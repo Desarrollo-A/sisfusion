@@ -1527,8 +1527,6 @@ function fillTableReport(dataObject) {
                 [10, 25, 50, -1],
                 [10, 25, 50, "Todos"]
             ],
-            destroy: true,
-            ordering: false,
             scrollX: true,
             language: {
                 url: `${base_url}static/spanishLoader_v2.json`,

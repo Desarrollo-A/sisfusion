@@ -146,17 +146,21 @@ class Administracion_model extends CI_Model {
         return $query->result_array();
     }
     public function getRepAdmon($idResidencial){
-        $query = $this->db->query("SELECT re.descripcion AS Proyecto, cn.nombre_condominio as nombre_condominio, lo.nombreLote as nombreLote, lo.idLote as idLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, hls.modificado AS fecha9, 
-		hl.fechaLiberacion as fechaLiberacion, OXC.nombre as nombre
+        $query = $this->db->query("SELECT re.descripcion AS Proyecto, cn.nombre as nombre_condominio, 
+        lo.nombreLote as nombreLote, lo.idLote as idLote, hlo3.idStatusContratacion,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
+        hlo.modificado AS fecha11, hl.fechaLiberacion as fechaLiberacion, oxc.nombre as nombre
         FROM clientes cl 
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
-        INNER JOIN opcs_x_cats AS OXC ON hl.tipo = OXC.id_opcion AND OXC.id_catalogo = 48
-        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        INNER JOIN opcs_x_cats AS oxc ON hl.tipo = oxc.id_opcion AND oxc.id_catalogo = 48
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41 GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo2 ON hlo2.idLote = lo.idLote AND hlo2.idCliente = cl.id_cliente
+        INNER JOIN historial_lotes hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente AND hlo2.modificado = hlo3.modificado
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
-        INNER JOIN (SELECT idCliente, idLote, MAX(modificado) AS modificado FROM historial_lotes WHERE idStatusContratacion = 9 GROUP BY idCliente, idLote) AS hls ON hls.idCliente = cl.id_cliente AND HLS.idLote = lo.idLote
-        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(lo.tipo_venta, 0) IN (0, 1, 2) AND cl.status = 0 AND hl.fechaLiberacion >= '2022-09-22 00:00:00.000' AND re.idResidencial=$idResidencial
+        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(lo.tipo_venta, 0) IN (0, 1, 2) 
+        AND cl.status = 0 AND hl.fechaLiberacion >= '2022-07-22 00:00:00.000' AND re.idResidencial = $idResidencial
         ORDER BY nombreCliente");
         return $query->result_array();
     }
