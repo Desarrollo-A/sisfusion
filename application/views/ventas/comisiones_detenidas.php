@@ -68,6 +68,7 @@
     <script>
         const baseUrl = '<?=base_url()?>';
         const urlIndex = `${baseUrl}index.php/`;
+        let rol  = "<?=$this->session->userdata('id_rol')?>";
 
         $('#comisiones-detenidas-table').ready(function () {
             let titulos = [];
@@ -196,15 +197,21 @@
                         'width': '8%',
                         'orderable': false,
                         'data': function (d) {
-                            return `
-                                <div class="d-flex justify-center">
-                                    <button value="${d.idLote}" data-value="${d.nombreLote}"
-                                        class="btn-data btn-blueMaderas btn-cambiar-estatus"
-                                        title="Detener">
-                                        <i class="material-icons">undo</i>
-                                    </button>
-                                </div>
-                            `;
+                            if(rol != 63 && rol != 4){
+
+                                return `
+                                    <div class="d-flex justify-center">
+                                        <button value="${d.idLote}" data-value="${d.nombreLote}"
+                                            class="btn-data btn-blueMaderas btn-cambiar-estatus"
+                                            title="Detener">
+                                            <i class="material-icons">undo</i>
+                                        </button>
+                                    </div>
+                                `;
+                                } else{
+                                return 'NA';
+                                }
+                           
                         }
                     }
                 ],

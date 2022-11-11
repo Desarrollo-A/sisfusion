@@ -62,7 +62,7 @@ class Usuarios_modelo extends CI_Model {
             case '6': // ASISTENTE GERENCIA
             case '53': // ANALISTA DE COMISIONES
                 if ($id_rol == 4 || $id_rol == 53)
-                    $where = "us.id_rol IN (3, 7, 9) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%'";
+                    $where = "us.id_rol IN (3, 7, 9) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%'";
                 else if ($id_rol == 5)
                     $where = "us.subdirector_id = $id_lider OR us.regional_id = $id_lider OR us.id_usuario = $id_lider";
                 else
@@ -234,14 +234,19 @@ class Usuarios_modelo extends CI_Model {
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                         id_rol = 1 AND estatus = 1 ORDER BY nombre");
                 break;
-            case '3':// GERENTE
-                $sede = '';
-                     if($headquarter == 11){
-                        $sede = " OR id_sede='3'";
-                     }
-                return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                        id_rol = 2 AND (id_sede LIKE '%".$headquarter."%' $sede)  AND estatus = 1 ORDER BY nombre");
-                break;
+                case '3':// GERENTE
+                    $sede = '';
+                    $lider = "";
+                         if($headquarter == 11){
+                            $sede = " OR id_sede='3'";
+                         }
+                         if($headquarter == 10){
+                            $headquarter = 1;
+                            $lider = " AND id_usuario=607";
+                         }
+                    return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                            id_rol = 2 AND (id_sede LIKE '%".$headquarter."%' $sede) $lider AND estatus = 1 ORDER BY nombre");
+                    break;
             case '4':// ASISTENTE DIRECTOR
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                         id_rol = 1 AND estatus = 1 ORDER BY nombre");
