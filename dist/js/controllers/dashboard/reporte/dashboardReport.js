@@ -1,4 +1,25 @@
-var chart;
+let chart, rolOnReport, idUserOnReport;
+
+function asDirector(userType){
+    debugger;
+    // 18: Fabián
+    //  4: Asistente dirección administración
+    // 63: Control interno
+    // 33: Consulta
+    // 58: Asistente de dirección general
+    // 69: Dirección general
+    //  2: Subidrector
+    if ( userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2'){
+        rolOnReport = '1';
+        idUserOnReport = '2';
+    }
+    //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
+    else if( userType == '5' && ( idUser != '28' || idUser != '30' )){
+        rolOnReport = '1';
+        idUserOnReport = '2';
+    }
+}
+
 var initialOptions = {
     series: [],
     chart: {
@@ -114,22 +135,26 @@ function readyReport(){
 }
 
 async function initReport(){
+    asDirector(userType);
     typeSale = validateTypeSale();
     getLastSales(typeSale);
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    // let rol = userType == 2 ? await getRolDR(idUser): userType; (TEMPORAL)
+    
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
+    // if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' ) (TEMPORAL)
+    if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
         rolString = 'gerente';
-    else if ( rol == '3' || rol == '6' )
+    else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-        
-    fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
+    
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, null, [0, null, null, null, null, null, rolOnReport]);
+    // fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]); (TEMPORAL)
 }
 
 function validateTypeSale(){
@@ -923,6 +948,7 @@ function monthName(mon){
 }
 
 function getRolDR(idUser){
+    debugger;
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
@@ -935,7 +961,14 @@ function getRolDR(idUser){
             },
             success: function(data){
                 $('#spiner-loader').addClass('hide');
-                resolve (data.length > 0 ? 59:2);
+                if (data.length > 0){
+                    resolve (59);
+                }
+                else{
+                    resolve (2);
+
+                }
+                // resolve (data.length > 0 ? 59:2);
             },
             error: function() {
             $('#spiner-loader').addClass('hide');

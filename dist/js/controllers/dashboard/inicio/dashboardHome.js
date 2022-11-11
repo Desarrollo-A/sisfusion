@@ -1040,8 +1040,6 @@ function getFirstFilter(rol, secondRol){
         }
         $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
     }, 'json');
-
-
 }
 
 function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
