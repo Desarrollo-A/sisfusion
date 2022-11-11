@@ -109,6 +109,7 @@ class Postventa extends CI_Controller
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
         $idClient = empty($this->Postventa_model->getClient($idLote)) ? -1 : $this->Postventa_model->getClient($idLote);
+        print_r($this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']));
         if(is_object($idClient->row()) AND $idClient->row()->num_cli > 0){
             $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
             if (count($resDecode->data) > 0) {
