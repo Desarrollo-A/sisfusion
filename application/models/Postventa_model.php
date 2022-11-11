@@ -61,7 +61,6 @@ class Postventa_model extends CI_Model
 
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
-        print_r($data['ncliente']);exit;
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
