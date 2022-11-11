@@ -1280,6 +1280,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
         lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, sup, cl.fechaApartado,
         concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
+		concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, 
         concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
 		STRING_AGG(lotes.status8Flag, '-') AS status8Flag, STRING_AGG(lotes.totalValidado, '-') AS totalValidado, STRING_AGG(movs.descripcion, '-') AS descripcion
 		FROM lotes as lotes

@@ -60,6 +60,7 @@
                                                 <th>DÍAS VENCIDOS</th>
                                                 <th>ESTATUS FECHA</th>
                                                 <th>FECHA APARTADO</th>
+												<th>CLIENTE</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -158,7 +159,7 @@
                 titleAttr: 'Estatus actuales de terrenos al: ' + dateTime ,
                 title: 'Estatus actuales de terrenos al:  ' + dateTime ,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -194,6 +195,9 @@
                                     return 'ESTATUS';
                                 case 15:
                                     return 'FECHA APARTADO';
+								case 16: 
+									return 'CLIENTE';
+							
                             }
                         }
                     }
@@ -331,6 +335,7 @@
 					}
 				},//statusFecha
 				{data: 'fechaApartado'},
+				{data: 'nombreCliente'},
 
 			]
 		});
