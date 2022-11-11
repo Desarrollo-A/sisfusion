@@ -61,7 +61,7 @@ function repAdmon(idResidencial) {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -81,13 +81,16 @@ function repAdmon(idResidencial) {
                                 return 'NOMBRE CLIENTE';
                                 break;
                             case 5:
-                                return 'FECHA 9';
+                                return 'FECHA 11';
                                 break;
                             case 6:
-                                return 'FECHA LIBERACION';
+                                return 'FECHA LIBERACIÓN';
                                 break;
                             case 7:
-                                return 'MOTIVO LIBERACION';
+                                return 'MOTIVO LIBERACIÓN';
+                                break;
+                            case 8:
+                                return 'ÚLTIMO ESTATUS';
                                 break;
                         }
                     }
@@ -108,13 +111,14 @@ function repAdmon(idResidencial) {
                 {data: 'nombreLote'},
                 {data: 'idLote'},
                 {data: 'nombreCliente'},
-                {data: 'fecha9'},
+                {data: 'fecha11'},
                 {
                     "data": function(d){
                         return '<p>'+myFunctions.convertDateYMDHMS(d.fechaLiberacion)+'</p>';
                     }
                 },
-                {data: 'nombre'}
+                {data: 'nombre'},
+                {data: 'idStatusContratacion'}
             ]
     });
 }

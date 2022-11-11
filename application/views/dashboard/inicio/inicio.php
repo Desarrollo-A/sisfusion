@@ -73,8 +73,9 @@
                         <div class="card p-0 h-100 cardProspectosVig">
                             <div class="container-fluid h-100">
                                 <div class="row h-100">
-                                    <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center">
-                                        <div class="w-40 d-flex align-center">
+                                    <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center cursor-point"
+                                         onClick="prospectsTable()" data-toggle="tooltip" data-placement="top" title="Más detalle">
+                                        <div class="w-40 d-flex align-center" >
                                             <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
                                             <p class="m-0 overflow-text numberGraphic" id="numberGraphic" rel="tooltip" data-placement="left" title="">
                                             </p>
@@ -93,6 +94,17 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" id="prospects-section">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="container-fluid h-100 p-0">
+                <div class="table-dinamic">
                 </div>
             </div>
         </div>

@@ -3848,9 +3848,6 @@
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view('administracion/datos_status11Contratacion_administracion_view',$datos);
-		/*$datos = array();
-		$datos["registroStatus11ContratacionAdministracion"] = $this->registrolote_modelo->registroStatusContratacion11();
-		$this->load->view("datos_status11Contratacion_administracion_view", $datos);*/
 	}
 
 	public function getStatus11ContrAdmin()
