@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_usuario') == "7310" || $this->session->userdata('id_usuario') == "11237")//contraloria
         {/*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -242,6 +242,8 @@
     <!-- Modal general -->
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script>
+                let rol  = "<?=$this->session->userdata('id_rol')?>";
+
         $(document).ready(function() {
             $("#tabla_historialGral").prop("hidden", true);
             var url = "<?=base_url()?>/index.php/";
@@ -711,18 +713,22 @@
                     'className': 'dt-body-center',
                     'render': function (d, type, full) {
                         const estatus = $('#filtro44').val();
-                        if (estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') {
+                        if ((estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && rol != 17 ) {
                             return '';
-                        } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6')) {
+                        } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6') && rol == 17 ) {
                             return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                        } else if ($('#filtro44').val() === '2') {
-                            if (full.forma_pago.toLowerCase() !== 'factura') {
+                        } else if ($('#filtro44').val() === '2' && rol == 17 ) {
+                            if (full.forma_pago.toLowerCase() !== 'factura' && rol == 17 ) {
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             } else {
                                 return '';
                             }
                         } else {
-                            return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            if(rol == 17){
+                                return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            }else{
+                                return '';
+                            }
                         }
                     },
                     select: {
