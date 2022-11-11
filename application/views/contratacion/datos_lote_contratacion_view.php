@@ -299,6 +299,9 @@
 												<th>LUGAR PROS.</th>
 												<th>FECHA VAL. ENGANCHE</th>
 												<th>CANTIDAD ENGANCHE PAGADO</th>
+												<th>ESTATUS CONTRATACIÓN</th>
+												<th>CLIENTE</th>
+												<th>COPROPIETARIO (S)</th>
 												<th></th>
 											</tr>
 										</thead>
@@ -407,7 +410,7 @@
 							titleAttr: 'Descargar archivo de Excel',
 							title: 'MADERAS_CRM_INVENTARIO',
 							exportOptions: {
-							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
 							format: {
 								header: function (d, columnIdx) {
 									switch (columnIdx) {
@@ -474,6 +477,15 @@
 										case 20:
 											return 'CANTIDAD ENGANCHE PAGADO';
 											break;
+										case 21:
+											return 'ESTATUS CONTRATACIÓN';
+											break;
+										case 22:
+											return 'CLIENTE';
+											break;
+										case 23:
+											return 'COPROPIETARIO (S)';
+											break;
 									}
 								}
 								}
@@ -487,7 +499,7 @@
 							orientation: 'landscape',
 							pageSize: 'LEGAL',
 							exportOptions: {
-							columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 							format: {
 								header:  function (d, columnIdx) {
 									if(columnIdx == 0){
@@ -789,6 +801,24 @@
 					"width": "8%",
 					"data": function( d ){
 						return '<p>$ '+formatMoney(d.cantidad_enganche)+'</p>';
+					}
+				},
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p>'+d.idStatusContratacion+'</p>';
+					}
+				},
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p>'+d.nombreCliente+'</p>';
+					}
+				},
+				{
+					"width": "8%",
+					"data": function( d ){
+						return '<p>'+d.nombreCopropietario+'</p>';
 					}
 				},
 				{
