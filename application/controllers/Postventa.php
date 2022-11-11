@@ -108,23 +108,22 @@ class Postventa extends CI_Controller
     {
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
-        $idClient = !empty($this->Postventa_model->getClient($idLote)) ? -1 : $this->Postventa_model->getClient($idLote)->row()->num_cli;
-        $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-        if($idClient > 0){
-            //$resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        $idClient = empty($this->Postventa_model->getClient($idLote)) ? -1 : $this->Postventa_model->getClient($idLote);
+        if(is_object($idClient->row()) AND $idClient->row()->num_cli > 0){
+            $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
             if (count($resDecode->data) > 0) {
-                $resDecode->data[0]->id_cliente = $idClient->id_cliente;
+                $resDecode->data[0]->id_cliente = $idClient->row()->id_cliente;
                 $resDecode->data[0]->referencia = $data1[0]['referencia'];
                 $resDecode->data[0]->empresa = $data1[0]['empresa'];
-                $resDecode->data[0]->personalidad = $idClient->personalidad_juridica;
-                $resDecode->data[0]->ocupacion = $idClient->ocupacion;
-                $resDecode->data[0]->regimen_matrimonial = $idClient->regimen_matrimonial;
-                $resDecode->data[0]->estado_civil = $idClient->estado_civil;
+                $resDecode->data[0]->personalidad = $idClient->row()->personalidad_juridica;
+                $resDecode->data[0]->ocupacion = $idClient->row()->ocupacion;
+                $resDecode->data[0]->regimen_matrimonial = $idClient->row()->regimen_matrimonial;
+                $resDecode->data[0]->estado_civil = $idClient->row()->estado_civil;
                 echo json_encode($resDecode->data[0]);
             } else {
                 echo json_encode(false);
             }
-        }elseif($idClient <= 0) {
+        }else {
             echo json_encode(false);
         }
     }
