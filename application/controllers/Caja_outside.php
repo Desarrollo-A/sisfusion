@@ -1617,7 +1617,7 @@ class Caja_outside extends CI_Controller
 
                         $arreglo_asesores = array();
                         $arreglo_asesores["id_gerente"] = $value->idGerente;
-                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor ? 0 : $value->idCoordinador;
+                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 ? 0 : $value->idCoordinador;
                         $arreglo_asesores["id_asesor"] = $value->idAsesor;
                         $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
                         $arreglo_asesores["estatus"] = 1;
@@ -1860,9 +1860,9 @@ class Caja_outside extends CI_Controller
 
                     $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
 
-                    if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor) {
+                    if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor && $data->asesores[0]->idAsesor != 7092) {
                         $voBoCoord = 0;
-                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente) {
+                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092) {
                         $voBoCoord = 0;
                     } else {
                         $voBoCoord = $data->asesores[0]->idCoordinador;
