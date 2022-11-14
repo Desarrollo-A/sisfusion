@@ -68,9 +68,21 @@ class Reporte extends CI_Controller {
             $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
-
+        
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
+
+        //Provisional para simular rol como director
+        if ( $rol == 18 || $rol == 4 || $rol == 63 || $rol == 33 || $rol == 58 || $rol == 69 || $rol == 2){
+            $rol = 1;
+            $id = 2;
+        }
+        //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
+        else if( $rol == 5 && ( $id != 28 || $id != 30 )){
+            $rol = 1;
+            $id = 2;
+        }
+
         if( $rol == 2 || $rol == 5){
             if ( $rol == 5 ) $id = $this->session->userdata('id_lider'); //Se asignara id de su lider (para asistentes de dirección y subdirección)
 
