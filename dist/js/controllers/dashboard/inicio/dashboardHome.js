@@ -745,7 +745,7 @@ async function prospectsTable(){
         div.classList.remove('openDiv')
     } else {
         div.classList.add('openDiv');
-        fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol], nombreUser);
+        fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
         sp.initFormExtendedDatetimepickers();
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
