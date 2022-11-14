@@ -6271,16 +6271,16 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function changeLoteToPenalizacion()
     {
-      echo $_POST['id_lote'];
-      echo $_POST['id_cliente'];
+      // echo $_POST['id_lote'];
+      // echo $_POST['id_cliente'];
       
-        // $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
-        //         'penalizaciones', 'NULL');
-        // if ($response) {
-        //   $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
-        // }
+        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
+                'penalizaciones', 'NULL');
+        if ($response) {
+          $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
+        }
 
-        //  echo json_encode($response);
+         echo json_encode($response);
     }
 
     public function changeLoteToPenalizacionCuatro()
@@ -6293,6 +6293,18 @@ for ($d=0; $d <count($dos) ; $d++) {
 
          echo json_encode($response);
     }
+
+
+    public function cancelLoteToPenalizacion()
+    {
+        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE CANCELÓ PENALIZACIÓN', 'penalizaciones', 'NULL');
+        if ($response) {
+          $response = $this->Comisiones_model->updatePenalizacionCancel($_POST['id_lote'], $_POST['id_cliente']);
+        }
+
+         echo json_encode($response);
+    }
+    
     
 
     public function getFormasPago()
