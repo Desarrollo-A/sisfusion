@@ -108,11 +108,18 @@ class Postventa extends CI_Controller
     {
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
-        $idClient = empty($this->Postventa_model->getClient($idLote)) ? -1 : $this->Postventa_model->getClient($idLote);
-        print_r($this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']));
+        $idClient = $this->Postventa_model->getClient($idLote);
+        $idClient = empty($idClient) ? -1 : $idClient;
+        $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        if(!empty($resDecode->data)){
+            $resDecode->data[0]->bandera_exist_cli = true;
+        }else{
+            $resDecode->data[0]= new \stdClass();
+            $resDecode->data[0]->bandera_exist_cli = false;
+        }
         if(is_object($idClient->row()) AND $idClient->row()->num_cli > 0){
-            $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-            if (count($resDecode->data) > 0) {
+            //$resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+            if (count($resDecode->data) > 0 && $resDecode->data[0]->bandera_exist_cli == true) {
                 $resDecode->data[0]->id_cliente = $idClient->row()->id_cliente;
                 $resDecode->data[0]->referencia = $data1[0]['referencia'];
                 $resDecode->data[0]->empresa = $data1[0]['empresa'];
@@ -122,10 +129,12 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->estado_civil = $idClient->row()->estado_civil;
                 echo json_encode($resDecode->data[0]);
             } else {
-                echo json_encode(false);
+                $resDecode->data[0]->bandera_exist_cli = false;
+                echo json_encode($resDecode->data[0]);
             }
         }else {
-            echo json_encode(false);
+            $resDecode->data[0]->bandera_exist_cli = false;
+            echo json_encode($resDecode->data[0]);
         }
     }
 
@@ -608,7 +617,6 @@ class Postventa extends CI_Controller
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['personalidad'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
-
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
             "rfc" => $_POST['rfc'],
@@ -689,6 +697,11 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]["ult_rfc"] = 'NULL';
                 $resDecode->data[0]["idEstatus"] = $_POST['estatus'];
 
+            }else {
+                $resDecode->data[0]->ult_rfc = $resDecode->data[0]->rfc;
+                $resDecode->data[0]->ult_ncliente = $resDecode->data[0]->ncliente;
+                $resDecode->data[0]->ncliente = $_POST['nombreComp'];
+                $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
