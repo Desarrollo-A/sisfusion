@@ -745,7 +745,7 @@ async function prospectsTable(){
         div.classList.remove('openDiv')
     } else {
         div.classList.add('openDiv');
-        fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol], nombreUser);
+        fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
         sp.initFormExtendedDatetimepickers();
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
@@ -795,7 +795,7 @@ function createAccordionsPR(option, render, rol, titleDinamic){
                             <i class="fas fa-angle-down"></i>
                         </div>
                         <div>
-                            <h4 class="p-0 accordion-title js-accordion-title">`+tittle+` (`+titleDinamic+`)</h4>
+                            <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
                         </div>
                         <div class="cursor-point">
                             ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
