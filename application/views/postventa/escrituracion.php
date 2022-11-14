@@ -137,13 +137,13 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="EdoCiv">
                                                                 <label class="control-label label-gral">Estado Civil</label>
-                                                                <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7"></select>
+                                                                <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                             </div>
                                                         </div>    
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="RegCon">
                                                                 <label class="control-label label-gral">Régimen Conyugal</label>
-                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7"></select>
+                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                                 <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>

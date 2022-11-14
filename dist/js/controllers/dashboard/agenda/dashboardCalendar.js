@@ -1,7 +1,7 @@
-var calendar, eventsTable;
+var calendar;
 var appointment = '';
 var exists = 1;
-
+var eventsTable;
 $(document).ready(function() {
   arrayEvents = [];
   getUsersAndEvents(userType, idUser, true);    
@@ -72,7 +72,7 @@ calendar = new FullCalendar.Calendar(calendarEl, {
   }
 });
 calendar.render();
-customizeIcon();
+// customizeIcon();
 
 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 

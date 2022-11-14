@@ -8,7 +8,7 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2'){
+    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69'){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -16,6 +16,10 @@ function asDirector(userType){
     else if( userType == '5' && ( idUser != '28' || idUser != '30' )){
         rolOnReport = '1';
         idUserOnReport = '2';
+    }
+    else{
+        rolOnReport = userType;
+        idUserOnReport = idUser;
     }
 }
 
@@ -1684,3 +1688,13 @@ $(".scrollCharts").scroll(function() {
         $(".gradientLeft").addClass("d-none");
     }
 });
+
+function formatMoney(n) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}

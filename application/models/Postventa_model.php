@@ -24,7 +24,7 @@ class Postventa_model extends CI_Model
     function getLotes($idCondominio)
     {
         return $this->db->query("SELECT * FROM lotes l
-        WHERE idCondominio = $idCondominio AND idStatusContratacion = 15 AND idMovimiento = 45 AND idStatusLote = 2 
+        WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
         AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
     }
 
@@ -61,6 +61,9 @@ class Postventa_model extends CI_Model
 
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
+        if(is_object($data)){
+            $data = (array)$data;
+        }
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
