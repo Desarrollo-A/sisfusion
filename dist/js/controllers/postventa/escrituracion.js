@@ -44,8 +44,8 @@ $(document).on('submit', '#formEscrituracion', function (e) {
 
 //Functions
 function loading() {
-    $(".fa-spinner").show();
-    $(".btn-text").html("Cargando...");
+   // $(".fa-spinner").show();
+   // $(".btn-text").html("Cargando...");
 }
 
 function complete() {
@@ -78,8 +78,8 @@ function aportaciones(data) {
                 $("#lotes").selectpicker('refresh');
                 clearInputs();
                 getLotes($('#condominio').val());
-                $('#aportaciones').prop('disabled', false);
-                $('#aportaciones').css('background-color', '');
+              //  $('#aportaciones').prop('disabled', false);
+               // $('#aportaciones').css('background-color', '');
             }else{
                 alerts.showNotification("top", "right", "Oops, algo salio mal.", "error");
             }
@@ -163,7 +163,7 @@ function getClient(idLote) {
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
-        if(data){
+        if(data.bandera_exist_cli){
 
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
@@ -219,6 +219,22 @@ function getClient(idLote) {
             document.getElementById('RegCon').children[1].children[0].title = '';
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
 
+            $('#nombre2').val(data.ncliente);
+            $('#ocupacion').val(data.ocupacion);
+            $('#origen').val(data.estado);
+            $('#correo').val(data.correo);
+            // $('#direccionf').val(); //nosotros insertamos
+            let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
+            $('#direccion').val(dir); 
+            $('#rfc').val(data.rfc);
+            $('#telefono').val(data.telefono);
+            $('#cel').val(data.tfijo);
+            $('#idCliente').val(data.id_cliente);
+            $('#idPostventa').val(data.id_dpersonal);
+            $('#referencia').val(data.referencia);
+            $('#empresa').val(data.empresa);
+            data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
+            $('#personalidad').val(data.personalidad);
             /*$('#ecivil').val('');//pendiente, este es el codigo que estaba anteriormente
             //$('#rconyugal').val('');//pendiente
             $('#correo').val('');
@@ -233,7 +249,7 @@ function getClient(idLote) {
             $('#referencia').val(data.referencia);
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
-            $("#estatusL").prop("checked", true);
+            //$("#estatusL").prop("checked", true);
             $('#check').removeClass("d-none");
         }
        

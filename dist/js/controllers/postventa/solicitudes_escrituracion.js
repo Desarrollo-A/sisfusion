@@ -848,7 +848,8 @@ function fillTable(beginDate, endDate, estatus) {
                     switch (d.idEstatus) {
                         case 0:
                             if (userType == 55) { // MJ: ANTES 54
-                                group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar1"><i class="far fa-paper-plane"></i></button>';
+                                // BOTON APROBAR
                             }
                             break;
 
@@ -856,18 +857,21 @@ function fillTable(beginDate, endDate, estatus) {
                         console.log('userType', userType);
                         if(userType == 56){
                             newBtn += `<button id="estatusL" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;
+                            // BOTON ESTATUS LOTE
                             if(d.flagEstLot == 0 || d.expediente == null){
                                 exp = null;
                                 permiso = 3
                                 if(d.expediente == null && d.flagEstLot == 1) {
                                     permiso = 3;
                                     newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Administración suba la información faltante."><i class="far fa-paper-plane"></i></button>`;
+                                    // BOTON MENSAJE INFO
                                     aditional = 1
                                 }
                             }else if(d.expediente != null && d.flagEstLot == 1){
                                 if(d.aportaciones == null && d.descuentos == null) {
                                     permiso = 3;
                                     newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Administración suba la información faltante."><i class="far fa-paper-plane"></i></button>`;
+                                    // BOTON MENSAJE INFO
                                     aditional = 1
                                 } else if(d.aportaciones != null && d.descuentos != null){
                                     exp = 1;
@@ -879,14 +883,17 @@ function fillTable(beginDate, endDate, estatus) {
                             if(d.expediente != null && d.flagEstLot == 0){
                                 permiso = 2;
                                 newBtn += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
+                                // BOTON INFORMACION
                                 aditional = 1
                                 if(d.aportaciones != null && d.descuentos != null){
                                     newBtn += `<button class="btn-data btn-details-grey" title="No podra avanzar hasta que Comité Técnico suba el estatus de construcción."><i class="far fa-paper-plane"></i></button>`;
+                                    // BOTON MENSAJE INFO
                                     aditional = 1
                                 }
                             } else if(d.expediente != null && d.flagEstLot == 1){
                                 permiso = 2;
                                 newBtn += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
+                                // BOTON INFORMACION
                                 aditional = 1
                                 if(d.aportaciones != null && d.descuentos != null){
                                     permiso = d.permisos;
@@ -904,7 +911,7 @@ function fillTable(beginDate, endDate, estatus) {
                         //     group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
                         //     break;
                         case 92:
-                            group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
+                        group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 2, newBtn);
                             break;
                         // case 3:
                         //     newBtn += `<button id="estatusL" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;
@@ -920,12 +927,18 @@ function fillTable(beginDate, endDate, estatus) {
                         case 4:
                             if (userType == 55) {
                                 newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                // BOTON DESGLOSE DOCUMENTOS
+
                                 if(d.contrato == 1){
-                                    newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
+                                    newBtn += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`; 
+                                    //BOTON PRESUPUESTO
                                 }
                                 newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                //BOTON RECHAZAR
+
                                 if(d.Spresupuesto == 1){
-                                    newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                    newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar2"><i class="far fa-paper-plane"></i></button>';
+                                    //BOTON APROBAR
                                 }
                             }
                             group_buttons += permisos(d.permisos,d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
@@ -933,20 +946,26 @@ function fillTable(beginDate, endDate, estatus) {
                         case 5:
                             if (d.pertenece == 2){
                                 newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                //BOTON NOTARIA
                             } 
                             newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            //BOTON RECHAZAR
                             newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            //BOTON DOCUMENTOS
                             
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 6:
                             //solicitud de valores (solicitud de presupuesto)
-                            newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;                            
-                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                            newBtn += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            //BOTON RECHAZAR                            
+                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar3"><i class="far fa-paper-plane"></i></button>';
+                            //BOTON APROBAR
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 7:
                             newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            //BOTON DESGLOCE PRESUPUESTOS
                             if(d.flagPresupuesto == 1){
                                 exp = 2
                             }else{
@@ -961,11 +980,13 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = d.expediente;
                             }
                             newBtn += `<button id="treePresupuesto${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                            //BOTON DESGLOCE PRESUPUESTOS
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 9:
                             //se notifica al cliente el presupuesto
-                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar4"><i class="far fa-paper-plane"></i></button>';
+                            //BOTON APROBAR
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 10:
@@ -974,7 +995,9 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = 1;
                             }
                             newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                            //BOTON DESGLOCE DOCUMENTOS
                             newBtn += `<button id="newNotary" data-idSolicitud=${d.idSolicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+                            //BOTON NUEVA NOTARIA
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 11:
@@ -984,11 +1007,14 @@ function fillTable(beginDate, endDate, estatus) {
                             else if (d.result == 1 && d.estatusValidacion == 1)
                                 exp = 2;   
                                 newBtn += `<button id="trees${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                //BOTON DESGLOCE DOCUMENTOS
                             if (d.pertenece == 2){
                                 newBtn += `<button id="notaria" data-idSolicitud=${d.idSolicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                //BOTON NOTARIA
                             } 
                             if (userType == 57 && d.estatusValidacion == 0 && exp != null && d.no_rechazos != 0) { // MJ: ANTES 55
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                //BOTON RECHAZAR
                             }
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -1000,7 +1026,9 @@ function fillTable(beginDate, endDate, estatus) {
                             }
                             if (userType == 57) { // MJ: ANTES 56
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                //BOTON RECHAZAR
+                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar5"><i class="far fa-paper-plane"></i></button>';
+                                //BOTON APROBAR
                             }
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
 
@@ -1008,7 +1036,9 @@ function fillTable(beginDate, endDate, estatus) {
                         case 13://14
                             if (userType == 57) { // MJ: ANTES 56
                                 newBtn += `<button id="pago${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-pago" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                //BOTON DESGLOCE DOCUMENTOS
                                 newBtn += `<button id="createDate" data-idSolicitud=${d.idSolicitud} data-action="3" data-idNotaria=${d.idNotaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
+                                //BOTON FECHA PARA FIRMA
                             }
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -1018,17 +1048,20 @@ function fillTable(beginDate, endDate, estatus) {
                             if (d.result == 1) {
                                 exp = 1;
                             }
-                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                            newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar6"><i class="far fa-paper-plane"></i></button>';
+                            //BOTON ABROBAR
                             group_buttons += permisos(d.permisos, exp, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 15://16
                             if (userType == 55) { // MJ: ANTES 54
                                 newBtn +=  `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="top"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
+                                //BOTON NUEVA FECHA
                             }
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 16://13
                             newBtn += `<button id="observacionesButton" data-idSolicitud=${d.idSolicitud} data-action="3" class="btn-data btn-violetBoots" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Envió Observaciones"><i class="far fa-comment"></i></button><button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            //BOTON ENVIO OBSERVACIONES Y RECHAZAR
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 17:
@@ -1048,7 +1081,9 @@ function fillTable(beginDate, endDate, estatus) {
                             //notificacion de la factura electronica
                             if (userType == 55) { // MJ: ANTES 54
                                 newBtn += `<button id="reject"  class="btn-data btn-warning" data-toggle="tooltip" data-placement="top"  title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                //BOTON RECHAZAR
+                                newBtn += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar7"><i class="far fa-paper-plane"></i></button>';
+                                //BOTON APROBAR
                             }
                             group_buttons += permisos(d.permisos, d.expediente, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
@@ -1056,6 +1091,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 exp = d.expediente;
                                 if (userType == 57) {
                                     newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    //BOTON DESGLOSE DOCUMENTOS
                                     if(d.copia_cer == 1 && d.testimonio == 1){
                                         exp = 1;
                                      }
@@ -1067,6 +1103,7 @@ function fillTable(beginDate, endDate, estatus) {
                             permiso = d.permisos;
                                 if (userType == 17) {
                                     newBtn += `<button id="docs${d.idSolicitud}" data-idSolicitud=${d.idSolicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    //BOTON DESGLOSE DOCUMENTOS
                                     if(d.copia_cer == 1 && d.testimonio == 1){
                                         exp = 1;
                                         permiso=3;
@@ -1079,6 +1116,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 90:
                             newBtn += `<button id="newDate" data-idSolicitud=${d.idSolicitud} data-idNotaria=${d.idNotaria} class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Nueva fecha"><i class="fas fa-calendar-alt"></i></button>`;
+                            // DESGLOSE NUEVA FECHA
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
                             break;
                         case 93:
