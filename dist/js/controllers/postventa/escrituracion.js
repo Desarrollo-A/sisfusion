@@ -163,7 +163,6 @@ function getClient(idLote) {
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
-        console.log(data);
         if(data.bandera_exist_cli){
 
             habilitarInputs(true);
