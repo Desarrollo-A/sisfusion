@@ -215,6 +215,7 @@
                     next: "<i class='fa fa-angle-right'>"
                 }
             },
+			scrollX: true,
             columnDefs: [{
                 defaultContent: "Sin especificar",
                 targets: "_all",

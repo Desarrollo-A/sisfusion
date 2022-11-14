@@ -45,6 +45,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>PROCESO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -178,7 +179,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                     titleAttr: 'Registro estatus 9',
                     title:"Registro estatus 9",
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6],
+                        columns: [1, 2, 3, 4, 5, 6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -198,6 +199,9 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         break;
                                     case 6:
                                         return 'CLIENTE';
+                                        break;
+                                    case 7:
+                                        return 'PROCESO';
                                         break;
                                 }
                             }
@@ -213,7 +217,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6],
+                        columns: [1, 2, 3, 4, 5, 6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -233,6 +237,9 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         break;
                                     case 6:
                                         return 'CLIENTE';
+                                        break;
+                                    case 7:
+                                        return 'PROCESO';
                                         break;
                                 }
                             }
@@ -327,7 +334,21 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
 "data": function( d ){
     return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
 }
-}, 
+},{
+"width": "20%",
+"data": function( d ){
+                        let respuesta = ''; 
+                        if(d.nacion == 0){
+                            respuesta = '<p class="m-0">NACIONAL</p>';
+                        }else{
+                            respuesta = '<p class="m-0">EXTRANJERO</p>';
+                        }
+                        return respuesta;
+                    }
+},
+
+
+
 { 
 "width": "40%",
 "orderable": false,
