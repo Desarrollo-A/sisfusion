@@ -262,6 +262,7 @@ class Administracion extends CI_Controller{
 			/*-------------------------------------------------------------------------------*/
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
+		$datos["rol"] = $this->session->userdata('id_rol');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
 	}
 	public function registroStatus11ContratacionAdministracion() {
