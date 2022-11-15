@@ -291,8 +291,8 @@
 												<th>ASESOR</th>
 												<th>COORDINADOR</th>
 												<th>GERENTE</th>
-												<th>SUBDIRECTOR</th>
-												<th>DIRECTOR REGIONAL</th>
+												<!-- <th>SUBDIRECTOR</th>
+												<th>DIRECTOR REGIONAL</th> -->
 												<th>ESTATUS</th>
 												<th>APARTADO</th>
 												<th>COMENTARIO</th>
@@ -330,7 +330,7 @@
 		var url2 = "<?=base_url()?>/index.php/";
 		var urlimg = "<?=base_url()?>/img/";
 		var idLote = 0;
-
+		var rol =	"<?= $id_rol ?>";
 		$(document).ready(function(){
 			$.post(url + "Contratacion/lista_proyecto", function(data) {
 				var len = data.length;
@@ -398,7 +398,7 @@
 				searching: true,
 				ajax:
 				{
-					"url": '<?=base_url()?>index.php/Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
+					"url": '<?=base_url()?>Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
 					"dataSrc": ""
 				},
 				buttons: [
@@ -410,9 +410,78 @@
 							titleAttr: 'Descargar archivo de Excel',
 							title: 'MADERAS_CRM_INVENTARIO',
 							exportOptions: {
-							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+							columns:   coordinador = rol == 11 ?  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] ,
 							format: {
 								header: function (d, columnIdx) {
+									if(rol != 11){
+										switch (columnIdx) {
+										case 0:
+											return 'PROYECTO';
+											break;
+										case 1:
+											return 'CONDOMINIO';
+											break;
+										case 2:
+											return 'LOTE';
+											break;
+										case 3:
+											return 'ID LOTE';
+											break;
+										case 4:
+											return 'SUPERFICIE';
+											break;
+										case 5:
+											return 'PRECIO DE LISTA';
+											break;
+										case 6:
+											return 'TOTAL CON DESCUENTOS';
+											break;
+										case 7:
+											return 'M2';
+											break;
+										case 8:
+											return 'REFERENCIA';
+											break;
+										case 9:
+											return 'MSI';
+											break;
+										case 10:
+											return 'ASESOR';
+											break;
+										case 11:
+											return 'COORDINADOR';
+											break;
+										case 12:
+											return 'GERENTE';
+											break;
+										// case 13:
+										// 	return 'SUBDIREECTOR';
+										// 	break;
+										// case 14:
+										// 	return 'DIRECTOR REGIONAL';
+										// 	break;
+										case 13:
+											return 'ESTATUS';
+											break;
+										case 14:
+											return 'APARTADO';
+											break;
+										case 15:
+											return 'COMENTARIO';
+											break;
+										case 16:
+											return 'LUGAR PROSPECCIÓN';
+											break;
+										case 17:
+											return 'FECHA VALIDACION ENGANCHE';
+											break;
+										case 18:
+											return 'CANTIDAD ENGANCHE PAGADO';
+											break;
+										
+									}
+									}else{
+
 									switch (columnIdx) {
 										case 0:
 											return 'PROYECTO';
@@ -453,40 +522,50 @@
 										case 12:
 											return 'GERENTE';
 											break;
+										// case 13:
+										// 	return 'SUBDIREECTOR';
+										// 	break;
+										// case 14:
+										// 	return 'DIRECTOR REGIONAL';
+										// 	break;
 										case 13:
-											return 'SUBDIREECTOR';
-											break;
-										case 14:
-											return 'DIRECTOR REGIONAL';
-											break;
-										case 15:
 											return 'ESTATUS';
 											break;
-										case 16:
+										case 14:
 											return 'APARTADO';
 											break;
-										case 17:
+										case 15:
 											return 'COMENTARIO';
 											break;
-										case 18:
+										case 16:
 											return 'LUGAR PROSPECCIÓN';
 											break;
-										case 19:
+										case 17:
 											return 'FECHA VALIDACION ENGANCHE';
 											break;
-										case 20:
+										case 18:
 											return 'CANTIDAD ENGANCHE PAGADO';
 											break;
+										case 19:	
+											if(rol == 11){
+												return 'ESTATUS CONTRATACIÓN';
+											}
+											return ''
+											break;
+										case 20:
+											if(rol == 11){
+												return 'CLIENTE';
+											}
+											return ''
+											break;
 										case 21:
-											return 'ESTATUS CONTRATACIÓN';
-											break;
-										case 22:
-											return 'CLIENTE';
-											break;
-										case 23:
-											return 'COPROPIETARIO (S)';
+											if(rol == 11){
+												return 'COPROPIETARIO (S)';
+											}
+											return ''
 											break;
 									}
+								}
 								}
 								}
 							}
@@ -513,6 +592,11 @@
 							}
 						}
 					],
+
+				columnDefs: [
+							{ targets: [19,20, 21], visible: coordinador = rol == 11 ? true : false },
+       					 	{ targets: '_all', visible: true }
+						],	
 				pagingType: "full_numbers",
 				language: {
 					url: "<?=base_url()?>/static/spanishLoader_v2.json",
@@ -729,26 +813,26 @@
 						return gerente;
 					}
 				},
-				{
-					data: function(d){
-						var subdirector;
-						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-							subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
-						else
-							subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
-						return subdirector;
-					}
-				},
-				{
-					data: function(d){
-						var regional;
-						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-							regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
-						else
-							regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
-						return regional;
-					}
-				},
+				// {
+				// 	data: function(d){
+				// 		var subdirector;
+				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+				// 			subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
+				// 		else
+				// 			subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+				// 		return subdirector;
+				// 	}
+				// },
+				// {
+				// 	data: function(d){
+				// 		var regional;
+				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+				// 			regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
+				// 		else
+				// 			regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
+				// 		return regional;
+				// 	}
+				// },
 				{
 					"width": "12%",
 					"data": function(d){
@@ -1024,12 +1108,14 @@
 						titleAttr: 'Excel'
 					}
 				],
-				columnDefs: [{
+				columnDefs: [
+						{
 						defaultContent: "",
 						targets: "_all",
 						searchable: true,
 						orderable: false
-					}],
+						}
+						],
 				"scrollX": true,
 				"pageLength": 10,
 				language: {
