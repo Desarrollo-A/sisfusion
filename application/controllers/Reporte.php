@@ -59,6 +59,13 @@ class Reporte extends CI_Controller {
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
         $typeSale = $this->input->post('typeSale');
+        $id_rol = $this->input->post('type');
+        $render = $this->input->post('render');
+        $asesor = $this->input->post("asesor");
+        $coordinador = $this->input->post("coordinador");
+        $gerente = $this->input->post("gerente");
+        $subdirector = $this->input->post("subdirector");
+        $regional = $this->input->post("regional");
 
         if( $this->input->post("beginDate")==null && $this->input->post("endDate") == null){
             $beginDate = "$currentYear-01-01";
@@ -69,9 +76,11 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
         
+        /*
         $id = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
+        
         //Provisional para simular rol como director
         if ( $rol == 18 || $rol == 4 || $rol == 63 || $rol == 33 || $rol == 58 || $rol == 69){
             $rol = 1;
@@ -125,8 +134,9 @@ class Reporte extends CI_Controller {
         else{
             $condicion_x_rol = '';
         }
+        */
 
-        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate, $typeSale);
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $id_rol, $beginDate, $endDate, $typeSale, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional]);
 
         //Obtenemos solo array de ventas contratadas
         $vcArray = array_filter($data, function($element){
@@ -163,12 +173,12 @@ class Reporte extends CI_Controller {
             }
         }
 
-        if($data != null) {
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
+
     function validateDate($date, $format = 'Y-m-d'){
         $d = DateTime::createFromFormat($format, $date);
         // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.

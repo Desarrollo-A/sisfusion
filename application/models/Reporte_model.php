@@ -7,7 +7,16 @@ class Reporte_model extends CI_Model {
         parent::__construct();
     }
 
-    public function getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate, $typeSale){
+    public function getDataChart($general, $tipoChart, $id_rol, $beginDate, $endDate, $typeSale, $render, $leadersList){
+
+        // NOS QUEDAMOS CON LA ASIGNACIÓN DE LA VARIABLE $leadersList 
+        // QUEDA DUDA DE CÓMO LA MANDA EN EL JS NO LO SE RICK
+
+        $filtro = "";
+        $comodin2 = "";
+        $id_usuario = $this->session->userdata('id_usuario');
+        $id_lider = $this->session->userdata('id_lider');
+        $typeTransaction = 1;
 
         $ventasContratadas = ''; $ventasApartadas = ''; $canceladasContratadas = ''; $canceladasApartadas = ''; $filterTypeSale = '';
         $endDateDos =  date("Y-m-01", strtotime($endDate));
@@ -21,11 +30,13 @@ class Reporte_model extends CI_Model {
         )";
 
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
-        if($typeSale == "1"){
+        if($typeSale == "1")
             $filterTypeSale = 'AND totalValidado  != 0.00 AND totalValidado IS NOT NULL';
-        }elseif($typeSale == "2"){
+        elseif($typeSale == "2")
             $filterTypeSale = 'AND ISNULL(totalValidado, 0.00) <= 0.00';
-        }
+
+        list($filtro, $comodin, $comodin2) = $this->setFilters($typeSale, $id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
+
 
         $ventasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '$rol' rol FROM cte
         LEFT JOIN (SELECT FORMAT(ISNULL(SUM(CASE WHEN isNULL(cl.totalNeto2_cl, lo.totalNeto2) IS NULL THEN isNull(cl.total_cl, lo.total) WHEN isNULL(cl.totalNeto2_cl, lo.totalNeto2) = 0 THEN isNull(cl.total_cl, lo.total) ELSE isNULL(cl.totalNeto2_cl, lo.totalNeto2) END), 0), 'C') total,
@@ -34,7 +45,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND lo.idStatusContratacion >= 11
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 11 AND idMovimiento = 41
         GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
-        WHERE ISNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion_x_rol $filterTypeSale
+        WHERE ISNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtro $filterTypeSale
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
@@ -43,7 +54,7 @@ class Reporte_model extends CI_Model {
         COUNT(*) cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote != 2 AND lo.idStatusContratacion < 11
-        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion_x_rol $filterTypeSale
+        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtro $filterTypeSale
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
@@ -56,7 +67,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
         WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion_x_rol $filterTypeSale
+        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtro $filterTypeSale
         AND hlo2.idStatusContratacion >= 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
@@ -70,12 +81,12 @@ class Reporte_model extends CI_Model {
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
         INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
         WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion_x_rol $filterTypeSale
+        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtro $filterTypeSale
         AND hlo2.idStatusContratacion < 11
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
-        if($coordinador){
+        /*if($coordinador){
             $ventasContratadas = $ventasContratadas . " UNION ALL " . $coordinadorVC;
 
             $ventasApartadas = $ventasApartadas . " UNION ALL " . $coordinadorVA;
@@ -83,7 +94,7 @@ class Reporte_model extends CI_Model {
             $canceladasContratadas = $canceladasContratadas . " UNION ALL " . $coordinadorCC;
 
             $canceladasApartadas = $canceladasApartadas . " UNION ALL " . $coordinadorCA;
-        }
+        }*/
 
         //General 1. Cuado la consulta va a ser hecho por primera vez por los minicharts
         if($general == '1' || $general){
