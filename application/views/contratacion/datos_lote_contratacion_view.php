@@ -879,7 +879,13 @@
 				},
 				{
 					"width": "8%",
-					data: 'fecha_validacion'
+					"data": function( d ){
+						if(d.fecha_validacion  == ' ' || d.fecha_validacion  == null || d.fecha_validacion  == ''   ){
+							return '<p> SIN ESPECIFICAR </p>';
+						}else{
+						return '<p>$ '+d.fecha_validacion+'</p>';
+						}
+					}
 				},
 				{
 					"width": "8%",
@@ -890,19 +896,31 @@
 				{
 					"width": "8%",
 					"data": function( d ){
-						return '<p>'+d.idStatusContratacion+'</p>';
+						if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
+							return '<p> SIN ESPECIFICAR </p>';
+						}else{
+							return '<p>'+d.idStatusContratacion+'</p>';
+						}
 					}
 				},
 				{
 					"width": "8%",
 					"data": function( d ){
-						return '<p>'+d.nombreCliente+'</p>';
+						if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
+							return '<p> SIN ESPECIFICAR </p>';
+						}else{
+							return '<p>'+d.nombreCliente+'</p>';
+						}
 					}
 				},
 				{
 					"width": "8%",
 					"data": function( d ){
-						return '<p>'+d.nombreCopropietario+'</p>';
+						if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
+							return '<p> SIN ESPECIFICAR </p>';
+						}else{
+							return '<p>'+d.nombreCopropietario+'</p>';
+						}
 					}
 				},
 				{
