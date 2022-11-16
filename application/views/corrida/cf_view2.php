@@ -4282,7 +4282,7 @@
 			}
 
 			$scope.onSelectChangec = function(condominio) {
-				$http.post('<?=base_url()?>index.php/Corrida/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
+				$http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
 					function (response) {
 						$scope.lotes = response.data;
 
@@ -4369,7 +4369,7 @@
 					});
 			}
 			$scope.onSelectChangel = function(lote) {
-				$http.post('<?=base_url()?>index.php/Corrida/getinfoLoteDisponible',{lote: lote.idLote}).then(
+				$http.post('<?=base_url()?>index.php/queryInventario/getinfoLoteDisponible',{lote: lote.idLote}).then(
 					function (response) {
 
 						/*Reinicia los valores del arreglo que trae descuentos*/
@@ -4458,6 +4458,8 @@
 						calcularCF();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        console.log('response.data[0]', response.data[0]);
+                        console.log('response.data[0].idLote', response.data[0].idLote);
 						$http.post('<?=base_url()?>index.php/corrida/descuentos',{lote: response.data[0].idLote}).then(
 							function(paquetes){
 								$scope.paquetes = paquetes.data;

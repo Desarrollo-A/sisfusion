@@ -3077,7 +3077,7 @@ legend {
             }else{
                 $response['message'] = 'ERROR';
             }
-
+            
             $data_documento_update = array(
                 'modificado' => date('Y-m-d H:i:s'),
                 'idUser' => $this->session->userdata('id_usuario'),

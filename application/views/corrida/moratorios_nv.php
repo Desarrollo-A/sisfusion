@@ -345,7 +345,7 @@
                             <small id="plazoHelp" class="form-text text-muted">Ingresa el plazo en meses.</small>
                         </div>
                         <div class="form-group  col-sm-12 col-md-4 col-lg-4">
-                            <label for="fechaField">Fecha de pago</label>
+                            <label for="fechaField">Fecha de corte</label>
                             <input type="date" class="form-control" id="fechaField" aria-describedby="dateBillHelp" placeholder="14/08/2020"
                                    ng-model="fechaField">
                             <small id="dateBillHelp" class="form-text text-muted">&nbsp;</small>
@@ -375,7 +375,6 @@
                             <br>
                             <button class="btn btnCalcular" type="button" ng-click="showVals()">CALCULAR</button>
                         </div>
-                    </div>
 
 
                     <input type="hidden" ng-model="msiField" value="0" id="msiField">
