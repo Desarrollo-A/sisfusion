@@ -617,6 +617,7 @@ class Postventa extends CI_Controller
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['personalidad'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
+      //  print_r($resDecode->data[0]);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
             "rfc" => $_POST['rfc'],
@@ -628,10 +629,12 @@ class Postventa extends CI_Controller
         ($_POST['municipiof'] == '' || $_POST['municipiof'] == null) ? '': $dataFiscal['municipio'] =  $_POST['municipiof'];
         ($_POST['estadof'] == '' || $_POST['estadof'] == null) ? '': $dataFiscal['estado'] =  $_POST['estadof'];
         ($_POST['cpf'] == '' || $_POST['cpf'] == null) ? '': $dataFiscal['cp'] =  $_POST['cpf'];
-
+ 
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
+       // print_r($responseInsert);
         if($responseInsert->resultado == 1){
+            
             $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
             if (!$usuarioJuridico) {
                 $this->Postventa_model->restablecerJuridicosAsignados();
@@ -639,7 +642,18 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-
+            /*echo $personalidad;
+            echo "<br>";
+            echo $idLote;
+            echo "<br>";
+            echo $idCliente;
+            echo "<br>";
+            echo $idPostventa;
+            echo "<br>";
+            print_r($resDecode->data[0]);
+            echo "<br>";
+            echo $usuarioJuridico->id_usuario;
+            echo "<br>";*/
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
                 $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
@@ -2015,7 +2029,7 @@ class Postventa extends CI_Controller
         //     ),
         // );
         $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/updateDFiscales';
-
+       // $url = base_url().'backCobranza/index.php/PaginaCDM/updateDFiscales';
         // $fields_string = http_build_query($dataFiscal);
         $ch = curl_init($url);
         # Setup request to send json via POST.
@@ -2028,6 +2042,7 @@ class Postventa extends CI_Controller
         curl_close($ch);
         // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
+      //  print_r($resDecode);
         return $resDecode; 
     }
 
