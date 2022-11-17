@@ -770,9 +770,11 @@ class Contraloria_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function getLotesTwo($idCondominio)
-	{
-		$query = $this->db-> query("SELECT * FROM lotes WHERE status = 1 and idCondominio = $idCondominio AND idStatusContratacion IN (1, 2, 3)");
+	public function getLotesTwo($idCondominio) {
+		$query = $this->db-> query("SELECT * FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
+		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
 		return $query->result_array();
 	}
 
