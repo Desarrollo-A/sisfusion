@@ -718,7 +718,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'asesor';
 
     typeSale = validateTypeSale();
-    getLastSales(typeSale);
+    getLastSales(typeSale, rol, [0, null, null, null, null, null, rol]);
     fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
@@ -808,7 +808,7 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     });
 }
 
-function getLastSales(typeSale){
+function getLastSales(typeSale, rol, leadersList){
     let beginDate = $('#tableBegin').val()
     let endDate = $('#tableEnd').val()
     $('.loadChartMini').removeClass('d-none');
@@ -821,7 +821,14 @@ function getLastSales(typeSale){
             tipoChart:'na', 
             beginDate: beginDate, 
             endDate: endDate,
-            typeSale: typeSale
+            typeSale: typeSale,
+            type: rol,
+            render: 1,
+            asesor: leadersList[1],
+            coordinador: leadersList[2],
+            gerente: leadersList[3],
+            subdirector: leadersList[4],
+            regional: leadersList[5],
         },
         dataType: 'json',
         cache: false,

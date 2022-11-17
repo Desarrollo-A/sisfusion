@@ -454,9 +454,9 @@ class Caja_outside extends CI_Controller
         }
 
 
-        if ($datosView->id_coordinador == $datosView->id_asesor) {
+        if ($datosView->id_coordinador == $datosView->id_asesor && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
             $voBoCoord = 0;
-        } else if ($datosView->id_coordinador == $datosView->id_gerente) {
+        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
             $voBoCoord = 0;
         } else {
             $voBoCoord = $datosView->id_coordinador;
@@ -1618,7 +1618,7 @@ class Caja_outside extends CI_Controller
 
                         $arreglo_asesores = array();
                         $arreglo_asesores["id_gerente"] = $value->idGerente;
-                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor ? 0 : $value->idCoordinador;
+                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 && $value->idAsesor != 6626 ? 0 : $value->idCoordinador;
                         $arreglo_asesores["id_asesor"] = $value->idAsesor;
                         $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
                         $arreglo_asesores["estatus"] = 1;
@@ -1841,7 +1841,7 @@ class Caja_outside extends CI_Controller
                 $token_data[0]['existe'] = 1;
                 $token_data[0]['token'] = $data->token;
 
-            }
+            } 
 
             //VERIFICAMOS LA IDENTIDAD DEL ASESOR
             if ($this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $data->idAsesor . " AND contrasena = '" . encriptar($data->name) . "'")->num_rows() > 0) {
@@ -1861,9 +1861,9 @@ class Caja_outside extends CI_Controller
 
                     $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
 
-                    if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor) {
+                    if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
-                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente) {
+                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
                     } else {
                         $voBoCoord = $data->asesores[0]->idCoordinador;

@@ -71,13 +71,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group label-floating is-focused">
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
-                                                        <input class="d-none generate" type="radio" name="estatus" id="estatusL" value="">
-                                                        <label class="w-50">Liquidado</label>
-                                                        <input class="d-none find-results" type="radio" name="estatus" id="estatusSL" value="">
-                                                        <label class="w-50">Sin liquidar</label>
+                                                        <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
+                                                        <label class="btn btn-secondary w-50" for = "estatusL">Liquidado</label>
+
+                                                        <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
+                                                        <label class="btn btn-secondary w-50" for = "estatusSL">Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,14 +102,28 @@
                                                 </div>
                                                 <div class="col-md-7">
                                                     <div class="row">
-                                                        <div class="col-md-12 pl-0">
+                                                        <!-- CAMPOS PARA LA CAPTURA DEL NOMBRE Y APELLIDOS POR SEPARADO -->
+                                                        <div class="col-md-12 pl-0" id = "nom2_cli">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Nombre Completo</label>
                                                                 <input id="nombre2" name="nombre2" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 pl-0">
+                                                        <div class="col-md-4 pl-0" id = "ape1_cli">
                                                             <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Apellido Paterno</label>
+                                                                <input id="ape1" name="ape1" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0" id = "ape2_cli">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label label-gral">Apellido Materno</label>
+                                                                <input id="ape2" name="ape2" class="form-control input-gral" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <!--------------------------------------------------------------->
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="cont_ocu form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Ocupación</label>
                                                                 <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text" disabled>
                                                             </div>
@@ -120,21 +135,22 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
-                                                            <div class="form-group label-floating is-focused">
+                                                            <div class="form-group label-floating is-focused" id="EdoCiv">
                                                                 <label class="control-label label-gral">Estado Civil</label>
-                                                                <input id="ecivil" name="ecivil" class="form-control input-gral" type="text" disabled>
+                                                                <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                             </div>
                                                         </div>    
                                                         <div class="col-md-4 pl-0">
-                                                            <div class="form-group label-floating is-focused">
+                                                            <div class="form-group label-floating is-focused" id="RegCon">
                                                                 <label class="control-label label-gral">Régimen Conyugal</label>
-                                                                <input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>
+                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
+                                                                <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label label-gral">Correo Electrónico</label>
-                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail" disabled>
+                                                                <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
@@ -222,7 +238,7 @@
                                                     </a> -->
                                                 </div>
                                                 <div class="col-md-7 d-flex justify-end">
-                                                    <div class="w-50">
+                                                    <div class="cont-button_apl w-50">
                                                         <button class="btn-gral-data find_doc" id="aportaciones" type="submit">
                                                         <i class="fas fa-spinner fa-spin" style="display: none"></i>
                                                         <span class="btn-text">Iniciar Proceso.</span>

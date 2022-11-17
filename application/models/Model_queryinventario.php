@@ -103,7 +103,7 @@
 
 
         }else if( $this->session->userdata('id_rol')==33 || $this->session->userdata('id_rol') == 17) {
-            $statusLoteVar = '1, 3';
+            $statusLoteVar = '2, 3';
             $idAsesor = "";
             $statuscl = '';
             $statuslt = 'lo.status IN (0,1,2,3) AND';
@@ -157,7 +157,7 @@
 
 		$this->db->select('idLote,nombreLote, total, sup, precio, porcentaje, enganche, condominios.msni, descSup1, descSup2, referencia, datosbancarios.banco, datosbancarios.cuenta, datosbancarios.empresa, datosbancarios.clabe');
 		$this->db->join('condominios', 'lotes.idCondominio = condominios.idCondominio', 'left');
-		$this->db->join('residencial', 'condominios.idResidencial = residencial.idResidencial', 'left');
+		$this->db->join('residenciales', 'condominios.idResidencial = residenciales.idResidencial', 'left');
 		$this->db->join('datosbancarios', 'condominios.idDBanco = datosbancarios.idDBanco', 'left');
 
 

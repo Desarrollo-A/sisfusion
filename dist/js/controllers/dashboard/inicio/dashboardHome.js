@@ -785,7 +785,7 @@ function getRolDR(idUser){
     });
 }
 
-function createAccordionsPR(option, render, rol, titleDinamic){
+function createAccordionsPR(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
@@ -1042,7 +1042,7 @@ function getFirstFilter(rol, secondRol){
     }, 'json');
 }
 
-function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
+function fillBoxAccordionsPR(option, rol, render) {
     if (rol == 5 && (idUser == 28 && idUser == 30))
         rolEspecial = 59;
     else if (rol == 5 && (idUser != 28 && idUser != 30))
@@ -1053,7 +1053,7 @@ function fillBoxAccordionsPR(option, rol, render, titleDinamic) {
         rolEspecial = 2
     else rolEspecial = rol;
 
-    createAccordionsPR(option, render, rolEspecial, titleDinamic);
+    createAccordionsPR(option, render, rolEspecial);
     multirol();
 }
 

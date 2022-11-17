@@ -432,7 +432,7 @@
 					<div class="form-group">
 						<label for="plazoField">Plazo</label>
 						<input type="number" class="form-control" id="plazoField" aria-describedby="plazoHelp" placeholder="30"
-							   ng-model="plazoField" max="120">
+							   ng-model="plazoField" max="240">
 						<small id="plazoHelp" class="form-text text-muted">Ingresa el plazo en meses.</small>
 					</div>
 					<div class="form-group">
@@ -948,6 +948,7 @@
                     plazo: $scope.plazoField,
                     im: $scope.imField,
                     si: $scope.SIField,//$scope.SIField
+                    meses: ($scope.age_plan*12),
                     fechapago: $scope.fechaField,
                     mesesSinInteresP1: $scope.msiField,
                     mesesSinInteresP2: 120,
@@ -1945,7 +1946,7 @@
                         /*Empieza range3*/
                         $scope.p3 = ($scope.infoMoratorio.interes_p3 *  Math.pow(1 + $scope.infoMoratorio.interes_p3, $scope.infoMoratorio.plazo - 120) *$scope.infoMoratorio.saldoNormal) / ( Math.pow(1 + $scope.infoMoratorio.interes_p3, $scope.infoMoratorio.plazo - 120)-1);
                         var range3=[];
-                        for (var i = 121; i < $scope.infoMoratorio.plazo + 1; i++) {
+                        for (var i = 120; i < $scope.infoMoratorio.plazo + 1; i++) {
 
                             if(mes == 13){
                                 mes = '01';
@@ -2020,7 +2021,6 @@
                         }
 						/*Termina range3*/
                         $scope.range3= range3;
-
 
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2).concat($scope.range3);
