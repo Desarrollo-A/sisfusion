@@ -475,7 +475,7 @@
                         var lblPenalizacion = '';
 
                         if (d.penalizacion == 1){
-                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;">Penalización + 90 días</span></p>';
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;"> + 90 días</span></p>';
                         }
 
                         if(d.bonificacion >= 1){
