@@ -93,9 +93,4 @@
     idUser = <?= $this->session->userdata('id_usuario') ?>;
     var idLider = <?= $this->session->userdata('id_lider') ?>;
     var  base_url = "<?=base_url()?>";
-
-    if ( userType == 5 && ( idUser == 28 || idUser == 30 ) ){
-        userType = 59;
-        idUser = idLider;
-    }
 </script>

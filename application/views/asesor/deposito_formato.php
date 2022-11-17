@@ -112,11 +112,15 @@ $datos = array();
 	{
 		$readOnly = '';
 		$statsInput = '';
+        $html_action = '<form method="post" class="form-horizontal" action="'.base_url().'index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">';
+        $html_action_end = '</form>';
 	}
 	else
 	{
 		$readOnly = 'readonly';
 		$statsInput = 'disabled';
+        $html_action = '';
+        $html_action_end = '';
 	}
 	if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752
 		|| $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810  || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834)
@@ -136,8 +140,8 @@ $datos = array();
 						<i class="material-icons">list</i>
 					</div>
 
-					<form method="post" class="form-horizontal" action="<?=base_url()?>index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">
-						<!-- <div class="card-content" style="background-image: url('<?=base_url()?>dist/img/ar4c.png'); background-repeat: no-repeat;"> -->
+                    <?php echo $html_action;?>
+                    <!-- <div class="card-content" style="background-image: url('<?=base_url()?>dist/img/ar4c.png'); background-repeat: no-repeat;"> -->
 						<div class="card-content">
 							<h4 class="card-title"><B>Depósito de seriedad</B> - Formato
                                 <?php if ($this->session->userdata('id_rol') == 17) { ?>
@@ -178,7 +182,7 @@ $datos = array();
 											<div class="radio">
 												<label style="font-size: 0.9em;">
 													<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-														<?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22) {
+														<?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) {
 															echo "checked=true";
 														}
 														?>  value="2" style="font-size: 0.9em;"/> León
@@ -281,6 +285,10 @@ $datos = array();
 											</div>
 										</div>
 									</div>
+
+
+
+
 								</div>
 
 								
@@ -417,6 +425,35 @@ $datos = array();
 								</div>
 
 							</div>
+
+                            <div class="row">
+                                <label class="col-sm-2 label-on-left">TIPO NACIONALIDAD:</label>
+                                <div class="col-sm-10 checkbox-radios">
+                                    <div class="col-md-2 checkbox-radios required">
+                                        <div class="radio">
+                                            <label style="font-size: 0.9em;">
+                                                <input type="radio" name="tipoNc_valor" onclick="return false;" id="tipoNc_valor" value="0" <?php echo $statsInput; ?>
+                                                    <?php if ($cliente[0]->tipo_nc == 0) {
+                                                        echo "checked=true";
+                                                    }
+                                                    ?>> NACIONAL
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 checkbox-radios required">
+                                        <div class="radio">
+                                            <label style="font-size: 0.9em;">
+                                                <input type="radio" name="tipoNc_valor" onclick="return false;" id="tipoNc_valor" value="1" <?php echo $statsInput; ?>
+                                                    <?php if ($cliente[0]->tipo_nc == 1) {
+                                                        echo "checked=true";
+                                                    }
+                                                    ?>> EXTRANJERO
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 							<hr>
 
@@ -1969,8 +2006,8 @@ $datos = array();
 								<a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>" target="_blank" class="btn btn-primary">IMPRIMIR DEPOSITO SERIEDAD</a>
 							<?php }?>
 						</div>
-					</form>
-				</div>
+                    <?php echo $html_action_end;?>
+                </div>
 			</div>
 		</div>
 	</div>
