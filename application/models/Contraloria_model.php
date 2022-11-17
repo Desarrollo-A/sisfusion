@@ -252,7 +252,7 @@ class Contraloria_model extends CI_Model {
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
-		l.ubicacion, l.tipo_venta, l.observacionContratoUrgente as vl,oxc.nombre as nacionalidad,asesor.nacionalidad as nacion,
+		l.ubicacion, l.tipo_venta, l.observacionContratoUrgente as vl,oxc.nombre as nacionalidad,cl.tipo_nc as nacion,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -264,13 +264,13 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		LEFT JOIN opcs_x_cats oxc ON asesor.nacionalidad =  oxc.id_opcion and oxc.id_catalogo = 11
+		LEFT JOIN opcs_x_cats oxc ON cl.tipo_nc =  oxc.id_opcion and oxc.id_catalogo = 78
 		WHERE l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
 		AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,  oxc.nombre,asesor.nacionalidad,
+		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,  oxc.nombre,cl.tipo_nc ,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 		l.tipo_venta, l.observacionContratoUrgente,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
@@ -770,9 +770,11 @@ class Contraloria_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function getLotesTwo($idCondominio)
-	{
-		$query = $this->db-> query("SELECT * FROM lotes WHERE status = 1 and idCondominio = $idCondominio AND idStatusContratacion IN (1, 2, 3)");
+	public function getLotesTwo($idCondominio) {
+		$query = $this->db-> query("SELECT * FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
+		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
 		return $query->result_array();
 	}
 
@@ -1099,5 +1101,9 @@ class Contraloria_model extends CI_Model {
 		$cmd = "SELECT * FROM opcs_x_cats WHERE id_catalogo = 77 AND estatus = 1 ";
 		$query  = $this->db->query($cmd);
 		return $query->result();
+	}
+		public function updateNaci ($cliente,$array_cliente) {
+		$this->db->where("id_cliente",$cliente);
+        $this->db->update('clientes',$array_cliente);
 	}
 }

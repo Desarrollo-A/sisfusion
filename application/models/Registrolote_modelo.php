@@ -662,13 +662,9 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 
-	public function getResidencialQro()
-	{
-		$this->db->select('idResidencial, nombreResidencial, descripcion');
-		$this->db->from('residenciales');
-		$this->db->where('status', '1');
-		$this->db->order_by('nombreResidencial', 'asc');
-		$query = $this->db->get();
+	public function getResidencialQro() {
+		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR, descripcion))) nombreResidencial, idResidencial, descripcion, 
+		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
 		return $query->result_array();
 	}
 
@@ -6246,10 +6242,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         }
     }
 
-    public function getLotesGralTwo($condominio,$residencial)
-	{
-		$query = $this->db->query("SELECT idLote,nombreLote, idStatusLote FROM lotes WHERE status = 1 AND idCondominio = $condominio AND idStatusContratacion IN (1, 2, 3)");
-		if($query){
+    public function getLotesGralTwo($condominio, $residencial) {
+		$query = $this->db-> query("SELECT * FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
+		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
+		if($query) {
 			$query = $query->result_array();
 			return $query;
 		}
