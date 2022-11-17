@@ -83,7 +83,7 @@ class Reporte extends CI_Controller {
             $id = 2;
         }
         //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
-        else if( $rol == 5 && ( $id != 28 || $id != 30 )){
+        else if( $rol == 5 && ( $id == 28 || $id == 30 )){
             $rol = 1;
             $id = 2;
         }
