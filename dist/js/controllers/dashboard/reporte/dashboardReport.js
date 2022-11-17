@@ -8,7 +8,7 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69'){
+    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2' ){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -141,7 +141,7 @@ async function initReport(){
     asDirector(userType);
     typeSale = validateTypeSale();
     getLastSales(typeSale);
-    // let rol = userType == 2 ? await getRolDR(idUser): userType; (TEMPORAL)
+    let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
     // if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' ) (TEMPORAL)
@@ -951,7 +951,6 @@ function monthName(mon){
 }
 
 function getRolDR(idUser){
-    debugger;
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",

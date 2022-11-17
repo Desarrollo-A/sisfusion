@@ -73,7 +73,7 @@ class Reporte extends CI_Controller {
         $rol = $this->session->userdata('id_rol');
 
         //Provisional para simular rol como director
-        if ( $rol == 18 || $rol == 4 || $rol == 63 || $rol == 33 || $rol == 58 || $rol == 69){
+        if ( $rol == 18 || $rol == 4 || $rol == 63 || $rol == 33 || $rol == 58 || $rol == 69 || $rol == 2){
             $rol = 1;
             $id = 2;
         }
