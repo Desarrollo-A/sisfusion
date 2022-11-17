@@ -8,15 +8,16 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2' ){
+    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' ){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
-    //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
-    else if( userType == '5' && ( idUser != '28' || idUser != '30' )){
+    //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
+    else if( userType == '5' && ( idUser == '28' || idUser == '30' )){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
+    
     else{
         rolOnReport = userType;
         idUserOnReport = idUser;
@@ -138,13 +139,13 @@ function readyReport(){
 }
 
 async function initReport(){
+    console.log("init");
     asDirector(userType);
     typeSale = validateTypeSale();
     getLastSales(typeSale);
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
-    // if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' ) (TEMPORAL)
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
     else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
