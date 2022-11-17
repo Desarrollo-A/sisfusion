@@ -8,7 +8,7 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69'){
+    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2' ){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -140,11 +140,10 @@ function readyReport(){
 async function initReport(){
     asDirector(userType);
     typeSale = validateTypeSale();
-    getLastSales(typeSale, rolOnReport, [0, null, null, null, null, null, rolOnReport]);
-    // let rol = userType == 2 ? await getRolDR(idUser): userType; (TEMPORAL)
+    getLastSales(typeSale);
+    // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
-    // if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' ) (TEMPORAL)
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
     else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
@@ -958,7 +957,6 @@ function monthName(mon){
 }
 
 function getRolDR(idUser){
-    debugger;
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
