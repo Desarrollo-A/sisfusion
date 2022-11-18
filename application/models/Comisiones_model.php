@@ -349,7 +349,7 @@ public function getDataDispersionPago($val = '') {
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
             LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
-            WHERE (l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) OR (l.idStatusContratacion >= 9
+            WHERE (l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250, 31850 , 32573 )) OR (l.idStatusContratacion >= 9
             AND cl.status = 1 AND l.status = 1
             AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) 
             AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) AND cl.fechaApartado >= '2020-03-01'
@@ -8973,7 +8973,10 @@ function descuentos_universidad($clave , $data){
         $ConsultCoordinador = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 9");
         $ConsultGerente = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 3");  
        
-        $Consult = $this->db->query("SELECT pe.id_penalizacion, com.rol_generado, CONCAT('(', com.id_comision,',', com.id_usuario,',', (((CASE WHEN com.rol_generado = 3 THEN pp.gerente/".$ConsultGerente->row()->val." WHEN com.rol_generado = 7 THEN pp.asesor/".$ConsultAsesor->row()->val." WHEN com.rol_generado = 9 THEN pp.coordinador/".$ConsultCoordinador->row()->val." END))*(l.totalNeto2/100)),', GETDATE(), GETDATE(), 1, 28,1 ,','''NUEVO DESCUENTO +90 DÍAS''', ', 1, NULL, NULL, 1)') AS comisionista
+        $Consult = $this->db->query("SELECT pe.id_penalizacion, com.rol_generado, CONCAT('(', com.id_comision,',', com.id_usuario,',', (((CASE WHEN com.rol_generado = 3 THEN pp.gerente/".$ConsultGerente->row()->val." WHEN com.rol_generado = 7 THEN pp.asesor/".$ConsultAsesor->row()->val." WHEN com.rol_generado = 9 THEN pp.coordinador/".$ConsultCoordinador->row()->val." END))*(l.totalNeto2/100)),', GETDATE(), GETDATE(), 1, 28,1 ,','''NUEVO DESCUENTO +90 DÍAS''', ', 1, NULL, NULL, 1)') AS comisionista, 
+
+        CONCAT(' abono_neodata - ', (((CASE WHEN com.rol_generado = 3 THEN pp.gerente/1 WHEN com.rol_generado = 7 THEN pp.asesor/1 WHEN com.rol_generado = 9 THEN pp.coordinador/1 END))*(l.totalNeto2/100)), ' WHERE id_comision = ',com.id_comision, ' AND estatus = 1 ' ) AS update_consult
+
         FROM penalizaciones pe
         INNER JOIN lotes l ON l.idLote = pe.id_lote
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
@@ -8984,6 +8987,7 @@ function descuentos_universidad($clave , $data){
         for($a = 0; $a < sizeof($Consult) ; $a++){
           // echo "INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." <br>";
           $this->db->query("INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." ");
+          $this->db->query("UPDATE pago_comision_ind SET abono_neodata = ".$Consult[$a]['update_consult']." ");
         }
         return true;
   
