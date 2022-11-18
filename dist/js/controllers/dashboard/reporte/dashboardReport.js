@@ -139,10 +139,9 @@ function readyReport(){
 }
 
 async function initReport(){
-    console.log("init");
     asDirector(userType);
     typeSale = validateTypeSale();
-    getLastSales(typeSale);
+    getLastSales(typeSale, rolOnReport);
     // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
@@ -778,7 +777,15 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate, typeSale: typeSale},
+        data: {
+            general: 0, 
+            tipoChart: type, 
+            beginDate: beginDate, 
+            endDate: endDate, 
+            typeSale: typeSale, 
+            type: rolOnReport,
+            render: 1
+        },
         dataType: 'json',
         cache: false,
         success: function(data){

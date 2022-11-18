@@ -149,6 +149,7 @@ class Reporte_model extends CI_Model {
 
     public function setFilters($typeSale = '', $id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction = null, $leader = null) {
         $filterTypeSale = '';
+        $comodin = '';
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if($typeSale == "1"){
             $filterTypeSale = 'AND totalValidado  != 0.00 AND totalValidado IS NOT NULL';
