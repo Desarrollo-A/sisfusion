@@ -2153,8 +2153,12 @@ $i = 0;
     $fechaVenc=$this->input->post('fechaVenc');
     $totalNeto2=$this->input->post('totalNeto2');
 	$rl=$this->input->post('rl');
+	$naci=$this->input->post('naci');
     $charactersNoPermit = array('$',',');
     $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
+	
+	$array_cliente=array();
+	$array_cliente["tipo_nc"]=$naci;
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]=9;
@@ -2182,8 +2186,8 @@ $i = 0;
 	// $arreglo2["rl"]=$rl;
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
-
-	$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
+	$resultNACI = $this->Contraloria_model->updateNaci($idCliente, $array_cliente);
+	//$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
 
 	if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
