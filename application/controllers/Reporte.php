@@ -54,7 +54,6 @@ class Reporte extends CI_Controller {
 
     public function getDataChart() {
         $currentYear = date("Y");
-        $coordinadorVC = ''; $coordinadorVA = ''; $coordinadorCC = ''; $coordinadorCA = ''; $coordinador = false;
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
         $typeSale = $this->input->post('typeSale');
@@ -162,13 +161,6 @@ class Reporte extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-    }
-    public function get4MonthsRequest(){
-        $data = $this->get4Months();
-        if($data != null) {
-            echo json_encode($data, JSON_NUMERIC_CHECK);
-        }
-        else echo json_encode(array());
     }
 
     public function getLotesInformation(){
