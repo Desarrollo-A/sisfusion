@@ -808,7 +808,7 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     });
 }
 
-function getLastSales(typeSale, rol, leadersList){
+function getLastSales(typeSale, rol){
     let beginDate = $('#tableBegin').val()
     let endDate = $('#tableEnd').val()
     $('.loadChartMini').removeClass('d-none');
@@ -823,12 +823,7 @@ function getLastSales(typeSale, rol, leadersList){
             endDate: endDate,
             typeSale: typeSale,
             type: rol,
-            render: 1,
-            asesor: leadersList[1],
-            coordinador: leadersList[2],
-            gerente: leadersList[3],
-            subdirector: leadersList[4],
-            regional: leadersList[5],
+            render: 1
         },
         dataType: 'json',
         cache: false,
