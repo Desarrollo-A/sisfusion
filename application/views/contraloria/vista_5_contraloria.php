@@ -181,6 +181,7 @@ $datos = array();
                                                 <th>F.VENC</th>
                                                 <th>UC</th>
                                                 <th>SEDE</th>
+												<th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
