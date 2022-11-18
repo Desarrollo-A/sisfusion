@@ -74,64 +74,7 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
         }
         
-        $id = $this->session->userdata('id_usuario');
-        $rol = $this->session->userdata('id_rol');
-
-        //Provisional para simular rol como director
-        if ( $rol == 18 || $rol == 4 || $rol == 63 || $rol == 33 || $rol == 58 || $rol == 69 || $rol == 2){
-            $rol = 1;
-            $id = 2;
-        }
-        //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
-        else if( $rol == 5 && ( $id == 28 || $id == 30 )){
-            $rol = 1;
-            $id = 2;
-        }
-
-        if( $rol == 2 || $rol == 5){
-            if ( $rol == 5 ) $id = $this->session->userdata('id_lider'); //Se asignara id de su lider (para asistentes de dirección y subdirección)
-
-            $condicion_x_rol = $this->validateRegional($id);
-            $getRol = $this->Reporte_model->validateRegional($id);
-
-            if(count($getRol) > 1){
-                if( ( $rol == 5 || $rol == 2 ) && ( $id == 28 || $id == 30 ) ) $rol = 59; //Se asigna rol de dto. regional y  subdto.
-                
-                $coordinador = true;
-                $arraySalesBySubdir = $this->chartRegional($id, $beginDate, $endDate);
-                $coordinadorVC = $arraySalesBySubdir[0];
-                $coordinadorVA = $arraySalesBySubdir[1];
-                $coordinadorCC = $arraySalesBySubdir[2];
-                $coordinadorCA = $arraySalesBySubdir[3]; 
-            }
-            else $rol = 2;//Validación para asistentes de dto. regional, se asigna rol especial
-
-        }
-        else if( $rol == 3 || $rol == 6 ){
-            if( $rol == 6 ){ //Validación para asistente gte
-                $id = $this->session->userdata('id_lider');
-                $rol = 3;
-            }
-            $condicion_x_rol = ' AND cl.id_gerente = ' . $id;
-        }
-        else if( $rol == 7 ){
-            $condicion_x_rol = ' AND cl.id_asesor = ' . $id;
-        }
-        else if( $rol == 9 ){
-            $condicion_x_rol = ' AND cl.id_coordinador = ' . $id;
-            $rol = 7;
-            $coordinador = true;
-            $arraySalesByCoor = $this->chartCoordinator($id, $beginDate, $endDate);
-            $coordinadorVC = $arraySalesByCoor[0];
-            $coordinadorVA = $arraySalesByCoor[1];
-            $coordinadorCC = $arraySalesByCoor[2];
-            $coordinadorCA = $arraySalesByCoor[3]; 
-        }
-        else{
-            $condicion_x_rol = '';
-        }
-
-        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $rol, $condicion_x_rol, $coordinador, $coordinadorVC, $coordinadorVA, $coordinadorCC, $coordinadorCA, $beginDate, $endDate, $typeSale);
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $id_rol, $beginDate, $endDate, $typeSale, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional]);
 
         //Obtenemos solo array de ventas contratadas
         $vcArray = array_filter($data, function($element){
