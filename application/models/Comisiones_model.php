@@ -8987,8 +8987,11 @@ function descuentos_universidad($clave , $data){
         for($a = 0; $a < sizeof($Consult) ; $a++){
           // echo "INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." <br>";
           $this->db->query("INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." ");
+          $this->db->query("INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." ");
           $this->db->query("UPDATE pago_comision_ind SET abono_neodata = ".$Consult[$a]['update_consult']." ");
         }
+        // $this->db->query("UPDATE pago_comision_ind SET abono_neodata = ".$Consult[$a]['update_consult']." ");
+
         return true;
   
       }
