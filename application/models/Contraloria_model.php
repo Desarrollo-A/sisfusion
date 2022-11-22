@@ -1073,14 +1073,15 @@ class Contraloria_model extends CI_Model {
         return $query->result_array();
     }
 	public function validate90Dias($idLote,$idCliente,$usuario){
-		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias 
+		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias, c.tipo_nc  
 		FROM clientes c 
 		INNER JOIN lotes l on l.idCliente=c.id_cliente 
 		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote")->result_array();
 		if(count($validation90) > 0){
-			if($validation90[0]['dias'] > 89){
+			if($validation90[0]['dias'] > 89 && $validation90[0]['tipo_nc'] == 0){
 				$dias = $validation90[0]['dias'];
-				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus=1")->result_array();
+				$tipo_nc0 = $validation90[0]['tipo_nc'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus = 1 AND tipo_cliente = $tipo_nc0")->result_array();
 				$estatus= $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
 				$datos = array(
 					'id_lote' => $idLote,
@@ -1092,7 +1093,24 @@ class Contraloria_model extends CI_Model {
 					'creado_por' => $usuario,
 					'fecha_creacion' => date('Y-m-d H:i:s'),
 					'modificado_por' => $usuario,
-				);
+ 				);
+				$this->db->insert('penalizaciones',$datos);
+			}else if ($validation90[0]['dias'] > 119 && $validation90[0]['tipo_nc'] == 1){
+				$dias = $validation90[0]['dias'];
+				$tipo_nc1 = $validation90[0]['tipo_nc'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus = 1 AND tipo_cliente = $tipo_nc1")->result_array();
+				$estatus = $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
+				$datos = array(
+					'id_lote' => $idLote,
+					'id_cliente' => $idCliente,
+					'dias_atraso' => $dias,
+					'estatus' => $estatus,
+					'fecha_aprobacion' => date('Y-m-d H:i:s'),
+					'id_porcentaje_penalizacion' => $validationPorcentage[0]['id_porcentaje_penalizacion'],
+					'creado_por' => $usuario,
+					'fecha_creacion' => date('Y-m-d H:i:s'),
+					'modificado_por' => $usuario,
+ 				);
 				$this->db->insert('penalizaciones',$datos);
 			}
 		}
