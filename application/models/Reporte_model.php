@@ -669,7 +669,9 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
             CASE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
-            CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote
+            CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote,
+            FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -692,7 +694,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
-            CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre
+            CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             $statusLote = ($type == 4 || $type == 44) ? "<" : ">=";
@@ -704,7 +706,9 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
             CASE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
-            CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, st.nombreStatus, 'Cancelado' estatusLote, CONVERT(VARCHAR, hl.modificado, 103) fechaLiberacion, oxc.nombre motivoLiberacion
+            CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, st.nombreStatus, 'Cancelado' estatusLote, CONVERT(VARCHAR, hl.modificado, 103) fechaLiberacion, oxc.nombre motivoLiberacion,
+            FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -732,7 +736,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus,
             cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional,
-            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre
+            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado
             ORDER BY st.nombreStatus");
         }
         return $query;       
