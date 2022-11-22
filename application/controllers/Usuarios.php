@@ -316,30 +316,6 @@ class Usuarios extends CI_Controller
                 "sucursalch" => $sucursal
 
             );
-           /* $data = array(
-                "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
-                "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
-                "apellido_materno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
-                "rfc" => strtoupper(trim($_POST['rfc'])),
-                "correo" => strtoupper(trim($_POST['email'])),
-                "telefono" => strtoupper(trim($_POST['phone_number'])),
-                "id_sede" => $_POST['headquarter'],
-                "id_rol" => $_POST['member_type'],
-                "id_lider" => $id_lider,
-                "usuario" => trim($_POST['username']),
-                "contrasena" => encriptar($_POST['contrasena']),
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "sedech" => $sedeCH,
-                "sucursalch" => $sucursal,
-                "gerente_id" => $id_gerente,
-                "subdirector_id" => $id_subdirector,
-                "regional_id" => $id_regional,
-                "talla" => empty($_POST['talla']) ? 0 : $_POST['talla'],
-                "sexo" => !empty($_POST['sexo']) ? $_POST['sexo'] : 'S',
-                "tiene_hijos" => !empty($_POST['hijos']) ? $_POST['hijos'] : "NO" ,
-                "hijos_12" => !empty($_POST['noHijos']) ? $_POST['noHijos'] : 0   
-               );*/
             }
 
             if($usersCH == 0){
@@ -355,52 +331,12 @@ class Usuarios extends CI_Controller
         echo json_encode($response);
     }
 
-    /*public function changeUserStatus(){
-        if(isset($_POST) && !empty($_POST)){
-            $data = array(
-                "estatus" => $this->input->post("estatus"),
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-            $response = $this->Usuarios_modelo->changeUserStatus($data, $this->input->post("id_usuario"));
-            echo json_encode($response);
-        }
-    }*/
-
     public function getUserInformation($id_usuario)
     {
         $data = $this->Usuarios_modelo->getUserInformation($id_usuario);
         $data[0]['contrasena'] = desencriptar($data[0]['contrasena']);
         echo json_encode($data);
     }
-
-    /*public function updateUser(){
-        if($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 13 ){
-            $data = array(
-                "forma_pago" => $_POST['payment_method'],
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario')
-            );
-        } else {
-            $data = array(
-                "nombre" => $_POST['name'],
-                "apellido_paterno" => $_POST['last_name'],
-                "apellido_materno" => $_POST['mothers_last_name'],
-                "rfc" => $_POST['rfc'],
-                "correo" => $_POST['email'],
-                "telefono" => $_POST['phone_number'],
-                "id_sede" => $_POST['headquarter'],
-                "id_rol" => $_POST['member_type'],
-                "id_lider" => $_POST['leader'],
-                "usuario" => $_POST['username'],
-                "contrasena" => encriptar($_POST['contrasena']),
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario')
-            );
-        }
-        $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
-        echo json_encode($response);
-    }*/
 
     public function validateSession()
     {
