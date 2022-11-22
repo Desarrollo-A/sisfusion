@@ -195,6 +195,9 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
+                        <th>Precio de lista</th>
+                        <th>Precio con desc</th>
+                        <th>Casa</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
                         <th>Coordinador</th>
@@ -202,6 +205,7 @@
                         <th>Subdirector</th>
                         <th>Director regional</th>
                         <th>Fecha de apartado</th>
+                        <th>Días desde apartado</th>
                         <th>Estatus contratación</th>
                         <th>Estatus lote</th>
                     </tr>
@@ -235,6 +239,9 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
+                        <th>Precio de lista</th>
+                        <th>Precio con desc</th>
+                        <th>Casa</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
                         <th>Coordinador</th>
@@ -242,6 +249,7 @@
                         <th>Subdirector</th>
                         <th>Director regional</th>
                         <th>Fecha de apartado</th>
+                        <th>Días desde apartado</th>
                         <th>Estatus contratación</th>
                         <th>Estatus lote</th>
                         <th>Fecha liberación</th>
