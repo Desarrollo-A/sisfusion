@@ -7799,15 +7799,17 @@
 		echo json_encode($data);
 	}
 
+
 	public function updateAutsFromsDC()
 	{
 		$tamanoOfAuts = ($_POST['numeroDeRow']);
-
+    $response =  0 ;
 		$idCliente = ($_POST['idCliente']);
 		$idCondominio = ($_POST['idCondominio']);
 		$idLote = ($_POST['idLote']);
 		$idAut = ($_POST['id_autorizacion']);
-
+    $code = '';
+    $mensaje = '';
 		$nombreResidencial=($_POST['nombreResidencial']);
 		$nombreCondominio=($_POST['nombreCondominio']);
 		$nombreLote=($_POST['nombreLote']);
@@ -7884,19 +7886,34 @@
 				} else {
 					$type = 2;
 				}
+        $response = 1 ;
+        $code = 'success';
+        $mensaje = 'El usuario se ha registrado correctamente.';
+        // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('success', 1);
 			}
 			else
 			{
 				$type = 3;
+        $response = 2 ;
+        // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('error', 99);
+        $code = 'warning';
+        $mensaje = 'El usuario no ha registrado correctamente.';
 			}
 		}
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
 		if ($type == 1) {
 			$this->notifyUsers($this->session->userdata('id_usuario'), $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
 		}
-		redirect(base_url()."index.php/registroCliente/directivosAut");
+    $respuesta = array(
+      'code'    => $code,
+      'mensaje' => $mensaje,
+      'respuesta' => $response,
+      // donde 1 es succes y 2 es error
+    );
+    echo json_encode ($respuesta);
+		// redirect(base_url()."index.php/registroCliente/directivosAut");
 	}
 
 	public function notifyUsers($idAut, $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $motivoAut)
