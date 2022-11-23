@@ -132,7 +132,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
             }
         ],
     language: {
-        url: `${base_url}static/spanishLoader_v2.json`,
+        url: `${general_base_url}static/spanishLoader_v2.json`,
         paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
