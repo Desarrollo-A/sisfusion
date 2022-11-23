@@ -46,8 +46,6 @@
     if (isSignedIn) {
       $(".fc-googleSignIn-button").attr("style", "display: none !important");
       $(".fc-googleLogout-button").attr("style", "display: block !important");
-      // if (typeof(sideCalendar) != 'undefined') listUpcomingEvents();
-      // if (typeof(calendar) != 'undefined') listUpcomingEvents();
     } else {
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
@@ -66,7 +64,6 @@
       'maxResults': 2500,
       'orderBy': 'startTime'
     }).then(function(response) {
-      // if (typeof(sideCalendar) !== 'undefined') arrayEvents = [];
       var googleAppointments = response.result.items;
       for(let i = 0; i < googleAppointments.length; i++){
         if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
@@ -83,16 +80,6 @@
         
         calendar.refetchEvents();
       }
-        
-      // if(typeof(sideCalendar) != 'undefined'){
-        // sideCalendar.addEventSource({
-        //   title: 'sourceGoogle',
-        //   display:'block',
-        //   events: arrayEvents
-        // })
-        
-        // sideCalendar.refetchEvents();
-      // }
     });
   }
 
@@ -117,7 +104,6 @@
   
   function removeEvents(){
     let srcEventos;
-    // if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
     if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
   
     srcEventos.forEach(event => {
