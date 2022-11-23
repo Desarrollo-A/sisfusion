@@ -1,4 +1,4 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
@@ -37,7 +37,7 @@
 		<div class="modal fade" id="addFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
 			<div class="modal-dialog">
 				<div class="modal-content" >
-					<form method="POST" name="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>index.php/registroCliente/updateAutsFromsDC">
+					<form method="POST" name="sendAutsFromD" id="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>registroCliente/updateAutsFromsDC">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 							<center><h3 class="modal-title" id="myModalLabel"><b>Autorizaciones</b></h3></center>
@@ -51,10 +51,11 @@
 							<input type="hidden" name="id_autorizacion"  id="id_autorizacion" value="">
 							<input type="hidden" name="nombreResidencial"  id="nombreResidencial" value="">
 							<input type="hidden" name="nombreCondominio"  id="nombreCondominio" value="">
-							<input type="hidden" name="nombreLote"  id="nombreLote" value="">
+							<input type="hidden" name="nombreLote"  id="nombreLote" value="">						
 						</div>
 						<div class="modal-footer">
 							<button type="submit"  class="btn btn-primary">Enviar autorización</button>
+						
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
 						</div>
 					</form>
@@ -135,7 +136,7 @@
 				$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
 				$( 'input', this ).on('keyup change', function () {
 					if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-						$('#addExp').DataTable().column(i).search(this.value).draw();
+					//	$('#addExp').DataTable().column(i).search(this.value).draw();
 					}
 				});
 			}
@@ -210,7 +211,11 @@
 							}
 						}
 					}
-				}],
+				}, {
+                        text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
+                        titleAttr: 'Cargar vista inicial',
+                        className: "btn btn-azure reset-initial-values",
+                    }],
 				pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
@@ -385,9 +390,10 @@
 					method: 'POST',
 					type: 'POST',
 					success: function(data){
+						$('#addExp').DataTable().ajax.reload(null, false );
 						alerts.showNotification('top', 'right', 'Autorización enviada', 'success');
 						$('#addFile').modal('hide');
-						$('#addExp').DataTable().ajax.reload();
+					
 					},
 					error: function( data ){
 						alerts.showNotification('top', 'right', 'Error al enviar autorización', 'danger');
@@ -424,5 +430,67 @@
 			}
 			?>
 		});
+		$("#guardarImagen").click(function() {
+			alert('4444444444444444444');
+			//$("#fotoAlumno"),
+			let tr = $(this).closest('tr');
+	var comentario = $("#observaciones").val();
+    var archivos = $("#fotoAlumno")[0].files;
+    
+	if (archivos.length > 0) {
+      var foto = archivos[0]; //Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
+      var lector = new FileReader();
+	
+	  var formData = new FormData();
+
+      //Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
+      formData.append('foto', foto);
+	  formData.append('comentario', comentario);
+
+	  $.ajax({
+        url: "prueba",
+        data: formData,
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        success: function(resultados) {
+          console.log("Petición terminada. Resultados", resultados);
+        }
+
+      });
+    }
+  });
+  $(document).on("click", ".reset-initial-values", function () {
+	$('#addExp').DataTable().ajax.reload(null, false );
+        });
+
+
+  $("#sendAutsFromD").on('submit', function(e){
+    e.preventDefault();
+	
+	var formData = new FormData(this);
+    $.ajax({
+        type: 'POST',
+        url: 'updateAutsFromsDC',
+        data: formData,
+		dataType: "json",
+        contentType: false,
+        processData:false,
+        beforeSend: function(){
+            // Actions before send post
+        },
+        success: function(data) {
+			console.log(data.code);
+			console.log(data.mensaje);
+			console.log(data);
+                alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
+				$('#addFile').modal('hide');
+            
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
 	</script>
 </body>
