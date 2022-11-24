@@ -1,5 +1,5 @@
 <?php
-    require_once 'static/autoload.php';
+//    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 

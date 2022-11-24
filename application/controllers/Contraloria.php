@@ -2186,7 +2186,7 @@ $i = 0;
 	// $arreglo2["rl"]=$rl;
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
-	$resultNACI = $this->Contraloria_model->updateNaci($idCliente, $array_cliente);
+	$resultNACI = $this->General_model->updateRecord('clientes',  $array_cliente, 'id_cliente', $idCliente);
 	//$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
 
 	if($validate == 1){
