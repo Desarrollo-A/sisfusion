@@ -738,7 +738,8 @@ function update_estatus(){
           if( 
             ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
             ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122))
+            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ||
+            ($id_user_Vl == 7689))
             {
 
 
