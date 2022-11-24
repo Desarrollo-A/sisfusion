@@ -2366,6 +2366,7 @@ class Asesor extends CI_Controller
         $id_referencia1 = $this->input->post('id_referencia1');
         $id_referencia2 = $this->input->post('id_referencia2');
         $tipo_nc = $this->input->post('tipoNc_valor');
+        $printPagare = $this->input->post('imprimePagare');
 
         /*****MARTHA DEBALE OPTION*******/
 //        $descuento_mdb = $this->input->post('descuento_mdb');
@@ -2440,6 +2441,7 @@ class Asesor extends CI_Controller
         $arreglo_cliente["regimen_matrimonial"] = $regimen_matrimonial;
         $arreglo_cliente["modificado_por"] = $this->session->userdata('id_usuario');
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
+        $arreglo_cliente["printPagare"] = $printPagare;
         //$arreglo_cliente['lugar_prospeccion'] = $cm;
 //        $arreglo_cliente["descuento_mdb"] = $descuento_mdb;
 

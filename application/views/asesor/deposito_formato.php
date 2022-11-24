@@ -427,29 +427,59 @@ $datos = array();
 							</div>
 
                             <div class="row">
-                                <label class="col-sm-2 label-on-left">TIPO NACIONALIDAD:</label>
-                                <div class="col-sm-10 checkbox-radios">
-                                    <div class="col-md-2 checkbox-radios required">
-                                        <div class="radio">
-                                            <label style="font-size: 0.9em;">
-                                                <input type="radio" name="tipoNc_valor" onclick="return false;" id="tipoNc_valor" value="0" <?php echo $statsInput; ?>
-                                                    <?php if ($cliente[0]->tipo_nc == 0) {
-                                                        echo "checked=true";
-                                                    }
-                                                    ?>> NACIONAL
-                                            </label>
+                                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <label class="col-sm-2 label-on-left">RESIDENCIA:</label>
+                                    <div class="col-sm-10 checkbox-radios">
+                                        <div class="col-md-6 checkbox-radios required">
+                                            <div class="radio text-right">
+                                                <label style="  font-size: 0.9em;">
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_nc == 0) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> NACIONAL
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="font-size: 0.9em;">
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_nc == 1) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> EXTRANJERO
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
+                                    <label class="col-sm-4 label-on-left">¿IMPRIMES PAGARES?:</label>
+                                    <div class="col-sm-8 checkbox-radios">
+                                        <div class="col-md-3 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="  font-size: 0.9em;">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 1) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> SI
+                                                </label>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-md-3 checkbox-radios required">
-                                        <div class="radio">
-                                            <label style="font-size: 0.9em;">
-                                                <input type="radio" name="tipoNc_valor" onclick="return false;" id="tipoNc_valor" value="1" <?php echo $statsInput; ?>
-                                                    <?php if ($cliente[0]->tipo_nc == 1) {
-                                                        echo "checked=true";
-                                                    }
-                                                    ?>> EXTRANJERO
-                                            </label>
+                                        <div class="col-md-6 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="font-size: 0.9em;">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 0) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> NO
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2091,6 +2121,18 @@ $datos = array();
 		}
 	}
 
+    function checkResidencia(){
+        let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
+        console.log('valor', valor);
+        if(valor == 1){
+            //si es de residencia extranjera se debe de preguntar si imprime pagares
+            $('#pagarePart').removeClass('hide');
+        }else{
+            //se vuelve a quitar el apartado de pagares
+            $('#pagarePart').addClass('hide');
+
+        }
+    }
     function historialCampoHtml(data) {
         let html = '<h3>Historial de movimientos</h3>';
         data.forEach(columna => {
