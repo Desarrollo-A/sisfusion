@@ -687,6 +687,7 @@
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
+        id_usuario = <?= $this->session->userdata('id_usuario') ?>;
 
         $("#file-upload-extranjero").on('change', function() {
             $('#archivo-extranjero').val('');
@@ -870,7 +871,8 @@
 
                          if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)) ||
+                        (id_usuario == 7689)){
 
                             if ($('input[name="idT[]"]:checked').length > 0) {
                                 $('#spiner-loader').removeClass('hide');
@@ -1127,7 +1129,8 @@
 
                         if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
                         ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
+                        ((mes == 12 && dia == 24) || (mes == 12 && dia == 24 && hora <= 13)) ||
+                        (id_usuario == 7689))
                         {
 
                             switch (full.forma_pago) {
