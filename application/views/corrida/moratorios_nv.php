@@ -248,23 +248,27 @@
         {
             /* background:#000; *//*b3b3b3*/
             background-image: linear-gradient(to bottom, #000, #000);
-            position:absolute;
+            position:fixed;
             top:0%;
             left:0%;
             width:100%;
             height:100%;
-            z-index:3;
+            z-index:999;
             padding-top:200px;
             color:white;
             font-weight:300;
             opacity: 0.5;
-
-
             /* display:none; */
+        }
+        .center-align
+        {
+            text-align:center;
+            font-size:2em;
+            font-weight:lighter;
         }
         .hide
         {
-            display:none;
+            display:none !important;
         }
         .groupInputInteres input{
             text-align: center;
@@ -278,7 +282,80 @@
         {
             border: 1px solid green !important;
         }
+        .btn-a {
+            border-radius:19px !important;
+            height: 30px !important;
+            width: 30px !important;
+            padding: 5px 6px !important;
+        }
+        .btn-circle {
+            width: 50px;
+            height: 50px;
+            padding: 6px 0px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+            background-color: rgb(52,199,89);
+            color: #fff;
+            border: 0px;
+            transition-duration: 0.3s;
+            margin:4px;
+        }
+        .btn-circle:hover{
+            background-color: rgb(54,166,77);
+            color: #fff;
+            transition-duration: 0.3s;
+        }
+        .btn-float{
+            float: right;
+            bottom: 2%;
+            right: 3%;
+            position: fixed;
+        }
+        .blue{
+            background-color:#337ab7;
+            transition-duration: 0.3s;
+            color: white;
+        }
+        .blue:hover{
+            background-color: #003e97;
+            transition-duration: 0.3s;
+            color: white;
+        }
+        .buttons-excel {
+            box-shadow: none !important;
+            padding: 7px 25px !important;
+            color: #209E63 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #209E63 !important;
+            border-radius: 27px !important;
+            margin: -6px 18px 0px 0px !important
+        }
+
+        .buttons-excel i {
+            color: #209E63 !important;
+        }
+
+        .buttons-excel:hover {
+            background-color: #209E63 !important;
+            border: 1px solid #209E63 !important;
+            color:white !important;
+            background-image: none !important;
+        }
+
+        .buttons-excel:hover i {
+            color: #ffffff !important;
+        }
         /*Terminan los nuevos estilos*/
+        .bodyOverFlow{
+            overflow-y: hidden !important;
+        }
+        .justify-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
     </style>
 </head>
@@ -312,7 +389,7 @@
             <!--			</div>-->
             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 center-align " style="padding: 50px 0px 0px 0px">
                 <center><img src="https://maderascrm.gphsis.com/static/images/Logo_CM&TP_1.png" class="img-responsive" width="30%"></center>
-                <h3 class="font-light titleMoratorio" style="text-align: center;font-size: 2.5em;margin-top: 50px;background: #0a548b;color:white;padding: 7px">
+                <h3 class="font-light titleMoratorio" style="text-align: center;font-size: 1.5em;margin-top: 50px;background: #0a548b;color:white;padding: 7px">
                     Cálculo de <b>Moratorios</b>
                 </h3>
             </div>
@@ -334,7 +411,7 @@
                     <input type="hidden" ng-click="pagoACapital()" ng-model="pagoACapitalName" id="jsPagoImporte" name="importePagoJS">
                     <input type="hidden" ng-model="pagoADiasRetPosition" id="pagoADiasRetPositionJS" name="pagoDiasRetPosicionJS">
                     <input type="hidden" ng-model="diasRet" id="diasRetNumberJS" name="diasRetardoNumberJS">
-
+                    <input type="hidden" ng-model="fechaPago" id="fechaPagoJS" name="fechaPagoJS">
                     <input type="hidden" ng-model="siPosition" id="siPosJS" name="siCurrentNameJs">
 
                     <div class="row">
@@ -501,13 +578,14 @@
         $scope.dtoptions = DTOptionsBuilder;
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
-            DTColumnBuilder.newColumn('amc').withTitle('Pagados')
-                .renderWith(
-                    function (data, type, full, meta) {
-                        var inputCapital = '<input name="checkAd' + full["pago"] + '" type="checkbox" id="ckNoPay' + full["pago"] + '" onchange="noPayMen(' + full["pago"] + ')">';//onchange="pagoCapChange('+full["pago"]+')"
-                        return inputCapital;
-                    },
-                ),
+            // DTColumnBuilder.newColumn('amc').withTitle('Pagados')
+            //     .renderWith(
+            //         function (data, type, full, meta) {
+            //
+            //             var inputCapital = '<input name="checkAd' + full["pago"] + '" type="checkbox" id="ckNoPay' + full["pago"] + '" onchange="noPayMen(' + full["pago"] + ')">';//onchange="pagoCapChange('+full["pago"]+')"
+            //             return inputCapital;
+            //         },
+            //     ),
             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full)
             {return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))}),
@@ -520,10 +598,35 @@
                 .renderWith(
                     function(data, type, full, meta)
                     {
-                        var inputCapital = '<input name="importe'+full["pago"]+'" type="number" id="idImporte'+full["pago"]+'"   placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
+
+                        var inputCapital = '<input name="importe'+full["pago"]+'" id="idImporte'+full["pago"]+'"  type="tel" pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$" value="" data-type="currency" placeholder="Importe" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
                         var numberPay	 = '<input name="numberPay'+full["pago"]+'" type="hidden" id="payNum'+full["pago"]+'" value="'+full["pago"]+'">';
 
                         return inputCapital+numberPay;
+                    },
+                ),
+            DTColumnBuilder.newColumn('fechaPago').withTitle('Fecha de pago')
+                .renderWith(
+                    function(data, type, full, meta)
+                    {
+                        var dateCurrent = full['fecha'];
+                        var datePays = dateCurrent.split("-").reverse().join("-");
+
+                        var dayPay;
+                        var posicionDate = dateCurrent.split('-');
+                        var mesPay = posicionDate[1];
+                        var anioPay = posicionDate[2];
+                        dayPay=daysInMonth(mesPay, anioPay);
+
+                        // console.log(posicionDate[1]);
+                        // console.log(porciones[2]);
+
+                        // var inputCapital = '<input name="dRet'+full["pago"]+'" type="number" id="idDiasRet'+full["pago"]+'"  onchange="pagoCapChange('+full["pago"]+')" placeholder="Días retardo" class="form-control">';
+                        var currentDateRow = '<input name="pagoDia'+full["pago"]+'" id="payDay'+full["pago"]+'" type="hidden" value="'+datePays+'"> ';
+                        var inputCapital = '<input name="dRet'+full["pago"]+'" type="date" id="idDiasRet'+full["pago"]+'" min="'+anioPay+'-'+mesPay+'-02"   placeholder="Días retardo" class="form-control">';/*max="'+anioPay+'-'+mesPay+'-'+dayPay+'"*/
+                        var button_action = '<button class="btn btn-a blue " style="margin-left: 2px" onclick="pagoCapChange('+full["pago"]+')"><i class="fa fa-check"></i></button>';
+
+                        return '<div class="justify-between ">'+inputCapital+currentDateRow+button_action+'</div>';
                     },
                 ),
             DTColumnBuilder.newColumn('diasRetraso').withTitle('Días de retraso')
@@ -546,14 +649,14 @@
                         // var inputCapital = '<input name="dRet'+full["pago"]+'" type="number" id="idDiasRet'+full["pago"]+'"  onchange="pagoCapChange('+full["pago"]+')" placeholder="Días retardo" class="form-control">';
                         var currentDateRow = '<input name="pagoDia'+full["pago"]+'" id="payDay'+full["pago"]+'" type="hidden" value="'+datePays+'"> ';
                         var inputCapital = '<input name="dRet'+full["pago"]+'" type="date" id="idDiasRet'+full["pago"]+'" onchange="pagoCapChange('+full["pago"]+')" min="'+anioPay+'-'+mesPay+'-02"   placeholder="Días retardo" class="form-control">';/*max="'+anioPay+'-'+mesPay+'-'+dayPay+'"*/
-                        return inputCapital+currentDateRow;
+                        return 0;
                     },
                 ),
             DTColumnBuilder.newColumn('interesMoratorio').withTitle('Interés Moratorio').renderWith(function (data, type, full)
             {return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
             DTColumnBuilder.newColumn('total').withTitle('Total').renderWith(function (data, type, full)
             {return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
-            DTColumnBuilder.newColumn('saldo').withTitle('Saldo Moratorio').renderWith(function (data, type, full)
+            DTColumnBuilder.newColumn('saldo').withTitle('Saldo Insoluto').renderWith(function (data, type, full)
             {
                 // var numberFix;
                 // if(full['saldo'] % 1 == 0)
@@ -572,7 +675,6 @@
             DTColumnBuilder.newColumn('saldoNormal').withTitle('Saldo').renderWith(function (data, type, full)
             {
                 var saldoInsolutoCRNormal = '<input name="siNormal'+full["pago"]+'" type="hidden" id="idSiNormal'+full["pago"]+'"  value="'+full['saldoNormal']+'" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
-
                 return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}) + saldoInsolutoCRNormal;
             } ),
         ];
@@ -634,25 +736,33 @@
         function calculaMoratorio() {
             let fecha_input = new Date($scope.fechaField);
             let dayCorrect = (fecha_input.getDate() < 10) ? '0'+fecha_input.getDate() : fecha_input.getDate();
+            let monthCorrect = ((fecha_input.getMonth()+ 1) < 10) ? '0'+(fecha_input.getMonth()+ 1) : (fecha_input.getMonth()+ 1);
+            let yearCorrect = (fecha_input.getFullYear());
             console.log('fecha_input: ', fecha_input);
             console.log('día: ', dayCorrect);
             day = dayCorrect;
+            mes = monthCorrect;
+            yearc = yearCorrect;
 
             var saldoInsoluto = (document.getElementById('SIField').value).replace(/,/g, "");
             // console.log(saldoInsoluto.replace(/,/g, ""));
-            // console.log(saldoInsoluto.replace(/./g, ""));
-            var numb = saldoInsoluto.match(/\d/g);
-            numb = numb.join("");
-            // console.log(numb);
-            var last2digts = numb.slice(-2);
-            if(last2digts == "00")
-            {
-                $scope.SIField = numb.replace(last2digts,'');
-            }
-            else
-            {
-                $scope.SIField = numb;
-            }
+            // console.log('saldoInsoluto', saldoInsoluto.replace('$',''));
+            //
+            // var numb = saldoInsoluto.match(/\d/g);
+            // numb = numb.join("");
+            // var last2digts = numb.slice(-2);
+            // console.log('Número', last2digts);
+            // if(last2digts == "00")
+            // {
+            //     $scope.SIField = numb.replace(last2digts,'');
+            // }
+            // else
+            // {
+            //     $scope.SIField = numb;
+            // }
+
+            $scope.SIField = saldoInsoluto.replace('$','');
+
 
             $scope.imField = 2.5376;
             $scope.msiField = 0;
@@ -790,7 +900,7 @@
                             IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
 
                             // console.log("este es un check de prueba: " + check);
-                            <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
+                            <?php include("dist/js/controllers/moratorios_ca.js"); ?>
                             console.log("Interes Moratorio en esta posicion " + IM);
                             calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
                         }
@@ -906,7 +1016,7 @@
                             var posPay = PositionPago - 1;
                             /*se hace el segundo calculo y se manipula la tabla*/
                             /*termina la edicion*/
-                            <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
+                            <?php include("dist/js/controllers/moratorios_ca.js"); ?>
                             calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
                         }
                     }
@@ -1022,9 +1132,10 @@
                 ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoMoratorio.contadorInicial;
                 if ($scope.infoMoratorio.mesesSinInteresP1 >= 0 && $scope.infoMoratorio.mesesSinInteresP1 <= 36)
                 {
+                    let fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
                     for (var i = ini; i <= $scope.infoMoratorio.mesesSinInteresP1 - 1; i++) {
                         if (mes == 13) {
-                            mes = '01';
+                            mC
                             yearc++;
                         }
                         if (mes == 2) {
@@ -1074,6 +1185,7 @@
                         var diasRetardo = 0;
                         var checksArray = [];
                         var arrayCheckAllPost = [];
+                        let fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
                         // console.log($scope.alphaNumeric[i]['saldo']);
 
                         /*16diciembre*/
@@ -1083,6 +1195,8 @@
 
                         $scope.addCheckToArray = function()
                         {
+                            var checksArray = [];
+                            var arrayCheckAllPost = [];
                             var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
                             var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
                             console.log('Add to array: position ' + checkPagoname);
@@ -1126,18 +1240,21 @@
                             diasRetardo = document.getElementsByName("diasRetardoNumberJS")[0].value;
                             var InteresM = $scope.imField;
                             var saldoInsoluto = document.getElementsByName("siCurrentNameJs")[0].value;//$scope.SIField
+                            let fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
 
                             var minVal	=	document.getElementsByName("minName")[0].value;
                             var maxVal	=	document.getElementsByName("maxName")[0].value;
                             var posPay = PositionPago - 1;
+
                             //var ope = ((Math.pow(((InteresM / 100) + 1), 12) - 1) * 100).toFixed(2);
                             //IM = ((importeSaldoI * (ope / 360)) * diasRetardo);
                             var intFinal = InteresM/100;
                             IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
                             // console.log("este es un check de prueba: " + check);
-                            <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
+                            <?php include("dist/js/controllers/moratorios_ca.js"); ?>
                             console.log("Interes Moratorio en esta posicion " + IM);
-                            calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
+                            console.log("FECHA DEL PAGO AQUI", fechaDelPago);
+                            calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
                         }
                         /*nuevo código 27  de noviembre*/
                         var disp = 0;
@@ -1154,6 +1271,7 @@
                             interes = 0;
                             total = $scope.infoMoratorio.capital + $scope.infoMoratorio.interes_p1;
                         }
+
                         /***/
                         range.push({
                             "fecha": $scope.fechapago,
@@ -1162,6 +1280,7 @@
                             "interes": interes,
                             "importe": importeSaldoI,
                             "diasRetraso": diasRetardo,
+                            "fechaPago": fechaDelPago,
                             "interesMoratorio": IM,
                             "deudaMoratorio":0,
                             "deudaOrdinario":0,
@@ -1173,6 +1292,7 @@
                             "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-total,//$scope.SIField = $scope.SIField-total
                         });
                         window['pagoCapChange' + numfinalCount] = Function("", "console.log('pagoCapChange" + numfinalCount + " el parametro es: " + document.getElementById('#idModel' + numfinalCount) + "');");//angular.element(document.querySelector('#idModel'+numfinalCount))
+
                         // console.log("Part of range II");
                         mes++;
 
@@ -1191,6 +1311,8 @@
                         // $scope.total2 = $scope.infoMoratorio.si;
                         $scope.addCheckToArray = function()
                         {
+                            var checksArray = [];
+                            var arrayCheckAllPost = [];
                             var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
                             var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
                             console.log('Add to array: position ' + checkPagoname);
@@ -1229,6 +1351,8 @@
                             maxInputSet.value=max;
                         }
                         $scope.pagoACapital = function () {
+
+
                             var importeSaldoI = document.getElementsByName("importePagoJS")[0].value;
                             var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
                             var diasRetardo = document.getElementsByName("diasRetardoNumberJS")[0].value;
@@ -1236,19 +1360,20 @@
                             var saldoInsoluto = document.getElementsByName("siCurrentNameJs")[0].value;//$scope.SIField
                             var minVal	=	document.getElementsByName("minName")[0].value;
                             var maxVal	=	document.getElementsByName("maxName")[0].value;
-                            console.log("importe: " + importeSaldoI + " - Dias Retardo: " + diasRetardo + " - posicion: " + PositionPago);
-                            console.log("from range II");
+                            fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
                             /*var ope = ((Math.pow(((InteresM / 100) + 1), 12) - 1) * 100).toFixed(2);
                             IM = ((importeSaldoI * (ope / 360)) * diasRetardo);*/
                             var intFinal = InteresM/100;
                             IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;
                             $scope.total2 = saldoInsoluto;
-                            console.log("interes moratorio: " + IM.toFixed(2));
+                            console.log("FECHA DEL PAGO AQUI", fechaDelPago);
                             var posPay = PositionPago - 1;
+                            console.log("PositionPago:", PositionPago);
                             /*se hace el segundo calculo y se manipula la tabla*/
                             /*termina la edicion*/
-                            <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
-                            calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
+                            <?php include("dist/js/controllers/moratorios_ca.js"); ?>
+                            calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
+
                         }
                     }
                     //////////
@@ -1309,6 +1434,7 @@
                             "interes": $scope.infoMoratorio.saldoNormal * $scope.infoMoratorio.interes_p2,
                             "importe": 0,
                             "diasRetraso": 0,
+                            "fechaPago": fechaDelPago,
                             "interesMoratorio": 0,
                             "deudaMoratorio": 0,
                             "deudaOrdinario":0,
@@ -1316,8 +1442,9 @@
                             "saldo":  $scope.infoMoratorio.si - $scope.p2+$scope.p2,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
                             "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-$scope.capital2,
                         });
+
                         window['pagoCapChange' + numfinalCount] = Function("", "console.log('pagoCapChange" + numfinalCount + " el parametro es: " + document.getElementById('#idModel' + numfinalCount) + "');");//angular.element(document.querySelector('#idModel'+numfinalCount))
-                        console.log("Part of range II");
+
                         mes++;
 
                         if (i == ($scope.infoMoratorio.plazo - 1)) {
@@ -1362,6 +1489,7 @@
                     var ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoMoratorio.contadorInicial;
                     if ($scope.infoMoratorio.mesesSinInteresP1 >= 0 && $scope.infoMoratorio.mesesSinInteresP1 <= 36)
                     {
+                        let fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
                         for (var i = ini; i <= $scope.infoMoratorio.mesesSinInteresP1 - 1; i++) {
                             if (mes == 13) {
                                 mes = '01';
@@ -1422,6 +1550,8 @@
 
                             $scope.addCheckToArray = function()
                             {
+                                var checksArray = [];
+                                var arrayCheckAllPost = [];
                                 var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
                                 var checkPagoname = document.getElementsByName("checkPagoname")[0].value;
                                 console.log('Add to array: position ' + checkPagoname);
@@ -1459,23 +1589,25 @@
                                 maxInputSet.value=max;
                             }
                             $scope.pagoACapital = function () {
-                                importeSaldoI = document.getElementsByName("importePagoJS")[0].value;
+                                var importeSaldoI = document.getElementsByName("importePagoJS")[0].value;
                                 var PositionPago = document.getElementsByName("pagoDiasRetPosicionJS")[0].value;
-                                diasRetardo = document.getElementsByName("diasRetardoNumberJS")[0].value;
+                                var diasRetardo = document.getElementsByName("diasRetardoNumberJS")[0].value;
                                 var InteresM = $scope.imField;
                                 var saldoInsoluto = document.getElementsByName("siCurrentNameJs")[0].value;//$scope.SIField
-
                                 var minVal	=	document.getElementsByName("minName")[0].value;
                                 var maxVal	=	document.getElementsByName("maxName")[0].value;
-                                var posPay = PositionPago - 1;
-                                //var ope = ((Math.pow(((InteresM / 100) + 1), 12) - 1) * 100).toFixed(2);
-                                //IM = ((importeSaldoI * (ope / 360)) * diasRetardo);
+                                fechaDelPago = document.getElementsByName("fechaPagoJS")[0].value;
+                                /*var ope = ((Math.pow(((InteresM / 100) + 1), 12) - 1) * 100).toFixed(2);
+                                IM = ((importeSaldoI * (ope / 360)) * diasRetardo);*/
                                 var intFinal = InteresM/100;
-                                IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;///30.4*diasRetardo
-                                // console.log("este es un check de prueba: " + check);
-                                <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
-                                console.log("Interes Moratorio en esta posicion " + IM);
-                                calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
+                                IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;
+                                $scope.total2 = saldoInsoluto;
+                                console.log("FECHA DEL PAGO AQUI", fechaDelPago);
+                                var posPay = PositionPago - 1;
+                                /*se hace el segundo calculo y se manipula la tabla*/
+                                /*termina la edicion*/
+                                <?php include("dist/js/controllers/moratorios_ca.js"); ?>
+                                calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost, fechaDelPago);
                             }
                             /*nuevo código 27  de noviembre*/
                             var disp = 0;
@@ -1500,6 +1632,7 @@
                                 "interes": interes,
                                 "importe": importeSaldoI,
                                 "diasRetraso": diasRetardo,
+                                "fechaPago": fechaDelPago,
                                 "interesMoratorio": IM,
                                 "deudaMoratorio" : 0,
                                 "deudaOrdinario":0,
@@ -1590,7 +1723,7 @@
                                 console.log("interes moratorio: " + IM.toFixed(2));
                                 /*se hace el segundo calculo y se manipula la tabla*/
                                 /*termina la edicion*/
-                                <?php include("dist/js/controllers/calculoMoratorio.js"); ?>
+                                <?php include("dist/js/controllers/moratorios_ca.js"); ?>
                                 // calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto);
                                 calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo, saldoInsoluto, minVal, maxVal, arrayCheckAllPost);
 
@@ -1808,6 +1941,7 @@
             // return $scope.alphaNumeric;
         }
     });
+
     function pagoCapChange(param)
     {
         /*
@@ -1819,7 +1953,13 @@
         var fechaInit = document.getElementById('payDay'+param);
         var currentSI = document.getElementById('idSi' + param);
 
+
         console.log("Saldo insoluto de esta posicion: " + currentSI.value);
+
+        console.log("fechaInit", fechaInit);
+        console.log("diasRetardo", diasRetardo);
+        console.log("inputVal", inputVal);
+
         // console.log("Fecha de pago Oficial: " + fechaInit.value);
         // console.log("Fecha elegida de retraso: " + diasRetardo.value);
         // console.log("*************************");
@@ -1830,12 +1970,18 @@
         var wer=new Date(fechaInit.value);
         var asd=new Date(diasRetardo.value);
         var difference = dateDiffInDays(wer, asd);
-        // console.log("Días transcurridos alv: " + difference);
+        console.log("Días transcurridos alv: " + difference);
         $('#siPosJS').val(currentSI.value);
         $('#jsPagoImporte').val(inputVal.value);
         $('#pagoADiasRetPositionJS').val(numberPay.value);
         $('#diasRetNumberJS').val(difference);
+        $('#fechaPagoJS').val(diasRetardo.value);
+        console.log("FECHA PAGO II xD:", diasRetardo.value);
+
         $('#jsPagoImporte').click();
+
+        //aqui me quede, el siguiente paso es agregar la fecha de pao
+        // para enviarla al caluclarMoratorio.js y que lo reciba para guardarlo en el array
     }
 
     function noPayMen(regParam)
