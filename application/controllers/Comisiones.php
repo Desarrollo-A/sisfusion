@@ -7135,7 +7135,10 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function InsertPena($lote_1)
     {
-      return $this->Comisiones_model->InsertPenalizacionComision($lote_1);
+      $response =$this->Comisiones_model->InsertPenalizacionComision($lote_1);
+      if ($response) {
+      return $this->Comisiones_model->InsertPenalizacionHistorial($lote_1);
+      }
     }
 
     // END INSTALACIÓN PENALIZACIONES
