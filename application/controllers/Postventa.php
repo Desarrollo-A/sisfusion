@@ -895,7 +895,7 @@ class Postventa extends CI_Controller
                 $updateDocumentData = array(
                     "expediente" => $documentName,
                     "modificado_por" => $idUsuario,
-                    "idNxS" => $idNxS
+                    "idNotariaxSolicitud" => $idNxS
                 );
                 $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType, $idPresupuesto);
             }
