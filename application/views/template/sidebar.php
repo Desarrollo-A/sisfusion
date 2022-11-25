@@ -1,6 +1,7 @@
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
+            <!-- <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;"> -->
             <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div>
@@ -212,8 +213,6 @@ foreach($datos2 as $datos)
     </div>
 </div>
 
-<?php $this->load->view('template/calendar_sidebar');?>
-
 <?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
@@ -235,11 +234,6 @@ foreach($datos2 as $datos)
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
                 <div class="divIconsNav">
-                    <div class="divCalendar hidden" id="divCalendar">
-                        <a id="minimizeSidecalendar" class="navbar-brand responsive">
-                            <i class="material-icons far fa-calendar-alt"></i>
-                        </a>
-                    </div>
                     <a class="navbar-brand responsive" href="<?=base_url()?>index.php/Usuarios/configureProfile">
                         <span class="material-icons">settings</span>
                     </a>
@@ -254,12 +248,6 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri2" value="<?=$url?>">
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
-                    <!-- Abrir side-calendar -->
-					<li class="icoNav noResponsive hidden" id ="openCalendar" rel="tooltip" data-placement="bottom" title="calendario">
-						<a id="minimizeSidecalendar">
-                            <span class="material-icons">date_range</span>
-						</a>
-                    </li>
                     <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>

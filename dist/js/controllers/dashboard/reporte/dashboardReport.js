@@ -8,14 +8,19 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' || userType == '2'){
+    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' ){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
-    //  5: Asistente subdirector especificamente para los usuarioas 28 y 30
-    else if( userType == '5' && ( idUser != '28' || idUser != '30' )){
+    //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
+    else if( userType == '5' && ( idUser == '28' || idUser == '30' )){
         rolOnReport = '1';
         idUserOnReport = '2';
+    }
+    
+    else{
+        rolOnReport = userType;
+        idUserOnReport = idUser;
     }
 }
 
@@ -136,11 +141,10 @@ function readyReport(){
 async function initReport(){
     asDirector(userType);
     typeSale = validateTypeSale();
-    getLastSales(typeSale);
-    // let rol = userType == 2 ? await getRolDR(idUser): userType; (TEMPORAL)
+    getLastSales(typeSale, rolOnReport);
+    // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
-    // if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '58' || userType == '69' ) (TEMPORAL)
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
     else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
@@ -713,7 +717,7 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
         rolString = 'asesor';
 
     typeSale = validateTypeSale();
-    getLastSales(typeSale);
+    getLastSales(typeSale, rol, [0, null, null, null, null, null, rol]);
     fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
 });
 
@@ -773,7 +777,15 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate, typeSale: typeSale},
+        data: {
+            general: 0, 
+            tipoChart: type, 
+            beginDate: beginDate, 
+            endDate: endDate, 
+            typeSale: typeSale, 
+            type: rolOnReport,
+            render: 1
+        },
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -803,7 +815,7 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     });
 }
 
-function getLastSales(typeSale){
+function getLastSales(typeSale, rol){
     let beginDate = $('#tableBegin').val()
     let endDate = $('#tableEnd').val()
     $('.loadChartMini').removeClass('d-none');
@@ -816,7 +828,9 @@ function getLastSales(typeSale){
             tipoChart:'na', 
             beginDate: beginDate, 
             endDate: endDate,
-            typeSale: typeSale
+            typeSale: typeSale,
+            type: rol,
+            render: 1
         },
         dataType: 'json',
         cache: false,
@@ -947,7 +961,6 @@ function monthName(mon){
 }
 
 function getRolDR(idUser){
-    debugger;
     return new Promise(resolve => {      
         $.ajax({
             type: "POST",
@@ -1323,7 +1336,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13, 14, 15],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1337,30 +1350,42 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
-                                        return 'Cliente';
+                                        return 'Precio de lista';
                                         break;
                                     case 4:
-                                        return 'Asesor';
+                                        return 'Precio con desc';
                                         break;
                                     case 5:
-                                        return 'Coordinador';
+                                        return 'Casa';
                                         break;
                                     case 6:
-                                        return 'Gerente';
+                                        return 'Cliente';
                                         break;
                                     case 7:
-                                        return 'Subdirector';
+                                        return 'Asesor';
                                         break;
                                     case 8:
-                                        return 'Director regional';
+                                        return 'Coordinador';
                                         break;
                                     case 9:
-                                        return 'Fecha de apartado';
+                                        return 'Gerente';
                                         break;
                                     case 10:
-                                        return 'Estatus contratación';
+                                        return 'Subdirector';
                                         break;
                                     case 11:
+                                        return 'Director regional';
+                                        break;
+                                    case 12:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 13:
+                                        return 'Días desde apartado';
+                                        break;
+                                    case 14:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 15:
                                         return 'Estatus lote';
                                         break;
                                 }
@@ -1404,6 +1429,21 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
+                        return d.precioLista;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.precioDescuento;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.casa;
+                    }
+                },
+                {
+                    data: function (d) {
                         return d.nombreCliente;
                     }
                 },
@@ -1432,10 +1472,14 @@ function fillTableReport(dataObject) {
                         return d.nombreRegional;
                     }
                 },
-
                 {
                     data: function (d) {
                         return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasApartado;
                     }
                 },
                 {
@@ -1516,36 +1560,48 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
-                                        return 'Cliente';
+                                        return 'Precio de lista';
                                         break;
                                     case 4:
-                                        return 'Asesor';
+                                        return 'Precio con desc';
                                         break;
                                     case 5:
-                                        return 'Coordinador';
+                                        return 'Casa';
                                         break;
                                     case 6:
-                                        return 'Gerente';
+                                        return 'Cliente';
                                         break;
                                     case 7:
-                                        return 'Subdirector';
+                                        return 'Asesor';
                                         break;
                                     case 8:
-                                        return 'Director regional';
+                                        return 'Coordinador';
                                         break;
                                     case 9:
-                                        return 'Fecha de apartado';
+                                        return 'Gerente';
                                         break;
                                     case 10:
-                                        return 'Estatus contratación';
+                                        return 'Subdirector';
                                         break;
                                     case 11:
-                                        return 'Estatus lote';
+                                        return 'Director regional';
                                         break;
                                     case 12:
-                                        return 'Fecha liberación';
+                                        return 'Fecha de apartado';
                                         break;
                                     case 13:
+                                        return 'Días desde apartado';
+                                        break;    
+                                    case 14:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 15:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 16:
+                                        return 'Fecha liberación';
+                                        break;
+                                    case 17:
                                         return 'Motivo';
                                         break;
                                 }
@@ -1587,6 +1643,21 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
+                        return d.precioLista;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.precioDescuento;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.casa;
+                    }
+                },
+                {
+                    data: function (d) {
                         return d.nombreCliente;
                     }
                 },
@@ -1619,6 +1690,11 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasApartado;
                     }
                 },
                 {
@@ -1684,3 +1760,13 @@ $(".scrollCharts").scroll(function() {
         $(".gradientLeft").addClass("d-none");
     }
 });
+
+function formatMoney(n) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}

@@ -24,7 +24,7 @@ class Services_model extends CI_Model
 
         $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
         CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
-         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17,20)")->result_array();
+         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0, 1, 14, 17, 20, 68, 5)")->result_array();
         for ($m=0; $m <count($Nacionalidades) ; $m++) { 
                 if($m == 0){
                     $Nacionalidades[$m]['tipo_pago'] = $ArrayMex;

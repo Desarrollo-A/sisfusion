@@ -163,6 +163,7 @@
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>ESTATUS ACTUAL</th>
+                                                        <!-- <th>PROCESO</th> -->
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -213,7 +214,7 @@
 
                 $('#Jtabla thead tr:eq(0) th').each( function (i) {
 
-                if(i != 0 && i != 8){
+                if(i != 0 && i != 9){
                     var title = $(this).text();
                     $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
                     $( 'input', this ).on('keyup change', function () {
@@ -342,6 +343,18 @@
                         return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
+                // ,{
+                //     "width": "20%",
+                //     "data": function( d ){
+                //         let respuesta = ''; 
+                //         if(d.nacion == 0){
+                //             respuesta = '<p class="m-0">NACIONAL</p>';
+                //         }else{
+                //             respuesta = '<p class="m-0">EXTRANJERO</p>';
+                //         }
+                //         return respuesta;
+                //     }
+                // }
                 <?php
                 if($this->session->userdata('id_rol')!=53){
                 ?>
@@ -421,7 +434,7 @@
                 "targets": 0
                 }],
                 ajax: {
-                    "url": '<?=base_url()?>index.php/Asistente_gerente/getStatus8ContratacionAsistentes',
+                    "url": '<?=base_url()?>/Asistente_gerente/getStatus8ContratacionAsistentes',
                     "dataSrc": "",
                     "type": "POST",
                     cache: false,

@@ -662,13 +662,9 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 
-	public function getResidencialQro()
-	{
-		$this->db->select('idResidencial, nombreResidencial, descripcion');
-		$this->db->from('residenciales');
-		$this->db->where('status', '1');
-		$this->db->order_by('nombreResidencial', 'asc');
-		$query = $this->db->get();
+	public function getResidencialQro() {
+		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR, descripcion))) nombreResidencial, idResidencial, descripcion, 
+		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
 		return $query->result_array();
 	}
 
@@ -6189,18 +6185,20 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		return $query->row();
 	}
 
-    public function getLotesAllAssistant($condominio, $residencial)
-    {
+    public function getLotesAllAssistant($condominio, $residencial) {
+		$id_lider = $this->session->userdata('id_lider');
         $query = $this->db-> query("SELECT l.* FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente
             INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0, 1, 3)
-            WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $condominio
-            UNION ALL
+            WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) 
+			AND c.status = 1 AND c.id_gerente = $id_lider AND l.idCondominio = $condominio
+			UNION ALL
             SELECT l.* FROM lotes l 
 			INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
 			INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
-            WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $condominio");
+			INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND (uu.id_lider = $id_lider OR u.id_lider = $id_lider)
+            WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) 
+			AND c.status = 1 AND l.idCondominio = $condominio");
         if($query){
             $query = $query->result_array();
             return $query;
@@ -6246,10 +6244,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         }
     }
 
-    public function getLotesGralTwo($condominio,$residencial)
-	{
-		$query = $this->db->query("SELECT idLote,nombreLote, idStatusLote FROM lotes WHERE status = 1 AND idCondominio = $condominio AND idStatusContratacion IN (1, 2, 3)");
-		if($query){
+    public function getLotesGralTwo($condominio, $residencial) {
+		$query = $this->db-> query("SELECT * FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
+		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
+		if($query) {
 			$query = $query->result_array();
 			return $query;
 		}

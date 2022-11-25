@@ -45,6 +45,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>RESIDENCIA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -78,18 +79,30 @@
                             <input class="form-control" name="totalNeto2" id="totalNeto2"
                                    oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                                   
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label class="m-0" for="proyecto">Representante Legal:</label>
+                                <label class="m-0" for="proyecto">Representante Legal:</label>
+                                        <div class="form-group ">
+                                        
                                             <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true" 
                                                     title="Selecciona RL" data-size="7" required>
                                                     <option value="opciones" selected="selected">OPCIONES</option>
                                             </select>
                                         </div>
-                        </div>
-                    
+                        </div>  
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="m-0" for="proyecto">Residencia:</label>
+                                        <div class="form-group selec">
+                                        
+                                            <select name="naci" id="naci"  class="selectpicker select-gral m-0 naci" data-default-value="opciones"
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true" 
+                                                    title="Nacionalidad del proceso" data-size="7" required>
+                                             
+                                            </select>
+                                        </div>
+                        </div>                   
                     </div>
                 </div>
 
@@ -178,7 +191,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                     titleAttr: 'Registro estatus 9',
                     title:"Registro estatus 9",
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6],
+                        columns: [1, 2, 3, 4, 5, 6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -198,6 +211,9 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         break;
                                     case 6:
                                         return 'CLIENTE';
+                                        break;
+                                    case 7:
+                                        return 'RESIDENCIA';
                                         break;
                                 }
                             }
@@ -213,7 +229,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6],
+                        columns: [1, 2, 3, 4, 5, 6,7],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -233,6 +249,9 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         break;
                                     case 6:
                                         return 'CLIENTE';
+                                        break;
+                                    case 7:
+                                        return 'RESIDENCIA';
                                         break;
                                 }
                             }
@@ -327,7 +346,20 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
 "data": function( d ){
     return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
 }
-}, 
+},{
+"width": "20%",
+"data": function( d ){
+                        let respuesta = ''; 
+                        
+
+                            respuesta = '<p class="m-0">'+d.nacionalidad+'</p>';
+                        
+                        return respuesta;
+                    }
+},
+
+
+
 { 
 "width": "40%",
 "orderable": false,
@@ -343,7 +375,7 @@ if(data.vl == '1') {
     if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
 
             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-             'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+             'data-idCliente="'+data.id_cliente+'" data-nacion="'+data.nacion+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
              'class="btn-data btn-green editReg" title="Registrar estatus">' +
              '<i class="fas fa-thumbs-up"></i></button>';
 
@@ -456,8 +488,25 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
      $("#tabla_ingresar_9 tbody").on("click", ".editReg", function(e){
             e.preventDefault();
-            
+            var multSelect1 
+            multSelect1 = '';
+
+            $(".selec").html(multSelect1);
+
+            getInfo1[8] = $(this).attr("data-nacion");
         //    getRL();
+        var multSelect = '<select name="naci" id="naci"  class="selectpicker select-gral m-0 naci" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="Nacionalidad del proceso" data-size="7" required>';
+               if( getInfo1[8] == 0){
+                multSelect += ' <option selected="selected" value="0">Nacional</option>';
+                 multSelect += '<option value="1">Extranjero</option>';
+               }else{
+                multSelect += ' <option  value="0">Nacional</option>';
+                 multSelect += '<option selected="selected" value="1">Extranjero</option>';
+               }
+         
+             multSelect += '   </select>';
+               console.log( getInfo1[8]);
+             $(".selec").html(multSelect);
             getInfo1[0] = $(this).attr("data-idCliente");
             getInfo1[1] = $(this).attr("data-nombreResidencial");
             getInfo1[2] = $(this).attr("data-nombreCondominio");
@@ -469,16 +518,16 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
             nombreLote = $(this).data("nomlote");
             $(".lote").html(nombreLote);
-            console.log('444444444');
-            // $("#rl").selectpicker('refresh');
             
+            // $("#rl").selectpicker('refresh');
+            $("#naci").selectpicker('refresh');
              $('#editReg').modal('show');
-            console.log('78787878');
+        
             // document.getElementById("rl").value = 'opciones';
             $("#rl").selectpicker('refresh');
-            console.log('77788');
+          
             $("#rl").val('opciones');
-             console.log('99999');
+         
                // $("#rl").val($("#rl").data("default-value"));
 
             // $('#rl option').prop('selected', function() {
@@ -532,12 +581,14 @@ e.preventDefault();
     var comentario = $("#comentario").val();
     var totalNeto2 = $("#totalNeto2").val();
     var rl = $("#rl").val();  
+    var naci = $("#naci").val();
+    
     //  me quede aqui para guaradar el nuevo dato porfavor que se guarde 
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
 
     var dataExp1 = new FormData();
-
+    
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -548,8 +599,12 @@ e.preventDefault();
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl );
+    dataExp1.append("naci", naci);
+    var cliente =  getInfo1[0];
     if( rl == 'opciones'){
         alerts.showNotification("top", "right", "Selecciona un RL para poder continuar.", "warning");
+    }else if(naci == 'opciones'){
+        alerts.showNotification("top", "right", "Confirma la nacionalidad del proceso.", "warning");
     }else{
 
     
@@ -559,7 +614,7 @@ e.preventDefault();
       if (validaComent == 1 && validatn == 1) {
         $('#save1').prop('disabled', true);
             $.ajax({
-              url : '<?=base_url()?>index.php/Contraloria/editar_registro_lote_contraloria_proceceso9/',
+              url : '<?=base_url()?>Contraloria/editar_registro_lote_contraloria_proceceso9/',
               data: dataExp1,
               cache: false,
               contentType: false,
@@ -697,6 +752,7 @@ function getRL(){
 				
 			}, 'json');
 }
+
 
 
 
