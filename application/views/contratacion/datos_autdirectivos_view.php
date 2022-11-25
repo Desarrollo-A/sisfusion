@@ -136,7 +136,7 @@
 				$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
 				$( 'input', this ).on('keyup change', function () {
 					if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-					//	$('#addExp').DataTable().column(i).search(this.value).draw();
+						$('#addExp').DataTable().column(i).search(this.value).draw();
 					}
 				});
 			}
@@ -211,11 +211,7 @@
 							}
 						}
 					}
-				}, {
-                        text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
-                        titleAttr: 'Cargar vista inicial',
-                        className: "btn btn-azure reset-initial-values",
-                    }],
+				}],
 				pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
@@ -287,20 +283,31 @@
 					var ctn;
 					var p = 0;
 					var opcionDenegado;
+					var tama = '';
 					$.each(JSON.parse(data), function(i, item) {
 
-						<?php if($this->session->userdata('id_rol')==1){ ?>
-							opcionDenegado = '';
-						<?php }
-						else {
+						<?php
+						if($this->session->userdata('id_rol')==1)
+						{?>
+						opcionDenegado = '';
+						tama = 'class="col-md-6"';
+						<?php
+						}
+						else
+						{
 						?>
-							opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
-						<?php } ?>
+						tama = 'class="col-md-4"';
+
+						opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
+						<?php
+						}
+						?>
+
 
 						ctn ='<table width="100%">'+
 							'<tr>'+
-							'<td width="100%">' +
-							'<label>Solicitud asesor <small>('+item['fecha_creacion']+')</small>:</label><br><p><i>' + item['autorizacion']+'</i></p></td>' +
+							'<td width="100%" class="center-align">' +
+							'<label class="center-align">Solicitud asesor <small class="center-align">('+ item['fecha_creacion'].substr(0,10)  +')</small></label><br class="center-align"><p><i>' + item['autorizacion']+'</i></p></td>' +
 							'<tr/>'+
 							'<tr>'+
 							'<td width="100%">' +
@@ -323,13 +330,13 @@
 							'<tr>'+
 							'<div class="input-group" >' +
 							'<td style="text-align:center;">' +
-							'<div class="col-md-4">' +
-							'<label><input type="radio" name="accion'+i+'" value="0" required> Aceptar</label>' +
+							'<div '+tama +'>' +
+							'<label ><input class=" btn-details-grey" type="radio" name="accion'+i+'" value="0" required> Aceptar</label>' +
 							'</div>'+
-							'<div class="col-md-4">' +
-							'<label><input type="radio" name="accion'+i+'" value="2" required> Denegar</label>' +
+							'<div '+tama +'>' +
+							'<label ><input class=" btn-details-grey" type="radio" name="accion'+i+'" value="2" required> Denegar</label>' +
 							'</div>'+
-							'<div class="col-md-4">' +
+							'<div '+tama +'>' +
 							opcionDenegado +
 							'</div>'+
 							'</td>'+
@@ -383,7 +390,7 @@
 					method: 'POST',
 					type: 'POST',
 					success: function(data){
-						$('#addExp').DataTable().ajax.reload(null, false );
+						$('#addExp').DataTable().ajax.reload( );
 						alerts.showNotification('top', 'right', 'Autorización enviada', 'success');
 						$('#addFile').modal('hide');
 					
@@ -410,22 +417,10 @@
 		});
 
 		$(document).ready(function () {
-			<?php
-			if($this->session->userdata('success') == 1){
-				echo 'alerts.showNotification("top","right","Se enviaron las autorizaciones correctamente", "success");';
-				echo 'console.log("logrado correctamente");';
-				$this->session->unset_userdata('success');
-			}
-			elseif($this->session->userdata('error') == 99){
-				echo 'alerts.showNotification("top","right","Ocurrio un error al enviar la autorización	", "danger");';
-				echo 'console.log("OCURRIO UN ERROR");';
-				$this->session->unset_userdata('error');
-			}
-			?>
+		
 		});
 		$("#guardarImagen").click(function() {
-			alert('4444444444444444444');
-			//$("#fotoAlumno"),
+
 			let tr = $(this).closest('tr');
 	var comentario = $("#observaciones").val();
     var archivos = $("#fotoAlumno")[0].files;
@@ -453,9 +448,7 @@
       });
     }
   });
-  $(document).on("click", ".reset-initial-values", function () {
-	$('#addExp').DataTable().ajax.reload(null, false );
-        });
+
 
 
   $("#sendAutsFromD").on('submit', function(e){
@@ -464,7 +457,7 @@
 	var formData = new FormData(this);
     $.ajax({
         type: 'POST',
-        url: 'updateAutsFromsDC',
+		url: general_base_url + 'RegistroCliente/updateAutsFromsDC',
         data: formData,
 		dataType: "json",
         contentType: false,
@@ -477,6 +470,7 @@
 			console.log(data.mensaje);
 			console.log(data);
                 alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
+				$('#addExp').DataTable().ajax.reload(null, false );
 				$('#addFile').modal('hide');
             
         },
