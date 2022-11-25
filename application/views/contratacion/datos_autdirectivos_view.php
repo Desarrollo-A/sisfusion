@@ -284,20 +284,13 @@
 					var opcionDenegado;
 					$.each(JSON.parse(data), function(i, item) {
 
-						<?php
-						if($this->session->userdata('id_rol')==1)
-						{?>
-						opcionDenegado = '';
-						<?php
-						}
-						else
-						{
+						<?php if($this->session->userdata('id_rol')==1){ ?>
+							opcionDenegado = '';
+						<?php }
+						else {
 						?>
-						opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
-						<?php
-						}
-						?>
-
+							opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
+						<?php } ?>
 
 						ctn ='<table width="100%">'+
 							'<tr>'+
