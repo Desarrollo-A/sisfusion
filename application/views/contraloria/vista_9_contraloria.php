@@ -81,16 +81,13 @@
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label class="m-0" for="proyecto">Representante Legal:</label>
-                                            <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true" 
-                                                    title="Selecciona RL" data-size="7" required>
-                                                    <option value="opciones" selected="selected">OPCIONES</option>
-                                            </select>
-                                        </div>
+                            <div class="form-group">
+                                <label class="m-0" for="proyecto">Representante Legal:</label>
+                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona RL" data-size="7" required>
+                                    <option value="opciones" selected="selected">OPCIONES</option>
+                                </select>
+                            </div>
                         </div>
-                    
                     </div>
                 </div>
 
@@ -171,82 +168,80 @@ $("#tabla_ingresar_9").ready( function(){
 tabla_9 = $("#tabla_ingresar_9").DataTable({
     dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
     width: 'auto',
-    buttons: [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Registro estatus 9',
-                    title:"Registro estatus 9",
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6,7],
-                        format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 1:
-                                        return 'TIPO VENTA';
-                                        break;
-                                    case 2:
-                                        return 'PROYECTO'
-                                    case 3:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 4:
-                                        return 'LOTE';
-                                        break;
-                                    case 5:
-                                        return 'GERENTE';
-                                        break;
-                                    case 6:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 7:
-                                        return 'PROCESO';
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                    className: 'btn buttons-pdf',
-                    titleAttr: 'Registro estatus 9',
-                    title: "Registro estatus 9",
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6,7],
-                        format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 1:
-                                        return 'TIPO VENTA';
-                                        break;
-                                    case 2:
-                                        return 'PROYECTO'
-                                    case 3:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 4:
-                                        return 'LOTE';
-                                        break;
-                                    case 5:
-                                        return 'GERENTE';
-                                        break;
-                                    case 6:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 7:
-                                        return 'PROCESO';
-                                        break;
-                                }
-                            }
-                        }
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Registro estatus 9',
+        title:"Registro estatus 9",
+        exportOptions: {
+            columns: [1, 2, 3, 4, 5, 6,7],
+            format: {
+                header: function (d, columnIdx) {
+                    switch (columnIdx) {
+                        case 1:
+                            return 'TIPO VENTA';
+                            break;
+                        case 2:
+                            return 'PROYECTO'
+                        case 3:
+                            return 'CONDOMINIO';
+                            break;
+                        case 4:
+                            return 'LOTE';
+                            break;
+                        case 5:
+                            return 'GERENTE';
+                            break;
+                        case 6:
+                            return 'CLIENTE';
+                            break;
+                        case 7:
+                            return 'PROCESO';
+                            break;
                     }
                 }
-            ],
+            }
+        }
+    },
+    {
+        extend: 'pdfHtml5',
+        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+        className: 'btn buttons-pdf',
+        titleAttr: 'Registro estatus 9',
+        title: "Registro estatus 9",
+        orientation: 'landscape',
+        pageSize: 'LEGAL',
+        exportOptions: {
+            columns: [1, 2, 3, 4, 5, 6,7],
+            format: {
+                header: function (d, columnIdx){
+                    switch (columnIdx) {
+                        case 1:
+                            return 'TIPO VENTA';
+                            break;
+                        case 2:
+                            return 'PROYECTO'
+                        case 3:
+                            return 'CONDOMINIO';
+                            break;
+                        case 4:
+                            return 'LOTE';
+                            break;
+                        case 5:
+                            return 'GERENTE';
+                            break;
+                        case 6:
+                            return 'CLIENTE';
+                            break;
+                        case 7:
+                            return 'PROCESO';
+                            break;
+                    }
+                }
+            }
+        }
+    }],
     language: {
         url: "<?=base_url()?>/static/spanishLoader_v2.json",
         paginate: {
@@ -259,22 +254,19 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
         [10, 25, 50, -1],
         [10, 25, 50, "Todos"]
     ],
-"bAutoWidth": false,
-"fixedColumns": true,
-"ordering": false,
-"columns": [
-{
-    "width": "3%",
-    "className": 'details-control',
-    "orderable": false,
-    "data" : null,
-    "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-},
-{
-
-    "data": function( d ){
-        var lblStats;
-
+    bAutoWidth: false,
+    fixedColumns: true,
+    ordering: false,
+    columns: [{
+        "width": "3%",
+        "className": 'details-control',
+        "orderable": false,
+        "data" : null,
+        "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+    },
+    {
+        "data": function( d ){
+            var lblStats;
             if(d.tipo_venta==1) {
                 lblStats ='<span class="label label-danger">Venta Particular</span>';
             }
@@ -297,112 +289,97 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                 lblStats ='<span class="label label-info">Venta especial</span>';
             }
             else if(d.tipo_venta== null) {
-                    lblStats ='<span class="label label-info"></span>';
+                lblStats ='<span class="label label-info"></span>';
+            }
+            return lblStats;
+        }
+    },
+    {
+        "width": "10%",
+        "data": function( d ){
+            return '<p class="m-0">'+d.nombreResidencial+'</p>';
+        }
+    },
+    {
+        "width": "10%",
+        "data": function( d ){
+            return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
+        }
+    },
+    {
+        "width": "15%",
+        "data": function( d ){
+            return '<p class="m-0">'+d.nombreLote+'</p>';
+
+        }
+    }, 
+    {
+        "width": "20%",
+        "data": function( d ){
+            return '<p class="m-0">'+d.gerente+'</p>';
+        }
+    }, 
+    {
+        "width": "20%",
+        "data": function( d ){
+            return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+        }
+    },
+    {
+        "width": "20%",
+        "data": function( d ){
+            let respuesta = ''; 
+            if(d.nacion == 0){
+                respuesta = '<p class="m-0">NACIONAL</p>';
+            }else{
+                respuesta = '<p class="m-0">EXTRANJERO</p>';
+            }
+            return respuesta;
+        }
+    },
+    { 
+        "width": "40%",
+        "orderable": false,
+        "data": function( data ){
+            var cntActions;
+            if(data.vl == '1') {
+                cntActions = 'En proceso de Liberación';
+            } 
+            else {
+                if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
+                    cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                    'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+                    'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                    '<i class="fas fa-thumbs-up"></i></button>';
+
+                    cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                    'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
+                    'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                    '<i class="fas fa-thumbs-down"></i></button>';
+                }
+                else{
+                    cntActions ='N/A';
+                }
             }
 
-
-        return lblStats;
-    }
-},
-{
-"width": "10%",
-"data": function( d ){
-    return '<p class="m-0">'+d.nombreResidencial+'</p>';
-}
-},
-{
-"width": "10%",
-"data": function( d ){
-    return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
-}
-},
-{
-"width": "15%",
-"data": function( d ){
-    return '<p class="m-0">'+d.nombreLote+'</p>';
-
-}
-}, 
-{
-"width": "20%",
-"data": function( d ){
-    return '<p class="m-0">'+d.gerente+'</p>';
-}
-}, 
-{
-"width": "20%",
-"data": function( d ){
-    return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
-}
-},{
-"width": "20%",
-"data": function( d ){
-                        let respuesta = ''; 
-                        if(d.nacion == 0){
-                            respuesta = '<p class="m-0">NACIONAL</p>';
-                        }else{
-                            respuesta = '<p class="m-0">EXTRANJERO</p>';
-                        }
-                        return respuesta;
-                    }
-},
-
-
-
-{ 
-"width": "40%",
-"orderable": false,
-"data": function( data ){
-
-    var cntActions;
-    
-if(data.vl == '1') {
-    cntActions = 'En proceso de Liberación';
-
-} else {
-    
-    if(data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
-
-            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-             'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
-             'class="btn-data btn-green editReg" title="Registrar estatus">' +
-             '<i class="fas fa-thumbs-up"></i></button>';
-
-            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-              'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'"  ' +
-              'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
-              '<i class="fas fa-thumbs-down"></i></button>';
-    }
-    else
-    {
-        cntActions ='N/A';
-    }
-
-}
-
-    return "<div class='d-flex justify-center'>" + cntActions + "</div>";
-
-} 
-}
-
-],
+            return "<div class='d-flex justify-center'>" + cntActions + "</div>";
+        } 
+    }],
     columnDefs: [{
         defaultContent: "Sin especificar",
         targets: "_all",
         searchable: true,
         orderable: false
     }],
-
-"ajax": {
-"url": '<?=base_url()?>/Contraloria/getregistroStatus9ContratacionContraloria',
-"dataSrc": "",
-"type": "POST",
-cache: false,
-"data": function( d ){
-}
-},
-"order": [[ 1, 'asc' ]]
-
+    ajax: {
+        url: '<?=base_url()?>/Contraloria/getregistroStatus9ContratacionContraloria',
+        dataSrc: "",
+        type: "POST",
+        cache: false,
+        data: function( d ){
+        }
+    },
+    order: [[ 1, 'asc' ]]
 });
 
 $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
@@ -415,61 +392,47 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
              $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
          } else {
             var status;
-                
-                 var fechaVenc;
-                 if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38) {
-                     status = 'Status 8 listo (Asistentes de Gerentes)';
-                 } else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65 ) {
-                     status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-                 }
-                 else
-                 {
-                     status='N/A';
-                 }
+            var fechaVenc;
+            if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38) {
+                status = 'Status 8 listo (Asistentes de Gerentes)';
+            } else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65 ) {
+                status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
+            }
+            else
+            {
+                status='N/A';
+            }
 
-                 if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
-                     row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
-                     fechaVenc = row.data().fechaVenc;
-                 }
-                 else
-                 {
-                     fechaVenc='N/A';
-                 }
+            if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
+                row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
+                fechaVenc = row.data().fechaVenc;
+            }
+            else
+            {
+                fechaVenc='N/A';
+            }
 
-
-             /*var informacion_adicional2 = '<table class="table text-justify">' +
-                 '<tr><b>INFORMACIÓN ADICIONAL</b>:' +
-                 '<td style="font-size: .8em"><strong>ESTATUS: </strong>'+status+'</td>' +
-                 '<td style="font-size: .8em"><strong>COMENTARIO: </strong>' + row.data().comentario + '</td>' +
-                 '<td style="font-size: .8em"><strong>FECHA VENCIMIENTO: </strong>' + fechaVenc + '</td>' +
-                 '<td style="font-size: .8em"><strong>FECHA REALIZADO: </strong>' + row.data().modificado + '</td>' +
-                 '<td style="font-size: .8em"><strong>COORDINADOR: </strong>'+row.data().coordinador+'</td>' +
-                 '<td style="font-size: .8em"><strong>ASESOR: </strong>'+row.data().asesor+'</td>' +
-                 '</tr>' +
-                 '</table>';*/
-             var informacion_adicional = '<div class="container subBoxDetail">';
-             informacion_adicional += '  <div class="row">';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-             informacion_adicional += '          <label><b>Información adicional</b></label>';
-             informacion_adicional += '      </div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA VENCIMIENTO: </b> ' + fechaVenc + '</label></div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA REALIZADO: </b> ' + row.data().modificado + '</label></div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
-             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
-             informacion_adicional += '  </div>';
-             informacion_adicional += '</div>';
+            var informacion_adicional = '<div class="container subBoxDetail">';
+            informacion_adicional += '  <div class="row">';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
+            informacion_adicional += '          <label><b>Información adicional</b></label>';
+            informacion_adicional += '      </div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA VENCIMIENTO: </b> ' + fechaVenc + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA REALIZADO: </b> ' + row.data().modificado + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
+            informacion_adicional += '  </div>';
+            informacion_adicional += '</div>';
 
 
 
-             row.child(informacion_adicional).show();
-             tr.addClass('shown');
-             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
-         }
-
-
-     });
+            row.child(informacion_adicional).show();
+            tr.addClass('shown');
+            $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+        }
+    });
 
 
 
@@ -478,7 +441,6 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
      $("#tabla_ingresar_9 tbody").on("click", ".editReg", function(e){
             e.preventDefault();
             
-        //    getRL();
             getInfo1[0] = $(this).attr("data-idCliente");
             getInfo1[1] = $(this).attr("data-nombreResidencial");
             getInfo1[2] = $(this).attr("data-nombreCondominio");
@@ -490,31 +452,9 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
             nombreLote = $(this).data("nomlote");
             $(".lote").html(nombreLote);
-            console.log('444444444');
-            // $("#rl").selectpicker('refresh');
-            
-             $('#editReg').modal('show');
-            console.log('78787878');
-            // document.getElementById("rl").value = 'opciones';
+            $('#editReg').modal('show');            
             $("#rl").selectpicker('refresh');
-            console.log('77788');
             $("#rl").val('opciones');
-             console.log('99999');
-               // $("#rl").val($("#rl").data("default-value"));
-
-            // $('#rl option').prop('selected', function() {
-            //          return this.defaultSelected;
-            //      });
-            //$("#rl").data("default-value",$("#rl").val());
-  
-        
-           
-           // $("#rl").val('opciones');//Setting the value as 'b'
-            // $('#rl option').prop('selected', function() {
-            //         return this.defaultSelected;
-            //   });
-            console.log('544445555');
-       
             });
 
 
@@ -536,13 +476,6 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
             $('#rechReg').modal('show');
 
             });
-
-
-
-
-
-
-
 });
 
 
@@ -687,36 +620,34 @@ dataExp3.append("fechaVenc", getInfo3[6]);
 
 
 jQuery(document).ready(function(){
-
     getRL();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
-    jQuery(this).removeData('bs.modal');
-    jQuery(this).find('#comentario').val('');
-    jQuery(this).find('#totalNeto').val('');
-    jQuery(this).find('#totalNeto2').val('');
+        jQuery(this).removeData('bs.modal');
+        jQuery(this).find('#comentario').val('');
+        jQuery(this).find('#totalNeto').val('');
+        jQuery(this).find('#totalNeto2').val('');
     })
 
     jQuery('#rechReg').on('hidden.bs.modal', function (e) {
-    jQuery(this).removeData('bs.modal');
-    jQuery(this).find('#comentario3').val('');
+        jQuery(this).removeData('bs.modal');
+        jQuery(this).find('#comentario3').val('');
     })
     let info =  [];
    
 })
+
 function getRL(){
     $.post(url + "Contraloria/getRL", function(data) {
-                info = data;
+        info = data;
+        var len = data.length;
+        for(var i = 0; i<len; i++){
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#rl").append($('<option>').val(id).text(name.toUpperCase()));
+        }
 
-                var len = data.length;
-				 for(var i = 0; i<len; i++){
-                    var id = data[i]['id_opcion'];
-					var name = data[i]['nombre'];
-					$("#rl").append($('<option>').val(id).text(name.toUpperCase()));
-				}
-
-				 $("#rl").selectpicker('refresh');
-				
-			}, 'json');
+        $("#rl").selectpicker('refresh');
+    }, 'json');
 }
 
 
