@@ -1,5 +1,5 @@
 $('#tabla_ingresar_5 thead tr:eq(0) th').each( function (i) {
-    if(i!=0 && i!=1 && i!=12){
+    if(i!=0 && i!=1 && i!=13){
     var title = $(this).text();
     $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
     $( 'input', this ).on('keyup change', function () {
@@ -59,7 +59,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                 titleAttr: 'Registro estatus 5',
                 title:"Registro estatus 5",
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -85,6 +85,8 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                                     return 'UC';
                                 case 11:
                                     return 'SEDE';
+                                case 12:
+                                    return 'COMENTARIO';
                             }
                         }
                     }
@@ -99,7 +101,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -124,7 +126,9 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                                 case 10:
                                     return 'UC';
                                 case 11:
-                                    return 'SEDE'; 
+                                    return 'SEDE';
+                                case 12:
+                                    return 'COMENTARIO'; 
                             }
                         }
                     }
@@ -132,7 +136,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
             }
         ],
     language: {
-        url: `${base_url}static/spanishLoader_v2.json`,
+        url: `${general_base_url}static/spanishLoader_v2.json`,
         paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -247,6 +251,18 @@ scrollX: true,
              respuesta = 'No definido';
         }else{
              respuesta = d.sede;
+        }
+        return '<p class="m-0">'+ respuesta +'</p>';
+    }
+},
+{
+ "whith":"10%",
+ "data" : function(d){
+    let respuesta = '';
+        if(d.comentario == null || d.comentario == '' ){
+            respuesta = 'No definido';
+        }else{
+            respuesta = d.comentario;
         }
         return '<p class="m-0">'+ respuesta +'</p>';
     }

@@ -163,7 +163,7 @@
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>ESTATUS ACTUAL</th>
-                                                        <th>PROCESO</th>
+                                                        <!-- <th>PROCESO</th> -->
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -245,7 +245,7 @@
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7,8],
+                    columns: [1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header:  function (d, columnIdx) {
                             if(columnIdx == 0){
@@ -342,19 +342,19 @@
                     "data": function( d ){
                         return '<p class="m-0">'+d.descripcion+'</p>';
                     }
-                },
-                {
-                    "width": "20%",
-                    "data": function( d ){
-                        let respuesta = ''; 
-                        if(d.nacion == 0){
-                            respuesta = '<p class="m-0">NACIONAL</p>';
-                        }else{
-                            respuesta = '<p class="m-0">EXTRANJERO</p>';
-                        }
-                        return respuesta;
-                    }
                 }
+                // ,{
+                //     "width": "20%",
+                //     "data": function( d ){
+                //         let respuesta = ''; 
+                //         if(d.nacion == 0){
+                //             respuesta = '<p class="m-0">NACIONAL</p>';
+                //         }else{
+                //             respuesta = '<p class="m-0">EXTRANJERO</p>';
+                //         }
+                //         return respuesta;
+                //     }
+                // }
                 <?php
                 if($this->session->userdata('id_rol')!=53){
                 ?>

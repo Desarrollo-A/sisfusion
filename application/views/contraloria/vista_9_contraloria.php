@@ -45,7 +45,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
-                                                <th>PROCESO</th>
+                                                <th>RESIDENCIA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -79,6 +79,7 @@
                             <input class="form-control" name="totalNeto2" id="totalNeto2"
                                    oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)"
                                    type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                                   
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group">
@@ -486,12 +487,14 @@ e.preventDefault();
     var comentario = $("#comentario").val();
     var totalNeto2 = $("#totalNeto2").val();
     var rl = $("#rl").val();  
+    var naci = $("#naci").val();
+    
     //  me quede aqui para guaradar el nuevo dato porfavor que se guarde 
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
 
     var dataExp1 = new FormData();
-
+    
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -502,8 +505,12 @@ e.preventDefault();
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl );
+    dataExp1.append("naci", naci);
+    var cliente =  getInfo1[0];
     if( rl == 'opciones'){
         alerts.showNotification("top", "right", "Selecciona un RL para poder continuar.", "warning");
+    }else if(naci == 'opciones'){
+        alerts.showNotification("top", "right", "Confirma la nacionalidad del proceso.", "warning");
     }else{
 
     
@@ -513,7 +520,7 @@ e.preventDefault();
       if (validaComent == 1 && validatn == 1) {
         $('#save1').prop('disabled', true);
             $.ajax({
-              url : '<?=base_url()?>index.php/Contraloria/editar_registro_lote_contraloria_proceceso9/',
+              url : '<?=base_url()?>Contraloria/editar_registro_lote_contraloria_proceceso9/',
               data: dataExp1,
               cache: false,
               contentType: false,
@@ -649,6 +656,7 @@ function getRL(){
         $("#rl").selectpicker('refresh');
     }, 'json');
 }
+
 
 
 

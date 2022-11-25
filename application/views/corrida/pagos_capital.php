@@ -925,7 +925,6 @@
             var isValid = function(val) {
                 return angular.isNumber(val) && !isNaN(val);
             };
-
             // Helper for creating RegExp's
             var toRegExp = function(val) {
                 var escaped = val.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

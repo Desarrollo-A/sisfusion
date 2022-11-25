@@ -738,7 +738,8 @@ function update_estatus(){
           if( 
             ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
             ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122))
+            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ||
+            ($id_user_Vl == 7689))
             {
 
 
@@ -7135,7 +7136,10 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function InsertPena($lote_1)
     {
-      return $this->Comisiones_model->InsertPenalizacionComision($lote_1);
+      $response =$this->Comisiones_model->InsertPenalizacionComision($lote_1);
+      if ($response) {
+      return $this->Comisiones_model->InsertPenalizacionHistorial($lote_1);
+      }
     }
 
     // END INSTALACIÓN PENALIZACIONES

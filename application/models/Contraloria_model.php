@@ -254,7 +254,7 @@ class Contraloria_model extends CI_Model {
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
-		l.ubicacion, l.tipo_venta, l.observacionContratoUrgente as vl,oxc.nombre as nacionalidad,asesor.nacionalidad as nacion,
+		l.ubicacion, l.tipo_venta, l.observacionContratoUrgente as vl,oxc.nombre as nacionalidad,cl.tipo_nc as nacion,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -266,13 +266,13 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		LEFT JOIN opcs_x_cats oxc ON asesor.nacionalidad =  oxc.id_opcion and oxc.id_catalogo = 11
+		LEFT JOIN opcs_x_cats oxc ON cl.tipo_nc =  oxc.id_opcion and oxc.id_catalogo = 78
 		WHERE l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
 		AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,  oxc.nombre,asesor.nacionalidad,
+		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,  oxc.nombre,cl.tipo_nc ,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 		l.tipo_venta, l.observacionContratoUrgente,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
@@ -758,16 +758,18 @@ class Contraloria_model extends CI_Model {
 		return $query->row();
 	}
 
-	public function getLotesAllAssistant($idCondominio){
+	public function getLotesAllAssistant($idCondominio) {
+		$id_lider = $this->session->userdata('id_lider');
 		$query = $this->db-> query("SELECT l.* FROM lotes l 
 		INNER JOIN clientes c ON c.id_cliente = l.idCliente
 		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0, 1, 3)
-		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND c.id_gerente = ". $this->session->userdata('id_lider') ." AND l.idCondominio = $idCondominio
+		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) 
+		AND c.status = 1 AND c.id_gerente = $id_lider AND l.idCondominio = $idCondominio
 		UNION ALL
         SELECT l.* FROM lotes l 
-		INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND cl.id_asesor != 1908
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
 		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-		INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND uu.id_lider = ". $this->session->userdata('id_lider') ."
+		INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND (uu.id_lider = $id_lider OR u.id_lider = $id_lider)
         WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $idCondominio");
 		return $query->result_array();
 	}
@@ -1073,14 +1075,15 @@ class Contraloria_model extends CI_Model {
         return $query->result_array();
     }
 	public function validate90Dias($idLote,$idCliente,$usuario){
-		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias 
+		$validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias, c.tipo_nc  
 		FROM clientes c 
 		INNER JOIN lotes l on l.idCliente=c.id_cliente 
 		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote")->result_array();
 		if(count($validation90) > 0){
-			if($validation90[0]['dias'] > 89){
+			if($validation90[0]['dias'] > 89 && $validation90[0]['tipo_nc'] == 0){
 				$dias = $validation90[0]['dias'];
-				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus=1")->result_array();
+				$tipo_nc0 = $validation90[0]['tipo_nc'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus = 1 AND tipo_cliente = $tipo_nc0")->result_array();
 				$estatus= $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
 				$datos = array(
 					'id_lote' => $idLote,
@@ -1092,7 +1095,24 @@ class Contraloria_model extends CI_Model {
 					'creado_por' => $usuario,
 					'fecha_creacion' => date('Y-m-d H:i:s'),
 					'modificado_por' => $usuario,
-				);
+ 				);
+				$this->db->insert('penalizaciones',$datos);
+			}else if ($validation90[0]['dias'] > 119 && $validation90[0]['tipo_nc'] == 1){
+				$dias = $validation90[0]['dias'];
+				$tipo_nc1 = $validation90[0]['tipo_nc'];
+				$validationPorcentage = $this->db->query("SELECT * FROM porcentajes_penalizaciones WHERE inicio <= $dias AND fin >= $dias AND estatus = 1 AND tipo_cliente = $tipo_nc1")->result_array();
+				$estatus = $validationPorcentage[0]['id_porcentaje_penalizacion'] == 4 ? 4 : 1;
+				$datos = array(
+					'id_lote' => $idLote,
+					'id_cliente' => $idCliente,
+					'dias_atraso' => $dias,
+					'estatus' => $estatus,
+					'fecha_aprobacion' => date('Y-m-d H:i:s'),
+					'id_porcentaje_penalizacion' => $validationPorcentage[0]['id_porcentaje_penalizacion'],
+					'creado_por' => $usuario,
+					'fecha_creacion' => date('Y-m-d H:i:s'),
+					'modificado_por' => $usuario,
+ 				);
 				$this->db->insert('penalizaciones',$datos);
 			}
 		}
@@ -1103,5 +1123,9 @@ class Contraloria_model extends CI_Model {
 		$cmd = "SELECT * FROM opcs_x_cats WHERE id_catalogo = 77 AND estatus = 1 ";
 		$query  = $this->db->query($cmd);
 		return $query->result();
+	}
+		public function updateNaci ($cliente,$array_cliente) {
+		$this->db->where("id_cliente",$cliente);
+        $this->db->update('clientes',$array_cliente);
 	}
 }
