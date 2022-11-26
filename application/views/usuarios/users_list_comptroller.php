@@ -540,7 +540,7 @@
                 }
             },
             { data: function (d) {
-                    if (userId == 2767) {
+                    if (userId == 2767 || userId == 5957) {
                         return '<button class="btn btn-success btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" style="margin-right: 5px;background-color:#2874A6;border-color:#21618C" title="Cambiar forma de pago"><i class="material-icons">edit</i></button>'+
                         '<button class="btn btn-success btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" style="background-color:#96843d;border-color:#48DBA7" title="Ver historial de cambios"><i class="material-icons">visibility</i></button>';
                     } else {
