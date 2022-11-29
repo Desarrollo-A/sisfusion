@@ -367,8 +367,8 @@
             if(condominio == '' || condominio == null || condominio == undefined){
                 condominio = 0;
             }
-            if(tabla_historialGral2){
-                 tabla_historialGral2.destroy();
+            if(tabla_historialGral3){
+                 tabla_historialGral3.destroy();
             }
 
             getAssimilatedCancelacion(proyecto, condominio);
@@ -421,7 +421,8 @@
         var totalCdmx = 0;
         var totalCancun = 0;
         var tr;
-        var tabla_historialGral2 ;
+        var tabla_historialGral2 ; 
+        var tabla_historialGral3 ;
         var totaPen = 0;
 
         //INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
@@ -443,7 +444,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_COMISIONES',
+                    title: 'HISTORIAL_GENERAL_ACTIVAS',
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
@@ -686,7 +687,7 @@
         function getAssimilatedCancelacion(proyecto, condominio){
             let titulos = [];
             $("#tabla_comisiones_canceladas").prop("hidden", false);
-            tabla_historialGral2 = $("#tabla_comisiones_canceladas").DataTable({
+            tabla_historialGral3 = $("#tabla_comisiones_canceladas").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',                
                 buttons: [
@@ -700,7 +701,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_COMISIONES',
+                    title: 'HISTORIAL_GENERAL_CANCELADAS',
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
