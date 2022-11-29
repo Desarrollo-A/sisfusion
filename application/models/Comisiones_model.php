@@ -349,7 +349,7 @@ public function getDataDispersionPago($val = '') {
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
             LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
-            WHERE (l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250, 31850 , 32573 )) OR (l.idStatusContratacion >= 9
+            WHERE (l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250, 31850, 32573)) OR (l.idStatusContratacion >= 9
             AND cl.status = 1 AND l.status = 1
             AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) 
             AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) AND cl.fechaApartado >= '2020-03-01'
