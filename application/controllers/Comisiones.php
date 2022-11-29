@@ -3031,6 +3031,18 @@ public function getDatosHistorialPago($proyecto,$condominio){
  echo json_encode( array( "data" => $dat));
 }
 
+public function getDatosHistorialCancelacion($proyecto,$condominio){
+
+  // ini_set('max_execution_time', 99999);
+  // set_time_limit(999999);
+  // ini_set('memory_limit','8192M');
+
+    
+$dat =  $this->Comisiones_model->getDatosHistorialCancelacion($proyecto,$condominio)->result_array();
+
+echo json_encode( array( "data" => $dat));
+}
+
 
 public function getDatosHistorialPagoM($proyecto,$condominio){
   ini_set('max_execution_time', 900);
