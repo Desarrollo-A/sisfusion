@@ -4696,18 +4696,35 @@ return 1;
         }
 
         function getDatosHistorialPostventa(){
-            return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, lo.idLote, pac.total_comision, lo.totalNeto2, cl.fechaApartado, lo.nombreLote, 
-cl.nombre, cl.apellido_paterno, cl.apellido_materno, lo.registro_comision, lo.totalNeto2, lo.referencia, con.nombre as condominio, res.nombreResidencial as proyecto
-                FROM lotes lo
-                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
-                INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
-                INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
-                LEFT JOIN comisiones c1 ON lo.idLote = c1.id_lote
-                LEFT JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
-                LEFT JOIN pago_comision pac ON pac.id_lote = lo.idLote
-                WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.registro_comision in (1,7)
-                GROUP BY lo.idLote, pac.total_comision, lo.totalNeto2, cl.fechaApartado, lo.nombreLote, cl.nombre,
-                cl.apellido_paterno, cl.apellido_materno, lo.totalNeto2, lo.registro_comision , lo.referencia, con.nombre, res.nombreResidencial");  
+            //MODIFICACION PENDIENTE
+            return $this->db->query("SELECT DISTINCT(lo.idLote), cm1.comision_total, cm2.abono_pagos, cm3.abono_pagos as abonados, pc.total_comision, lo.totalNeto2, 
+            cl.fechaApartado, lo.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+            lo.registro_comision, lo.totalNeto2, lo.referencia, cn.nombre as condominio, rs.nombreResidencial as proyecto
+            FROM lotes lo
+            
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            INNER JOIN condominios cn ON lo.idCondominio=cn.idCondominio
+            INNER JOIN residenciales rs ON cn.idResidencial = rs.idResidencial
+            INNER JOIN pago_comision pc ON pc.id_lote = lo.idLote
+            INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
+            
+            LEFT JOIN (SELECT SUM(c0.comision_total) comision_total, c0.id_lote FROM comisiones c0 
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            GROUP BY c0.id_lote ) cm1 ON cm1.id_lote = lo.idLote
+            
+            LEFT JOIN (SELECT SUM(p0.abono_neodata) abono_pagos, c0.id_lote FROM comisiones c0 
+            LEFT JOIN pago_comision_ind p0 ON p0.id_comision = c0.id_comision
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            GROUP BY c0.id_lote ) cm3 ON cm3.id_lote = lo.idLote
+                
+            LEFT JOIN (SELECT SUM(p0.abono_neodata) abono_pagos, c0.id_lote FROM comisiones c0 
+            LEFT JOIN pago_comision_ind p0 ON p0.id_comision = c0.id_comision AND (p0.estatus in (11,3,4,88) OR p0.descuento_aplicado = 1)
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            GROUP BY c0.id_lote ) cm2 ON cm2.id_lote = lo.idLote
+            
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+            LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+            ORDER BY lo.idLote");  
         }
 
  
@@ -8741,7 +8758,7 @@ return $query->result();
             SELECT 7 AS idEstatus, 'PAGADAS' as nombre union
             SELECT 8 AS idEstatus, 'VENTAS ESPECIALES' as nombre union
             SELECT 9 AS idEstatus, 'RECISIONES'");
-            /* Modificacion Uri */
+            
         return $query->result_array();
     }
     
