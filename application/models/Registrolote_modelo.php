@@ -4705,7 +4705,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		$condicion;
 		if($this->session->userdata('id_rol') == 1){
 			$condicion ='';
-			$query = $this->db-> query('SELECTT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, users.usuario as sol, users1.usuario as aut, id_autorizacion, aut.idLote
+			$query = $this->db-> query('SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, users.usuario as sol, users1.usuario as aut, id_autorizacion, aut.idLote
 			FROM autorizaciones aut
 			inner join lotes on lotes.idLote = aut.idLote 
 			inner join condominios cond on cond.idCondominio = lotes.idCondominio 
