@@ -2142,8 +2142,7 @@ $i = 0;
 
 
 
-  public function editar_registro_lote_contraloria_proceceso9(){
-
+public function editar_registro_lote_contraloria_proceceso9(){
 	$idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
     $nombreLote=$this->input->post('nombreLote');
@@ -2182,15 +2181,16 @@ $i = 0;
     $arreglo2["fechaVenc"]= $fechaVenc;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;         
-    $arreglo2["idCliente"]= $idCliente;          
-	// $arreglo2["rl"]=$rl;
+    $arreglo2["idCliente"]= $idCliente;
+	
+	$arreglo3 = array();
 
 	$validate = $this->Contraloria_model->validateSt9($idLote);
 	$resultNACI = $this->General_model->updateRecord('clientes',  $array_cliente, 'id_cliente', $idCliente);
 	//$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
 
 	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2, $rl) == TRUE){ 
 				$data['message'] = 'OK';
 				echo json_encode($data);
 			}else{
@@ -2201,8 +2201,7 @@ $i = 0;
 		$data['message'] = 'FALSE';
 		echo json_encode($data);
 	}
-
-  }
+}
 
 
 

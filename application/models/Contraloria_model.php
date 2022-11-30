@@ -106,21 +106,23 @@ class Contraloria_model extends CI_Model {
 
 
 
-	public function updateSt($idLote,$arreglo,$arreglo2){
-
+	public function updateSt($idLote,$arreglo,$arreglo2, $rl){
         $this->db->trans_begin();
-
         $this->db->where("idLote",$idLote);
         $this->db->update('lotes',$arreglo);
+
+		$this->db->where("idLote",$idLote);
+		$this->db->where("status", 1);
+        $this->db->update('clientes',$rl);
 
         $this->db->insert('historial_lotes',$arreglo2);
 
         if ($this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-                return false;
-            } else {
-                $this->db->trans_commit();
-                return true;
+			$this->db->trans_rollback();
+			return false;
+		} else { 
+			$this->db->trans_commit();
+			return true;
         }
 
 	}
@@ -355,7 +357,7 @@ class Contraloria_model extends CI_Model {
 		INNER JOIN clientes cl ON cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		LEFT JOIN opcs_x_cats opx ON l.rl  = opx.id_opcion AND opx.id_catalogo = 77
+		LEFT JOIN opcs_x_cats opx ON cl.rl  = opx.id_opcion AND opx.id_catalogo = 77
 		WHERE l.idStatusContratacion IN (9) AND l.idMovimiento IN (39, 26) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, l.validacionEnganche, l.firmaRL,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.perfil, cond.nombre,
@@ -451,7 +453,7 @@ class Contraloria_model extends CI_Model {
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-			LEFT JOIN opcs_x_cats opx ON l.rl  = opx.id_opcion AND opx.id_catalogo = 77
+			LEFT JOIN opcs_x_cats opx ON cl.rl  = opx.id_opcion AND opx.id_catalogo = 77
 			WHERE l.idStatusContratacion IN (12, 11, 10) AND l.idMovimiento IN (42, 41, 40) 
 			AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 			AND l.totalNeto2 != 0.00 AND l.totalNeto2 != '0.00' AND l.totalNeto2 > 0.00
