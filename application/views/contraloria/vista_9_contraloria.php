@@ -45,7 +45,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
-                                                <th>PROCESO</th>
+                                                <th>RESIDENCIA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -82,8 +82,9 @@
                                    
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="m-0" for="proyecto">Representante Legal:</label>
                                         <div class="form-group ">
-                                            <label class="m-0" for="proyecto">Representante Legal:</label>
+                                        
                                             <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true" 
                                                     title="Selecciona RL" data-size="7" required>
@@ -92,8 +93,9 @@
                                         </div>
                         </div>  
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="m-0" for="proyecto">Residencia:</label>
                                         <div class="form-group selec">
-                                            <label class="m-0" for="proyecto">Confirma la nacionalidad del proceso:</label>
+                                        
                                             <select name="naci" id="naci"  class="selectpicker select-gral m-0 naci" data-default-value="opciones"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true" 
                                                     title="Nacionalidad del proceso" data-size="7" required>
@@ -211,7 +213,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         return 'CLIENTE';
                                         break;
                                     case 7:
-                                        return 'PROCESO';
+                                        return 'RESIDENCIA';
                                         break;
                                 }
                             }
@@ -249,7 +251,7 @@ tabla_9 = $("#tabla_ingresar_9").DataTable({
                                         return 'CLIENTE';
                                         break;
                                     case 7:
-                                        return 'PROCESO';
+                                        return 'RESIDENCIA';
                                         break;
                                 }
                             }
@@ -516,16 +518,16 @@ $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
 
             nombreLote = $(this).data("nomlote");
             $(".lote").html(nombreLote);
-            console.log('444444444');
+            
             // $("#rl").selectpicker('refresh');
             $("#naci").selectpicker('refresh');
              $('#editReg').modal('show');
-            console.log('78787878');
+        
             // document.getElementById("rl").value = 'opciones';
             $("#rl").selectpicker('refresh');
-            console.log('77788');
+          
             $("#rl").val('opciones');
-             console.log('99999');
+         
                // $("#rl").val($("#rl").data("default-value"));
 
             // $('#rl option').prop('selected', function() {
