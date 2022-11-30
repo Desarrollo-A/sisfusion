@@ -101,10 +101,6 @@ class Contraloria_model extends CI_Model {
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
 	}
-	
- 
-
-
 
 	public function updateSt($idLote,$arreglo,$arreglo2, $rl){
         $this->db->trans_begin();
