@@ -66,7 +66,7 @@
 							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
 						</div>
 						<div class="modal-body" style="padding-left:0px; padding-right:0px">
-							<div id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
+							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
 							<input hidden name="numeroDeRow" id="numeroDeRow">
 							<input hidden name="idCliente" id="idCliente">
 							<input hidden name="idCondominio" id="idCondominio">
