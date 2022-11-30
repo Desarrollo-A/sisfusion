@@ -19277,34 +19277,23 @@ tr td:hover { background: #666; color: #FFF; }
       $this->registrolote_modelo->aplicaLiberaciones($this->input->post('filtro4'), $valida);
     }
 
-	public function get_auts_by_lote_directivos($idLote)
-	{
+	public function get_auts_by_lote_directivos($idLote){
 		$data = $this->registrolote_modelo->get_auts_by_lote_directivos($idLote);
-//		print_r($data);
 		if($data != null) {
-
 			echo json_encode($data);
-
-		} else {
-
+		}
+		else {
 			echo json_encode(array());
-
 		}
 	}
 
 
-	function get_auts_by_lote($idLote)
-	{
+	function get_auts_by_lote($idLote){
 		$data = $this->registrolote_modelo->get_auts_by_lote($idLote);
-		//print_r($data);
 		if($data != null) {
-
 			echo json_encode($data);
-
 		} else {
-
 			echo json_encode(array());
-
 		}
 	}	
 

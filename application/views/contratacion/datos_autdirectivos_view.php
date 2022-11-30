@@ -32,6 +32,30 @@
 		$this->load->view('template/sidebar', $dato);
 		?>
 
+
+		<style>
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iAccepted {
+				color: #4caf50;
+			}
+
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iDenied {
+				color: #929292;
+			}
+
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iSend {
+				color: #103f75;
+			}
+
+			#addFile .radio-with-Icon i {
+				color: #eaeaea;
+			}
+
+			#addFile .radio-with-Icon i:hover {
+				color: #929292;
+			}
+
+		</style>
+
 		<!-- Modals -->
 		<!-- modal  INSERT COMENTARIOS-->
 		<div class="modal fade" id="addFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
@@ -39,23 +63,21 @@
 				<div class="modal-content" >
 					<form method="POST" name="sendAutsFromD" id="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>registroCliente/updateAutsFromsDC">
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<center><h3 class="modal-title" id="myModalLabel"><b>Autorizaciones</b></h3></center>
+							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
 						</div>
-						<div class="modal-body">
-							<div id="loadAuts"></div>
-							<input type="hidden" name="numeroDeRow"  id="numeroDeRow" value="">
-							<input type="hidden" name="idCliente"  id="idCliente" value="">
-							<input type="hidden" name="idCondominio"  id="idCondominio" value="">
-							<input type="hidden" name="idLote"  id="idLote" value="">
-							<input type="hidden" name="id_autorizacion"  id="id_autorizacion" value="">
-							<input type="hidden" name="nombreResidencial"  id="nombreResidencial" value="">
-							<input type="hidden" name="nombreCondominio"  id="nombreCondominio" value="">
-							<input type="hidden" name="nombreLote"  id="nombreLote" value="">						
+						<div class="modal-body" style="padding-left:0px; padding-right:0px">
+							<div id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
+							<input hidden name="numeroDeRow" id="numeroDeRow">
+							<input hidden name="idCliente" id="idCliente">
+							<input hidden name="idCondominio" id="idCondominio">
+							<input hidden name="idLote" id="idLote">
+							<input hidden name="id_autorizacion" id="id_autorizacion">
+							<input hidden name="nombreResidencial" id="nombreResidencial">
+							<input hidden name="nombreCondominio" id="nombreCondominio">
+							<input hidden name="nombreLote" id="nombreLote">						
 						</div>
 						<div class="modal-footer">
 							<button type="submit"  class="btn btn-primary">Enviar autorización</button>
-						
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
 						</div>
 					</form>
@@ -108,6 +130,8 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script>
+
+		
 		$(document).ready(function() {
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
@@ -120,13 +144,11 @@
 			});
 		});
 
-		$(document).on('change', '.btn-file :file', function() {
-			var input = $(this),
-				numFiles = input.get(0).files ? input.get(0).files.length : 1,
-				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			input.trigger('fileselect', [numFiles, label]);
-			console.log('triggered');
-		});
+		function changeName(e){
+			var fileName = e.files[0].name;
+			var relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+			relatedTarget[0].value = fileName;
+		}
 
 		let titulos = [];
 		$('#addExp thead tr:eq(0) th').each( function (i) {
@@ -283,68 +305,63 @@
 					var ctn;
 					var p = 0;
 					var opcionDenegado;
-					var tama = '';
 					$.each(JSON.parse(data), function(i, item) {
 
-						<?php
-						if($this->session->userdata('id_rol')==1)
-						{?>
-						opcionDenegado = '';
-						tama = 'class="col-md-6"';
-						<?php
-						}
-						else
-						{
-						?>
-						tama = 'class="col-md-4"';
+						<?php if($this->session->userdata('id_rol')!=1) { ?>
+							opcionDenegado = '';
+						<?php } else { ?>
+							opcionDenegado = `<p class="radioOption-Item m-0 pl-1">
+												<input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
+												<label for="send${i}" class="cursor-point m-0">
+													<i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC"></i>
+												</label>
+											</p>`;
+						<?php } ?>
 
-						opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
-						<?php
-						}
-						?>
+						ctn = `
+							<div class="boxContent" style="margin-bottom:20px; padding: 10px; background: #f7f7f7; border-radius:15px">
+								<div class="d-flex">
+									<div class="w-80">
+										<small>
+											<label class="m-0" style="font-size: 11px; font-weight: 100;">Solicitud asesor ( ${ item['fecha_creacion'].substr(0,10) })</label>
+										</small>
+									</div>
+									<div class="w-20">
+										<div class="radio-with-Icon d-flex justify-end">
+											<p class="radioOption-Item m-0">
+												<input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
+												<label for="accept${i}" class="cursor-point m-0">
+													<i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Aceptar"></i>
+												</label>
+											</p>
+											<p class="radioOption-Item m-0 pl-1">
+												<input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
+												<label for="denied${i}" class="cursor-point m-0">
+													<i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Rechazar"></i>
+												</label>
+											</p>
+											${opcionDenegado}
+										</div>
+									</div>
+								</div>
+								<label>${ item['autorizacion'] }</label>
+								<div class="file-gph">
+									<input class="d-none" type="file" id="expediente${i}" name="docArchivo${i}" onchange="changeName(this)">
+									<input class="file-name" type="text" placeholder="No has seleccionada nada aún" >
+									<label class="upload-btn m-0" for="expediente${i}">
+										<span>Buscar</span>
+										<i class="fas fa-search"></i>
+									</label>
+								</div>
+								<div class="form-group label-floating is-empty">
+									<label class="control-label">Comentario</label>
+									<input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none" required>
+								</div>
+								<input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
+							</div>
+						`;
 
-
-						ctn ='<table width="100%">'+
-							'<tr>'+
-							'<td width="100%" class="center-align">' +
-							'<label class="center-align">Solicitud asesor <small class="center-align">('+ item['fecha_creacion'].substr(0,10)  +')</small></label><br class="center-align"><p><i>' + item['autorizacion']+'</i></p></td>' +
-							'<tr/>'+
-							'<tr>'+
-							'<td width="100%">' +
-							'<div class="form-group label-floating is-empty">\n' +
-							'                                            <label class="control-label">Comentario</label>\n' +
-							'<input type="text" name="observaciones'+i+'" class="form-control" placeholder="" required><br><br>' +
-							'                                        <span class="material-input"></span></div>' +
-
-							'<input type="hidden" name="idAutorizacion'+i+'"  value="'+item['id_autorizacion']+'">'+
-							'</td>' +
-							'<tr/>'+
-							'<tr>'+
-
-							'<td>' +
-							'<div class="input-group"><label class="input-group-btn"><span class="btn btn-primary btn-file">' +
-							'Seleccionar archivo&hellip;<input type="file" name="docArchivo'+i+'" id="expediente'+i+'" style="display: none;">' +
-							'</span></label><input type="text" class="form-control" id= "txtexp'+i+'" readonly></div><br><br>'+
-							'</td>' +
-							'<tr/>'+
-							'<tr>'+
-							'<div class="input-group" >' +
-							'<td style="text-align:center;">' +
-							'<div '+tama +'>' +
-							'<label ><input class=" btn-details-grey" type="radio" name="accion'+i+'" value="0" required> Aceptar</label>' +
-							'</div>'+
-							'<div '+tama +'>' +
-							'<label ><input class=" btn-details-grey" type="radio" name="accion'+i+'" value="2" required> Denegar</label>' +
-							'</div>'+
-							'<div '+tama +'>' +
-							opcionDenegado +
-							'</div>'+
-							'</td>'+
-							'</div>'+
-							'</tr></table>'+
-							'<hr style="border:1px solid #eee">';
 						$('#loadAuts').append(ctn);
-
 						p++;
 					});
 					$('#numeroDeRow').val(p);
@@ -442,7 +459,6 @@
         contentType: false,
         processData: false,
         success: function(resultados) {
-          console.log("Petición terminada. Resultados", resultados);
         }
 
       });
@@ -466,9 +482,6 @@
             // Actions before send post
         },
         success: function(data) {
-			console.log(data.code);
-			console.log(data.mensaje);
-			console.log(data);
                 alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
 				$('#addExp').DataTable().ajax.reload(null, false );
 				$('#addFile').modal('hide');

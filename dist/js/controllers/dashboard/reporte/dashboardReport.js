@@ -13,7 +13,7 @@ function asDirector(userType){
         idUserOnReport = '2';
     }
     //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
-    else if( userType == '5' && ( idUser == '28' || idUser == '30' )){
+    else if( userType == '5' && ( idUser == '28' || idUser == '30' || idUser == '4888')){
         rolOnReport = '1';
         idUserOnReport = '2';
     }

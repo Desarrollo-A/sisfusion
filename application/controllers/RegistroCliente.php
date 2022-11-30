@@ -7800,8 +7800,7 @@
 	}
 
 
-	public function updateAutsFromsDC()
-	{
+	public function updateAutsFromsDC(){
 		$tamanoOfAuts = ($_POST['numeroDeRow']);
     $response =  0 ;
 		$idCliente = ($_POST['idCliente']);
@@ -7856,9 +7855,7 @@
 
 				$this->registrolote_modelo->insert_historial_documento($arreglo2);
 				if (move_uploaded_file($_FILES["docArchivo".$i]["tmp_name"],"static/documentos/cliente/expediente/".$expediente)) {
-					//        echo 'success';
 				}
-				/**/
 			}
 
 			$dataUPDAut = array(
