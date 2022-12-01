@@ -972,7 +972,7 @@ function update_estatus(){
               'id_usuario' =>  $id_user_Vl,
               'fecha_movimiento' => date('Y-m-d H:i:s'),
               'estatus' => 1,
-              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+              'comentario' =>  'CONTRALORÍA MARCO COMO PAGADA' 
             );
              array_push($data,$row_arr);
 
