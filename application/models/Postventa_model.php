@@ -25,7 +25,7 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
@@ -108,7 +108,7 @@ class Postventa_model extends CI_Model
          VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
-    function getSolicitudes($begin, $end, $estatus)
+    function getSolicitudes($begin, $end, $filtro_vista)
     {
 
         $idUsuario = $this->session->userdata('id_usuario');
@@ -121,7 +121,7 @@ class Postventa_model extends CI_Model
         }
 
         $where = "";
-        if($estatus == 0){
+        if($filtro_vista == 0){
             $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
         }else{
             $where = "";
