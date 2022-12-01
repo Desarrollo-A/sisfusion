@@ -39,6 +39,11 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
+                        <div class="col-lg-12 form-group p-0 m-0" id="rechazo">
+                                <label class="label-gral">Área de rechazo</label>
+                                <select class="selectpicker select-gral m-0" name="area_rechazo" id="area_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
+                                <b id="area_selected"></b>
+                            </div>
                             <div class="col-lg-12 form-group p-0 m-0">
                                 <label class="label-gral">Seleccione el motivo de rechazo.</label>
                                 <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>

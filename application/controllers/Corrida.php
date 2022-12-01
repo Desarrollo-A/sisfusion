@@ -57,6 +57,10 @@ class Corrida extends CI_Controller {
 	public function cf3(){
 		$this->load->view("corrida/cf_view_PAC");
 	}
+	public function cf_testing(){
+        $this->load->view("corrida/cf_cambios");
+
+    }
 
 	public function getGerente() {
 		$data= $this->Corrida_model->getGerente();
@@ -3237,7 +3241,7 @@ legend {
     function getLotesPC($condominio,$residencial)
     {
         $data['lotes'] = $this->Corrida_model->getLotesPC($condominio, $residencial);
-        //$data2 = array();
+        //$data2 = array
         if(count($data['lotes'])<=0)
         {
             $data['lotes'][0]['idLote'] = 0;
