@@ -323,7 +323,7 @@
                                         tabla_especial2.ajax.reload();
                                         $("#myModalEnviadas .modal-body").html("");
                                         $("#myModalEnviadas").modal();
-                                        $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                                        $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de ventas especiales, se marcaron como pagadas correctamente.</p></center>");
                                     }
                                     else {
                                         $('#spiner-loader').addClass('hide');
