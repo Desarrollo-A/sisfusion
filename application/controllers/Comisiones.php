@@ -949,6 +949,55 @@ function update_estatus(){
       }
   }
 
+  public function acepto_internomex_especial(){
+    $this->load->model("Comisiones_model");
+    $sol=$this->input->post('idcomision');  
+    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+   
+      if( $consulta_comisiones->num_rows() > 0 ){
+        $consulta_comisiones = $consulta_comisiones->result_array();
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        
+          $sep = ',';
+          $id_pago_i = '';
+
+          $data=array();
+
+          foreach ($consulta_comisiones as $row) {
+            $id_pago_i .= implode($sep, $row);
+            $id_pago_i .= $sep;
+
+            $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>  $id_user_Vl,
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+            );
+             array_push($data,$row_arr);
+
+
+          }
+          $id_pago_i = rtrim($id_pago_i, $sep);
+      
+            $up_b = $this->Comisiones_model->update_contraloria_especial($id_pago_i);
+            $ins_b = $this->Comisiones_model->insert_phc($data);
+      
+      if($up_b == true && $ins_b == true){
+        $data_response = 1;
+        echo json_encode($data_response);
+      } else {
+        $data_response = 0;
+        echo json_encode($data_response);
+      }
+            
+      }
+      else{
+        $data_response = 0;
+      echo json_encode($data_response);
+      }
+  }
+
     public function pago_internomex(){
     $this->load->model("Comisiones_model");
     $sol=$this->input->post('idcomision');  
@@ -3509,6 +3558,29 @@ public function LiquidarLote(){
       }
 
     }
+
+    public function revision_especial()
+    {
+      //Moficiaciones para revisiones especiales
+      $datos = array();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      switch($this->session->userdata('id_rol')){
+        case '31':
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_INTMEXremanente", $datos);
+        break;
+
+        default:
+        $this->load->view('template/header');
+        $this->load->view("ventas/revision_especial", $datos);
+        break;
+      }
+
+    }
  
     public function getDatosNuevasRContraloria($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosNuevasRContraloria($proyecto,$condominio)->result_array();
@@ -3517,6 +3589,15 @@ public function LiquidarLote(){
      }
      echo json_encode( array( "data" => $dat));
     }
+
+    public function getDatosEspecialRContraloria(){
+      $dat =  $this->Comisiones_model->getDatosEspecialRContraloria()->result_array();
+     for( $i = 0; $i < count($dat); $i++ ){
+         $dat[$i]['pa'] = 0;
+     }
+     echo json_encode( array( "data" => $dat));
+    }
+
     public function resguardos()
     {
       $datos = array();
