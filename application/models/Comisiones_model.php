@@ -2283,7 +2283,7 @@ function update_acepta_contraloria($idsol) {
 }
 
 function update_contraloria_especial($idsol) {
-    return $this->db->query("UPDATE pago_comision_ind14 SET estatus = 11 ,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 11 ,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
 }
 
 function update_mktd_contraloria($idsol) {

@@ -980,7 +980,7 @@ function update_estatus(){
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
       
-            $up_b = $this->Comisiones_model->update_contraloria_especial($id_pago_i);
+            $up_b = $this->Comisiones_model->update_acepta_contraloria($id_pago_i);
             $ins_b = $this->Comisiones_model->insert_phc($data);
       
       if($up_b == true && $ins_b == true){
