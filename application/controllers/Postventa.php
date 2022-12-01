@@ -968,7 +968,11 @@ class Postventa extends CI_Controller
     public function getMotivosRechazos()
     {
         $tipo_documento = $_POST['tipo_documento'];
-        $data = $this->Postventa_model->getMotivosRechazos($tipo_documento);
+        $estatus = $_POST['estatus'];
+        $dataMotivos = $this->Postventa_model->getMotivosRechazos($tipo_documento);
+        $dataEstatus = $this->Postventa_model->getStatusSiguiente($estatus);
+        $data = array("dataMotivos" => $dataMotivos,
+                     "dataEstatus" => $dataEstatus);
         if ($data != null)
             echo json_encode($data);
         else
@@ -1675,6 +1679,16 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
+    function getStatusSiguiente(){
+        $actividad = $_POST['actividad'];
+        $tipo = $_POST['tipo'];
+        $estatus = $_POST['estatus'];
+        $data = $this->Postventa_model->getStatusSiguiente($actividad,$tipo,$estatus)->row();
+        if($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
+    }
 
     public function rechazarNotaria()
     {
@@ -2050,14 +2064,11 @@ class Postventa extends CI_Controller
     public function newInformacion()
     {
         $data = $_POST;
-
         $id_solicitud = $data['idSolicitud'];
-
         $updateData = array(
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
         );
-
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);

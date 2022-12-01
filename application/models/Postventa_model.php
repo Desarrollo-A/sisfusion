@@ -135,6 +135,13 @@ class Postventa_model extends CI_Model
          INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
          INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
     }
+    function getStatusSiguiente($estatus){
+        return $this->db->query("SELECT ae.nombre,opc.nombre as area,axe.estatus_siguiente,ae.descripcion
+        FROM actividades_x_estatus axe
+        INNER JOIN actividades_escrituracion ae ON axe.actividad_siguiente=ae.clave
+        INNER JOIN opcs_x_cats opc ON opc.id_opcion=ae.id_area AND opc.id_catalogo=1
+        WHERE axe.tipo=2 and axe.estatus_actual in($estatus)")->result_array();
+    }
 
     function changeStatus($id_solicitud, $type, $comentarios, $motivos_rechazo)
     {
@@ -144,7 +151,7 @@ class Postventa_model extends CI_Model
         $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
 
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
-        $siguienteEstatus = $this->db->query("SELECT estatus_siguiente FROM actividades_x_estatus WHERE estatus_actual=$estatus AND id_area=$rol and tipo=$type")->row()->estatus_siguiente;
+        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol and tipo_permiso=$type")->row();
 
         $pertenece = 0;
        /* if($notaria != NULL || $notaria != 0){
@@ -203,7 +210,9 @@ class Postventa_model extends CI_Model
             }
         }*/
 
-       return $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =$siguienteEstatus  WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente."  WHERE id_solicitud = $id_solicitud");
+        return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
+         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->actividad_actual."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
          VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");*/
     }

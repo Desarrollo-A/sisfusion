@@ -220,7 +220,7 @@ $(document).on('submit', '#approveForm', function (e) {
     e.preventDefault();
     let id_solicitud = $('#id_solicitud').val();
     let observations = $('#observations').val();
-    let type =$('#type').val();
+    let type = 2; //$('#type').val();
     changeStatus(id_solicitud, 1, observations, type == 5 ? 5:1);
 })
 
@@ -444,7 +444,7 @@ $(document).on('click', '#request', function () {
     $('#observations').val('');
     let type = $(this).attr('data-type');
     //$('#type').val(type == 5 ? 5:null);
-    $('#type').val(1);
+    $('#type').val(2);
     $("#approveModal").modal();
 });
 
@@ -459,10 +459,13 @@ $(document).on('click', '#createDate', function () {
 
 $(document).on('click', '#reject', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
+    console.log(data);
     $('#id_solicitud2').val(data.idSolicitud);
-    $('#status2').val(data.estatus);
+   // $('#status2').val(data.estatus);
+   $('#status2').val(data.id_estatus);
     $('#estatus').val(data.idEstatus);
-    getMotivosRechazos(data.tipo_documento);
+    data.tipo_documento=11;
+    getMotivosRechazos(data.tipo_documento,data.id_estatus);
     $("#rejectModal").modal();
 });
 
@@ -838,7 +841,7 @@ function fillTable(beginDate, endDate, estatus) {
             {
                 data: function (d) {
                     //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
-                    return `<center><span><b> - ${d.id_estatus}</b></span><center>`;   
+                    return `<center><span><b> ${d.id_estatus}</b></span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
             },
@@ -858,10 +861,19 @@ function fillTable(beginDate, endDate, estatus) {
                             }
                             break;
                             case 2:
-                                if (userType == 11) { 
+                                if (userType == 11 || userType == 56) { 
                                     group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
                                     group_buttons += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
 
+                                    // BOTON APROBAR
+                                }
+                            break;
+                            case 3:
+                            case 4:
+                                if (userType == 55) { 
+                                    group_buttons += `<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;
+                                    
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     // BOTON APROBAR
                                 }
                             break;
@@ -1220,27 +1232,55 @@ function setInitialValues() {
     fillTable(finalBeginDate, finalEndDate, $('#estatusE').val());
 }
 
-function getMotivosRechazos(tipo_documento) {
+function getMotivosRechazos(tipo_documento,estatus) {
+    document.getElementById('area_selected').innerHTML = '';
     $('#spiner-loader').removeClass('hide');
     $("#motivos_rechazo").find("option").remove();
     $("#motivos_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    $("#area_rechazo").find("option").remove();
+    $("#area_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    let showSelect = estatus == 3 || estatus == 4 ? 'show' : 'none';
+    estatus = estatus == 3 || estatus == 4 ? '3,4' : estatus;
+    
+    document.getElementById("rechazo").style.display = showSelect;
     $.post('getMotivosRechazos', {
-        tipo_documento: tipo_documento
+        tipo_documento: tipo_documento,
+        estatus: estatus
     }, function (data) {
-        var len = data.length;
+        console.log(data);
+        var len = data.dataMotivos.length;
+        var len2 = data.dataEstatus.length;
+        console.log(data.dataMotivos);
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_motivo'];
-            var name = data[i]['motivo'];
+            var id = data.dataMotivos[i]['id_motivo'];
+            var name = data.dataMotivos[i]['motivo'];
             $("#motivos_rechazo").append($('<option>').val(id).text(name));
         }
         if (len <= 0) {
             $("#motivos_rechazo").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
+
+        for (var i = 0; i < len2; i++) {
+            var id = data.dataEstatus[i]['estatus_siguiente']+','+data.dataEstatus[i]['descripcion'];
+            var name = data.dataEstatus[i]['area'] +' - '+ data.dataEstatus[i]['nombre'];
+            var descripcion = data.dataEstatus[i]['descripcion'];
+            $("#area_rechazo").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#area_rechazo").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
         $("#motivos_rechazo").selectpicker('refresh');
+        $("#area_rechazo").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
+$(document).on('change', '#area_rechazo', function () {
+    var input = $(this).val();
+    let datos = input.split(',');
+        document.getElementById('area_selected').innerHTML = datos[1];
+    
+});
 function getDocumentsClient(idEscritura) {
     $('#spiner-loader').removeClass('hide');
     $("#documents").find("option").remove();
