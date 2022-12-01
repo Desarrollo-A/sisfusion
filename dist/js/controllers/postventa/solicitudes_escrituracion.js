@@ -210,7 +210,8 @@ $(document).on('submit', '#rejectForm', function (e) {
     let id_solicitud = $('#id_solicitud2').val();
     let motivos_rechazo = $('#motivos_rechazo').val();
     let estatus = $('#estatus').val();
-    let type = estatus == 12 ? 4:2; 
+   // let type = estatus == 12 ? 4:2; 
+   let type = 2;
     changeStatus(id_solicitud, 2, motivos_rechazo, type);
 })
 
@@ -219,7 +220,7 @@ $(document).on('submit', '#approveForm', function (e) {
     e.preventDefault();
     let id_solicitud = $('#id_solicitud').val();
     let observations = $('#observations').val();
-    let type =$('#type').val();
+    let type = 2; //$('#type').val();
     changeStatus(id_solicitud, 1, observations, type == 5 ? 5:1);
 })
 
@@ -438,11 +439,12 @@ $(document).on("submit", "#formPresupuesto", function (e) {
 
 $(document).on('click', '#request', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
-    $('#id_solicitud').val(data.idSolicitud);
-    $('#status').val(data.estatus);
+    $('#id_solicitud').val(data.id_solicitud);
+    $('#status').val(data.id_estatus);
     $('#observations').val('');
     let type = $(this).attr('data-type');
-    $('#type').val(type == 5 ? 5:null);
+    //$('#type').val(type == 5 ? 5:null);
+    $('#type').val(2);
     $("#approveModal").modal();
 });
 
@@ -457,10 +459,13 @@ $(document).on('click', '#createDate', function () {
 
 $(document).on('click', '#reject', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
+    console.log(data);
     $('#id_solicitud2').val(data.idSolicitud);
-    $('#status2').val(data.estatus);
+   // $('#status2').val(data.estatus);
+   $('#status2').val(data.id_estatus);
     $('#estatus').val(data.idEstatus);
-    getMotivosRechazos(data.tipo_documento);
+    data.tipo_documento=11;
+    getMotivosRechazos(data.tipo_documento,data.id_estatus);
     $("#rejectModal").modal();
 });
 
@@ -795,7 +800,7 @@ function fillTable(beginDate, endDate, estatus) {
         columns: [
             {
                 data: function (d) {
-                    return d.idSolicitud
+                    return d.id_solicitud
                 }
 
             },
@@ -818,7 +823,8 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.nombre;
+                    //return d.nombre;
+                    return 0;
                 }
             },
             {
@@ -828,12 +834,14 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
+                    //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
+                    return '';
                 }
             },
             {
                 data: function (d) {
-                    return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
+                    //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
+                    return `<center><span><b> ${d.id_estatus}</b></span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
             },
@@ -845,15 +853,31 @@ function fillTable(beginDate, endDate, estatus) {
                     let exp;
                     let permiso;
 
-                    switch (d.idEstatus) {
-                        case 0:
-                            if (userType == 55) { // MJ: ANTES 54
-                                group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar1"><i class="far fa-paper-plane"></i></button>';
+                    switch (d.id_estatus) {
+                        case 1:
+                            if (userType == 55) { 
+                                group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
                                 // BOTON APROBAR
                             }
                             break;
+                            case 2:
+                                if (userType == 11 || userType == 56) { 
+                                    group_buttons += '<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>';
+                                    group_buttons += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;
 
-                        case 91: //union del paso 1 y 3
+                                    // BOTON APROBAR
+                                }
+                            break;
+                            case 3:
+                            case 4:
+                                if (userType == 55) { 
+                                    group_buttons += `<button id="request" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;
+                                    
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                    // BOTON APROBAR
+                                }
+                            break;
+                      /*  case 91: //union del paso 1 y 3
                         console.log('userType', userType);
                         if(userType == 56){
                             newBtn += `<button id="estatusL" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;
@@ -1121,7 +1145,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                         case 93:
                             group_buttons += permisos(d.permisos, 1, d.idDocumento, d.tipo_documento, d.idSolicitud, 1, newBtn);
-                            break;
+                            break;*/
                         default:
                             break;
                     }
@@ -1131,7 +1155,7 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.idEstatus;   
+                    return d.id_estatus;   
                 }
             }
         ],
@@ -1208,27 +1232,55 @@ function setInitialValues() {
     fillTable(finalBeginDate, finalEndDate, $('#estatusE').val());
 }
 
-function getMotivosRechazos(tipo_documento) {
+function getMotivosRechazos(tipo_documento,estatus) {
+    document.getElementById('area_selected').innerHTML = '';
     $('#spiner-loader').removeClass('hide');
     $("#motivos_rechazo").find("option").remove();
     $("#motivos_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    $("#area_rechazo").find("option").remove();
+    $("#area_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    let showSelect = estatus == 3 || estatus == 4 ? 'show' : 'none';
+    estatus = estatus == 3 || estatus == 4 ? '3,4' : estatus;
+    
+    document.getElementById("rechazo").style.display = showSelect;
     $.post('getMotivosRechazos', {
-        tipo_documento: tipo_documento
+        tipo_documento: tipo_documento,
+        estatus: estatus
     }, function (data) {
-        var len = data.length;
+        console.log(data);
+        var len = data.dataMotivos.length;
+        var len2 = data.dataEstatus.length;
+        console.log(data.dataMotivos);
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_motivo'];
-            var name = data[i]['motivo'];
+            var id = data.dataMotivos[i]['id_motivo'];
+            var name = data.dataMotivos[i]['motivo'];
             $("#motivos_rechazo").append($('<option>').val(id).text(name));
         }
         if (len <= 0) {
             $("#motivos_rechazo").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
+
+        for (var i = 0; i < len2; i++) {
+            var id = data.dataEstatus[i]['estatus_siguiente']+','+data.dataEstatus[i]['descripcion'];
+            var name = data.dataEstatus[i]['area'] +' - '+ data.dataEstatus[i]['nombre'];
+            var descripcion = data.dataEstatus[i]['descripcion'];
+            $("#area_rechazo").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#area_rechazo").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
         $("#motivos_rechazo").selectpicker('refresh');
+        $("#area_rechazo").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
 
+$(document).on('change', '#area_rechazo', function () {
+    var input = $(this).val();
+    let datos = input.split(',');
+        document.getElementById('area_selected').innerHTML = datos[1];
+    
+});
 function getDocumentsClient(idEscritura) {
     $('#spiner-loader').removeClass('hide');
     $("#documents").find("option").remove();
@@ -1418,7 +1470,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                 if (aditional == 2) {
                     //modal paso 22
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-                } else {
+                }else {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="top" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
                     botones += newBtn;
                 }
@@ -1579,7 +1631,7 @@ function getSignDate(idNotaria) {
     return fecha;
 }
 
-function changeStatus(id_solicitud, action, comentarios, type, notaria) {
+function changeStatus(id_solicitud, action, comentarios, type, notaria){
     $('#spiner-loader').removeClass('hide');
     $.post('changeStatus', {
         id_solicitud: id_solicitud,
@@ -1588,16 +1640,16 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria) {
         notaria: notaria
     }, function (data) {
         switch (action) {
-            case 1:
+            case 1: //MODAL PARA APROBAR LA SOLICITUD
                 $('#approveModal').modal("hide");
                 break;
-            case 2:
+            case 2: //MODAL PARA RECHAZAR LA SOLICITUD
                 $('#rejectModal').modal("hide");
                 break;
-            case 3:
+            case 3: //MODAL PARA FECHA DE FIRMA DEL CLIENTE
                 $('#dateModal').modal("hide");
                 break;
-            case 4:
+            case 4: //MODAL 
                 $("#notarias").modal("hide");
                 break;
             default:
@@ -1937,8 +1989,8 @@ function getTipoEscrituracion() {
 $(document).on('click', '#informacion', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
 
-    getBudgetInformacion(data.idSolicitud);
-    $('#idSolicitud').val(data.idSolicitud);
+    getBudgetInformacion(data.id_solicitud);
+    $('#idSolicitud').val(data.id_solicitud);
     ;
     $("#informacionModal").modal();
 });

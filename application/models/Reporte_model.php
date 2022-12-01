@@ -919,4 +919,28 @@ class Reporte_model extends CI_Model {
         ORDER BY t.fechaApartado");
         return $query;
     }
+
+    public function getLotesApartados($beginDate, $endDate){
+        $query=$this->db->query("SELECT t.nombreResidencial nombreResidencial, t.nombreCondominio nombreCondominio, t.nombreLote nombreLote, t.precioFinal precioFinal, t.referencia referencia,
+        t.nombreAsesor nombreAsesor, t.fechaApartado fechaApartado, t.nombreSede nombreSede, t.tipo_venta tipo_venta, t.fechaEstatus9 fechaEstatus9
+        FROM (
+        SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+        lo.idLote, FORMAT(lo.totalNeto2, 'C') precioFinal, lo.referencia, 
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+        cl.fechaApartado, se.nombre nombreSede, tv.tipo_venta, hl.modificado fechaEstatus9
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+        INNER JOIN sedes se ON se.id_sede = cl.id_sede
+        INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+        WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+        hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999') t
+        ORDER BY t.fechaApartado");
+        return $query;
+    }
+    
 }
