@@ -1364,7 +1364,8 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     let telefono = (d.telefono=='' || d.telefono==null)?'':d.telefono;
                     let telefono2 = (d.telefono_2==''||d.telefono_2==null)?'':d.telefono_2;
                     return telefono + '<br>' + telefono2;
-                }
+                },
+                visible: (userType==7) ? false : true
             },
             { data: function (d) {
                     return d.fecha_creacion;
