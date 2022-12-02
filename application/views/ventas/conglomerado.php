@@ -56,6 +56,12 @@
                             </div>
                             <div class="col-md-4" style="display:none;">
                                 <div class="form-group">
+                                    <input class="form-control" type="text"   name="pagado" id="pagado" readonly>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
                                     <input class="form-control" type="text"   name="total_pagos" id="total_pagos" readonly>
                                 </div>
 
@@ -128,7 +134,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Monto a descontar</label>
-                                    <input class="form-control" type="text" id="pago_ind011" name="pago_ind011" readonly>
+                                    <input class="form-control" type="text" id="pago_ind011" name="pago_ind011">
                                 </div>
                             </div>
 
