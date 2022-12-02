@@ -705,6 +705,7 @@ function loadTable(tipoDescuento) {
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
 
+            
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
             
 
@@ -712,7 +713,6 @@ function loadTable(tipoDescuento) {
         });
 
         $(document).on('input', '.descuento1', function(){
-
             total_pagos = document.getElementById("total_pagos").value ;
             actualess = document.getElementById("actualess").value ;
             totalmeses = document.getElementById("totalmeses").value ;
@@ -729,7 +729,8 @@ function loadTable(tipoDescuento) {
 
           
         });
-      
+     
+     
         $(document).on("click", ".updateDescuento", function () {
             document.getElementById('updateDescuento').disabled = true;
             let validation = true;
@@ -1659,7 +1660,7 @@ $("#idloteorigen").change(function () {
         } else {
             var comision = $(this).val();
             datos = comision[0].split(',');
-            let id = datos[0];
+              let id = datos[0];
             let monto = datos[1];
             //alert(id+'-------'+monto);
             document.getElementById('monto').value = '';
