@@ -84,7 +84,7 @@ function fillTable(beginDate, endDate) {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -118,6 +118,9 @@ function fillTable(beginDate, endDate) {
                             case 9:
                                 return 'FECHA CONTRATACIÓN';
                                 break;
+                            case 10:
+                                return 'ESTATUS VENTA';
+                                break;
                         }
                     }
                 }
@@ -141,7 +144,8 @@ function fillTable(beginDate, endDate) {
                 {data: 'fechaApartado'},
                 {data: 'nombreSede'},
                 {data: 'tipo_venta'},
-                {data: 'fechaEstatus9'}
+                {data: 'fechaEstatus9'},
+                {data: 'estatusVenta'}
             ]
     });
 }
@@ -149,5 +153,5 @@ function fillTable(beginDate, endDate) {
 $(document).on("click", "#searchByDateRange", function () {
 	let finalBeginDate = $("#beginDate").val();
 	let finalEndDate = $("#endDate").val();
-	fillTrimestral(finalBeginDate, finalEndDate);
+	fillTable(finalBeginDate, finalEndDate);
 });

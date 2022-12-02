@@ -9,13 +9,8 @@
     
     <div class="wrapper">
         <?php 
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
+            $this->load->view('template/sidebar', "");
         ?>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -25,7 +20,7 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reportes con ingreso de contrato - estatus 9 <small>(se tomará en cuenta la fecha de apartado para llevar a cabo el registro)</small></h3>
+                                <h3 class="card-title center-align">Reporte de lotes con ingreso de contrato</h3>
                                 <div class="row">
                                     <div class="toolbar">
                                         <div class="col-md-8"></div>
@@ -53,7 +48,8 @@
                                                 <th>FECHA APARTADO</th>
                                                 <th>SEDE</th>
                                                 <th>TIPO VENTA</th>
-                                                <th>FECHA CONTRATACION</th>
+                                                <th>FECHA CONTRATACIÓN</th>
+                                                <th>ESTATUS VENTA</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -84,5 +80,5 @@
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
     <!--  Full Calendar Plugin    -->
     <!-- MODAL WIZARD -->
-    <script src="<?=base_url()?>dist/js/controllers/contraloria/reporteApartados.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/contraloria/reporteApartado.js"></script>
 </body>
