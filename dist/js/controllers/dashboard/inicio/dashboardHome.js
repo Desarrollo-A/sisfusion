@@ -829,13 +829,14 @@ function createAccordionsPR(option, render, rol){
                                             <thead>
                                                 <tr>
                                                     <th>ESTADO</th>
-                                                    <th>ETAPA</th>
+                                                      <th>ETAPA</th>
                                                     <th>TIPO</th>
                                                     <th>PROSPECTO</th>
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
-                                                    <th>LP</th>
+                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                    <th>TELÉFONO</th>
                                                     <th>CREACIÓN</th>
                                                     <th>VENCIMIENTO</th>
                                                 </tr>
@@ -1272,12 +1273,15 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                                     return 'GERENTE';
                                     break;
                                 case 7:
-                                    return 'LP';
+                                    return 'LUGAR PROSPECCION';
                                     break;
                                 case 8:
-                                    return 'CREACIÓN';
+                                    return 'TELÉFONO';
                                     break;
                                 case 9:
+                                    return 'CREACIÓN';
+                                    break;
+                                case 10:
                                     return 'VENCIMIENTO';
                                     break;
                             }
@@ -1352,6 +1356,14 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
             },
             { data: function (d) {
                     return d.nombre_lp;
+                }
+            },
+            {
+                data: function (d) {
+                    //telefono
+                    let telefono = (d.telefono=='' || d.telefono==null)?'':d.telefono;
+                    let telefono2 = (d.telefono_2==''||d.telefono_2==null)?'':d.telefono_2;
+                    return telefono + '<br>' + telefono2;
                 }
             },
             { data: function (d) {
