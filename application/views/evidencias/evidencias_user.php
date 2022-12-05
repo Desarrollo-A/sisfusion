@@ -1,10 +1,8 @@
 <link href="<?= base_url() ?>dist/css/evidencias_user.css" rel="stylesheet"/>
-<!-- <link href="<?= base_url() ?>dist/css/evidenciasRecisiones.css" rel="stylesheet"/> -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
 <link rel="stylesheet" href="//unpkg.com/videojs-record/dist/css/videojs.record.min.css">
 <link href="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/introjs.min.css" rel="stylesheet" />
-<!-- <link href="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/introjs-rtl.min.css" rel="stylesheet" /> -->
 
 <?php if($information == false){ 
     $this->load->view('evidencias/warning_view');
@@ -178,10 +176,7 @@ let typeTransaction = 0; // MJ: SELECTS MULTIPLES
 </script>
 
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-<!-- <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script> -->
 <script src="<?= base_url() ?>dist/js/controllers/evidencias/user_evidencias.js"></script>
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/intro.min.js"></script>
-
-
 <?php } ?>
