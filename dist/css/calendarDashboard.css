@@ -917,7 +917,6 @@
 
 /* Color de la barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb {
-  border-radius: 10px;
   background-color: #c1c1c1;
 }
 
