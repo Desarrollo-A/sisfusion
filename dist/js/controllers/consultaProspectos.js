@@ -108,7 +108,7 @@ $(document).ready(function() {
                                 var actions = '';
                                 var group_buttons = '';
                                 group_buttons += '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
-                                    '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '"  rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                     '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
 
@@ -135,7 +135,7 @@ $(document).ready(function() {
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
-                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
+                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                             '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
@@ -150,7 +150,7 @@ $(document).ready(function() {
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
-                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
+                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                             '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
 
@@ -168,7 +168,7 @@ $(document).ready(function() {
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
-                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
+                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                         actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
@@ -182,7 +182,7 @@ $(document).ready(function() {
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
-                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
+                                            '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" rel="tooltip" data-placement="left" title="Ver información">remove_red_eye</i></button>';
                                         actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
                                         actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
@@ -717,14 +717,19 @@ function fillFields(v, type) {
      * 1 see information modal
      * 2 update reference
      */
+    // Limpiar readonly de editar prospectos
+    $("#name").val(v.nombre).attr('readonly',false);
+    $("#last_name").val(v.apellido_paterno).attr('readonly',false);
+    $("#mothers_last_name").val(v.apellido_materno).attr('readonly',false);
+    
     if (type == 0) {
         $("#nationality").val(v.nacionalidad);
         $("#legal_personality").val(v.personalidad_juridica);
         $("#curp").val(v.curp);
         $("#rfc").val(v.rfc);
-        $("#name").val(v.nombre);
-        $("#last_name").val(v.apellido_paterno);
-        $("#mothers_last_name").val(v.apellido_materno);
+        v.source!=0 && v.editProspecto==0?$("#name").val(v.nombre):$("#name").val(v.nombre).attr('readonly',true);
+        v.source!=0 && v.editProspecto==0?$("#last_name").val(v.apellido_paterno):$("#last_name").val(v.apellido_paterno).attr('readonly',true);
+        v.source!=0 && v.editProspecto==0?$("#mothers_last_name").val(v.apellido_materno):$("#mothers_last_name").val(v.apellido_materno).attr('readonly',true);
         $("#date_birth").val(v.fecha_nacimiento);
         $("#email").val(v.correo);
         $("#phone_number").val(v.telefono);
@@ -960,12 +965,18 @@ $(document).on('click', '.change-reference-status', function() {
 
 $(document).on('click', '.edit-information', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
+    source = $(this).attr("data-source");
+    editProspecto = $(this).attr("data-editProspecto");
+    owner = $(this).attr("data-owner");
     $.getJSON("getProspectInformation/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
             $("#myEditModal").modal();
             fillFields(v, 0);
             validateEmptyFields(v, 1);
             $("#id_prospecto_ed").val(id_prospecto);
+            $("#owner").val(owner);
+            $("#source").val(source);
+            $("#editProspecto").val(editProspecto);
             showSpecificationObject();
         });
     });
