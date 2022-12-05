@@ -231,16 +231,17 @@ class Contraloria_model extends CI_Model {
 
 	public function registroStatusContratacion9 () {
 		$id_sede = $this->session->userdata('id_sede');
-	    if($this->session->userdata('id_usuario') == 2749 || $this->session->userdata('id_usuario') == 2807 || $this->session->userdata('id_rol') == 63 || $this->session->userdata('id_usuario')==2754){
+		$id_usuario = $this->session->userdata('id_usuario');
+	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario==2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
-		} // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
-		else if ($id_sede == 3) {// CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
+		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-		}else if ($id_sede == 8) {// CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
+		else if ($id_sede == 8)// CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
-		}else{
+		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
-		}
 		
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -330,8 +331,11 @@ class Contraloria_model extends CI_Model {
 
 	public function registroStatusContratacion10v2 () {
 		$id_sede = $this->session->userdata('id_sede');
-	    if($this->session->userdata('id_usuario') == 2749 || $this->session->userdata('id_usuario') == 2807 || $this->session->userdata('id_rol') == 63 || $this->session->userdata('id_usuario') == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+		$id_usuario = $this->session->userdata('id_usuario');
+	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -419,8 +423,11 @@ class Contraloria_model extends CI_Model {
 
 		public function registroStatusContratacion13 () {
 			$id_sede = $this->session->userdata('id_sede');
-			if($this->session->userdata('id_usuario') == 2749 || $this->session->userdata('id_usuario') == 2807 || $this->session->userdata('id_rol') == 63 || $this->session->userdata('id_usuario') == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+			$id_usuario = $this->session->userdata('id_usuario');
+			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -471,9 +478,12 @@ class Contraloria_model extends CI_Model {
 		
 		public function registroStatusContratacion15 () {
 			$id_sede = $this->session->userdata('id_sede');
-			if($this->session->userdata('id_usuario') == 2749 || $this->session->userdata('id_usuario') == 2807 || $this->session->userdata('id_rol') == 63
-                || $this->session->userdata('id_usuario') == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+			$id_usuario = $this->session->userdata('id_usuario');
+
+			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA

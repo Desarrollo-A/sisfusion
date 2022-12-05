@@ -1048,17 +1048,25 @@ $(document).on('click', '.see-information', function(e) {
     });
 
     $.getJSON("getComments/" + id_prospecto).done(function(data) {
-        counter = 0;
-        $.each(data, function(i, v) {
-            counter++;
-            fillTimeline(v, counter);
-        });
+        if (data.length == 0) {
+            $("#comments-list").append('SIN DATOS POR MOSTRAR');
+        } else {
+            counter = 0;
+            $.each(data, function(i, v) {
+                counter++;
+                fillTimeline(v, counter);
+            });
+        }
     });
 
     $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
-        $.each(data, function(i, v) {
-            fillChangelog(v);
-        });
+        if (data.length == 0) {
+            $("#changelog").append('SIN DATOS POR MOSTRAR');
+        } else {
+            $.each(data, function(i, v) {
+                fillChangelog(v);
+            });
+        }
     });
 
 });
