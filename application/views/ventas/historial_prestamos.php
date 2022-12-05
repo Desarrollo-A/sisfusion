@@ -67,7 +67,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label class="m-0"
                                                            for="roles">Puesto</label>
@@ -86,9 +86,9 @@
                                                         <option value="2">Sub director</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label class="m-0"
                                                            for="users">Usuario</label>
@@ -103,7 +103,37 @@
                                                             required>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="form-group">
+                                                                            <label for="proyecto">Mes</label>
+                                                            <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
+                                                                <?php
+                                                                    setlocale(LC_ALL, 'es_ES');
+                                                                    for ($i = 1; $i <= 12; $i++) {
+                                                                    $monthNum  = $i;
+                                                                    $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                                    $monthName = strftime('%B', $dateObj->getTimestamp());
+                                                                    echo '<option value="' . $i . '">' . $monthName . '</option>';
+                                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                                    <div class="form-group">
+                                                                   <label>Año</label>
+                                                                   <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                                   <?php
+                                                                    setlocale(LC_ALL, 'es_ES');
+                                                                     for ($i = 2021; $i <= 2022; $i++) {
+                                                                     $yearName  = $i;
+                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                                    }
+                                                                    ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                         </div>
                                     </div>
                                 </div>
@@ -124,6 +154,7 @@
                                                         <th>PAGADO</th>
                                                         <th>PENDIENTE</th>
                                                         <th>PAGO INDIVUAL</th>
+                                                        <th>FECHA</th>
                                                         <th>ESTATUS</th>
                                                         <th>TIPO DESCUENTO</th>
                                                         <th>OPCIONES</th>
@@ -159,40 +190,76 @@
 
         $("#prestamos-table").prop('hidden', true);
 
-        $('#roles').change(function () {
-            const rol = $(this).val();
+        // $('#roles').change(function () {
+        //     const rol = $(this).val();
+        //     // $("#users").empty().selectpicker('refresh');
 
-            $("#users").empty().selectpicker('refresh');
+        //     $.ajax({
+        //         url: `${baseUrl}Comisiones/getUserPrestamoByRol/${rol}`,
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function (data) {
+        //             const len = data.length;
+        //             for(let i = 0; i < len; i++){
+        //                 const id = data[i]['id_usuario'];
+        //                 const name = data[i]['name_user'].toUpperCase();
+        //                 $("#users").append($('<option>').val(id).text(name));
+        //             }
 
-            $.ajax({
-                url: `${baseUrl}Comisiones/getUserPrestamoByRol/${rol}`,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    const len = data.length;
-                    for(let i = 0; i < len; i++){
-                        const id = data[i]['id_usuario'];
-                        const name = data[i]['name_user'].toUpperCase();
-                        $("#users").append($('<option>').val(id).text(name));
-                    }
+        //             $("#users").selectpicker('refresh');
+        //         }
+        //     });
 
-                    $("#users").selectpicker('refresh');
-                }
-            });
+        //     // createPrestamosDataTable(rol, user, mes, anio);
+        // });
 
-            createPrestamosDataTable(rol, 0);
-        });
+        // $('#users').change(function () {
+        //     const rol = $('#roles').val();
+        //     let user = $(this).val();
+        //     mes = $('#mes').val();
+        //     rol = $('#rol').val();
 
-        $('#users').change(function () {
-            const rol = $('#roles').val();
-            let user = $(this).val();
+        //     if (user === undefined || user === null || user === '') {
+        //         user = 0;
+        //     }
 
-            if (user === undefined || user === null || user === '') {
-                user = 0;
+        //     // createPrestamosDataTable(rol, user, mes, anio);
+        // });
+
+        $('#mes').change(function(ruta){
+            anio = $('#anio').val();
+            mes = $('#mes').val();
+            
+            if(mes == '' || anio == ''){
+            }else{
+               createPrestamosDataTable(mes, anio);
             }
-
-            createPrestamosDataTable(rol, user);
         });
+
+        $('#anio').change(function(ruta) {
+            anio = $('#anio').val();
+            mes = $('#mes').val();
+            // rol = $('#roles').val();
+            // users = $('#users').val();
+            console.log(anio);
+            if(anio == '' || mes == ''){
+            }else{
+                createPrestamosDataTable(mes, anio);
+            }
+            
+        });
+
+    //     $('#rol').change( function(){
+    //     mes = $('#mes').val();
+    //     anio = $('#anio').val();
+    //     rol = $('#rol').val();
+
+    //     if(mes == '' || anio == '' ){
+    //    //     alerts.showNotification("top", "right", "Debe seleccionar las dos fechas y el estatus", "warning");
+    //     }else{
+    //         createPrestamosDataTable(anio,rol);
+    //     }
+    // });
 
         $('#prestamos-table thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
@@ -215,7 +282,8 @@
             }
         });
 
-        function createPrestamosDataTable(rol, user) {
+        function createPrestamosDataTable(mes, anio) {
+            console.log(anio);
             if (prestamosTabla) {
                 prestamosTabla.clear();
                 prestamosTabla.destroy();
@@ -244,7 +312,7 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10],
                             format: {
                                 header: function (d, columnIndx) {
                                     switch (columnIndx) {
@@ -256,8 +324,9 @@
                                         case 5: return 'PAGADO';
                                         case 6: return 'PENDIENTE';
                                         case 7: return 'PAGO INDIVIDUAL';
-                                        case 8: return 'TIPO DESCUENTO';
-                                        case 9: return 'ESTATUS';
+                                        case 8: return 'FECHA';
+                                        case 9: return 'TIPO DESCUENTO';
+                                        case 10: return 'ESTATUS';
                                         default: return 'NA';
                                     }
                                 }
@@ -327,6 +396,12 @@
                         }
                     },
                     {
+                        'width': "8%",
+                        'data': function( d ){
+                            return '<p class="m-0">'+d.fecha_creacion+'</p>';
+                        }
+                    },
+                    {
                         'width': "5%",
                         'data': function(d) {
                             return '<span class="label" style="background: #05A134;">PAGADO</span>';
@@ -376,7 +451,7 @@
                 ],
                 columnDefs: [],
                 ajax: {
-                    url: `${baseUrl}Comisiones/getPrestamosTable/${rol}/${user}`,
+                    url: `${baseUrl}Comisiones/getPrestamosTable/${mes}/${anio}`,
                     type: "GET",
                     cache: false,
                     data: function( d ){}

@@ -6849,9 +6849,11 @@ for ($d=0; $d <count($dos) ; $d++) {
             'detalle' => $detalle
         ));
     }
-    public function getPrestamosTable($rol, $user)
+    public function getPrestamosTable($mes=0, $anio=0)
     {
-        $data = $this->Comisiones_model->getPrestamosTable($rol, $user);
+     // echo $anio;
+      //if($anio != 0)
+        $data = $this->Comisiones_model->getPrestamosTable($mes, $anio);
         echo json_encode(array('data' => $data));
     }
     public function lista_estatus_descuentos()

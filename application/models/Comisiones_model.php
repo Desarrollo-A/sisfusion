@@ -8424,16 +8424,16 @@ return $query->result();
         return $result->result_array();
     }
 
-    public function getPrestamosTable($rol, $user)
+    public function getPrestamosTable($mes=0, $anio=0)
     {
         $whereUserClause = '';
-        if ($user != 0) {
-            $whereUserClause = "AND pa.id_usuario = $user";
+        if ($anio != 0) {
+            $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
 
         $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
             u .apellido_materno) AS nombre_completo, 
-            oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
+            oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, 
             rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
             FROM prestamos_aut pa
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
@@ -8447,7 +8447,7 @@ return $query->result();
                 JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
                 GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
             AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
-            AND u.id_rol = $rol $whereUserClause
+            $whereUserClause
             ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
         return $result->result_array();
     }
