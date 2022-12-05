@@ -10,7 +10,7 @@
             </div>
             <form id="my-comment-form" name="my-comment-form" method="post">
                 <div class="modal-body">
-                    <textarea class="form-control" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    <textarea class="form-control input-gral" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     <input type="hidden" name="id_prospecto" id="id_prospecto">
                 </div>
                 <div class="modal-footer">
@@ -634,25 +634,25 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label class="control-label">Personalidad jurídica</label>
-                                        <input id="legal-personality-lbl" type="text" class="form-control" disabled>
+                                        <input id="legal-personality-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label class="control-label">Nacionalidad</label>
-                                        <input id="nationality-lbl" type="text" class="form-control" disabled>
+                                        <input id="nationality-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label class="control-label">CURP</label>
-                                        <input id="curp-lbl" type="text" class="form-control" disabled>
+                                        <input id="curp-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label class="control-label">RFC</label>
-                                        <input id="rfc-lbl" type="text" class="form-control" disabled>
+                                        <input id="rfc-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -662,19 +662,19 @@
 								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Nombre / Razón social</label>
-										<input id="name-lbl" type="text" class="form-control" disabled>
+										<input id="name-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Correo electrónico</label>
-										<input id="email-lbl" type="text" class="form-control" disabled>
+										<input id="email-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Teléfono</label>
-										<input id="phone-number-lbl" type="text" class="form-control" disabled>
+										<input id="phone-number-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 							</div>
@@ -682,13 +682,13 @@
 								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">¿Cómo nos contactaste?</label>
-										<input id="prospecting-place-lbl" type="text" class="form-control" disabled>
+										<input id="prospecting-place-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Plaza de venta</label>
-										<input id="sales-plaza-lbl" type="text" class="form-control" disabled>
+										<input id="sales-plaza-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 							</div>
@@ -696,19 +696,19 @@
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Asesor</label>
-										<input id="asesor-lbl" type="text" class="form-control" disabled>
+										<input id="asesor-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Coordinador</label>
-										<input id="coordinador-lbl" type="text" class="form-control" disabled>
+										<input id="coordinador-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Gerente</label>
-										<input id="gerente-lbl" type="text" class="form-control" disabled>
+										<input id="gerente-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 							</div>
