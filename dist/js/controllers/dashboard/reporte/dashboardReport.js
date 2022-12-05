@@ -157,7 +157,6 @@ async function initReport(){
         rolString = 'asesor';
     
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, null, [0, null, null, null, null, null, rolOnReport]);
-    // fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]); (TEMPORAL)
 }
 
 function validateTypeSale(){
@@ -700,25 +699,25 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
     loaderCharts();
+    typeSale = validateTypeSale();
 
     let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    // let rol = userType == 2 ? await getRolDR(idUser): userType;
 
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69')
+    if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
         rolString = 'gerente';
-    else if ( rol == '3' || rol == '6' )
+    else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-
-    typeSale = validateTypeSale();
-    getLastSales(typeSale, rol, [0, null, null, null, null, null, rol]);
-    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
+    
+    getLastSales(typeSale, rolOnReport);
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, dates, [0, null, null, null, null, null, rolOnReport]);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -835,6 +834,7 @@ function getLastSales(typeSale, rol){
         dataType: 'json',
         cache: false,
         success: function(data){
+            console.log("successs!");
             $('.loadChartMini').addClass('d-none');
             $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
@@ -866,14 +866,6 @@ function getLastSales(typeSale, rol){
         }
     });
 }
-
-$(document).on("click", "#searchByDateRange", function () {
-    var beginDate = $("#modalChart #beginDate").val();
-    var endDate = $("#modalChart #endDate").val();
-    var type = $("#modalChart #type").val();
-    $("#modalChart .boxModalTitle .total").html('');
-    getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
-});
 
 function loaderCharts(){
     $("#modalChart .boxModalTitle .total").html('');
