@@ -6,7 +6,7 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" )//contraloria
+        if($this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="17"  || $this->session->userdata('id_rol')=="28" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="18"|| $this->session->userdata('id_rol')=="1"|| $this->session->userdata('id_rol')=="2"|| $this->session->userdata('id_rol')=="3"|| $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_rol')=="4" )//contraloria
         {/*-------------------------------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -105,6 +105,10 @@
                             <li class="active">
                                 <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Historial CRM</a>
                             </li>
+
+                            <li><a href="#solicitudesCanceladas" role="tab"  data-toggle="tab">Historial canceladas</a>
+                                </li>
+
                             <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                 <li>
                                     <a href="#solicitudesSUMA" role="tab"  data-toggle="tab">Historial SUMA</a>
@@ -117,8 +121,8 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="solicitudesCRM">
                                             <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Historial general</h3>
-                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados y en proceso)</p>
+                                                <h3 class="card-title center-align">Historial Activos</h3>
+                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
@@ -174,6 +178,71 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        <!-- INICIO tab CANCELADAS validado -->
+
+                                        <div class="tab-pane" id="solicitudesCanceladas">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Historial Canceladas</h3>
+                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Año</label>
+                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                                <?php
+                                                                setlocale(LC_ALL, 'es_ES');
+                                                                    for ($i = 2019; $i <= 2022; $i++) {
+                                                                        $yearName  = $i;
+                                                                        echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="proyecto">Proyecto</label>
+                                                            <select name="filtro45" id="filtro45" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="material-datatables">
+                                                <div class="form-group">
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>PROY.</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>REF.</th>
+                                                                    <th>PRECIO LOTE</th>
+                                                                    <th>TOTAL COM.</th>
+                                                                    <th>PAGO CLIENTE</th>
+                                                                    <th>DISPERSADO</th>
+                                                                    <th>PAGADO</th>
+                                                                    <th>PENDIENTE</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>DETALLE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- End tab CANCELADAS validado -->
+
+
                                         <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                         <div class="tab-pane" id="solicitudesSUMA">
                                             <div class="encabezadoBox">
@@ -271,6 +340,41 @@
             // 
         });
 
+        $('#filtro35').change(function(ruta){
+            residencial = $('#filtro35').val();
+            param = $('#param').val();
+            $("#filtro45").empty().selectpicker('refresh');
+            $.ajax({
+                url: '<?=base_url()?>Contratacion/lista_proyecto_dos/',
+                type: 'post',
+                dataType: 'json',
+                success:function(response){
+                    var len = response.length;
+                    for( var i = 0; i<len; i++){
+                        var id = response[i]['idResidencial'];
+                        var name = response[i]['descripcion'];
+                        $("#filtro45").append($('<option>').val(id).text(name.toUpperCase()));
+                    }
+                    $("#filtro45").selectpicker('refresh');
+                }
+            });
+        });
+
+
+        $('#filtro45').change(function(ruta){
+            proyecto = $('#filtro35').val();
+            condominio = $('#filtro45').val();
+            if(condominio == '' || condominio == null || condominio == undefined){
+                condominio = 0;
+            }
+            if(tabla_historialGral3){
+                 tabla_historialGral3.destroy();
+            }
+
+            getAssimilatedCancelacion(proyecto, condominio);
+        
+        });
+
         function cleanCommentsAsimilados() {
             var myCommentsList = document.getElementById('comments-list-asimilados');
             var myCommentsLote = document.getElementById('nameLote');
@@ -293,6 +397,21 @@
             }
         });
 
+        $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
+            var title = $(this).text();
+            if(i != 15){
+                $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
+                        $('#tabla_comisiones_canceladas').DataTable()
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            }
+        });
+
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
         var totalLeon = 0;
@@ -302,10 +421,11 @@
         var totalCdmx = 0;
         var totalCancun = 0;
         var tr;
-        var tabla_historialGral2 ;
+        var tabla_historialGral2 ; 
+        var tabla_historialGral3 ;
         var totaPen = 0;
 
-        //INICIO TABLA QUERETARO****************************************************************************************
+        //INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
 
         function getAssimilatedCommissions(proyecto, condominio){
             let titulos = [];
@@ -324,7 +444,7 @@
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'HISTORIAL_GENERAL_COMISIONES',
+                    title: 'HISTORIAL_GENERAL_ACTIVAS',
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                         format: {
@@ -561,6 +681,265 @@
         }
 
         //FIN TABLA  ****************************************************************************************
+
+        //INICIO TABLA QUERETARO CANCELACIONES****************************************************************************************
+
+        function getAssimilatedCancelacion(proyecto, condominio){
+            let titulos = [];
+            $("#tabla_comisiones_canceladas").prop("hidden", false);
+            tabla_historialGral3 = $("#tabla_comisiones_canceladas").DataTable({
+                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+                width: 'auto',                
+                buttons: [
+                // {
+                //     text: '<i class="fa fa-table" aria-hidden="true"></i>',
+                //     className: 'btn buttons-general-dt ver-info-asesor',
+                //     titleAttr: 'Reporte pagos UM',
+                // },
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'HISTORIAL_GENERAL_CANCELADAS',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                        format: {
+                            header:  function (d, columnIdx) {
+                                if(columnIdx == 0){
+                                    //  return ' '+d +' ';
+                                    return 'ID PAGO';
+                                }else if(columnIdx == 1){
+                                    return 'PROYECTO';
+                                }else if(columnIdx == 2){
+                                    return 'CONDOMINIO';
+                                }else if(columnIdx == 3){
+                                    return 'NOMBRE LOTE';
+                                }else if(columnIdx == 4){
+                                    return 'REFERENCIA';
+                                }else if(columnIdx == 5){
+                                    return 'PRECIO LOTE';
+                                }else if(columnIdx == 6){
+                                    return 'TOTAL COMISIÓN';
+                                }else if(columnIdx == 7){
+                                    return 'PAGO CLIENTE';
+                                }else if(columnIdx == 8){
+                                    return 'DISPERSADO NEODATA';
+                                }else if(columnIdx == 9){
+                                    return 'PAGADO';
+                                }else if(columnIdx == 10){
+                                    return 'PENDIENTE';
+                                }else if(columnIdx == 11){
+                                    return 'COMISIONISTA';
+                                }else if(columnIdx == 12){
+                                    return 'PUESTO';
+                                }else if(columnIdx == 13){
+                                    return 'DETALLE';
+                                }else if(columnIdx == 14){
+                                    return 'ESTATUS ACTUAL';
+                                }else if(columnIdx != 15 && columnIdx !=0){
+                                    return ' '+titulos[columnIdx-1] +' ';
+                                }
+                            }
+                        }
+                    },
+                }],
+                pagingType: "full_numbers",
+                fixedHeader: true,
+                language: {
+                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                    paginate: {
+                        previous: "<i class='fa fa-angle-left'>",
+                        next: "<i class='fa fa-angle-right'>"
+                    }
+                },
+                destroy: true,
+                deferRender: true,
+
+                columns: [{
+                    "width": "5%",
+                    "data": function( d ){
+                        var lblStats;
+                        lblStats ='<p class="m-0"><b>'+d.id_pago_i+'</b></p>';
+                        return lblStats;
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.proyecto+'</p>';
+                    }
+                },
+                {
+                    "width": "6%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.condominio+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.nombreLote+'</p>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.referencia+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.comision_total)+' </p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>$'+formatMoney(d.pago_cliente)+'</b></p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">$'+formatMoney(d.pagado)+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        if(d.restante==null||d.restante==''){
+                            return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+                        }
+                        else{
+                            return '<p class="m-0">$'+formatMoney(d.restante)+'</p>';
+                        }
+                    }
+                }, 
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        if(d.activo == 0 || d.activo == '0'){
+                            return '<p class="m-0"><b>'+d.user_names+'</b></p><p><span class="label" style="background:red;">BAJA</span></p>';
+                        }
+                        else{
+                            return '<p class="m-0"><b>'+d.user_names+'</b></p>';
+                        }
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0">'+d.puesto+'</p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        var lblPenalizacion = '';
+
+                        if (d.penalizacion == 1){
+                            lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;"> + 90 días</span></p>';
+                        }
+
+                        if(d.bonificacion >= 1){
+                            p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                        }
+                        else{
+                            p1 = '';
+                        }
+
+                        if(d.lugar_prospeccion == 0){
+                            p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
+                        }
+                        else{
+                            p2 = '';
+                        }
+                        
+                        return p1 + p2 + lblPenalizacion;
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        var etiqueta;
+     
+                                if(d.pago_neodata < 1){
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                                }else{
+
+                                    etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
+                                }
+ 
+                        return etiqueta;
+                    }
+                },
+                { 
+                    "width": "2%",
+                    "orderable": false,
+                    "data": function( data ){
+
+                        var BtnStats;
+
+                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                        return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                    }
+                }],
+                columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0,
+                    'searchable':false,
+                    'className': 'dt-body-center',
+
+                    select: {
+                        style:    'os',
+                        selector: 'td:first-child'
+                    },
+                }],
+                ajax: {
+
+                    "url": url2 + "Comisiones/getDatosHistorialCancelacion/" + proyecto + "/" + condominio,
+                    "type": "POST",
+                    cache: false,
+                    "data": function( d ){}
+                },
+                order: [[ 1, 'asc' ]]
+            });
+
+            $("#tabla_comisiones_canceladas tbody").on("click", ".consultar_logs_asimilados", function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                id_pago = $(this).val();
+                lote = $(this).attr("data-value");
+
+                $("#seeInformationModalAsimilados").modal();
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+                $.getJSON("getComments/"+id_pago).done( function( data ){
+                    $.each( data, function(i, v){
+                        $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                    });
+                });
+            });
+        }
+
+        //FIN TABLA  ****************************************************************************************
+
+
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
         });

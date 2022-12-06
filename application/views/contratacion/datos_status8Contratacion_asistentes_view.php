@@ -163,7 +163,6 @@
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>ESTATUS ACTUAL</th>
-                                                        <!-- <th>PROCESO</th> -->
                                                         <?php
                                                         if($this->session->userdata('id_rol')!=53){
                                                         ?>
@@ -343,18 +342,6 @@
                         return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
-                // ,{
-                //     "width": "20%",
-                //     "data": function( d ){
-                //         let respuesta = ''; 
-                //         if(d.nacion == 0){
-                //             respuesta = '<p class="m-0">NACIONAL</p>';
-                //         }else{
-                //             respuesta = '<p class="m-0">EXTRANJERO</p>';
-                //         }
-                //         return respuesta;
-                //     }
-                // }
                 <?php
                 if($this->session->userdata('id_rol')!=53){
                 ?>

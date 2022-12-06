@@ -621,11 +621,11 @@ function loadTable(tipoDescuento) {
             pago_mensual = $(this).attr("data-mensual");
             descuento = $(this).attr("data-descuento");
             pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
-            total = $(this).attr("data-total");
+            total = $(this).attr("data-total"); //dinero que ha pagado al momento
             descuento = Math.round(descuento);
             pago_mensual = Math.round(pago_mensual);
             cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
-
+            document.getElementById("pagado").value = total;
             document.getElementById("mensualidad").value = pago_mensual;
             document.getElementById("descuento_id").value = id_descuento;
             document.getElementById("total_pagos").value = cantidad_de_pagos;
@@ -645,12 +645,12 @@ function loadTable(tipoDescuento) {
                 {
                     if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
                     {
-                        console.log('33');
+                     
                         mensualidadesFaltantesMostrar = 1;
                     }else{
-                        console.log('22');  
+                     
                     }
-                    console.log('44');
+           
                 }else{
 
                     console.log('54');
@@ -659,23 +659,22 @@ function loadTable(tipoDescuento) {
                // mensualidadesFaltantes
             }
             if ((mensualidadesFaltantes % 1)  == 0 ){
-                console.log(mensualidadesFaltantes);
-                console.log('1');
+
             }else{
                 if( 0 == Math.trunc(mensualidadesFaltantes))
                 {
                     if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
                     {
-                        console.log('33');
+
                         mensualidadesFaltantes = 1;
                     }else{
-                        console.log('22');  
+  
                     }
-                    console.log('44');
+
                 }else{
 
-                    console.log('54');
-                    mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+
+                        mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
                 }
                // mensualidadesFaltantes
             }
@@ -684,8 +683,10 @@ function loadTable(tipoDescuento) {
             
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
             console.log(Total_a_pagar);
-
-            NuevasMensualidades = Total_a_pagar / mensualidadesFaltantes;
+            
+            sobrante = Total_a_pagar - total;
+            //para agregar llo que ya se pago
+            NuevasMensualidades = sobrante  / mensualidadesFaltantes;
 
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
 
@@ -698,9 +699,10 @@ function loadTable(tipoDescuento) {
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
-
+            pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
             loQueSedebe  = document.getElementById("descuento1").value ;
             pagos  = document.getElementById("numeroPagos1").value ;
+            loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
 
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
@@ -716,9 +718,11 @@ function loadTable(tipoDescuento) {
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
-
+            pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
             loQueSedebe  = document.getElementById("descuento1").value ;
             pagos  = document.getElementById("numeroPagos1").value ;
+
+            loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
             

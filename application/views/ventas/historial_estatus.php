@@ -713,18 +713,19 @@
                     'className': 'dt-body-center',
                     'render': function (d, type, full) {
                         const estatus = $('#filtro44').val();
-                        if ((estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && rol != 17 ) {
+                        /*Moficacion Uri*/ 
+                        if (( full.recision == '1' || estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && rol != 17 ) {
                             return '';
-                        } else if (estatus === '7' && (full.estatus === '1' || full.estatus === '6') && rol == 17 ) {
+                        } else if ( full.recision != '1' && estatus === '7' && (full.estatus === '1' || full.estatus === '6') && rol == 17 ) {
                             return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                         } else if ($('#filtro44').val() === '2' && rol == 17 ) {
-                            if (full.forma_pago.toLowerCase() !== 'factura' && rol == 17 ) {
+                            if (full.forma_pago.toLowerCase() !== 'factura' && rol == 17 && full.recision != '1' ) {
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             } else {
                                 return '';
                             }
                         } else {
-                            if(rol == 17){
+                            if(rol == 17 && full.recision != '1'){
                                 return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             }else{
                                 return '';

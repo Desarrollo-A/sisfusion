@@ -23,7 +23,6 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTableLotificacion2(fechaInicio, fechaFin) {
- 
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -35,7 +34,7 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4,5,6,7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
                     
@@ -145,7 +144,6 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
 
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
-
     generalDataTable = $('#tableLotificacion').dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
@@ -156,10 +154,9 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4,5,6,7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                    
                             switch (columnIdx) {
                                 case 0:
                                     return "Nombre";
@@ -281,9 +278,7 @@ $(document).on('click', '.searchByDateRange', function(){
 
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
-   // $(".row-load").removeClass("hide");
     $(".box-table").removeClass("hide");
-    //fillTableLotificacion();
     fillTableLotificacion();
     document.getElementById('startDate').valueAsDate = new Date();
     document.getElementById('endDate').valueAsDate = new Date();

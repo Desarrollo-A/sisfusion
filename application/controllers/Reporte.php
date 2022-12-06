@@ -223,4 +223,23 @@ class Reporte extends CI_Controller {
             echo json_encode(array());
         }
     }
+
+    public function reporteApartados(){
+        $this->validateSession();
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("reportes/reporteApartados",$datos);
+    }
+
+    public function getLotesApartados(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getLotesApartados($beginDate, $endDate)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
 }

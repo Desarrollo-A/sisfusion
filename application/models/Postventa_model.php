@@ -126,47 +126,21 @@ class Postventa_model extends CI_Model
         }else{
             $where = "";
         }
-        return $this->db->query("SELECT oxc2.nombre area, se.idSolicitud,  CASE WHEN oxc.nombre = 'RECEPCIÓN DE TESTIMONIO' THEN 'COPIA CERTIFICADA - RECEPCIÓN DE TESTIMONIO' ELSE oxc.nombre END AS estatus, se.fecha_creacion, l.nombreLote, se.estatus idEstatus,
-        se.nombre, cond.nombre nombreCondominio, r.nombreResidencial, de.expediente,
-        ctrl.tipo_documento, de.idDocumento, ctrl.permisos, de2.result, cee.tipo, cee.comentarios, mr.motivo motivos_rechazo, de2.estatusValidacion, de3.Spresupuesto,
-        de2.no_rechazos, n.pertenece, se2.flagEstLot, pr.flagPresupuesto, pr2.approvedPresupuesto, se.idNotaria, de4.contrato,de5.copia_cer,de6.testimonio, se3.aportacion, se4.descuento, se.descuentos, se.aportaciones FROM solicitud_escrituracion se 
-        LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria 
-        INNER JOIN lotes l ON se.idLote = l.idLote 
-        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus AND oxc.id_catalogo = 59 
-        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.idArea AND oxc2.id_catalogo = 1 
-        INNER JOIN control_procesos ctrl ON ctrl.estatus = se.estatus AND ctrl.idRol = $rol
-        LEFT JOIN documentos_escrituracion de ON de.idSolicitud=se.idSolicitud AND de.tipo_documento = ctrl.tipo_documento
-            
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
-            THEN 0 ELSE 1 END result,  
-            CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
-            COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
-            FROM documentos_escrituracion 
-            WHERE tipo_documento NOT IN (7,9,10, 11, 12, 13,14,15,16,17,20,21,22) AND
-            tipo_documento != CASE WHEN (SELECT COUNT(*) FROM control_estatus ce1 WHERE ce1.idEscrituracion = idSolicitud 
-                AND comentarios LIKE '%Se trabajara con Notaría externa%') > 0 THEN 0 ELSE 23 END
-            GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.idSolicitud
-            
-        LEFT JOIN (SELECT idSolicitud,  CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END Spresupuesto
-        FROM documentos_escrituracion WHERE tipo_documento = 11 GROUP BY idSolicitud) de3 ON de3.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
-        FROM documentos_escrituracion WHERE tipo_documento = 21 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END testimonio
-        FROM documentos_escrituracion WHERE tipo_documento = 16 GROUP BY idSolicitud) de6 ON de6.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END copia_cer
-        FROM documentos_escrituracion WHERE tipo_documento = 22 GROUP BY idSolicitud) de5 ON de5.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion FROM control_estatus GROUP BY idEscrituracion) ce ON ce.idEscrituracion = se.idSolicitud
-        LEFT JOIN control_estatus cee ON cee.idEscrituracion = ce.idEscrituracion AND cee.fecha_creacion = ce.fecha_creacion
-        LEFT JOIN motivos_rechazo mr ON mr.id_motivo = cee.motivos_rechazo
-        LEFT JOIN usuarios us ON us.id_usuario = de.validado_por
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN estatus_construccion IS NULL THEN 0 ELSE 1 END flagEstLot FROM solicitud_escrituracion) se2 ON se2.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN aportaciones IS NULL THEN 0 ELSE 1 END aportacion FROM solicitud_escrituracion) se3 ON se3.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN descuentos IS NULL THEN 0 ELSE 1 END descuento FROM solicitud_escrituracion) se4 ON se4.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END flagPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.idSolicitud
-        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END approvedPresupuesto FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) pr2 ON pr2.idSolicitud = se.idSolicitud
-        WHERE (se.fecha_creacion BETWEEN '$begin 00:00:00' AND '$end 23:59:59') $where $Addwhere");
+        return $this->db->query("SELECT  se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
+        cond.nombre nombreCondominio, r.nombreResidencial, 
+          n.pertenece, se.id_notaria, se.descuento, se.aportacion 
+         FROM solicitudes_escrituracion se 
+         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
+         INNER JOIN lotes l ON se.id_lote = l.idLote 
+         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
+    }
+    function getStatusSiguiente($estatus){
+        return $this->db->query("SELECT ae.nombre,opc.nombre as area,axe.estatus_siguiente,ae.descripcion
+        FROM actividades_x_estatus axe
+        INNER JOIN actividades_escrituracion ae ON axe.actividad_siguiente=ae.clave
+        INNER JOIN opcs_x_cats opc ON opc.id_opcion=ae.id_area AND opc.id_catalogo=1
+        WHERE axe.tipo=2 and axe.estatus_actual in($estatus)")->result_array();
     }
 
     function changeStatus($id_solicitud, $type, $comentarios, $motivos_rechazo)
@@ -174,19 +148,18 @@ class Postventa_model extends CI_Model
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->estatus;
+        $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
 
-        $notaria = $this->db->query("SELECT idNotaria FROM solicitud_escrituracion WHERE idSolicitud = $id_solicitud")->row()->idNotaria;
+        $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
+        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol and tipo_permiso=$type")->row();
 
         $pertenece = 0;
-        if($notaria != NULL || $notaria != 0){
-            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.idNotaria WHERE idSolicitud = $id_solicitud")->row();
-
+       /* if($notaria != NULL || $notaria != 0){
+            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
             $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
+        }*/
 
-        }
-
-        if ($type == 1) { //OK
+      /*  if ($type == 1) { //OK
             if ($estatus == 90) {
                 $newStatus = 16;
                 $next = $newStatus + 1;
@@ -235,11 +208,13 @@ class Postventa_model extends CI_Model
                 $newStatus = 92;
                 $next = 4;
             }
-        }
+        }*/
 
-        $this->db->query("UPDATE solicitud_escrituracion SET estatus = ($newStatus), idArea = $rol  WHERE idSolicitud = $id_solicitud");
-        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
-         VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente."  WHERE id_solicitud = $id_solicitud");
+        return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
+         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->actividad_actual."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
+        /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+         VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");*/
     }
 
     function generateFilename($idSolicitud, $tipoDoc)
@@ -379,7 +354,7 @@ class Postventa_model extends CI_Model
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
-            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNotariaxSolicitud = pr.idNotariaxSolicitud
 			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
              GROUP BY pr.idPresupuesto , pr.expediente, pr.idSolicitud, oxc.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), pr.fecha_creacion, se.estatus,
@@ -771,21 +746,26 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
-    function getPresupuestosUpload($idNxS)
+    function getPresupuestosUpload($idNotariaxSolicitud)
     {
-        $query = $this->db->query("SELECT  TOP (3) oxc.nombre, pres.idPresupuesto, pres.expediente,pres.tipo, pres.idNxS,  nxu.* FROM notarias_x_usuario nxu
-        INNER JOIN Presupuestos pres ON pres.idSolicitud = nxu.id_solicitud AND (pres.idNxS = nxu.idNxS OR pres.idNxs IS NULL)
+        $query = $this->db->query("SELECT  TOP (3) oxc.nombre, pres.idPresupuesto, pres.expediente,pres.tipo, pres.idNotariaxSolicitud,  nxu.* FROM notarias_x_usuario nxu
+        INNER JOIN Presupuestos pres ON pres.idSolicitud = nxu.id_solicitud AND (pres.idNotariaxSolicitud = nxu.idNotariaxSolicitud OR pres.idNotariaxSolicitud IS NULL)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pres.tipo AND oxc.id_catalogo = 69
-        WHERE nxu.idNxS = $idNxS");
+        WHERE nxu.idNotariaxSolicitud = $idNotariaxSolicitud");
         return $query->result_array();
     }
 
     function updatePresupuestosNXU($idSolicitud, $idNotaria)
     {
-        $response = $this->db->query("UPDATE Presupuestos SET idNxS = (SELECT idNxS FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
-        WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNxS IS NULL
-            GROUP BY tipo, idNxS)");
+        $response = $this->db->query("UPDATE Presupuestos SET idNotariaxSolicitud = (SELECT idNotariaxSolicitud FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
+        WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNotariaxSolicitud IS NULL
+            GROUP BY tipo, idNotariaxSolicitud)");
     }
+
+    /**Ozuna16M
+     * 3.DsWp.hm3THnju
+     * 
+     */
     
     function getDocumentsClientOtros($idSolicitud)
     {
@@ -835,7 +815,7 @@ function checkBudgetInfo($idSolicitud){
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
-            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNotariaxSolicitud = pr.idNotariaxSolicitud
 			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
              GROUP BY
@@ -896,7 +876,7 @@ function checkBudgetInfo($idSolicitud){
             LEFT JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = de.idDocumento AND mrxd.estatus = 1 
             LEFT JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.tipo AND oxc.id_catalogo = 69
-            INNER JOIN notarias_x_usuario nxu ON nxu.idNxS = pr.idNxS
+            INNER JOIN notarias_x_usuario nxu ON nxu.idNotariaxSolicitud = pr.idNotariaxSolicitud
 			INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
             WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
              GROUP BY
@@ -928,7 +908,7 @@ function checkBudgetInfo($idSolicitud){
 
     public function existeNotariaSolicitud($idSolicitud, $idNotaria)
     {
-        $query = $this->db->query("SELECT idNxS FROM notarias_x_usuario 
+        $query = $this->db->query("SELECT idNotariaxSolicitud FROM notarias_x_usuario 
              WHERE id_solicitud = $idSolicitud AND id_notaria = $idNotaria");
         return $query->row();
     }

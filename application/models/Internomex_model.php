@@ -139,8 +139,8 @@ class Internomex_model extends CI_Model {
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
 
-    public function getMFPagos( $fechainicio,$fechafin,$instrucciones){
-        $cmd = "SELECT p.id_usuario,
+    public function getPagosFinal($beginDate, $enDate) {
+        return $this->db->query("SELECT p.id_usuario,
         FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
 		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
 		FORMAT(p.monto_internomex,'C','En-Us') as 'monto_internomex'
@@ -148,18 +148,11 @@ class Internomex_model extends CI_Model {
         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,
         u.id_rol , d.nombre as rol 
         FROM  pagos_internomex p
-        INNER JOIN usuarios u on u.id_usuario = p.id_usuario $instrucciones
+        INNER JOIN usuarios u on u.id_usuario = p.id_usuario
         INNER JOIN sedes c on c.id_sede = p.forma_pago 
         INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
         INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
-        WHERE p.fecha_creacion  >= '$fechainicio' AND
-       p.fecha_creacion <= '$fechafin' ";
-        
-        //$cmd = "SELECT p.id_usuario,p.monto_con_descuento,p.monto_sin_descuento,p.monto_internomex,CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre
-       // FROM  pagos_internomex p  INNER JOIN usuarios u on u.id_usuario = p.id_usuario
-       // WHERE YEAR(p.fecha_creacion) = $year and MONTH(p.fecha_creacion) = $mes";
-       $query = $this->db->query($cmd);
-        return $query  ;
+        WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'");
     }
     public function getCommissions()
     {
