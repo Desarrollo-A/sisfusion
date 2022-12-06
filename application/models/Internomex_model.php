@@ -139,7 +139,13 @@ class Internomex_model extends CI_Model {
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
 
-    public function getPagosFinal($beginDate, $enDate) {
+    public function getPagosFinal($beginDate, $endDate){
+        $condicion = '';
+        if ($this->session->userdata('id_rol') != 31){
+            $idUsuario = $this->session->userdata('id_usuario');
+            $condicion = " AND p.id_usuario = $idUsuario";
+        }
+    
         return $this->db->query("SELECT p.id_usuario,
         FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
 		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
@@ -152,7 +158,7 @@ class Internomex_model extends CI_Model {
         INNER JOIN sedes c on c.id_sede = p.forma_pago 
         INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
         INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
-        WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'");
+        WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
     }
     public function getCommissions()
     {
