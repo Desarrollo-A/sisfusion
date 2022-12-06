@@ -185,6 +185,7 @@
                                                                         <th>ENGANCHE</th>
                                                                         <th>FECHA ENGANCHE</th>
                                                                         <th>FECHA CREACIÓN PROSPECTO</th>
+                                                                        <th>ID Dragon</th>
                                                                         <th>ESTATUS LOTE</th>
                                                                         <th>ACCIONES</th>
                                                                     </tr>
