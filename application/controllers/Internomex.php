@@ -105,15 +105,10 @@
   }
   }
 
-  public function loadFinalPayment()
-  {
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol') );
+  public function loadFinalPayment() {
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-      if($this->session->userdata('id_rol') != 31){
-        $this->load->view("internomex/load_final_payment_ase", $datos);
-      }else{
-        $this->load->view("internomex/load_final_payment", $datos);
-      }
+    $this->load->view("internomex/load_final_payment", $datos);
   }
 
   public function getPaymentsListByCommissionAgent()
@@ -121,33 +116,11 @@
     $data = $this->Internomex_model->getCommissions()->result_array();
     echo json_encode($data);
   }
-  public function getPagosFinal(){
-    $year   = date("Y");
-    $mes    = date("m");
-    $Udia   = date("t");
-    if($this->session->userdata('id_rol') != 31){
-      $clave_user = $this->session->userdata('id_usuario'); 
-      $clave_user = 9341;
-      $cmd = ' and u.id_usuario = '.$clave_user; 
-   
-    }else{
-      
-      $cmd = '';
-    }
-    $fechaInicio = $this->input->post('fechaInicio');
-    $fechaFin = $this->input->post('fechaFin');
 
-    if(!isset($fechaFin) and !isset($fechaInicio))
-    {
-      $mes = date("m");
-      $year = date("Y");
-      $fechaInicio = $year.'-'.$mes.'-'.'1';
-      $fechaFin = date("Y-m-t");   
-
-    }
-    $fechaInicio = $fechaInicio ." 0:00:00"; 
-    $fechaFin = $fechaFin ." 23:59:59"; 
-    $data['data'] = $this->Internomex_model->getMFPagos($fechaInicio ,$fechaFin, $cmd)->result_array();
+  public function getPagosFinal() {
+    $beginDate = $this->input->post('beginDate');
+    $enDate = $this->input->post('enDate');
+    $data['data'] = $this->Internomex_model->getPagosFinal($beginDate, $enDate)->result_array();
     echo json_encode($data);
   }
 
