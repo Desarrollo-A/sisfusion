@@ -5,8 +5,30 @@ $(document).ready(function () {
         var fileName = target[0].files[0].name;
         relatedTarget.val(fileName);
     });
-
+    setInitialDates();
+    $('.find-results').trigger('click');
 });
+
+function setInitialDates() {
+    var beginDt = moment().startOf('year').format('DD/MM/YYYY');
+    var endDt = moment().format('DD/MM/YYYY');
+    $('.beginDate').val(beginDt);
+    $('.endDate').val(endDt);
+}
+
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+    return [year, month, day].join('-');
+}
+
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     if (i != 13) {
@@ -21,126 +43,6 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
         });
     }
 });
-
-function fillTableLotificacion2(fechaInicio, fechaFin) {
-    $(".box-table").removeClass('hide');
-    generalDataTable = $('#tableLotificacion').dataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                    format: {
-                        header: function (d, columnIdx) {
-                    
-                            switch (columnIdx) {
-                                case 0:
-                                    return "Nombre";
-                                    break;
-                                case 1:
-                                    return "Rol";
-                                    break;
-                                case 2:
-                                    return "Forma de pago"
-                                case 3:
-                                    return "Sede";
-                                    break;
-                                case 4:
-                                    return "Monto con descuento";
-                                break;
-                                case 5:
-                                    return "Monto sin descuento";
-                                break;
-                                case 6:
-                                    return "Monto internomex";
-                                break;
-                                case 7:
-                                    return "Fecha de creación";
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        ],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        language: {
-            url: "../static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [
-            {
-                data: function (d) {
-               
-                    return d.nombre;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.rol;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.forma_pago;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sede;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_con_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_sin_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_internomex;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_creacion   ;
-                }
-            },
-        ],
-        columnDefs: [{
-            visible: false,
-            searchable: false
-        }],
-        ajax: {
-            url: "getPagosFinal",
-            type: "POST",
-            cache: false,
-            data : {
-                fechaInicio : fechaInicio,
-                fechaFin     : fechaFin
-            }
-        }
-    });
-}
 
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
@@ -254,8 +156,8 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             type: "POST",
             cache: false,
             data : {
-                fechaInicio : fechaInicio,
-                fechaFin     : fechaFin
+                beginDate: fechaInicio,
+                endDate: fechaFin
             }
         }
     });
@@ -263,14 +165,10 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
 
 
 $(document).on('click', '.searchByDateRange', function(){
-
-    var fechaStart = document.getElementById("startDate").value;
-    var fechaEnd = document.getElementById("endDate").value;
- 
-    if(fechaStart <= fechaEnd ){
-   
-        fillTableLotificacion2(fechaStart , fechaEnd);
-
+    let fechaInicio = formatDate( $(".beginDate").val());
+    let fechaFin = formatDate( $(".endDate").val());
+    if(fechaInicio <= fechaFin ){
+        fillTableLotificacion(fechaInicio, fechaFin);
     }else{
         alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
     }
@@ -279,26 +177,21 @@ $(document).on('click', '.searchByDateRange', function(){
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
     $(".box-table").removeClass("hide");
-    fillTableLotificacion();
-    document.getElementById('startDate').valueAsDate = new Date();
-    document.getElementById('endDate').valueAsDate = new Date();
+    let fechaInicio = formatDate( $(".beginDate").val());
+    let fechaFin = formatDate( $(".endDate").val());
+    fillTableLotificacion(fechaInicio, fechaFin);
 });
 
 $(document).on('click', '.generate', function () {
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
-    
 });
 
 $(document).on('click', '#downloadFile', function () {
-    //let lotes = $("#lotes").val();
     $.ajax({
         url: 'getPaymentsListByCommissionAgent',
         type: 'post',
         dataType: 'json',
-        /*data: {
-            "lotes": lotes
-        },*/
         beforeSend: function() {
             $('#spiner-loader').removeClass('hide');
           },
