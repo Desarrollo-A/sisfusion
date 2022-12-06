@@ -6,7 +6,10 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    $('.find-results').trigger('click');
+    if( id_rol_global == 31 )
+        $('.generate').trigger('click');
+    else
+        $('.find-results').trigger('click');
 });
 
 function setInitialDates() {
@@ -72,10 +75,10 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                                     return "Sede";
                                     break;
                                 case 4:
-                                    return "Monto con descuento";
+                                    return "Monto sin descuento";
                                 break;
                                 case 5:
-                                    return "Monto sin descuento";
+                                    return "Monto con descuento";
                                 break;
                                 case 6:
                                     return "Monto internomex";
@@ -128,12 +131,12 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
-                    return d.monto_con_descuento;
+                    return d.monto_sin_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.monto_sin_descuento;
+                    return d.monto_con_descuento;
                 }
             },
             {

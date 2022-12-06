@@ -150,7 +150,7 @@ class Internomex_model extends CI_Model {
         FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
 		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
 		FORMAT(p.monto_internomex,'C','En-Us') as 'monto_internomex'
-        ,c.nombre sede, g.nombre forma_pago,p.fecha_creacion ,
+        ,c.nombre sede, g.nombre forma_pago, CONVERT(varchar, p.fecha_creacion, 20) fecha_creacion,
         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,
         u.id_rol , d.nombre as rol 
         FROM  pagos_internomex p

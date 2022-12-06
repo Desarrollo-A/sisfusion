@@ -46,13 +46,15 @@
                                     <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="radio_container w-100">
                                         <?php if( $this->session->userdata('id_rol') == 31 ) { ?>
-                                            <input class="d-none generate" type="radio" name="radio" id="one">
+                                            <input class="d-none generate" type="radio" name="radio" id="one" checked>
                                             <label for="one" class="w-50">Cargar</label>
-                                            <input class="d-none find-results" type="radio" name="radio" id="two" checked>
+                                            <input class="d-none find-results" type="radio" name="radio" id="two">
                                             <label for="two" class="w-50">Consultar</label>
                                         <?php } else  { ?> 
-                                            <input class="d-none find-results" type="radio" name="radio" id="two" checked>
-                                            <label for="two" class="w-100">Consultar</label>
+                                            <input class="d-none" type="radio" name="radio" id="one" disabled>
+                                            <label for="one" class="w-50" disabled>Cargar</label>
+                                            <input class="d-none find-results" type="radio" name="radio" id="two">
+                                            <label for="two" class="w-50" checked>Consultar</label>
                                         <?php } ?>
                                         </div>
                                     </div>
@@ -89,8 +91,8 @@
                                             <th>Rol</th>           
                                             <th>Forma de pago</th>
                                             <th>Sede</th>                        
+                                            <th>Monto sin descuento</th>
                                             <th>Monto con descuento</th>
-                                            <th>Monto s/n descuento</th>
                                             <th>Monto internomex</th>
                                             <th>Fecha</th>
                                         </tr>
