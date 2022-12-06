@@ -6851,8 +6851,6 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
     public function getPrestamosTable($mes=0, $anio=0)
     {
-     // echo $anio;
-      //if($anio != 0)
         $data = $this->Comisiones_model->getPrestamosTable($mes, $anio);
         echo json_encode(array('data' => $data));
     }
@@ -7199,12 +7197,15 @@ for ($d=0; $d <count($dos) ; $d++) {
       // echo $_POST['id_lote'];
       // echo $_POST['id_cliente'];
       
+      
         $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
                 'penalizaciones', 'NULL');
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
         }
-
+        if($response){
+          $response = $this->Comisiones_model->insertHistorialComentario($_POST['id_lote'], $this->session->userdata('id_usuario'), $_POST['comentario_aceptado']);
+        }
          echo json_encode($response);
     }
 
@@ -7214,6 +7215,9 @@ for ($d=0; $d <count($dos) ; $d++) {
                 'penalizaciones', 'NULL');
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacionCuatro($_POST['id_lote'], $_POST['id_cliente'], $_POST['asesor'], $_POST['coordinador'], $_POST['gerente']);
+        }
+        if($response){
+          $response = $this->Comisiones_model->insertHistorialCancelado($_POST['id_lote'], $this->session->userdata('id_usuario'), $_POST['comentario_rechazado']);
         }
 
          echo json_encode($response);

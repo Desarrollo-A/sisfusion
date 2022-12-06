@@ -9068,6 +9068,16 @@ function descuentos_universidad($clave , $data){
         return (bool)($this->db->query("UPDATE penalizaciones SET bandera = 1 WHERE bandera = 0 AND id_lote = $idLote AND id_cliente = $idCliente"));
     }
 
+    public function insertHistorialComentario($idLote, $idCliente,$comentario)
+    {   
+        return (bool)($this->db->query("INSERT INTO historial_log (identificador, id_usuario, fecha_movimiento, estatus, comentario, tabla, motivo) values ($idLote, $idCliente, getdate(), 1, '".$comentario."', 'penalizaciones', '1')"));
+    }
+
+    public function insertHistorialCancelado($idLote, $idCliente,$comentario)
+    {   
+        return (bool)($this->db->query("INSERT INTO historial_log (identificador, id_usuario, fecha_movimiento, estatus, comentario, tabla, motivo) values ($idLote, $idCliente, getdate(), 1, '".$comentario."', 'penalizaciones', '0')"));
+    }
+
     public function InsertPenalizacionComision($lote){
    
         $valInner =  $this->db->query("SELECT COALESCE(pe.id_porcentaje_penalizacion,0) val FROM penalizaciones pe
