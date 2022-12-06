@@ -1219,7 +1219,8 @@
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
-                    if(r1>=500000){
+                    // if(r1>=500000){
+                    if($scope.saldoFinal>=500000){
                         $('#porcentajeEnganche').attr('min', 1);
                         let porcetaje = 0.01;
                         let porcentajeDanero = (porcetaje*r1);
@@ -1776,7 +1777,6 @@
                     });
                 }
                 else{
-                    console.log('chinguen todos a su madre perros bastardos');
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
@@ -5783,6 +5783,7 @@
 
             $scope.selectPorcentajeEnganche = function(){
                 $scope.porcentajeEng = $scope.porcentaje;
+                console.log('me ejecuté');
 
                 /*nuevo*/
                 var porcentajeEnganche = angular.element( document.querySelector('#porcentajeEnganche') );
@@ -5828,7 +5829,8 @@
                     // $scope.engancheFinal = ef;
                     // $scope.cantidad = ef;
 
-                }else{
+                }
+                else{
                     let pe = porcentajeEnganche.val();
                     var cantidadFromPorcnt = (pe*r1)/100;
                     cantidadEnganche.val(parseFloat(cantidadFromPorcnt));
@@ -5909,7 +5911,8 @@
                     // document.getElementById("msdif").disabled = false;
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
                     calcularCF();
-                }else{
+                }
+                else{
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day:'Limpiar'}];
                     calcularCF();
                 }
@@ -7573,11 +7576,23 @@
                         var cantidadEnganche   =  angular.element( document.querySelector('#cantidadEnganche') );
                         $scope.diasEnganche=[{day: 15}, {day: 30}, {day: 'Diferido'}];
                         $scope.cantidad="";
-                        porcentajeEnganche.val('10');
+                        //respaldo
+                        // porcentajeEnganche.val('10');
+                        // apartado.val('0');
+                        // $scope.porcentajeEng = 10;
+                        // cantidadEnganche.val(response.data[0].enganche);
+                        // $scope.cantidad = response.data[0].enganche;
+                        //end
+
+                        //probando...02122022
+                        porcentajeEnganche.val('0');
                         apartado.val('0');
-                        $scope.porcentajeEng = 10;
-                        cantidadEnganche.val(response.data[0].enganche);
-                        $scope.cantidad = response.data[0].enganche;
+                        $scope.porcentajeEng = 0;
+                        cantidadEnganche.val(0);
+                        $scope.cantidad = 0;
+                        //termina el probando
+
+
 
                         mesesdiferidos.val('[1, 2, 3, 4, 5, 6]');
 

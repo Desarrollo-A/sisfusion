@@ -4379,13 +4379,13 @@ function getStatusMktdPreventa(){
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, cl.engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
-                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, 0 as id_dragon
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
                 INNER JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto 
-                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion=l.idStatusContratacion ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_telefono." ".$condition_sedes. " AND pr.source='DragonCEM' AND cl.status=1");
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion=l.idStatusContratacion ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_telefono." ".$condition_sedes. "  AND pr.source='DragonCEM' AND cl.status=1");
                 break;
             case 2:    //prospectos
                 $query = $this->db->query("SELECT concat(pr.nombre,' ', pr.apellido_paterno, ' ', pr.apellido_materno) as nombre_prospecto,
