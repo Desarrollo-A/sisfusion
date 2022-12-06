@@ -817,7 +817,7 @@ function loadTable(tipoDescuento) {
                 } else {
                     validation = false;
                 }
-           
+            
             if (validation ){
                 $.ajax({
                     url : 'UpdateDescuent',
@@ -835,7 +835,7 @@ function loadTable(tipoDescuento) {
                         alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
                         document.getElementById('updateDescuento').disabled = false;
                       
-                        //   $('#addExp').DataTable().ajax.reload(null, false );
+                        $('#tabla-general').DataTable().ajax.reload(null, false );
                         // toastr[response.response_type](response.message);
                         $('#editDescuento').modal('toggle');
                     },              
