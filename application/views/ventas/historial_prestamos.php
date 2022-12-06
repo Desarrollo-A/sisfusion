@@ -155,6 +155,7 @@
                                                         <th>PENDIENTE</th>
                                                         <th>PAGO INDIVUAL</th>
                                                         <th>FECHA</th>
+                                                        <th>COMENTARIOS</th>
                                                         <th>ESTATUS</th>
                                                         <th>TIPO DESCUENTO</th>
                                                         <th>OPCIONES</th>
@@ -312,7 +313,7 @@
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
                             format: {
                                 header: function (d, columnIndx) {
                                     switch (columnIndx) {
@@ -325,8 +326,9 @@
                                         case 6: return 'PENDIENTE';
                                         case 7: return 'PAGO INDIVIDUAL';
                                         case 8: return 'FECHA';
-                                        case 9: return 'TIPO DESCUENTO';
-                                        case 10: return 'ESTATUS';
+                                        case 9: return 'COMENTARIOS';
+                                        case 10: return 'TIPO DESCUENTO';
+                                        case 11: return 'ESTATUS';
                                         default: return 'NA';
                                     }
                                 }
@@ -399,6 +401,12 @@
                         'width': "8%",
                         'data': function( d ){
                             return '<p class="m-0">'+d.fecha_creacion+'</p>';
+                        }
+                    },
+                    {
+                        'width': "8%",
+                        'data': function( d ){
+                            return '<p class="m-0">'+d.comentario+'</p>';
                         }
                     },
                     {
