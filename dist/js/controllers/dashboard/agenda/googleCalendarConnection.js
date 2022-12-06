@@ -1,14 +1,14 @@
   // LOCAL
-  var CLIENT_ID = '20777256148-vn24jag8p6gg898hu4ncoabsqc3galup.apps.googleusercontent.com';
+  // var CLIENT_ID = '20777256148-vn24jag8p6gg898hu4ncoabsqc3galup.apps.googleusercontent.com';
 
   // PRUEBAS
-  // var CLIENT_ID = '267709590113-v4i5keof8q5gb07c85kbcl0in9tjuq1u.apps.googleusercontent.com';
+  var CLIENT_ID = '161969316544-ou10ee3mktbmp2og21po8rj2eke8ej9t.apps.googleusercontent.com';
   
   // LOCAL
-  var API_KEY = 'AIzaSyCG2ig3Dj3XGIvTpcRCiT10hQ8jdEVxANg';
+  // var API_KEY = 'AIzaSyCG2ig3Dj3XGIvTpcRCiT10hQ8jdEVxANg';
 
   // PRUEBAS
-  // var API_KEY = 'AIzaSyCT-w9W-QZ6mEex9OUzmlKK9Z_Q5VVwBP0';
+  var API_KEY = 'AIzaSyCCR6Rd3y0E3FgV4iBWTVn_ZtLYMIvZPNw';
 
   // Array of API discovery doc URLs for APIs used by the quickstart
   var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -30,7 +30,8 @@
       apiKey: API_KEY,
       clientId: CLIENT_ID,
       discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES
+      scope: SCOPES,
+      plugin_name: 'Google Auth production'
     }).then(function () {
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
