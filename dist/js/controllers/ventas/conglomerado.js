@@ -446,6 +446,16 @@ function loadTable(tipoDescuento) {
                                 </div>`;
                         } else if(tipo_descuento == 1 ){
                             if (d.status == 0) {
+                                let pendiente = parseFloat(d.monto - d.aply);
+                                if(pendiente < 0 ){
+                                   actividad =  (pendiente * -1);
+                                }
+                                let total ;
+                                if(d.aply == null || d.aply <= 1){
+                                    total = d.pagado_caja;
+                                } else {
+                                    total = d.aply;
+                                }
                                 return `
                                     <div class="d-flex justify-center">
                                         <button value="${d.id_usuario}"
@@ -463,7 +473,18 @@ function loadTable(tipoDescuento) {
                                             title="Historial pagos">
                                             <i class="fas fa-chart-bar"></i>
                                         </button>
-                                        
+                                        </button>
+                                        <button value="${d.id_usuario}"
+                                         data-value="${d.id_descuento}"
+                                         data-code="${d.id_usuario}"
+                                         data-descuento="${d.monto}"
+                                         data-mensual="${d.pago_individual}"
+                                         data-pendiente="${pendiente}"
+                                         data-total="${total}"
+                                         class="btn-data btn-violetBoots editar_descuentos"
+                                         title="Cambiar descuentos">
+                                         <i class="fas fa-money-check-alt"></i>
+                                     </button>
                                         <button value="${d.id_usuario}"
                                             data-value="${d.nombre}"
                                             data-code="${d.id_usuario}"
@@ -532,6 +553,7 @@ function loadTable(tipoDescuento) {
                                     } else {
                                         total = d.aply;
                                     }
+                                    
                                     return `
                                         <div class="d-flex justify-center">
                                             <button value="${d.id_usuario}"
@@ -570,6 +592,16 @@ function loadTable(tipoDescuento) {
                                             </button>${btnEliminarEditar}
                                         </div>`;
                                 } else if (d.estatus == 5) {
+                                    let pendiente = parseFloat(d.monto - d.aply);
+                                    if(pendiente < 0 ){
+                                       actividad =  (pendiente * -1);
+                                    }
+                                    let total ;
+                                    if(d.aply == null || d.aply <= 1){
+                                        total = d.pagado_caja;
+                                    } else {
+                                        total = d.aply;
+                                    }
                                     return `
                                         <div class="d-flex justify-center">
                                             <button value="${d.id_usuario}"
@@ -579,8 +611,31 @@ function loadTable(tipoDescuento) {
                                                 title="Historial pagos">
                                                 <i class="fas fa-chart-bar"></i>
                                             </button>${btnEliminarEditar}
-                                        </div>`;
+                                            </button>
+                                            <button value="${d.id_usuario}"
+                                             data-value="${d.id_descuento}"
+                                             data-code="${d.id_usuario}"
+                                             data-descuento="${d.monto}"
+                                             data-mensual="${d.pago_individual}"
+                                             data-pendiente="${pendiente}"
+                                             data-total="${total}"
+                                             class="btn-data btn-violetBoots editar_descuentos"
+                                             title="Cambiar descuentos">
+                                             <i class="fas fa-money-check-alt"></i>
+                                            </button>    
+                                        </div>
+                                        `;
                                 } else {
+                                    let pendiente = parseFloat(d.monto - d.aply);
+                                    if(pendiente < 0 ){
+                                       actividad =  (pendiente * -1);
+                                    }
+                                    let total ;
+                                    if(d.aply == null || d.aply <= 1){
+                                        total = d.pagado_caja;
+                                    } else {
+                                        total = d.aply;
+                                    }
                                     return `
                                         <div class="d-flex justify-center">
                                             <button value="${d.id_usuario}"
@@ -593,6 +648,18 @@ function loadTable(tipoDescuento) {
                                                 title="Aplicar descuento">
                                                 <i class="fas fa-plus"></i>
                                             </button>
+                                            </button>
+                                            <button value="${d.id_usuario}"
+                                             data-value="${d.id_descuento}"
+                                             data-code="${d.id_usuario}"
+                                             data-descuento="${d.monto}"
+                                             data-mensual="${d.pago_individual}"
+                                             data-pendiente="${pendiente}"
+                                             data-total="${total}"
+                                             class="btn-data btn-violetBoots editar_descuentos"
+                                             title="Cambiar descuentos">
+                                             <i class="fas fa-money-check-alt"></i>
+                                         </button>
                                             <button value="${d.id_usuario}"
                                                 data-value="${d.nombre}"
                                                 data-code="${d.id_usuario}"
@@ -686,9 +753,9 @@ function loadTable(tipoDescuento) {
             
             sobrante = Total_a_pagar - total;
             //para agregar llo que ya se pago
-            NuevasMensualidades = sobrante  / mensualidadesFaltantes;
+            NuevasMensualidades= sobrante  / mensualidadesFaltantes;
 
-            document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
+            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
 
             //faltantes = mensualidadesFaltantes/mensual;
             
@@ -705,14 +772,14 @@ function loadTable(tipoDescuento) {
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
 
-            document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
+            
+            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
             
 
         
         });
 
         $(document).on('input', '.descuento1', function(){
-
             total_pagos = document.getElementById("total_pagos").value ;
             actualess = document.getElementById("actualess").value ;
             totalmeses = document.getElementById("totalmeses").value ;
@@ -724,19 +791,18 @@ function loadTable(tipoDescuento) {
 
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
-            document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
+            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
             
 
           
         });
-      
         $(document).on("click", ".updateDescuento", function () {
             document.getElementById('updateDescuento').disabled = true;
             let validation = true;
            mensualidades = document.getElementById("pago_ind011").value;
-            
+           id_descuento = document.getElementById("descuento_id").value; 
            pago = document.getElementById("descuento1").value ;
-          
+           pagos_activos = document.getElementById("numeroPagos1").value ;
             if (mensualidades == '' ) 
             {
                 validation = false;
@@ -744,26 +810,35 @@ function loadTable(tipoDescuento) {
             if (pago == ''){
                 validation = false;
             }
-       
-       
+            
+                var RE = /^\d*(\.\d{1})?\d{0,1}$/;
+                if (RE.test(mensualidades)) {
+                    
+                } else {
+                    validation = false;
+                }
+            
             if (validation ){
                 $.ajax({
                     url : 'UpdateDescuent',
                     type : 'POST',
+                    dataType: "json",
                     data: {
+                    "pagos_activos"     : pagos_activos,
                     "id_descuento"      : id_descuento,
                     "monto"             : pago,
                     "pago_individual"   : mensualidades,
-                 
                       }, 
-                    success : response => {
+
+                      success: function(data) {
+                       
+                        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
                         document.getElementById('updateDescuento').disabled = false;
-                        alerts.showNotification("top", "right", "Descuento actualizado satisfactoriamente.", "success");
-                     
-                   
+                      
+                        $('#tabla-general').DataTable().ajax.reload(null, false );
                         // toastr[response.response_type](response.message);
                         $('#editDescuento').modal('toggle');
-                    },
+                    },              
                     error : (a, b, c) => {
                         alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
                     }

@@ -7168,8 +7168,9 @@ for ($d=0; $d <count($dos) ; $d++) {
             $monto              = $this->input->post('monto');
             $pago_individual    = $this->input->post('pago_individual');
             $comentario         = 'Descuento aplicado';
+            $pagos_activos         =  $this->input->post('pagos_activos');
                                 $arr_update = array(                      
-                                  
+                                    "pagos_activos"   => $pagos_activos,
                                     "monto"           =>  $monto,
                                     "pago_individual" =>  $pago_individual,
                                     "detalles"      =>  $comentario
@@ -7184,7 +7185,7 @@ for ($d=0; $d <count($dos) ; $d++) {
               $d=  array(
                 "response_code" => 400, 
                 "response_type" => 'error',
-                "message" => "Descuento no actualizado ");
+                "message" => "Descuento no actualizado, intentalo más tarde");
             }
             echo json_encode ($d);
           } 

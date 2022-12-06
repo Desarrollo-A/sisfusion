@@ -9041,7 +9041,8 @@ function descuentos_universidad($clave , $data){
         try {
             $this->db->where('id_descuento', $clave);
             $this->db->update('descuentos_universidad', $data);
-            return TRUE;
+            $afftectedRows = $this->db->affected_rows();
+            return $afftectedRows > 0 ? TRUE : FALSE ;
         }
         catch(Exception $e) {
             return $e->getMessage();
