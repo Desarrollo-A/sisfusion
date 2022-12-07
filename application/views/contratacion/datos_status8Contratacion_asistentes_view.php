@@ -265,9 +265,9 @@
                 columns: [{
                     width: "3%",
                     className: 'details-control',
-                    orderable": false,
+                    orderable: false,
                     data : null,
-                    defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+                    defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
                 {
                     data: function( d ){

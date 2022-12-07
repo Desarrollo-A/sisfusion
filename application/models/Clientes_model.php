@@ -4419,4 +4419,19 @@ function getStatusMktdPreventa(){
         return $query->result_array();
 
     }
+
+    public function getDragonsClientsList() {
+        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
+        c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+        cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto
+        FROM clientes cl 
+        INNER JOIN lotes l ON cl.idLote = l.idLote 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.source = 'DragonCem'
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+        WHERE cl.status=1");
+    }
+
 }
