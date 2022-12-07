@@ -1,4 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+//require_once 'vendor/autoload.php';
+
 class Calendar extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
@@ -17,6 +20,8 @@ class Calendar extends CI_Controller {
     }
 
     public function calendar(){
+        // $client = new Google\Client();
+        // print_r($client);
         $this->load->view("dashboard/agenda/calendar");
     }
 

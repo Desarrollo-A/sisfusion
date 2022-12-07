@@ -72,7 +72,7 @@ calendar = new FullCalendar.Calendar(calendarEl, {
   }
 });
 calendar.render();
-// customizeIcon();
+customizeIcon();
 
 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
