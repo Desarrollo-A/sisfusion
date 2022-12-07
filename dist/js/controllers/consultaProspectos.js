@@ -75,16 +75,6 @@ $(document).ready(function() {
                 }
             },
             {
-                data: function (d) {
-                    return d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
-                }
-            },
-            {
                 data: function(d) {
                     return d.nombre_lp;
                 }
