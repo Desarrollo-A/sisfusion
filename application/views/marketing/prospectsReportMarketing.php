@@ -182,6 +182,7 @@
                                                                         <th>ENGANCHE</th>
                                                                         <th>FECHA ENGANCHE</th>
                                                                         <th>FECHA CREACIÓN PROSPECTO</th>
+                                                                        <th>ID CRM</th>
                                                                         <th>ID DRAGON</th>
                                                                         <th>ESTATUS LOTE</th>
                                                                         <th>ACCIONES</th>

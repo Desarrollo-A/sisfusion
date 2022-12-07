@@ -25,15 +25,6 @@ $('#searchButton').click(()=>{
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
-
-	// console.log('sedeII:', Object.assign({}, sede));
-	// var data = new FormData();
-	// data.append("idLote", idLote);
-	// data.append("name", name);
-	// data.append("mail", mail);
-	// data.append("telephone", telephone);
-	// data.append("sede", sede);
-
 	if(name!='' || mail!='' || telephone!='' || sede!=''){
 		let array_data = [];
 		array_data['name'] = name;
@@ -62,14 +53,6 @@ $('#searchButtonC').click(()=>{
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
 
-	// console.log('sedeII:', Object.assign({}, sede));
-	// var data = new FormData();
-	// data.append("idLote", idLote);
-	// data.append("name", name);
-	// data.append("mail", mail);
-	// data.append("telephone", telephone);
-	// data.append("sede", sede);
-
 	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!=''){
 		let array_data = [];
 		array_data['idLote'] = idLote;
@@ -78,38 +61,9 @@ $('#searchButtonC').click(()=>{
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
 		fillTableClientes(array_data);
-	}else{
+	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
 	}
-
-
-	// $.ajax({
-	//     type: 'POST',
-	//    url: '<?//=base_url()?>//index.php/Clientes/searchData',
-	//     data: data,
-	//     contentType: false,
-	//     cache: false,
-	//     processData: false,
-	//     dataType: "json",
-	//     beforeSend: function () {
-	//
-	//     },
-	//     success: function (data) {
-	//         if (data == 1) {
-	//             $('#preguntaDeleteMktd').modal("hide");
-	//             $('#checkEvidencia').DataTable().ajax.reload();
-	//             $('#sol_aut').DataTable().ajax.reload();
-	//             alerts.showNotification('top', 'right', 'Se ha eliminado MKTD de esta venta de manera exitosa.', 'success');
-	//         } else {
-	//             alerts.showNotification('top', 'right', 'Oops, algo salió mal, inténtalo de nuevo.', 'danger');
-	//         }
-	//     },
-	//     error: function () {
-	//         alerts.showNotification('top', 'right', 'Oops, algo salió mal, inténtalo de nuevo.', 'danger');
-	//     }
-	// });
-
-
 });
 
 
@@ -125,7 +79,7 @@ function fillTable(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Lista de prospectos',
 				exportOptions: {
-					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
@@ -208,7 +162,6 @@ function fillTable(data_search) {
 					return '<p class="m-0">' + telefono + '</p>';
 				}
 			},
-
 			{
 				data: function (d) {
 					return '<p class="m-0">' + d.correo + '</p>';
@@ -371,7 +324,7 @@ $("#tabla_prospectos").ready(function () {
 
 	let titulos = [];
 	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		// if (i != 0 && i != 13) {
+		// if (i != 0 && i != 14) {
 			var title = $(this).text();
 
 			titulos.push(title);
@@ -394,7 +347,7 @@ function fillTableClientes(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Registro de clientes',
 				exportOptions: {
-					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
@@ -523,67 +476,23 @@ function fillTableClientes(data_search) {
 			{
 
 				data: function (d) {
-
 					return '<p class="m-0">' +   myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  + '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.id_prospecto + '</p>';
+					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.id_prospecto}</span>`;
 				}
 			},
 			{
 				data: function (d) {
 					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
-					return '<p class="m-0">' + validateData + '</p>';
+					return `<span class="label" style="background: #AED6F1; color: #1B4F72">${validateData}</span>`;
 				}
 			},
 			{
 				data: function (d) {
-					let backgrColor = '';
-					switch (d.idStatusContratacion) {
-						case 1:
-							backgrColor = "#103F75";
-							break;
-						case 2:
-							backgrColor = "#765FA4";
-							break;
-						case 5:
-							backgrColor = "#D17FC5";
-							break;
-						case 6:
-							backgrColor = "#006A9D";
-							break;
-						case 7:
-							backgrColor = "#0095A9";
-							break;
-						case 8:
-							backgrColor = "#00723F";
-							break;
-						case 9 :
-							backgrColor = "#85DF7F";
-							break;
-						case 10 :
-							backgrColor = "#D7A31A";
-							break;
-						case 11 :
-							backgrColor = "#414656";
-							break;
-						case 13 :
-							backgrColor = "#877555";
-							break;
-						case 14 :
-							backgrColor = "#A75565";
-							break;
-						case 15 :
-							backgrColor = "#00C6BD";
-							break;
-						default:
-							//Declaraciones ejecutadas cuando ninguno de los valores coincide con el valor de la expresión
-							break;
-					}
-					let lblStatusContratacion = '<label class="label label-info" style="color: white;font-size: 0.8em;background-color:'+backgrColor+'">' + d.nombreStatusContratacion + '</label>';
-					return '<p class="m-0">' + lblStatusContratacion + '</p>';
+					return `<span class="label" style="background: #D2B4DE; color: #4A235A">${d.nombreStatusContratacion}</span>`;
 				}
 			},
 			{
@@ -722,14 +631,10 @@ $(document).on('click', '.cop', function (e) {
 	e.preventDefault();
 	var $itself = $(this);
 	var id_cliente = $itself.attr('data-idcliente');
-
 	id_cliente_global = id_cliente;
-	// tableHistorial.ajax.reload();
-
-
 	tableHistorial = $('#verDet').DataTable({
 		responsive: true,
-		"autoWidth": 'true',
+		autoWidth: 'true',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		buttons: [
 			{
@@ -740,36 +645,37 @@ $(document).on('click', '.cop', function (e) {
 				title:'Reporte ventas compartidas',
 			}
 		],
-		"scrollX": true,
-		"pageLength": 10,
+		scrollX: true,
+		pageLength: 10,
 		language: {
-			url: "<?=base_url()?>/static/spanishLoader_v2.json",
+			url: url+"static/spanishLoader_v2.json",
 			paginate: {
 				previous: "<i class='fa fa-angle-left'>",
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
 		columns: [
-			{"data": "nombreGerente"},
-			{"data": "nombreCoordinador"},
-			{"data": "nombreAsesor"}
+			{data: "nombreGerente"},
+			{data: "nombreCoordinador"},
+			{data: "nombreAsesor"}
 		],
-		"processing": true,
-		"destroy": true,
-		"bAutoWidth": false,
-		"bLengthChange": false,
-		"bInfo": true,
-		"ordering": false,
-		"fixedColumns": true,
-		"ajax": {
-			"url": url2+"registroCliente/getcop/",
-			"type": "POST",
+		processing: true,
+		destroy: true,
+		bAutoWidth: false,
+		bLengthChange: false,
+		bInfo: true,
+		ordering: false,
+		fixedColumns: true,
+		ajax: {
+			url: url2+"registroCliente/getcop/",
+			type: "POST",
 			cache: false,
-			"data": function (d) {
+			data: function (d) {
 				d.id_cliente = id_cliente_global;
 			}
 		},
 	});
+
 	$('#verDetalles').modal('show');
 });
 

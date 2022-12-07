@@ -96,9 +96,11 @@ class VentasAsistentes_model extends CI_Model {
 
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
+        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17)// MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        } else { // MJ: ES VENTAS
+        else if ($this->session->userdata('id_rol') == 54) { // MJ: SUBDIRECTOR CONSULTA (POPEA)
+            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
+        else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
@@ -229,9 +231,11 @@ class VentasAsistentes_model extends CI_Model {
 	
 
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
+        if ($this->session->userdata('id_rol') == 17) // MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        } else { // MJ: ES VENTAS
+        else if ($this->session->userdata('id_rol') == 54)  // MJ: SUBDIRECTOR CONSULTA (POPEA)
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
+        else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
