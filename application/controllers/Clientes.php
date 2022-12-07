@@ -3023,10 +3023,10 @@ public function getStatusMktdPreventa(){
         $this->load->view("clientes/prospectosDR",$datos);
     }
 
-    public function dragonsClientsList() { ¿
+    public function dragonsClientsList() {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("marketinga/dragonsClientsList",$datos);
+        $this->load->view("marketing/dragonsClientsList", $datos);
     }
 
     public function getDragonsClientsList() {
