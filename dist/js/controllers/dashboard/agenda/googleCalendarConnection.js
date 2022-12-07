@@ -1,11 +1,5 @@
-  // LOCAL
-  // var CLIENT_ID = '20777256148-vn24jag8p6gg898hu4ncoabsqc3galup.apps.googleusercontent.com';
-
   // PRUEBAS
   var CLIENT_ID = '161969316544-ou10ee3mktbmp2og21po8rj2eke8ej9t.apps.googleusercontent.com';
-  
-  // LOCAL
-  // var API_KEY = 'AIzaSyCG2ig3Dj3XGIvTpcRCiT10hQ8jdEVxANg';
 
   // PRUEBAS
   var API_KEY = 'AIzaSyCCR6Rd3y0E3FgV4iBWTVn_ZtLYMIvZPNw';
