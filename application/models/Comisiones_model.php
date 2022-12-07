@@ -8424,31 +8424,35 @@ return $query->result();
         return $result->result_array();
     }
 
-    public function getPrestamosTable($rol, $user)
+    public function getPrestamosTable($mes=0, $anio=0)
     {
         $whereUserClause = '';
-        if ($user != 0) {
-            $whereUserClause = "AND pa.id_usuario = $user";
+        if ($anio != 0) {
+            $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
 
         $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
-            u .apellido_materno) AS nombre_completo, 
-            oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
-            rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
-            FROM prestamos_aut pa
-            JOIN usuarios u ON u.id_usuario = pa.id_usuario
-            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-            JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
-            JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente, pa1.id_usuario
-                FROM prestamos_aut pa1
-                JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
-                JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
-                GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
-            AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
-            AND u.id_rol = $rol $whereUserClause
-            ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
+        u .apellido_materno) AS nombre_completo, 
+        oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario,
+        rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
+        FROM prestamos_aut pa
+        JOIN usuarios u ON u.id_usuario = pa.id_usuario
+        JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
+        JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+        JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
+        JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente, pa1.id_usuario
+            FROM prestamos_aut pa1
+            JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
+            JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
+            GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
+        AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+        WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio
+        GROUP BY pci.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, 
+        u .apellido_materno, 
+        oxc.nombre, pa.id_usuario, pa.monto, pci.abono_neodata, pa.pago_individual,pci.fecha_pago_intmex, pa.comentario,
+        rpp.id_relacion_pp,oxc2.nombre, oxc2.id_opcion, pend.pendiente
+        ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
         return $result->result_array();
     }
 
@@ -9037,7 +9041,8 @@ function descuentos_universidad($clave , $data){
         try {
             $this->db->where('id_descuento', $clave);
             $this->db->update('descuentos_universidad', $data);
-            return TRUE;
+            $afftectedRows = $this->db->affected_rows();
+            return $afftectedRows > 0 ? TRUE : FALSE ;
         }
         catch(Exception $e) {
             return $e->getMessage();
@@ -9061,6 +9066,16 @@ function descuentos_universidad($clave , $data){
         $penalizacion = $this->db->query("SELECT id_penalizacion FROM penalizaciones WHERE id_lote = $idLote AND id_cliente = $idCliente");
         $this->db->query("INSERT INTO distribucion_penalizaciones values (".$penalizacion->row()->id_penalizacion.",$a,$c,$g,1,($a+$c+$g),1,GETDATE())");
         return (bool)($this->db->query("UPDATE penalizaciones SET bandera = 1 WHERE bandera = 0 AND id_lote = $idLote AND id_cliente = $idCliente"));
+    }
+
+    public function insertHistorialComentario($idLote, $idCliente,$comentario)
+    {   
+        return (bool)($this->db->query("INSERT INTO historial_log (identificador, id_usuario, fecha_movimiento, estatus, comentario, tabla, motivo) values ($idLote, $idCliente, getdate(), 1, '".$comentario."', 'penalizaciones', '1')"));
+    }
+
+    public function insertHistorialCancelado($idLote, $idCliente,$comentario)
+    {   
+        return (bool)($this->db->query("INSERT INTO historial_log (identificador, id_usuario, fecha_movimiento, estatus, comentario, tabla, motivo) values ($idLote, $idCliente, getdate(), 1, '".$comentario."', 'penalizaciones', '0')"));
     }
 
     public function InsertPenalizacionComision($lote){

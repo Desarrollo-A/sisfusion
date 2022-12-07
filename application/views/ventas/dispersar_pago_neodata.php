@@ -244,7 +244,12 @@
                         <div class="modal-body">
                         <input type="hidden" name="id_lote" id="id_lote_penalizacion">
                         <input type="hidden" name="id_cliente" id="id_cliente_penalizacion">
- 
+                        <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <P>Comentarios:</P>
+                                    <textarea class="form-control" rows="2" name="comentario_aceptado" id="comentario_aceptado" placeholder="Agregue sus comentarios..."></textarea></p>
+                                </div>
+                            </div>   
                         </div>
 
                         <div class="modal-footer">
@@ -284,9 +289,14 @@
                           id="Nopenalizacion-form"
                           autocomplete="off">
                         <div class="modal-body">
-                        <input type="hidden" name="id_lote" id="id_lote_cancelar">
-                        <input type="hidden" name="id_cliente" id="id_cliente_cancelar">
- 
+                            <input type="hidden" name="id_lote" id="id_lote_cancelar">
+                            <input type="hidden" name="id_cliente" id="id_cliente_cancelar">
+                                <div class="col-lg-12">
+                                    <div class="form-group is-empty">
+                                        <P>Comentarios:</P>
+                                        <textarea class="form-control" rows="2" name="comentario_rechazado" id="comentario_rechazado" placeholder="Agregue sus comentarios..."></textarea>
+                                    </div>
+                                </div>
                         </div>
 
                         <div class="modal-footer">
@@ -943,6 +953,7 @@
 
                 $('#id_lote_penalizacion').val(idLote);
                 $('#id_cliente_penalizacion').val(idCliente);
+                // $('#comentario_aceptado').val(idCliente);
 
                 // alert($('#id_cliente_penalizacion').val());
 
@@ -1378,6 +1389,7 @@
                         $('#penalizacion-modal').modal("hide");
                         $("#id_lote_penalizacion").val("");
                         $("#id_cliente_penalizacion").val("");
+                        $("#comentario_aceptado").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
@@ -1438,6 +1450,7 @@
                         $('#Nopenalizacion-modal').modal("hide");
                         $("#id_lote_cancelar").val("");
                         $("#id_cliente_cancelar").val("");
+                        $("#comentario_rechazado").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
@@ -1613,7 +1626,7 @@
     }
 
     $('#fecha1').change( function(){
-        fecha1 = $(this).val(); 
+        fecha1 = $(this).val(); fecha2
         var fecha2 = $('#fecha2').val();
         if(fecha2 == ''){
             alerts.showNotification("top", "right", "Selecciona la segunda fecha", "info");

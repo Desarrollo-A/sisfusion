@@ -6849,9 +6849,9 @@ for ($d=0; $d <count($dos) ; $d++) {
             'detalle' => $detalle
         ));
     }
-    public function getPrestamosTable($rol, $user)
+    public function getPrestamosTable($mes=0, $anio=0)
     {
-        $data = $this->Comisiones_model->getPrestamosTable($rol, $user);
+        $data = $this->Comisiones_model->getPrestamosTable($mes, $anio);
         echo json_encode(array('data' => $data));
     }
     public function lista_estatus_descuentos()
@@ -7166,8 +7166,9 @@ for ($d=0; $d <count($dos) ; $d++) {
             $monto              = $this->input->post('monto');
             $pago_individual    = $this->input->post('pago_individual');
             $comentario         = 'Descuento aplicado';
+            $pagos_activos         =  $this->input->post('pagos_activos');
                                 $arr_update = array(                      
-                                  
+                                    "pagos_activos"   => $pagos_activos,
                                     "monto"           =>  $monto,
                                     "pago_individual" =>  $pago_individual,
                                     "detalles"      =>  $comentario
@@ -7182,7 +7183,7 @@ for ($d=0; $d <count($dos) ; $d++) {
               $d=  array(
                 "response_code" => 400, 
                 "response_type" => 'error',
-                "message" => "Descuento no actualizado ");
+                "message" => "Descuento no actualizado, intentalo más tarde");
             }
             echo json_encode ($d);
           } 
@@ -7196,12 +7197,15 @@ for ($d=0; $d <count($dos) ; $d++) {
       // echo $_POST['id_lote'];
       // echo $_POST['id_cliente'];
       
+      
         $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
                 'penalizaciones', 'NULL');
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
         }
-
+        if($response){
+          $response = $this->Comisiones_model->insertHistorialComentario($_POST['id_lote'], $this->session->userdata('id_usuario'), $_POST['comentario_aceptado']);
+        }
          echo json_encode($response);
     }
 
@@ -7211,6 +7215,9 @@ for ($d=0; $d <count($dos) ; $d++) {
                 'penalizaciones', 'NULL');
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacionCuatro($_POST['id_lote'], $_POST['id_cliente'], $_POST['asesor'], $_POST['coordinador'], $_POST['gerente']);
+        }
+        if($response){
+          $response = $this->Comisiones_model->insertHistorialCancelado($_POST['id_lote'], $this->session->userdata('id_usuario'), $_POST['comentario_rechazado']);
         }
 
          echo json_encode($response);

@@ -1191,8 +1191,9 @@ public function getStatusMktdPreventa(){
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
-        if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
+        if ((($this->session->userdata('id_usuario') == $_POST['owner']) && (($_POST['source']!=0 || $_POST['source']!=null) && $_POST['editProspecto']==0) )) {
             $data["nombre"] = $_POST['name'];
+            $data["editProspecto"]= 1;
         }
         $response = $this->Clientes_model->updateProspect($data, $this->input->post("id_prospecto_ed"));
         echo json_encode($response);

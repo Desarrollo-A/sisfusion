@@ -379,7 +379,7 @@ function fillTable(data_search) {
 
 $("#tabla_prospectos").ready(function () {
 	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 11) {
+		// if (i != 0 && i != 11) {
 			var title = $(this).text();
 			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
 			$('input', this).on('keyup change', function () {
@@ -390,16 +390,16 @@ $("#tabla_prospectos").ready(function () {
 						.draw();
 				}
 			});
-		}
+		// }
 	});
 
 	let titulos = [];
 	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 13) {
+		// if (i != 0 && i != 13) {
 			var title = $(this).text();
 
 			titulos.push(title);
-		}
+		// }
 	});
 });
 
@@ -423,7 +423,7 @@ function fillTableClientes(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Registro de clientes',
 				exportOptions: {
-					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
@@ -431,36 +431,39 @@ function fillTableClientes(data_search) {
 									return 'ID LOTE';
 									break;
 								case 1:
-									return 'ESTATUS LOTE';
-									break;
-								case 2:
 									return 'PROYECTO';
-								case 3:
+								case 2:
 									return 'CONDOMINIO';
 									break;
-								case 4:
+								case 3:
 									return 'LOTE';
 									break;
-								case 5:
+								case 4:
 									return 'NOMBRE';
 									break;
-								case 6:
+								case 5:
 									return 'NO. RECIBO';
 									break;
-								case 7:
+								case 6:
 									return 'REFERENCIA';
 									break;
-								case 8:
+								case 7:
 									return 'FECHA APARTADO';
 									break;
-								case 9:
+								case 8:
 									return 'ENGANCHE';
 									break;
-								case 10:
+								case 9:
 									return 'FECHA ENGANCHE';
 									break;
-								case 11:
+								case 10:
 									return 'FECHA CREACIÓN PROSPECTO';
+									break;
+								case 11:
+									return 'ID DRAGON';
+									break;
+								case 12:
+									return 'ESTATUS LOTE';
 									break;
 							}
 						}
@@ -498,41 +501,35 @@ function fillTableClientes(data_search) {
 
 
 			{
-				"width": "5%",
 				"data": function (d) {
 					return '<p class="m-0">' + d.idLote + '</p>';
 				}
 			},
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">' + d.nombreProyecto + '</p>';
 				}
 			},
 
 			{
-				"width": "12%",
 				"data": function (d) {
 					return '<p class="m-0">' + d.nombreCondominio + '</p>';
 				}
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">' + d.nombreLote + '</p>';
 				}
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">'+ d.nombreCliente + '</p>';
 				}
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					let numero_recibo;
 					if(d.noRecibo == null)
@@ -544,42 +541,49 @@ function fillTableClientes(data_search) {
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">' + d.referencia + '</p>';
 				}
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaApartado)+ '</p>';
 				}
 			},
 
 			{
-				"width": "8%",
 				"data": function (d) {
 					return '<p class="m-0">$' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
 				}
 			},
 
 			{
-				"width": "10%",
 				"data": function (d) {
 					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaEnganche) + '</p>';
 				}
 			},
 
 			{
-				"width": "8%",
+
 				"data": function (d) {
 
 					return '<p class="m-0">' +   myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  + '</p>';
 				}
 			},
 			{
-				"width": "7%",
+				"width": "10%",
+				"data": function (d) {
+					let id_dragon = d.id_dragon;
+					let validateData;
+					if(id_dragon==0){
+						validateData = 'No disponible';
+					}
+					return '<p class="m-0">' + validateData + '</p>';
+				}
+			},
+			{
+
 				"data": function (d) {
 					let backgrColor = '';
 					switch (d.idStatusContratacion) {
@@ -629,11 +633,12 @@ function fillTableClientes(data_search) {
 			}
 			,
 			{
-				"width": "8%",
+
 				"data": function (d) {
 					return '<center><button class="btn-data btn-deepGray cop" title= "Ventas compartidas" data-idcliente="' + d.id_cliente + '"><i class="material-icons">people</i></button></center>';
 				}
 			}
+
 		],
 
 		columnDefs: [{
@@ -731,7 +736,7 @@ function fillTableClientes(data_search) {
 }
 $("#tabla_clientes").ready(function () {
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 11) {
+		if ( i != 13) {
 			var title = $(this).text();
 			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
 			$('input', this).on('keyup change', function () {
@@ -747,7 +752,7 @@ $("#tabla_clientes").ready(function () {
 
 	let titulos = [];
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 13) {
+		if ( i != 13) {
 			var title = $(this).text();
 
 			titulos.push(title);

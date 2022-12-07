@@ -45,10 +45,17 @@
                                 <div class="row aligned-row">
                                     <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="radio_container w-100">
-                                            <input class="d-none generate" type="radio" name="radio" id="one">
+                                        <?php if( $this->session->userdata('id_rol') == 31 ) { ?>
+                                            <input class="d-none generate" type="radio" name="radio" id="one" checked>
                                             <label for="one" class="w-50">Cargar</label>
                                             <input class="d-none find-results" type="radio" name="radio" id="two">
                                             <label for="two" class="w-50">Consultar</label>
+                                        <?php } else  { ?> 
+                                            <input class="d-none" type="radio" name="radio" id="one" disabled>
+                                            <label for="one" class="w-50" disabled>Cargar</label>
+                                            <input class="d-none find-results" type="radio" name="radio" id="two">
+                                            <label for="two" class="w-50" checked>Consultar</label>
+                                        <?php } ?>
                                         </div>
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
@@ -60,8 +67,8 @@
                                         </button> <!-- UPLOAD -->
                                     </div>
                                     <div class=" form-group d-flex col col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center justify-evenly  box-table hide">
-                                        <input type="date" class="form-control datepicker beginDate box-table hide" name="startDate" id="startDate"/>
-                                        <input type="date" class="form-control datepicker endDate box-table hide" name="endDate" id="endDate"/>
+                                        <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate"/>
+                                        <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate"/>
                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
                                             <span class="material-icons update-dataTable">search</span>
                                         </button>
@@ -84,8 +91,8 @@
                                             <th>Rol</th>           
                                             <th>Forma de pago</th>
                                             <th>Sede</th>                        
+                                            <th>Monto sin descuento</th>
                                             <th>Monto con descuento</th>
-                                            <th>Monto s/n descuento</th>
                                             <th>Monto internomex</th>
                                             <th>Fecha</th>
                                         </tr>

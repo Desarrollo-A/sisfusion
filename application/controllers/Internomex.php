@@ -119,8 +119,8 @@
 
   public function getPagosFinal() {
     $beginDate = $this->input->post('beginDate');
-    $enDate = $this->input->post('enDate');
-    $data['data'] = $this->Internomex_model->getPagosFinal($beginDate, $enDate)->result_array();
+    $endDate = $this->input->post('endDate');
+    $data['data'] = $this->Internomex_model->getPagosFinal($beginDate, $endDate)->result_array();
     echo json_encode($data);
   }
 
