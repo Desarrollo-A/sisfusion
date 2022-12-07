@@ -502,7 +502,6 @@ function fillTableClientes(data_search) {
 			}
 
 		],
-
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -511,7 +510,7 @@ function fillTableClientes(data_search) {
 		}],
 		ajax: {
 			type: 'POST',
-			url: url2+'Clientes/searchData',
+			url: url2 + 'Clientes/searchData',
 			data: {
 				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
@@ -599,7 +598,7 @@ function fillTableClientes(data_search) {
 }
 $("#tabla_clientes").ready(function () {
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if ( i != 13) {
+		if ( i != 14) {
 			var title = $(this).text();
 			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
 			$('input', this).on('keyup change', function () {

@@ -170,7 +170,6 @@
                                                                        id="tabla_clientes" name="tabla_clientes">
                                                                     <thead>
                                                                     <tr>
-                                                                        <!--<th></th>-->
                                                                         <th>ID LOTE</th>
                                                                         <th>PROYECTO</th>
                                                                         <th>CONDOMINIO</th>
