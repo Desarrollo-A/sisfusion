@@ -8,12 +8,8 @@
 <body>
     
     <div class="wrapper">
-        <?php 
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
+        <?php  
+        $this->load->view('template/sidebar', '');
         ?>
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -112,6 +108,7 @@
                                                                 <th>COORDINADOR</th>
                                                                 <th>GERENTE</th>
                                                                 <th>FECHA CREACIÓN</th>
+                                                                <th>ID CRM</th>
                                                                 <th>ID DRAGON</th>
                                                                 <th>SEDE</th>
                                                             </tr>
@@ -185,7 +182,7 @@
                                                                         <th>ENGANCHE</th>
                                                                         <th>FECHA ENGANCHE</th>
                                                                         <th>FECHA CREACIÓN PROSPECTO</th>
-                                                                        <th>ID Dragon</th>
+                                                                        <th>ID DRAGON</th>
                                                                         <th>ESTATUS LOTE</th>
                                                                         <th>ACCIONES</th>
                                                                     </tr>

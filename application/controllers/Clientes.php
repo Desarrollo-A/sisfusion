@@ -790,13 +790,7 @@ public function getStatusMktdPreventa(){
         }
     }
 
-    // public function getProspectsReport(){
-        // $data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        // echo json_encode($data);
-    // }
-    public function getProspectsReport(){
-        //$data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        //echo json_encode($data);
+    public function getProspectsReport() {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
