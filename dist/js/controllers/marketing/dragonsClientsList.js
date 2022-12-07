@@ -1,15 +1,16 @@
 $('#dragonsClientsTable thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($("#dragonsClientsTable").DataTable().column(i).search() !== this.value) {
-            $("#dragonsClientsTable").DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-        }
-    });
-
+	if (i != 14) {
+		const title = $(this).text();
+		$(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+		$('input', this).on('keyup change', function () {
+			if ($("#dragonsClientsTable").DataTable().column(i).search() !== this.value) {
+				$("#dragonsClientsTable").DataTable()
+					.column(i)
+					.search(this.value)
+					.draw();
+			}
+		});
+	}
 });
 
 function fillDragonsClientsTable() {
@@ -163,7 +164,11 @@ function fillDragonsClientsTable() {
 			},
 			{
 				data: function (d) {
-					return '<center><button class="btn-data btn-deepGray cop" title= "Ventas compartidas" data-idcliente="' + d.id_cliente + '"><i class="material-icons">people</i></button></center>';
+					let btns = `<div class="d-flex align-center justify-center">`;
+                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-nombre-archivo="${d.nombre_archivo}" title="Ver evidencia"></body><i class="fas fa-file"></i></button>`;
+                    btns += `<button class="btn-data btn-gray see-information" data-id-prospecto = "${d.id_prospecto}" title="Bitácora de cambios"></body><i class="fas fa-eye"></i></button>`;
+					btns += '</div>';
+                    return btns;
 				}
 			}
 
@@ -180,9 +185,47 @@ function fillDragonsClientsTable() {
     });
 }
 
-$(document).on("click", "#generateToken", function () {
-    document.getElementById("fileElm").value = "";
-    document.getElementById("file-name").value = "";
-    $("#generateTokenModal").modal("show");
-    $("#asesoresList").val("").selectpicker("refresh");
+$(document).on('click', '.reviewEvidence', function () {
+    let fileName = $(this).attr("data-nombre-archivo");
+    $("#img_actual").empty();
+    let path = general_base_url + "static/documentos/cliente/expediente/" + fileName;
+    let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
+    $("#token_name").text($(this).attr("data-token-name"));
+    $("#img_actual").append(img_cnt);
+    $("#reviewTokenEvidence").modal();
 });
+
+$(document).on('click', '.see-information', function(e) {
+    id_prospecto = $(this).attr("data-id-prospecto");
+    $("#seeInformationModal").modal();
+    $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
+        if (data.length == 0) {
+            $("#changelog").append('SIN DATOS POR MOSTRAR');
+        } else {
+            $.each(data, function(i, v) {
+                fillChangelog(v);
+            });
+        }
+    });
+});
+
+function cleanComments() {
+	var myChangelog = document.getElementById('changelog');
+    myChangelog.innerHTML = '';
+}
+
+function fillChangelog(v) {
+    $("#changelog").append('<li class="timeline-inverted">\n' +
+        '    <div class="timeline-badge success"></div>\n' +
+        '    <div class="timeline-panel">\n' +
+        '            <label><h6>' + v.parametro_modificado + '</h6></label><br>\n' +
+        '            <b>Valor anterior:</b> ' + v.anterior + '\n' +
+        '            <br>\n' +
+        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n' +
+        '        <h6>\n' +
+        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + ' - ' + v.creador + '</span>\n' +
+        '        </h6>\n' +
+        '    </div>\n' +
+        '</li>');
+}
+

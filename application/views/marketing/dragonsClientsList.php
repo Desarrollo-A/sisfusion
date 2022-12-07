@@ -31,17 +31,55 @@
         </div>
     </div>
 
+    <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons" onclick="cleanComments()">clear</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div role="tabpanel">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                        <li role="presentation" class="active"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content">
+                                            <ul class="timeline timeline-simple" id="changelog"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="fas fa-shield-alt fa-2x"></i>
+                            <i class="fas fa-list fa-2x"></i>
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Revisión de evidencias</h3>
+                                <h3 class="card-title center-align">Listado general de clientes Marketing Dragon</h3>
                             </div>
                             <div class="table-responsive box-table">
                                 <input class="hide" id="generatedToken"/>

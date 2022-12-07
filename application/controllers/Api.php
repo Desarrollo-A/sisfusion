@@ -26,7 +26,7 @@ class Api extends CI_Controller
             if ($data->username == "" || $data->password == "")
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                $JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
+                //$JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
                 //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
                 $time = time();
                 $result = true;
@@ -35,9 +35,9 @@ class Api extends CI_Controller
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        "data" => array("id" => 1, "username" => $data->username, "password" => encriptar($data->password), "descripcion" => ''),
+                        "data" => array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr"),
                     );
-                    $token = JWT::encode($data, $JwtSecretKey);
+                    $token = JWT::encode($data, '&66a5k_f7k133+c9r$OFt');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);

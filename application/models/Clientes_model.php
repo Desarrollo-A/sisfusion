@@ -4424,14 +4424,15 @@ function getStatusMktdPreventa(){
         return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
         c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
         cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
-        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
         FROM clientes cl 
         INNER JOIN lotes l ON cl.idLote = l.idLote 
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.source = 'DragonCem'
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.source = 'DragonCEM'
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
-        WHERE cl.status=1");
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
+        WHERE cl.status = 1")->result_array();
     }
 
 }
