@@ -4378,7 +4378,7 @@ function getStatusMktdPreventa(){
             case 1://clientes
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
-                cl.noRecibo, l.referencia, cl.fechaApartado, cl.engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
+                cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
                 sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 

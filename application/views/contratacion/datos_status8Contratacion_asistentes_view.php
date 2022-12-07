@@ -2,14 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php
-        /*-------------------------------------------------------*/
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
+        <?php 
+            $this->load->view('template/sidebar', '');
         ?>
 
         <!-- Modals -->
@@ -164,7 +158,7 @@
                                                         <th>CLIENTE</th>
                                                         <th>ESTATUS ACTUAL</th>
                                                         <?php
-                                                        if($this->session->userdata('id_rol')!=53){
+                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54) { // ANALISTA DE COMISIONES Y SUBDIRECCIÓN CONUSLTA (POPEA)
                                                         ?>
                                                         <th>ACCIONES</th>
                                                     <?php 
@@ -269,14 +263,14 @@
                 destroy: true,
                 ordering: false,
                 columns: [{
-                    "width": "3%",
-                    "className": 'details-control',
-                    "orderable": false,
-                    "data" : null,
-                    "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+                    width: "3%",
+                    className: 'details-control',
+                    orderable": false,
+                    data : null,
+                    defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
                 {
-                    "data": function( d ){
+                    data: function( d ){
                         var lblStats;
                         if(d.tipo_venta==1) {
                             lblStats ='<span class="label label-danger">Venta Particular</span>';
@@ -306,50 +300,50 @@
                     }
                 },
                 {
-                    "width": "10%",
-                    "data": function( d ){
+                    width: "10%",
+                    data: function( d ){
                         return '<p class="m-0">'+d.nombreResidencial+'</p>';
                     }
                 },
                 {
-                    "width": "10%",
-                    "data": function( d ){
+                    width: "10%",
+                    data: function( d ){
                         return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
                     }
                 },
                 {
-                    "width": "15%",
-                    "data": function( d ){
+                    width: "15%",
+                    data: function( d ){
                         return '<p class="m-0">'+d.nombreLote+'</p>';
 
                     }
                 }, 
                 {
-                    "width": "20%",
-                    "data": function( d ){
+                    width: "20%",
+                    data: function( d ){
                         return '<p class="m-0">'+d.gerente+'</p>';
                     }
                 }, 
                 {
-                    "width": "20%",
-                    "data": function( d ){
+                    width: "20%",
+                    data: function( d ){
                         return '<p class="m-0">'+d.nombreCliente+'</p>';
                     }
                 },
                 {
-                    "width": "20%",
-                    "data": function( d ){
+                    width: "20%",
+                    data: function( d ){
                         return '<p class="m-0">'+d.descripcion+'</p>';
                     }
                 }
                 <?php
-                if($this->session->userdata('id_rol')!=53){
-                ?>
+                if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
+                 ?>
                     , 
                     { 
-                        "width": "40%",
-                        "orderable": false,
-                        "data": function( data ){
+                        width: "40%",
+                        orderable: false,
+                        data: function( data ){
                             var cntActions;        
                             if(data.vl == '1') {
                                 cntActions = 'En proceso de Liberación';
@@ -416,16 +410,16 @@
                 ?>
                 ],
                 columnDefs: [{
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
+                searchable: false,
+                orderable: false,
+                targets: 0
                 }],
                 ajax: {
-                    "url": '<?=base_url()?>/Asistente_gerente/getStatus8ContratacionAsistentes',
-                    "dataSrc": "",
-                    "type": "POST",
+                    url: '<?=base_url()?>/Asistente_gerente/getStatus8ContratacionAsistentes',
+                    dataSrc: "",
+                    type: "POST",
                     cache: false,
-                    "data": function( d ){
+                    data: function( d ){
                     }
                 },
             });
