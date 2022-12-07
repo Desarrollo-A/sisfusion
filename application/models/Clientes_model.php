@@ -4379,26 +4379,36 @@ function getStatusMktdPreventa(){
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, cl.engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
-                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, 0 as id_dragon
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-                INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
-                INNER JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto 
-                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion=l.idStatusContratacion ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_telefono." ".$condition_sedes. "  AND pr.source='DragonCEM' AND cl.status=1");
+                INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+                INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+                $condition_nombre
+                $condition_idlote
+                $condition_correo
+                $condition_telefono
+                $condition_sedes
+                AND cl.status=1");
                 break;
             case 2:    //prospectos
                 $query = $this->db->query("SELECT concat(pr.nombre,' ', pr.apellido_paterno, ' ', pr.apellido_materno) as nombre_prospecto,
                 pr.telefono, pr.telefono_2, pr.correo, pr.lugar_prospeccion, CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as nombre_asesor,
                 CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
-                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, 0 as id_dragon, sedes.nombre as sede_nombre,
-                sedes.abreviacion as abreviacion_sedes, pr.source, opc.nombre as lugar_prospeccion
+                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, sedes.nombre as sede_nombre,
+                sedes.abreviacion as abreviacion_sedes, pr.source, opc.nombre as lugar_prospeccion, pr.id_prospecto
                 FROM prospectos pr
-                INNER JOIN usuarios as asesor ON pr.id_asesor=asesor.id_usuario
-                LEFT JOIN usuarios as coord ON pr.id_coordinador=coord.id_usuario
-                LEFT JOIN usuarios as ger ON pr.id_gerente=ger.id_usuario
-                INNER JOIN opcs_x_cats opc ON opc.id_opcion=pr.lugar_prospeccion
-                INNER JOIN sedes ON pr.id_sede=sedes.id_sede ".$condition_nombre." ".$condition_idlote." ".$condition_correo." ".$condition_sedes. " AND pr.source='DragonCEM' AND opc.id_catalogo=9");
+                INNER JOIN usuarios asesor ON pr.id_asesor = asesor.id_usuario
+                LEFT JOIN usuarios coord ON pr.id_coordinador = coord.id_usuario
+                LEFT JOIN usuarios ger ON pr.id_gerente = ger.id_usuario
+                INNER JOIN opcs_x_cats opc ON opc.id_opcion = pr.lugar_prospeccion AND opc.id_catalogo = 9
+                INNER JOIN sedes ON pr.id_sede = sedes.id_sede 
+                $condition_nombre
+                $condition_idlote
+                $condition_correo
+                $condition_sedes");
                 break;
         }
 
