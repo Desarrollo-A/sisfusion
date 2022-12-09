@@ -26,24 +26,15 @@ class Usuarios_modelo extends CI_Model {
         $id_lider = $this->session->userdata('id_lider');
         switch ($id_rol) {
             case '54': // POPEA
-                    $where = "us.id_rol IN (7) AND us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '') NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%'";
-                return $this->db->query("SELECT us.id_usuario, us.id_rol, oxc.nombre AS puesto, 
-                UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
-                UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-                UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-                UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-                UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
-                us.telefono, us.correo, us.estatus, 0 nuevo, us.fecha_creacion, se.nombre sede,
-                us.talla, us.sexo, us.hijos_12, us.fecha_reingreso, us.fecha_baja
-                FROM usuarios us
-                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
-                LEFT JOIN sedes se ON CAST(se.id_sede AS VARCHAR(45)) = CAST(us.id_sede AS VARCHAR(45))
-                LEFT JOIN usuarios u1 ON u1.id_usuario = us.id_lider
-                LEFT JOIN usuarios u2 ON u2.id_usuario = us.gerente_id
-                LEFT JOIN usuarios u3 ON u3.id_usuario = us.subdirector_id
-                LEFT JOIN usuarios u4 ON u4.id_usuario = us.regional_id
-                WHERE $where 
-                ORDER BY nombre");
+                return $this->db->query("SELECT usuarios.id_usuario, id_rol, opcs_x_cats.nombre AS puesto, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
+                (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
+                usuarios.fecha_creacion, s.nombre sede 
+                FROM usuarios 
+                INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
+                LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
+                LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid 
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))  
+                WHERE (id_rol IN (7) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%') ORDER BY nombre");
                 break;
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD

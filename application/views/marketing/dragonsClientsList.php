@@ -114,7 +114,6 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
-<?php include 'common_modals.php' ?>
 
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -126,12 +125,14 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/marketing/dragonsClientsList.js"></script>
 
 <script>
     $(document).ready(function () {
         fillDragonsClientsTable();
+        Shadowbox.init();
     });
 </script>
 

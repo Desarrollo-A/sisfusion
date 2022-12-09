@@ -10,7 +10,30 @@ $(document).ready(function () {
         $('.generate').trigger('click');
     else
         $('.find-results').trigger('click');
+
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
 });
+
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
 
 function setInitialDates() {
     var beginDt = moment().startOf('year').format('DD/MM/YYYY');
@@ -59,33 +82,39 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
-                                    return "Nombre";
+                                    return "ID REGISTRO";
                                     break;
                                 case 1:
-                                    return "Rol";
+                                    return "NOMBRE";
                                     break;
                                 case 2:
-                                    return "Forma de pago"
-                                case 3:
-                                    return "Sede";
+                                    return "ROL";
                                     break;
+                                case 3:
+                                    return "FORMA DE PAGO"
                                 case 4:
-                                    return "Monto sin descuento";
-                                break;
+                                    return "SEDE";
+                                    break;
                                 case 5:
-                                    return "Monto con descuento";
+                                    return "MONTO SIN DESCUENTO";
                                 break;
                                 case 6:
-                                    return "Monto internomex";
+                                    return "MONTO CON DESCUENTO";
                                 break;
                                 case 7:
-                                    return "Fecha de creación";
+                                    return "MONTO INTERNOMEX";
                                 break;
+                                case 8:
+                                    return "FECHA CAPTURA REGISTRO";
+                                break;
+                                case 9:
+                                    return "COMENTARIO";
+                                    break;
                             }
                         }
                     }
@@ -108,6 +137,12 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         destroy: true,
         ordering: false,
         columns: [
+            {
+                data: function (d) {
+               
+                    return d.id_pagoi;
+                }
+            },
             {
                 data: function (d) {
                
@@ -141,14 +176,19 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
-                    return d.monto_internomex   ;
+                    return d.monto_internomex;
                 }
             },
             {
                 data: function (d) {
-                    return d.fecha_creacion   ;
+                    return d.fecha_creacion;
                 }
             },
+            {
+                data: function (d) {
+                    return d.comentario;
+                }
+            }
         ],
         columnDefs: [{
             visible: false,
@@ -201,7 +241,7 @@ $(document).on('click', '#downloadFile', function () {
         success: function (response) {
             var len = response.length;
             var createXLSLFormatObj = [];
-            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede", "montoFinal"];
+            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede", "montoFinal", "comentario"];
             xlsHeader.push($(this).data('name'));
             createXLSLFormatObj.push(xlsHeader);
             for (var i = 0; i < len; i++) {
@@ -216,10 +256,12 @@ $(document).on('click', '#downloadFile', function () {
                 innerRowData.push(response[i]['montoSinDescuentos']);
                 innerRowData.push(response[i]['montoConDescuentosSede']);
                 innerRowData.push(response[i]['montoFinal']);
+                innerRowData.push(response[i]['comentario']);
                 createXLSLFormatObj.push(innerRowData);
             }
             /* File Name */
-            var filename = "PlantillaLotes_JSON_To_XLS.xlsx";
+            let date = new Date();
+            var filename = "PlantillaComisionistas_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
             /* Sheet Name */
             var ws_name = "Plantilla";
             //if (typeof console !== 'undefined') console.log(new Date());
