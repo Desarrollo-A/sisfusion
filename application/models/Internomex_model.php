@@ -145,14 +145,14 @@ class Internomex_model extends CI_Model {
             $idUsuario = $this->session->userdata('id_usuario');
             $condicion = " AND p.id_usuario = $idUsuario";
         }
-    
-        return $this->db->query("SELECT p.id_usuario,
-        FORMAT(p.monto_con_descuento,'C','En-Us') as 'monto_con_descuento',
-		FORMAT(p.monto_sin_descuento,'C','En-Us') as 'monto_sin_descuento',
-		FORMAT(p.monto_internomex,'C','En-Us') as 'monto_internomex'
+        return $this->db->query("SELECT p.id_pagoi, p.id_usuario,
+        FORMAT(p.monto_con_descuento,'C','En-Us') 'monto_con_descuento',
+		FORMAT(p.monto_sin_descuento,'C','En-Us') 'monto_sin_descuento',
+		FORMAT(p.monto_internomex,'C','En-Us') 'monto_internomex'
         ,c.nombre sede, g.nombre forma_pago, CONVERT(varchar, p.fecha_creacion, 20) fecha_creacion,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,
-        u.id_rol , d.nombre as rol 
+        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, 
+        CASE WHEN (p.comentario IS NULL OR CAST(p.comentario AS VARCHAR(250)) = '') THEN '--' ELSE p.comentario END comentario,
+        u.id_rol, d.nombre rol 
         FROM  pagos_internomex p
         INNER JOIN usuarios u on u.id_usuario = p.id_usuario
         INNER JOIN sedes c on c.id_sede = p.forma_pago 
@@ -160,13 +160,13 @@ class Internomex_model extends CI_Model {
         INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
         WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
     }
-    public function getCommissions()
-    {
+
+    public function getCommissions() {
         return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
         se.nombre sede, oxc0.nombre tipoUsuario, oxc2.nombre formaPago, u0.rfc,oxc1.nombre nacionalidad, 
         FORMAT(SUM(pci.abono_neodata), 'C') montoSinDescuentos,
         (CASE u0.forma_pago WHEN 3 THEN FORMAT(SUM(pci.abono_neodata) - ((SUM(pci.abono_neodata) * se.impuesto) / 100), 'C') 
-        ELSE FORMAT(SUM(pci.abono_neodata), 'C') END) montoConDescuentosSede, 0.00 montoFinal
+        ELSE FORMAT(SUM(pci.abono_neodata), 'C') END) montoConDescuentosSede, '0.00' montoFinal, '' comentario
         FROM pago_comision_ind pci
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision
         INNER JOIN lotes lo ON lo.idLote = co.id_lote
@@ -184,40 +184,9 @@ class Internomex_model extends CI_Model {
     public function verifyData($id_usuario) {
         $month = date("m");
         $year = date("Y");
-		$query = $this->db-> query("SELECT id_usuario/*, FORMAT(monto_sin_descuento, 'C') monto_sin_descuento, FORMAT(monto_con_descuento, 'C') monto_con_descuento, 
-        FORMAT(monto_internomex, 'C') monto_internomex, fecha_creacion*/ FROM pagos_internomex 
+		$query = $this->db-> query("SELECT id_usuario FROM pagos_internomex 
         WHERE id_usuario IN ($id_usuario) AND YEAR(fecha_creacion) = $year AND MONTH(fecha_creacion) = $month")->result();
 		return $query;
 	}
-
-    
-        //return $this->db->count_all_results() > 0;
-
-        // 
-        //return $query->result() !== [];
-        
- 
-    public function insertMontoFinalPago($data){
-
-         $this->db->insert('dbo.pagos_internomex', $data);    
-        return $this->db->affected_rows();
-
-        //  $this->db->where('id_comida', $id_comida);
-      //  $this->db->set("status", 2);
-      //  $this->db->update('menu');
-      //  return $this->db->affected_rows();
-    }
-    public function getuser($claves,$mes,$fecha){
-        //claves es necesario para barrer todos los numeros
-        $cmd("SELECT * FROM auditoria WHERE id_parametro IN $claves AND YEAR(fecha_creacion) = $mes AND MONTH(fecha_creacion) = $fecha");
-        $query = $this->db->query($cmd);
-
-
-    }
-    public function formaDePago($filtro){
-        $cmd = ("SELECT * FROM opcs_x_cats WHERE id_catalogo = 16 and opcs_x_cats.nombre =  '$filtro' ");
-        $query = $this->db->query($cmd);
-        return $query->num_rows() > 0 ? $query->row() : false; 
-    }
 
 }

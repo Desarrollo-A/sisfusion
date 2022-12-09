@@ -40,8 +40,13 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Asignación de monto final pagado</h3>
-                                <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
+                                <?php if( $this->session->userdata('id_rol') == 31 ) { ?>
+                                    <h3 class="card-title center-align">Asignación de monto final pagado</h3>
+                                    <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
+                                <?php } else  { ?> 
+                                    <h3 class="card-title center-align">Consulta pago final</h3>
+                                    <p class="center-align">A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</p>
+                                <?php } ?>
                                 <div class="row aligned-row">
                                     <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="radio_container w-100">
@@ -87,14 +92,16 @@
                                 <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>  
-                                            <th>Rol</th>           
-                                            <th>Forma de pago</th>
-                                            <th>Sede</th>                        
-                                            <th>Monto sin descuento</th>
-                                            <th>Monto con descuento</th>
-                                            <th>Monto internomex</th>
-                                            <th>Fecha</th>
+                                            <th>ID REGISTRO</th>  
+                                            <th>NOMBRE</th>  
+                                            <th>ROL</th>           
+                                            <th>FORMA DE PAGO</th>
+                                            <th>SEDE</th>                        
+                                            <th>MONTO SIN DESCUENTO</th>
+                                            <th>MONTO CON DESCUENTO</th>
+                                            <th>MONTO INTERNOMEX</th>
+                                            <th>FECHA CAPTURA REGISTRO</th>
+                                            <th>COMENTARIO</th>
                                         </tr>
                                     </thead>
                                 </table>

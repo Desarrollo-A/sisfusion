@@ -4429,10 +4429,10 @@ function getStatusMktdPreventa(){
         INNER JOIN lotes l ON cl.idLote = l.idLote 
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.source = 'DragonCEM'
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
         LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
-        WHERE cl.status = 1")->result_array();
+        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
     }
 
 }

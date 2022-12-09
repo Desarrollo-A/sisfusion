@@ -186,13 +186,27 @@ function fillDragonsClientsTable() {
 }
 
 $(document).on('click', '.reviewEvidence', function () {
-    let fileName = $(this).attr("data-nombre-archivo");
-    $("#img_actual").empty();
-    let path = general_base_url + "static/documentos/cliente/expediente/" + fileName;
-    let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
-    $("#token_name").text($(this).attr("data-token-name"));
-    $("#img_actual").append(img_cnt);
-    $("#reviewTokenEvidence").modal();
+	let fileName = $(this).attr("data-nombre-archivo");
+	let lote = $(this).attr("data-lote");
+	let extension = fileName.slice(fileName.length - 4);
+	let path = general_base_url + "static/documentos/cliente/expediente/" + fileName;
+	if (extension != '.pdf' && fileName != 0) { // MJ: ES UNA IMAGEN
+		$("#token_name").text(lote);
+		$("#img_actual").empty();
+		let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
+		$("#img_actual").append(img_cnt);
+		$("#reviewTokenEvidence").modal();
+	} else if (fileName == 0) // MJ: NO HAY EVIDENCIA CARGADA
+		alerts.showNotification("top", "right", "No hay ningún archivo cargado para el lote " + lote + ".", "warning");
+	else if (extension == '.pdf') { // MJ: ES UN PDF
+		Shadowbox.open({
+			content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="' + path + '"></iframe></div>',
+			player:     "html",
+			title:      "Visualizando archivo: " + lote,
+			width:      985,
+			height:     660
+		});
+	}
 });
 
 $(document).on('click', '.see-information', function(e) {

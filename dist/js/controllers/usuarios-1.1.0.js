@@ -50,7 +50,7 @@ function fillUsersTable() {
                 title: 'Listado de usuarios',
                 exportOptions: {
 
-                    columns:  (rolId==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns:  (rolId == 54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -75,31 +75,7 @@ function fillUsersTable() {
                                     return 'SEDE';
                                     break;
                                 case 7:
-                                    return 'COORDINADOR';
-                                    break;
-                                case 8:
-                                    return 'GERENTE';
-                                    break;
-                                case 9:
-                                    return 'SUBDIRECTOR';
-                                    break;
-                                case 10:
-                                    return 'DIRECTOR REGIONAL';
-                                    break;
-                                case 11:
-                                    return 'TALLA';
-                                    break;
-                                case 12:
-                                    return 'GÉNERO';
-                                    break;
-                                case 13:
-                                    return 'HIJOS + 12';
-                                    break;
-                                case 14:
-                                    return 'REINGRESO';
-                                    break;
-                                case 15:
-                                    return 'BAJA';
+                                    return 'LÍDER';
                                     break;
                             }
                         }
@@ -167,47 +143,7 @@ function fillUsersTable() {
             },
             {
                 data: function (d) {
-                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.regional == '  ' ? 'NO APLICA' : d.regional;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.talla == null ? 'SIN ESPECIFICAR' : d.talla;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sexo == null ? 'SIN ESPECIFICAR' : d.sexo;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.hijos_12 == null ? 'SIN ESPECIFICAR' : d.hijos_12;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_reingreso == null ? 'SIN ESPECIFICAR' : d.fecha_reingreso;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_baja == null ? 'SIN ESPECIFICAR' : d.fecha_baja;
+                    return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;
                 }
             },
             {
@@ -291,7 +227,7 @@ function fillUsersTable() {
         }
     });
     if(rolId==54){//validacion para no mostrarle acciones a usuario POPEA
-        let arrayNOView = [8,9,10,11,12,13,14,15,16];
+        let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
 }
