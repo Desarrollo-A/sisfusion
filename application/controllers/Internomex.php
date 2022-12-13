@@ -212,7 +212,32 @@
     }
   }
 
+  public function updateMontoInternomex()
+  {
+ 
+     if(!isset($_POST)){
+      echo json_encode(array("status" => 500, "message" => "No hay información para procesar (inicio)."), JSON_UNESCAPED_UNICODE);
+  
+      }
+      else{
 
+        $updateData = array(
+          "monto_internomex" => (float)$this->formatter->removeNumberFormat($this->input->post("monto")) ,
+          "fecha_modificacion" => date('Y-m-d H:m:s'),
+          "modificado_por" =>  (int)$this->session->userdata('id_usuario')
+      );
+      $reuslt = $this->General_model->updateRecord("pagos_internomex", $updateData, "id_pagoi", $this->input->post("id_pago"));
+      if ($reuslt == true)
+          echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+      else
+          echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+      }
+  }
+
+  public function getBitacora($id_pago)
+  {
+      echo json_encode($this->Internomex_model->getBitacora($id_pago)->result_array());
+  }
 
 
 

@@ -115,6 +115,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                                 case 9:
                                     return "COMENTARIO";
                                     break;
+                             
                             }
                         }
                     }
@@ -188,6 +189,20 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 data: function (d) {
                     return d.comentario;
                 }
+            },
+            {
+               
+                data: function (d) {
+                    if (id_rol_global == 31) {
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
+                        '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    }
+                    else{
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    }
+                    
+                }
+                
             }
         ],
         columnDefs: [{
@@ -205,6 +220,82 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         }
     });
 }
+
+$(document).on('click', '.edit-monto-internomex', function(e){
+    id_pago = $(this).attr("data-id-pago");
+    monto = $(this).attr("data_monto_internomex")
+        $("#editMontoInternomex").modal();
+        $("#monto").val(monto);
+        $("#id_pago").val(id_pago);
+
+});
+
+$(document).on('click', '.see-bitacora', function(e){
+    id_pago = $(this).attr("data-id-pago");
+        
+        $.post("getBitacora/"+id_pago).done( function( data ){
+            $("#changesBitacora").modal();
+            $.each( JSON.parse(data), function(i, v){
+                fillChangelogUsers(v);
+            });
+        });
+
+
+});
+
+function fillChangelogUsers(v) {
+    var nombreMovimiento;
+    var dataMovimiento;
+
+            nombreMovimiento = v.col_afect;
+            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+        '            <br>\n' +
+        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+ 
+   
+
+    $("#changelogUsers").append('<li class="timeline-inverted">\n' +
+        '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
+        '    <div class="timeline-panel">\n' +
+        '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
+                    dataMovimiento +
+        '        <h6>\n' +
+        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha + ' - ' + v.usuario + '</span>\n' +
+        '        </h6>\n' +
+        '    </div>\n' +
+        '</li>');
+}
+
+$(document).on('click', '#aceptarMonto', function(e){
+    let monto = $("#monto").val();
+    let id_pago = $("#id_pago").val();
+    $.ajax({
+        type: 'POST',
+        url: 'updateMontoInternomex',
+        data: {
+            'monto': monto,
+            'id_pago': id_pago
+        },
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+            if (data.status == 200) {
+                $("#editMontoInternomex").modal("hide");
+                alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
+                let fechaInicio = formatDate( $(".beginDate").val());
+                let fechaFin = formatDate( $(".endDate").val());
+                fillTableLotificacion(fechaInicio, fechaFin);
+            } else {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            }
+        },
+         error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+
+});
+
 
 
 $(document).on('click', '.searchByDateRange', function(){
