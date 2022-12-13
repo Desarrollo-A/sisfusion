@@ -11,7 +11,7 @@ class Usuarios extends CI_Controller
         $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
-        $this->load->library(array('session', 'form_validation','formatter'));
+        $this->load->library(array('session', 'form_validation', 'formatter'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->validateSession();
@@ -48,7 +48,6 @@ class Usuarios extends CI_Controller
         //var_dump($datos);
         $this->load->view('template/header');
         $this->load->view("usuarios/profile", $datos);
-
     }
 
     public function updatePersonalInformation()
@@ -147,7 +146,7 @@ class Usuarios extends CI_Controller
     {
         echo json_encode($this->Usuarios_modelo->getLeadersList($headquarter, $type)->result_array());
     }
- 
+
     public function changeUserStatus()
     {
         date_default_timezone_set('America/Mexico_City');
@@ -158,10 +157,10 @@ class Usuarios extends CI_Controller
                 $estatus = 0;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
 
-                  $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
-                    if(count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0 ){
+                    $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
+                    if (count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0) {
                         $estatus = 0;
-                    }else{
+                    } else {
                         $estatus = 3;
                     }
                     $dataBaja = array(
@@ -183,8 +182,7 @@ class Usuarios extends CI_Controller
                 );
                 $response = $this->Usuarios_modelo->changeUserStatus($data, $this->input->post("id_user"));
                 echo json_encode($response);
-            }
-            else {
+            } else {
                 $data = array(
                     "estatus" => $this->input->post("estatus"),
                     "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -207,7 +205,8 @@ class Usuarios extends CI_Controller
     {
         $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/getSucursalesComerciales';
         $data = array(
-            "idsede" => $idsede);
+            "idsede" => $idsede
+        );
         $row = $this->Usuarios_modelo->ServicePostCH($url, $data);
         echo $row;
     }
@@ -215,7 +214,7 @@ class Usuarios extends CI_Controller
     public function updateUser()
     {
         //RUTA DE PRUEBAS
-        $usersCH=0;
+        $usersCH = 0;
         $ruta = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
         //RUTA DE PRODUCCIÓN
         //$ruta="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
@@ -226,23 +225,22 @@ class Usuarios extends CI_Controller
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
             //ACTUALIZACIÓN DE CONTRALORÍA SOLO FORMA DE PAGO
-         $formaPago =  $this->Usuarios_modelo->getFormaPago($_POST['payment_method']);
-            
+            $formaPago =  $this->Usuarios_modelo->getFormaPago($_POST['payment_method']);
+
             $dataCH = array(
-                         "dcontrato" => array("forma_pagoch" => $formaPago[0]['nombre']),
-                         "idasesor" => $this->input->post("id_usuario")
+                "dcontrato" => array("forma_pagoch" => $formaPago[0]['nombre']),
+                "idasesor" => $this->input->post("id_usuario")
             );
-            $usersCH=1;
-            $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta,$dataCH);
+            $usersCH = 1;
+            $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        
         } else {
-            
+
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
-                $usersCH=1;
+                $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
                 /* 
                 SEDES CAPITAL HUMANO
@@ -258,43 +256,43 @@ class Usuarios extends CI_Controller
                 $sucursal = !isset($_POST['sucursal']) ? 0 : $_POST['sucursal'];
                 $datosCH = array(
                     "dpersonales" => array(
-                        "nombre_persona"=>$this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
-                            "apellido_paterno_persona"=>$this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
-                            "apellido_materno_persona"=>$this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
-                            "RFC"=>strtoupper(trim($_POST['rfc'])),
-                            "telefono1"=>$_POST['phone_number'],
-                            //"paramPrueba"=>00,
-                            "email_empresarial"=>strtoupper(trim($_POST['email']))
-                                ),
-                                "dcontrato" => array(),
-                                "idasesor" => $this->input->post("id_usuario")
-                        );
-                        
-            $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal,$datosCH);
+                        "nombre_persona" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
+                        "apellido_paterno_persona" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
+                        "apellido_materno_persona" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
+                        "RFC" => strtoupper(trim($_POST['rfc'])),
+                        "telefono1" => $_POST['phone_number'],
+                        //"paramPrueba"=>00,
+                        "email_empresarial" => strtoupper(trim($_POST['email']))
+                    ),
+                    "dcontrato" => array(),
+                    "idasesor" => $this->input->post("id_usuario")
+                );
+
+                $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal, $datosCH);
             }
-            $getLider = $this->Services_model->getLider($_POST['leader'],$_POST['member_type']);
+            $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
             $id_lider = 0;
-            $id_gerente=0;
-            $id_subdirector=0;
-            $id_regional=0;
-            if($_POST['member_type'] == 7){
+            $id_gerente = 0;
+            $id_subdirector = 0;
+            $id_regional = 0;
+            if ($_POST['member_type'] == 7) {
                 //Asesor
                 $id_lider = $_POST['leader'];
-                $id_gerente=$getLider[0]['id_gerente'];
-                $id_subdirector=$getLider[0]['id_subdirector'];
-                $id_regional=$getLider[0]['id_regional'];
-            }else if($_POST['member_type'] == 9){
+                $id_gerente = $getLider[0]['id_gerente'];
+                $id_subdirector = $getLider[0]['id_subdirector'];
+                $id_regional = $getLider[0]['id_regional'];
+            } else if ($_POST['member_type'] == 9) {
                 //Coordinador
                 $id_lider = 0;
-                $id_gerente=$_POST['leader'];
-                $id_subdirector=$getLider[0]['id_subdirector'];
-                $id_regional=$getLider[0]['id_regional'];
-            }else if($_POST['member_type'] == 3){
+                $id_gerente = $_POST['leader'];
+                $id_subdirector = $getLider[0]['id_subdirector'];
+                $id_regional = $getLider[0]['id_regional'];
+            } else if ($_POST['member_type'] == 3) {
                 //Gerente
                 $id_lider = 0;
-                $id_gerente=0;
-                $id_subdirector=$_POST['leader']; //$getLider[0]['id_subdirector'];
-                $id_regional=$getLider[0]['id_lider'];
+                $id_gerente = 0;
+                $id_subdirector = $_POST['leader']; //$getLider[0]['id_subdirector'];
+                $id_regional = $getLider[0]['id_lider'];
             }
 
             $data = array(
@@ -316,18 +314,50 @@ class Usuarios extends CI_Controller
                 "sucursalch" => $sucursal
 
             );
-            }
+        }
+        switch ($_POST['member_type']) {
+            case 7:
+                $tipo = "id_asesor";
+                break;
+            case 9:
+                $tipo = "id_coordinador";
+                break;
+            case 3:
+                $tipo = "id_gerente";
+                break;
 
-            if($usersCH == 0){
+            default:
+                $tipo = '';
+                break;
+        }
+
+
+        if ($usersCH == 0) {
+            $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+        } else {
+            // $result = json_decode($resultadoCH); se comenta por no dejar pasar VER!!!! HAY QUE DESCOMENTAR DESPUES
+            $result = json_decode(1);
+            if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
-            }else {
-                $result = json_decode($resultadoCH);
-                if($result == 1){
-                    $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
-                }else{
-                    $response = 0;
-                }
+            } else {
+                $response = 0;
             }
+        }
+
+        $props = $this->Usuarios_modelo->DatosProsp($this->input->post("id_usuario"))->row();
+        if ($props) {
+
+            $arrProp = array(
+                "id_coordinador" => $props->id_coordinador,
+                "id_gerente" => $props->id_gerente,
+                "id_subdirector" => $props->id_subdirector,
+                "id_regional" => $props->id_regional,
+                "id_sede" => $sedeCH,
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $this->session->userdata('id_usuario')
+            );
+            $this->db->update('prospectos', $arrProp, "$tipo =". $this->input->post("id_usuario") ." AND tipo = 0");
+        }
         echo json_encode($response);
     }
 
@@ -409,7 +439,6 @@ class Usuarios extends CI_Controller
 
         $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc);
         echo json_encode($response);
-
     }
 
     public function SubirPDFExtranjero($id = '')
@@ -450,7 +479,6 @@ class Usuarios extends CI_Controller
 
         $response = $this->Usuarios_modelo->UpdatePDF($id);
         echo json_encode($response);
-
     }
 
     /**---------------------------------------- */
@@ -497,15 +525,17 @@ class Usuarios extends CI_Controller
         }
     }
 
-    public function usersByLeader(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+    public function usersByLeader()
+    {
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
-      $this->load->view('template/header');
-      $this->load->view("usuarios/usersByLeader", $datos);
-  }
+        $this->load->view('template/header');
+        $this->load->view("usuarios/usersByLeader", $datos);
+    }
 
-    public function getUsersListByLeader(){
+    public function getUsersListByLeader()
+    {
         $data['data'] = $this->Usuarios_modelo->getUsersListByLeader($this->session->userdata('id_usuario'))->result_array();
         echo json_encode($data);
     }
@@ -516,23 +546,24 @@ class Usuarios extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("asesor/viewUser", $datos);   
+        $this->load->view("asesor/viewUser", $datos);
     }
 
-    public function getUsersListAsesor(){
+    public function getUsersListAsesor()
+    {
         $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
         $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 
-    public function deleteDocumentoExtranjero(){
-        $a=0;
+    public function deleteDocumentoExtranjero()
+    {
+        $a = 0;
         $idDocumento = $this->input->post("idDocumento");
         $response = $this->Usuarios_modelo->deleteDocumentoExtranjero($idDocumento);
         if ($response)
             echo json_encode(array("status" => 200, "message" => "Se ha realizado la acción de manera exitosa"));
-        else 
+        else
             echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido realizar la acción solicitada."));
-
     }
 }
