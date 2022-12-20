@@ -8,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title">Ingrese su comentario</h4>
+                <h4 class="modal-title card-title"><b>Comentarios adicionales</b></h4>
             </div>
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
@@ -18,8 +18,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="submit" class="btn btn-success btn-simple btn-border">Enviar</button>
+                    <button type="button" class="btn btn-danger btn-simple btn-border" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>

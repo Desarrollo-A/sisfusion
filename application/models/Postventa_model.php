@@ -25,7 +25,7 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
@@ -108,33 +108,50 @@ class Postventa_model extends CI_Model
          VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
-    function getSolicitudes($begin, $end, $estatus)
+    function getSolicitudes($begin, $end, $filtro_vista)
     {
 
-        $idUsuario = $this->session->userdata('id_usuario');
-        $rol = $this->session->userdata('id_rol');
-        $Addwhere =   "";
-        if($rol == 57 && $idUsuario!= 10865){
-          $Addwhere =   " AND se.id_juridico = $idUsuario ";
-        }else{
-             $Addwhere =   "";
-        }
+        // $idUsuario = $this->session->userdata('id_usuario');
+        // $rol = $this->session->userdata('id_rol');
+        // $Addwhere =   "";
+        // if($rol == 57 && $idUsuario!= 10865){
+        //   $Addwhere =   " AND se.id_juridico = $idUsuario ";
+        // }else{
+        //      $Addwhere =   "";
+        // }
 
-        $where = "";
-        if($estatus == 0){
-            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
-        }else{
-            $where = "";
-        }
-        return $this->db->query("SELECT  se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
-        cond.nombre nombreCondominio, r.nombreResidencial, 
-          n.pertenece, se.id_notaria, se.descuento, se.aportacion 
+        // $where = "";
+        // if($filtro_vista == 0){
+        //     $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
+        // }else{
+        //     $where = "";
+        // }
+        // return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
+        // cond.nombre nombreCondominio, r.nombreResidencial, 
+        //   n.pertenece, se.id_notaria, se.descuento, se.aportacion 
+        //  FROM solicitudes_escrituracion se 
+        //  LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
+        //  INNER JOIN lotes l ON se.id_lote = l.idLote 
+        //  INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        //  INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
+
+        return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
+        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, se.aportacion,
+        ae.id_actividad, ae.clave, ar.nombre as area, cp.nombre_actividad, ae.nombre actividad
          FROM solicitudes_escrituracion se 
          LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
          INNER JOIN lotes l ON se.id_lote = l.idLote 
+         INNER JOIN clientes c ON c.id_cliente = l.idCliente
          INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
+         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
+         LEFT JOIN actividades_escrituracion ae ON ae.id_actividad = se.id_actividad
+         LEFT JOIN control_permisos cp ON cp.clave_actividad LIKE ae.clave AND cp.tipo_permiso = 0
+         LEFT JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+         LEFT JOIN opcs_x_cats pr ON pr.id_opcion = cp.tipo_permiso AND pr.id_catalogo = 80");
+
     }
+
     function getStatusSiguiente($estatus){
         return $this->db->query("SELECT ae.nombre as actividad, cp.id_estatus, cp.bandera_vista, cp.estatus_actual, ae.clave as clave_actual, cp.nombre_actividad as actividad_actual, cp.area_actual, cp.estatus_siguiente, cr.clave_siguiente, cr.actividad_siguiente, cp.area_siguiente, cp.tipo_permiso, ar.nombre as area, cr.nombre_siguiente, pr.nombre as permiso
         FROM actividades_escrituracion ae 

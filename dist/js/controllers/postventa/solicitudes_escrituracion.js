@@ -841,9 +841,8 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    //return d.nombre;
-                    return 0;
-                }
+                    return d.cliente;
+                 }
             },
             {
                 data: function (d) {
@@ -856,13 +855,21 @@ function fillTable(beginDate, endDate, estatus) {
                     return '';
                 }
             },
+            
             {
                 data: function (d) {
                     //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
-                    return `<center><span><b> ${d.id_estatus}</b></span><center>`;   
+                    return `<center><span><b> ${d.clave}</b> - ${d.actividad}</span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
             },
+            // {
+            //     data: function (d) {
+            //         //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
+            //         return `<center><span><b> ${d.area}</span><center>`;   
+            //         // <center><span>(${d.area})</span><center></center>
+            //     }
+            // },
             {
                 data: function (d) {
                     var aditional;
