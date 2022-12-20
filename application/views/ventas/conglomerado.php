@@ -40,7 +40,7 @@
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" id="header_modal" name="header_modal">
                         <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
                     </div>
                     <div class="modal-body" >
