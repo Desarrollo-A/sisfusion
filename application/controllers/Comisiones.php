@@ -6125,7 +6125,7 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
       echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida),JSON_NUMERIC_CHECK);
     }*/
 
-     public function InsertNeo(){
+    public function InsertNeo(){
       $lote_1 =  $this->input->post("idLote");
       $bonificacion =  $this->input->post("bonificacion");
       $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
@@ -6227,7 +6227,9 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 
               }else{
                 $respuesta = true;
-              }
+              }}
+
+              
 
               // $respuesta =  $this->InsertPena($lote_1);
              
@@ -6238,10 +6240,6 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     }
     echo json_encode( $respuesta );
     }
-
-    // public function porcentajes($cliente,$tipo,$vigencia){
-    //   echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
-    // }
     public function porcentajes($cliente,$tipoVenta){
       echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipoVenta)->result_array(),JSON_NUMERIC_CHECK);
     }
