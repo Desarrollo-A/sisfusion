@@ -653,13 +653,18 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
+       /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }
+        }*/
+        $motivos_rechazo = $_POST['comentarios'];
+        $area_rechazo = $_POST['area_rechazo'];
+    
+
+        $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
         // }elseif($type == 3) {
         //     $comentarios = $_POST['comentarios'];
         //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
@@ -979,7 +984,7 @@ class Postventa extends CI_Controller
         $id_solicitud = $data['id_solicitud3'];
 
         $updateData = array(
-            "nombre_escrituras" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
+            "nombre_a_escriturar" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
@@ -991,7 +996,7 @@ class Postventa extends CI_Controller
         ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
         if($_POST['not'] == 'nou'){
-            $updateData['idNotaria'] = 0;
+            $updateData['id_notaria'] = 0;
         }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
@@ -1913,8 +1918,8 @@ class Postventa extends CI_Controller
     }
 
     public function servicioPostventa($referencia, $empresa){
-        $url = 'https://clientes.gphsis.com/BACK/index.php/PaginaCDM/getDatos_clientePV';
-
+        //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+        $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
             "referencia" => $referencia,
             "empresa" => $empresa
@@ -1922,7 +1927,7 @@ class Postventa extends CI_Controller
 
         $opciones = array(
             "http" => array(
-                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com"],
+                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com, localhost"],
                 "method" => "POST",
                 "content" => $datos, # Agregar el contenido definido antes
             ),
@@ -1978,7 +1983,7 @@ class Postventa extends CI_Controller
         if ($data != null)
             echo json_encode($data);
         else
-            echo json_encode(array());
+            echo json_encode(array());*/
     }
 
     public function getBudgetInformacion()
