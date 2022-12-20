@@ -226,7 +226,7 @@
                                                                     <div class="col-md-12 d-flex justify-end">
                                                                     <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
                                                                         </button>
-                                                                        <button type="submit" class="btn btn-primary mt-1">Aceptar</button>
+                                                                        <button type="submit" id="btn_acept" class="btn btn-primary mt-1">Aceptar</button>
                                                                     </div>
                                                                 </div>
                                                             </div>

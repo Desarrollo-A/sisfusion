@@ -225,7 +225,7 @@ function fillUsersTable() {
                                 //TODO SOPORTE  
                             return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
-                                '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
+                                //'<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
                                 '</div>';
                         }
                     }
@@ -572,6 +572,13 @@ $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
+            const ventas = [7,1,2,3,9];
+const isLargeNumber = (element) => element == v.id_rol;
+if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
+    $('#btn_acept').addClass('hide');
+}else{
+    $('#btn_acept').removeClass('hide');
+}
             let leader;
             if (v.id_rol == 9)
                 leader = v.gerente_id
