@@ -767,8 +767,8 @@ function loadTable(tipoDescuento) {
                                         <button value="${d.id_usuario}"
                                             data-value="${d.nombre}"
                                             data-code="${d.id_usuario}"
-                                            title="Historial pagos">
-                                            class="btn-data btn-gray consultar_historial_pagos"
+                                            title="Historial pagos"
+                                            class="btn-data btn-gray consultar_historial_pagos">
                                                 <i class="fas fa-chart-bar"></i>
                                         </button>
                                         <button value="${d.id_usuario}"
@@ -2360,10 +2360,32 @@ $(document).on('input', '.MontoDescontarCerti', function(){
 });
 
 // $("#numeroPagos").change(function () {
-
-    $("#mensualidadesC").change(function () {
-        console.log('mensaje de realizacioón');
-        alert('refromazado');
+    $(document).on('change', '#mensualidadesC', function() {
+         // console.log('mensaje de realizacioón');
+        // alert('refromazado');
+    //     console.log('3111111111111111111111111111111111');
+        mensualidadesC = document.getElementById("mensualidadesC").value;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+        loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagos  = document.getElementById("mensualidadesC").value ;
+        console.log("loQueSedebe" + loQueSedebe );
+        banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+        if(banderaLiquidado){
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;
+        }else{
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;
+        } 
+        document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    
+    });
+    
+    // $("#mensualidadesC").change(function () {
+        // console.log('mensaje de realizacioón');
+        // alert('refromazado');
     //     console.log('3111111111111111111111111111111111');
     //     mensualidadesC = document.getElementById("mensualidadesC").value;
     //     pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
@@ -2382,7 +2404,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     //     } 
     //     document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
     // 
-    });
+    // });
 
 $(document).on("click", ".updateDescuentoCertificado", function () {
 
