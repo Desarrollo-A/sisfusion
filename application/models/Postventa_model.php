@@ -25,7 +25,7 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
@@ -108,56 +108,94 @@ class Postventa_model extends CI_Model
          VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
-    function getSolicitudes($begin, $end, $estatus)
+    function getSolicitudes($begin, $end, $filtro_vista)
     {
 
-        $idUsuario = $this->session->userdata('id_usuario');
-        $rol = $this->session->userdata('id_rol');
-        $Addwhere =   "";
-        if($rol == 57 && $idUsuario!= 10865){
-          $Addwhere =   " AND se.id_juridico = $idUsuario ";
-        }else{
-             $Addwhere =   "";
-        }
+        // $idUsuario = $this->session->userdata('id_usuario');
+        // $rol = $this->session->userdata('id_rol');
+        // $Addwhere =   "";
+        // if($rol == 57 && $idUsuario!= 10865){
+        //   $Addwhere =   " AND se.id_juridico = $idUsuario ";
+        // }else{
+        //      $Addwhere =   "";
+        // }
 
-        $where = "";
-        if($estatus == 0){
-            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
-        }else{
-            $where = "";
-        }
-        return $this->db->query("SELECT  se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
-        cond.nombre nombreCondominio, r.nombreResidencial, 
-          n.pertenece, se.id_notaria, se.descuento, se.aportacion 
+        // $where = "";
+        // if($filtro_vista == 0){
+        //     $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
+        // }else{
+        //     $where = "";
+        // }
+        // return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
+        // cond.nombre nombreCondominio, r.nombreResidencial, 
+        //   n.pertenece, se.id_notaria, se.descuento, se.aportacion 
+        //  FROM solicitudes_escrituracion se 
+        //  LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
+        //  INNER JOIN lotes l ON se.id_lote = l.idLote 
+        //  INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        //  INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
+
+        return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
+        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, se.aportacion,
+        ae.id_actividad, ae.clave, ar.nombre as area, cp.nombre_actividad, ae.nombre actividad
          FROM solicitudes_escrituracion se 
          LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
          INNER JOIN lotes l ON se.id_lote = l.idLote 
+         INNER JOIN clientes c ON c.id_cliente = l.idCliente
          INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
-    }
-    function getStatusSiguiente($estatus){
-        return $this->db->query("SELECT ae.nombre,opc.nombre as area,axe.estatus_siguiente,ae.descripcion
-        FROM actividades_x_estatus axe
-        INNER JOIN actividades_escrituracion ae ON axe.actividad_siguiente=ae.clave
-        INNER JOIN opcs_x_cats opc ON opc.id_opcion=ae.id_area AND opc.id_catalogo=1
-        WHERE axe.tipo=2 and axe.estatus_actual in($estatus)")->result_array();
+         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
+         LEFT JOIN actividades_escrituracion ae ON ae.id_actividad = se.id_actividad
+         LEFT JOIN control_permisos cp ON cp.clave_actividad LIKE ae.clave AND cp.tipo_permiso = 0
+         LEFT JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+         LEFT JOIN opcs_x_cats pr ON pr.id_opcion = cp.tipo_permiso AND pr.id_catalogo = 80");
+
     }
 
-    function changeStatus($id_solicitud, $type, $comentarios, $motivos_rechazo)
+    function getStatusSiguiente($estatus){
+        return $this->db->query("SELECT ae.nombre as actividad, cp.id_estatus, cp.bandera_vista, cp.estatus_actual, ae.clave as clave_actual, cp.nombre_actividad as actividad_actual, cp.area_actual, cp.estatus_siguiente, cr.clave_siguiente, cr.actividad_siguiente, cp.area_siguiente, cp.tipo_permiso, ar.nombre as area, cr.nombre_siguiente, pr.nombre as permiso
+        FROM actividades_escrituracion ae 
+        INNER JOIN control_permisos cp ON cp.clave_actividad LIKE ae.clave
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        INNER JOIN opcs_x_cats pr ON pr.id_opcion = cp.tipo_permiso AND pr.id_catalogo = 80
+        LEFT JOIN (SELECT DISTINCT(cl.clave_actividad) as clave_siguiente, cl.nombre_actividad as actividad_siguiente, cl.estatus_actual, cl.tipo_permiso,
+        av.nombre as nombre_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave WHERE cl.tipo_permiso = 1 
+        GROUP BY cl.estatus_actual, cl.clave_actividad, cl.nombre_actividad, cl.tipo_permiso, av.nombre) cr ON cr.estatus_actual = cp.estatus_siguiente
+        WHERE cp.tipo_permiso = 3 AND cp.estatus_actual in($estatus)")->result_array();
+    }
+
+    function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
         $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
+       // echo $estatus;
+        $sqlAreaRechazo = '';
+        if($area_rechazo != 0 && $area_rechazo != ''){
+            $sqlAreaRechazo = "AND estatus_siguiente=$area_rechazo ";
+        }
 
+         
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
-        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol and tipo_permiso=$type")->row();
+        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $sqlAreaRechazo and tipo_permiso=$type")->row();
+
+
+        $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 3 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 4 ? ' ,bandera_comiste=1' : '');
+
+
+        if($estatus == 12 && $notaria == 0){
+            $actividades_x_estatus->estatus_siguiente = 13;
+        }
+        if($estatus == 12 && $notaria != 0){
+            $actividades_x_estatus->estatus_siguiente = 18;
+        }
 
         $pertenece = 0;
-       /* if($notaria != NULL || $notaria != 0){
+        if($notaria != NULL || $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
             $pertenece = ($pertenece) ? $pertenece->pertenece : 1;
-        }*/
+        }
 
       /*  if ($type == 1) { //OK
             if ($estatus == 90) {
@@ -210,9 +248,9 @@ class Postventa_model extends CI_Model
             }
         }*/
 
-        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente."  WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
-         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->actividad_actual."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
+         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->clave_actividad."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
          VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");*/
     }
@@ -389,16 +427,18 @@ class Postventa_model extends CI_Model
 
     function getBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura FROM solicitud_escrituracion se 
-        INNER JOIN clientes c ON c.id_cliente = se.idCliente
-        INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
-        INNER JOIN lotes l ON se.idLote = l.idLote 
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
+		CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as nombre 
+		FROM solicitudes_escrituracion se 
+        INNER JOIN clientes c ON c.id_cliente = se.id_cliente
+        INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
+        INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
-        WHERE se.idSolicitud = $idSolicitud");
+        WHERE se.id_solicitud = $idSolicitud");
     }
 
     function savePresupuesto($nombreT, $fechaCA, $cliente, $superficie, $catastral, $rfcDatos, $construccion,
@@ -411,7 +451,7 @@ class Postventa_model extends CI_Model
 
     function updatePresupuesto($data, $id_solicitud)
     {
-        $response = $this->db->update("solicitud_escrituracion", $data, "idSolicitud = $id_solicitud");
+        $response = $this->db->update("solicitudes_escrituracion", $data, "id_solicitud = $id_solicitud");
         if (!$response)
             return $finalAnswer = 0;
         else
@@ -422,18 +462,18 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote, 
         cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura, n.nombre_notaria, 
         n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece
-                FROM solicitud_escrituracion se 
-                INNER JOIN clientes c ON c.id_cliente = se.idCliente
-                INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.idLote
-                INNER JOIN lotes l ON l.idLote = se.idLote
+                FROM solicitudes_escrituracion se 
+                INNER JOIN clientes c ON c.id_cliente = se.id_cliente
+                INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
+                INNER JOIN lotes l ON l.idLote = se.id_lote
                 INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-                LEFT JOIN Notarias n ON n.idNotaria = se.idNotaria
-                LEFT JOIN Valuadores v ON v.idValuador = se.idValuador
+                LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
+                LEFT JOIN Valuadores v ON v.idValuador = se.id_valuador
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
                 LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
-                WHERE se.idSolicitud =$idSolicitud");
+                WHERE se.id_solicitud =$idSolicitud");
     }
 
     function getInfoNotaria($idSolicitud)
@@ -568,7 +608,7 @@ function checkBudgetInfo($idSolicitud){
     
     function saveEstatusLote($data, $id_solicitud)
     {
-        $response = $this->db->update("solicitud_escrituracion", $data, "idSolicitud = $id_solicitud");
+        $response = $this->db->update("solicitudes_escrituracion", $data, "id_solicitud = $id_solicitud");
         if (!$response)
             return $finalAnswer = 0;
         else
@@ -715,7 +755,7 @@ function checkBudgetInfo($idSolicitud){
 
     function updateInformacion($data, $idSolicitud)
     {
-        $response = $this->db->update("solicitud_escrituracion", $data, "idSolicitud = $idSolicitud");
+        $response = $this->db->update("solicitudes_escrituracion", $data, "id_solicitud = $idSolicitud");
         if (!$response)
             return $finalAnswer = 0;
         else 
@@ -762,10 +802,7 @@ function checkBudgetInfo($idSolicitud){
             GROUP BY tipo, idNotariaxSolicitud)");
     }
 
-    /**Ozuna16M
-     * 3.DsWp.hm3THnju
-     * 
-     */
+   
     
     function getDocumentsClientOtros($idSolicitud)
     {

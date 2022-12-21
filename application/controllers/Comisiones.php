@@ -6125,7 +6125,7 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
       echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida),JSON_NUMERIC_CHECK);
     }*/
 
-     public function InsertNeo(){
+    public function InsertNeo(){
       $lote_1 =  $this->input->post("idLote");
       $bonificacion =  $this->input->post("bonificacion");
       $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
@@ -6227,7 +6227,9 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 
               }else{
                 $respuesta = true;
-              }
+              }}
+
+              
 
               // $respuesta =  $this->InsertPena($lote_1);
              
@@ -6238,10 +6240,6 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     }
     echo json_encode( $respuesta );
     }
-
-    // public function porcentajes($cliente,$tipo,$vigencia){
-    //   echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
-    // }
     public function porcentajes($cliente,$tipoVenta){
       echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipoVenta)->result_array(),JSON_NUMERIC_CHECK);
     }
@@ -6721,6 +6719,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
         $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
         $datos = array();
+        $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
         $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
         $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
         $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -7243,6 +7242,44 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
     // END INSTALACIÓN PENALIZACIONES
+
+    public function insertCertificacion(){
+      $id_descuento       = $this->input->post('id_descuento');
+      $monto              = $this->input->post('monto');
+      $pago_individual    = $this->input->post('pago_individual');
+      $certificacionX     = $this->input->post('certificacionX');
+      $comentario         = 'Descuento ingreso por';
+      $pagos_activos         =  $this->input->post('pagos_activos');
+    }
+   
+    public function descuentoUpdateCertificaciones(){
+      $id_descuento       = $this->input->post('id_descuento');
+      $monto              = $this->input->post('monto');
+      $pago_individual    = $this->input->post('pago_individual');
+      $estatus_certificacion = $this->input->post('estatus_certificacion');
+      $comentario         = 'Descuento aplicado';
+      // $pagos_activos      =  $this->input->post('pagos_activos');
+                          $arr_update = array(                      
+                              // "pagos_activos"   => $pagos_activos,
+                              "monto"           =>  $monto,
+                              "pago_individual" =>  $pago_individual,
+                              "detalles"      =>  $comentario,
+                              "estatus_certificacion" => $estatus_certificacion,
+                                              );
+      $update = $this->Comisiones_model->descuentos_universidad($id_descuento,$arr_update);                           
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Descuento actualizado satisfactoriamente");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Descuento no actualizado, intentalo más tarde");
+      }
+      echo json_encode ($respuesta);
+    } 
 
 
 }

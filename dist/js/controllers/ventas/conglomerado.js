@@ -7,7 +7,7 @@ let titulosTablaGeneral = [];
 $(document).ready(function() { 
     console.log('entrando al nuevo js');
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
-        if (i !== 13) {
+        if (i !== 15) {
             const title = $(this).text();
             titulosTablaGeneral.push(title);
  
@@ -122,7 +122,7 @@ function loadTable(tipoDescuento) {
                     titleAttr: 'DESCUENTOS UNIVERSIDAD',
                     title: 'DESCUENTOS UNIVERSIDAD',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13],
                         format: {
                             header: function (d, columnIndex) {
                                 return ' ' + titulosTablaGeneral[columnIndex] + ' ';
@@ -362,21 +362,29 @@ function loadTable(tipoDescuento) {
                     }
                 },
                 {
+                    "data": function (d) {
+                        if(d.certificacion ==  null || d.certificacion == ''){
+                            return '<p style="font-size: 1em; color:gray"><b> No definido</b></p>';
+
+                        }else{
+                            
+                            return '<span class="label label-warning" style="background:' + d.colorCertificacion + ';"> '+ d.certificacion +' </span>';
+                        }
+                    }
+                },
+                {
                     // Acciones
                     "data": function (d) {
-                        const btnEliminarEditar = ((d.estatus == 1 || d.estatus == 2 || d.estatus == 5)
-                            && d.no_descuentos == 0 && d.pagado_caja == 0 && d.status == 1)
-                            ? `<button class="btn-data btn-warning btn-eliminar-descuento"
-                                value="${d.id_descuento}">
-                                <i class="fa fa-trash"></i>
-                               </button>
-                               <button class="btn-data btn-green btn-editar-descuento"
-                                value="${d.id_descuento}">
-                                <i class="fa fa-edit"></i>
-                               </button>`
-                            : '';
-
-                        if (d.estatus == 0) {
+                        if(d.aply == null || d.aply <= 1){
+                            total = d.pagado_caja;
+                        } else {
+                            total = d.aply;
+                        }
+                        let pendientes = parseFloat(d.monto - d.aply);
+                        if(pendientes < 0 ){
+                           actividad =  (pendientes * -1);
+                        }
+                        if (d.estatusDU == 0) {
                             return `
                                     <div class="d-flex justify-center">
                                         <button value="${d.id_usuario}"
@@ -391,9 +399,20 @@ function loadTable(tipoDescuento) {
                                             title="Activar">
                                             <i class="fa fa-rotate-left"></i>
                                         </button>
+                                        <button value="${d.id_usuario}"
+                                        data-value="${d.id_descuento}"
+                                        data-code="${d.id_usuario}"
+                                        data-descuento="${d.monto}"
+                                        data-mensual="${d.pago_individual}"
+                                        data-pendiente="${pendientes}"
+                                        data-total="${total}"
+                                        class="btn-data btn-violetBoots editar_descuentos"
+                                        title="Cambiar descuentos">
+                                        <i class="fas fa-money-check-alt"></i>
+                                    </button>
                                     </div>
                                 `;
-                        } else if ((d.estatus == 1 || d.estatus == 5) && d.pagos_activos == 0) {
+                        } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
                             return `
                                     <div class="d-flex justify-center">
                                         <button value="${d.id_usuario}"
@@ -402,10 +421,22 @@ function loadTable(tipoDescuento) {
                                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
                                             title="Detalles">
                                                 <i class="fas fa-info-circle"></i>
-                                        </button>${btnEliminarEditar}
+                                        </button>
                                     </div>
                                 `;
                         } else if (tipoDescuento === '2' || tipoDescuento === '3') {
+                                // aqui podemos ponerles 
+                                let total ;
+                                if(d.aply == null || d.aply <= 1){
+                                    total = d.pagado_caja;
+                                } else {
+                                    total = d.aply;
+                                }
+                                let pendientes = parseFloat(d.monto - d.aply);
+                                if(pendientes < 0 ){
+                                   actividad =  (pendientes * -1);
+                                }
+                                //   aqui vamos a poner el boton que va para el nuevo sistema     
                             return `
                                 <div class="d-flex justify-center">
                                     <button value="${d.id_usuario}"
@@ -421,78 +452,30 @@ function loadTable(tipoDescuento) {
                                         class="btn-data btn-gray consultar_historial_pagos"
                                         title="Historial pagos">
                                             <i class="fas fa-chart-bar"></i>
-                                    </button>${btnEliminarEditar}
+                                    </button>
+                           
+                                    <button value="${d.id_usuario}"
+                                        data-code="${d.id_usuario}"
+                                        data-value="${d.id_descuento}"
+                                        data-code="${d.id_usuario}"
+                                        data-descuento="${d.monto}"
+                                        data-mensual="${d.pago_individual}"
+                                        data-pendiente="${pendientes}"
+                                        data-total="${total}"
+                                        class="btn-data btn-acidGreen uniAdd"
+                                        title="Editar suficiente">
+                                        <i class="fas fa-money-check-alt"></i>
+                                    </button>
                                 </div>`;
                         }
 
                         let tipo_descuento = d.queryType;
                         if(tipo_descuento == 2){
-                            return `
-                                <div class="d-flex justify-center">
-                                    <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="Detalles">
-                                                <span class="fas fa-info-circle"></span>
-                                    </button>
-                                    <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="editarDescuento">
-                                                <span class="fas fa-info-circle"></span>
-                                    </button>${btnEliminarEditar}
-                                </div>`;
+                            return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button></div>';
                         } else if(tipo_descuento == 1 ){
                             if (d.status == 0) {
-                                let pendiente = parseFloat(d.monto - d.aply);
-                                if(pendiente < 0 ){
-                                   actividad =  (pendiente * -1);
-                                }
-                                let total ;
-                                if(d.aply == null || d.aply <= 1){
-                                    total = d.pagado_caja;
-                                } else {
-                                    total = d.aply;
-                                }
-                                return `
-                                    <div class="d-flex justify-center">
-                                        <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="Detalles">
-                                            <i class="fas fa-info-circle"></i>
-                                        </button>
-                                        
-                                        <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-darkMaderas consultar_historial_pagos"
-                                            title="Historial pagos">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        </button>
-                                        <button value="${d.id_usuario}"
-                                         data-value="${d.id_descuento}"
-                                         data-code="${d.id_usuario}"
-                                         data-descuento="${d.monto}"
-                                         data-mensual="${d.pago_individual}"
-                                         data-pendiente="${pendiente}"
-                                         data-total="${total}"
-                                         class="btn-data btn-violetBoots editar_descuentos"
-                                         title="Cambiar descuentos">
-                                         <i class="fas fa-money-check-alt"></i>
-                                     </button>
-                                        <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-darkMaderas pagos"
-                                            title="Editar descuento">
-                                            <i class="fa-duotone fa-money-check-dollar-pen"></i>
-                                        </button>${btnEliminarEditar}
-                                    </div>`;
+                                return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
+                                    '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
 
                             } else {
                                 OK = parseFloat(d.pago_individual * d.pagos_activos);
@@ -506,7 +489,8 @@ function loadTable(tipoDescuento) {
 
 
                                 if (d.estatus == 2 || d.estatus == 3 || d.estatus == 4 || d.status == 3) {
-                                    BOTON = 0;
+                                    BOTON = 0; 
+                                  
                                 } else if (pend > 0) {
                                     if (d.id_sede == 6) {
                                         if (d.abono_nuevo < 15000) {
@@ -529,150 +513,40 @@ function loadTable(tipoDescuento) {
                                             validar = d.pagos_activos;
                                             pendiente = pend;
                                         } else {
-                                            // pendiente = (validar * d.pago_individual);
-                                            if((validar * d.pago_individual)>(d.monto - d.aply)){
-                                                pendiente = (d.monto - d.aply);
-                                            }else{
-                                                pendiente = (validar * d.pago_individual);
-                                            }
+                                            pendiente = (validar * d.pago_individual);
                                         }
                                         BOTON = 1;
                                     }
                                 } else {
                                     BOTON = 0;
                                 }
+                                
+                                let pendientes = parseFloat(d.monto - d.aply);
+                                if(pendientes < 0 ){
+                                   actividad =  (pendientes * -1);
+                                }
+                                let total ;
+                                if(d.aply == null || d.aply <= 1){
+                                    total = d.pagado_caja;
+                                } else {
+                                    total = d.aply;
+                                }
 
                                 if (BOTON == 0) {
-                                    let pendiente = parseFloat(d.monto - d.aply);
-                                    if(pendiente < 0 ){
-                                       actividad =  (pendiente * -1);
-                                    }
-                                    let total ;
-                                    if(d.aply == null || d.aply <= 1){
-                                        total = d.pagado_caja;
-                                    } else {
-                                        total = d.aply;
-                                    }
-                                    
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                                title="Detalles">
-                                                <span class="fas fa-info-circle"></span>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.aply}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-orangeYellow topar_descuentos"
-                                                title="Detener descuentos">
-                                                <i class="fas fa-money"></i>
-                                            </button>
-                                               <button value="${d.id_usuario}"
-                                                data-value="${d.id_descuento}"
-                                                data-code="${d.id_usuario}"
-                                                data-descuento="${d.monto}"
-                                                data-mensual="${d.pago_individual}"
-                                                data-pendiente="${pendiente}"
-                                                data-total="${total}"
-                                                class="btn-data btn-violetBoots editar_descuentos"
-                                                title="Cambiar descuentos">
-                                                <i class="fas fa-money-check-alt"></i>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                               
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                              
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>`;
-                                } else if (d.estatus == 5) {
-                                    let pendiente = parseFloat(d.monto - d.aply);
-                                    if(pendiente < 0 ){
-                                       actividad =  (pendiente * -1);
-                                    }
-                                    let total ;
-                                    if(d.aply == null || d.aply <= 1){
-                                        total = d.pagado_caja;
-                                    } else {
-                                        total = d.aply;
-                                    }
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                             data-value="${d.id_descuento}"
-                                             data-code="${d.id_usuario}"
-                                             data-descuento="${d.monto}"
-                                             data-mensual="${d.pago_individual}"
-                                             data-pendiente="${pendiente}"
-                                             data-total="${total}"
-                                             class="btn-data btn-violetBoots editar_descuentos"
-                                             title="Cambiar descuentos">
-                                             <i class="fas fa-money-check-alt"></i>
-                                            </button>    
-                                        </div>
-                                        `;
+                                    return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button><button href="#" value="' + d.id_usuario + '" data-value="' + d.aply + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos">' + '<i class="fas fa-money"></i></button>'+
+                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button> '+
+                                        '<button value="'+d.id_usuario+'" data-value="'+d.id_descuento+'" data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" '+
+                                        'data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-violetBoots editar_descuentos" title="Cambiar descuentos"> <i class="fas fa-money-check-alt"></i> </button> </div>';
                                 } else {
-                                    let pendiente = parseFloat(d.monto - d.aply);
-                                    if(pendiente < 0 ){
-                                       actividad =  (pendiente * -1);
-                                    }
-                                    let total ;
-                                    if(d.aply == null || d.aply <= 1){
-                                        total = d.pagado_caja;
-                                    } else {
-                                        total = d.aply;
-                                    }
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${pendiente}"
-                                                data-saldoCom="${d.abono_nuevo}"
-                                                data-sede="${d.id_sede}"
-                                                data-validate="${validar}"
-                                                data-code="${d.cbbtton}"
-                                                class="btn-data btn-violetDeep agregar_nuevo_descuento"
-                                                title="Aplicar descuento">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                             data-value="${d.id_descuento}"
-                                             data-code="${d.id_usuario}"
-                                             data-descuento="${d.monto}"
-                                             data-mensual="${d.pago_individual}"
-                                             data-pendiente="${pendiente}"
-                                             data-total="${total}"
-                                             class="btn-data btn-violetBoots editar_descuentos"
-                                             title="Cambiar descuentos">
-                                             <i class="fas fa-money-check-alt"></i>
-                                         </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>`
+                                    return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  ' +
+                                        'data-saldoCom="'+d.abono_nuevo+'" data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
+                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
                                 }
                             }
                         }
                     }
-                }],
+                }
+           ],
             "ajax": {
                 "url": `getDataConglomerado/${tipoDescuento}`,
                 "type": "GET",
@@ -682,9 +556,10 @@ function loadTable(tipoDescuento) {
         });
         $(document).on("click", ".editar_descuentos", function () {
             $("#editDescuento").modal();
-            document.getElementById("descuento1").value = '';
+            document.getElementById("descuentoEscrito").value = '';
             id_descuento = $(this).attr("data-value");
-            id_user = $(this).attr("data-code");
+            id_user = $(this).attr("data-code");    
+            // aqui mero va la bander de saber que info se guardara
             pago_mensual = $(this).attr("data-mensual");
             descuento = $(this).attr("data-descuento");
             pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
@@ -702,7 +577,7 @@ function loadTable(tipoDescuento) {
             mensualidadesFaltantes = descuento / pago_mensual ;
             mensualidadesFaltantesMostrar = pendiente / pago_mensual ;
            
-            document.getElementById("descuento1").value = descuento;
+            document.getElementById("descuentoEscrito").value = descuento;
             
             if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
                 console.log(mensualidadesFaltantesMostrar);
@@ -746,7 +621,7 @@ function loadTable(tipoDescuento) {
                // mensualidadesFaltantes
             }
          
-            document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
+            document.getElementById("numeroDeMensualidades").value = Math.trunc( mensualidadesFaltantesMostrar);
             
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
             console.log(Total_a_pagar);
@@ -755,43 +630,42 @@ function loadTable(tipoDescuento) {
             //para agregar llo que ya se pago
             NuevasMensualidades= sobrante  / mensualidadesFaltantes;
 
-            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
+            document.getElementById("nuevasMensualidades").value =  NuevasMensualidades.toFixed(2);
 
             //faltantes = mensualidadesFaltantes/mensual;
             
         });
-        $('#numeroPagos1').change(function () {
+
+        $('#numeroDeMensualidades').change(function () {
             total_pagos = document.getElementById("total_pagos").value ;
             actualess = document.getElementById("actualess").value ;
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
             pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
-            loQueSedebe  = document.getElementById("descuento1").value ;
-            pagos  = document.getElementById("numeroPagos1").value ;
+            loQueSedebe  = document.getElementById("descuentoEscrito").value ;
+            pagos  = document.getElementById("numeroDeMensualidades").value ;
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
 
             
-            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
-            
-
+            document.getElementById("nuevasMensualidades").value =  NuevasMensualidades.toFixed(2);
         
         });
 
-        $(document).on('input', '.descuento1', function(){
+        $(document).on('input', '.descuentoEscrito', function(){
             total_pagos = document.getElementById("total_pagos").value ;
             actualess = document.getElementById("actualess").value ;
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
             pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
-            loQueSedebe  = document.getElementById("descuento1").value ;
-            pagos  = document.getElementById("numeroPagos1").value ;
+            loQueSedebe  = document.getElementById("descuentoEscrito").value ;
+            pagos  = document.getElementById("numeroDeMensualidades").value ;
 
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
-            document.getElementById("pago_ind011").value =  NuevasMensualidades.toFixed(2);
+            document.getElementById("nuevasMensualidades").value =  NuevasMensualidades.toFixed(2);
             
 
           
@@ -799,11 +673,11 @@ function loadTable(tipoDescuento) {
         $(document).on("click", ".updateDescuento", function () {
             document.getElementById('updateDescuento').disabled = true;
             let validation = true;
-           mensualidades = document.getElementById("pago_ind011").value;
+           mensualidades = document.getElementById("nuevasMensualidades").value;
            id_descuento = document.getElementById("descuento_id").value; 
-           pago = document.getElementById("descuento1").value ;
-           pagos_activos = document.getElementById("numeroPagos1").value ;
-            if (mensualidades == '' ) 
+           pago = document.getElementById("descuentoEscrito").value ;
+           pagos_activos = document.getElementById("numeroDeMensualidades").value ;
+            if (mensualidades == '' )       
             {
                 validation = false;
             }
@@ -824,7 +698,7 @@ function loadTable(tipoDescuento) {
                     type : 'POST',
                     dataType: "json",
                     data: {
-                    "pagos_activos"     : pagos_activos,
+                    // "pagos_activos"     : pagos_activos,
                     "id_descuento"      : id_descuento,
                     "monto"             : pago,
                     "pago_individual"   : mensualidades,
@@ -1519,7 +1393,12 @@ $("#form_basta").submit(function (e) {
         });
     }
 });
-
+$(document).on("click", "#editarDescuentos", function () {
+    alert('editando descuentos prueba');
+    $('#botonesInicio').css('display', 'none');
+    $('#updateDescuento').css('display', 'block');
+    $('#fomularioEditarDescuento').css('display', 'block');
+});
 $("#form_nuevo").submit(function (e) {
 
     // $('#btn_abonar').attr('disabled', 'true');
@@ -1882,3 +1761,350 @@ function open_Mb() {
 $('#ModalBonos').on('hidden.bs.modal', function() {
     $('#form_nuevo').trigger('reset');
 });
+
+$(document).on("click", ".uniAdd", function () {
+    let banderaLiquidados = false;
+    $("#modalUni").modal();
+    document.getElementById("descuentoEscrito").value = '';
+    // el que modificaremos    
+    id_descuento = $(this).attr("data-value");
+    //id_usuario perteneciente a ese id_user
+    id_user = $(this).attr("data-code");    
+    // aqui mero va la bander de saber que info se guardara
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    MontoDescontarCerti = $(this).attr("data-value");
+    console.log(' MontoDescontarCerti' + MontoDescontarCerti);
+    console.log('descuento' + descuento);
+    if (descuento == total){
+        banderaLiquidados = true;
+        console.log('ESSSSSS igual ');
+    }else{
+        console.log('no es igual ');
+        banderaLiquidados = false;
+    }
+    descuento = Math.round(descuento);
+    pago_mensual = Math.round(pago_mensual);
+    cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+    console.log('descuento entre pago_mensual '+ descuento);
+    console.log('descuento entre pago_mensual '+ pago_mensual);
+    console.log('descuento entre pago_mensual '+ descuento);
+    console.log('descuento entre pago_mensual '+ pago_mensual);
+
+
+    document.getElementById("banderaLiquidado").value = banderaLiquidados;
+    document.getElementById("dineroPagado").value = total;
+    document.getElementById("pagoIndiv").value = pago_mensual;
+    document.getElementById("idDescuento").value = id_descuento;
+    document.getElementById("totalPagos").value = cantidad_de_pagos;
+    document.getElementById("pagoDado").value = pagoDado;
+    // monto a descontar,  lp importante es mas 
+    id_user = $(this).attr("data-code");
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    console.log('pago mensual: = '+pago_mensual );
+    console.log('id_descuento: = '+id_descuento );
+    console.log('id_user: = '+id_user );
+    console.log('descuento: = '+descuento );
+    console.log('pendiente: = '+pendiente );
+    console.log('total: = '+total );
+
+    console.log('descuento por math: = '+descuento );
+    console.log('pendiente por math: = '+pago_mensual );
+    console.log('total por math: = '+cantidad_de_pagos );
+      
+
+    var informacion_adicional = ' '; //inicio de div que contiene todo el modal
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '            <label class="label">Monto Descuento *</label>';
+    informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
+    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '               required />';
+    informacion_adicional += '         </div>';
+    informacion_adicional += '       </div>';
+
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '          <label class="label">Pagos repartidos*</label> ';
+    informacion_adicional += '         <select class="form-control" name="mensualidadesC" id="mensualidadesC">';
+    informacion_adicional += '          <option value="" disabled="true" selected="selected">- Selecciona opción';
+    informacion_adicional += '          </option>';
+    informacion_adicional += '          <option value="1">1</option>';
+    informacion_adicional += '          <option value="2">2</option>';
+    informacion_adicional += '          <option value="3">3</option>';
+    informacion_adicional += '          <option value="4">4</option>';
+    informacion_adicional += '          <option value="5">5</option>';
+    informacion_adicional += '          <option value="6">6</option>';
+    informacion_adicional += '          <option value="7">7</option>';
+    informacion_adicional += '          <option value="8">8</option>';
+    informacion_adicional += '          <option value="9">9</option>';
+    informacion_adicional += '          <option value="10">10</option>';
+    informacion_adicional += '         </select>';
+    informacion_adicional += '        </div>';
+    informacion_adicional += '      </div>';
+ 
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
+    informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
+    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '               required />';
+    informacion_adicional += '         </div>';
+    informacion_adicional += '      </div>';
+    // eee
+    var cuerpoModalUni = document.getElementById('cuerpoModalUni');
+    cuerpoModalUni.innerHTML = informacion_adicional;
+  
+    document.getElementById("MontoDescontarCerti").value = descuento;
+    var myCommentsLote = document.getElementById('tituloModalUni');
+    myCommentsLote.innerHTML = '';
+    
+    if(banderaLiquidados){
+        document.getElementById("mensualidadesC").value = 1;
+    }else{
+        document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+    }
+       mensualidadesFaltantes = descuento / pago_mensual ;
+            mensualidadesFaltantesMostrar = pendiente / pago_mensual ;         
+            if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
+                console.log(mensualidadesFaltantesMostrar);
+                console.log('1');
+            }else{
+                if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
+                {
+                    if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
+                    {
+                        mensualidadesFaltantesMostrar = 1;
+                    }else{
+
+                    }           
+                }else{
+                    console.log('54');
+                    mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
+                }
+               // mensualidadesFaltantes
+            }
+            if ((mensualidadesFaltantes % 1)  == 0 ){
+
+            }else{
+                if( 0 == Math.trunc(mensualidadesFaltantes))
+                {
+                    if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
+                    {
+
+                        mensualidadesFaltantes = 1;
+                    }else{
+  
+                    }
+                }else{
+                        mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+                }
+               // mensualidadesFaltantes
+            }
+            if(banderaLiquidados){
+                document.getElementById("mensualidadesC").value = 1;
+                mensualidadesFaltantesMostrar = 1;
+                mensualidadesFaltantes = 1;
+            }else{
+                
+                document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+            }
+            console.log(' mensualidadesFaltantes'  + mensualidadesFaltantes);
+            console.log(' pago_mensual'  + pago_mensual);
+
+            Total_a_pagar = mensualidadesFaltantes * pago_mensual;
+            console.log('Total_a_pagar'  + Total_a_pagar);
+
+            sobrante = Total_a_pagar - total;
+            console.log(' total'  +  total);
+            console.log('sobrante'  + sobrante);
+            
+            //para agregar llo que ya se pago
+            NuevasMensualidades= sobrante  / mensualidadesFaltantes;
+            if(banderaLiquidados){
+                sobrante = document.getElementById("MontoDescontarCerti").value;
+                sobrante =  total - sobrante ;
+                NuevasMensualidades = sobrante  / mensualidadesFaltantes;
+            }
+            document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+            //faltantes = mensualidadesFaltantes/mensual;
+});  
+
+    $(document).on("click", "#cancelarOperation", function () {
+    alert('cancelando Proceso');
+    // $('#botonesInicio').css('display', 'none');
+    $('#editDescuento').modal('hide');
+    });
+
+    $('#editDescuento').on("click", "#editarDescuentos", function (){
+
+    });
+    $(document).on("click", "#editarDescuentos", function () {
+        alert('editando descuentos prueba');
+        $('#botonesInicio').css('display', 'none');
+        $('#updateDescuento').css('display', 'block');
+        $('#fomularioEditarDescuento').css('display', 'block');
+    });
+    $(document).on("click", "#descuentoCertificaciones", function () {
+        alert('editando descuentos certificaciones');
+    }); 
+    
+    // Nueva functionalidad
+     //  aqui mero 
+
+    $("#certificaciones").change(function () {
+        console.log('1');
+        pagos  = document.getElementById("numeroDeMensualidades").value ;
+        selectCertificacion = document.getElementById("certificaciones").value;
+        console.log(selectCertificacion);
+        var comentarioDescrip = document.getElementById('textDescripcion');
+        comentarioDescrip.innerHTML = '';
+        if(selectCertificacion == 1){
+            comentarioDescrip.innerHTML = '';
+            comentarioDescrip.innerHTML = 'Persona que obtuvo una calificación favorable y con ello la certificación.';
+        }else if(selectCertificacion == 2){
+            comentarioDescrip.innerHTML = '';
+            comentarioDescrip.innerHTML = 'Persona que obtuvo una ponderación menor a la deseada y por ende no obtiene la certificación';
+        }else if(selectCertificacion == 3){
+            comentarioDescrip.innerHTML = '';
+            comentarioDescrip.innerHTML = 'Persona que al no seguir los lineamientos de la institución evaluadora se le suspende su proceso de certificación. ';
+        }else if(selectCertificacion == 4){
+            comentarioDescrip.innerHTML = '';
+            comentarioDescrip.innerHTML = 'Persona que se encuentra por hacer examen final con el Tecnológico de Monterrey.';
+        }else if(selectCertificacion == 5){
+            comentarioDescrip.innerHTML = 'Personas que está en valoración el que se certifiquen en este año, así que en sus casos hay que dejar activo el pago, porque dependiendo de cómo se desenvuelva cada caso puede ser que aplique incremento.';
+            comentarioDescrip.innerHTML = '';
+        }else{
+            comentarioDescrip.innerHTML = '';
+            comentarioDescrip.innerHTML = 'No definido';
+        }
+        
+    });
+
+    $(document).on("click", ".editar_descuentos", function () {
+
+    
+    });
+
+    function subirInfo(){  
+        document.getElementById("descuentoEscrito").value = '';
+        id_descuento = $(this).attr("data-value");
+        id_user = $(this).attr("data-code");    
+        // aqui mero va la bander de saber que info se guardara
+        pago_mensual = $(this).attr("data-mensual");
+        descuento = $(this).attr("data-descuento");
+        pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+        total = $(this).attr("data-total"); //dinero que ha pagado al momento
+        descuento = Math.round(descuento);
+        pago_mensual = Math.round(pago_mensual);
+        cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+        document.getElementById("pagado").value = total;
+        document.getElementById("mensualidad").value = pago_mensual;
+        document.getElementById("descuento_id").value = id_descuento;
+        document.getElementById("pagoDado").value = dineroPagado;
+        valor = 0;
+        valor1 = 0;
+     }
+     
+    
+
+
+    $(document).on('input', '.MontoDescontarCerti', function(){
+        console.log('aqui empezamos a editar ');
+        // total_pagos = document.getElementById("total_pagos").value ;
+        // actualess = document.getElementById("actualess").value ;
+        // totalmeses = document.getElementById("totalmeses").value ;
+        // cuanto = document.getElementById("cuanto").value ;
+        // mensualidad = document.getElementById("mensualidad").value ;
+        mensualidadesC = document.getElementById("mensualidadesC").value;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+        loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagos  = document.getElementById("mensualidadesC").value ;
+        console.log("loQueSedebe" + loQueSedebe );
+        banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+        if(banderaLiquidado){
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;
+        }else{
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;   
+        }
+
+        console.log("loQueSedebe + pagado" + loQueSedebe );
+        console.log("pagos"+pagos);
+        console.log("NuevasMensualidades" + NuevasMensualidades);
+        console.log("");
+        console.log("");
+        document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+        
+    });
+
+    
+    $("#mensualidadesC").change(function () {
+        alert('1111111111111111111111155555555555555555555555');
+        console.log("esta información es necesaria para seguir trabajando");
+        mensualidadesC = document.getElementById("mensualidadesC").value;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+        loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagos  = document.getElementById("mensualidadesC").value ;
+        console.log("loQueSedebe" + loQueSedebe );
+        banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+        if(banderaLiquidado){
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;
+        }else{
+            loQueSedebe = loQueSedebe - pagado;
+            console.log("Pagado" + pagado );
+            NuevasMensualidades = loQueSedebe / pagos;
+        } 
+        document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    });
+    
+    $(document).on("click", ".updateDescuentoCertificado", function () {
+
+        mensualidadesC  = document.getElementById("mensualidadesC").value;
+        id_descuento     = document.getElementById("idDescuento").value;
+        monto           = document.getElementById("MontoDescontarCerti").value;
+        pago_individual = document.getElementById("newMensualidades").value;
+        estatus_certificacion  = document.getElementById("certificaciones").value;
+        console.log('valor de mensualidadesC'+ mensualidadesC);
+        console.log("estatus_certificacion"+ estatus_certificacion);
+        console.log("id_descuento"+id_descuento);
+        console.log("monto"+monto);
+        console.log("pago_individual"+pago_individual);
+        alert('mesaje de guardar el estatu y la informació mad');
+                $.ajax({
+            url : 'descuentoUpdateCertificaciones',
+            type : 'POST',
+            dataType: "json",
+            data: {
+            // "pagos_activos"     : pagos_activos,
+            "estatus_certificacion" : estatus_certificacion,
+            "id_descuento"      : id_descuento,
+            "monto"             : monto,
+            "pago_individual"   : pago_individual,
+              }, 
+    
+              success: function(data) {
+               
+                alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                document.getElementById('updateDescuento').disabled = false;
+            
+                $('#tabla-general').DataTable().ajax.reload(null, false );
+                // toastr[response.response_type](response.message);
+                $('#modalUni').modal('toggle');
+            },              
+            error : (a, b, c) => {
+                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            }
+    
+        });
+    });
