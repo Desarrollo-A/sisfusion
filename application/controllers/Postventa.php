@@ -1917,9 +1917,10 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function servicioPostventa($referencia, $empresa){
-        $url = 'https://clientes.gphsis.com/BACK/index.php/PaginaCDM/getDatos_clientePV';
+    public s($referencia, $empresa){
 
+        //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+        $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
             "referencia" => $referencia,
             "empresa" => $empresa
@@ -1927,7 +1928,7 @@ class Postventa extends CI_Controller
 
         $opciones = array(
             "http" => array(
-                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com"],
+                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com, localhost"],
                 "method" => "POST",
                 "content" => $datos, # Agregar el contenido definido antes
             ),
@@ -1978,8 +1979,7 @@ class Postventa extends CI_Controller
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
         );
-        print_r($data);
-       /* $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
+        $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
         else
