@@ -3,6 +3,8 @@
 
 class Dashboard extends CI_Controller
 {
+    //Global vrbls
+    public $googleCode;
 
     public function __construct()
     {
@@ -13,6 +15,7 @@ class Dashboard extends CI_Controller
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
+        $this->googleCode = isset($_GET["code"]) ? $_GET["code"] : '';
     }
     public function index()
     {
@@ -35,8 +38,10 @@ class Dashboard extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
+
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
+        $datos['googleCode'] = $this->googleCode;
         $this->load->view('template/header');
         $this->load->view("dashboard/base/base", $datos);
     }
