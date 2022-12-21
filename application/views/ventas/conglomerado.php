@@ -97,7 +97,25 @@
                             <div class="row">
                                 
                                 <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">
-                                                
+                                <div class="col-xs-4 col-sm-4 col-md-4">';
+                                      <div class="form-group">';
+                                        <label class="label">Pagos repartidos*</label> ';
+                                       <select class="form-control mensualidadesC" name="mensualidadesC" id="mensualidadesC" required>';
+                                        <option value="" disabled="true" selected="selected">- Selecciona opción';
+                                        </option>';
+                                        <option value="1">1</option>';
+                                        <option value="2">2</option>';
+                                        <option value="3">3</option>';
+                                        <option value="4">4</option>';
+                                        <option value="5">5</option>';
+                                        <option value="6">6</option>';
+                                        <option value="7">7</option>';
+                                        <option value="8">8</option>';
+                                        <option value="9">9</option>';
+                                        <option value="10">10</option>';
+                                       </select>';
+                                      </div>';
+                                    </div>';     
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12" >
                                 </div>
