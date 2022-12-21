@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
     <div class="row pdt-40">
-        <div class="col-12 col-sm-5 col-md-6 col-lg-3">
+        <div class="col-12 col-sm-5 col-md-6 col-lg-6">
             <div class="back d-flex">
                 <label class="m-0 checkBox" >
                     <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
@@ -13,8 +13,18 @@
                     <span>Sin enganche</span>
                 </label>
             </div>
+            <div class="back d-flex">
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
+                    <span class="mr-1">Comerciales</span>
+                </label>
+                <label class="m-0 checkBox" >
+                    <input type="checkbox" class="d-none infoMainSelector" value="2" name="infoMainSelector" id="typeSale2">
+                    <span>Habitacionales</span>
+                </label>
+            </div>
         </div>
-        <div class="col-12 col-sm-7 col-md-6 col-lg-9 d-flex align-center justify-end" id="tableFilters">
+        <div class="col-12 col-sm-7 col-md-6 col-lg-6 d-flex align-center justify-end" id="tableFilters">
             <div class="col-12 col-sm-1 col-md-1 col-lg-1 h-100 d-flex justify-center iconHover">
                 <i class="fas fa-chart-line chartButton" id="chartButton" ></i>
             </div>
