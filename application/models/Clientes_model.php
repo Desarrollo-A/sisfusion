@@ -4241,6 +4241,19 @@ function getStatusMktdPreventa(){
             $condition_sedes = "";
         }
 
+        if(!empty($data_search['id_dragon'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_iddragon = $condicion_dinamica." pr.id_dragon=".$data_search['id_dragon'];
+        }else{
+            $condition_iddragon = "";
+        }
+
+
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
@@ -4258,6 +4271,7 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_sedes
+                $condition_iddragon
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
@@ -4275,6 +4289,8 @@ function getStatusMktdPreventa(){
                 $condition_nombre
                 $condition_idlote
                 $condition_correo
+                $condition_telefono
+                $condition_iddragon
                 $condition_sedes");
                 break;
         }
