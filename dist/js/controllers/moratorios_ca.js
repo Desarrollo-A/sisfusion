@@ -9687,38 +9687,11 @@ function calculoMoratorioII(IM, importeSaldoI, posPay, PositionPago, diasRetardo
                 // 		},
                 // 	),
                 DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
-                DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(
+                DTColumnBuilder.newColumn('total').withTitle('Mensualidad').renderWith(
                     function (data, type, full)
                     {
-                        var showDescMens;
-                        if(full['importe']<full['interesMoratorio'])
-                        {
-                            showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>No se abonó nada a capital</i></span>';
-                        }
-                        else
-                        {
-                            if(full['importe']=="" || full['importe']==0)
-                            {
-                                showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>No se abonó nada a capital</i></span>';
-                            }
-                            else
-                            {
-                                // showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>'+full['total'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})+'</i></span>';
-                                var intOrd = full['interes'];
-                                if(intOrd==0 || intOrd=="")
-                                {
-                                    showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>'+full['total'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})+'</i></span>';
-                                }
-                                else
-                                {
 
-                                    showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>Primero descuenta a Intereses ordinarios</i></span>';
-
-                                    // showDescMens = '<br><span style="color:red;font-size: 0.8em"><i>Primero descuenta a Intereses ordinarios</i></span>';
-                                }
-                            }
-                        }
-                        return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})) + showDescMens
+                        return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
                     }),
                 DTColumnBuilder.newColumn('interes').withTitle('Intereses').renderWith(function (data, type, full)
                 {
