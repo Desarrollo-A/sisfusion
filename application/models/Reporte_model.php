@@ -482,7 +482,7 @@ class Reporte_model extends CI_Model {
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN sedes ss ON ss.id_sede = r.sede_residencial
                 WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-                $filtro totalValidado != 0.00 AND totalValidado IS NOT NULL
+                AND totalValidado != 0.00 AND totalValidado IS NOT NULL $filtro
                 GROUP BY ss.nombre, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, 
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 isNULL(cl.totalNeto2_cl ,lo.totalNeto2), isNULL(cl.total_cl ,lo.total), CONVERT(VARCHAR, cl.fechaApartado, 103)
@@ -507,7 +507,7 @@ class Reporte_model extends CI_Model {
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN sedes ss ON ss.id_sede = r.sede_residencial
                 WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-                $filtro AND totalValidado  != 0.00 AND totalValidado IS NOT NULL
+                AND totalValidado  != 0.00 AND totalValidado IS NOT NULL AND $filtro
                 AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)
                 GROUP BY ss.nombre, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),lo.idLote, lo.nombreLote, 
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
