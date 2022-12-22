@@ -3006,8 +3006,7 @@ public function getStatusMktdPreventa(){
             'id_dragon' => $id_dragon,
             'tipo_busqueda' => $tipo_busqueda
         );
-        print_r($data_search);
-        exit;
+
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
         print_r(json_encode($result, JSON_NUMERIC_CHECK));
