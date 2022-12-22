@@ -86,6 +86,12 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <div class="form-group label-floating div_last_name">
+                                                                    <label class="control-label">ID DRAGÓN</label>
+                                                                    <input id="idDragon" name="idDragonC" type="text" class="form-control input-gral" required>
+                                                                </div>
+                                                            </div>
                                                             <div class=" col col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered">
                                                                 <div class="form-group label-floating div_last_name">
                                                                     <button type="button" class="btn btn-primary" id="searchButton">BUSCAR</button>
@@ -151,12 +157,17 @@
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group label-floating div_last_name">
-                                                                <!--<label class="control-label">TELÉFONO</label>-->
                                                                 <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class=" col col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered">
+                                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                                            <div class="form-group label-floating div_last_name">
+                                                                <label class="control-label">ID DRAGÓN</label>
+                                                                <input id="idDragonC" name="idDragonC" type="text" class="form-control input-gral" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class=" col col-xs-12 col-sm-12 col-md-2 col-lg-2 center-align centered">
                                                             <div class="form-group label-floating div_last_name">
                                                                 <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
                                                             </div>

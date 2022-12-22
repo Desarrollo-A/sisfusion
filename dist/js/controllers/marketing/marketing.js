@@ -20,17 +20,21 @@ $('#searchButton').click(()=>{
 	let mail = $('#mail').val();
 	let telephone = $('#telephone').val();
 	let sede = $('#sede').val();
+	let id_dragon = $('#idDragon').val();
 
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
-	if(name!='' || mail!='' || telephone!='' || sede!=''){
+	id_dragon = (id_dragon!='') ? id_dragon: '';
+	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
+		array_data['idLote'] = '';
 		array_data['name'] = name;
 		array_data['mail'] = mail;
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
+		array_data['id_dragon'] = id_dragon;
 		fillTable(array_data);
 	}else{
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
@@ -44,6 +48,7 @@ $('#searchButtonC').click(()=>{
 	let mail = $('#mailC').val();
 	let telephone = $('#telephoneC').val();
 	let sede = $('#sedeC').val();
+	let id_dragon = $('#idDragonC').val();
 
 	console.log('sedeII:', JSON.stringify(sede));
 
@@ -52,14 +57,16 @@ $('#searchButtonC').click(()=>{
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
+	id_dragon = (id_dragon!='') ? id_dragon : '';
 
-	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!=''){
+	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
 		array_data['idLote'] = idLote;
 		array_data['name'] = name;
 		array_data['mail'] = mail;
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
+		array_data['id_dragon'] = id_dragon;
 		fillTableClientes(array_data);
 	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
@@ -221,11 +228,13 @@ function fillTable(data_search) {
 			type: 'POST',
 			url: url2+'Clientes/searchData',
 			data: {
-				"idLote": '',
+				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
 				"mail" :  data_search['mail'],
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
+				"id" : data_search['sede'],
+				"id_dragon" : data_search['id_dragon'],
 				"TB": 2
 			},
 			cache: false
@@ -517,6 +526,7 @@ function fillTableClientes(data_search) {
 				"mail" :  data_search['mail'],
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
+				"id_dragon" : data_search['id_dragon'],
 				"TB": 1
 			},
 			cache: false
