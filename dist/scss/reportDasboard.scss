@@ -17,25 +17,31 @@
     }
     .back{
         width: fit-content;
-        background-color: $white;
-        padding: 8px 2px;
-        border-radius: 5px;
+        background-color: transparent;
+        padding: 3px 0px;
+        border-radius: 27px;
+        border: 1px solid $platinumScroll;
         .checkBox{
-          cursor: pointer;
-          user-select: none;
-          display: block;
-          line-height: inherit;
-          span{
-            font-size: 12px;
-            border-radius: 5px;
-            transition: 0.4s;
-            padding: 8px 15px;
-            color: $deepGray;
-            background-color: $white;
-            margin: 0 2px;
-            @media #{$smartphone} {
-                padding: 8px 35px;
+            cursor: pointer;
+            user-select: none;
+            display: block;
+            line-height: inherit;
+            .spnLeft{
+                border-radius: 27px 0 0 27px!important;
             }
+            .spnRight{
+                border-radius: 0 27px 27px 0!important;
+            }
+            span{
+                font-size: 12px;
+                transition: 0.4s;
+                padding: 8px 15px;
+                color: $deepGray;
+                background-color: transparent;
+                margin: 0;
+                @media #{$smartphone} {
+                    padding: 8px 35px;
+                }
           }
           span:hover{
             box-shadow: none;
