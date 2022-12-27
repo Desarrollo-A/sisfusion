@@ -4,6 +4,19 @@
         table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
     }
+    #beginDateC
+    {
+        background-color: #eaeaea !important;
+        border-radius: 27px 0 0 27px !important;
+        background-image: initial !important;
+        text-align: center !important;
+    }
+    #endDateC{
+        background-color: #eaeaea !important;
+        border-radius: 0px 0 0 0px !important;
+        background-image: initial !important;
+        text-align: center !important;
+    }
     </style>
 <body>
     
@@ -82,9 +95,27 @@
                                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                                 <div class="form-group label-floating div_last_name">
                                                                     <!--<label class="control-label">TELÉFONO</label>-->
-                                                                    <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
+                                                                    <select class="selectpicker select-gral m-0" id="sede" name="sede[]"
+                                                                            onchange="changeSede()"
+                                                                            data-style="btn btn-primary " data-show-subtext="true"
+                                                                            data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
                                                                     </select>
                                                                 </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="fechasFiltro">
+                                                                    <div class="container-fluid p-0">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 p-r">
+                                                                                <div class="form-group d-flex">
+                                                                                    <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2022" />
+                                                                                    <input type="text" class="form-control datepicker" id="endDate" value="12/31/2022" />
+                                                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                                        <span class="material-icons update-dataTable">search</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                                 <div class="form-group label-floating div_last_name">
@@ -157,8 +188,25 @@
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group label-floating div_last_name">
-                                                                <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7" required="" multiple="" tabindex="-98">
+                                                                <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary "
+                                                                        data-show-subtext="true" data-live-search="true" title="Selecciona sede" data-size="7"
+                                                                        required="" multiple="" tabindex="-98" onchange="changeSedeC()">
                                                                 </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="fechasFiltroC">
+                                                            <div class="container-fluid p-0">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 p-r">
+                                                                        <div class="form-group d-flex">
+                                                                            <input type="text" class="form-control datepicker" id="beginDateC" value="01/01/2022" />
+                                                                            <input type="text" class="form-control datepicker" id="endDateC" value="12/31/2022" />
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                                <span class="material-icons update-dataTable">search</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">

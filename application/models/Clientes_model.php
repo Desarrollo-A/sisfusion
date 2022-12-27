@@ -4235,7 +4235,12 @@ function getStatusMktdPreventa(){
             }elseif($flag_where>1){
                 $condicion_dinamica = ' OR ';
             }
-            $condition_sedes = $condicion_dinamica." $prefix.id_sede IN(".$data_search['sede'].")";
+
+            if($data_search['tipo_busqueda']==1){
+                $condition_sedes = $condicion_dinamica." $prefix.fechaApartado BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
+            }elseif($data_search['tipo_busqueda']==2){
+                $condition_sedes = $condicion_dinamica." $prefix.fecha_creacion BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
+            }
         }else {
             $condition_sedes = "";
         }

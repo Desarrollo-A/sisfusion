@@ -11,8 +11,28 @@ $(document).ready(function () {
 		$("#sede").selectpicker('refresh');
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
+	sp.initFormExtendedDatetimepickers();
+	$('.datepicker').datetimepicker({locale: 'es'});
 });
-
+sp = { //  SELECT PICKER
+	initFormExtendedDatetimepickers: function () {
+		$('.datepicker').datetimepicker({
+			format: 'MM/DD/YYYY',
+			icons: {
+				time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+				up: "fa fa-chevron-up",
+				down: "fa fa-chevron-down",
+				previous: 'fa fa-chevron-left',
+				next: 'fa fa-chevron-right',
+				today: 'fa fa-screenshot',
+				clear: 'fa fa-trash',
+				close: 'fa fa-remove',
+				inline: true
+			}
+		});
+	}
+}
 
 $('#searchButton').click(()=>{
 
@@ -21,12 +41,18 @@ $('#searchButton').click(()=>{
 	let telephone = $('#telephone').val();
 	let sede = $('#sede').val();
 	let id_dragon = $('#idDragon').val();
+	let fecha_init = $('#beginDate').val();
+	let fecha_end = $('#endDate').val();
 
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
 	id_dragon = (id_dragon!='') ? id_dragon: '';
+	fecha_init = (fecha_init!='') ? fecha_init : '';
+	fecha_end = (fecha_end!='') ? fecha_end : '';
+
+
 	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
 		array_data['idLote'] = '';
@@ -35,6 +61,8 @@ $('#searchButton').click(()=>{
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
 		array_data['id_dragon'] = id_dragon;
+		array_data['fecha_init'] = fecha_init;
+		array_data['fecha_end'] = fecha_end;
 		fillTable(array_data);
 	}else{
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
@@ -49,6 +77,8 @@ $('#searchButtonC').click(()=>{
 	let telephone = $('#telephoneC').val();
 	let sede = $('#sedeC').val();
 	let id_dragon = $('#idDragonC').val();
+	let fecha_init = $('#beginDateC').val();
+	let fecha_end = $('#endDateC').val();
 
 	console.log('sedeII:', JSON.stringify(sede));
 
@@ -58,6 +88,9 @@ $('#searchButtonC').click(()=>{
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
 	id_dragon = (id_dragon!='') ? id_dragon : '';
+	fecha_init = (fecha_init!='') ? fecha_init : '';
+	fecha_end = (fecha_end!='') ? fecha_end : '';
+
 
 	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
@@ -67,6 +100,10 @@ $('#searchButtonC').click(()=>{
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
 		array_data['id_dragon'] = id_dragon;
+		array_data['fecha_init'] = fecha_init;
+		array_data['fecha_end'] = fecha_end;
+
+
 		fillTableClientes(array_data);
 	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
@@ -165,33 +202,65 @@ function fillTable(data_search) {
 						telefono = tel1;
 					}else if(tel1==null || tel2==null){
 						telefono = '--'
+					}else{
+						telefono = 'Sin teléfono';
 					}
 					return '<p class="m-0">' + telefono + '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.correo + '</p>';
+					let correo = '';
+					if(d.correo == undefined || d.correo == '' || d.correo == null){
+						correo = 'Sin correo';
+					}else{
+						correo = d.correo;
+					}
+					return '<p class="m-0">' + correo+ '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">'+ d.lugar_prospeccion + '</p>';
+					let lugar_prospeccion = '';
+					if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
+						lugar_prospeccion = '--';
+					}else{
+						lugar_prospeccion = d.lugar_prospeccion;
+					}
+					return '<p class="m-0">'+ lugar_prospeccion + '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.nombre_asesor + '</p>';
+					let asesor;
+					if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
+						asesor = 'Sin asesor';
+					}else{
+						asesor = d.nombre_asesor;
+					}
+					return '<p class="m-0">' + asesor+ '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.nombre_coordinador + '</p>';
+					let coordinador;
+					if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
+						coordinador = 'Sin coordinador';
+					}else{
+						coordinador = d.nombre_coordinador;
+					}
+					return '<p class="m-0">' + coordinador + '</p>';
 				}
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.nombre_gerente+ '</p>';
+					let gerente;
+					if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
+						gerente = 'Sin gerente';
+					}else{
+						gerente = d.nombre_gerente;
+					}
+					return '<p class="m-0">' + gerente + '</p>';
 				}
 			},
 			{
@@ -212,8 +281,13 @@ function fillTable(data_search) {
 			},
 			{
 				data: function (d) {
-
-					return '<p class="m-0">' +   d.sede_nombre  + '</p>';
+					let sede;
+					if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
+						sede = 'Sin sede';
+					}else{
+						sede = d.sede_nombre;
+					}
+					return '<p class="m-0">' +   sede + '</p>';
 				}
 			}
 		],
@@ -233,8 +307,9 @@ function fillTable(data_search) {
 				"mail" :  data_search['mail'],
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
-				"id" : data_search['sede'],
 				"id_dragon" : data_search['id_dragon'],
+				"fecha_init" : data_search['fecha_init'],
+				"fecha_end" : data_search['fecha_end'],
 				"TB": 2
 			},
 			cache: false
@@ -449,7 +524,13 @@ function fillTableClientes(data_search) {
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">'+ d.nombreCliente + '</p>';
+					let cliente ;
+					if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
+						cliente = 'Sin cliente';
+					}else{
+						cliente = d.nombreCliente;
+					}
+					return '<p class="m-0">'+ cliente + '</p>';
 				}
 			},
 			{
@@ -464,7 +545,13 @@ function fillTableClientes(data_search) {
 			},
 			{
 				data: function (d) {
-					return '<p class="m-0">' + d.referencia + '</p>';
+					let referencia;
+					if(d.referencia==undefined || d.referencia==null || d.referencia==''){
+						referencia = 'Sin referencia';
+					}else{
+						referencia = d.referencia;
+					}
+					return '<p class="m-0">' + referencia + '</p>';
 				}
 			},
 			{
@@ -527,6 +614,8 @@ function fillTableClientes(data_search) {
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
 				"id_dragon" : data_search['id_dragon'],
+				"fecha_init" : data_search['fecha_init'],
+				"fecha_end" : data_search['fecha_end'],
 				"TB": 1
 			},
 			cache: false
@@ -688,4 +777,19 @@ $(document).on('click', '.cop', function (e) {
 	$('#verDetalles').modal('show');
 });
 
-
+function changeSede(){
+	let sedes = $('#sede').val();
+	if(sedes.length>0){
+		$('#fechasFiltro').removeClass('hide');
+	}else{
+		$('#fechasFiltro').addClass('hide');
+	}
+}
+function changeSedeC(){
+	let sedes = $('#sedeC').val();
+	if(sedes.length>0){
+		$('#fechasFiltroC').removeClass('hide');
+	}else{
+		$('#fechasFiltroC').addClass('hide');
+	}
+}
