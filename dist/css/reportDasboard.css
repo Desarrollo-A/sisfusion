@@ -521,11 +521,15 @@
 
 #reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td { white-space: nowrap !important; }
 
-#reporte .back { width: fit-content; background-color: #ffffff; padding: 8px 2px; border-radius: 5px; }
+#reporte .back { width: fit-content; background-color: transparent; padding: 3px 0px; border-radius: 27px; border: 1px solid #c1c1c1; }
 
 #reporte .back .checkBox { cursor: pointer; user-select: none; display: block; line-height: inherit; }
 
-#reporte .back .checkBox span { font-size: 12px; border-radius: 5px; transition: 0.4s; padding: 8px 15px; color: #929292; background-color: #ffffff; margin: 0 2px; }
+#reporte .back .checkBox .spnLeft { border-radius: 27px 0 0 27px !important; }
+
+#reporte .back .checkBox .spnRight { border-radius: 0 27px 27px 0 !important; }
+
+#reporte .back .checkBox span { font-size: 12px; transition: 0.4s; padding: 8px 15px; color: #929292; background-color: transparent; margin: 0; }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) { #reporte .back .checkBox span { padding: 8px 35px; } }
 

@@ -1,40 +1,73 @@
 <link href="<?= base_url() ?>dist/css/reportDasboard.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
 
 <div class="container-fluid">
     <div class="row pdt-40">
-        <div class="col-12 col-sm-5 col-md-6 col-lg-6">
-            <div class="back d-flex">
-                <label class="m-0 checkBox" >
-                    <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
-                    <span class="mr-1">Con enganche</span>
-                </label>
-                <label class="m-0 checkBox" >
-                    <input type="checkbox" class="d-none infoMainSelector" value="2" name="infoMainSelector" id="typeSale2">
-                    <span>Sin enganche</span>
-                </label>
-            </div>
-            <div class="back d-flex">
-                <label class="m-0 checkBox" >
-                    <input type="checkbox" class="d-none infoMainSelector" value="1" name="infoMainSelector" id="typeSale1" checked>
-                    <span class="mr-1">Comerciales</span>
-                </label>
-                <label class="m-0 checkBox" >
-                    <input type="checkbox" class="d-none infoMainSelector" value="2" name="infoMainSelector" id="typeSale2">
-                    <span>Habitacionales</span>
-                </label>
-            </div>
-        </div>
-        <div class="col-12 col-sm-7 col-md-6 col-lg-6 d-flex align-center justify-end" id="tableFilters">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-9 d-flex">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-filter"></i> Filtros de búsqueda
+            </button>
+            <button class="btn btn-primary" type="button" id="filterAction">
+                Aplicar filtros
+            </button>
             <div class="col-12 col-sm-1 col-md-1 col-lg-1 h-100 d-flex justify-center iconHover">
                 <i class="fas fa-chart-line chartButton" id="chartButton" ></i>
             </div>
-            <div class="col-12 col-sm-11 col-md-11 col-lg-4 h-100 pr-0">
-                <div class="form-group d-flex m-0 datesTable">
-                    <input type="text" class="form-control datepicker tableDates" id="tableBegin" value="" autocomplete='off'/>
-                    <input type="text" class="form-control datepicker tableDates" id="tableEnd" value="" autocomplete='off' />
-                    <button class="btn btn-success btn-round btn-fab btn-fab-mini tableSearch" id="searchByDateRangeTable">
-                        <span class="material-icons">search</span>
-                    </button>
+        </div>
+        <div class="col-12 col-sm-12 col-md12 col-lg-12">
+            <div class="collapse" id="collapseExample">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                            <div class="back d-flex">
+                                <label class="m-0 checkBox">
+                                    <input type="checkbox" class="d-none conSinEnganche" value="1" name="conSinEnganche" id="typeSale1" checked>
+                                    <span class="spnLeft">Con enganche</span>
+                                </label>
+                                <label class="m-0 checkBox">
+                                    <input type="checkbox" class="d-none conSinEnganche" value="2" name="conSinEnganche" id="typeSale2">
+                                    <span class="spnRight">Sin enganche</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                            <div class="back d-flex">
+                                <label class="m-0 checkBox" >
+                                    <input type="checkbox" class="d-none typeLote" value="0" name="typeLote" id="typeLote1" checked>
+                                    <span class="spnLeft">Habitacionales</span>
+                                </label>
+                                <label class="m-0 checkBox">
+                                    <input type="checkbox" class="d-none typeLote" value="1" name="typeLote" id="typeLote2">
+                                    <span class="spnRight">Comerciales</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                            <div class="back d-flex">
+                                <label class="m-0 checkBox" >
+                                    <input type="checkbox" class="d-none typeConstruccion" value="0" name="typeConstruccion" id="typeBuild1" checked>
+                                    <span class="spnLeft">Sin casa</span>
+                                </label>
+                                <label class="m-0 checkBox">
+                                    <input type="checkbox" class="d-none typeConstruccion" value="1" name="typeConstruccion" id="typeBuild2">
+                                    <span class="spnRight">Con casa</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                            <label>Estatus</label>
+                            <select id="condominios" name="condominios" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-actions-box="true" title="Selecciona un condominio" data-size="7" required multiple>
+                                <option value="639">CDMSLP-ROBLE-HABITACIONAL</option> 
+                                <option value="639">CDMSLP-ROBLE-HABITACIONAL</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 d-flex align-center justify-end" id="tableFilters">
+                            <div class="form-group d-flex m-0 datesTable">
+                                <input type="text" class="form-control datepicker tableDates" id="tableBegin" value="" autocomplete='off'/>
+                                <input type="text" class="form-control datepicker tableDates" id="tableEnd" value="" autocomplete='off' />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -209,3 +242,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
