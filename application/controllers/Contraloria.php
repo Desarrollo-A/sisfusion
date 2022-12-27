@@ -2,18 +2,11 @@
 class Contraloria extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Contraloria_model');
-		$this->load->model('registrolote_modelo');
-		$this->load->model('Clientes_model');
-		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
-		$this->load->model('General_model');
-		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->model((array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model'));
+		$this->load->library(array('session','form_validation', 'get_menu', 'phpmailer_lib', 'formatter'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-		$this->load->library('phpmailer_lib');
-		$this->load->library('formatter');
 		$this->validateSession();
-
 		date_default_timezone_set('America/Mexico_City');
 	}
 
@@ -1682,7 +1675,10 @@ public function editar_registro_loteRevision_contraloria_proceceso6(){
     $comentario=$this->input->post('comentario');
     $modificado=date('Y-m-d H:i:s');
     $fechaVenc=$this->input->post('fechaVenc');
-
+	//quitar las cosas que le daban formato
+	$charactersNoPermit = array('$', ',');
+	$totalNeto = $this->input->post('totalNeto');
+	$totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
 
 
     $arreglo=array();
@@ -1692,6 +1688,7 @@ public function editar_registro_loteRevision_contraloria_proceceso6(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");
+	$arreglo["totalNeto"] = $totalNeto;
 	
 
 $horaActual = date('H:i:s');
