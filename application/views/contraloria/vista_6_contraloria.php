@@ -118,6 +118,11 @@
 							<textarea class="form-control" name="comentario1" id="comentario1" rows="3"></textarea>
                              <br>
 						</div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                            <label id="tvLbl">Enganche:</label>
+                            <input class="form-control" name="totalNeto" id="totalNetoR" oncopy="return false"
+                                   onpaste="return false" onkeypress="return SoloNumeros(event)" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" >
+                        </div>
 					</div>
 				</div>
 
@@ -995,8 +1000,10 @@ $(document).on('click', '#save1', function(e) {
 e.preventDefault();
 
 var comentario = $("#comentario1").val();
+var totalNeto = $("#totalNetoR").val();
 
 var validaComent = ($("#comentario1").val().length == 0) ? 0 : 1;
+var validaTotalNeto = ($("#totalNetoR").val().length == 0) ? 0 : 1;
 
 var dataExp1 = new FormData();
 
@@ -1008,10 +1015,11 @@ dataExp1.append("nombreLote", getInfo1[4]);
 dataExp1.append("idLote", getInfo1[5]);
 dataExp1.append("comentario", comentario);
 dataExp1.append("fechaVenc", getInfo1[6]);
+dataExp1.append("totalNeto", totalNeto);
 
 
-      if (validaComent == 0) {
-				alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+      if (validaComent == 0 || validaTotalNeto == 0) {
+				alerts.showNotification("top", "right", "Asegúrate de llenar los campos de comentarios y enganche antes de llevar a cabo el avance.", "danger");
 	  }
 	  
       if (validaComent == 1) {
