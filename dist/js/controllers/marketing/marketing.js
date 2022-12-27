@@ -810,44 +810,55 @@ function changeSedeC(){
 	}
 }
 function cleanFilters(){
-	$('#name').val('');
-	$('#mail').val('');
-	$('#telephone').val('');
-	$('#idDragon').val('');
-	$("#sede").val('default');
-	$("#sede").selectpicker("refresh");
-	$('#fechasFiltro').addClass('hide');
-	$('#beginDate').val('01/01/2022');
-	$('#endDate').val('12/31/2022');
-	$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
-	$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
-	$('#inside').addClass('col-md-12 col-lg-12');
-	$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
-	// $("#tabla_prospectos").DataTable().clear().draw();
-	tabla_valores_prospectos.clear().draw();
-	tabla_valores_prospectos.destroy();
+
+	if($('#name').val()=='' && $('#mail').val()=='' && $('#telephone').val()=='' && $('#idDragon').val()=='' && $("#sede").val().length<=0){
+		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
+	}else{
+		$('#name').val('');
+		$('#mail').val('');
+		$('#telephone').val('');
+		$('#idDragon').val('');
+		$("#sede").val('default');
+		$("#sede").selectpicker("refresh");
+		$('#fechasFiltro').addClass('hide');
+		$('#beginDate').val('01/01/2022');
+		$('#endDate').val('12/31/2022');
+		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
+		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
+		$('#inside').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		// $("#tabla_prospectos").DataTable().clear().draw();
+		tabla_valores_prospectos.clear().draw();
+		tabla_valores_prospectos.destroy();
+	}
+
+
 }
 
 function cleanFiltersC(){
 	// clientes_btns
 	// insideC
+	if($('#idLotteC').val()=='' && $('#nameC').val()=='' && $('#mailC').val()=='' && $('#telephoneC').val()=='' && $("#sedeC").val().length<=0){
+		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
+	}else{
+		$('#idLotteC').val('');
+		$('#nameC').val('');
+		$('#mailC').val('');
+		$('#telephoneC').val('');
+		$('#idDragonC').val('');
+		$("#sedeC").val('default');
+		$("#sedeC").selectpicker("refresh");
+		$('#fechasFiltroC').addClass('hide');
+		$('#beginDateC').val('01/01/2022');
+		$('#endDateC').val('12/31/2022');
+		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
+		$('#clientes_btns').addClass('col-md-4 col-lg-4');
+		$('#insideC').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		// tabla_valores_cliente.clear();
+		tabla_valores_cliente.clear().draw();
+		tabla_valores_cliente.destroy();
+	}
 
 
-	$('#idLotteC').val('');
-	$('#nameC').val('');
-	$('#mailC').val('');
-	$('#telephoneC').val('');
-	$('#idDragonC').val('');
-	$("#sedeC").val('default');
-	$("#sedeC").selectpicker("refresh");
-	$('#fechasFiltroC').addClass('hide');
-	$('#beginDateC').val('01/01/2022');
-	$('#endDateC').val('12/31/2022');
-	$('#clientes_btns').removeClass('col-md-12 col-lg-12');
-	$('#clientes_btns').addClass('col-md-4 col-lg-4');
-	$('#insideC').addClass('col-md-12 col-lg-12');
-	$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
-	// tabla_valores_cliente.clear();
-	tabla_valores_cliente.clear().draw();
-	tabla_valores_cliente.destroy();
 }
