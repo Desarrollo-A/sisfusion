@@ -202,9 +202,11 @@
 
     public function getResidencialDis() {
         $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) as descripcion 
-                                FROM [residenciales] res INNER JOIN [condominios] con ON con.idResidencial = res.idResidencial 
-                                INNER JOIN [lotes] lot ON lot.idCondominio = con.idCondominio WHERE lot.idStatusLote = 1 
-                                GROUP BY res.idResidencial,res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) ORDER BY res.idResidencial");
+        FROM [residenciales] res 
+        INNER JOIN [condominios] con ON con.idResidencial = res.idResidencial 
+        INNER JOIN [lotes] lot ON lot.idCondominio = con.idCondominio 
+        --WHERE lot.idStatusLote = 1 
+        GROUP BY res.idResidencial,res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) ORDER BY res.idResidencial");
         return $query->result_array();
     }
 
