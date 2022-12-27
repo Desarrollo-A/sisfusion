@@ -2996,6 +2996,8 @@ public function getStatusMktdPreventa(){
         $sede = $this->input->post("sede");
         $id_dragon = $this->input->post("id_dragon");
         $tipo_busqueda = $this->input->post("TB");
+        $fecha_init = $this->input->post("fecha_init");
+        $fecha_end = $this->input->post("fecha_end");
 
         $data_search = array(
             'idLote' => $idLote,
@@ -3004,9 +3006,10 @@ public function getStatusMktdPreventa(){
             'telefono' => $telephone,
             'sede' => $sede,
             'id_dragon' => $id_dragon,
-            'tipo_busqueda' => $tipo_busqueda
+            'tipo_busqueda' => $tipo_busqueda,
+            'fecha_init' => $fecha_init,
+            'fecha_end' => $fecha_end
         );
-
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
         print_r(json_encode($result, JSON_NUMERIC_CHECK));
