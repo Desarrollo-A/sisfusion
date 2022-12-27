@@ -2075,19 +2075,17 @@ $(document).on("click", ".uniAdd", function () {
     pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
-    console.log(' MontoDescontarCerti' + MontoDescontarCerti);
-    console.log('descuento' + descuento);
+
     if (descuento == total){
         banderaLiquidados = true;
-        console.log('ESSSSSS igual ');
+
     }else{
-        console.log('no es igual ');
+
         banderaLiquidados = false;
     }
     descuento = Math.round(descuento);
     pago_mensual = Math.round(pago_mensual);
-    console.log(' pago_mensual '+ pago_mensual);
-    console.log('descuento '+ descuento);
+
     cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
     console.log('descuento entre pago_mensual '+ cantidad_de_pagos);
 
@@ -2103,11 +2101,7 @@ $(document).on("click", ".uniAdd", function () {
     descuento = $(this).attr("data-descuento");
     pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
-    console.log('pago mensual: = '+pago_mensual );
-    console.log('id_descuento: = '+id_descuento );
-    console.log('id_user: = '+id_user );
-    console.log('descuento: = '+descuento );
-    console.log('pendiente: = '+pendiente );
+
     valorPendiente = pendiente;
     console.log('total: = '+total );
 
@@ -2365,18 +2359,18 @@ $(document).on('input', '.MontoDescontarCerti', function(){
         // alert('refromazado');
     //     console.log('3111111111111111111111111111111111');
         mensualidadesC = document.getElementById("mensualidadesC").value;
-        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
         loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
         pagos  = document.getElementById("mensualidadesC").value ;
         console.log("loQueSedebe" + loQueSedebe );
         banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
         if(banderaLiquidado){
             loQueSedebe = loQueSedebe - pagado;
-            console.log("Pagado" + pagado );
             NuevasMensualidades = loQueSedebe / pagos;
+            console.log("Pagado" + pagado );
+            console.log("Pagado" + pagado );
         }else{
             loQueSedebe = loQueSedebe - pagado;
-            console.log("Pagado" + pagado );
             NuevasMensualidades = loQueSedebe / pagos;
         } 
         document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
@@ -2407,7 +2401,15 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     // });
 
 $(document).on("click", ".updateDescuentoCertificado", function () {
-
+    let tipoDescuento = $('#tipo_descuento').val();
+    console.log(tipoDescuento);
+    console.log('tipo de descuento:');
+    if(tipoDescuento == 3){
+        // frutas = ["Manzana", "Banana"]
+        estatus = 1;
+    }else{
+        estatus = '';
+    }
     mensualidadesC  = document.getElementById("mensualidadesC").value;
     id_descuento     = document.getElementById("idDescuento").value;
     monto           = document.getElementById("MontoDescontarCerti").value;
@@ -2417,14 +2419,15 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     console.log("estatus_certificacion"+ estatus_certificacion);
     console.log("id_descuento"+id_descuento);
     console.log("monto"+monto);
-    console.log("pago_individual"+pago_individual);
     // alert('mesaje de guardar el estatu y la informació mad');
-            $.ajax({
+    console.log("pago_individual"+pago_individual);
+        $.ajax({
         url : 'descuentoUpdateCertificaciones',
         type : 'POST',
         dataType: "json",
         data: {
         // "pagos_activos"     : pagos_activos,
+        "estatus" : estatus,
         "estatus_certificacion" : estatus_certificacion,
         "id_descuento"      : id_descuento,
         "monto"             : monto,
@@ -2435,8 +2438,8 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
            
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
             document.getElementById('updateDescuento').disabled = false;
-        
             $('#tabla-general').DataTable().ajax.reload(null, false );
+            
             // toastr[response.response_type](response.message);
             $('#modalUni').modal('toggle');
         },              
