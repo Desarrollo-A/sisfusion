@@ -110,9 +110,9 @@ $('#searchButtonC').click(()=>{
 	}
 });
 
-
+var tabla_valores_prospectos;
 function fillTable(data_search) {
-	tabla_valores_cliente = $("#tabla_prospectos").DataTable({
+	tabla_valores_prospectos = $("#tabla_prospectos").DataTable({
 		width: 'auto',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		buttons: [
@@ -175,7 +175,7 @@ function fillTable(data_search) {
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
-		processing: true,
+		processing: false,
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
@@ -415,7 +415,7 @@ $("#tabla_prospectos").ready(function () {
 		// }
 	});
 });
-
+var tabla_valores_cliente;
 function fillTableClientes(data_search) {
 	console.log("sede fillTable", data_search['sede']);
 
@@ -491,7 +491,7 @@ function fillTableClientes(data_search) {
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
-		processing: true,
+		processing: false,
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
@@ -781,15 +781,73 @@ function changeSede(){
 	let sedes = $('#sede').val();
 	if(sedes.length>0){
 		$('#fechasFiltro').removeClass('hide');
+		$('#clientes_btnsPr').removeClass('col-md-4 col-lg-4');
+		$('#clientes_btnsPr').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-12 col-lg-12');
+		$('#inside').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
 	}else{
 		$('#fechasFiltro').addClass('hide');
+		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
+		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
+		$('#inside').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
 	}
 }
 function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
+		$('#clientes_btns').removeClass('col-md-4 col-lg-4');
+		$('#clientes_btns').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-12 col-lg-12');
+		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
 	}else{
 		$('#fechasFiltroC').addClass('hide');
+		$('#clientes_btns').addClass('col-md-4 col-lg-4');
+		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
+		$('#insideC').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
 	}
+}
+function cleanFilters(){
+	$('#name').val('');
+	$('#mail').val('');
+	$('#telephone').val('');
+	$('#idDragon').val('');
+	$("#sede").val('default');
+	$("#sede").selectpicker("refresh");
+	$('#fechasFiltro').addClass('hide');
+	$('#beginDate').val('01/01/2022');
+	$('#endDate').val('12/31/2022');
+	$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
+	$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
+	$('#inside').addClass('col-md-12 col-lg-12');
+	$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	// $("#tabla_prospectos").DataTable().clear().draw();
+	tabla_valores_prospectos.clear().draw();
+	tabla_valores_prospectos.destroy();
+}
+
+function cleanFiltersC(){
+	// clientes_btns
+	// insideC
+
+
+	$('#idLotteC').val('');
+	$('#nameC').val('');
+	$('#mailC').val('');
+	$('#telephoneC').val('');
+	$('#idDragonC').val('');
+	$("#sedeC").val('default');
+	$("#sedeC").selectpicker("refresh");
+	$('#fechasFiltroC').addClass('hide');
+	$('#beginDateC').val('01/01/2022');
+	$('#endDateC').val('12/31/2022');
+	$('#clientes_btns').removeClass('col-md-12 col-lg-12');
+	$('#clientes_btns').addClass('col-md-4 col-lg-4');
+	$('#insideC').addClass('col-md-12 col-lg-12');
+	$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	// tabla_valores_cliente.clear();
+	tabla_valores_cliente.clear().draw();
+	tabla_valores_cliente.destroy();
 }
