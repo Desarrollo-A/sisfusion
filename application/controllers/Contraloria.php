@@ -2,7 +2,7 @@
 class Contraloria extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		$this->load->model((array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model'));
+		$this->load->model((array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model')));
 		$this->load->library(array('session','form_validation', 'get_menu', 'phpmailer_lib', 'formatter'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
