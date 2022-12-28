@@ -163,8 +163,8 @@ class Reporte extends CI_Controller {
         if (isset($_POST) && !empty($_POST)) {
             $type = $this->input->post("type");
             /*Filtros grales */
-            $beginDate = date("Y-m-d", strtotime($this->input->post("filters")[0]["begin"]));
-            $endDate = date("Y-m-d", strtotime($this->input->post("filters")[0]["end"]));
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
             $typeSale = $this->input->post("filters")[0]["typeSale"];
             $typeLote = $this->input->post("filters")[0]["typeLote"];
             $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"]; 
