@@ -4235,10 +4235,28 @@ function getStatusMktdPreventa(){
             }elseif($flag_where>1){
                 $condicion_dinamica = ' OR ';
             }
-            $condition_sedes = $condicion_dinamica." $prefix.id_sede IN(".$data_search['sede'].")";
+
+            if($data_search['tipo_busqueda']==1){
+                $condition_sedes = $condicion_dinamica." $prefix.fechaApartado BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
+            }elseif($data_search['tipo_busqueda']==2){
+                $condition_sedes = $condicion_dinamica." $prefix.fecha_creacion BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
+            }
         }else {
             $condition_sedes = "";
         }
+
+        if(!empty($data_search['id_dragon'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_iddragon = $condicion_dinamica." pr.id_dragon=".$data_search['id_dragon'];
+        }else{
+            $condition_iddragon = "";
+        }
+
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
@@ -4257,6 +4275,7 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_sedes
+                $condition_iddragon
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
@@ -4274,6 +4293,8 @@ function getStatusMktdPreventa(){
                 $condition_nombre
                 $condition_idlote
                 $condition_correo
+                $condition_telefono
+                $condition_iddragon
                 $condition_sedes");
                 break;
         }

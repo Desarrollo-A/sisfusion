@@ -40,7 +40,7 @@
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" id="header_modal" name="header_modal">
                         <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
                     </div>
                     <div class="modal-body" >
@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6"> 
                                 <div class="form-group">
-                                <label class="label">Descripcion:</label> 
+                                    <label class="label">Descripcion:</label> 
                                     <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
                                     Persona que obtuvo una calificación favorable y con ello la certificación
                                     </span>        

@@ -1917,7 +1917,8 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function servicioPostventa($referencia, $empresa){
+    public s($referencia, $empresa){
+
         //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
         $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
@@ -1978,7 +1979,6 @@ class Postventa extends CI_Controller
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
         );
-
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
