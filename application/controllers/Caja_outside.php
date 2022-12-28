@@ -517,7 +517,7 @@ class Caja_outside extends CI_Controller
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
-            'id_regional_2' => $data['lider'][0]['id_regional_2'],
+            // 'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida
         );
         /*Inserta cliente*/
@@ -1897,7 +1897,7 @@ class Caja_outside extends CI_Controller
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
+                        // $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
                         $fechaAccion = date("Y-m-d H:i:s");
