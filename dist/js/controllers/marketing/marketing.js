@@ -80,7 +80,6 @@ $('#searchButtonC').click(()=>{
 	let fecha_init = $('#beginDateC').val();
 	let fecha_end = $('#endDateC').val();
 
-	console.log('sedeII:', JSON.stringify(sede));
 
 	idLote = (idLote!='') ? idLote : '';
 	name = (name!='') ? name : '';
@@ -417,9 +416,6 @@ $("#tabla_prospectos").ready(function () {
 });
 var tabla_valores_cliente;
 function fillTableClientes(data_search) {
-	console.log("sede fillTable", data_search['sede']);
-
-	console.log('data_search:', data_search);
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
 		width: 'auto',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
