@@ -11,8 +11,28 @@ $(document).ready(function () {
 		$("#sede").selectpicker('refresh');
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
+	sp.initFormExtendedDatetimepickers();
+	$('.datepicker').datetimepicker({locale: 'es'});
 });
-
+sp = { //  SELECT PICKER
+	initFormExtendedDatetimepickers: function () {
+		$('.datepicker').datetimepicker({
+			format: 'MM/DD/YYYY',
+			icons: {
+				time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+				up: "fa fa-chevron-up",
+				down: "fa fa-chevron-down",
+				previous: 'fa fa-chevron-left',
+				next: 'fa fa-chevron-right',
+				today: 'fa fa-screenshot',
+				clear: 'fa fa-trash',
+				close: 'fa fa-remove',
+				inline: true
+			}
+		});
+	}
+}
 
 $('#searchButton').click(()=>{
 
@@ -20,26 +40,29 @@ $('#searchButton').click(()=>{
 	let mail = $('#mail').val();
 	let telephone = $('#telephone').val();
 	let sede = $('#sede').val();
+	let id_dragon = $('#idDragon').val();
+	let fecha_init = $('#beginDate').val();
+	let fecha_end = $('#endDate').val();
 
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
+	id_dragon = (id_dragon!='') ? id_dragon: '';
+	fecha_init = (fecha_init!='') ? fecha_init : '';
+	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-	// console.log('sedeII:', Object.assign({}, sede));
-	// var data = new FormData();
-	// data.append("idLote", idLote);
-	// data.append("name", name);
-	// data.append("mail", mail);
-	// data.append("telephone", telephone);
-	// data.append("sede", sede);
 
-	if(name!='' || mail!='' || telephone!='' || sede!=''){
+	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
+		array_data['idLote'] = '';
 		array_data['name'] = name;
 		array_data['mail'] = mail;
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
+		array_data['id_dragon'] = id_dragon;
+		array_data['fecha_init'] = fecha_init;
+		array_data['fecha_end'] = fecha_end;
 		fillTable(array_data);
 	}else{
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
@@ -53,73 +76,42 @@ $('#searchButtonC').click(()=>{
 	let mail = $('#mailC').val();
 	let telephone = $('#telephoneC').val();
 	let sede = $('#sedeC').val();
+	let id_dragon = $('#idDragonC').val();
+	let fecha_init = $('#beginDateC').val();
+	let fecha_end = $('#endDateC').val();
 
-	console.log('sedeII:', JSON.stringify(sede));
 
 	idLote = (idLote!='') ? idLote : '';
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
+	id_dragon = (id_dragon!='') ? id_dragon : '';
+	fecha_init = (fecha_init!='') ? fecha_init : '';
+	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-	// console.log('sedeII:', Object.assign({}, sede));
-	// var data = new FormData();
-	// data.append("idLote", idLote);
-	// data.append("name", name);
-	// data.append("mail", mail);
-	// data.append("telephone", telephone);
-	// data.append("sede", sede);
 
-	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!=''){
+	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
 		let array_data = [];
 		array_data['idLote'] = idLote;
 		array_data['name'] = name;
 		array_data['mail'] = mail;
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
+		array_data['id_dragon'] = id_dragon;
+		array_data['fecha_init'] = fecha_init;
+		array_data['fecha_end'] = fecha_end;
+
+
 		fillTableClientes(array_data);
-	}else{
+	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
 	}
-
-
-	// $.ajax({
-	//     type: 'POST',
-	//    url: '<?//=base_url()?>//index.php/Clientes/searchData',
-	//     data: data,
-	//     contentType: false,
-	//     cache: false,
-	//     processData: false,
-	//     dataType: "json",
-	//     beforeSend: function () {
-	//
-	//     },
-	//     success: function (data) {
-	//         if (data == 1) {
-	//             $('#preguntaDeleteMktd').modal("hide");
-	//             $('#checkEvidencia').DataTable().ajax.reload();
-	//             $('#sol_aut').DataTable().ajax.reload();
-	//             alerts.showNotification('top', 'right', 'Se ha eliminado MKTD de esta venta de manera exitosa.', 'success');
-	//         } else {
-	//             alerts.showNotification('top', 'right', 'Oops, algo salió mal, inténtalo de nuevo.', 'danger');
-	//         }
-	//     },
-	//     error: function () {
-	//         alerts.showNotification('top', 'right', 'Oops, algo salió mal, inténtalo de nuevo.', 'danger');
-	//     }
-	// });
-
-
 });
 
-
+var tabla_valores_prospectos;
 function fillTable(data_search) {
-	// var data = new FormData();
-	// data.append("idLote", data_search['idLote']);
-	// data.append("name", data_search['name']);
-	// data.append("mail", data_search['mail']);
-	// data.append("telephone", data_search['telephone']);
-	tabla_valores_cliente = $("#tabla_prospectos").DataTable({
+	tabla_valores_prospectos = $("#tabla_prospectos").DataTable({
 		width: 'auto',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		buttons: [
@@ -130,7 +122,7 @@ function fillTable(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Lista de prospectos',
 				exportOptions: {
-					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
@@ -159,9 +151,12 @@ function fillTable(data_search) {
 									return 'FECHA CREACIÓN';
 									break;
 								case 8:
-									return 'ID DRAGON';
+									return 'ID CRM';
 									break;
 								case 9:
+									return 'ID DRAGON';
+									break;
+								case 10:
 									return 'SEDE';
 									break;
 							}
@@ -179,7 +174,7 @@ function fillTable(data_search) {
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
-		processing: true,
+		processing: false,
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
@@ -190,24 +185,13 @@ function fillTable(data_search) {
 		fixedColumns: true,
 		destroy: true,
 		columns: [
-			// {
-			//     "width": "3%",
-			//     "className": 'details-control',
-			//     "orderable": false,
-			//     "data" : null,
-			//     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-			// },
-
-
 			{
-				"width": "5%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + d.nombre_prospecto + '</p>';
 				}
 			},
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					let tel1 = d.telefono;
 					let tel2 = d.telefono_2;
 					let telefono;
@@ -217,68 +201,92 @@ function fillTable(data_search) {
 						telefono = tel1;
 					}else if(tel1==null || tel2==null){
 						telefono = '--'
+					}else{
+						telefono = 'Sin teléfono';
 					}
 					return '<p class="m-0">' + telefono + '</p>';
 				}
 			},
-
 			{
-				"width": "12%",
-				"data": function (d) {
-					return '<p class="m-0">' + d.correo + '</p>';
+				data: function (d) {
+					let correo = '';
+					if(d.correo == undefined || d.correo == '' || d.correo == null){
+						correo = 'Sin correo';
+					}else{
+						correo = d.correo;
+					}
+					return '<p class="m-0">' + correo+ '</p>';
 				}
 			},
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">'+ d.lugar_prospeccion + '</p>';
+				data: function (d) {
+					let lugar_prospeccion = '';
+					if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
+						lugar_prospeccion = '--';
+					}else{
+						lugar_prospeccion = d.lugar_prospeccion;
+					}
+					return '<p class="m-0">'+ lugar_prospeccion + '</p>';
 				}
 			},
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">' + d.nombre_asesor + '</p>';
+				data: function (d) {
+					let asesor;
+					if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
+						asesor = 'Sin asesor';
+					}else{
+						asesor = d.nombre_asesor;
+					}
+					return '<p class="m-0">' + asesor+ '</p>';
 				}
 			},
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">' + d.nombre_coordinador + '</p>';
+				data: function (d) {
+					let coordinador;
+					if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
+						coordinador = 'Sin coordinador';
+					}else{
+						coordinador = d.nombre_coordinador;
+					}
+					return '<p class="m-0">' + coordinador + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">' + d.nombre_gerente+ '</p>';
+				data: function (d) {
+					let gerente;
+					if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
+						gerente = 'Sin gerente';
+					}else{
+						gerente = d.nombre_gerente;
+					}
+					return '<p class="m-0">' + gerente + '</p>';
 				}
 			},
-
 			{
-				"width": "8%",
-				"data": function (d) {
-					//myFunctions.convertDateYMDHMS(d.fechaEnganche)
+				data: function (d) {
 					return '<p class="m-0">' +  myFunctions.convertDateYMDHMS(d.fecha_creacion)  + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
-					let id_dragon = d.id_dragon;
-					let validateData;
-					if(id_dragon==0){
-						validateData = 'No disponible';
-					}
-					return '<p class="m-0">' + validateData + '</p>';
+				data: function (d) {
+					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.id_prospecto}</span>`;
 				}
 			},
-
 			{
-				"width": "8%",
-				"data": function (d) {
-
-					return '<p class="m-0">' +   d.sede_nombre  + '</p>';
+				data: function (d) {
+					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
+					return `<span class="label" style="background: #AED6F1; color: #1B4F72">${validateData}</span>`;
+				}
+			},
+			{
+				data: function (d) {
+					let sede;
+					if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
+						sede = 'Sin sede';
+					}else{
+						sede = d.sede_nombre;
+					}
+					return '<p class="m-0">' +   sede + '</p>';
 				}
 			}
 		],
@@ -293,17 +301,21 @@ function fillTable(data_search) {
 			type: 'POST',
 			url: url2+'Clientes/searchData',
 			data: {
-				"idLote": '',
+				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
 				"mail" :  data_search['mail'],
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
+				"id_dragon" : data_search['id_dragon'],
+				"fecha_init" : data_search['fecha_init'],
+				"fecha_end" : data_search['fecha_end'],
 				"TB": 2
 			},
 			cache: false
 		},
-		"order": [[1, 'asc']]
+		order: [[1, 'asc']]
 	});
+
 	$('#tabla_prospectos tbody').on('click', 'td.details-control', function () {
 		var tr = $(this).closest('tr');
 		var row = tabla_valores_cliente.row(tr);
@@ -379,7 +391,7 @@ function fillTable(data_search) {
 
 $("#tabla_prospectos").ready(function () {
 	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 11) {
+		// if (i != 0 && i != 11) {
 			var title = $(this).text();
 			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
 			$('input', this).on('keyup change', function () {
@@ -390,28 +402,20 @@ $("#tabla_prospectos").ready(function () {
 						.draw();
 				}
 			});
-		}
+		// }
 	});
 
 	let titulos = [];
 	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 13) {
+		// if (i != 0 && i != 14) {
 			var title = $(this).text();
 
 			titulos.push(title);
-		}
+		// }
 	});
 });
-
+var tabla_valores_cliente;
 function fillTableClientes(data_search) {
-	// var data = new FormData();
-	// data.append("idLote", data_search['idLote']);
-	// data.append("name", data_search['name']);
-	// data.append("mail", data_search['mail']);
-	// data.append("telephone", data_search['telephone']);
-	console.log("sede fillTable", data_search['sede']);
-
-	console.log('data_search:', data_search);
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
 		width: 'auto',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -423,7 +427,7 @@ function fillTableClientes(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Registro de clientes',
 				exportOptions: {
-					columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
 					format: {
 						header: function (d, columnIdx) {
 							switch (columnIdx) {
@@ -431,36 +435,42 @@ function fillTableClientes(data_search) {
 									return 'ID LOTE';
 									break;
 								case 1:
-									return 'ESTATUS LOTE';
-									break;
-								case 2:
 									return 'PROYECTO';
-								case 3:
+								case 2:
 									return 'CONDOMINIO';
 									break;
-								case 4:
+								case 3:
 									return 'LOTE';
 									break;
-								case 5:
+								case 4:
 									return 'NOMBRE';
 									break;
-								case 6:
+								case 5:
 									return 'NO. RECIBO';
 									break;
-								case 7:
+								case 6:
 									return 'REFERENCIA';
 									break;
-								case 8:
+								case 7:
 									return 'FECHA APARTADO';
 									break;
-								case 9:
+								case 8:
 									return 'ENGANCHE';
 									break;
-								case 10:
+								case 9:
 									return 'FECHA ENGANCHE';
 									break;
-								case 11:
+								case 10:
 									return 'FECHA CREACIÓN PROSPECTO';
+									break;
+								case 11:
+									return 'ID CRM';
+									break;
+								case 12:
+									return 'ID DRAGON';
+									break;
+								case 13:
+									return 'ESTATUS LOTE';
 									break;
 							}
 						}
@@ -477,7 +487,7 @@ function fillTableClientes(data_search) {
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
-		processing: true,
+		processing: false,
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
@@ -488,52 +498,39 @@ function fillTableClientes(data_search) {
 		fixedColumns: true,
 		destroy: true,
 		columns: [
-			// {
-			//     "width": "3%",
-			//     "className": 'details-control',
-			//     "orderable": false,
-			//     "data" : null,
-			//     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-			// },
-
-
 			{
-				"width": "5%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + d.idLote + '</p>';
 				}
 			},
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + d.nombreProyecto + '</p>';
 				}
 			},
-
 			{
-				"width": "12%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + d.nombreCondominio + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + d.nombreLote + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">'+ d.nombreCliente + '</p>';
+				data: function (d) {
+					let cliente ;
+					if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
+						cliente = 'Sin cliente';
+					}else{
+						cliente = d.nombreCliente;
+					}
+					return '<p class="m-0">'+ cliente + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					let numero_recibo;
 					if(d.noRecibo == null)
 						numero_recibo = '--';
@@ -542,100 +539,61 @@ function fillTableClientes(data_search) {
 					return '<p class="m-0">' + numero_recibo + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
-					return '<p class="m-0">' + d.referencia + '</p>';
+				data: function (d) {
+					let referencia;
+					if(d.referencia==undefined || d.referencia==null || d.referencia==''){
+						referencia = 'Sin referencia';
+					}else{
+						referencia = d.referencia;
+					}
+					return '<p class="m-0">' + referencia + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaApartado)+ '</p>';
 				}
 			},
-
 			{
-				"width": "8%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">$' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
 				}
 			},
-
 			{
-				"width": "10%",
-				"data": function (d) {
+				data: function (d) {
 					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaEnganche) + '</p>';
 				}
 			},
-
 			{
-				"width": "8%",
-				"data": function (d) {
 
+				data: function (d) {
 					return '<p class="m-0">' +   myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  + '</p>';
 				}
 			},
 			{
-				"width": "7%",
-				"data": function (d) {
-					let backgrColor = '';
-					switch (d.idStatusContratacion) {
-						case 1:
-							backgrColor = "#103F75";
-							break;
-						case 2:
-							backgrColor = "#765FA4";
-							break;
-						case 5:
-							backgrColor = "#D17FC5";
-							break;
-						case 6:
-							backgrColor = "#006A9D";
-							break;
-						case 7:
-							backgrColor = "#0095A9";
-							break;
-						case 8:
-							backgrColor = "#00723F";
-							break;
-						case 9 :
-							backgrColor = "#85DF7F";
-							break;
-						case 10 :
-							backgrColor = "#D7A31A";
-							break;
-						case 11 :
-							backgrColor = "#414656";
-							break;
-						case 13 :
-							backgrColor = "#877555";
-							break;
-						case 14 :
-							backgrColor = "#A75565";
-							break;
-						case 15 :
-							backgrColor = "#00C6BD";
-							break;
-						default:
-							//Declaraciones ejecutadas cuando ninguno de los valores coincide con el valor de la expresión
-							break;
-					}
-					let lblStatusContratacion = '<label class="label label-info" style="color: white;font-size: 0.8em;background-color:'+backgrColor+'">' + d.nombreStatusContratacion + '</label>';
-					return '<p class="m-0">' + lblStatusContratacion + '</p>';
+				data: function (d) {
+					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.id_prospecto}</span>`;
 				}
-			}
-			,
+			},
 			{
-				"width": "8%",
-				"data": function (d) {
+				data: function (d) {
+					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
+					return `<span class="label" style="background: #AED6F1; color: #1B4F72">${validateData}</span>`;
+				}
+			},
+			{
+				data: function (d) {
+					return `<span class="label" style="background: #D2B4DE; color: #4A235A">${d.nombreStatusContratacion}</span>`;
+				}
+			},
+			{
+				data: function (d) {
 					return '<center><button class="btn-data btn-deepGray cop" title= "Ventas compartidas" data-idcliente="' + d.id_cliente + '"><i class="material-icons">people</i></button></center>';
 				}
 			}
-		],
 
+		],
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -644,19 +602,23 @@ function fillTableClientes(data_search) {
 		}],
 		ajax: {
 			type: 'POST',
-			url: url2+'Clientes/searchData',
+			url: url2 + 'Clientes/searchData',
 			data: {
 				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
 				"mail" :  data_search['mail'],
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
+				"id_dragon" : data_search['id_dragon'],
+				"fecha_init" : data_search['fecha_init'],
+				"fecha_end" : data_search['fecha_end'],
 				"TB": 1
 			},
 			cache: false
 		},
-		"order": [[1, 'asc']]
+		order: [[1, 'asc']]
 	});
+
 	$('#tabla_clientes tbody').on('click', 'td.details-control', function () {
 		var tr = $(this).closest('tr');
 		var row = tabla_valores_cliente.row(tr);
@@ -731,7 +693,7 @@ function fillTableClientes(data_search) {
 }
 $("#tabla_clientes").ready(function () {
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 11) {
+		if ( i != 14) {
 			var title = $(this).text();
 			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
 			$('input', this).on('keyup change', function () {
@@ -747,7 +709,7 @@ $("#tabla_clientes").ready(function () {
 
 	let titulos = [];
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if (i != 0 && i != 13) {
+		if ( i != 13) {
 			var title = $(this).text();
 
 			titulos.push(title);
@@ -763,14 +725,10 @@ $(document).on('click', '.cop', function (e) {
 	e.preventDefault();
 	var $itself = $(this);
 	var id_cliente = $itself.attr('data-idcliente');
-
 	id_cliente_global = id_cliente;
-	// tableHistorial.ajax.reload();
-
-
 	tableHistorial = $('#verDet').DataTable({
 		responsive: true,
-		"autoWidth": 'true',
+		autoWidth: 'true',
 		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
 		buttons: [
 			{
@@ -781,37 +739,122 @@ $(document).on('click', '.cop', function (e) {
 				title:'Reporte ventas compartidas',
 			}
 		],
-		"scrollX": true,
-		"pageLength": 10,
+		scrollX: true,
+		pageLength: 10,
 		language: {
-			url: "<?=base_url()?>/static/spanishLoader_v2.json",
+			url: url+"static/spanishLoader_v2.json",
 			paginate: {
 				previous: "<i class='fa fa-angle-left'>",
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
 		columns: [
-			{"data": "nombreGerente"},
-			{"data": "nombreCoordinador"},
-			{"data": "nombreAsesor"}
+			{data: "nombreGerente"},
+			{data: "nombreCoordinador"},
+			{data: "nombreAsesor"}
 		],
-		"processing": true,
-		"destroy": true,
-		"bAutoWidth": false,
-		"bLengthChange": false,
-		"bInfo": true,
-		"ordering": false,
-		"fixedColumns": true,
-		"ajax": {
-			"url": url2+"registroCliente/getcop/",
-			"type": "POST",
+		processing: true,
+		destroy: true,
+		bAutoWidth: false,
+		bLengthChange: false,
+		bInfo: true,
+		ordering: false,
+		fixedColumns: true,
+		ajax: {
+			url: url2+"registroCliente/getcop/",
+			type: "POST",
 			cache: false,
-			"data": function (d) {
+			data: function (d) {
 				d.id_cliente = id_cliente_global;
 			}
 		},
 	});
+
 	$('#verDetalles').modal('show');
 });
 
+function changeSede(){
+	let sedes = $('#sede').val();
+	if(sedes.length>0){
+		$('#fechasFiltro').removeClass('hide');
+		$('#clientes_btnsPr').removeClass('col-md-4 col-lg-4');
+		$('#clientes_btnsPr').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-12 col-lg-12');
+		$('#inside').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	}else{
+		$('#fechasFiltro').addClass('hide');
+		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
+		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
+		$('#inside').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	}
+}
+function changeSedeC(){
+	let sedes = $('#sedeC').val();
+	if(sedes.length>0){
+		$('#fechasFiltroC').removeClass('hide');
+		$('#clientes_btns').removeClass('col-md-4 col-lg-4');
+		$('#clientes_btns').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-12 col-lg-12');
+		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	}else{
+		$('#fechasFiltroC').addClass('hide');
+		$('#clientes_btns').addClass('col-md-4 col-lg-4');
+		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
+		$('#insideC').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+	}
+}
+function cleanFilters(){
 
+	if($('#name').val()=='' && $('#mail').val()=='' && $('#telephone').val()=='' && $('#idDragon').val()=='' && $("#sede").val().length<=0){
+		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
+	}else{
+		$('#name').val('');
+		$('#mail').val('');
+		$('#telephone').val('');
+		$('#idDragon').val('');
+		$("#sede").val('default');
+		$("#sede").selectpicker("refresh");
+		$('#fechasFiltro').addClass('hide');
+		$('#beginDate').val('01/01/2022');
+		$('#endDate').val('12/31/2022');
+		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
+		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
+		$('#inside').addClass('col-md-12 col-lg-12');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		// $("#tabla_prospectos").DataTable().clear().draw();
+		tabla_valores_prospectos.clear().draw();
+		tabla_valores_prospectos.destroy();
+	}
+
+
+}
+
+function cleanFiltersC(){
+	// clientes_btns
+	// insideC
+	if($('#idLotteC').val()=='' && $('#nameC').val()=='' && $('#mailC').val()=='' && $('#telephoneC').val()=='' && $("#sedeC").val().length<=0){
+		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
+	}else{
+		$('#idLotteC').val('');
+		$('#nameC').val('');
+		$('#mailC').val('');
+		$('#telephoneC').val('');
+		$('#idDragonC').val('');
+		$("#sedeC").val('default');
+		$("#sedeC").selectpicker("refresh");
+		$('#fechasFiltroC').addClass('hide');
+		$('#beginDateC').val('01/01/2022');
+		$('#endDateC').val('12/31/2022');
+		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
+		$('#clientes_btns').addClass('col-md-4 col-lg-4');
+		$('#insideC').addClass('col-md-12 col-lg-12');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		// tabla_valores_cliente.clear();
+		tabla_valores_cliente.clear().draw();
+		tabla_valores_cliente.destroy();
+	}
+
+
+}

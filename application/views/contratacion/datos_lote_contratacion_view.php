@@ -32,6 +32,7 @@
 			case "47": // DIRECCIÓN FINANZAS
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
+			case "54": // MKTD POPEA
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;

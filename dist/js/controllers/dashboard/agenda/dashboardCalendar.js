@@ -2,10 +2,11 @@ var calendar;
 var appointment = '';
 var exists = 1;
 var eventsTable;
-$(document).ready(function() {
-  arrayEvents = [];
+var arrayEvents = [];
+
+function readyAgenda(){
   getUsersAndEvents(userType, idUser, true);    
-});
+}
 
 $('[data-toggle="tooltip"]').tooltip();
 
@@ -13,7 +14,7 @@ var calendarEl = document.getElementById('calendar');
 calendar = new FullCalendar.Calendar(calendarEl, {   
   longPressDelay: 0,
   headerToolbar: {
-    start: 'prev next today appointments googleSignIn googleLogout',
+    start: 'prev next today appointments googleBtn',
     center: 'title',
     end:   'timeGridDay timeGridWeek dayGridMonth',
   },
@@ -25,18 +26,6 @@ calendar = new FullCalendar.Calendar(calendarEl, {
         createTable();
       }
     },
-    googleSignIn: {
-      click: function() {
-        gapi.auth2.getAuthInstance().signIn();
-        listUpcomingEvents();
-      }
-    },
-    googleLogout: {
-      click: function() {
-        gapi.auth2.getAuthInstance().signOut();
-        window.location.reload();
-      }
-    }
   },
   timeZone: 'none',
   locale: 'es',
@@ -71,10 +60,94 @@ calendar = new FullCalendar.Calendar(calendarEl, {
     setDatesToModalInsert(info);
   }
 });
-calendar.render();
-// customizeIcon();
 
-updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+calendar.render();
+googleBtnEvaluation();
+
+function listUpcomingEvents() {
+  for(let i = 0; i < googleEvents.length; i++){
+    //Verificamos que no sea un evento insertado por el CRM, para dar la libertad de editarlo
+    var isFullcalendar = doesObjectHaveNestedKey( googleEvents[i], 'setByFullCalendar' );
+    if(!isFullcalendar){
+      eventTemplateGoogle(arrayEvents, googleEvents[i]);
+    }
+  }
+  
+  if(typeof(calendar) != 'undefined'){
+    calendar.addEventSource({
+      title: 'sourceGoogle',
+      display:'block',
+      events: arrayEvents
+    }); 
+  }
+
+  calendar.refetchEvents();
+}
+
+/* Search for existence of key in obj */
+function doesObjectHaveNestedKey(obj, key) {
+  if(obj === null || obj === undefined) {
+    return false;
+  }
+  
+  for(const k of Object.keys(obj)) {
+    if(k === key) {
+      /* Search keys of obj for match and return true if match found */
+      return true
+    }
+    else {
+      const val = obj[k];
+      /* If k not a match, try to search it's value.*/
+      if(typeof val === 'object') {
+        /* Recursivly search for nested key match in nested val */
+        if(doesObjectHaveNestedKey(val, key) === true) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function eventTemplateGoogle(arrayEvents, googleAppointments){
+  const { summary, htmlLink } = googleAppointments;
+  let start, end;
+
+  if( googleAppointments.start.hasOwnProperty('date') )
+    start = ( googleAppointments.start.date != null ) ? googleAppointments.start.date : googleAppointments.start.dateTime;
+  else
+    start = googleAppointments.start.dateTime;
+  
+  if(googleAppointments.end.hasOwnProperty('date') ){
+    end = ( googleAppointments.end.date != null ) ? googleAppointments.end.date : googleAppointments.end.dateTime;
+  }
+  else{
+    end = googleAppointments.end.dateTime
+  }
+
+  arrayEvents.push({
+    className: 'googleEvents',
+    title: summary,
+    start: start,
+    end: end,
+    url: htmlLink,
+    backgroundColor:'transparent',
+    borderColor: '#999',
+    textColor: '#999'
+  });
+}
+
+
+function googleBtnEvaluation(){
+  //Se es diferente de '' significa que se autorizó autentificación y pintaremos estos eventos.
+  if (googleCode != ''){
+    $(".fc-googleBtn-button").append(googleBtn);
+    listUpcomingEvents();
+  }
+  else{
+    $(".fc-googleBtn-button").append(googleBtn);
+  }
+}
 
 $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
   var len = data.length;
@@ -145,7 +218,7 @@ $("#dateEnd2").on('change', function(e){
 });
 
 document.querySelector('#insert_appointment_form').addEventListener('submit',async e =>  {
-  e.preventDefault();
+  e.preventDefault(); 
   const dataF = Object.fromEntries(
     new FormData(e.target)
   )
@@ -326,43 +399,6 @@ function cleanModal(){
 $('#feedbackModal').on('hidden.bs.modal', function () {
   $(this).find('form').trigger('reset');
 });
-
-function getAppointmentSidebarCalendar(idAgenda){
-  $.ajax({
-    type: "POST",
-    url: `${base_url}Calendar/getAppointmentData`,
-    data: {idAgenda: idAgenda},
-    dataType: 'json',
-    cache: false,
-    beforeSend: function() {
-      $('#spiner-loader').removeClass('hide');
-    },
-    success: function(data){
-      appointment = data[0];
-      $('#spiner-loader').addClass('hide');
-      $("#evtTitle2").val(appointment.titulo);
-      $("#estatus_recordatorio2").val(appointment.medio);
-      $("#estatus_recordatorio2").selectpicket('refresh');
-      $("#prospectoE").append($('<option>').val(appointment.idCliente).text(appointment.nombre));
-      $("#prospectoE").val(appointment.idCliente);
-      $("#prospectoE").selectpicker('refresh');
-      $("#dateStart2").val(moment(appointment.fecha_cita).format().substring(0,19));
-      $("#dateEnd2").val(moment(appointment.fecha_final).format().substring(0,19));
-      $("#description2").val(appointment.description);
-      $(".idAgenda2").val(idAgenda);
-      $(".idGoogle").val(appointment.idGoogle);
-
-      var medio = $("#estatus_recordatorio2").val();
-      var box = $("comodinDIV2");
-      validateNCreate(appointment, medio, box);
-    },
-    error: function() {
-      $('#spiner-loader').addClass('hide');
-      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-  })
-}
-/* Google sign in estatus true */
 
 /* Event's structure sent to Google */
 function buildEventGoogle(data){

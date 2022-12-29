@@ -108,33 +108,19 @@ class Postventa extends CI_Controller
     {
         $idLote = $this->input->post("idLote");
         $data1 = $this->Postventa_model->getEmpRef($idLote)->result_array();
-        $idClient = $this->Postventa_model->getClient($idLote);
-        $idClient = empty($idClient) ? -1 : $idClient;
+        $idClient = $this->Postventa_model->getClient($idLote)->row();
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-        if(!empty($resDecode->data)){
-            $resDecode->data[0]->bandera_exist_cli = true;
-        }else{
-            $resDecode->data[0]= new \stdClass();
-            $resDecode->data[0]->bandera_exist_cli = false;
-        }
-        if(is_object($idClient->row()) AND $idClient->row()->num_cli > 0){
-            //$resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-            if (count($resDecode->data) > 0 && $resDecode->data[0]->bandera_exist_cli == true) {
-                $resDecode->data[0]->id_cliente = $idClient->row()->id_cliente;
-                $resDecode->data[0]->referencia = $data1[0]['referencia'];
-                $resDecode->data[0]->empresa = $data1[0]['empresa'];
-                $resDecode->data[0]->personalidad = $idClient->row()->personalidad_juridica;
-                $resDecode->data[0]->ocupacion = $idClient->row()->ocupacion;
-                $resDecode->data[0]->regimen_matrimonial = $idClient->row()->regimen_matrimonial;
-                $resDecode->data[0]->estado_civil = $idClient->row()->estado_civil;
-                echo json_encode($resDecode->data[0]);
-            } else {
-                $resDecode->data[0]->bandera_exist_cli = false;
-                echo json_encode($resDecode->data[0]);
-            }
-        }else {
-            $resDecode->data[0]->bandera_exist_cli = false;
+        if (count($resDecode->data) > 0) {
+            $resDecode->data[0]->id_cliente = $idClient->id_cliente;
+            $resDecode->data[0]->referencia = $data1[0]['referencia'];
+            $resDecode->data[0]->empresa = $data1[0]['empresa'];
+            $resDecode->data[0]->personalidad = $idClient->personalidad_juridica;
+            $resDecode->data[0]->ocupacion = $idClient->ocupacion;
+            $resDecode->data[0]->regimen_matrimonial = $idClient->regimen_matrimonial;
+            $resDecode->data[0]->estado_civil = $idClient->estado_civil;
             echo json_encode($resDecode->data[0]);
+        } else {
+            echo json_encode(false);
         }
     }
 
@@ -617,7 +603,7 @@ class Postventa extends CI_Controller
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['personalidad'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
-      //  print_r($resDecode->data[0]);
+
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
             "rfc" => $_POST['rfc'],
@@ -629,12 +615,10 @@ class Postventa extends CI_Controller
         ($_POST['municipiof'] == '' || $_POST['municipiof'] == null) ? '': $dataFiscal['municipio'] =  $_POST['municipiof'];
         ($_POST['estadof'] == '' || $_POST['estadof'] == null) ? '': $dataFiscal['estado'] =  $_POST['estadof'];
         ($_POST['cpf'] == '' || $_POST['cpf'] == null) ? '': $dataFiscal['cp'] =  $_POST['cpf'];
- 
+
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
-       // print_r($responseInsert);
         if($responseInsert->resultado == 1){
-            
             $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
             if (!$usuarioJuridico) {
                 $this->Postventa_model->restablecerJuridicosAsignados();
@@ -642,87 +626,13 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            /*echo $personalidad;
-            echo "<br>";
-            echo $idLote;
-            echo "<br>";
-            echo $idCliente;
-            echo "<br>";
-            echo $idPostventa;
-            echo "<br>";
-            print_r($resDecode->data[0]);
-            echo "<br>";
-            echo $usuarioJuridico->id_usuario;
-            echo "<br>";*/
+
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
                 $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
         }
-    }
-
-    public function AltaCli(){
-        $data1 = $this->Postventa_model->getEmpRef($_POST['idLote'])->result_array();
-        $_POST['referencia'] = $data1[0]['referencia'];
-        $_POST['empresa'] = $data1[0]['empresa'];
-        $result = $this->Postventa_model->InsertCli($_POST);
-        $idLote = $_POST['idLote'];
-        $idCliente = $result->ult_reg;
-        $idPostventa = $_POST['idPostventa'];
-        $referencia = $_POST['referencia'];
-        $empresa = $_POST['empresa'];
-        $personalidad = $_POST['personalidad'];
-        $resDecode = $this->servicioPostventa($referencia, $empresa);
-        $dataFiscal = array(
-            "id_dpersonal" => $_POST['idPostventa'],
-            "rfc" => $_POST['rfc'],
-        );
-        ($_POST['calleF'] == '' || $_POST['calleF'] == null) ? '': $dataFiscal['calle'] =  $_POST['calleF'];
-        ($_POST['numExtF'] == '' || $_POST['numExtF'] == null) ? '': $dataFiscal['numext'] =  $_POST['numExtF'];
-        ($_POST['numIntF'] == '' || $_POST['numIntF'] == null) ? '': $dataFiscal['numint'] =  $_POST['numIntF'];
-        ($_POST['coloniaf'] == '' || $_POST['coloniaf'] == null) ? '': $dataFiscal['colonia'] =  $_POST['coloniaf'];
-        ($_POST['municipiof'] == '' || $_POST['municipiof'] == null) ? '': $dataFiscal['municipio'] =  $_POST['municipiof'];
-        ($_POST['estadof'] == '' || $_POST['estadof'] == null) ? '': $dataFiscal['estado'] =  $_POST['estadof'];
-        ($_POST['cpf'] == '' || $_POST['cpf'] == null) ? '': $dataFiscal['cp'] =  $_POST['cpf'];
-        $dataFiscal = base64_encode(json_encode($dataFiscal));
-        $responseInsert = $this->insertPostventaDF($dataFiscal);
-        if($responseInsert->resultado == 1){
-            $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
-            if (!$usuarioJuridico) {
-                $this->Postventa_model->restablecerJuridicosAsignados();
-                $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
-            }
-
-            $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
-            //echo "Personalidad: ".$personalidad."\n";
-            $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
-            //echo "idLote:".$idLote."\n";
-            $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
-            //echo "idCliente:".$idCliente."\n";
-            $idPostventa = (!isset($idPostventa) || $idPostventa == '') ? 'NULL' : $idPostventa;
-            //echo "idPostVenta:".$idPostventa."\n";
-            if(empty($resDecode->data[0])){
-                $resDecode->data[0]["ncliente"] = $_POST['nombreComp'];
-                $resDecode->data[0]["idECons;"] = 'NULL';
-                $resDecode->data[0]["ClaveCat"] = 'NULL';
-                $resDecode->data[0]["ult_ncliente"] = 'NULL';
-                $resDecode->data[0]["ult_rfc"] = 'NULL';
-                $resDecode->data[0]["idEstatus"] = $_POST['estatus'];
-
-            }else {
-                $resDecode->data[0]->ult_rfc = $resDecode->data[0]->rfc;
-                $resDecode->data[0]->ult_ncliente = $resDecode->data[0]->ncliente;
-                $resDecode->data[0]->ncliente = $_POST['nombreComp'];
-                $resDecode->data[0]->idEstatus = $_POST['estatus'];
-            }
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
-            echo json_encode($informacion);
-        }else{
-            echo json_encode(false);
-        }
-        
     }
 
     public function getSolicitudes()
@@ -743,13 +653,18 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
+       /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }
+        }*/
+        $motivos_rechazo = $_POST['comentarios'];
+        $area_rechazo = $_POST['area_rechazo'];
+    
+
+        $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
         // }elseif($type == 3) {
         //     $comentarios = $_POST['comentarios'];
         //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
@@ -776,11 +691,6 @@ class Postventa extends CI_Controller
         if($documentType == 13){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
-            /*if($documentInfo->estatus == 22){
-
-            }else{
-
-            }*/
             $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }
         $folder = $this->getFolderFile($documentType);
@@ -910,7 +820,7 @@ class Postventa extends CI_Controller
                 $updateDocumentData = array(
                     "expediente" => $documentName,
                     "modificado_por" => $idUsuario,
-                    "idNotariaxSolicitud" => $idNxS
+                    "idNxS" => $idNxS
                 );
                 $response = $this->Postventa_model->addPresupuesto($updateDocumentData, $idSolicitud, $presupuestoType, $idPresupuesto);
             }
@@ -968,11 +878,7 @@ class Postventa extends CI_Controller
     public function getMotivosRechazos()
     {
         $tipo_documento = $_POST['tipo_documento'];
-        $estatus = $_POST['estatus'];
-        $dataMotivos = $this->Postventa_model->getMotivosRechazos($tipo_documento);
-        $dataEstatus = $this->Postventa_model->getStatusSiguiente($estatus);
-        $data = array("dataMotivos" => $dataMotivos,
-                     "dataEstatus" => $dataEstatus);
+        $data = $this->Postventa_model->getMotivosRechazos($tipo_documento);
         if ($data != null)
             echo json_encode($data);
         else
@@ -1078,7 +984,7 @@ class Postventa extends CI_Controller
         $id_solicitud = $data['id_solicitud3'];
 
         $updateData = array(
-            "nombre_escrituras" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
+            "nombre_a_escriturar" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
@@ -1090,7 +996,7 @@ class Postventa extends CI_Controller
         ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
         if($_POST['not'] == 'nou'){
-            $updateData['idNotaria'] = 0;
+            $updateData['id_notaria'] = 0;
         }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
@@ -1679,16 +1585,6 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
-    function getStatusSiguiente(){
-        $actividad = $_POST['actividad'];
-        $tipo = $_POST['tipo'];
-        $estatus = $_POST['estatus'];
-        $data = $this->Postventa_model->getStatusSiguiente($actividad,$tipo,$estatus)->row();
-        if($data != null)
-        echo json_encode($data);
-    else
-        echo json_encode(array());
-    }
 
     public function rechazarNotaria()
     {
@@ -1836,6 +1732,10 @@ class Postventa extends CI_Controller
                         "data" => 'area'
                     ],
                     [
+                        "title" => 'Asignado',
+                        "data" => 'asignado'  
+                    ],
+                    [
                         "title" => 'Vigencia',
                         "data" => 'atrasado'
                     ],
@@ -1881,6 +1781,10 @@ class Postventa extends CI_Controller
                         "data" => 'area'
                     ],
                     [
+                        "title" => 'Asignado',
+                        "data" => 'asignado'  
+                    ],
+                    [
                         "title" => 'Vigencia',
                         "data" => 'atrasado'
                     ],
@@ -1922,8 +1826,12 @@ class Postventa extends CI_Controller
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Asignado',
+                        "data" => 'asignado'  
                     ],
                     [
                         "title" => 'Vigencia',
@@ -2009,9 +1917,10 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function servicioPostventa($referencia, $empresa){
-        $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+    public s($referencia, $empresa){
 
+        //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+        $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
             "referencia" => $referencia,
             "empresa" => $empresa
@@ -2019,7 +1928,7 @@ class Postventa extends CI_Controller
 
         $opciones = array(
             "http" => array(
-                "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com, localhost"],
                 "method" => "POST",
                 "content" => $datos, # Agregar el contenido definido antes
             ),
@@ -2042,13 +1951,13 @@ class Postventa extends CI_Controller
         //         'timeout' => 30,
         //     ),
         // );
-        $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/updateDFiscales';
-       // $url = base_url().'backCobranza/index.php/PaginaCDM/updateDFiscales';
+        $url = 'https://clientes.gphsis.com/BACK/index.php/PaginaCDM/updateDFiscales';
+
         // $fields_string = http_build_query($dataFiscal);
         $ch = curl_init($url);
         # Setup request to send json via POST.
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataFiscal);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Origin: maderascrm.gphsis.com'));
         # Return response instead of printing.
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         # Send request.
@@ -2056,7 +1965,6 @@ class Postventa extends CI_Controller
         curl_close($ch);
         // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
-      //  print_r($resDecode);
         return $resDecode; 
     }
 
@@ -2064,7 +1972,9 @@ class Postventa extends CI_Controller
     public function newInformacion()
     {
         $data = $_POST;
+
         $id_solicitud = $data['idSolicitud'];
+
         $updateData = array(
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
@@ -2073,7 +1983,7 @@ class Postventa extends CI_Controller
         if ($data != null)
             echo json_encode($data);
         else
-            echo json_encode(array());
+            echo json_encode(array());*/
     }
 
     public function getBudgetInformacion()
@@ -2092,7 +2002,20 @@ function getWorkingDays($startDate, $endDate, $tiempo){
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
     $stop = strtotime($stop_date);
-    $validDays = 0;
+    if ($begin > $stop) {
+        return 0;
+    } else {
+        $no_days  = 0;
+        $weekends = 0;
+        while ($begin < $stop) {
+            $no_days++; // no of days in the given interval
+            $what_day = date("N", $begin);
+            if ($what_day > 5) { // 6 and 7 are weekend days
+                $weekends++;
+            };
+            $begin += 86400; // +1 day
+        };
+        $working_days = $no_days - $weekends;
 
         $dt = new DateTime($startDate);
         $dt2 = new DateTime($stop_date);    
@@ -2113,30 +2036,7 @@ function getWorkingDays($startDate, $endDate, $tiempo){
 
             return $dataTime;
         }        
-    // while ($begin < $stop) {
-        
-    // };
-    $working_days = $no_days - $weekends;
-
-    $dt = new DateTime($startDate);
-    $dt2 = new DateTime($stop_date);    
-    $timeStart = $dt->format('h:i:s A');
-    $timeEnd = $dt2->format('h:i:s A');
-    $st_time    =   strtotime($timeStart);
-    $end_time   =   strtotime($timeEnd);
-
-    if( $end_time <= $st_time ){
-        $dataTime['atrasado'] = "En tiempo";
-        $dataTime['diferencia'] = 0;
-
-        return $dataTime;
     }
-    else{
-        $dataTime['atrasado'] = "Atrasado";
-        $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-
-        return $dataTime;
-    }        
 }
 
 function getNotariasXUsuario(){
@@ -2175,24 +2075,16 @@ function saveNotaria(){
         echo json_encode(array());
 }
 
-    function getPresupuestosUpload(){
-        $idNxS = $_POST['idNxS'];
-        $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
+function getPresupuestosUpload(){
+    $idNxS = $_POST['idNxS'];
+    $data = $this->Postventa_model->getPresupuestosUpload($idNxS);
+    if ($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
+}
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria){
-        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
-    }
-    public function getOpcCat(){
-        $id_cat = $this->input->post("id_cat");
-        $data = $this->Postventa_model->getOpcCat($id_cat)->result_array();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
+function updatePresupuestosNXU($idSolicitud, $idNotaria){
+    $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+}
 }

@@ -3430,13 +3430,10 @@ class Asesor extends CI_Controller
 
 
                 } else {
-
                     die("ERROR");
-
                 }
             }
         }
-
     }
 
 

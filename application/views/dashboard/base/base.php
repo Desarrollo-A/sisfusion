@@ -9,7 +9,7 @@
 <body id="mainDashboard">
     <div class="wrapper ">
         <?php
-            if(!ISSET($external)){
+            if(!isset($external)){
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
@@ -91,6 +91,7 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
-    var idLider = <?= $this->session->userdata('id_lider') ?>;
-    var  base_url = "<?=base_url()?>";
+    let idLider = <?= $this->session->userdata('id_lider') ?>;
+    let  base_url = "<?=base_url()?>";
+    googleCode = "<?php echo $googleCode?>";
 </script>
