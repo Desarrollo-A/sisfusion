@@ -697,7 +697,7 @@ $(document).on('click', '#filterAction', async function (e) {
         rolString = 'asesor';
     
     getLastSales(filters, rolOnReport);
-    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport]);
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
 
 $(document).on('click', '.chartButton', function () {
