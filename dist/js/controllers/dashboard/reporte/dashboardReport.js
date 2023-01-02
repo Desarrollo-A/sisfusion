@@ -809,7 +809,6 @@ function getLastSales(filters, rol){
         dataType: 'json',
         cache: false,
         success: function(data){
-            console.log("successs!");
             $('.loadChartMini').addClass('d-none');
             $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
@@ -840,10 +839,6 @@ function getLastSales(filters, rol){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-}
-
-function getFilters(){
-
 }
 
 function loaderCharts(){
@@ -1076,6 +1071,7 @@ function accordionToRemove(rol){
 function initDetailRow(dataObj){
     var detailRows = [];
     var tr = $(`#details-${dataObj.user}`).closest('tr');
+    // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
