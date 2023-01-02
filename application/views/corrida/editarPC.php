@@ -997,9 +997,10 @@
             // $scope.range2= 0;
             // $scope.range3= 0;
 
-
+            var counterTCO ;
             function changeInitialInfo(){
                 /*load libraries*/
+
                 $.ajax({
                     url: "<?=base_url()?>index.php/Corrida/getResidencialDisponible",
                     cache: false,
@@ -1067,8 +1068,25 @@
                 $scope.msni = <?php echo $data_corrida->msni;?>;
                 $scope.alphaNumeric = <?=$data_corrida->corrida_dump;?>;
 
+                $scope.alphaNumeric .map((element, index)=>{
+                    if (element.pagoCapital != '' || element.pagoCapital != '') {
+                        counterTCO = (index);
+                    }
+                });
+
+                for(let i=1; i<=counterTCO; i++){
+                    // console.log('debe ser el id_', i);
+                    $('#idModel'+i).attr('disabled', true);
+                }
+
+
                 // console.log($scope.alphaNumeric);
                 calcularCF();
+                setTimeout(()=>{
+                    blockInitFields($scope.alphaNumeric);
+                    // console.log($scope.alphaNumeric);
+                },2000);
+                console.log("cámara", counterTCO);
             }
 
             $scope.mesesdiferir = 0;
@@ -1123,6 +1141,7 @@
             }
 
             function calcularCF(){
+                console.log('check');
 
 ///////////////////////////////////////
 
@@ -1656,7 +1675,7 @@
                             //new code 18 FEB
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -1676,10 +1695,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -1925,7 +1952,7 @@
                             //nuevo codigo 19 FEB
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -1945,10 +1972,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -2072,7 +2107,7 @@
                             //new code 18 FEB
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -2092,10 +2127,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -2258,9 +2301,10 @@
                             }
                             var numfinalCount = i+1;
                             //new code 18 FEB
+                            var PagoACapital;
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -2280,10 +2324,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -2621,9 +2673,10 @@
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
                             //nuevo codigo 19 FEB
+                            var PagoACapital;
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -2643,10 +2696,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -2974,9 +3035,10 @@
                             }
                             var numfinalCount = i+1;
                             //new code 18 FEB
+                            var PagoACapital;
                             $scope.pagoACapital = function()
                             {
-                                var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
+                                PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
@@ -2996,10 +3058,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -3188,7 +3258,7 @@
 
 
                 if($scope.infoLote.meses >= 132 && $scope.infoLote.meses <= 240) {
-
+                    console.log('alphaNumeric', $scope.alphaNumeric);
                     var range=[];
 
                     ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
@@ -3259,15 +3329,36 @@
                             {
                                 PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
+                                // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
                                 var saldoFinalisimo	=	($scope.saldoFinal - $scope.infoLote.capital);//
                                 var saldoMenosPC	=	saldoFinalisimo - saldo;
-
+                                // $scope.total = saldoFinalisimo - saldo;
+                                // $scope.porcentajeEng = 0;
+                                // console.log($scope.total);
+                                // console.log($scope.precioFinal + " " + (($scope.saldoFinal - $scope.infoLote.capital)) + " " + saldo + " REST " + (saldoMenosPC) );
+                                // calcularCF();
+                                // for(var n = 0; n<=i-1 ; n++)
+                                // {
+                                // }
                                 var posicionPay =	PositionPago-1;
                                 var saldoActual	=	$scope.alphaNumeric[posicionPay]['saldo'];
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                // console.log("Saldo actual: " + saldoActual);
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
+                                // console.log("Este es el nuevo saldo: " + nuevoSaldo);
+
+                                // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -3595,10 +3686,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -3751,8 +3850,8 @@
                     if($scope.infoLote.mesesSinInteresP1 == 36) {
 
 
-                        for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
 
+                        for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
                             if( (mes == 13) || (mes == 14) ){
 
                                 if(mes == 13){
@@ -3806,10 +3905,10 @@
                             }
 
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric['fecha'];
                             }
                             var numfinalCount = i+1;
                             //new code 18 FEB
@@ -3836,10 +3935,18 @@
                                 var nuevoSaldo	=	($scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital);
                                 var TestEng = $scope.cantidad;
                                 // console.log("Saldo actual: " + saldoActual);
-                                $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                //CHACHA 14 12 22
+                                // $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
+                                $scope.alphaNumeric[posicionPay]['disp'] = 1;
+                                if($scope.alphaNumeric[posicionPay]['pagoCapital']!=0 || $scope.alphaNumeric[posicionPay]['pagoCapital']!=''){
+                                    $scope.alphaNumeric[posicionPay]['recalculate'] = 1;
+                                }
+                                // $scope.alphaNumeric[posicionPay]['pagoCapital'] = saldo;
+
                                 // console.log("Este es el nuevo saldo: " + nuevoSaldo);
 
                                 // $scope.infoLote.capital=0;
+                                // calcularCF();
                                 var posPay = PositionPago-1;
                                 calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
@@ -3878,7 +3985,6 @@
                         var range2=[];
 
                         for (var i = ini2; i < 120; i++) {
-
                             if( (mes == 13) || (mes == 14) ){
 
                                 if(mes == 13){
@@ -3930,7 +4036,7 @@
                             }
 
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
@@ -3970,8 +4076,7 @@
 
                         var range3=[];
 
-                        for (var i = 121; i < $scope.infoLote.meses + 1; i++) {
-
+                        for (var i = 120; i < $scope.infoLote.meses + 1; i++) {
                             if( (mes == 13) || (mes == 14) ){
 
                                 if(mes == 13){
@@ -4022,7 +4127,7 @@
                                 mes = '12';
                             }
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[(i-1)]['fecha'];
 
 
 
@@ -4072,21 +4177,6 @@
 
 
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4770,7 +4860,7 @@
                 DTColumnBuilder.newColumn('pagoCapital').withTitle('Pago a Capital')
                     .renderWith(
                         function(data, type, full, meta) {
-
+                            var inputCapital;
                             // var inputCapital = '<input name="capVal'+full["pago"]+'" type="number" id="idModel'+full["pago"]+'" ng-model="myModeloAlv" onchange="pagoCapChange('+full["pago"]+')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                             // var numberPay	 = '<input name="numberPay'+full["pago"]+'" type="hidden" id="payNum'+full["pago"]+'" value="'+full["pago"]+'">';
                             // return inputCapital+numberPay;
@@ -4782,7 +4872,17 @@
                                 // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
                                 // console.log('Estoy llegando aquí');
                                 // return "$ " + saldo;
-                                var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']);
+                                // console.log('counterCTO', (counterTCO+1));
+                                // console.log('full[\'pago\']', (full['pago']+1));
+
+                                if((counterTCO)==(full['pago']-1) ){
+                                    inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ' +
+                                        'ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" ' +
+                                        'placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
+                                }else{
+                                    inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']);
+                                }
+                                // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']);
                                 var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                 return inputCapital + numberPay;
                             } else {
@@ -4798,140 +4898,17 @@
             {
                 // console.log(nuevoSaldo + " " + (posPay + 1) + " " + $scope.infoLote.capital);
                 var pagoACapitalCantidad = saldoMenosPC;
+                // console.log($scope.alphaNumeric);
 
-                //INICIO FECHA
-                var day;
-                var month = (new Date().getMonth() + 1);
-                var yearc = new Date().getFullYear();
-
-
-                if (month == 1) {
-                    day = '0' + 1;
-                }
-                if (month == 2) {
-                    day = '0 ' + 2;
-                }
-                if (month == 3) {
-                    day = '0' + 3;
-                }
-                if (month == 4) {
-                    day = '0' + 6;
-                }
-                if (month == 5) {
-                    day = '0' + 7;
-                }
-                if (month == 6) {
-                    day = '0' + 8;
-                }
-                if (month == 7) {
-                    day = 11;
-                }
-                if (month == 8) {
-                    day = 12;
-                }
-                if (month == 9) {
-                    day = 13;
-                }
-                if (month == 10) {
-                    day = 14;
-                }
-                if (month == 11) {
-                    day = 16;
-                }
-                if (month == 12) {
-                    day = 17;
-                }
-
-                var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3);
-
-                //FIN FECHA
-
-                var ini;
-                var ini2;
-                var ini3;
-
-
-                /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
-
-                if ($scope.day && $scope.apartado && $scope.mesesdiferir > 0) {
-
-                    var engd = (enganche - $scope.apartado);
-                    var engd2 = (engd / $scope.mesesdiferir);
-                    var saldoDif = ($scope.precioFinal);
-
-                    var rangEd = [];
-                    for (var e = 0; e < $scope.mesesdiferir; e++) {
-
-                        if (mes == 13) {
-                            mes = '01';
-                            yearc++;
-                        }
-                        if (mes == 2) {
-                            mes = '02';
-                        }
-                        if (mes == 3) {
-                            mes = '03';
-                        }
-                        if (mes == 4) {
-                            mes = '04';
-                        }
-                        if (mes == 5) {
-                            mes = '05';
-                        }
-                        if (mes == 6) {
-                            mes = '06';
-                        }
-                        if (mes == 7) {
-                            mes = '07';
-                        }
-                        if (mes == 8) {
-                            mes = '08';
-                        }
-                        if (mes == 9) {
-                            mes = '09';
-                        }
-                        if (mes == 10) {
-                            mes = '10';
-                        }
-                        if (mes == 11) {
-                            mes = '11';
-                        }
-                        if (mes == 12) {
-                            mes = '12';
-                        }
-
-                        $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                        if (e == 0) {
-                            $scope.fechaPM = $scope.dateCf;
-                        }
-
-                        rangEd.push({
-                            "fecha": $scope.dateCf,
-                            "pago": e + 1,
-                            "capital": engd2,
-                            "interes": 0,
-                            "total": engd2,
-                            "saldo": saldoDif -= engd2,
-
-                        });
-                        mes++;
-                    }
-
-                    $scope.rangEd = rangEd;
-
-                }
-
-                /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
 
 
                 var r1 = $scope.saldoFinal; //$scope.saldoFinal
 
                 $scope.infoLote = {
                     precioTotal: r1,
-                    yPlan: $scope.age_plan,
+                    yPlan: $scope.yearplan,
                     msn: $scope.msni,
-                    meses: ($scope.age_plan * 12),
+                    meses: ($scope.yearplan * 12),
                     mesesSinInteresP1: $scope.msni,
                     mesesSinInteresP2: 120,
                     mesesSinInteresP3: 60,
@@ -4966,44 +4943,8 @@
                     {
 
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
@@ -5011,145 +4952,145 @@
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+
+
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        // alert('olv');
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
                                         dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
                                     }
-                                    /*ghdfhfdhdhdfhdh*/
-                                    //anterior a 19 enero20
-                                    // for (var n = 0; n < posicionPago; n++) {
-                                    // 	if ($scope.alphaNumeric[n]['disp'] == 0 || $scope.alphaNumeric[n]['disp'] == "0") {
-                                    // 		if ($scope.alphaNumeric[n]['pago'] < posicionPago) {
-                                    // 			console.log($scope.alphaNumeric[n]['pago']);
-                                    // 			$scope.alphaNumeric[n]['saldo'] = alphaOriginal[n]['saldo'];//alphaOriginal[n]['saldo']
-                                    // 			console.log("este es el saldo " + alphaOriginal[n]['saldo'] + " en " + n)
-                                    // 		}
-                                    // 	}
-                                    // }
-                                    // for (var n = 0; n < posicionPago; n++)
-                                    // {
-                                    // 	if($scope.alphaNumeric[n]['disp']!="")
-                                    // 	{
-                                    // 		newSaldoTable = 99999;
-                                    // 	}
-                                    // }
-                                } else {
-                                    /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                    if ($scope.alphaNumeric[i]['disp'] == 0 || $scope.alphaNumeric[i]['disp'] == undefined) {
-                                        //newSaldoTable = $scope.inufoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital;
-                                        // dispPC = 0;
-                                        // pagoACapitalCantidad = 0;
-                                        //else despues del primer post en segunda posicion
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'] - saldo;
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            // dispPC = 0;
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                    } else {
-                                        //else despues del primer post
-                                        // console.log($scope.alphaNumeric[i]['disp']);
-                                        // console.log('posicion de pago ene ste punto :' + posicionPago);
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                        // if ($scope.alphaNumeric[posicionPago]['pago'] >= posicionPago || $scope.alphaNumeric[posicionPago]['pago'] <= posicionPago)
-                                        // {
-                                        // 	if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
-                                        // 	{
-                                        // 		/*aqui se coloca cuando se hay pagos abajo del nuevo, ejemplo Pago 5:550 y se quiere colocar uno en el 2*/
-                                        // 		newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posicionPago]['saldo'];
-                                        // 		dispPC = 1;
-                                        // 		pagoACapitalCantidad = $scope.alphaNumeric[posicionPago]['pagoCapital'];
-                                        // 	}
-                                        // 	else
-                                        // 	{/*se coloca un valor cuando nohay nada(el resto de los campos*/
-                                        // 			newSaldoTable = $scope.alphaNumeric[i]['saldo'];
-                                        // 			dispPC = 0;
-                                        // 			pagoACapitalCantidad = 0;
-                                        // 	}
-                                        // }
-                                        // else
-                                        // {
-                                        // 	newSaldoTable = 0;
-                                        // 	dispPC = 0;
-                                        // 	pagoACapitalCantidad = 0;
-                                        // }
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.infoLote.capital,
-                                    "interes": 0,
-                                    "total": $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
-                                // range.push({
-                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
-                                //     "pago": i + 1,
-                                //     "capital": $scope.alphaNumeric[i]['capital'],
-                                //     "interes": 0,
-                                //     "total": $scope.alphaNumeric[i]['total'],
-                                //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                //     "disp": $scope.alphaNumeric[i]['disp'],
-                                // });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            /*finaliza funcion*/
-                            // range.push({
-                            //     "fecha" : $scope.dateCf,
-                            //     "pago" : i + 1,
-                            //     "capital" : $scope.infoLote.capital,
-                            //     "interes" : 0,
-                            //     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                            //     "saldo" : newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                            //     "pagoCapital" : pagoACapitalCantidad,
-                            //     "disp":dispPC,
-                            // });
-                            mes++;
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo":  $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
+
+
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
                                 // alert($scope.total2);
@@ -5162,48 +5103,14 @@
 
                         //////////
                         // var range2=[];
+                        if(posicionPago<=$scope.infoLote.mesesSinInteresP1){
+                            $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
+                        }
                         // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo']) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
                         var range2 = [];
                         // console.log("Saldo para el segundo arreglo " + $scope.total2);
                         for (var i = ini2; i < $scope.infoLote.meses; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -5218,186 +5125,225 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
-                                    } else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        // capital = $scope.alphaNumeric[i]['capital']=99999999999999;
-                                        // newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                        // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                        // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            // $scope.interes_plan2 = $scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p2);//$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                            // $scope.capital2 = (($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'])
-                                            //  / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1) - $scope.interes_plan2);
-
-                                            // $scope.capital2 = ((($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1)) - $scope.interes_plan2);
-
-                                            // capital = $scope.capital2 ;
-                                            // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                            // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            // total = $scope.p2 ;//$scope.p2
-
-
-                                            // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'] ) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // A1 pones Tasa (tipo de interes del periodo)
-                                                // en B1 el nPer  (número de Periodos)
-                                                // en C1 el Va  (Capital inicial)
-                                                // (A1*(1+A1)^B1)*C1/(((1+A1)^B1)-1)
-                                                //(0.01 * (1+0.1)^84*191,520.00/(((1+A1)^84)-1)
-
-                                                // var mesesAlv=posPay - $scope.alphaNumeric.length;
-                                                // console.log("Total II: " + $scope.total2);
-
-                                                if (posicionPago < $scope.infoLote.msn) {
-                                                    // $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.total2;
-                                                    // console.log($scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']);
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log($scope.infoLote.msn + " - " + posicionPago);
-
-                                                    // console.log($scope.alphaNumeric[posPay]['control']);
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log(0);
-                                                    // console.log(posPay + " - " + posicionPago);
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                }
-                                                // var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                // parte1 = parte1;
-                                                //
-                                                // var parte2 = ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago'])-1);
-                                                // parte2 = parte2;
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-                                                // operacionCompleta = (($scope.infoLote.interes_p2*parte1*$scope.alphaNumeric[(posPay)]['saldo'].toFixed(2))/parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log("poscicion " + (i-1) + ": ");
-                                                // console.log($scope.alphaNumeric[(i-1)]['saldo']);
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-
-
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // capital = $scope.capital2 ;
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // total = $scope.p2;
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log("saldo: " +( $scope.alphaNumeric[i]['saldo'] - $scope.alphaNumeric[i]['pagoCapital']) );
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) - 1);
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
-                            }
-                            //
-                            // range2.push({
-                            // 	"fecha": $scope.dateCf,
-                            // 	"pago": i + 1,
-                            // 	"capital": ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                            // 	"interes": ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
-                            // 	"total": $scope.p2,
-                            // 	"saldo":  ($scope.total2 = ($scope.total2 -$scope.capital2)),//newSaldoTable
-                            // 	"pagoCapital": 0,
-                            // 	"disp": dispPC,
-                            // });
-                            // window['pagoCapChange' + numfinalCount]=Function("","console.log('pagoCapChange"+numfinalCount+" el parametro es: " + document.getElementById('#idModel'+numfinalCount) + "');");//angular.element(document.querySelector('#idModel'+numfinalCount))
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
 
-                            mes++;
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
+                            }
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.total2 = ($scope.total2 -$scope.capital2),//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
+
                             if (i == ($scope.infoLote.meses - 1)) {
                                 $scope.totalSegundoPlan = $scope.p2;
                             }
@@ -5447,13 +5393,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            // var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="' + $scope.alphaNumeric[full['pago'] - 1]['pagoCapital'] + '" disabled>';
-                                            var inputCapital = "$" + parseFloat(($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -5461,6 +5414,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -5500,46 +5454,9 @@
                         var range2 = [];
                         for (var i = ini; i < $scope.infoLote.meses; i++) {
 
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
 
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
@@ -5552,165 +5469,224 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        console.log('primera posicion');
-                                    } else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        // capital = $scope.alphaNumeric[i]['capital']=99999999999999;
-                                        // newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                        // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                        // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);//$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                            $scope.capital2 = (($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'])
-                                                / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1) - $scope.interes_plan2);
-                                            // $scope.capital2 = ((($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1)) - $scope.interes_plan2);
-
-                                            // capital = $scope.capital2 ;
-                                            // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                            // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            // total = $scope.p2 ;//$scope.p2
-
-
-                                            // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'] ) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-
-                                                //version anterior 09MARZO20
-                                                // var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);
-                                                // parte1 = parte1.toFixed(2);
-                                                // var parte2 = ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1);
-                                                // parte2 = parte2.toFixed(2);
-                                                // var operacionCompleta = (($scope.infoLote.interes_p2*($scope.alphaNumeric[posPay]['saldo'] * parte1))/parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 = ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // total = operacionCompleta;//$scope.p2
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-
-                                                //version nueva 09marzo20 más
-                                                var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                parte1 = parte1;
-
-                                                var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                parte2 = parte2;
-                                                // console.log(0);
-                                                // console.log(posPay + " - " + posicionPago);
-                                                operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 = ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-
-
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // capital = $scope.capital2 ;
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // total = $scope.p2;
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log("saldo: " +( $scope.alphaNumeric[i]['saldo'] - $scope.alphaNumeric[i]['pagoCapital']) );
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) - 1);
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            //finaliza nuevo código 2 marzo 20
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.total2 - $scope.capital2,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
 
 
-                            //codigo anterior a 2 marzo 20
-                            // $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
-                            // $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-                            // range2.push({
-                            //
-                            // 	"fecha" : $scope.dateCf,
-                            // 	"pago" : i + 1,
-                            // 	"capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                            // 	"interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
-                            // 	"total" : $scope.p2,
-                            // 	"saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
-                            // 	"pagoCapital"	:	"",
-                            // });
 
 
-                            mes++;
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
 
                             if (i == ($scope.infoLote.meses - 1)) {
                                 $scope.totalSegundoPlan = $scope.p2;
@@ -5747,14 +5723,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + parseFloat(($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
-                                            //anterior
-                                            // var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="' + $scope.alphaNumeric[full['pago'] - 1]['pagoCapital'] + '" disabled>';
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -5762,6 +5744,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -5794,44 +5777,8 @@
                     if ($scope.infoLote.mesesSinInteresP1 == 36)
                     {
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
@@ -5839,90 +5786,145 @@
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        // alert('olv');
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
-                                } else {
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                        if ($scope.alphaNumeric[posicionPago]['disp'] == 0) {
-                                            //else despues del primer post en segunda posicion
-                                            if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                                capital = $scope.alphaNumeric[i]['capital'] = ($scope.mesesdiferir > 0) ? ($scope.alphaNumeric[posPay]['saldo'] / (((($scope.age_plan * 12) - $scope.alphaNumeric[posPay]['pago'])) - $scope.mesesdiferir)) : ($scope.alphaNumeric[posPay]['saldo'] / ((($scope.age_plan * 12) - $scope.alphaNumeric[posPay]['pago'])));
-                                                // $scope.infoLote.precioTotal = $scope.alphaNumeric[(i - 1)]['saldo'] - capital
-                                                newSaldoTable = $scope.alphaNumeric[i]['saldo'] = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;// - ($scope.mesesdiferir > 0) ? ($scope.alphaNumeric[posPay]['saldo']/ (((($scope.age_plan*12)-$scope.alphaNumeric[posPay]['pago'])) - $scope.mesesdiferir)) : ($scope.alphaNumeric[posPay]['saldo'] / ((($scope.age_plan*12)-$scope.alphaNumeric[posPay]['pago'])))
-                                                dispPC = 0;
-                                                pagoACapitalCantidad = 0;
-                                                // console.log("Faltan: " + (($scope.age_plan * 12) - $scope.alphaNumeric[i]['pago']));
-                                            } else// if ($scope.alphaNumeric[i]['pago'] <= posicionPago)
-                                            {
-                                                newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                                dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                                pagoACapitalCantidad = 0;
-                                                capital = $scope.alphaNumeric[i]['capital'];
-                                            }
-                                        }
-                                        // else
-                                        // {
-                                        // 	//else despues del primer post
-                                        // 	console.log('posicion de pago ene ste punto :' + posicionPago);
-                                        // 	if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                        // 		capital = ($scope.mesesdiferir > 0) ? ($scope.alphaNumeric[posPay]['saldo'] / (((($scope.age_plan * 12) - $scope.alphaNumeric[posPay]['pago'])) - $scope.mesesdiferir)) : ($scope.alphaNumeric[posPay]['saldo'] / ((($scope.age_plan * 12) - $scope.alphaNumeric[posPay]['pago'])));
-                                        // 		newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;// - ($scope.mesesdiferir > 0) ? ($scope.alphaNumeric[posPay]['saldo']/ (((($scope.age_plan*12)-$scope.alphaNumeric[posPay]['pago'])) - $scope.mesesdiferir)) : ($scope.alphaNumeric[posPay]['saldo'] / ((($scope.age_plan*12)-$scope.alphaNumeric[posPay]['pago'])))
-                                        // 		dispPC = 0;
-                                        // 		pagoACapitalCantidad = 0;
-                                        // 		console.log("Faltan: " + (($scope.age_plan * 12) - $scope.alphaNumeric[i]['pago']));
-                                        // 	} else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                        // 		newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                        // 		dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                        // 		pagoACapitalCantidad = 0;
-                                        // 		capital = $scope.alphaNumeric[i]['capital'];
-                                        // 	}
-                                        // }
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": 0,
-                                    "total": capital,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo":  $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
+
+
+
                             /*finaliza funcion*/
-                            mes++;
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
                                 // alert($scope.total2);
@@ -5962,12 +5964,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + parseFloat(($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -5975,6 +5985,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -6002,6 +6013,10 @@
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
+
+                    setTimeout(()=>{
+                        blockFields();
+                    },1500)
                 }
 
 
@@ -6014,44 +6029,8 @@
                     if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 < 35)
                     {
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
@@ -6059,145 +6038,143 @@
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        // alert('olv');
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
                                         dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
                                     }
-                                    /*ghdfhfdhdhdfhdh*/
-                                    //anterior a 19 enero20
-                                    // for (var n = 0; n < posicionPago; n++) {
-                                    // 	if ($scope.alphaNumeric[n]['disp'] == 0 || $scope.alphaNumeric[n]['disp'] == "0") {
-                                    // 		if ($scope.alphaNumeric[n]['pago'] < posicionPago) {
-                                    // 			console.log($scope.alphaNumeric[n]['pago']);
-                                    // 			$scope.alphaNumeric[n]['saldo'] = alphaOriginal[n]['saldo'];//alphaOriginal[n]['saldo']
-                                    // 			console.log("este es el saldo " + alphaOriginal[n]['saldo'] + " en " + n)
-                                    // 		}
-                                    // 	}
-                                    // }
-                                    // for (var n = 0; n < posicionPago; n++)
-                                    // {
-                                    // 	if($scope.alphaNumeric[n]['disp']!="")
-                                    // 	{
-                                    // 		newSaldoTable = 99999;
-                                    // 	}
-                                    // }
-                                } else {
-                                    /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                    if ($scope.alphaNumeric[i]['disp'] == 0 || $scope.alphaNumeric[i]['disp'] == undefined) {
-                                        //newSaldoTable = $scope.inufoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital;
-                                        // dispPC = 0;
-                                        // pagoACapitalCantidad = 0;
-                                        //else despues del primer post en segunda posicion
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'] - saldo;
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            // dispPC = 0;
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                    } else {
-                                        //else despues del primer post
-                                        // console.log($scope.alphaNumeric[i]['disp']);
-                                        // console.log('posicion de pago ene ste punto :' + posicionPago);
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                        // if ($scope.alphaNumeric[posicionPago]['pago'] >= posicionPago || $scope.alphaNumeric[posicionPago]['pago'] <= posicionPago)
-                                        // {
-                                        // 	if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
-                                        // 	{
-                                        // 		/*aqui se coloca cuando se hay pagos abajo del nuevo, ejemplo Pago 5:550 y se quiere colocar uno en el 2*/
-                                        // 		newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posicionPago]['saldo'];
-                                        // 		dispPC = 1;
-                                        // 		pagoACapitalCantidad = $scope.alphaNumeric[posicionPago]['pagoCapital'];
-                                        // 	}
-                                        // 	else
-                                        // 	{/*se coloca un valor cuando nohay nada(el resto de los campos*/
-                                        // 			newSaldoTable = $scope.alphaNumeric[i]['saldo'];
-                                        // 			dispPC = 0;
-                                        // 			pagoACapitalCantidad = 0;
-                                        // 	}
-                                        // }
-                                        // else
-                                        // {
-                                        // 	newSaldoTable = 0;
-                                        // 	dispPC = 0;
-                                        // 	pagoACapitalCantidad = 0;
-                                        // }
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.infoLote.capital,
-                                    "interes": 0,
-                                    "total": $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
-                                // range.push({
-                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
-                                //     "pago": i + 1,
-                                //     "capital": $scope.alphaNumeric[i]['capital'],
-                                //     "interes": 0,
-                                //     "total": $scope.alphaNumeric[i]['total'],
-                                //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                //     "disp": $scope.alphaNumeric[i]['disp'],
-                                // });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo":  $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
                             /*finaliza funcion*/
-                            // range.push({
-                            //     "fecha" : $scope.dateCf,
-                            //     "pago" : i + 1,
-                            //     "capital" : $scope.infoLote.capital,
-                            //     "interes" : 0,
-                            //     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                            //     "saldo" : newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                            //     "pagoCapital" : pagoACapitalCantidad,
-                            //     "disp":dispPC,
-                            // });
-                            mes++;
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
                                 // alert($scope.total2);
@@ -6214,44 +6191,7 @@
                         var range2 = [];
                         // console.log("Saldo para el segundo arreglo " + $scope.total2);
                         for (var i = ini2; i < $scope.infoLote.meses; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -6266,171 +6206,222 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
-                                    } else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        // capital = $scope.alphaNumeric[i]['capital']=99999999999999;
-                                        // newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                        // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                        // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            // $scope.interes_plan2 = $scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p2);//$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                            // $scope.capital2 = (($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'])
-                                            //  / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1) - $scope.interes_plan2);
-
-                                            // $scope.capital2 = ((($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1)) - $scope.interes_plan2);
-
-                                            // capital = $scope.capital2 ;
-                                            // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                            // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            // total = $scope.p2 ;//$scope.p2
-
-
-                                            // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'] ) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // A1 pones Tasa (tipo de interes del periodo)
-                                                // en B1 el nPer  (número de Periodos)
-                                                // en C1 el Va  (Capital inicial)
-                                                // (A1*(1+A1)^B1)*C1/(((1+A1)^B1)-1)
-                                                //(0.01 * (1+0.1)^84*191,520.00/(((1+A1)^84)-1)
-
-                                                // var mesesAlv=posPay - $scope.alphaNumeric.length;
-                                                // console.log("Total II: " + $scope.total2);
-
-                                                if (posicionPago < $scope.infoLote.msn) {
-                                                    // $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.total2;
-                                                    // console.log($scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']);
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log($scope.infoLote.msn + " - " + posicionPago);
-
-                                                    // console.log($scope.alphaNumeric[posPay]['control']);
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log(0);
-                                                    // console.log(posPay + " - " + posicionPago);
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                }
-                                                // var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                // parte1 = parte1;
-                                                //
-                                                // var parte2 = ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago'])-1);
-                                                // parte2 = parte2;
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-                                                // operacionCompleta = (($scope.infoLote.interes_p2*parte1*$scope.alphaNumeric[(posPay)]['saldo'].toFixed(2))/parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log("poscicion " + (i-1) + ": ");
-                                                // console.log($scope.alphaNumeric[(i-1)]['saldo']);
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-
-
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // capital = $scope.capital2 ;
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // total = $scope.p2;
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log("saldo: " +( $scope.alphaNumeric[i]['saldo'] - $scope.alphaNumeric[i]['pagoCapital']) );
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) - 1);
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
+                            }
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.total2 = ($scope.total2 -$scope.capital2),//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
                             }
                             //
                             // range2.push({
@@ -6445,7 +6436,6 @@
                             // });
                             // window['pagoCapChange' + numfinalCount]=Function("","console.log('pagoCapChange"+numfinalCount+" el parametro es: " + document.getElementById('#idModel'+numfinalCount) + "');");//angular.element(document.querySelector('#idModel'+numfinalCount))
 
-                            mes++;
                             if (i == ($scope.infoLote.meses - 1)) {
                                 $scope.totalSegundoPlan = $scope.p2;
                             }
@@ -6495,12 +6485,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + parseFloat(($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -6508,6 +6506,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -6549,46 +6548,7 @@
                         var range2 = [];
                         for (var i = ini; i < $scope.infoLote.meses; i++) {
 
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-
-
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             //nuevo codigo 2 marzo 20
                             if (i == 0) {
@@ -6601,168 +6561,224 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
-                                    } else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        // capital = $scope.alphaNumeric[i]['capital']=99999999999999;
-                                        // newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                        // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                        // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);//$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                            $scope.capital2 = (($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'])
-                                                / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1) - $scope.interes_plan2);
-                                            // $scope.capital2 = ((($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1)) - $scope.interes_plan2);
-
-                                            // capital = $scope.capital2 ;
-                                            // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                            // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            // total = $scope.p2 ;//$scope.p2
-
-
-                                            // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'] ) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-
-
-                                                // version 09Marzo20
-                                                // var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);
-                                                // parte1 = parte1.toFixed(2);
-                                                // var parte2 = ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1);
-                                                // parte2 = parte2.toFixed(2);
-                                                // var operacionCompleta = (($scope.infoLote.interes_p2*($scope.alphaNumeric[posPay]['saldo'] * parte1))/parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // // console.log("alv: " + operacionCompleta);
-                                                // capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 = ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // total = operacionCompleta;
-                                                // interes = $scope.interes_plan2;
-
-
-                                                //nunevaversion 09MArzo2020
-                                                var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                parte1 = parte1;
-
-                                                var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                parte2 = parte2;
-                                                // console.log(0);
-                                                // console.log(posPay + " - " + posicionPago);
-                                                operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 = ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // capital = $scope.capital2 ;
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // total = $scope.p2;
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log("saldo: " +( $scope.alphaNumeric[i]['saldo'] - $scope.alphaNumeric[i]['pagoCapital']) );
-                                            } else {
-                                                console.log($scope.alphaNumeric[i]['pago']);
-                                                console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                        // console.log('pagoCapital == 0');
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
-                                        // console.log('pagoCapital != 0');
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) - 1);
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            //finaliza nuevo código 2 marzo 20
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.total2 - $scope.capital2,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
 
 
-                            //codigo anterior a 2 marzo 20
-                            // $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
-                            // $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-                            // range2.push({
-                            //
-                            // 	"fecha" : $scope.dateCf,
-                            // 	"pago" : i + 1,
-                            // 	"capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                            // 	"interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
-                            // 	"total" : $scope.p2,
-                            // 	"saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
-                            // 	"pagoCapital"	:	"",
-                            // });
 
 
-                            mes++;
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
 
                             if (i == ($scope.infoLote.meses - 1)) {
                                 $scope.totalSegundoPlan = $scope.p2;
@@ -6800,12 +6816,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + parseFloat(($scope.alphaNumeric[full['pago'] - 1]['pagoCapital']).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -6813,6 +6837,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -6843,46 +6868,11 @@
 
                     }
 
-                    if ($scope.infoLote.mesesSinInteresP1 == 36) {
+                    if ($scope.infoLote.mesesSinInteresP1 == 36)
+                    {
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
@@ -6890,145 +6880,141 @@
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        // alert('olv');
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
                                         dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
                                     }
-                                    /*ghdfhfdhdhdfhdh*/
-                                    //anterior a 19 enero20
-                                    // for (var n = 0; n < posicionPago; n++) {
-                                    // 	if ($scope.alphaNumeric[n]['disp'] == 0 || $scope.alphaNumeric[n]['disp'] == "0") {
-                                    // 		if ($scope.alphaNumeric[n]['pago'] < posicionPago) {
-                                    // 			console.log($scope.alphaNumeric[n]['pago']);
-                                    // 			$scope.alphaNumeric[n]['saldo'] = alphaOriginal[n]['saldo'];//alphaOriginal[n]['saldo']
-                                    // 			console.log("este es el saldo " + alphaOriginal[n]['saldo'] + " en " + n)
-                                    // 		}
-                                    // 	}
-                                    // }
-                                    // for (var n = 0; n < posicionPago; n++)
-                                    // {
-                                    // 	if($scope.alphaNumeric[n]['disp']!="")
-                                    // 	{
-                                    // 		newSaldoTable = 99999;
-                                    // 	}
-                                    // }
-                                } else {
-                                    /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                    if ($scope.alphaNumeric[i]['disp'] == 0 || $scope.alphaNumeric[i]['disp'] == undefined) {
-                                        //newSaldoTable = $scope.inufoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital;
-                                        // dispPC = 0;
-                                        // pagoACapitalCantidad = 0;
-                                        //else despues del primer post en segunda posicion
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'] - saldo;
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            // dispPC = 0;
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                    } else {
-                                        //else despues del primer post
-                                        // console.log($scope.alphaNumeric[i]['disp']);
-                                        // console.log('posicion de pago ene ste punto :' + posicionPago);
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                        // if ($scope.alphaNumeric[posicionPago]['pago'] >= posicionPago || $scope.alphaNumeric[posicionPago]['pago'] <= posicionPago)
-                                        // {
-                                        // 	if ($scope.alphaNumeric[posicionPago]['disp'] == 1)
-                                        // 	{
-                                        // 		/*aqui se coloca cuando se hay pagos abajo del nuevo, ejemplo Pago 5:550 y se quiere colocar uno en el 2*/
-                                        // 		newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posicionPago]['saldo'];
-                                        // 		dispPC = 1;
-                                        // 		pagoACapitalCantidad = $scope.alphaNumeric[posicionPago]['pagoCapital'];
-                                        // 	}
-                                        // 	else
-                                        // 	{/*se coloca un valor cuando nohay nada(el resto de los campos*/
-                                        // 			newSaldoTable = $scope.alphaNumeric[i]['saldo'];
-                                        // 			dispPC = 0;
-                                        // 			pagoACapitalCantidad = 0;
-                                        // 	}
-                                        // }
-                                        // else
-                                        // {
-                                        // 	newSaldoTable = 0;
-                                        // 	dispPC = 0;
-                                        // 	pagoACapitalCantidad = 0;
-                                        // }
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.infoLote.capital,
-                                    "interes": 0,
-                                    "total": $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
-                                // range.push({
-                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
-                                //     "pago": i + 1,
-                                //     "capital": $scope.alphaNumeric[i]['capital'],
-                                //     "interes": 0,
-                                //     "total": $scope.alphaNumeric[i]['total'],
-                                //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                //     "disp": $scope.alphaNumeric[i]['disp'],
-                                // });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            /*finaliza funcion*/
-                            // range.push({
-                            //     "fecha" : $scope.dateCf,
-                            //     "pago" : i + 1,
-                            //     "capital" : $scope.infoLote.capital,
-                            //     "interes" : 0,
-                            //     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                            //     "saldo" : newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                            //     "pagoCapital" : pagoACapitalCantidad,
-                            //     "disp":dispPC,
-                            // });
-                            mes++;
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo":  $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
                                 // alert($scope.total2);
@@ -7045,44 +7031,8 @@
                         var range2 = [];
                         // console.log("Saldo para el segundo arreglo " + $scope.total2);
                         for (var i = ini2; i < $scope.infoLote.meses; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -7096,172 +7046,226 @@
                             // total = $scope.p2;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
+                            let interesC;
+                            let capitalC;
+                            let totalC;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        console.log('primera posicion');
-                                    } else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0) {
-                                        // capital = $scope.alphaNumeric[i]['capital']=99999999999999;
-                                        // newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                        // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                        // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            // $scope.interes_plan2 = $scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p2);//$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                            // $scope.capital2 = (($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'])
-                                            //  / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1) - $scope.interes_plan2);
-
-                                            // $scope.capital2 = ((($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1)) - $scope.interes_plan2);
-
-                                            // capital = $scope.capital2 ;
-                                            // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                            // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            // total = $scope.p2 ;//$scope.p2
-
-
-                                            // $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.alphaNumeric[i]['saldo'] ) / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // A1 pones Tasa (tipo de interes del periodo)
-                                                // en B1 el nPer  (número de Periodos)
-                                                // en C1 el Va  (Capital inicial)
-                                                // (A1*(1+A1)^B1)*C1/(((1+A1)^B1)-1)
-                                                //(0.01 * (1+0.1)^84*191,520.00/(((1+A1)^84)-1)
-
-                                                // var mesesAlv=posPay - $scope.alphaNumeric.length;
-                                                // console.log("Total II: " + $scope.total2);
-
-                                                if (posicionPago < $scope.infoLote.msn) {
-                                                    // $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.total2;
-                                                    // console.log($scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']);
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log($scope.infoLote.msn + " - " + posicionPago);
-
-                                                    // console.log($scope.alphaNumeric[posPay]['control']);
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log(0);
-                                                    // console.log(posPay + " - " + posicionPago);
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                }
-                                                // var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                // parte1 = parte1;
-                                                //
-                                                // var parte2 = ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses  - $scope.alphaNumeric[posPay]['pago'])-1);
-                                                // parte2 = parte2;
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-                                                // operacionCompleta = (($scope.infoLote.interes_p2*parte1*$scope.alphaNumeric[(posPay)]['saldo'].toFixed(2))/parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log("poscicion " + (i-1) + ": ");
-                                                // console.log($scope.alphaNumeric[(i-1)]['saldo']);
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                                // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-
-
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // capital = $scope.capital2 ;
-                                                // newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                // dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                // pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                // interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // total = $scope.p2;
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log("saldo: " +( $scope.alphaNumeric[i]['saldo'] - $scope.alphaNumeric[i]['pagoCapital']) );
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[i]['pago']) - 1);
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
+                            }
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.total2 = ($scope.total2 -$scope.capital2),//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
                             }
                             //
                             // range2.push({
@@ -7276,7 +7280,6 @@
                             // });
                             // window['pagoCapChange' + numfinalCount]=Function("","console.log('pagoCapChange"+numfinalCount+" el parametro es: " + document.getElementById('#idModel'+numfinalCount) + "');");//angular.element(document.querySelector('#idModel'+numfinalCount))
 
-                            mes++;
                             if (i == ($scope.infoLote.meses - 1)) {
                                 $scope.totalSegundoPlan = $scope.p2;
                             }
@@ -7326,12 +7329,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + parseFloat($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -7339,6 +7350,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -7366,267 +7378,15 @@
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
+
+                    setTimeout(()=>{
+                        blockFields();
+                    },1500)
                 }
 
 
                 /////////////////// TABLES X 11 A 20 AÑOS //////////////
                 if ($scope.infoLote.meses >= 132 && $scope.infoLote.meses <= 240)
-                    // {
-                    // 	console.log('hanumaaa t vas a endeudar prro!');
-                    // 	if($scope.infoLote.mesesSinInteresP1 == 36)
-                    // 	{
-                    // 		for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++)
-                    // 		{
-                    // 			if(mes == 13){
-                    // 				mes = '01';
-                    // 				yearc++;
-                    // 			}
-                    // 			if(mes == 2){
-                    // 				mes = '02';
-                    // 			}
-                    // 			if(mes == 3){
-                    // 				mes = '03';
-                    // 			}
-                    // 			if(mes == 4){
-                    // 				mes = '04';
-                    // 			}
-                    // 			if(mes == 5){
-                    // 				mes = '05';
-                    // 			}
-                    // 			if(mes == 6){
-                    // 				mes = '06';
-                    // 			}
-                    // 			if(mes == 7){
-                    // 				mes = '07';
-                    // 			}
-                    // 			if(mes == 8){
-                    // 				mes = '08';
-                    // 			}
-                    // 			if(mes == 9){
-                    // 				mes = '09';
-                    // 			}
-                    // 			if(mes == 10){
-                    // 				mes = '10';
-                    // 			}
-                    // 			if(mes == 11){
-                    // 				mes = '11';
-                    // 			}
-                    // 			if(mes == 12){
-                    // 				mes = '12';
-                    // 			}
-                    //
-                    //
-                    // 			$scope.dateCf = day + '-' + mes + '-' + yearc;
-                    //
-                    // 			if(i == 0){
-                    // 				$scope.fechaPM = $scope.dateCf;
-                    // 			}
-                    //
-                    //
-                    // 			range.push({
-                    //
-                    // 				"fecha" : $scope.dateCf,
-                    // 				"pago" : i + 1,
-                    // 				"capital" : $scope.infoLote.capital,
-                    // 				"interes" : 0,
-                    // 				"total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                    // 				"saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
-                    // 				"pagoCapital"	:	"",
-                    // 			});
-                    // 			mes++;
-                    //
-                    // 			if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
-                    // 				$scope.total2 = $scope.infoLote.precioTotal;
-                    // 				$scope.totalPrimerPlan = $scope.infoLote.capital + $scope.infoLote.interes_p1;
-                    //
-                    //
-                    // 			}
-                    // 			ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
-                    // 			$scope.finalMesesp1 = (range.length);
-                    //
-                    // 		}
-                    // 		$scope.range= range;
-                    //
-                    // 		//////////
-                    //
-                    // 		$scope.p2 = ($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1 )-1);
-                    //
-                    // 		var range2=[];
-                    //
-                    // 		for (var i = ini2; i < 120; i++)
-                    // 		{
-                    // 			if(mes == 13){
-                    // 				mes = '01';
-                    // 				yearc++;
-                    // 			}
-                    // 			if(mes == 2){
-                    // 				mes = '02';
-                    // 			}
-                    // 			if(mes == 3){
-                    // 				mes = '03';
-                    // 			}
-                    // 			if(mes == 4){
-                    // 				mes = '04';
-                    // 			}
-                    // 			if(mes == 5){
-                    // 				mes = '05';
-                    // 			}
-                    // 			if(mes == 6){
-                    // 				mes = '06';
-                    // 			}
-                    // 			if(mes == 7){
-                    // 				mes = '07';
-                    // 			}
-                    // 			if(mes == 8){
-                    // 				mes = '08';
-                    // 			}
-                    // 			if(mes == 9){
-                    // 				mes = '09';
-                    // 			}
-                    // 			if(mes == 10){
-                    // 				mes = '10';
-                    // 			}
-                    // 			if(mes == 11){
-                    // 				mes = '11';
-                    // 			}
-                    // 			if(mes == 12){
-                    // 				mes = '12';
-                    // 			}
-                    //
-                    //
-                    // 			$scope.dateCf = day + '-' + mes + '-' + yearc;
-                    //
-                    //
-                    // 			$scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                    // 			$scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-                    //
-                    // 			range2.push({
-                    //
-                    // 				"fecha" : $scope.dateCf,
-                    // 				"pago" : i + 1,
-                    // 				"capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                    // 				"interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
-                    // 				"total" : $scope.p2,
-                    // 				"saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
-                    // 				"pagoCapital"	:	"",
-                    // 			});
-                    // 			mes++;
-                    //
-                    //
-                    // 			if (i == 119){
-                    // 				$scope.total3 = $scope.total2;
-                    // 				$scope.totalSegundoPlan = $scope.p2;
-                    //
-                    // 			}
-                    // 			$scope.finalMesesp2 = (range2.length);
-                    //
-                    // 		}
-                    // 		$scope.range2= range2;
-                    //
-                    //
-                    //
-                    // 		//////////
-                    //
-                    //
-                    //
-                    // 		$scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120) * $scope.total3) / ( Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120)-1);
-                    //
-                    //
-                    // 		var range3=[];
-                    //
-                    // 		for (var i = 121; i < $scope.infoLote.meses + 1; i++)
-                    // 		{
-                    //
-                    // 			if(mes == 13){
-                    // 				mes = '01';
-                    // 				yearc++;
-                    // 			}
-                    //
-                    // 			if(mes == 2){
-                    // 				mes = '02';
-                    // 			}
-                    // 			if(mes == 3){
-                    // 				mes = '03';
-                    // 			}
-                    // 			if(mes == 4){
-                    // 				mes = '04';
-                    // 			}
-                    // 			if(mes == 5){
-                    // 				mes = '05';
-                    // 			}
-                    // 			if(mes == 6){
-                    // 				mes = '06';
-                    // 			}
-                    // 			if(mes == 7){
-                    // 				mes = '07';
-                    // 			}
-                    // 			if(mes == 8){
-                    // 				mes = '08';
-                    // 			}
-                    // 			if(mes == 9){
-                    // 				mes = '09';
-                    // 			}
-                    // 			if(mes == 10){
-                    // 				mes = '10';
-                    // 			}
-                    // 			if(mes == 11){
-                    // 				mes = '11';
-                    // 			}
-                    // 			if(mes == 12){
-                    // 				mes = '12';
-                    // 			}
-                    //
-                    // 			$scope.dateCf = day + '-' + mes + '-' + yearc;
-                    //
-                    //
-                    //
-                    // 			$scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
-                    // 			$scope.capital2 = ($scope.p3 - $scope.interes_plan3);
-                    //
-                    // 			range3.push({
-                    //
-                    // 				"fecha" : $scope.dateCf,
-                    // 				"pago" : i,
-                    // 				"capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
-                    // 				"interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
-                    // 				"total" : $scope.p3,
-                    // 				"saldo" : ($scope.total3 = ($scope.total3 -$scope.capital2)),
-                    // 				"pagoCapital"	:	"",
-                    // 			});
-                    // 			mes++;
-                    //
-                    //
-                    // 			if (i == 122){
-                    // 				$scope.totalTercerPlan = $scope.p3;
-                    //
-                    // 			}
-                    // 			$scope.finalMesesp3 = (range3.length);
-                    //
-                    // 		}
-                    //
-                    // 		$scope.range3= range3;
-                    //
-                    // 		$scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
-                    // 		$scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2).concat($scope.range3);
-                    //
-                    // 		// $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
-                    //
-                    // 		$scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                    // 				{extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                    // 				{extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                    // 				{extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                    // 				{extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                    // 						//pageMargins [left, top, right, bottom]
-                    // 						doc.pageMargins = [ 140, 40, 10, 50 ];
-                    // 						doc.alignment = 'center';
-                    //
-                    // 					}},
-                    // 			]
-                    // 		).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
-                    //
-                    //
-                    // 	}
-                    // }
                 {
                     var range=[];
 
@@ -7636,44 +7396,7 @@
                         $scope.infoLote.mesesSinInteresP1 = ($scope.mesesdiferir > 0) ? ($scope.infoLote.mesesSinInteresP1 + $scope.mesesdiferir) : ($scope.infoLote.mesesSinInteresP1);
 
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1-1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
@@ -7681,77 +7404,142 @@
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
                                         dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
                                     }
-                                } else {
-                                    /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                    if ($scope.alphaNumeric[i]['disp'] == 0 || $scope.alphaNumeric[i]['disp'] == undefined) {
-                                        //else despues del primer post en segunda posicion
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'] - saldo;
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            // dispPC = 0;
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.infoLote.capital,
-                                    "interes": 0,
-                                    "total": $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            mes++;
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
+
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
                                 // alert($scope.total2);
@@ -7770,59 +7558,9 @@
                         // var range2 = [];
                         var f=0;
                         for (var i = ini2; i <  120; i++) {
-                            var f=f+1;
-                            if ((mes == 13) || (mes == 14)) {
-
-                                if (mes == 13) {
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
 
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -7835,119 +7573,224 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                    else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital'] == undefined) {
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                if (posicionPago < $scope.infoLote.msn) {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses -  ($scope.alphaNumeric[posPay]['pago']));//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - ($scope.alphaNumeric[posPay]['pago'])) - 1);
-                                                    parte2 = parte2;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                }
-
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.total2 - $scope.capital2,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
                             }
                             //se termina nueva parte
-                            mes++;
 
                             if (i == 119) {
                                 $scope.total3 = $scope.total2;
@@ -7968,74 +7811,9 @@
                         // console.log("Saldo para el tercer arreglo " + $scope.total2);
                         for (var i = 120; i < $scope.infoLote.meses; i++) {//$scope.infoLote.meses + 1
 
-                            if ((mes == 13) || (mes == 14)) {
-
-                                if (mes == 13) {
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-
-                            //11marzo20
-                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
-                            // $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
-                            // $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
-                            // range3.push({
-                            //
-                            // 	"fecha" : $scope.dateCf,
-                            // 	"pago" : i,
-                            // 	"capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
-                            // 	"interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
-                            // 	"total" : $scope.p3,
-                            // 	"saldo" : ($scope.total3 = ($scope.total3 -$scope.capital2)),
-                            //
-                            // });
-                            //versioi a terior range3 11Marzo20
 
                             //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -8049,123 +7827,220 @@
                             alphaOriginal = $scope.alphaNumeric;
 
                             // console.log($scope.alphaNumeric[i]['disp'] + " - " + i);
+                            let interesC;
+                            let capitalC;
+                            let totalC;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+                                        console.log('total3[',i,']', $scope.total3);
                                     }
-                                    else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital'] == undefined) {
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // if (posicionPago < 120) {
-                                                if (posicionPago < 120) {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses  -120) - 1);
-                                                    parte2 = parte2;
-
-
-                                                    //$scope.alphaNumeric[(119)]['saldo'] = $scope.total2;
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.total2;
-                                                    operacionCompleta = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[
-                                                }
-                                                else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    operacionCompleta = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                }
-
-                                                // console.log("ALV: " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                                capital = operacionCompleta - ($scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3));//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total3 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2 888888
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes = $scope.interes_plan3;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital3;
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital3;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes = $scope.interes_plan3;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p3;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago'])) * $scope.total3) / ( Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago']))-1);
+
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('flagv4[',i,']');
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
                             }
-                            mes++;
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
+                                    $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                        "interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
+                                        "total" : $scope.p3,
+                                        "saldo" :$scope.total3 = ($scope.total3 -$scope.capital2), //
+                                        // "saldo" : saldoFinal_2,
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                // console.log('restante..', $scope.alphaNumeric[i]);
+                                // range3.push({
+                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
+                                //     "pago": $scope.alphaNumeric[i]['pago'],
+                                //     "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                //     "interes": 0,
+                                //     "total": 666,//RECALCULAR
+                                //     "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     "pagoCapital": 0,
+                                //     "disp": 1,
+                                // })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
 
 
                             if (i == 122) {
@@ -8207,12 +8082,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -8220,13 +8103,9 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
-
-
-
-
-
                                 ),
                         ];
 
@@ -8266,58 +8145,9 @@
 
                         for (var i = ini; i < 120; i++) {
 
-                            if( (mes == 13) || (mes == 14) ){
-
-                                if(mes == 13){
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if(mes == 2){
-                                mes = '02';
-                            }
-                            if(mes == 3){
-                                mes = '03';
-                            }
-                            if(mes == 4){
-                                mes = '04';
-                            }
-                            if(mes == 5){
-                                mes = '05';
-                            }
-                            if(mes == 6){
-                                mes = '06';
-                            }
-                            if(mes == 7){
-                                mes = '07';
-                            }
-                            if(mes == 8){
-                                mes = '08';
-                            }
-                            if(mes == 9){
-                                mes = '09';
-                            }
-                            if(mes == 10){
-                                mes = '10';
-                            }
-                            if(mes == 11){
-                                mes = '11';
-                            }
-                            if(mes == 12){
-                                mes = '12';
-                            }
 
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
                             }
@@ -8328,153 +8158,233 @@
                             var newSaldoTable = 0;
 
                             var alphaOriginal = [];
-                            alphaOriginal = $scope.alphaNumeric;
+                            alphaOriginal = $scope.alphaNumeric[i]['fecha'];
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1)
+                            let interesC;
+                            let capitalC;
+                            let totalC;
+
+
+
+                            if($scope.alphaNumeric[i]['disp']==1)
                             {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
-                                if (vuelta == posicionPago)
-                                {
-                                    if (posicionPago == 1)
-                                    {
-                                        console.log('primera posicion');
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
+                                if (vuelta == posicionPago) {
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                    else
-                                    {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
                                 }
-                                else
-                                {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital']==undefined)
-                                    {
-                                        if (i < posicionPago)
-                                        {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        }
-                                        else
-                                        {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // A1 pones Tasa (tipo de interes del periodo)
-                                                // en B1 el nPer  (número de Periodos)
-                                                // en C1 el Va  (Capital inicial)
-                                                // (A1*(1+A1)^B1)*C1/(((1+A1)^B1)-1)
-                                                //(0.01 * (1+0.1)^84*191,520.00/(((1+A1)^84)-1)
-
-                                                // var mesesAlv=posPay - $scope.alphaNumeric.length;
-                                                // console.log("Total II: " + $scope.total2);
-
-                                                if (posicionPago < $scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log(0);
-                                                    // console.log(posPay + " - " + posicionPago);
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                }
-
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-
-
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                            } else {
-                                                console.log($scope.alphaNumeric[i]['pago']);
-                                                console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
-                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
+
+
                             }
-                            else
-                            {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.total2 - $scope.capital2,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
                             }
                             //se termina nueva parte
-                            mes++;
 
                             if (i == 119){
                                 $scope.total3 = $scope.total2;
@@ -8496,74 +8406,8 @@
                         var range3=[];
                         for (var i = 120; i < $scope.infoLote.meses ; i++) {//$scope.infoLote.meses + 1
 
-                            if( (mes == 13) || (mes == 14) ){
-
-                                if(mes == 13){
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if(mes == 2){
-                                mes = '02';
-                            }
-                            if(mes == 3){
-                                mes = '03';
-                            }
-                            if(mes == 4){
-                                mes = '04';
-                            }
-                            if(mes == 5){
-                                mes = '05';
-                            }
-                            if(mes == 6){
-                                mes = '06';
-                            }
-                            if(mes == 7){
-                                mes = '07';
-                            }
-                            if(mes == 8){
-                                mes = '08';
-                            }
-                            if(mes == 9){
-                                mes = '09';
-                            }
-                            if(mes == 10){
-                                mes = '10';
-                            }
-                            if(mes == 11){
-                                mes = '11';
-                            }
-                            if(mes == 12){
-                                mes = '12';
-                            }
-
-                            //11marzo20
-                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
-                            // $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
-                            // $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
-                            // range3.push({
-                            //
-                            // 	"fecha" : $scope.dateCf,
-                            // 	"pago" : i,
-                            // 	"capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
-                            // 	"interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
-                            // 	"total" : $scope.p3,
-                            // 	"saldo" : ($scope.total3 = ($scope.total3 -$scope.capital2)),
-                            //
-                            // });
-                            //versioi a terior range3 11Marzo20
-
                             //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -8578,155 +8422,221 @@
 
                             // console.log($scope.alphaNumeric[i]['disp'] + " - " + i);
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1 )
+                            let interesC;
+                            let capitalC;
+                            let totalC;
+
+                            if($scope.alphaNumeric[i]['disp']==1)
                             {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
-                                if (vuelta == posicionPago)
-                                {
-                                    if (posicionPago == 1)
-                                    {
-                                        // console.log('primera posicion');
+                                if (vuelta == posicionPago) {
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+                                        console.log('total3[',i,']', $scope.total3);
                                     }
-                                    else
-                                    {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago'])) * $scope.total3) / ( Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago']))-1);
+
                                 }
-                                else
-                                {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                else{
+                                    // console.log('flagv4[',i,']');
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital']==undefined)
-                                    {
-                                        if (i < posicionPago)
-                                        {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        }
-                                        else
-                                        {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // A1 pones Tasa (tipo de interes del periodo)
-                                                // en B1 el nPer  (número de Periodos)
-                                                // en C1 el Va  (Capital inicial)
-                                                // (A1*(1+A1)^B1)*C1/(((1+A1)^B1)-1)
-                                                //(0.01 * (1+0.1)^84*191,520.00/(((1+A1)^84)-1)
-
-                                                // var mesesAlv=posPay - $scope.alphaNumeric.length;
-                                                // console.log("Total II: " + $scope.total2);
-
-
-                                                if (posicionPago < 120)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120) - 1);
-                                                    parte2 = parte2;
-
-                                                    // console.log($scope.total2);
-                                                    $scope.alphaNumeric[(119)]['saldo'] = $scope.total2;
-
-                                                    operacionCompleta = $scope.infoLote.precioTotal = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[(119)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[($scope.infoLote.msn-1)]['saldo']);
-                                                    // console.log(i + " - " + $scope.infoLote.precioTotal);
-                                                    // console.log($scope.alphaNumeric[(120)]['saldo']);
-                                                }
-                                                else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    // console.log(0);
-                                                    // console.log(posPay + " - " + posicionPago);
-                                                    operacionCompleta = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                    // console.log(parte2 + " - " + $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2));
-                                                    // console.log('alv');
-                                                }
-
-                                                capital = operacionCompleta - ($scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p3));//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total3 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2 888888
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes =  $scope.interes_plan3 ;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-
-                                                // console.log(i + " - " +($scope.alphaNumeric[i-1]['interes']));
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital3;
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital3;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i-1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes =  $scope.interes_plan3;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p3;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
-                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
                             }
-                            else
-                            {
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
+                                    $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                        "interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
+                                        "total" : $scope.p3,
+                                        "saldo" :$scope.total3 = ($scope.total3 -$scope.capital2), //
+                                        // "saldo" : saldoFinal_2,
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
                             }
-                            mes++;
+                            else{
+                                // console.log('restante..', $scope.alphaNumeric[i]);
+                                // range3.push({
+                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
+                                //     "pago": $scope.alphaNumeric[i]['pago'],
+                                //     "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                //     "interes": 0,
+                                //     "total": 666,//RECALCULAR
+                                //     "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     "pagoCapital": 0,
+                                //     "disp": 1,
+                                // })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
+
 
 
                             if (i == 122){
@@ -8768,29 +8678,32 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            var numberPay2 =  $scope.alphaNumeric[full['pago'] - 1]['pagoCapital'] ;
                                             return inputCapital + numberPay;
-                                            // return numberPay2;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            var numberPay2 =  $scope.alphaNumeric[full['pago'] - 1]['pagoCapital'] ;
                                             return inputCapital + numberPay;
-                                            // return numberPay2;
-
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
                         ];
-                        console.log("cámara mis perros: ", $scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
                                 {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
                                 {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
@@ -8799,13 +8712,12 @@
                                         //pageMargins [left, top, right, bottom]
                                         doc.pageMargins = [ 140, 40, 10, 50 ];
                                         doc.alignment = 'center';
-
                                     }},
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
 
-
+x
 
 
                     }
@@ -8814,124 +8726,162 @@
                         $scope.infoLote.mesesSinInteresP1 = ($scope.mesesdiferir > 0) ? ($scope.infoLote.mesesSinInteresP1 + $scope.mesesdiferir) : ($scope.infoLote.mesesSinInteresP1);
 
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1-1; i++) {
-                            if (mes == 13) {
-                                mes = '01';
-                                yearc++;
-                            }
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.dateCf;
                             }
-                            var newSaldoTable = 0;
+                            var newSaldoTable;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
-                                /*Para verfificar donde se puso el pago a capital*/
+
+
+
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
                                 var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    // console.log("se tiene que poner esto " + saldo + " en la posición: " + (posPay + 1));
-                                    if (posicionPago == 1) {
-                                        /* Este if es para ver si se descuenta la primera posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
-                                        dispPC = 1;
-                                        pagoACapitalCantidad = saldo;
-                                        // console.log('se desceunta de la primera posicion');
-                                    } else {/* Este else es para ver si se descuenta apartir de la segunda posicion*/
-                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(saldo > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        console.log('[v1]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
                                         dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        // console.log('se descuente de la posicion ' + i);
                                     }
-                                } else {
-                                    /*Hace el calculo cuando es 0apartir de la segunda posición*/
-                                    if ($scope.alphaNumeric[i]['disp'] == 0 || $scope.alphaNumeric[i]['disp'] == undefined) {
-                                        //else despues del primer post en segunda posicion
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'] - saldo;
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            // dispPC = 0;
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[i]['pago'] >= posicionPago) {
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = 0;
-                                            pagoACapitalCantidad = 0;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > saldo){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                        } else if ($scope.alphaNumeric[i]['pago'] <= posicionPago) {
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                    }else if(saldo==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                            newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'];
-                                            dispPC = $scope.alphaNumeric[i]['dispPC'] = 0;
-                                            pagoACapitalCantidad = 0;
-                                        }
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total":$scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.infoLote.capital,
-                                    "interes": 0,
-                                    "total": $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo": newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
-                                range.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": 0,
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    // console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            mes++;
-                            if (i == ($scope.infoLote.mesesSinInteresP1 - 1)) {
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": 0,
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    let saldo_nuevo_to_calculate_capital = $scope.alphaNumeric[posicionPago]['saldo'];
+                                    let capital =  $scope.alphaNumeric[i]['capital'];
+                                    let total = $scope.alphaNumeric[i]['total'];
+                                    // console.log('flagv3[',i,']');
+                                    // console.log('Capital[',i,']:', capital);
+                                    //recalcular
+                                    range.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capital,//RECALCULAR
+                                        "interes": 0,
+                                        "total": total,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable = newSaldoTable - capital,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+                            }
+
+
+
+
+                            if (i == ($scope.infoLote.mesesSinInteresP1-1)) {
                                 $scope.total2 = $scope.infoLote.precioTotal;
+                                console.log('$scope.infoLote.precioTotal',$scope.infoLote.precioTotal);
+                                console.log('$scope.total2', $scope.total2);
+                                console.log('newSaldoTable', newSaldoTable);
+
                                 // alert($scope.total2);
                                 $scope.totalPrimerPlan = $scope.infoLote.capital + $scope.infoLote.interes_p1;
                             }
@@ -8941,66 +8891,15 @@
                         $scope.range = range;
 
                         /////////////
-                        // 	$scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal)
-                        // 		/ (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
+                        	$scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal)
+                        		/ (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
+
                         var range2 = [];
                         // console.log("Saldo para el segundo arreglo " + ini2);
                         // var range2 = [];
-                        var f=0;
                         for (var i = ini2; i <  120; i++) {
-                            var f=f+1;
-                            if ((mes == 13) || (mes == 14)) {
-
-                                if (mes == 13) {
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -9012,120 +8911,230 @@
 
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
+                            let interesC;
+                            let capitalC;
+                            let totalC;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+
+
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
+                                // console.log('vuelta:', vuelta, 'posicionPago:', posicionPago);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+
                                     }
-                                    else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital'] == undefined) {
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                if (posicionPago < $scope.infoLote.msn) {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
-                                                    parte2 = parte2;
-
-
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.infoLote.precioTotal;
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                } else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses -  ($scope.alphaNumeric[posPay]['pago']));//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - ($scope.alphaNumeric[posPay]['pago'])) - 1);
-                                                    parte2 = parte2;
-
-                                                    operacionCompleta = (($scope.infoLote.interes_p2 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                }
-
-                                                $scope.interes_plan2 = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p2);
-                                                capital = operacionCompleta - $scope.interes_plan2;//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total2 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                // console.log(i + " - " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital2;
-                                                newSaldoTable = $scope.total2 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital2;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                interes = $scope.interes_plan2;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p2;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total2 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
+                                else{
+                                    // console.log('deja esto tal cual viene en el arreglo');
+                                    // console.log($scope.alphaNumeric[i]);
+                                    console.log('flagv4[',i,']');
+                                    // console.log($scope.alphaNumeric[i]);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
+
+
                             }
-                            else {
-                                range2.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    $scope.p2 = ($scope.infoLote.interes_p2 * Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) * $scope.infoLote.precioTotal)
+                                        / (Math.pow(1 + $scope.infoLote.interes_p2, $scope.infoLote.meses - $scope.infoLote.mesesSinInteresP1) - 1);
+                                    //recalcularx
+                                    $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
+                                    $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),//RECALCULAR
+                                        "interes":$scope.interes_plan2= ($scope.total2  * $scope.infoLote.interes_p2),
+                                        "total": $scope.p2,//RECALCULAR
+                                        "saldo": $scope.infoLote.precioTotal = $scope.total2 = $scope.total2 - $scope.capital2,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                console.log('restante..', $scope.alphaNumeric[i]);
+                                range.push({
+                                    "fecha": $scope.alphaNumeric[i]['fecha'],
+                                    "pago": $scope.alphaNumeric[i]['pago'],
+                                    "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                    "interes": 0,
+                                    "total": 666,//RECALCULAR
+                                    "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                    "pagoCapital": 0,
+                                    "disp": 1,
+                                })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
                             }
                             //se termina nueva parte
-                            mes++;
 
                             if (i == 119) {
                                 $scope.total3 = $scope.total2;
@@ -9140,80 +9149,14 @@
 
                         //////////
 
-                        // $scope.p3 = ($scope.infoLote.interes_p3 * Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120) * $scope.total3) / (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120) - 1);
+                        $scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120) * $scope.infoLote.precioTotal) / ( Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120)-1);
 
                         var range3 = [];
                         // console.log("Saldo para el tercer arreglo " + $scope.total2);
                         for (var i = 120; i < $scope.infoLote.meses; i++) {//$scope.infoLote.meses + 1
 
-                            if ((mes == 13) || (mes == 14)) {
 
-                                if (mes == 13) {
-
-                                    mes = '01';
-                                    yearc++;
-
-                                } else if (mes == 14) {
-
-                                    mes = '02';
-                                    yearc++;
-
-                                }
-
-                            }
-
-                            if (mes == 2) {
-                                mes = '02';
-                            }
-                            if (mes == 3) {
-                                mes = '03';
-                            }
-                            if (mes == 4) {
-                                mes = '04';
-                            }
-                            if (mes == 5) {
-                                mes = '05';
-                            }
-                            if (mes == 6) {
-                                mes = '06';
-                            }
-                            if (mes == 7) {
-                                mes = '07';
-                            }
-                            if (mes == 8) {
-                                mes = '08';
-                            }
-                            if (mes == 9) {
-                                mes = '09';
-                            }
-                            if (mes == 10) {
-                                mes = '10';
-                            }
-                            if (mes == 11) {
-                                mes = '11';
-                            }
-                            if (mes == 12) {
-                                mes = '12';
-                            }
-
-                            //11marzo20
-                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
-                            // $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
-                            // $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
-                            // range3.push({
-                            //
-                            // 	"fecha" : $scope.dateCf,
-                            // 	"pago" : i,
-                            // 	"capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
-                            // 	"interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
-                            // 	"total" : $scope.p3,
-                            // 	"saldo" : ($scope.total3 = ($scope.total3 -$scope.capital2)),
-                            //
-                            // });
-                            //versioi a terior range3 11Marzo20
-
-                            //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.fechapago;
                             }
@@ -9226,124 +9169,220 @@
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
 
-                            // console.log($scope.alphaNumeric[i]['disp'] + " - " + i);
+                            let interesC;
+                            let capitalC;
+                            let totalC;
 
-                            if ($scope.alphaNumeric[i]['disp'] != 1) {
+                            if($scope.alphaNumeric[i]['disp']==1)
+                            {
+                                var dispPC = 0;
                                 var vuelta = (i + 1);
                                 var posicionPago = (posPay + 1);
                                 if (vuelta == posicionPago) {
-                                    if (posicionPago == 1) {
-                                        // console.log('primera posicion');
+
+                                    console.log('flagv2[',i,']');
+
+                                    if(parseFloat(saldo) > parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])){
+                                        // console.log("saldo", parseFloat(saldo));
+                                        // console.log("parseFloat($scope.alphaNumeric[posPay]['pagoCapital'])", parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+                                        console.log('[v1]');
+                                        let saldo_anterior = parseFloat($scope.alphaNumeric[posPay]['saldo'] )+ parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        // console.log('saldo_anterior', saldo_anterior);
+                                        // console.log('nuevo_saldo', nuevo_saldo);
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
+                                        console.log('total3[',i,']', $scope.total3);
                                     }
-                                    else {
-                                        // console.log('Segunda posicion: ' + $scope.alphaNumeric[posPay]['saldo'] + 'pagocap: ' + saldo);
-                                        capital = $scope.alphaNumeric[posPay]['capital'];
-                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'];//= nuevoSaldo;//saldo es el pago a capital (facepalm)
-                                        dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                        pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
-                                        interes = $scope.alphaNumeric[posPay]['interes'];//$scope.alphaNumeric[posPay]['saldo'] * $scope.infoLote.interes_p2
-                                        total = $scope.alphaNumeric[posPay]['total'];//capital + interes
-                                        $scope.alphaNumeric[posPay]['control'] = 1;
+                                    else if(parseFloat($scope.alphaNumeric[posPay]['pagoCapital']) > parseFloat(saldo)){
+                                        console.log('[v2]');
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        capitalC =  $scope.alphaNumeric[i]['capital'];
+                                        interesC = $scope.alphaNumeric[i]['interes'];
+                                        totalC = $scope.alphaNumeric[i]['total'];
                                     }
-                                } else {
-                                    // console.log('el total hasta este punto es de: ' + $scope.total2);
+                                    else if(parseFloat(saldo)==0){
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                        let nuevo_saldo = saldo_anterior - saldo;
 
-                                    if ($scope.alphaNumeric[posicionPago]['pagoCapital'] == 0 || $scope.alphaNumeric[posicionPago]['pagoCapital'] == undefined) {
-                                        if (i < posicionPago) {
-                                            capital = $scope.alphaNumeric[i]['capital'];
-                                            newSaldoTable = $scope.alphaNumeric[i]['saldo'];//saldo es el pago a capital (facepalm)
-                                            dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                            pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                            interes = $scope.alphaNumeric[i]['interes'];
-                                            total = $scope.alphaNumeric[i]['total'];
-                                        } else {
-
-                                            if ($scope.alphaNumeric[i]['disp'] == undefined || $scope.alphaNumeric[i]['disp'] == 0) {
-                                                // if (posicionPago < 120) {
-                                                if (posicionPago < 120) {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - 120);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses  -120) - 1);
-                                                    parte2 = parte2;
-
-
-                                                    //$scope.alphaNumeric[(119)]['saldo'] = $scope.total2;
-                                                    $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo'] = $scope.total2;
-                                                    operacionCompleta = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[($scope.infoLote.msn - 1)]['saldo']) / parte2);//((0.01*($scope.alphaNumeric[
-                                                }
-                                                else //if(posicionPago>=$scope.infoLote.msn)
-                                                {
-                                                    var parte1 = Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']);//$scope.infoLote.meses  - $scope.infoLote.mesesSinInteresP1
-                                                    parte1 = parte1;
-
-                                                    var parte2 = (Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - $scope.alphaNumeric[posPay]['pago']) - 1);
-                                                    parte2 = parte2;
-                                                    operacionCompleta = (($scope.infoLote.interes_p3 * parte1 * $scope.alphaNumeric[(posPay)]['saldo'].toFixed(2)) / parte2);//((0.01*($scope.alphaNumeric[i]['saldo']*1.17)))/.17
-                                                }
-
-                                                // console.log("ALV: " + $scope.alphaNumeric[(i - 1)]['saldo']);
-                                                capital = operacionCompleta - ($scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3));//($scope.capital2 =	 ($scope.p2 - $scope.interes_plan2))
-                                                // console.log("interes: " + $scope.interes_plan2);
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i)]['saldo'] = $scope.total3 - capital;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                total = operacionCompleta;//$scope.p2 888888
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes = $scope.interes_plan3;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                            } else {
-                                                // console.log($scope.alphaNumeric[i]['pago']);
-                                                // console.log($scope.alphaNumeric[i]['saldo']);
-                                                capital = $scope.capital3;
-                                                newSaldoTable = $scope.total3 = $scope.alphaNumeric[(i - 1)]['saldo'] - $scope.alphaNumeric[i]['pagoCapital'] - $scope.capital3;//$scope.total2= $scope.alphaNumeric[(i-1)]['saldo']-capital
-                                                dispPC = $scope.alphaNumeric[i]['disp'] = 0;
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'] = 0;
-                                                $scope.interes_plan3 = $scope.alphaNumeric[i]['interes'] = $scope.alphaNumeric[(i - 1)]['saldo'] * ($scope.infoLote.interes_p3);
-                                                interes = $scope.interes_plan3;//$scope.alphaNumeric[i]['saldo']*$scope.infoLote.interes_p2
-                                                total = $scope.p3;//$scope.p2
-                                            }
-                                            // console.log($scope.total2);
-                                        }
-                                    } else {
-                                        if ($scope.alphaNumeric[posPay]['pago'] >= posicionPago || $scope.alphaNumeric[posPay]['pago'] <= posicionPago) {
-                                            if ($scope.alphaNumeric[posicionPago]['disp'] == 1) {
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 1;
-                                                saldo = $scope.infoMoratorio.si = $scope.alphaNumeric[i]['saldo'];
-                                                pagoACapitalCantidad = $scope.alphaNumeric[i]['pagoCapital'];
-                                            } else {//se coloca un valor cuando nohay nada(el resto de los campos, apartir de la segunda posicion, else de la primera posicion
-                                                dispPC = $scope.alphaNumeric[posPay]['disp'] = 0;
-                                            }
-                                        } else {
-                                            //cuando se salta un espacio en la tabla
-                                            saldo = $scope.alphaNumeric[posPay]['saldo'] = $scope.infoMoratorio.si = 1;
-                                            total = 999999999999999;
-                                        }
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                        dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
                                     }
+                                    else{
+                                        // newSaldoTable = $scope.infoLote.precioTotal = $scope.alphaNumeric[posPay]['saldo'];
+                                        // dispPC = $scope.alphaNumeric[posPay]['dispPC'] = 1;
+                                        // pagoACapitalCantidad = $scope.alphaNumeric[posPay]['pagoCapital'] = saldo;
+                                        let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'];
+                                        let nuevo_saldo = saldo_anterior - saldo;
+                                        console.log('[v3]');
+                                        console.log('saldo_anterior:', parseFloat(saldo_anterior));
+                                        console.log('pago actual:', parseFloat(saldo));
+                                        console.log('pago anterior:',  parseFloat($scope.alphaNumeric[posPay]['pagoCapital']));
+
+
+
+                                        newSaldoTable = $scope.total3 = $scope.alphaNumeric[posPay]['saldo'] = nuevo_saldo;
+                                    }
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": capitalC,
+                                        "interes": interesC,
+                                        "total": totalC,
+                                        "saldo": $scope.infoLote.precioTotal = newSaldoTable,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": saldo,
+                                        "disp": 1,
+                                    });
+                                    $scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago'])) * $scope.total3) / ( Math.pow(1 + $scope.infoLote.interes_p3, $scope.infoLote.meses - ($scope.alphaNumeric[i]['pago']))-1);
+
                                 }
-                                // console.log("p2: " + $scope.p2);
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": capital,
-                                    "interes": interes,
-                                    "total": total,
-                                    "saldo": newSaldoTable,//newSaldoTable
-                                    "pagoCapital": pagoACapitalCantidad,
-                                    "disp": dispPC,
-                                });
-                            } else {
-                                range3.push({
-                                    "fecha": $scope.dateCf,
-                                    "pago": i + 1,
-                                    "capital": $scope.alphaNumeric[i]['capital'],
-                                    "interes": $scope.alphaNumeric[i]['interes'],
-                                    "total": $scope.alphaNumeric[i]['total'],
-                                    "saldo": $scope.alphaNumeric[i]['saldo'],//newSaldoTable
-                                    "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
-                                    "disp": $scope.alphaNumeric[i]['disp'],
-                                });
+                                else{
+                                    // console.log('flagv4[',i,']');
+
+                                    range2.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes": $scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": $scope.infoLote.precioTotal = $scope.alphaNumeric[i]['pagoCapital'],
+                                        "disp": 1,
+                                    })
+                                }
                             }
-                            mes++;
+                            else if ($scope.alphaNumeric[i]['disp'] == 0) {
+                                // console.log('ENTRE [', i,'] vuelta:',vuelta,'posicionPago:',posicionPago);
+                                // verifica donde no hay abono a capital ya sea pasado o futuro
+                                // dependiendo de eso lo modifica el arreglo
+                                var vuelta = (i + 1);
+                                var posicionPago = (posPay + 1);
+                                if(i<posicionPago){
+                                    // console.log('flagv1[',i,']');
+                                    //dejar tal cual no recalcular
+
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        "capital": $scope.alphaNumeric[i]['capital'],
+                                        "interes":$scope.alphaNumeric[i]['interes'],
+                                        "total": $scope.alphaNumeric[i]['total'],
+                                        "saldo": $scope.alphaNumeric[i]['saldo'], //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                        "pagoCapital": 0,
+                                        "disp": 1,
+                                    })
+                                }
+                                else{
+                                    $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
+                                    $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
+                                    range3.push({
+                                        "fecha": $scope.alphaNumeric[i]['fecha'],
+                                        "pago": $scope.alphaNumeric[i]['pago'],
+                                        	"capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                        	"interes" : ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3)),
+                                        	"total" : $scope.p3,
+                                        	"saldo" :$scope.total3 = ($scope.total3 -$scope.capital2), //
+                                        // "saldo" : saldoFinal_2,
+                                        "pagoCapital": 0,
+                                        "disp": 0,
+                                    })
+                                }
+
+                            }
+                            else{
+                                // console.log('restante..', $scope.alphaNumeric[i]);
+                                // range3.push({
+                                //     "fecha": $scope.alphaNumeric[i]['fecha'],
+                                //     "pago": $scope.alphaNumeric[i]['pago'],
+                                //     "capital": $scope.alphaNumeric[i]['capital'],//RECALCULAR
+                                //     "interes": 0,
+                                //     "total": 666,//RECALCULAR
+                                //     "saldo": 888,//RECALCULAR //$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     "pagoCapital": 0,
+                                //     "disp": 1,
+                                // })
+
+
+
+
+                                // if(posPay==i){
+                                //     console.log('posPay', posPay);
+                                //     console.log('i', i);
+                                //     //saldo: importe ingrrsado
+                                //     //nuevoSaldo: nuevo saldo
+                                //     //     console.log('nuevoSaldo', nuevoSaldo);
+                                //     //     console.log('saldo', saldo);
+                                //     //     console.log('saldoMenosPC', saldoMenosPC);
+                                //         if(saldo > $scope.alphaNumeric[posPay]['pagoCapital']){
+                                //             let saldo_anterior = $scope.alphaNumeric[posPay]['saldo'] + parseFloat($scope.alphaNumeric[posPay]['pagoCapital']);
+                                //             let nuevo_saldo = saldo_anterior - saldo;
+                                //             console.log('$scope.alphaNumeric[posPay][\'saldo\'] :', $scope.alphaNumeric[posPay]['saldo'] );
+                                //             console.log('$scope.alphaNumeric[posPay][\'pagoCapital\'] :', parseFloat($scope.alphaNumeric[posPay]['pagoCapital'] ));
+                                //             console.log('saldo_anterior', saldo_anterior);
+                                //             console.log('nuevo_saldo', nuevo_saldo);
+                                //
+                                //             // console.log('saldo anyterior:', $scope.alphaNumeric[posPay]['saldo']);
+                                //             // console.log('Nuevo saldo:', nuevo_saldo);
+                                //
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": nuevo_saldo,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": saldo,
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }else if($scope.alphaNumeric[posPay]['pagoCapital'] > nuevoSaldo){
+                                //
+                                //         }
+                                //         else{
+                                //             range.push({
+                                //                 "fecha": $scope.dateCf,
+                                //                 "pago": i + 1,
+                                //                 "capital": $scope.alphaNumeric[i]['capital'],
+                                //                 "interes": 0,
+                                //                 "total": $scope.alphaNumeric[i]['total'],
+                                //                 "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //                 "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //                 "disp": $scope.alphaNumeric[i]['disp'],
+                                //             });
+                                //         }
+                                //     // range.push({
+                                //     //     "fecha": $scope.dateCf,
+                                //     //     "pago": i + 1,
+                                //     //     "capital": $scope.alphaNumeric[i]['capital'],
+                                //     //     "interes": 0,
+                                //     //     "total": $scope.alphaNumeric[i]['total'],
+                                //     //     "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //     //     "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //     //     "disp": $scope.alphaNumeric[i]['disp'],
+                                //     // });
+                                // }
+                                // else{
+                                //     /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
+                                //     range.push({
+                                //         "fecha": $scope.dateCf,
+                                //         "pago": i + 1,
+                                //         "capital": $scope.alphaNumeric[i]['capital'],
+                                //         "interes": 0,
+                                //         "total": $scope.alphaNumeric[i]['total'],
+                                //         "saldo": $scope.alphaNumeric[i]['saldo'],//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
+                                //         "pagoCapital": $scope.alphaNumeric[i]['pagoCapital'],
+                                //         "disp": $scope.alphaNumeric[i]['disp'],
+                                //     });
+                                // }
+
+
+                            }
 
 
                             if (i == 122) {
@@ -9385,12 +9424,20 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
-                                            // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
+
                                             // console.log('Estoy llegando aquí');
                                             // return "$ " + saldo;
-                                            var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+
+                                            // console.log('data', data);
+                                            // console.log('type', type);
+                                            // console.log('full', full);
+                                            // console.log('meta', meta);
+                                            // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
+                                                'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
@@ -9398,6 +9445,7 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
+
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
                                     },
                                 ),
@@ -9423,6 +9471,9 @@
                     }
 
                     console.log("$scope.alphaNumeric: ", $scope.alphaNumeric);
+                    setTimeout(()=>{
+                        blockFields();
+                    },1500)
                 }
             }
 
@@ -9444,7 +9495,36 @@
             $('#pagoACapitalNumberJS').val(numberPay.value);
             $('#jsPagoCapital').click();
         }
+        function blockFields(){
+            let pagoCurrent = document.getElementById('pagoACapitalNumberJS');
+            for (var n = 0; n < pagoCurrent.value; n++)
+            {
+                // console.log(n);
+                // console.log('#idModel'+n);
+                $('#idModel'+n).attr('disabled', true);
+            }
+        }
+        function blockInitFields(arreglo){
+            $('#loaderDiv').removeClass('hide');
 
+            // console.log('ARRAY:', arreglo);
+
+            arreglo.map((element, index)=>{
+                if (element.pagoCapital != '' || element.pagoCapital != '') {
+                    counterTCO = (index);
+                }
+            });
+
+            for(let i=1; i<=counterTCO; i++){
+                // console.log('debe ser el id_', i);
+                $('#idModel'+i).attr('disabled', true);
+            }
+
+            $('#loaderDiv').addClass('hide');
+
+            // console.log(counter);
+
+        }
 
 
         $("#lote").change(function(){

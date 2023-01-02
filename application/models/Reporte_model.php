@@ -104,7 +104,7 @@ class Reporte_model extends CI_Model {
         return $data->result_array();    
     }
 
-    public function getChartQueries( $generalFilters, $id_rol, $beginDate, $endDate) {
+    public function getChartQueries( $generalFilters, $id_rol, $beginDate, $endDate, $filtroEsp) {
         $ventasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '$id_rol' rol FROM cte
         LEFT JOIN (SELECT FORMAT( SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END), 'C') total,
         COUNT(*)
@@ -114,7 +114,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        WHERE ISNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $generalFilters
+        WHERE ISNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtroEsp $generalFilters
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
@@ -126,7 +126,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11) AND (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00)
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $generalFilters
+        WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtroEsp $generalFilters
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
@@ -141,7 +141,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $generalFilters
+        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtroEsp $generalFilters
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
@@ -157,7 +157,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         WHERE isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0  
-        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $generalFilters
+        AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtroEsp $generalFilters
         AND (hlo2.idStatusContratacion = 9 OR hlo2.idStatusContratacion = 11)
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
@@ -199,8 +199,12 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {  // CONSULTADA POR ASISTENTE DE GERENCIA
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
-                else // SE CONSULTA DESDE LA TABLA PAPÁ ANTES TENIA ID_GERENTE = $ID_LIDER
-                    $filtro .= " AND cl.id_coordinador = $id_usuario";                 
+                else  {// SE CONSULTA DESDE LA TABLA PAPÁ ANTES TENIA ID_GERENTE = $ID_LIDER
+                    if ($current_rol == 9) // ES UN COORDINADOR EL QUE ESTPA LOGUEADO (TRAE LAS VENTAS DONDE ES COORDINADOR O ÉL EL ASESOR) hay que ver si también ponemos al asesor
+                        $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
+                    else // ES ASESOR O CUALQUIER OTRO ROL DISTINTO AL DE COORDINADOR
+                        $filtro .= " AND cl.id_coordinador = $id_usuario";
+                }               
                 $comodin = "id_asesor";
             } else { // CONSULTA DIRECTOR GENERAL, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN, SUBDIRECTOR REGIONAL, ASISTENTES DE SUBDIRECCIÓN REGIONAL
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES

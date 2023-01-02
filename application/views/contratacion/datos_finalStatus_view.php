@@ -61,6 +61,9 @@
                                                 <th>ESTATUS FECHA</th>
                                                 <th>FECHA APARTADO</th>
 												<th>CLIENTE</th>
+                                                <th>LIBERACIÓN</th>
+                                                <th>ÚLT. MOVIMIENTO</th>
+                                                <th>ESTATUS LOTE</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -159,7 +162,7 @@
                 titleAttr: 'Estatus actuales de terrenos al: ' + dateTime ,
                 title: 'Estatus actuales de terrenos al:  ' + dateTime ,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16,17, 18],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -197,6 +200,10 @@
                                     return 'FECHA APARTADO';
 								case 16: 
 									return 'CLIENTE';
+                                case 17:
+                                    return 'LIBERACIÓN';
+                                case 18:
+                                    return 'ESTATUS LOTE';
 							
                             }
                         }
@@ -335,8 +342,57 @@
 						}
 					}
 				},//statusFecha
-				{data: 'fechaApartado'},
+				{
+				    // data: 'fechaApartado'
+                    data : function(data)
+                    {
+                        if(data.fechaApartado !=null)
+                        {
+                            return myFunctions.convertDateYMDHMS(data.fechaApartado);
+                        }
+                        else
+                        {
+                            return "N/A";
+                        }
+                    }
+
+                },
+                // ¿Por qué? Porque si, ojalá te guste esta rosa mi bella bonita, no olvides que te amo con to-do mi corazón mi colorina, bonito día.
 				{data: 'nombreCliente'},
+                {
+                    // data: 'statusFecha'
+                    data : function(data)
+                    {
+                        let labelAlc = '';
+                        if(data.observacionContratoUrgente == '1'){
+                            labelAlc = '<label class="label" style="background: #4caf58;font-size: 0.8em;color: #FFF">En Proceso de liberación</label>';
+                        }else{
+                            labelAlc = '<label class="label" style="background: #616A6B;font-size: 0.8em;color: #FFF">Sin registro </label>';
+                        }
+
+                        return  labelAlc;
+                    }
+                },//liberación
+                {
+                    // data: 'statusFecha'
+                    data : function(data)
+                    {
+                        let label_return = myFunctions.convertDateYMDHMS(data.modificado_historial);
+                        return  label_return;
+                    }
+                },//última modificacion
+                {
+                    // data: 'statusFecha'
+                    data : function(data)
+                    {
+                        let center_init = '<center>';
+                        let center_end = '</center>';
+
+                        let label_statusLote = '<span class="label label-danger" style="background:#'+data.color+';">'+data.estatus_lote+'</span>';
+                        let tipo_venta = '<span class="label label-warning";">'+data.tipo_venta+'</span>';
+                        return  center_init+label_statusLote+'<br><br>'+tipo_venta+center_end;
+                    }
+                },//estatus lote
 
 			]
 		});

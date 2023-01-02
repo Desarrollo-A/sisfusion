@@ -533,9 +533,7 @@
 
 #calendar .fc-toolbar-chunk .fc-icon-fab, #calendar .fc-toolbar-chunk .fc-icon-fas { font-family: FontAwesome !important; }
 
-#calendar .fc-toolbar-chunk .fc-googleSignIn-button { display: none !important; background-color: transparent; box-shadow: none; border: none; height: 37px; width: 37px; padding: 0; border: 1px solid transparent; }
-
-#calendar .fc-toolbar-chunk .fc-googleSignIn-button img { width: 85%; }
+#calendar .fc-toolbar-chunk .fc-googleBtn-button { background-color: transparent; box-shadow: none; border: none; color: #EA4335; padding: 0; }
 
 #calendar .fc-toolbar-chunk .fc-googleLogout-button { display: none !important; background-color: transparent; box-shadow: none; border: none; height: 37px; width: 37px; padding: 0; border: 1px solid transparent; }
 

@@ -6,7 +6,7 @@
         <?php
 
 
-        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "32") //contraloria
+        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "32" || $this->session->userdata('id_usuario') == 10894) //contraloria
         {
             /*-------------------------------------------------------*/
             $datos = array();
@@ -172,6 +172,7 @@
 
                                                         <div class="col xol-xs-4 col-sm-4 col-md-4 col-lg-4">
                                                             <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
+                                                           
                                                         </div>
                                                     </div>
                                                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -328,7 +329,7 @@
     var url2 = "<?= base_url() ?>index.php/";
     var totaPen = 0;
     var tr;
-
+    var id_rol = "<?=$this->session->userdata('id_rol')?>";
 
     function formatMoney(n) {
         var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -606,6 +607,11 @@
                     "orderable": false,
                     "data": function(d) {
 
+                        if(id_rol != 17 ){
+                            return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+
+                        }else{
+
                         if (d.estatus == 1 || d.estatus == 67) {
                             return `<div class="d-flex justify-center"><button class="btn-data btn-warning btn-delete" value="${d.id_rc},${d.monto},${d.usuario}" ><i class="fas fa-trash" ></i></button>
                             <button class="btn-data btn-sky btn-update" value="${d.id_rc},${d.monto},${d.usuario}"><i class="fas fa-pencil-alt"></i></button>
@@ -619,6 +625,7 @@
                             return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
 
                         }
+                    }
 
                         // if(d.estatus==0){
 

@@ -226,7 +226,6 @@
                                                 <input id="referencia" name="referencia" class="form-control input-gral d-none">
                                                 <input id="empresa" name="empresa" class="form-control input-gral d-none">
                                                 <input id="personalidad" name="personalidad" class="form-control input-gral d-none">
-
                                             </div>
                                             <div class="row d-flex align-center mt-3">
                                                 <div class="col-md-5">

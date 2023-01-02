@@ -42,18 +42,12 @@
     .fc-icon-fab, .fc-icon-fas{
       font-family: FontAwesome!important;
     }
-    .fc-googleSignIn-button{
-      display: none!important;
+    .fc-googleBtn-button{
       background-color: transparent;
       box-shadow: none;
       border: none;
-      height: 37px;
-      width: 37px;
+      color: $redGoogle;
       padding: 0;
-      border: 1px solid transparent;
-      img{
-        width: 85%;
-      }
     }
     .fc-googleLogout-button{
       display: none!important;

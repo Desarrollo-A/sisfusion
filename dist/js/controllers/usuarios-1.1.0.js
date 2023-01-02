@@ -526,7 +526,6 @@ if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
 }else{
     $('#btn_acept').removeClass('hide');
 }
-
             let leader;
             if (v.id_rol == 9)
                 leader = v.gerente_id

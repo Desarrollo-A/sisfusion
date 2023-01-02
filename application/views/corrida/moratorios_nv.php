@@ -587,13 +587,6 @@
             //         },
             //     ),
             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
-            DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full)
-            {return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))}),
-            DTColumnBuilder.newColumn('interes').withTitle('Intereses').renderWith(
-                function (data, type, full)
-                {
-                    return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
-                }),
             DTColumnBuilder.newColumn('importe').withTitle('Importe')
                 .renderWith(
                     function(data, type, full, meta)
@@ -654,29 +647,10 @@
                 ),
             DTColumnBuilder.newColumn('interesMoratorio').withTitle('Interés Moratorio').renderWith(function (data, type, full)
             {return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
-            DTColumnBuilder.newColumn('total').withTitle('Total').renderWith(function (data, type, full)
+            DTColumnBuilder.newColumn('total').withTitle('Mensualidad').renderWith(function (data, type, full)
             {return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
-            DTColumnBuilder.newColumn('saldo').withTitle('Saldo Insoluto').renderWith(function (data, type, full)
-            {
-                // var numberFix;
-                // if(full['saldo'] % 1 == 0)
-                // {
-                // 	numberFix = data;
-                // }
-                // else
-                // {
-                // 	 numberFix = data.toFixed(2);
-                // }
-
-                var saldoInsolutoCR = '<input name="si'+full["pago"]+'" type="hidden" id="idSi'+full["pago"]+'"  value="'+full['saldo']+'" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
-
-                return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}) + saldoInsolutoCR;
-            } ),
-            DTColumnBuilder.newColumn('saldoNormal').withTitle('Saldo').renderWith(function (data, type, full)
-            {
-                var saldoInsolutoCRNormal = '<input name="siNormal'+full["pago"]+'" type="hidden" id="idSiNormal'+full["pago"]+'"  value="'+full['saldoNormal']+'" class="form-control">';//onchange="pagoCapChange('+full["pago"]+')"
-                return (data).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}) + saldoInsolutoCRNormal;
-            } ),
+            DTColumnBuilder.newColumn('total').withTitle('Total').renderWith(function (data, type, full)
+            {return (0).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})} ),
         ];
         /*Others Vars*/
         $scope.mesesdiferir = 0;
@@ -1601,6 +1575,15 @@
                                 IM = ((importeSaldoI * (ope / 360)) * diasRetardo);*/
                                 var intFinal = InteresM/100;
                                 IM = (saldoInsoluto*intFinal/30.4)*diasRetardo;
+
+
+                                // IF = 0.601
+                                // IM = ((menusalidad * IF) /360)*diasRetraso
+                                let IF = 0.601;
+                                IM = ((importeSaldoI * IF) / 360) * diasRetardo;
+
+
+
                                 $scope.total2 = saldoInsoluto;
                                 console.log("FECHA DEL PAGO AQUI", fechaDelPago);
                                 var posPay = PositionPago - 1;
