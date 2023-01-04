@@ -56,7 +56,7 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label" style="background:#1ABC9C">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label" style="background: #A3E4D7; color: #0E6251">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -76,7 +76,11 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    return d.nombre_lp;
+                    if (d.nombre_lp == 'MKTD Dragon')
+                        id_dragon = '<br><span class="label" style="background: #AED6F1; color: #1B4F72">'+ d.id_dragon +'</span>';
+                    else
+                        id_dragon = '';
+                    return d.nombre_lp + id_dragon;
                 }
             },
             {
