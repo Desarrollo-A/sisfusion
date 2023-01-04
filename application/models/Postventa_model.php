@@ -89,7 +89,7 @@ class Postventa_model extends CI_Model
         fecha_modificacion,modificado_por)
         VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
-        $opcion = 72;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
+        $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
         foreach ($opciones as $row) {
             $opcion = $row['id_opcion'];
@@ -182,6 +182,12 @@ class Postventa_model extends CI_Model
         else if($estatus->id_estatus == 4 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 1){
             $estatus = $estatus->id_estatus;
             $actividades_x_estatus = (object)array("estatus_siguiente" => 3 ,"estatus_actual" => 4, "clave_actividad" => "APE0003");
+        }
+        else if($estatus->id_estatus == 2 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 0){
+            $estatus = $estatus->id_estatus;
+            $estatus_sig =  $rol == 56 ? 4 : 3;
+            $clave =  $rol == 56 ? 'APE0003' : 'APE0002';
+            $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
         }
         else {
             $estatus = $estatus->id_estatus;
@@ -346,14 +352,20 @@ class Postventa_model extends CI_Model
     {
         $docNotariaExterna = ($notariaExterna) ? '' : ',23';
 
-        if($status == 10 || $status == 11){
-            $tipo_doc = "NOT IN (11, 12, 13, 14, 15, 16, 17, 22 $docNotariaExterna)";
-        }elseif($status == 3 || $status == 4 || $status == 5){
-            $tipo_doc = 'IN (7,20,21)';
-        }elseif($status == 22 || $status == 23){
-            $tipo_doc = 'IN (16,22)';
-        }elseif($status == 11 || $status == 13){
+        if($status == 8){
+            $tipo_doc = "IN (11,13,20 $docNotariaExterna)";
+        }elseif($status == 11){
             $tipo_doc = 'IN (7)';
+        }elseif($status == 12){
+            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,20,21)';
+        }elseif($status == 18){
+            $tipo_doc = 'IN (17)';
+        }elseif($status == 20){
+            $tipo_doc = 'IN (15)';
+        }elseif($status == 23){
+            $tipo_doc = 'IN (22)';
+        }elseif($status == 24){
+            $tipo_doc = 'IN (16)';
         }
 
         $query = $this->db->query("	SELECT de.idDocumento, oxc.nombre, de.expediente, de.tipo_documento, de.idSolicitud,
