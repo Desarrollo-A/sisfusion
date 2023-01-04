@@ -618,6 +618,18 @@ function fillFields (v) {
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
+    else if (v.id_rol = 7 && v.nueva_estructura == 1)
+        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+    else if (v.id_rol = 7 && v.nueva_estructura == 0)
+        $("#member_type option[value=7]").text("ASESOR");
+    else if (v.id_rol = 9 && v.nueva_estructura == 1)
+        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+    else if (v.id_rol = 9 && v.nueva_estructura == 0)
+        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+    else if (v.id_rol = 3 && v.nueva_estructura == 1)
+        $("#member_type option[value=3]").text("EMBAJADOR");
+    else if (v.id_rol = 3 && v.nueva_estructura == 0)
+        $("#member_type option[value=3]").text("GERENTE");
         
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);
