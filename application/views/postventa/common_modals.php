@@ -8,13 +8,15 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title"><b>Comentarios adicionales</b></h4>
+                <!-- <h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4> -->
+                <!-- <h4 class="modal-title card-title">Comentarios adicionales</h4> -->
             </div>
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" type="text" name="observaciones" id="observaciones" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="type" id="type">
+                    <input type="hidden" name="estatus_siguiente" id="estatus_siguiente">
+                    <input type="hidden" name="tipo" id="tipo">
 
                 </div>
                 <div class="modal-footer">

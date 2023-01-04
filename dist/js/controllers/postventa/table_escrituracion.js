@@ -206,12 +206,15 @@ function getEstatusEscrituracion(){
 
 $(document).on('click', '#request', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
+    $("#approveModal").html();
     $('#id_solicitud').val(data.id_solicitud);
-    $('#status_next').val(data.id_estatus);
-    $('#observations').val('');
-    let type = $(this).attr('data-type');
+    $('#estatus_siguiente').val(data.id_estatus);
+    $('#observaciones').val('');
+    $('#tipo').val('');
+    // let type = $(this).attr('data-type');
     //BOTON PARA REQUEST DEL BOTON APROBAR
-    $('#type').val(type);
+    // $('#type').val(type);
+    $("#approveModal .modal-header").append(`<h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4>`);
     $("#approveModal").modal();
 });
 
