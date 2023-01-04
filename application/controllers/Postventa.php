@@ -8,7 +8,7 @@ class Postventa extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -1090,9 +1090,12 @@ class Postventa extends CI_Controller
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
-            "tipo_escritura" => $data['tipoE']
+            "tipo_escritura" => $data['tipoE'],
+            "aportacion" => $data['aportaciones'],
+            "descuento" => $data['descuentos'],
+            "motivo" => $data['motivo']
         );
-        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
         if($_POST['not'] == 'nou'){
             $updateData['id_notaria'] = 0;
@@ -1467,7 +1470,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Nombre a quien escritura:</b><br>
-                                                    ' . $data->nombre_escrituras . '
+                                                    ' . $data->nombre_a_escriturar . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Tipo de escrituración:</b><br>
@@ -1487,6 +1490,14 @@ class Postventa extends CI_Controller
                                                     <b>Superficie:</b><br>
                                                     ' . $data->superficie . '
                                                 </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Aportaciones:</b><br>
+                                                    $'.number_format($data->aportacion, 2, '.', '').'
+                                                </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Descuentos:</b><br>
+                                                    $'.number_format($data->descuento, 2, '.', '').'
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
@@ -1501,6 +1512,10 @@ class Postventa extends CI_Controller
                                                     <b>Estatus construcción:</b><br>
                                                     ' . $data->nombreConst . '
                                                 </td>
+                                                <td style="font-size: 1em;">
+                                                <b>Motivo:</b><br>
+                                                ' . $data->motivo . '
+                                            </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
@@ -2075,6 +2090,7 @@ class Postventa extends CI_Controller
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
         );
+        //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
