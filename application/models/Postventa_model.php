@@ -93,7 +93,7 @@ class Postventa_model extends CI_Model
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
         foreach ($opciones as $row) {
             $opcion = $row['id_opcion'];
-            $this->db->query("INSERT INTO documentacion_escrituracion VALUES(0,'creacion de rama',1, 1,$insert_id,$idUsuario,1, GETDATE(), $idUsuario,
+            $this->db->query("INSERT INTO documentacion_escrituracion VALUES($opcion,'creacion de rama',1, 1,$insert_id,$idUsuario,1, GETDATE(), $idUsuario,
             GETDATE(), $idUsuario);");
         }
         $y=0;
@@ -120,36 +120,32 @@ class Postventa_model extends CI_Model
         //      $Addwhere =   "";
         // }
 
-        // $where = "";
-        // if($filtro_vista == 0){
-        //     $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
-        // }else{
-        //     $where = "";
-        // }
-        // return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
-        // cond.nombre nombreCondominio, r.nombreResidencial, 
-        //   n.pertenece, se.id_notaria, se.descuento, se.aportacion 
-        //  FROM solicitudes_escrituracion se 
-        //  LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
-        //  INNER JOIN lotes l ON se.id_lote = l.idLote 
-        //  INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        //  INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial");
-
-        return $this->db->query("SELECT se.id_estatus,se.id_solicitud, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,
-        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, se.aportacion,
-        ae.id_actividad, ae.clave, ar.nombre as area, cp.nombre_actividad, ae.nombre actividad
-         FROM solicitudes_escrituracion se 
-         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria 
-         INNER JOIN lotes l ON se.id_lote = l.idLote 
-         INNER JOIN clientes c ON c.id_cliente = l.idCliente
-         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
-         LEFT JOIN actividades_escrituracion ae ON ae.id_actividad = se.id_actividad
-         LEFT JOIN control_permisos cp ON cp.clave_actividad LIKE ae.clave AND cp.tipo_permiso = 0
-         LEFT JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-         LEFT JOIN opcs_x_cats pr ON pr.id_opcion = cp.tipo_permiso AND pr.id_catalogo = 80");
-
+        $where = "";
+        if($estatus == 0){
+            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
+        }else{
+            $where = "";
+        }
+        return $this->db->query("SELECT distinct(se.id_solicitud), cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,se.bandera_comite,se.bandera_admin,
+        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, 
+        se.aportacion, ae.id_actividad, ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,
+        (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
+        ELSE CONCAT(cp.clave_actividad ,' - ', STRING_AGG(cp.nombre_actividad, ' ')) END) AS nombre_estatus,ar2.nombre as area_sig,se.nombre_a_escriturar,se.estatus_construccion
+        
+        FROM solicitudes_escrituracion se 
+        INNER JOIN lotes l ON se.id_lote = l.idLote 
+        INNER JOIN clientes c ON c.id_cliente = l.idCliente
+        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista = 1
+        INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad AND cp.bandera_vista = 1
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cp.area_actual AND ar2.id_catalogo = 1
+        LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
+        LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
+        GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, 
+        c.nombre, n.pertenece, se.id_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,
+        cp.clave_actividad, ae.nombre, ar.id_opcion, ar.nombre, cp.estatus_siguiente, cp.area_siguiente,se.bandera_comite,se.bandera_admin,ar2.nombre,se.nombre_a_escriturar,se.estatus_construccion");
     }
 
     function getStatusSiguiente($estatus){
@@ -169,8 +165,9 @@ class Postventa_model extends CI_Model
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
-       // echo $estatus;
+        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
+      
+        // echo $estatus;
         $sqlAreaRechazo = '';
         if($area_rechazo != 0 && $area_rechazo != ''){
             $sqlAreaRechazo = "AND estatus_siguiente=$area_rechazo ";
@@ -178,11 +175,24 @@ class Postventa_model extends CI_Model
 
          
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
-        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $sqlAreaRechazo and tipo_permiso=$type")->row();
-
-
-        $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 3 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 4 ? ' ,bandera_comiste=1' : '');
-
+       
+        if($estatus->id_estatus == 3 && $estatus->bandera_admin == 1 && $estatus->bandera_comite == 0){
+            $estatus = $estatus->id_estatus;
+            $actividades_x_estatus = (object)array("estatus_siguiente" => 4 ,"estatus_actual" => 3 , "clave_actividad" => "APE0002");
+        }
+        else if($estatus->id_estatus == 4 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 1){
+            $estatus = $estatus->id_estatus;
+            $actividades_x_estatus = (object)array("estatus_siguiente" => 3 ,"estatus_actual" => 4, "clave_actividad" => "APE0003");
+        }
+        else {
+            $estatus = $estatus->id_estatus;
+            $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $sqlAreaRechazo and tipo_permiso=$type")->row();
+        }
+        $banderasStatusRechazo = $actividades_x_estatus->estatus_siguiente == 5 ? ' ,bandera_admin=0 ' : ($actividades_x_estatus->estatus_siguiente == 7 ? ' ,bandera_comite=0' : '');
+        $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 3 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 4 ? ' ,bandera_comite=1' : '');
+        if($actividades_x_estatus->estatus_siguiente == 8 || $actividades_x_estatus->estatus_siguiente == 6){
+            $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 6 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 8 ? ' ,bandera_comite=1' : '');
+        }
 
         if($estatus == 12 && $notaria == 0){
             $actividades_x_estatus->estatus_siguiente = 13;
@@ -248,7 +258,7 @@ class Postventa_model extends CI_Model
             }
         }*/
 
-        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2  WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
          VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->clave_actividad."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
@@ -259,14 +269,15 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT CONCAT(r.nombreResidencial, '_', SUBSTRING(cn.nombre, 1, 4), '_', l.idLote, 
         '_', c.id_cliente,'_TDOC_', REPLACE(oxc.nombre, ' ', '_'), SUBSTRING(de.movimiento, 1, 4),
-        '_', UPPER(REPLACE(REPLACE(CONVERT(varchar, GETDATE(),109), ' ', ''), ':', ''))) fileName, de.idDocumento, de.expediente, de.estatus_validacion FROM solicitud_escrituracion se 
-		INNER JOIN lotes l ON se.idLote =l.idLote
-		INNER JOIN clientes c ON c.idLote = l.idLote AND c.id_cliente = se.idCliente
+        '_', UPPER(REPLACE(REPLACE(CONVERT(varchar, GETDATE(),109), ' ', ''), ':', ''))) fileName, de.idDocumento, de.expediente, de.estatus_validacion 
+		FROM solicitudes_escrituracion se 
+		INNER JOIN lotes l ON se.id_lote =l.idLote
+		INNER JOIN clientes c ON c.idLote = l.idLote AND c.id_cliente = se.id_cliente
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
-        LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud AND de.tipo_documento = $tipoDoc
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = $tipoDoc AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
-		WHERE se.idSolicitud = $idSolicitud");
+        LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.id_solicitud AND de.tipo_documento = $tipoDoc
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = $tipoDoc AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad_juridica,0) = 1 THEN 72 ELSE 60 END)
+		WHERE se.id_solicitud = $idSolicitud");
     }
 
     function generateFilename2($idDoc)
@@ -461,7 +472,7 @@ class Postventa_model extends CI_Model
 function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote, 
         cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura, n.nombre_notaria, 
-        n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece
+        n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre
                 FROM solicitudes_escrituracion se 
                 INNER JOIN clientes c ON c.id_cliente = se.id_cliente
                 INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote

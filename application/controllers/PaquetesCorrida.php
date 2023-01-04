@@ -170,7 +170,7 @@ class PaquetesCorrida extends CI_Controller
                   }
                   if(isset($_POST[$i."_2_ListaDescuentosM2_"])){
                     $descuentos = $_POST[$i."_2_ListaDescuentosM2_"];
-                    
+                     
                     for ($j=0; $j < count($descuentos) ; $j++) { 
                       if(isset($_POST[$i.'_'.$descuentos[$j].'_msi'])){
                         $meses_s_i=0;
@@ -243,7 +243,7 @@ class PaquetesCorrida extends CI_Controller
         $datosInsertar_x_condominio = array();
         $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin);
         
-         $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'));
+         $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'),$inicio,$fin);
 
       
         if ($this->db->trans_status() === FALSE) {
