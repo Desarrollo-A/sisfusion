@@ -6372,9 +6372,8 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     }
 
 
-    public function usuarios_nuevas($rol)
-    {
-      echo json_encode($this->Comisiones_model->usuarios_nuevas($rol)->result_array());
+    public function usuarios_nuevas() {
+      echo json_encode($this->Comisiones_model->usuarios_nuevas($this->input->post("id_rol"), $this->input->post("id_catalogo"))->result_array());
     }
 
     public function ReporteRevisionMKTD2(){
