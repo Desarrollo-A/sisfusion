@@ -153,7 +153,7 @@
 
         $('#filtro33').change(function(ruta){
             id_rol = $('#filtro33').val();
-            id_catalogo = $('#filtro33').attr("data-catalogo");
+            id_catalogo = $('#filtro33>option:selected').attr("data-catalogo");
             $("#filtro44").empty().selectpicker('refresh');
             $.ajax({
                 url: '<?=base_url()?>Comisiones/usuarios_nuevas',
