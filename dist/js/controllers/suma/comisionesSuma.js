@@ -170,7 +170,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
 
-                    if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) ||
+                    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
                     ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                     ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
@@ -383,7 +383,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
 
 
 
-                if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) ||
+                if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
                 ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
                 ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
                 {
@@ -1094,7 +1094,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 10 && dia == 25) || (mes == 10 && dia == 25 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
+    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
 
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");

@@ -1,5 +1,10 @@
 let chart, rolOnReport, idUserOnReport;
 
+document.querySelector(".c-filter__toggle").addEventListener("click", function () {
+    this.classList.toggle("c-filter__toggle--active");
+    document.querySelector(".c-filter__ul").classList.toggle("c-filter__ul--active");
+});
+
 function asDirector(userType){
     // 18: Fabián
     //  4: Asistente dirección administración
@@ -114,6 +119,7 @@ function readyReport(){
     chart.render();
 
     $('[data-toggle="tooltip"]').tooltip();
+    setListEstatus();
 }
 
 async function initReport(){
@@ -151,13 +157,16 @@ function validateFilters(){
     //Rango de fechas
     let beginDate = $('#tableBegin').val();
     let endDate = $('#tableEnd').val();
+    //Estauts de contratación
+    let estatus = $("#estatusContratacion").val();
 
     filters.push({
         typeSale: (selector1.checked && !selector2.checked) ? selector1.value : (selector2.checked && !selector1.checked) ? selector2.value : ( selector1.checked && selector2.checked ) ? 3 : 0,
         typeLote: (selector3.checked && !selector4.checked) ? selector3.value : (selector4.checked && !selector3.checked) ? selector4.value : ( selector3.checked && selector4.checked ) ? 3 : 0,
         typeConstruccion: (selector5.checked && !selector6.checked) ? selector5.value : (selector6.checked && !selector5.checked) ? selector6.value : ( selector5.checked && selector6.checked ) ? 3 : 0,
         begin: beginDate,
-        end: endDate
+        end: endDate,
+        estatus: estatus
     });
 
     return filters;
@@ -1727,4 +1736,15 @@ function formatMoney(n) {
         i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
         j = (j = i.length) > 3 ? j % 3 : 0;
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+function setListEstatus(){
+    $('#spiner-loader').removeClass('hide');
+    $.getJSON( base_url + "Reporte/getEstatusContratacionList").done( function( data ){
+        $('#spiner-loader').addClass('hide');
+        $.each( data, function( i, v){
+            $("#estatusContratacion").append($('<option>').val(data[i]['idStatusContratacion']).text(data[i]['nombreStatus'].toUpperCase()));
+        });
+        $("#estatusContratacion").selectpicker('refresh');
+    });
 }
