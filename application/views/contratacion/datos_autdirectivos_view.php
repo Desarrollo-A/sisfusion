@@ -66,7 +66,7 @@
 							<label class="m-0">(<span class="items"></span>) autorizaciones pendientes</label>
 						</div>
 						<div class="modal-body pl-0 pr-0">
-							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto" data-intro='Todas las autorizaciones por lote serán visualizadas en este espacio, a la derecha puede encontrarse una barra de desplazamiento en caso de que existan <b>más</b> de dos autorizaciones pendientes.' data-step='1'></div>
+							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
 							<input hidden name="numeroDeRow" id="numeroDeRow">
 							<input hidden name="idCliente" id="idCliente">
 							<input hidden name="idCondominio" id="idCondominio">
@@ -318,7 +318,7 @@
 							opcionDenegado = `<p class="radioOption-Item m-0 pl-1">
 												<input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
 												<label for="send${i}" class="cursor-point m-0">
-													<i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC" data-intro='Esta opción le permitirá "Enviar a DC" la autorización.' data-step='4'></i>
+													<i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC"></i>
 												</label>
 											</p>`;
 						<?php } ?>
@@ -336,13 +336,13 @@
 											<p class="radioOption-Item m-0">
 												<input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
 												<label for="accept${i}" class="cursor-point m-0">
-													<i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Aceptar" data-intro='Esta opción le permitirá "Aceptar" la autorización. Por defecto está seleccionada, se puede indentificar con el icono de pulgar hacía arriba coloreado en verde.' data-step='2'></i>
+													<i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Aceptar"></i>
 												</label>
 											</p>
 											<p class="radioOption-Item m-0 pl-1">
 												<input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
 												<label for="denied${i}" class="cursor-point m-0">
-													<i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Rechazar"  data-intro='Esta opción le permitirá "Rechazar" la autorización.' data-step='3'></i>
+													<i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Rechazar"></i>
 												</label>
 											</p>
 											${opcionDenegado}
