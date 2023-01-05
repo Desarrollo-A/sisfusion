@@ -7937,7 +7937,7 @@ function getDatosNuevasMontos($proyecto,$condominio){
 
     public  function usuarios_nuevas($id_rol, $id_catalogo) {
         if ($id_catalogo == 83)
-            $where = "AND nueva_estructura = 1"
+            $where = "AND nueva_estructura = 1";
         else
             $where = "";
         return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol $where ORDER BY nombre");
