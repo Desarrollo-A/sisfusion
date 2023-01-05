@@ -4263,7 +4263,8 @@ function getStatusMktdPreventa(){
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion as nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
-                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto,
+                CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio
@@ -4283,7 +4284,8 @@ function getStatusMktdPreventa(){
                 pr.telefono, pr.telefono_2, pr.correo, pr.lugar_prospeccion, CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as nombre_asesor,
                 CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
                 CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, sedes.nombre as sede_nombre,
-                sedes.abreviacion as abreviacion_sedes, pr.source, opc.nombre as lugar_prospeccion, pr.id_prospecto
+                sedes.abreviacion as abreviacion_sedes, pr.source, opc.nombre as lugar_prospeccion, pr.id_prospecto,
+                CASE WHEN pr.source = '0' THEN '' ELSE pr.source END source
                 FROM prospectos pr
                 INNER JOIN usuarios asesor ON pr.id_asesor = asesor.id_usuario
                 LEFT JOIN usuarios coord ON pr.id_coordinador = coord.id_usuario

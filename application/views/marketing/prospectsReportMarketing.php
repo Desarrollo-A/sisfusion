@@ -149,6 +149,7 @@
                                                                 <th>FECHA CREACIÓN</th>
                                                                 <th>ID CRM</th>
                                                                 <th>ID DRAGON</th>
+                                                                <th>ORIGEN</th>
                                                                 <th>SEDE</th>
                                                             </tr>
                                                             </thead>
@@ -248,6 +249,7 @@
                                                                         <th>FECHA CREACIÓN PROSPECTO</th>
                                                                         <th>ID CRM</th>
                                                                         <th>ID DRAGON</th>
+                                                                        <th>ORIGEN</th>
                                                                         <th>ESTATUS LOTE</th>
                                                                         <th>ACCIONES</th>
                                                                     </tr>
