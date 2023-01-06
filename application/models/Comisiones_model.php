@@ -2710,6 +2710,50 @@ function update_pago_general($suma, $ideLote){
 }
 
 
+function validarPenalizacion($id_lote, $id_cliente){
+
+    $valInner =  $this->db->query("SELECT COALESCE(pe.id_porcentaje_penalizacion,0) val FROM penalizaciones pe
+        INNER JOIN lotes l ON l.idLote = pe.id_lote
+        INNER JOIN clientes c ON c.id_cliente = l.idCliente
+        INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+        WHERE bandera = 1 AND l.idLote = ".$id_lote." AND pe.id_cliente = $id_cliente");
+        
+        if(!empty($valInner->row()->val)){
+            $stringInner  = '';
+            if(empty($valInner->row()->val) || $valInner->row()->val != '4' || $valInner->row()->val != 4){
+                $stringInner  = ' INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion ';
+            }else{
+                $stringInner  = ' INNER JOIN distribucion_penalizaciones pp ON pp.id_penalizacion = pe.id_penalizacion ';
+            }
+        }
+        $numAs = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_asesor or  u1.id_usuario = v1.id_asesor WHERE cl.id_cliente = $id_cliente)");
+        $numCo = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador or  u1.id_usuario = v1.id_coordinador WHERE cl.id_cliente = $id_cliente)");
+        $numGe = $this->db->query("(SELECT (COUNT(u1.id_usuario)) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_gerente or  u1.id_usuario = v1.id_gerente WHERE cl.id_cliente = $id_cliente)");
+
+   return $this->db->query("SELECT pe.id_penalizacion, pe.id_lote, 
+   ((pp.total_penalizacion/100)*lo.totalNeto2) total, 
+   ((pp.asesor/".$numAs->row()->i.") * ((pp.total_penalizacion/100)*lo.totalNeto2)) asesor, 
+   ((pp.coordinador/".$numCo->row()->i.") * ((pp.total_penalizacion/100)*lo.totalNeto2)) coordinador, 
+   ((pp.gerente/".$numGe->row()->i.") * ((pp.total_penalizacion/100)*lo.totalNeto2)) gerente, pe.id_porcentaje_penalizacion as tipo_penalizacion
+    FROM penalizaciones pe 
+    INNER JOIN lotes lo ON lo.idLote = pe.id_lote
+    $stringInner
+    WHERE (pe.pendiente > 0 OR pe.estatus = 1) AND pe.id_lote = ".$id_lote." AND pe.id_cliente = $id_cliente");
+}
+
+// function extraerPorcentaje($id_lote, $id_cliente){
+//     $this->db->query("SELECT asesor,coordinador,gerente FROM penalizaciones pe
+//     INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
+//     WHERE id_lote = $id_lote AND id_cliente = $id_cliente");
+// }
+
+function insertaPenalizacion($id_lote){
+    $this->db->query("UPDATE INTO penalizaciones (id_lote, id_cliente, dias_atraso, estatus, fecha_aprobacion, id_porcentaje_penalizacion, creado_por, fecha_creacion, 
+    modificado_por, bandera, total, abonado, pendiente)
+    VALUES ($id_lote,1016,107,1,GETDATE(),1,2852,GETDATE(),2852,1,1500,1000,500)");
+}
+
+
 function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
     $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
 
@@ -2798,18 +2842,14 @@ public function getSettledCommissions($val = '') {
 //     return $query->result();
 // }
  
-public function validateSettledCommissions($idlote){
-    return $this->db->query("SELECT * FROM comisiones WHERE id_lote = $idlote");
+public function validateSettledCommissions($id_lote){
+    return $this->db->query("SELECT * FROM comisiones WHERE id_lote = $id_lote");
 }
-public function validateDispersionCommissions($idlote){
-    return $this->db->query("SELECT bandera FROM pago_comision WHERE id_lote = $idlote");
+public function validateDispersionCommissions($id_lote){
+    return $this->db->query("SELECT bandera FROM pago_comision WHERE id_lote = $id_lote");
 }
 
-
- 
-
- 
-    function porcentajes2($idLote){
+     function porcentajes2($idLote){
 
         $req = $this->db->query("SELECT distinct(l.idLote), cl.lugar_prospeccion FROM lotes l INNER JOIN clientes cl ON cl.id_cliente = l.idCliente WHERE l.idLote = $idLote AND l.status = 1 AND cl.status = 1")->row();
        
@@ -7171,21 +7211,46 @@ function obtenerIDMK($id){
     } 
 
 
-
-
-    
     public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta){
     
     if($porcentaje != 0 && $porcentaje != ''){
-        $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+
+        $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$abono.", 1, 'NUEVAes DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
         $insert_id = $this->db->insert_id();
         
         $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata,creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
         
         $insert_id_2 = $this->db->insert_id();
         $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+
             }
         }
+
+        public function InsertNeoPenalizacion($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ACUM_ABONADO){
+    
+                $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'DISPERSION 1 - PRUEBA - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+                $insert_id = $this->db->insert_id();
+                
+                $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata,creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 28, ".$pago.",'$user', 'DESCUENTO U PENALIZACION', '$user')");
+
+                $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata,creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$ACUM_ABONADO.", GETDATE(), GETDATE(), 1, ".$pago.",'$user', 'Pruebas U de produccion 1', '$user')");
+                
+                $insert_id_2 = $this->db->insert_id();
+                $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+                    
+                }
+
+        //  public function InsertNeoPenalizacionUno($idLote, $id_usuario, $ACUM_ABONADO,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta){
+    
+        //             $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$abono.", 1, 'DISPERSION 1 - PRUEBA - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+        //             $insert_id = $this->db->insert_id();
+                    
+        //             $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata,creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$ACUM_ABONADO.", GETDATE(), GETDATE(), 1, ".$pago.",'$user', 'Pruebas U de produccion 1', '$user')");
+                    
+        //             $insert_id_2 = $this->db->insert_id();
+        //             $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+                        
+        //             }
 
 
 
@@ -7787,6 +7852,27 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
         return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol $where ORDER BY nombre");
     }
 
+    // public function inserta_penalizacion_28($id_comision, $comision_total, $pago_neo, $numero, $id_usuario, $lote_1, $id_rol, $idCliente){
+
+    //     $this->db->query("INSERT INTO comisiones (id_lote, id_usuario, comision_total, estatus, observaciones,	evidencia,	factura, creado_por, fecha_creacion, porcentaje_decimal, fecha_autorizacion, rol_generado, descuento, idCliente, modificado_por)
+    //     VALUES ($lote_1, $id_usuario, $numero, 1, 'DISPERSION 1 - PRUEBA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(), 1, GETDATE(), $id_rol, NULL, $idCliente,0)");
+
+
+    //     $this->db->query("INSERT INTO pago_comision_ind (id_comision,id_usuario,abono_neodata,fecha_abono,fecha_pago_intmex,pago_neodata,estatus,creado_por,comentario,descuento_aplicado,abono_final,aply_pago_intmex,modificado_por) VALUES ($id_comision, $id_usuario, $numero, GETDATE(), GETDATE(), $numero, 28, ".$this->session->userdata('id_usuario').",'DESCUENTO PENALIZACION',1, 0, NULL, ".$this->session->userdata('id_usuario').")");
+    // }
+
+    // public function inserta_penalizacion_1($id_comision, $comision_dar, $numero, $ACUM_RESTANTE, $id_usuario){
+
+    //      $this->db->query("INSERT INTO pago_comision_ind (id_comision,id_usuario,abono_neodata,fecha_abono,fecha_pago_intmex,pago_neodata,estatus,creado_por,comentario,descuento_aplicado,abono_final,aply_pago_intmex,modificado_por) VALUES ($id_comision, $id_usuario, $ACUM_RESTANTE, GETDATE(), GETDATE(), $numero, 1, ".$this->session->userdata('id_usuario').",'NUEVO PAGO', 0, 0, NULL, ".$this->session->userdata('id_usuario').")");
+    // }
+
+    //Funcion para actualizar
+
+    public function actualiza_penalizacion($total_penalizacion, $ACUM_ABONADO, $lote_1){
+
+        return $this->db->query("UPDATE penalizaciones SET total = $total_penalizacion, abonado = $ACUM_ABONADO, pendiente = ($total_penalizacion - $ACUM_ABONADO) WHERE id_lote = $lote_1");
+
+    }
 
      function getDatosRevisionMktd2($mes=0,$anio=0,$estatus=0){
         // return $this->db->query("SELECT pcmk.id_pago_mk, pcmk.abono_marketing, pcmk.pago_mktd, pcmk.fecha_abono, CONCAT(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) colaborador, pcmk.fecha_pago_intmex
@@ -8927,7 +9013,7 @@ function descuentos_universidad($clave , $data){
       }
 
       public function validatePenalization($idlote){
-        return $this->db->query("SELECT id_lote FROM penalizaciones WHERE estatus = 1 AND bandera = 1 AND id_lote = $idlote");
+        return $this->db->query("SELECT id_lote FROM penalizaciones WHERE estatus = 1 AND pendiente > 0 AND bandera = 1 AND id_lote = $idlote");
     }
 
     
