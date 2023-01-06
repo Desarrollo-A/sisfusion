@@ -82,16 +82,16 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
+                                                    <label class="m-0" for="id_proyecto_ei">Proyecto</label>
+                                                    <select name="id_proyecto_ei" id="id_proyecto_ei" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
+                                                    <label class="m-0" for="id_condominio_ei">Condominio</label>
+                                                    <select class="selectpicker select-gral" id="id_condominio_ei" name="id_condominio_ei[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
