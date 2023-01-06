@@ -677,6 +677,7 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
+    let rol_asignado = v.id_rol;
 
     if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607))
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
@@ -698,7 +699,7 @@ function fillFields (v) {
     $('#headquarter').selectpicker('refresh');
     $('#member_type').selectpicker('refresh');
 
-    if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
+    if(rol_asignado == 7 || rol_asignado== 3 || rol_asignado == 9 ){
         $('#ch'). show();
         document.getElementById("sedech").removeAttribute("required");
         $("#sedech").empty();
