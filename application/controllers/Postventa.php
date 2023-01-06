@@ -87,7 +87,7 @@ class Postventa extends CI_Controller
             case '57': //TITULACION
             case '62': //Proyectos
             $this->load->view('template/header');
-            $this->load->view("postVenta/notaria", $datos);
+            $this->load->view("postventa/notaria", $datos);
             break;
 
             default:
