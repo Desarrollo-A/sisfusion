@@ -937,7 +937,7 @@ function fillTable(beginDate, endDate, estatus) {
                                     group_buttons += `<button id="estatusL" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;
 
                               }
-                               
+                              break;
                             case 4:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
                                 if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {      
@@ -946,12 +946,11 @@ function fillTable(beginDate, endDate, estatus) {
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;                             
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
-                                if (userType == 11 && d.bandera_admin == 0 && (d.bandera_comite == 1 || d.bandera_comite == null )) {
+                                if (userType == 11 && (d.bandera_admin == 0 || d.bandera_admin == null) && d.bandera_comite == 1) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
                                     // BOTON APROBAR
-                                    group_buttons += userType == 11 && (d.nombre_a_escriturar != 0 || d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>` :'';
+                                    group_buttons += userType == 11 && (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>` :'';
                                     group_buttons += `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;
-
                                 }
                                
                                 

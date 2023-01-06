@@ -154,7 +154,7 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating select-is-empty div_membertype">
                                                                         <label class="control-label"><small class="isRequired">*</small>Tipo de miembro</label>
-                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="getLeadersList()">
+                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un rol" data-size="7" data-container="body" required onchange="getLeadersList()">
                                                                         </select>
                                                                     </div>
                                                                 </div>

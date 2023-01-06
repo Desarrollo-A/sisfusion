@@ -65,7 +65,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
 
@@ -318,6 +319,43 @@
         .dark-blue:hover{
             background-color: #845300;
         }
+        .buttons-excel {
+            box-shadow: none !important;
+            padding: 7px 25px !important;
+            color: #209E63 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #209E63 !important;
+            border-radius: 27px !important;
+            margin: -6px 18px 0px 0px !important
+        }
+
+        .buttons-excel i {
+            color: #209E63 !important;
+        }
+
+        .buttons-excel:hover {
+            background-color: #209E63 !important;
+            border: 1px solid #209E63 !important;
+            color:white !important;
+            background-image: none !important;
+        }
+
+        .buttons-excel:hover i {
+            color: #ffffff !important;
+        }
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .select2-container .select2-selection--single {
+            box-sizing: border-box;
+            cursor: pointer;
+            display: block;
+            height: 35px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
     </style>
 </head>
 <body class="hold-transition register-page" ng-controller = "myController">
@@ -437,21 +475,24 @@
                                 <div class="row">
                                     <div class="col-md-3 form-group" >
                                         <label>Proyecto:</label>
-                                        <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control">
+                                        <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial"
+                                                ng-change="onSelectChangep(proyecto)" class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                         <p id="proyectotext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-2 form-group" >
                                         <label>Condominio:</label>
-                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
+                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios"
+                                                ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Condominio - </option>
                                         </select>
                                         <p id="condominiotext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-3 form-group" >
                                         <label>Lote:</label>
-                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">
+                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes"
+                                                ng-change="onSelectChangel(lote)" class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Lote - </option>
                                         </select>
                                         <p id="lotetext" style="color: red;"></p>
@@ -902,6 +943,11 @@
 
 
     <script>
+        $(document).ready(function(){
+            $(".selectList").select2({
+                width: 'resolve' // need to override the changed default
+            });
+        });
         var myApp = angular.module ('myApp', ['checklist-model','datatables', 'datatables.buttons']);
 
 
@@ -1762,15 +1808,7 @@
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-                                    }},
-                            ]
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
 
@@ -1903,16 +1941,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
-                            ]
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
 
@@ -2088,15 +2117,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -2347,15 +2368,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -2604,15 +2617,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -3078,15 +3083,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -3403,15 +3400,7 @@
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -3653,7 +3642,7 @@
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
                                 // {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
                                 // {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                // {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
+                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                                 // {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
                                 //         doc.pageMargins = [ 140, 40, 10, 50 ];
                                 //         doc.alignment = 'center';
@@ -3982,15 +3971,7 @@
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -4290,8 +4271,10 @@
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
-
+                        $('#condominioS').val(null);
                         $scope.condominios = response.data;
+                        $("#condominioS").select2();
+
                         $scope.lotes = "";
                         $scope.plan = "";
                         $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
@@ -4375,13 +4358,15 @@
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
+                        $('#lote').val(null);
                         $scope.lotes = response.data;
+                        $("#lote").select2();
+
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
-
                         $scope.plan = "";
                         $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
                         $scope.porcentaje="";
@@ -5589,24 +5574,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -5898,24 +5866,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -6119,24 +6070,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -6665,24 +6599,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -6978,24 +6895,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -7512,24 +7412,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -8413,25 +8296,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -8982,15 +8847,7 @@
                         ];
                         console.log("cámara mis perros: ", $scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -9604,15 +9461,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                            {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                            {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                            {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                    //pageMargins [left, top, right, bottom]
-                                    doc.pageMargins = [ 140, 40, 10, 50 ];
-                                    doc.alignment = 'center';
-
-                                }},
+                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
 
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});

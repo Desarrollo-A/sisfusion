@@ -64,7 +64,6 @@ $().ready(function() {
 				return year+'-'+month+'-'+day+' '+hour+':'+minutes+':'+seconds;
 			}
 
-
 		}
 });
 

@@ -11733,3 +11733,8 @@
     border-bottom: none;
   }
 }
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: transparent;
+}

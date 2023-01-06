@@ -32,15 +32,11 @@
 			case "47": // DIRECCIÓN FINANZAS
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
-			case "54": // MKTD POPEA
-				$datos = array();
-				$datos = $datos4;
-				$datos = $datos2;
-				$datos = $datos3;  
-				$this->load->view('template/sidebar', $datos);
-				break;
+			case "54": // MKTD POPEA 
+				$this->load->view('template/sidebar', "");
+			break;
 			default:
-			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
 			break;
 		}
 		?>
@@ -53,7 +49,6 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
 					</div>
-
 					<div class="modal-body">
 						<div role="tabpanel">
 							<ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
@@ -327,22 +322,17 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script>
-		var url = "<?=base_url()?>";
-		var url2 = "<?=base_url()?>/index.php/";
-		var urlimg = "<?=base_url()?>/img/";
 		var idLote = 0;
 		var rol =	"<?= $id_rol ?>";
 		$(document).ready(function(){
-			$.post(url + "Contratacion/lista_proyecto", function(data) {
+			$.post(general_base_url + "Contratacion/lista_proyecto", function(data) {
 				var len = data.length;
 				for(var i = 0; i<len; i++){
 					var id = data[i]['idResidencial'];
 					var name = data[i]['descripcion'];
 					$("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
 				}
-
 				$("#proyecto").selectpicker('refresh');
-				
 			}, 'json');
 
 			$.post(url + "Contratacion/lista_estatus", function(data) {
@@ -364,9 +354,7 @@
 				}
 				$("#sel_desarrollo").selectpicker('refresh');
 			}, 'json');
-
 		});
-
 
 		$('#proyecto').change( function(){
 			index_proyecto = $(this).val();
@@ -399,200 +387,183 @@
 				searching: true,
 				ajax:
 				{
-					"url": '<?=base_url()?>Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
-					"dataSrc": ""
+					url: general_base_url + 'Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
+					dataSrc: ""
 				},
-				buttons: [
-						{
-
-							extend: 'excelHtml5',
-							text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-							className: 'btn buttons-excel',
-							titleAttr: 'Descargar archivo de Excel',
-							title: 'MADERAS_CRM_INVENTARIO',
-							exportOptions: {
-							columns:   coordinador = rol == 11 ?  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] ,
-							format: {
-								header: function (d, columnIdx) {
-									if(rol != 11){
-										switch (columnIdx) {
-										case 0:
-											return 'PROYECTO';
-											break;
-										case 1:
-											return 'CONDOMINIO';
-											break;
-										case 2:
-											return 'LOTE';
-											break;
-										case 3:
-											return 'ID LOTE';
-											break;
-										case 4:
-											return 'SUPERFICIE';
-											break;
-										case 5:
-											return 'PRECIO DE LISTA';
-											break;
-										case 6:
-											return 'TOTAL CON DESCUENTOS';
-											break;
-										case 7:
-											return 'M2';
-											break;
-										case 8:
-											return 'REFERENCIA';
-											break;
-										case 9:
-											return 'MSI';
-											break;
-										case 10:
-											return 'ASESOR';
-											break;
-										case 11:
-											return 'COORDINADOR';
-											break;
-										case 12:
-											return 'GERENTE';
-											break;
-										// case 13:
-										// 	return 'SUBDIREECTOR';
-										// 	break;
-										// case 14:
-										// 	return 'DIRECTOR REGIONAL';
-										// 	break;
-										case 13:
-											return 'ESTATUS';
-											break;
-										case 14:
-											return 'APARTADO';
-											break;
-										case 15:
-											return 'COMENTARIO';
-											break;
-										case 16:
-											return 'LUGAR PROSPECCIÓN';
-											break;
-										case 17:
-											return 'FECHA VALIDACION ENGANCHE';
-											break;
-										case 18:
-											return 'CANTIDAD ENGANCHE PAGADO';
-											break;
-										
-									}
-									}else{
-
-									switch (columnIdx) {
-										case 0:
-											return 'PROYECTO';
-											break;
-										case 1:
-											return 'CONDOMINIO';
-											break;
-										case 2:
-											return 'LOTE';
-											break;
-										case 3:
-											return 'ID LOTE';
-											break;
-										case 4:
-											return 'SUPERFICIE';
-											break;
-										case 5:
-											return 'PRECIO DE LISTA';
-											break;
-										case 6:
-											return 'TOTAL CON DESCUENTOS';
-											break;
-										case 7:
-											return 'M2';
-											break;
-										case 8:
-											return 'REFERENCIA';
-											break;
-										case 9:
-											return 'MSI';
-											break;
-										case 10:
-											return 'ASESOR';
-											break;
-										case 11:
-											return 'COORDINADOR';
-											break;
-										case 12:
-											return 'GERENTE';
-											break;
-										// case 13:
-										// 	return 'SUBDIREECTOR';
-										// 	break;
-										// case 14:
-										// 	return 'DIRECTOR REGIONAL';
-										// 	break;
-										case 13:
-											return 'ESTATUS';
-											break;
-										case 14:
-											return 'APARTADO';
-											break;
-										case 15:
-											return 'COMENTARIO';
-											break;
-										case 16:
-											return 'LUGAR PROSPECCIÓN';
-											break;
-										case 17:
-											return 'FECHA VALIDACION ENGANCHE';
-											break;
-										case 18:
-											return 'CANTIDAD ENGANCHE PAGADO';
-											break;
-										case 19:	
-											if(rol == 11){
-												return 'ESTATUS CONTRATACIÓN';
-											}
-											return ''
-											break;
-										case 20:
-											if(rol == 11){
-												return 'CLIENTE';
-											}
-											return ''
-											break;
-										case 21:
-											if(rol == 11){
-												return 'COPROPIETARIO (S)';
-											}
-											return ''
-											break;
-									}
+				buttons: [{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+					className: 'btn buttons-excel',
+					titleAttr: 'Descargar archivo de Excel',
+					title: 'MADERAS_CRM_INVENTARIO',
+					exportOptions: {
+					columns:   coordinador = rol == 11 ?  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] ,
+					format: {
+						header: function (d, columnIdx) {
+							if(rol != 11){
+								switch (columnIdx) {
+									case 0:
+										return 'PROYECTO';
+										break;
+									case 1:
+										return 'CONDOMINIO';
+										break;
+									case 2:
+										return 'LOTE';
+										break;
+									case 3:
+										return 'ID LOTE';
+										break;
+									case 4:
+										return 'SUPERFICIE';
+										break;
+									case 5:
+										return 'PRECIO DE LISTA';
+										break;
+									case 6:
+										return 'TOTAL CON DESCUENTOS';
+										break;
+									case 7:
+										return 'M2';
+										break;
+									case 8:
+										return 'REFERENCIA';
+										break;
+									case 9:
+										return 'MSI';
+										break;
+									case 10:
+										return 'ASESOR';
+										break;
+									case 11:
+										return 'COORDINADOR';
+										break;
+									case 12:
+										return 'GERENTE';
+										break;
+									case 13:
+										return 'ESTATUS';
+										break;
+									case 14:
+										return 'APARTADO';
+										break;
+									case 15:
+										return 'COMENTARIO';
+										break;
+									case 16:
+										return 'LUGAR PROSPECCIÓN';
+										break;
+									case 17:
+										return 'FECHA VALIDACION ENGANCHE';
+										break;
+									case 18:
+										return 'CANTIDAD ENGANCHE PAGADO';
+										break;
 								}
-								}
-								}
-							}
-						},
-						{
-							extend: 'pdfHtml5',
-							text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-							className: 'btn buttons-pdf',
-							titleAttr: 'PDF',
-							orientation: 'landscape',
-							pageSize: 'LEGAL',
-							exportOptions: {
-							columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-							format: {
-								header:  function (d, columnIdx) {
-									if(columnIdx == 0){
-										return ' '+d +' ';
+							} else {
+								switch (columnIdx) {
+									case 0:
+										return 'PROYECTO';
+										break;
+									case 1:
+										return 'CONDOMINIO';
+										break;
+									case 2:
+										return 'LOTE';
+										break;
+									case 3:
+										return 'ID LOTE';
+										break;
+									case 4:
+										return 'SUPERFICIE';
+										break;
+									case 5:
+										return 'PRECIO DE LISTA';
+										break;
+									case 6:
+										return 'TOTAL CON DESCUENTOS';
+										break;
+									case 7:
+										return 'M2';
+										break;
+									case 8:
+										return 'REFERENCIA';
+										break;
+									case 9:
+										return 'MSI';
+										break;
+									case 10:
+										return 'ASESOR';
+										break;
+									case 11:
+										return 'COORDINADOR';
+										break;
+									case 12:
+										return 'GERENTE';
+										break;
+									case 13:
+										return 'ESTATUS';
+										break;
+									case 14:
+										return 'APARTADO';
+										break;
+									case 15:
+										return 'COMENTARIO';
+										break;
+									case 16:
+										return 'LUGAR PROSPECCIÓN';
+										break;
+									case 17:
+										return 'FECHA VALIDACION ENGANCHE';
+										break;
+									case 18:
+										return 'CANTIDAD ENGANCHE PAGADO';
+										break;
+									case 19:	
+										if(rol == 11){
+											return 'ESTATUS CONTRATACIÓN';
 										}
-									
-												return ' '+titulos[columnIdx-1] +' ';
-										
-									}
+										return ''
+										break;
+									case 20:
+										if(rol == 11)
+											return 'CLIENTE';
+										else
+											return ''
+										break;
+									case 21:
+										if(rol == 11)
+											return 'COPROPIETARIO (S)';
+										else
+											return ''
+										break;
 								}
 							}
 						}
-					],
+					}
+				}
+			},
+			{
+				extend: 'pdfHtml5',
+				text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+				className: 'btn buttons-pdf',
+				titleAttr: 'PDF',
+				orientation: 'landscape',
+				pageSize: 'LEGAL',
+				exportOptions: {
+				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+				format: {
+					header:  function (d, columnIdx) {
+						if(columnIdx == 0){
+							return ' '+d +' ';
+							}
+						
+									return ' '+titulos[columnIdx-1] +' ';
+							
+						}
+					}
+				}
+			}],
 
 				columnDefs: [
 							{ targets: [19,20, 21], visible: coordinador = rol == 11 ? true : false },
