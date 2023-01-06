@@ -96,7 +96,7 @@
                                                         <th>REFERENCIA</th>
                                                         <th>PRECIO LOTE</th>
                                                         <th>TOT. COM.</th>
-                                                        <th>IMPTO.</th>
+                                                        <th>IMPUESTO</th>
                                                         <th>DESCUENTO</th>
                                                         <th>A PAGAR</th>
                                                         <th>USUARIO</th>

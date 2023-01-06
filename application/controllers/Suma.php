@@ -9,7 +9,7 @@ class Suma extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
+        $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
     }
 
     public function index() {}
