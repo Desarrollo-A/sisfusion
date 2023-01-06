@@ -22,15 +22,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#id_proyecto_ei").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#id_proyecto_ei").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#id_proyecto_ei').change(function(ruta){
+    residencial = $('#id_proyecto_ei').val();
+    $("#id_condominio_ei").empty().selectpicker('refresh');
     $.ajax({
         url: `${general_base_url}Asesor/getCondominioDesc/${residencial}`,
         type: 'post',
@@ -40,27 +40,27 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#id_condominio_ei").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#id_condominio_ei").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro33').change(function(ruta){
+$('#id_proyecto_ei').change(function(ruta){
     const formaPago = $('#forma-pago-filtro').val() || 0;
-    const proyecto = $('#filtro33').val();
-    let condominio = $('#filtro44').val();
+    const proyecto = $('#id_proyecto_ei').val();
+    let condominio = $('#id_condominio_ei').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio, formaPago);
 });
 
-$('#filtro44').change(function(ruta){
+$('#id_condominio_ei').change(function(ruta){
     const formaPago = $('#forma-pago-filtro').val() || 0;
-    const proyecto = $('#filtro33').val();
-    let condominio = $('#filtro44').val();
+    const proyecto = $('#id_proyecto_ei').val();
+    let condominio = $('#id_condominio_ei').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
@@ -69,8 +69,8 @@ $('#filtro44').change(function(ruta){
 
 $('#forma-pago-filtro').change(function () {
     const formaPago = $(this).val() || 0;
-    const proyecto = $('#filtro33').val();
-    let condominio = $('#filtro44').val();
+    const proyecto = $('#id_proyecto_ei').val();
+    let condominio = $('#id_condominio_ei').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
