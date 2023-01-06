@@ -130,7 +130,7 @@ class Postventa_model extends CI_Model
         cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, 
         se.aportacion, ae.id_actividad, ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,
         (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
-        ELSE CONCAT(cp.clave_actividad ,' - ', STRING_AGG(cp.nombre_actividad, ' ')) END) AS nombre_estatus,ar2.nombre as area_sig,se.nombre_a_escriturar,se.estatus_construccion
+        ELSE CONCAT(cp.clave_actividad ,' - ', STRING_AGG(cp.nombre_actividad, ' ')) END) AS nombre_estatus
         
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
@@ -139,15 +139,14 @@ class Postventa_model extends CI_Model
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
         INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista = 1
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad AND cp.bandera_vista = 1
-        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cp.area_actual AND ar2.id_catalogo = 1
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1   
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
+        WHERE se.fecha_creacion BETWEEN '$begin' AND '$end'
         GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, 
         c.nombre, n.pertenece, se.id_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,
-        cp.clave_actividad, ae.nombre, ar.id_opcion, ar.nombre, cp.estatus_siguiente, cp.area_siguiente,se.bandera_comite,se.bandera_admin,ar2.nombre,se.nombre_a_escriturar,se.estatus_construccion");
+        cp.clave_actividad, ae.nombre, ar.id_opcion, ar.nombre, cp.estatus_siguiente, cp.area_siguiente,se.bandera_comite,se.bandera_admin");
     }
-
     function getStatusSiguiente($estatus){
         return $this->db->query("SELECT ae.nombre as actividad, cp.id_estatus, cp.bandera_vista, cp.estatus_actual, ae.clave as clave_actual, cp.nombre_actividad as actividad_actual, cp.area_actual, cp.estatus_siguiente, cr.clave_siguiente, cr.actividad_siguiente, cp.area_siguiente, cp.tipo_permiso, ar.nombre as area, cr.nombre_siguiente, pr.nombre as permiso
         FROM actividades_escrituracion ae 
@@ -165,9 +164,8 @@ class Postventa_model extends CI_Model
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
-      
-        // echo $estatus;
+        $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
+       // echo $estatus;
         $sqlAreaRechazo = '';
         if($area_rechazo != 0 && $area_rechazo != ''){
             $sqlAreaRechazo = "AND estatus_siguiente=$area_rechazo ";
@@ -175,30 +173,11 @@ class Postventa_model extends CI_Model
 
          
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
-       
-        if($estatus->id_estatus == 3 && $estatus->bandera_admin == 1 && $estatus->bandera_comite == 0){
-            $estatus = $estatus->id_estatus;
-            $actividades_x_estatus = (object)array("estatus_siguiente" => 4 ,"estatus_actual" => 3 , "clave_actividad" => "APE0002");
-        }
-        else if($estatus->id_estatus == 4 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 1){
-            $estatus = $estatus->id_estatus;
-            $actividades_x_estatus = (object)array("estatus_siguiente" => 3 ,"estatus_actual" => 4, "clave_actividad" => "APE0003");
-        }
-        else if($estatus->id_estatus == 2 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 0){
-            $estatus = $estatus->id_estatus;
-            $estatus_sig =  $rol == 56 ? 4 : 3;
-            $clave =  $rol == 56 ? 'APE0003' : 'APE0002';
-            $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
-        }
-        else {
-            $estatus = $estatus->id_estatus;
-            $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $sqlAreaRechazo and tipo_permiso=$type")->row();
-        }
-        $banderasStatusRechazo = $actividades_x_estatus->estatus_siguiente == 5 ? ' ,bandera_admin=0 ' : ($actividades_x_estatus->estatus_siguiente == 7 ? ' ,bandera_comite=0' : '');
+        $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $sqlAreaRechazo and tipo_permiso=$type")->row();
+
+
         $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 3 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 4 ? ' ,bandera_comite=1' : '');
-        if($actividades_x_estatus->estatus_siguiente == 8 || $actividades_x_estatus->estatus_siguiente == 6){
-            $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 6 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 8 ? ' ,bandera_comite=1' : '');
-        }
+
 
         if($estatus == 12 && $notaria == 0){
             $actividades_x_estatus->estatus_siguiente = 13;
@@ -264,7 +243,7 @@ class Postventa_model extends CI_Model
             }
         }*/
 
-        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo  WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
          VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->clave_actividad."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
@@ -426,12 +405,38 @@ class Postventa_model extends CI_Model
             ORDER BY oxc.nombre");
         return $query->result();
     }
-
+    // Traer infomacion para la tabla de notarias
     function getNotarias()
     {
-        $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
-        return $query->result();
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
     }
+    // Eliminar los usuarios de la notaria
+    function updateNotarias($idnotaria){
+
+        $respuesta = $this->db->query("UPDATE Notarias SET estatus = 0 WHERE idNotaria = $idnotaria");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+        // Insertar usuarios en notaria
+    function insertNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $sede){
+
+        $respuesta = $this->db->query("INSERT INTO Notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES ('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', $sede, 1, 1)");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+
+    }
+
+
 
     function getValuadores(){
         $query = $this->db->query("SELECT * FROM Valuadores");
