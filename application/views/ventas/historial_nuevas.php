@@ -68,16 +68,16 @@
                                         <div class="row aligned-row d-flex align-end">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Puesto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required> 
+                                                    <label class="m-0" for="id_rol_hn">Puesto</label>
+                                                    <select name="id_rol_hn" id="id_rol_hn" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required> 
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
+                                                    <label class="m-0" for="id_usuario_hn">Usuario</label>
+                                                    <select class="selectpicker select-gral" id="id_usuario_hn" name="id_usuario_hn[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,5 +127,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_ventas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_nuevas.js"></script>
 </body>
