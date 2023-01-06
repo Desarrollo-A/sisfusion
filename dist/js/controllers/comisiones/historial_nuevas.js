@@ -31,7 +31,7 @@ $('#id_rol_hn').change(function(ruta){
         success:function(response){
             var len = response.length;
             for( var i = 0; i<len; i++){
-                var id = response[i]['idCondominio'];
+                var id = response[i]['id_usuario'];
                 var name = response[i]['nombre'];
                 $("#id_usuario_hn").append($('<option>').val(id).text(name));
             }
