@@ -74,6 +74,29 @@ class Postventa extends CI_Controller
         }
     }
 
+    public function notaria(){
+        if($this->session->userdata('id_rol') == FALSE){
+            redirect(base_url());
+        }
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        switch ($this->session->userdata('id_rol')){
+            case '11': //ADMON
+            case '17': //CONTRALORIA
+            case '55': //POSTVENTA
+            case '56': //COMITE TECNICO
+            case '57': //TITULACION
+            case '62': //Proyectos
+            $this->load->view('template/header');
+            $this->load->view("postVenta/notaria", $datos);
+            break;
+
+            default:
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'"</script>';
+                break;
+        }
+
+    }
+
     public function getProyectos()
     {
         $data = $this->Postventa_model->getProyectos()->result_array();
@@ -739,17 +762,54 @@ class Postventa extends CI_Controller
         }
     }
 
+    // Funciones para el apartado de notaria
+    public function getNotarias() {
+        $data['data'] = $this->Postventa_model->getNotarias()->result_array();
+            if ($data != null) {
+                    echo json_encode($data, JSON_NUMERIC_CHECK);
+                } else {
+                    echo json_encode(array());
+            }
+        }
+
+    // Funcion para eliminar los registros de la tabla notaria
+    public function updateNotarias(){
+
+            $respuesta = $this->Postventa_model->updateNotarias($this->input->post("idNotaria"));
+            echo json_encode($respuesta);
+
+    }
+    // Funcion para agregar a un nuevo notario
+    public function insertNotaria(){
+
+        $nombre_notaria = $this->input->post('notaria_nombre');
+        $notario_nombre = $this->input->post('notario_nombre');
+        $direccion = $this->input->post('direccion');
+        $correo = $this->input->post('correo');
+        $telefono = $this->input->post('telefono');
+        $sede = $this->input->post('sede');
+
+        $respuesta = $this->Postventa_model->insertNotaria($nombre_notaria, $notario_nombre, $direccion, $correo, $telefono, $sede);
+        echo json_encode($respuesta);
+    }
+
+
     public function changeStatus()
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
-        if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
+       /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
         }elseif ($type == 2) {
             $motivos_rechazo = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }
+        }*/
+        $motivos_rechazo = $_POST['comentarios'];
+        $area_rechazo = $_POST['area_rechazo'];
+    
+
+        $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
         // }elseif($type == 3) {
         //     $comentarios = $_POST['comentarios'];
         //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
@@ -1011,14 +1071,14 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function getNotarias()
-    {
-        $data = $this->Postventa_model->getNotarias();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
+    // public function getNotarias()
+    // {
+    //     $data = $this->Postventa_model->getNotarias();
+    //     if ($data != null)
+    //         echo json_encode($data);
+    //     else
+    //         echo json_encode(array());
+    // }
 
     public function getValuadores()
     {
@@ -1078,19 +1138,22 @@ class Postventa extends CI_Controller
         $id_solicitud = $data['id_solicitud3'];
 
         $updateData = array(
-            "nombre_escrituras" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
+            "nombre_a_escriturar" => $data['nombrePresupuesto2'] == '' || $data['nombrePresupuesto2'] == null ? null : $data['nombrePresupuesto2'],
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
             "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
             "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
-            "tipo_escritura" => $data['tipoE']
+            "tipo_escritura" => $data['tipoE'],
+            "aportacion" => $data['aportaciones'],
+            "descuento" => $data['descuentos'],
+            "motivo" => $data['motivo']
         );
-        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
         if($_POST['not'] == 'nou'){
-            $updateData['idNotaria'] = 0;
+            $updateData['id_notaria'] = 0;
         }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
@@ -1462,7 +1525,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Nombre a quien escritura:</b><br>
-                                                    ' . $data->nombre_escrituras . '
+                                                    ' . $data->nombre_a_escriturar . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Tipo de escrituración:</b><br>
@@ -2010,8 +2073,8 @@ class Postventa extends CI_Controller
     }
 
     public function servicioPostventa($referencia, $empresa){
-        $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
-
+        //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+        $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
             "referencia" => $referencia,
             "empresa" => $empresa
@@ -2019,7 +2082,7 @@ class Postventa extends CI_Controller
 
         $opciones = array(
             "http" => array(
-                "header" => "Content-type: application/x-www-form-urlencoded\r\n",
+                "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com, localhost"],
                 "method" => "POST",
                 "content" => $datos, # Agregar el contenido definido antes
             ),
@@ -2069,6 +2132,7 @@ class Postventa extends CI_Controller
             "aportaciones" => $data['aportaciones'],
             "descuentos" => $data['descuentos']
         );
+        //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);

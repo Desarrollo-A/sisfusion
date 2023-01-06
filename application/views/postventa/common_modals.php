@@ -8,18 +8,20 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title">Ingrese su comentario</h4>
+                <!-- <h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4> -->
+                <!-- <h4 class="modal-title card-title">Comentarios adicionales</h4> -->
             </div>
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" type="text" name="observaciones" id="observaciones" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="type" id="type">
+                    <input type="hidden" name="estatus_siguiente" id="estatus_siguiente">
+                    <input type="hidden" name="tipo" id="tipo">
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="submit" class="btn btn-success btn-simple btn-border">Enviar</button>
+                    <button type="button" class="btn btn-danger btn-simple btn-border" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -184,24 +186,45 @@
                                 <div class="col-md-12 pr-0 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" disabled>
+                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Fecha del contrato anterior</label>
+                                        <label class="control-label label-gral"></label>
                                         <input type="text" class="form-control datepicker"
-                                        id="fechaCA" name="fechaCA" disabled/>
+                                        id="fechaCA" name="fechaCA" placeholder="Fecha del contrato anterior"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatos" name="rfcDatos" value="N/A" class="form-control input-gral" type="text">
+                                        <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                             </div>
                             <!--INFORMACIÓN DE NOTARÍA-->
+                            <div >
+                                <div class="col-md-4 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Capital</label>
+                                        <input id="capital" name="capital" class="form-control input-gral" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0">
+                                      <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Ordinario</label>
+                                        <input id="ordinario" name="ordinario" class="form-control input-gral" type="text">
+                                      </div>
+                                </div>
+                                <div class="col-md-4 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Motivo</label>
+                                        <input id="motivo" name="motivo" class="form-control input-gral" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <!----------------------------->
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">¿Se va a trabajar con Notaría externa? *</label>

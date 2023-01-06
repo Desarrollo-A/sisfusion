@@ -1,7 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<link href="<?= base_url() ?>dist/css/solicitud_escrituracion.css" rel="stylesheet" />
+<link href="<?= base_url() ?>dist/css/table_escrituracion.css" rel="stylesheet" />
 
 <body>
     <div class="wrapper">
@@ -16,6 +16,7 @@
         ?>
 
         <div class="content boxContent">
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -24,12 +25,12 @@
                                 <i class="fas fa-feather-alt fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado General de Solicitudes de Escrituración.</h3>
+                                <h3 class="card-title center-align">Solicitudes Escrituración</h3>
                                 <div class="toolbar">
                                     <div class="row"> 
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                             <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Estatus</label>
+                                                <!--<label class="control-label">Estatus</label>-->
                                                 <select id="estatusE" name="estatusE"
                                                         class="selectpicker select-gral m-0"
                                                         data-style="btn" data-show-subtext="true"
@@ -38,7 +39,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
@@ -47,6 +48,7 @@
                                                                 id="beginDate" value="" autocomplete='off'/>
                                                             <input type="text" class="form-control datepicker"
                                                                 id="endDate" value="" autocomplete='off' />
+                                                                
                                                             <button
                                                                 class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                 id="searchByDateRange">
@@ -58,8 +60,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-9 col-md-9 col-lg-9">
-                                            <button class="btn btn-default btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                            
+                                            <button class="btn btn-info btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -78,15 +81,16 @@
                                                         <th>FECHA DE CREACIÓN</th>
                                                         <th>COMENTARIOS</th>
                                                         <th>ESTATUS</th>
+                                                        <th>ÁREA</th>
                                                         <th>ACCIONES</th>
-                                                        <th>idEstatus</th>
+                                                        <!-- <th>idEstatus</th> -->
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                                <?php include 'common_modals.php' ?>
+                              <?php include 'common_modals.php' ?>
                             </div>
                         </div>
                     </div>
