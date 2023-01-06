@@ -1278,7 +1278,8 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
 		concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, 
         concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
-		STRING_AGG(lotes.status8Flag, '-') AS status8Flag, STRING_AGG(lotes.totalValidado, '-') AS totalValidado, STRING_AGG(movs.descripcion, '-') AS descripcion
+		STRING_AGG(lotes.status8Flag, '-') AS status8Flag, STRING_AGG(lotes.totalValidado, '-') AS totalValidado, STRING_AGG(movs.descripcion, '-') AS descripcion,
+		lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, tv.tipo_venta, st.color
 		FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
         LEFT JOIN sedes AS s ON s.id_sede = lotes.ubicacion
@@ -1288,13 +1289,22 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario
 		INNER JOIN movimientos as movs ON lotes.idMovimiento = movs.idMovimiento
+		
+		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+        WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lotes.idLote AND hl.idCliente = cl.id_cliente
+        
+        INNER JOIN statusLote st ON st.idStatusLote = lotes.idStatusLote
+        INNER JOIN tipo_venta tv ON tv.id_tventa = lotes.tipo_venta
+        
+		
         WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45
         GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno, sup, cl.fechaApartado,
         lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
         lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
         residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, lotes.referencia
+        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, 
+        lotes.validacionEnganche, lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color
 		ORDER BY lotes.nombreLote");
 		return $query->result();
 	}
@@ -6106,7 +6116,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
     public function getLotesGralTwo($condominio, $residencial) {
 		$query = $this->db-> query("SELECT * FROM lotes lo
-		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549)
 		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
 		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
 		if($query) {

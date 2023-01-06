@@ -550,7 +550,7 @@ $tv                 : "(min-width: 1280px)";
 }
 /* Color de la barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb{
-    border-radius: 10px;
+    // border-radius: 10px;
     background-color: $platinumScroll;
 }
 /* Color del HOVER de barra de desplazamiento */

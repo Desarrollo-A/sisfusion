@@ -161,8 +161,9 @@
                                             <th class="text-center">CONDOMINIO</th>
                                             <th class="text-center">ID LOTE</th>
                                             <th class="text-center">LOTE</th>
-                                            <th class="text-center">HORA/FECHA</th>
+                                            <th class="text-center">HORA/FECHA CREACIÓN</th>
                                             <th class="text-center">RESPONSABLE</th>
+                                            <th class="text-center">ÚLT. MODIFICACIÓN POR</th>
                                             <th class="text-center">ACCIÓN</th>
                                         </tr>
                                         </thead>
@@ -381,6 +382,7 @@
                         {data: 'nombreLote'},
                         {data: 'fecha_creacionpc'},
                         {data: 'nombre_creador'},
+                        {data: 'modificado_nombre'},
                         {
                             // data: 'id_pc'
                             data: null,

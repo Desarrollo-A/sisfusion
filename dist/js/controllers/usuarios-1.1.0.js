@@ -50,7 +50,7 @@ function fillUsersTable() {
                 title: 'Listado de usuarios',
                 exportOptions: {
 
-                    columns:  (rolId==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns:  (rolId==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -75,31 +75,7 @@ function fillUsersTable() {
                                     return 'SEDE';
                                     break;
                                 case 7:
-                                    return 'COORDINADOR';
-                                    break;
-                                case 8:
-                                    return 'GERENTE';
-                                    break;
-                                case 9:
-                                    return 'SUBDIRECTOR';
-                                    break;
-                                case 10:
-                                    return 'DIRECTOR REGIONAL';
-                                    break;
-                                case 11:
-                                    return 'TALLA';
-                                    break;
-                                case 12:
-                                    return 'GÉNERO';
-                                    break;
-                                case 13:
-                                    return 'HIJOS + 12';
-                                    break;
-                                case 14:
-                                    return 'REINGRESO';
-                                    break;
-                                case 15:
-                                    return 'BAJA';
+                                    return 'JEFE DIRECTO';
                                     break;
                             }
                         }
@@ -167,47 +143,7 @@ function fillUsersTable() {
             },
             {
                 data: function (d) {
-                    return d.coordinador == '  ' ? 'NO APLICA' : d.coordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.gerente == '  ' ? 'NO APLICA' : d.gerente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.subdirector == '  ' ? 'NO APLICA' : d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.regional == '  ' ? 'NO APLICA' : d.regional;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.talla == null ? 'SIN ESPECIFICAR' : d.talla;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sexo == null ? 'SIN ESPECIFICAR' : d.sexo;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.hijos_12 == null ? 'SIN ESPECIFICAR' : d.hijos_12;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_reingreso == null ? 'SIN ESPECIFICAR' : d.fecha_reingreso;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_baja == null ? 'SIN ESPECIFICAR' : d.fecha_baja;
+                    return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;
                 }
             },
             {
@@ -223,25 +159,40 @@ function fillUsersTable() {
                                 '</div>';
                             } else  {
                                 //TODO SOPORTE  
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                            '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
+                           /* return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
-                                '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
-                                '</div>';
+                              //  '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
+                                '</div>';*/
                         }
                     }
                     else {
                         if (userId == 1297 || userId == 1) {
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                              '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
+                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                              //'<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
                         
                             } else {
                           //aqui mero vamos a poner el 
-                                if (id_rol == 8 && userId != 1297 || userId != 1  ) { 
-                                    return   '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                    '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
-                                    '<button class="btn-data btn-violetBoots btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><i class="fas fa-user-cog"></i></button>'+
-                                    '</div>';
+                                if (userId != 1297 || userId != 1  ) { 
+                                    let bt = ``;
+                                    bt =  '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                                 
+                                    if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) { 
+                                    }else {
+                                        if(d.estatus == 1){
+                                            bt += '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>';
+                                        }else{
+                                            bt += '';
+                                        }
+
+                                    }
+                                    //  '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
+                                  //  '<button class="btn-data btn-violetBoots btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><i class="fas fa-user-cog"></i></button>'+
+                                 
+                                  bt += '</div>';
+                                  return bt;
                                 }
                             if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
@@ -261,10 +212,9 @@ function fillUsersTable() {
                     }
                     else{
                         if (d.estatus == 1) {
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
                                 '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
                                 '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>'+
-                                 
                                 '</div>';
                             } else {
                             if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
@@ -290,8 +240,8 @@ function fillUsersTable() {
             }
         }
     });
-    if(rolId==54){//validacion para no mostrarle acciones a usuario POPEA
-        let arrayNOView = [8,9,10,11,12,13,14,15,16];
+    if(rolId == 54){//validacion para no mostrarle acciones a usuario POPEA
+        let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
 }
@@ -572,6 +522,13 @@ $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
+            const ventas = [7,1,2,3,9];
+const isLargeNumber = (element) => element == v.id_rol;
+if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
+    $('#btn_acept').addClass('hide');
+}else{
+    $('#btn_acept').removeClass('hide');
+}
             let leader;
             if (v.id_rol == 9)
                 leader = v.gerente_id
@@ -579,6 +536,9 @@ $(document).on('click', '.edit-user-information', function(e){
                 leader = v.subdirector_id
             else
                 leader = v.id_lider;
+
+
+
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
@@ -661,6 +621,18 @@ function fillFields (v) {
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
+    else if (v.id_rol = 7 && v.nueva_estructura == 1)
+        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+    else if (v.id_rol = 7 && v.nueva_estructura == 0)
+        $("#member_type option[value=7]").text("ASESOR");
+    else if (v.id_rol = 9 && v.nueva_estructura == 1)
+        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+    else if (v.id_rol = 9 && v.nueva_estructura == 0)
+        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+    else if (v.id_rol = 3 && v.nueva_estructura == 1)
+        $("#member_type option[value=3]").text("EMBAJADOR");
+    else if (v.id_rol = 3 && v.nueva_estructura == 0)
+        $("#member_type option[value=3]").text("GERENTE");
         
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);

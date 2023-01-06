@@ -254,6 +254,9 @@ class ComisionesNeo_model extends CI_Model {
 
     public function UpdateBanderaPagoComisionNO($idLote){
         return $this->db->query("UPDATE pago_comision SET bandera = 55, modificado_por = 'NEO' WHERE id_lote = $idLote");
+        $this->db->query("DELETE FROM comisiones where id_usuario = 0");
+        
+
     }
 
     public function UpdateBanderaPagoComisionAnticipo(){
@@ -284,7 +287,7 @@ class ComisionesNeo_model extends CI_Model {
         FROM comisiones cm
         INNER JOIN pago_comision pc on pc.id_lote = cm.id_lote 
         INNER JOIN lotes lo on lo.idLote = cm.id_lote AND lo.registro_comision not in (8)
-        WHERE cm.estatus = 1 AND pc.bandera in (0,1,7,55) and (cm.descuento is null OR cm.descuento = 0) --and pc.id_lote = 33355
+        WHERE cm.estatus = 1 AND cm.id_usuario NOT IN (0) AND pc.bandera in (0,1,7,55) and (cm.descuento is null OR cm.descuento = 0) --and pc.id_lote = 33355
         GROUP BY cm.id_lote, pc.total_comision, pc.bandera
         HAVING (sum(cm.comision_total) - pc.total_comision) not between -1 and 1  
         order by cm.id_lote");

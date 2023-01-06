@@ -790,13 +790,7 @@ public function getStatusMktdPreventa(){
         }
     }
 
-    // public function getProspectsReport(){
-        // $data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        // echo json_encode($data);
-    // }
-    public function getProspectsReport(){
-        //$data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        //echo json_encode($data);
+    public function getProspectsReport() {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -1191,8 +1185,9 @@ public function getStatusMktdPreventa(){
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
-        if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
+        if ((($this->session->userdata('id_usuario') == $_POST['owner']) && (($_POST['source']!=0 || $_POST['source']!=null) && $_POST['editProspecto']==0) )) {
             $data["nombre"] = $_POST['name'];
+            $data["editProspecto"]= 1;
         }
         $response = $this->Clientes_model->updateProspect($data, $this->input->post("id_prospecto_ed"));
         echo json_encode($response);
@@ -2999,7 +2994,10 @@ public function getStatusMktdPreventa(){
         $mail = $this->input->post("mail");
         $telephone = $this->input->post("telephone");
         $sede = $this->input->post("sede");
+        $id_dragon = $this->input->post("id_dragon");
         $tipo_busqueda = $this->input->post("TB");
+        $fecha_init = $this->input->post("fecha_init");
+        $fecha_end = $this->input->post("fecha_end");
 
         $data_search = array(
             'idLote' => $idLote,
@@ -3007,7 +3005,10 @@ public function getStatusMktdPreventa(){
             'correo' => $mail,
             'telefono' => $telephone,
             'sede' => $sede,
-            'tipo_busqueda' => $tipo_busqueda
+            'id_dragon' => $id_dragon,
+            'tipo_busqueda' => $tipo_busqueda,
+            'fecha_init' => $fecha_init,
+            'fecha_end' => $fecha_end
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
@@ -3026,6 +3027,17 @@ public function getStatusMktdPreventa(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("clientes/prospectosDR",$datos);
+    }
+
+    public function dragonsClientsList() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("marketing/dragonsClientsList", $datos);
+    }
+
+    public function getDragonsClientsList() {
+        $result['data'] = $this->Clientes_model->getDragonsClientsList();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
 }

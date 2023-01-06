@@ -65,7 +65,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
 
@@ -318,6 +319,43 @@
         .dark-blue:hover{
             background-color: #845300;
         }
+        .buttons-excel {
+            box-shadow: none !important;
+            padding: 7px 25px !important;
+            color: #209E63 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #209E63 !important;
+            border-radius: 27px !important;
+            margin: -6px 18px 0px 0px !important
+        }
+
+        .buttons-excel i {
+            color: #209E63 !important;
+        }
+
+        .buttons-excel:hover {
+            background-color: #209E63 !important;
+            border: 1px solid #209E63 !important;
+            color:white !important;
+            background-image: none !important;
+        }
+
+        .buttons-excel:hover i {
+            color: #ffffff !important;
+        }
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .select2-container .select2-selection--single {
+            box-sizing: border-box;
+            cursor: pointer;
+            display: block;
+            height: 35px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
     </style>
 </head>
 <body class="hold-transition register-page" ng-controller = "myController">
@@ -388,6 +426,8 @@
                                 <div id="areaImprimir">
                                     <input type="hidden" ng-click="pagoACapital()" ng-model="pagoACapitalName" id="jsPagoCapital" name="pagoACapitalNameJS">
                                     <input type="hidden" ng-model="pagoACapitalPosition" id="pagoACapitalNumberJS" name="pagoACapitalNumberJS">
+                                    <input type="hidden" ng-model="fechaPagoCapitalPosition" id="fechaPagoCapitalPosition" name="fechaPagoCapitalPosition">
+                                    <!--colocar la fecha editada para mandarla fecha pago input-->
                                     <div class="row hide">
                                         <div class="col-md-3 form-group">
                                             <label>Nombre: </label>
@@ -435,21 +475,24 @@
                                 <div class="row">
                                     <div class="col-md-3 form-group" >
                                         <label>Proyecto:</label>
-                                        <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control">
+                                        <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial"
+                                                ng-change="onSelectChangep(proyecto)" class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                         <p id="proyectotext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-2 form-group" >
                                         <label>Condominio:</label>
-                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
+                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios"
+                                                ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Condominio - </option>
                                         </select>
                                         <p id="condominiotext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-3 form-group" >
                                         <label>Lote:</label>
-                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">
+                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes"
+                                                ng-change="onSelectChangel(lote)" class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Lote - </option>
                                         </select>
                                         <p id="lotetext" style="color: red;"></p>
@@ -900,6 +943,11 @@
 
 
     <script>
+        $(document).ready(function(){
+            $(".selectList").select2({
+                width: 'resolve' // need to override the changed default
+            });
+        });
         var myApp = angular.module ('myApp', ['checklist-model','datatables', 'datatables.buttons']);
 
 
@@ -1573,6 +1621,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -1596,7 +1645,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             /*nuevo código 24 de FEB*/
@@ -1759,15 +1808,7 @@
                         $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-                                    }},
-                            ]
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
 
@@ -1842,6 +1883,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -1865,7 +1907,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             //CIERRA CODIGO 19 FEB
@@ -1899,16 +1941,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
-                            ]
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
 
@@ -1989,6 +2022,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -2012,7 +2046,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             /*nuevo código 24 de FEB*/
@@ -2083,15 +2117,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -2177,6 +2203,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -2200,7 +2227,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             /*nuevo código 24 de FEB*/
@@ -2341,15 +2368,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -2540,6 +2559,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -2563,7 +2583,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             //CIERRA CODIGO 19 FEB
@@ -2597,15 +2617,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -2893,6 +2905,7 @@
                             {
                                 var PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -2916,7 +2929,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             /*nuevo código 24 de FEB*/
@@ -3070,15 +3083,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -3172,6 +3177,8 @@
                             {
                                 PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
+                                console.log('Fecha pago alv', PosicionFecha);
                                 var saldo	=	 PagoACapital;
                                 var saldoFinalisimo	=	($scope.saldoFinal - $scope.infoLote.capital);//
                                 var saldoMenosPC	=	saldoFinalisimo - saldo;
@@ -3182,7 +3189,7 @@
                                 var TestEng = $scope.cantidad;
                                 $scope.alphaNumeric[posicionPay]['saldo'] = $scope.alphaNumeric[posicionPay]['saldo'] - PagoACapital;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             range.push({
@@ -3393,15 +3400,7 @@
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -3490,6 +3489,7 @@
                             {
                                 PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -3513,7 +3513,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             range2.push({
@@ -3642,7 +3642,7 @@
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
                                 // {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
                                 // {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                // {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
+                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                                 // {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
                                 //         doc.pageMargins = [ 140, 40, 10, 50 ];
                                 //         doc.alignment = 'center';
@@ -3730,6 +3730,7 @@
                             {
                                 PagoACapital	=	document.getElementsByName("pagoACapitalNameJS")[0].value;
                                 var PositionPago	=	document.getElementsByName("pagoACapitalNumberJS")[0].value;
+                                var PosicionFecha   =   document.getElementsByName("fechaPagoCapitalPosition")[0].value;
                                 // console.log("alv, ya llegé aquinumaaaa: " + PagoACapital);
                                 // console.log("se ingreso un pago en en la mensaualidad: " + PositionPago);
                                 var saldo	=	 PagoACapital;
@@ -3753,7 +3754,7 @@
 
                                 // $scope.infoLote.capital=0;
                                 var posPay = PositionPago-1;
-                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC);
+                                calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionFecha);
                                 /*aqui me quede con la busqueda de la actualizacion de la tabla*/
                             }
                             range.push({
@@ -3970,15 +3971,7 @@
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -4278,8 +4271,10 @@
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
-
+                        $('#condominioS').val(null);
                         $scope.condominios = response.data;
+                        $("#condominioS").select2();
+
                         $scope.lotes = "";
                         $scope.plan = "";
                         $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
@@ -4363,13 +4358,15 @@
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
+                        $('#lote').val(null);
                         $scope.lotes = response.data;
+                        $("#lote").select2();
+
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
-
                         $scope.plan = "";
                         $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}]
                         $scope.porcentaje="";
@@ -4929,7 +4926,15 @@
 
             $scope.dtoptions = DTOptionsBuilder;
             $scope.dtColumns = [
-                DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                    function(data, type, full, meta) {
+                        var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                        let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                        return inputFecha+fechaPago;
+                    }
+                ),
                 DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                 DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))}),
                 DTColumnBuilder.newColumn('interes').withTitle('Intereses').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))}),
@@ -4946,9 +4951,20 @@
                     ),
             ];
 
-            function calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC)
+            function calcularCF2(nuevoSaldo, posPay, saldo, saldoMenosPC, PosicionPagoFecha)
             {
                 // console.log(nuevoSaldo + " " + (posPay + 1) + " " + $scope.infoLote.capital);
+                console.log('posicion pago alaberga:', PosicionPagoFecha);
+                let fechaFromPago = PosicionPagoFecha.split('-');
+                let yearIncoming = fechaFromPago[2];
+                let monthIncoming = fechaFromPago[1];
+                let dayIncoming = fechaFromPago[0];
+                let fechaEmpezar = new Date(yearIncoming+'-'+monthIncoming+'-'+dayIncoming);
+                fechaEmpezar = fechaEmpezar.toISOString();
+                console.log('Con formato de fecha', fechaEmpezar);
+
+
+
                 var pagoACapitalCantidad = saldoMenosPC;
 
                 //INICIO FECHA
@@ -5003,78 +5019,6 @@
                 var ini3;
 
 
-                /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
-
-                if ($scope.day && $scope.apartado && $scope.mesesdiferir > 0) {
-
-                    var engd = (enganche - $scope.apartado);
-                    var engd2 = (engd / $scope.mesesdiferir);
-                    var saldoDif = ($scope.precioFinal);
-
-                    var rangEd = [];
-                    for (var e = 0; e < $scope.mesesdiferir; e++) {
-
-                        if (mes == 13) {
-                            mes = '01';
-                            yearc++;
-                        }
-                        if (mes == 2) {
-                            mes = '02';
-                        }
-                        if (mes == 3) {
-                            mes = '03';
-                        }
-                        if (mes == 4) {
-                            mes = '04';
-                        }
-                        if (mes == 5) {
-                            mes = '05';
-                        }
-                        if (mes == 6) {
-                            mes = '06';
-                        }
-                        if (mes == 7) {
-                            mes = '07';
-                        }
-                        if (mes == 8) {
-                            mes = '08';
-                        }
-                        if (mes == 9) {
-                            mes = '09';
-                        }
-                        if (mes == 10) {
-                            mes = '10';
-                        }
-                        if (mes == 11) {
-                            mes = '11';
-                        }
-                        if (mes == 12) {
-                            mes = '12';
-                        }
-
-                        $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                        if (e == 0) {
-                            $scope.fechaPM = $scope.dateCf;
-                        }
-
-                        rangEd.push({
-                            "fecha": $scope.dateCf,
-                            "pago": e + 1,
-                            "capital": engd2,
-                            "interes": 0,
-                            "total": engd2,
-                            "saldo": saldoDif -= engd2,
-
-                        });
-                        mes++;
-                    }
-
-                    $scope.rangEd = rangEd;
-
-                }
-
-                /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
 
 
                 var r1 = $scope.saldoFinal; //$scope.saldoFinal
@@ -5155,10 +5099,10 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if (i == 0) {
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -5267,7 +5211,8 @@
                                     "pagoCapital": pagoACapitalCantidad,
                                     "disp": dispPC,
                                 });
-                            } else {
+                            }
+                            else {
                                 /*Se coloca el valor anterior de donde se modificó, con el valor que trae por defecto en el areglo*/
                                 range.push({
                                     "fecha": $scope.dateCf,
@@ -5355,9 +5300,9 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -5578,7 +5523,15 @@
                         // console.log($scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -5609,7 +5562,9 @@
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         } else {
-                                            var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
+                                            // bloquear los anteriores
+                                            var inputCapital;
+                                            inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             return inputCapital + numberPay;
                                         }
@@ -5619,24 +5574,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -5691,11 +5629,11 @@
                             }
 
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             //nuevo codigo 2 marzo 20
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var interes = 0;
                             var total = 0;
@@ -5878,7 +5816,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -5920,24 +5866,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -5983,10 +5912,10 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -6093,7 +6022,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -6133,27 +6070,15 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
+
+                    setTimeout(()=>{
+                        blockFields();
+                    },500)
+
                 }
 
 
@@ -6203,10 +6128,10 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -6403,9 +6328,9 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -6626,7 +6551,15 @@
                         // console.log($scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -6666,24 +6599,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
@@ -6740,11 +6656,11 @@
                             }
 
 
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             //nuevo codigo 2 marzo 20
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var interes = 0;
                             var total = 0;
@@ -6931,7 +6847,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -6971,24 +6895,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -7034,10 +6941,10 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -7234,9 +7141,9 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -7457,7 +7364,15 @@
                         // console.log($scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -7497,27 +7412,14 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
+
+                    setTimeout(()=>{
+                        blockFields();
+                    },500)
                 }
 
 
@@ -7825,10 +7727,11 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -7974,9 +7877,10 @@
                             }
 
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -8187,9 +8091,10 @@
                             //versioi a terior range3 11Marzo20
 
                             //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -8338,7 +8243,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -8383,25 +8296,7 @@
                         ];
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [140, 40, 10, 50];
-                                        doc.alignment = 'center';
-
-                                    }
-                                },
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -8469,9 +8364,9 @@
                             }
 
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -8715,9 +8610,9 @@
                             //versioi a terior range3 11Marzo20
 
                             //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -8899,7 +8794,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -8944,15 +8847,7 @@
                         ];
                         console.log("cámara mis perros: ", $scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [ 140, 40, 10, 50 ];
-                                        doc.alignment = 'center';
-
-                                    }},
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
@@ -9003,10 +8898,10 @@
                             if (mes == 12) {
                                 mes = '12';
                             }
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
 
                             if(i == 0){
-                                $scope.fechaPM = $scope.dateCf;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -9152,9 +9047,9 @@
                             }
 
                             //nueva version 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha']
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -9365,9 +9260,9 @@
                             //versioi a terior range3 11Marzo20
 
                             //nueva versions 11Marzo20
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
-                                $scope.fechaPM = $scope.fechapago;
+                                $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -9516,7 +9411,15 @@
 
                         $scope.dtoptions = DTOptionsBuilder;
                         $scope.dtColumns = [
-                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
+                            DTColumnBuilder.newColumn('fecha').withTitle('Fechas').renderWith(
+                                function(data, type, full, meta) {
+                                    var inputFecha = '<input name="dateVal'+full["pago"]+'" type="hidden" id="idDate'+full["pago"]+'" value="'+full["fecha"]+'">';
+
+                                    let fechaPago = '<center><label>'+full["fecha"]+'</label></center>';
+
+                                    return inputFecha+fechaPago;
+                                }
+                            ),
                             DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                             DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function (data, type, full) {
                                 return (data.toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}))
@@ -9558,15 +9461,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                            {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                            {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                            {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                    //pageMargins [left, top, right, bottom]
-                                    doc.pageMargins = [ 140, 40, 10, 50 ];
-                                    doc.alignment = 'center';
-
-                                }},
+                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
 
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
@@ -9575,6 +9470,9 @@
                     }
 
                     console.log("$scope.alphaNumeric: ", $scope.alphaNumeric);
+                    setTimeout(()=>{
+                        blockFields();
+                    },500)
                 }
             }
         });
@@ -9590,10 +9488,24 @@
         {
             var inputVal = document.getElementById('idModel'+param);
             var numberPay = document.getElementById('payNum'+param);
+            var idDatePago = document.getElementById('idDate'+param);
+            // console.log('FECHA ALV', idDatePago.value);
+
             // console.log('Hubo un cambio en el row: ' + param + ' el valor del cambio es: ' + inputVal.value);
             $('#jsPagoCapital').val(inputVal.value);
             $('#pagoACapitalNumberJS').val(numberPay.value);
+            $('#fechaPagoCapitalPosition').val(idDatePago.value);
             $('#jsPagoCapital').click();
+        }
+        function blockFields(){
+            let pagoCurrent = document.getElementById('pagoACapitalNumberJS');
+            for (var n = 0; n < pagoCurrent.value; n++)
+            {
+                console.log(n);
+                console.log('#idModel'+n);
+                $('#idModel'+n).attr('disabled', true);
+            }
+
         }
 
 

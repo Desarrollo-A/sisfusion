@@ -132,7 +132,7 @@
                                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                    for ($i = 2019; $i <= 2022; $i++) {
+                                                                    for ($i = 2019; $i <= 2023; $i++) {
                                                                         $yearName  = $i;
                                                                         echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                     }
@@ -195,7 +195,7 @@
                                                             <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                    for ($i = 2019; $i <= 2022; $i++) {
+                                                                    for ($i = 2019; $i <= 2023; $i++) {
                                                                         $yearName  = $i;
                                                                         echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                     }

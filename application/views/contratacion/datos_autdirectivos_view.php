@@ -1,5 +1,6 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+	<link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet" />
+	<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
 		<?php
@@ -32,7 +33,6 @@
 		$this->load->view('template/sidebar', $dato);
 		?>
 
-
 		<style>
 			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iAccepted {
 				color: #4caf50;
@@ -53,7 +53,6 @@
 			#addFile .radio-with-Icon i:hover {
 				color: #929292;
 			}
-
 		</style>
 
 		<!-- Modals -->
@@ -62,11 +61,12 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<form method="POST" name="sendAutsFromD" id="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>registroCliente/updateAutsFromsDC">
-						<div class="modal-header">
+						<div class="modal-header d-flex justify-between align-center">
 							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
+							<label class="m-0">(<span class="items"></span>) autorizaciones pendientes</label>
 						</div>
-						<div class="modal-body" style="padding-left:0px; padding-right:0px">
-							<div id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
+						<div class="modal-body pl-0 pr-0">
+							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
 							<input hidden name="numeroDeRow" id="numeroDeRow">
 							<input hidden name="idCliente" id="idCliente">
 							<input hidden name="idCondominio" id="idCondominio">
@@ -129,9 +129,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-	<script>
-
-		
+	<script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+	<script>	
 		$(document).ready(function() {
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
@@ -149,6 +148,13 @@
 			var relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
 			relatedTarget[0].value = fileName;
 		}
+
+		$(document).on('change', '.btn-file :file', function() {
+			var input = $(this),
+				numFiles = input.get(0).files ? input.get(0).files.length : 1,
+				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			input.trigger('fileselect', [numFiles, label]);
+		});
 
 		let titulos = [];
 		$('#addExp thead tr:eq(0) th').each( function (i) {
@@ -306,8 +312,7 @@
 					var p = 0;
 					var opcionDenegado;
 					$.each(JSON.parse(data), function(i, item) {
-
-						<?php if($this->session->userdata('id_rol')!=1) { ?>
+						<?php if( $this->session->userdata('id_rol') == 1 ) { ?>
 							opcionDenegado = '';
 						<?php } else { ?>
 							opcionDenegado = `<p class="radioOption-Item m-0 pl-1">
@@ -355,15 +360,16 @@
 								</div>
 								<div class="form-group label-floating is-empty">
 									<label class="control-label">Comentario</label>
-									<input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none" required>
+									<input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none; padding: 0 20px;">
 								</div>
 								<input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
 							</div>
 						`;
-
 						$('#loadAuts').append(ctn);
 						p++;
 					});
+					introJs().start();
+					$(".items").text(p);
 					$('#numeroDeRow').val(p);
 				});
 				$('#addFile').modal('show');
@@ -409,8 +415,7 @@
 					success: function(data){
 						$('#addExp').DataTable().ajax.reload( );
 						alerts.showNotification('top', 'right', 'Autorización enviada', 'success');
-						$('#addFile').modal('hide');
-					
+						$('#addFile').modal('hide');					
 					},
 					error: function( data ){
 						alerts.showNotification('top', 'right', 'Error al enviar autorización', 'danger');
@@ -433,64 +438,43 @@
 			$('#addExp').DataTable().ajax.reload();
 		});
 
-		$(document).ready(function () {
-		
-		});
 		$("#guardarImagen").click(function() {
-
 			let tr = $(this).closest('tr');
-	var comentario = $("#observaciones").val();
-    var archivos = $("#fotoAlumno")[0].files;
+			var comentario = $("#observaciones").val();
+			var archivos = $("#fotoAlumno")[0].files;
     
-	if (archivos.length > 0) {
-      var foto = archivos[0]; //Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
-      var lector = new FileReader();
-	
-	  var formData = new FormData();
+			if (archivos.length > 0) {
+				//Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
+				var foto = archivos[0]; 
+				var lector = new FileReader();
+				var formData = new FormData();
 
-      //Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
-      formData.append('foto', foto);
-	  formData.append('comentario', comentario);
+				//Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
+				formData.append('foto', foto);
+				formData.append('comentario', comentario);
+			}
+		});
 
-	  $.ajax({
-        url: "prueba",
-        data: formData,
-        type: 'POST',
-        contentType: false,
-        processData: false,
-        success: function(resultados) {
-        }
-
-      });
-    }
-  });
-
-
-
-  $("#sendAutsFromD").on('submit', function(e){
-    e.preventDefault();
-	
-	var formData = new FormData(this);
-    $.ajax({
-        type: 'POST',
-		url: general_base_url + 'RegistroCliente/updateAutsFromsDC',
-        data: formData,
-		dataType: "json",
-        contentType: false,
-        processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
-        success: function(data) {
-                alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
-				$('#addExp').DataTable().ajax.reload(null, false );
-				$('#addFile').modal('hide');
-            
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
+		$("#sendAutsFromD").on('submit', function(e){
+			e.preventDefault();	
+			var formData = new FormData(this);
+			$.ajax({
+				type: 'POST',
+				url: general_base_url + 'RegistroCliente/updateAutsFromsDC',
+				data: formData,
+				dataType: "json",
+				contentType: false,
+				processData:false,
+				success: function(data) {
+						alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
+						$('#addExp').DataTable().ajax.reload(null, false );
+						$('#addFile').modal('hide');
+					
+				},
+				error: function(){
+					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+				}
+			});
+		});
 	</script>
 </body>

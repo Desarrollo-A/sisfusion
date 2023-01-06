@@ -11,6 +11,7 @@
                 <!-- <h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4> -->
                 <!-- <h4 class="modal-title card-title">Comentarios adicionales</h4> -->
             </div>
+            
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" type="text" name="observaciones" id="observaciones" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>

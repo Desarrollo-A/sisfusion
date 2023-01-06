@@ -218,8 +218,8 @@
             $.post("<?=base_url()?>index.php/Comisiones/lista_roles", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
+                    var id = data[i]['id_opcion'];
+                    var name = data[i]['nombre'];
                     $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
                 }
                 $("#filtro33").selectpicker('refresh');

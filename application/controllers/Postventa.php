@@ -8,7 +8,7 @@ class Postventa extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -1545,6 +1545,14 @@ class Postventa extends CI_Controller
                                                     <b>Superficie:</b><br>
                                                     ' . $data->superficie . '
                                                 </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Aportaciones:</b><br>
+                                                    $'.number_format($data->aportacion, 2, '.', '').'
+                                                </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Descuentos:</b><br>
+                                                    $'.number_format($data->descuento, 2, '.', '').'
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
@@ -1559,6 +1567,10 @@ class Postventa extends CI_Controller
                                                     <b>Estatus construcción:</b><br>
                                                     ' . $data->nombreConst . '
                                                 </td>
+                                                <td style="font-size: 1em;">
+                                                <b>Motivo:</b><br>
+                                                ' . $data->motivo . '
+                                            </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">

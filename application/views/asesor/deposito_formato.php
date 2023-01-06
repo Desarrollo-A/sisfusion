@@ -177,7 +177,7 @@ $datos = array();
 												<label style="font-size: 0.9em;">
 													<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
 														<?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
-															$cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/> Querétaro
+															$cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/> Querétaro
 												</label>
 											</div>
 										</div>
@@ -248,7 +248,7 @@ $datos = array();
 														<div class="radio">
 															<label style="font-size: 0.9em;">
 																<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-																	<?php if ($cliente[0]->desarrollo == 27) {
+																	<?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 33) {
 																		echo "checked=true";
 																	}
 																	?>  value="5" style="font-size: 0.9em;"/> Cancún
