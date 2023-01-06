@@ -224,7 +224,7 @@
         }else
          {
             $statusLote = '1';
-                if($this->session->userdata('id_rol') == 17){
+                if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){
                     $statusLote = '2,3';
                 } 
 
