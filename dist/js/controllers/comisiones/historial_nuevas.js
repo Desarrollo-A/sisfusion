@@ -13,16 +13,16 @@ $(document).ready(function() {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             var catalog = data[i]['id_catalogo'];
-            $("#filtro33").append($('<option>').val(id).attr('data-catalogo', catalog).text(name.toUpperCase()));
+            $("#id_rol_hn").append($('<option>').val(id).attr('data-catalogo', catalog).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#id_rol_hn").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(ruta){
-    id_rol = $('#filtro33').val();
-    id_catalogo = $('#filtro33>option:selected').attr("data-catalogo");
-    $("#filtro44").empty().selectpicker('refresh');
+$('#id_rol_hn').change(function(ruta){
+    id_rol = $('#id_rol_hn').val();
+    id_catalogo = $('#id_rol_hn>option:selected').attr("data-catalogo");
+    $("#id_usuario_hn").empty().selectpicker('refresh');
     $.ajax({
         url: `${general_base_url}Comisiones/usuarios_nuevas`,
         type: 'post',
@@ -33,19 +33,19 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#id_usuario_hn").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#id_usuario_hn").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
-    if(condominio == '' || condominio == null || condominio == undefined)
-        condominio = 0;
-    getAssimilatedCommissions(proyecto, condominio);
+$('#id_usuario_hn').change(function(ruta){
+    id_rol = $('#id_rol_hn').val();
+    id_usuario = $('#id_usuario_hn').val();
+    if(id_usuario == '' || id_usuario == null || id_usuario == undefined)
+    id_usuario = 0;
+    fillTable(id_rol, id_usuario);
 });
 
 var totalLeon = 0;
@@ -88,7 +88,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
+function fillTable(id_rol, id_usuario){
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -196,7 +196,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            url: `${general_base_url}Comisiones/getDatosNuevasMontos/${proyecto}/${condominio}`,
+            url: `${general_base_url}Comisiones/getDatosNuevasMontos/${id_rol}/${id_usuario}`,
             type: "POST",
             cache: false,
             data: function( d ){
