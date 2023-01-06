@@ -8,9 +8,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title">Ingrese su comentario</h4>
-                <b id="actividad_siguiente"></b>
-
+                <!-- <h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4> -->
+                <!-- <h4 class="modal-title card-title">Comentarios adicionales</h4> -->
             </div>
             
             <form id="approveForm" name="approveForm" method="post">
@@ -207,23 +206,22 @@
                             </div>
                             <!--INFORMACIÓN DE NOTARÍA-->
                             <div >
-                                <div class="col-md-3 pr-0">
+                                <div class="col-md-4 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                        <label class="control-label label-gral">Capital</label>
+                                        <input id="capital" name="capital" class="form-control input-gral" type="text">
                                     </div>
                                 </div>
-                                <div class="col-md-3 pr-0">
+                                <div class="col-md-4 pr-0">
                                       <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                        <label class="control-label label-gral">Ordinario</label>
+                                        <input id="ordinario" name="ordinario" class="form-control input-gral" type="text">
                                       </div>
                                 </div>
-                                <div class="col-md-6 pr-0">
+                                <div class="col-md-4 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
-                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
+                                        <input id="motivo" name="motivo" class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                             </div>
