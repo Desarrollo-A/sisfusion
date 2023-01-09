@@ -436,6 +436,11 @@ class Postventa_model extends CI_Model
 
     }
 
+        // Traer sedes
+        function listSedes(){
+            return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+         }
+
 
 
     function getValuadores(){

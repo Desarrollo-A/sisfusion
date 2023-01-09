@@ -31,6 +31,8 @@ class Postventa extends CI_Controller
         }
     }
 
+    
+
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -791,6 +793,11 @@ class Postventa extends CI_Controller
 
         $respuesta = $this->Postventa_model->insertNotaria($nombre_notaria, $notario_nombre, $direccion, $correo, $telefono, $sede);
         echo json_encode($respuesta);
+    }
+
+    public function listSedes()
+    {
+        echo json_encode($this->Postventa_model->listSedes()->result_array());
     }
 
 
