@@ -6061,6 +6061,7 @@
                 let residencial = proyecto.idResidencial;
                 // console.log('residencial: ', residencial);
                 $('#loteCont').empty();
+                cleanCondominios();
                 if(residencial == 17 || residencial == 28){
                     $('#loteCont').removeClass('col-md-3');
                     $('#loteCont').addClass('col-md-2');
@@ -6094,17 +6095,22 @@
                 // $(".selectList").selectpicker('refresh');
                 angular.element(document.querySelector('#loteCont')).append($compile(content)($scope)); //angular directive
 
-
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
+
                     function (response) {
                         // console.log('$scope.tipo_casa: ', $scope.tipo_casa);
+                        // $('#condominioS').val(null).trigger('change');
+                        // $('#condominioS').val(['']).trigger('change');
+                        // $('#condominioS').val(null).trigger('change');
+                        console.log('Lo que está aquí es:', $('#condominioS').val());
+
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
 
-                        $('#condominioS').select2('destroy');
+                        // $('#condominioS').select2('destroy');
                         $scope.condominios = response.data;
                         $('#condominioS').select2();
                         $scope.lotes = "";
@@ -6214,6 +6220,7 @@
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
+                        cleanlotes();
                         $scope.lotes = response.data;
                         // console.log('$scope.lotes: ', $scope.lotes);
 
@@ -9827,7 +9834,13 @@
 
 
         /*---------------*/
-
+        function cleanCondominios(){
+            $("#condominioS").val(null);
+            $('#lote').val(null);
+        }
+        function cleanlotes(){
+            $('#lote').val(null);
+        }
 
 
     </script>
