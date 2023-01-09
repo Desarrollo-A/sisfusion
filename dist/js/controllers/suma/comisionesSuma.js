@@ -1110,7 +1110,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     c=0;
     $.ajax({
         type: 'POST',
-        url: `${base_url}Suma/getComisionesByStatus`,
+        url: `${general_base_url}Suma/getComisionesByStatus`,
         data: {estatus: 1},
         dataType: 'json',
         beforeSend: function() {
@@ -1198,7 +1198,7 @@ function subir_xml(input) {
     data.append("xmlfile", documento_xml);
     resear_formulario();
     $.ajax({
-        url: general_base_url + "Comisiones/cargaxml",
+        url: general_base_url + "Suma/cargaxml",
         data: data,
         cache: false,
         contentType: false,
@@ -1233,7 +1233,7 @@ function subir_xml2(input) {
     data.append("xmlfile", documento_xml);
     resear_formulario();
     $.ajax({
-        url: general_base_url + "Comisiones/cargaxml2",
+        url: general_base_url + "Suma/cargaxml2",
         data: data,
         cache: false,
         contentType: false,
