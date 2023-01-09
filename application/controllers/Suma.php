@@ -635,11 +635,19 @@ class Suma extends CI_Controller
         }
     }
 
-    public function getTotalComisionAsesor()
-    {
+    public function getTotalComisionAsesor(){
         $idUsuario = $this->session->userdata('id_usuario');
         $data = $this->Suma_model->getTotalComisionAsesor($idUsuario);
         echo json_encode($data);
+    }
+
+    public function getResidencialDisponible(){
+        $datos["asesor"] = $this->caja_model_outside->allAsesor();
+        if ($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
     }
 
     public function cargaxml2($id_user = ''){
