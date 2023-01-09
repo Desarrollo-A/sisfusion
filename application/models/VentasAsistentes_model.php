@@ -98,7 +98,7 @@ class VentasAsistentes_model extends CI_Model {
         $id_sede = $this->session->userdata('id_sede');
         if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17)// MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        else if ($this->session->userdata('id_rol') == 54) // MJ: SUBDIRECTOR CONSULTA (POPEA)
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
         else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
@@ -233,7 +233,7 @@ class VentasAsistentes_model extends CI_Model {
     public function registroStatusContratacion14 () {
         if ($this->session->userdata('id_rol') == 17) // MJ: ES CONTRALORÍA CORPORATIVA
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        else if ($this->session->userdata('id_rol') == 54)  // MJ: SUBDIRECTOR CONSULTA (POPEA)
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63)  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
         else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
