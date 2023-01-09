@@ -167,11 +167,27 @@ function fillTable(id_rol, id_usuario){
             { data: "condominio" },
             { data: "lote" },
             { data: "referencia" },
-            { data: `${formatMoney(precio_lote)}` },
-            { data: `${formatMoney(comision_total)}` },
+            {
+                data: function( d ){
+                    return '$' + formatMoney(d.precio_lote);
+                }
+            },
+            {
+                data: function( d ){
+                    return '$' + formatMoney(d.comision_total);
+                }
+            },
             { data: "valimpuesto" },
-            { data: `${formatMoney(dcto)}` },
-            { data: `${formatMoney(impuesto)}` },
+            {
+                data: function( d ){
+                    return '$' + formatMoney(d.dcto);
+                }
+            },
+            {
+                data: function( d ){
+                    return '$' + formatMoney(d.impuesto);
+                }
+            },
             { data: "usuario" },
             { data: "puesto" },
             { data: "estatus_actual" },
