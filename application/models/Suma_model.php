@@ -325,7 +325,7 @@ class Suma_model extends CI_Model
 		WHERE f.uuid = '".$uuid."' ");
         }
     
- 
-
-  
+        function verificar_uuid( $uuid ){
+            return $this->db->query("SELECT * FROM facturas_suma WHERE uuid = '".$uuid."'");
+        }  
 }
