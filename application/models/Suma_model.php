@@ -25,7 +25,7 @@ class Suma_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider
         LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
         LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider
-        WHERE u0.id_usuario = $id_asesor AND u0.contrasena = '$contrasena'");
+        WHERE u0.id_usuario = $id_asesor AND u0.contrasena = '$contrasena' AND u0.estatus = 1");
 
         if($query->num_rows() > 0)
             return $query->row();
@@ -323,9 +323,16 @@ class Suma_model extends CI_Model
         INNER JOIN pagos_suma p ON p.id_pago_suma = f.id_pago_suma  
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario --AND u.id_usuario = 896
 		WHERE f.uuid = '".$uuid."' ");
-        }
+    }
     
- 
+    function verificar_uuid( $uuid ){
+        return $this->db->query("SELECT * FROM facturas_suma WHERE uuid = '".$uuid."'");
+    }  
 
-  
+    public function allAsesor(){
+        return $this->db->query("SELECT u.id_usuario id_asesor, 
+        CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
+        u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
+        WHERE u.id_rol IN (7) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
+    }
 }
