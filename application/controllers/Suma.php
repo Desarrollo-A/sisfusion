@@ -641,8 +641,8 @@ class Suma extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getResidencialDisponible(){
-        $datos["asesor"] = $this->caja_model_outside->allAsesor();
+    public function getAsesoresDisponibles(){
+        $datos["asesor"] = $this->Suma_model->allAsesor();
         if ($datos != null) {
             echo json_encode($datos);
         } else {
