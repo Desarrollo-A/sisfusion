@@ -485,8 +485,8 @@
                                         <label>Proyecto:<span class="required-label">*</span></label><br>
                                         <select id="proyectoS" ng-model = "proyecto"
                                                 ng-options = "item.descripcion for item in residencial"
-                                                 ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
-                                        width="100%">
+                                                ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
+                                                width="100%">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                         <p id="proyectotext" style="color: red;"></p>
@@ -1511,13 +1511,13 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         if(item.id_condicion == 3){
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
 
@@ -1525,7 +1525,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         // if(item.id_condicion == 5){
@@ -1554,7 +1554,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1564,7 +1564,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1574,7 +1574,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1594,7 +1594,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -1690,7 +1690,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
 
                         }
 
@@ -1701,7 +1701,7 @@
                             porcentaje2 = parseFloat(item.porcentaje);
                             nuevoResultado -= (porcentaje2);
                             // r1 -= (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1711,7 +1711,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
                         if(item.id_condicion == 12){
@@ -1728,7 +1728,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1848,7 +1848,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1858,7 +1858,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1868,7 +1868,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1888,7 +1888,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -2236,45 +2236,6 @@
                 }
                 // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
-                // if($scope.proyecto.idResidencial!=27){
-                //     if($scope.infoLote.precioTotal>500000){
-                //         //para mayores de 500,000
-                //         //total ---> 100%
-                //         //$scope.engancheFinal  ---> ?%
-                //
-                //         //total ---> 100%
-                //         //?  ---> 1%
-                //         let getMinimoDePorcentaje = (($scope.engancheFinal*100)/($scope.infoLote.r1));
-                //         getMinimoDePorcentaje = getMinimoDePorcentaje.toFixed(2);
-                //
-                //         let get1PercentCantidad = $scope.infoLote.r1 * 0.01;
-                //         if(getMinimoDePorcentaje<1){
-                //             //debe ser min el 1 %
-                //             $scope.engancheFinal = get1PercentCantidad;
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //         }
-                //     }
-                //     else{
-                //         //para menores de 500,000
-                //         console.log('entre a menor de 5000 enganche');
-                //         if($scope.cantidad<=5000){
-                //             //debe ser min 5000 en cantidad
-                //             $scope.engancheFinal = $scope.infoLote.engancheF = 5000;
-                //             // console.log('SIDD');
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //             // console.log('HARTHA');
-                //
-                //         }
-                //     }
-                //
-                // }else{
-                //     $scope.engancheFinal = $scope.infoLote.engancheF;
-                //     console.log('aqui jejej');
-                // }
                 $scope.engancheFinal = $scope.infoLote.engancheF;
                 // console.log('FINAL xd ',$scope.engancheFinal);
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;
@@ -6061,6 +6022,7 @@
                 let residencial = proyecto.idResidencial;
                 // console.log('residencial: ', residencial);
                 $('#loteCont').empty();
+                cleanCondominios();
                 if(residencial == 17 || residencial == 28){
                     $('#loteCont').removeClass('col-md-3');
                     $('#loteCont').addClass('col-md-2');
@@ -6094,17 +6056,22 @@
                 // $(".selectList").selectpicker('refresh');
                 angular.element(document.querySelector('#loteCont')).append($compile(content)($scope)); //angular directive
 
-
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
+
                     function (response) {
                         // console.log('$scope.tipo_casa: ', $scope.tipo_casa);
+                        // $('#condominioS').val(null).trigger('change');
+                        // $('#condominioS').val(['']).trigger('change');
+                        // $('#condominioS').val(null).trigger('change');
+                        console.log('Lo que está aquí es:', $('#condominioS').val());
+
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
 
-                        $('#condominioS').select2('destroy');
+                        // $('#condominioS').select2('destroy');
                         $scope.condominios = response.data;
                         $('#condominioS').select2();
                         $scope.lotes = "";
@@ -6214,6 +6181,7 @@
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
+                        cleanlotes();
                         $scope.lotes = response.data;
                         // console.log('$scope.lotes: ', $scope.lotes);
 
@@ -9827,7 +9795,13 @@
 
 
         /*---------------*/
-
+        function cleanCondominios(){
+            $("#condominioS").val(null);
+            $('#lote').val(null);
+        }
+        function cleanlotes(){
+            $('#lote').val(null);
+        }
 
 
     </script>
