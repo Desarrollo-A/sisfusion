@@ -439,9 +439,17 @@ class Postventa_model extends CI_Model
 
     function getNotarias()
     {
-        $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
-        return $query->result();
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
     }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+     }
+
 
     function getValuadores(){
         $query = $this->db->query("SELECT * FROM Valuadores");
