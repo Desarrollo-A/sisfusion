@@ -172,8 +172,8 @@ class Postventa_model extends CI_Model
          
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
         $notariaInterna = '';
-        if($estatus->id_estatus == 12 && $notaria == 0){
-            $notariaInterna = ' AND estatus_siguiente=18 ';
+        if($estatus == 12 && $notaria == 0){
+            $notariaInterna = ' AND estatus_siguiente=13 ';
         }
         if($estatus->id_estatus == 12 && $notaria != 0){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
@@ -428,9 +428,17 @@ class Postventa_model extends CI_Model
 
     function getNotarias()
     {
-        $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
-        return $query->result();
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
     }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+     }
+
 
     function getValuadores(){
         $query = $this->db->query("SELECT * FROM Valuadores");
