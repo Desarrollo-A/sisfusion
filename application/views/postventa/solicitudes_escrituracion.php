@@ -128,7 +128,8 @@
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/postventa/table_escrituracion.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
+<!-- <script src="<?=base_url()?>dist/js/controllers/postventa/table_escrituracion.js"></script> -->
 <!-- <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Classes/actionButtonsClass.js"></script>
 <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Helpers/helpers.js"></script>
 <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Services/services.js"></script>
