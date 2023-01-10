@@ -144,6 +144,10 @@
         h3{
             font-family: 'Open Sans', sans-serif;
         }
+        .pull-right{
+            float: right !important;
+            padding: 10px 0px;
+        }
     </style>
     <style type="text/css">
 
@@ -360,7 +364,7 @@
 
     </style>
 </head>
-<body class="hold-transition" ng-controller = "myController" style="background: #333">
+<body class="hold-transition" ng-controller = "myController" style="background: #e1e1e1">
 
 
 <div class="bkLoading hide" id="loaderDiv">
@@ -483,91 +487,94 @@
                     </div>
                 </div>
                 <div class="row">
-                    <!--            <div class="container-fluid">-->
-                    <hr>
-                    <br>
-                    <div class="table table-responsive">
-                        <table datatable="ng" class="table table-striped table-bordered table-hover table-condensed text-center" dt-options="dtoptions" dt-columns="dtColumns" dt-column-defs="dtColumnDefs" id="tblAmortizacion">
-                            <!--<thead>--><!--</thead>-->
-                            <!--<tbody>-->
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <!--            <div class="container-fluid">-->
+                        <hr>
+                        <br>
+                        <div class="table table-responsive">
+                            <table datatable="ng" class="table table-striped table-bordered table-hover table-condensed text-center" dt-options="dtoptions" dt-columns="dtColumns" dt-column-defs="dtColumnDefs" id="tblAmortizacion">
+                                <!--<thead>--><!--</thead>-->
+                                <!--<tbody>-->
 
 
 
-                            <!--	<tr ng-repeat= "i in rangEds">-->
-                            <!--		  <td>{{ i.fecha | date:'dd-mm-yyyy'}}</td>-->
-                            <!--		  <td>{{ i.pago }}</td>              -->
-                            <!--		  <td>{{ i.capital | currency }}</td>-->
-                            <!--		  <td>{{ i.interes | currency }}</td>-->
-                            <!--		  <td>{{ i.total | currency }}</td>-->
-                            <!--		  <td>{{ i.saldo | currency }}</td>-->
-                            <!--		  <td></td>-->
-                            <!--	</tr>-->
+                                <!--	<tr ng-repeat= "i in rangEds">-->
+                                <!--		  <td>{{ i.fecha | date:'dd-mm-yyyy'}}</td>-->
+                                <!--		  <td>{{ i.pago }}</td>              -->
+                                <!--		  <td>{{ i.capital | currency }}</td>-->
+                                <!--		  <td>{{ i.interes | currency }}</td>-->
+                                <!--		  <td>{{ i.total | currency }}</td>-->
+                                <!--		  <td>{{ i.saldo | currency }}</td>-->
+                                <!--		  <td></td>-->
+                                <!--	</tr>-->
 
-                            <!--	<tr ng-repeat= "i in range">-->
+                                <!--	<tr ng-repeat= "i in range">-->
 
-                            <!--		  <td>{{ i.fecha | date:'dd-mm-yyyy'}}</td>-->
-                            <!--		  <td>{{ i.pago }}</td>              -->
-                            <!--		  <td>{{ i.capital | currency }}</td>-->
-                            <!--		  <td>{{ i.interes | currency }}</td>-->
-                            <!--		  <td>{{ i.total | currency }}</td>-->
-                            <!--		  <td>{{ i.saldo | currency }}</td>-->
-                            <!--		  <td></td>-->
+                                <!--		  <td>{{ i.fecha | date:'dd-mm-yyyy'}}</td>-->
+                                <!--		  <td>{{ i.pago }}</td>              -->
+                                <!--		  <td>{{ i.capital | currency }}</td>-->
+                                <!--		  <td>{{ i.interes | currency }}</td>-->
+                                <!--		  <td>{{ i.total | currency }}</td>-->
+                                <!--		  <td>{{ i.saldo | currency }}</td>-->
+                                <!--		  <td></td>-->
 
-                            <!--	</tr>-->
-                            <!--</table>-->
+                                <!--	</tr>-->
+                                <!--</table>-->
 
-                            <!--<table class="table table-striped table-bordered table-hover table-condensed text-center">-->
-                            <!--	<tr>-->
-                            <!--		  <th>Fechas</th>-->
-                            <!--		  <th>Pago #</th>-->
-                            <!--		  <th>Capital</th>-->
-                            <!--		  <th>Intereses</th>-->
-                            <!--		  <th>Total</th>-->
-                            <!--		  <th>Saldo</th>-->
-                            <!--		  <th>Pagos a Capital</th>-->
-                            <!--	</tr>-->
-                            <!--	<tr ng-repeat= "i in range2">-->
+                                <!--<table class="table table-striped table-bordered table-hover table-condensed text-center">-->
+                                <!--	<tr>-->
+                                <!--		  <th>Fechas</th>-->
+                                <!--		  <th>Pago #</th>-->
+                                <!--		  <th>Capital</th>-->
+                                <!--		  <th>Intereses</th>-->
+                                <!--		  <th>Total</th>-->
+                                <!--		  <th>Saldo</th>-->
+                                <!--		  <th>Pagos a Capital</th>-->
+                                <!--	</tr>-->
+                                <!--	<tr ng-repeat= "i in range2">-->
 
-                            <!--		  <td>{{ i.fecha | date:'dd-MM-yyyy'}}</td>-->
-                            <!--		  <td>{{ i.pago }}</td>              -->
-                            <!--		  <td>{{ i.capital | currency }}</td>-->
-                            <!--		  <td>{{ i.interes | currency }}</td>-->
-                            <!--		  <td>{{ i.total | currency }}</td>-->
-                            <!--		  <td>{{ i.saldo | currency }}</td>-->
-                            <!--		  <td></td>-->
+                                <!--		  <td>{{ i.fecha | date:'dd-MM-yyyy'}}</td>-->
+                                <!--		  <td>{{ i.pago }}</td>              -->
+                                <!--		  <td>{{ i.capital | currency }}</td>-->
+                                <!--		  <td>{{ i.interes | currency }}</td>-->
+                                <!--		  <td>{{ i.total | currency }}</td>-->
+                                <!--		  <td>{{ i.saldo | currency }}</td>-->
+                                <!--		  <td></td>-->
 
-                            <!--	</tr>-->
-                            <!--</table> -->
-                            <!--<table class="table table-striped table-bordered table-hover table-condensed text-center">-->
-                            <!--	<tr>-->
-                            <!--		  <th>Fechas</th>-->
-                            <!--		  <th>Pago #</th>-->
-                            <!--		  <th>Capital</th>-->
-                            <!--		  <th>Intereses</th>-->
-                            <!--		  <th>Total</th>-->
-                            <!--		  <th>Saldo</th>-->
-                            <!--		  <th>Pagos a Capital</th>-->
-                            <!--	</tr>-->
-                            <!--	<tr ng-repeat= "i in range3">-->
+                                <!--	</tr>-->
+                                <!--</table> -->
+                                <!--<table class="table table-striped table-bordered table-hover table-condensed text-center">-->
+                                <!--	<tr>-->
+                                <!--		  <th>Fechas</th>-->
+                                <!--		  <th>Pago #</th>-->
+                                <!--		  <th>Capital</th>-->
+                                <!--		  <th>Intereses</th>-->
+                                <!--		  <th>Total</th>-->
+                                <!--		  <th>Saldo</th>-->
+                                <!--		  <th>Pagos a Capital</th>-->
+                                <!--	</tr>-->
+                                <!--	<tr ng-repeat= "i in range3">-->
 
-                            <!--		  <td>{{ i.fecha | date:'dd-MM-yyyy'}}</td>-->
-                            <!--		  <td>{{ i.pago }}</td>              -->
-                            <!--		  <td>{{ i.capital | currency }}</td>-->
-                            <!--		  <td>{{ i.interes | currency }}</td>-->
-                            <!--		  <td>{{ i.total | currency }}</td>-->
-                            <!--		  <td>{{ i.saldo | currency }}</td>-->
-                            <!--		  <td>{{ i. }}</td>-->
+                                <!--		  <td>{{ i.fecha | date:'dd-MM-yyyy'}}</td>-->
+                                <!--		  <td>{{ i.pago }}</td>              -->
+                                <!--		  <td>{{ i.capital | currency }}</td>-->
+                                <!--		  <td>{{ i.interes | currency }}</td>-->
+                                <!--		  <td>{{ i.total | currency }}</td>-->
+                                <!--		  <td>{{ i.saldo | currency }}</td>-->
+                                <!--		  <td>{{ i. }}</td>-->
 
-                            <!--	</tr>-->
-                            <!--</tbody>-->
-                        </table>
-                    </div>
-                    <!--            </div>-->
-                    <div class="row hide" style="text-align: center">
-                        <div class="container-fluid">
-                            <strong><span><i>Esta simulación constituye un ejercicio numérico que no implica ningún compromiso de Ciudad Maderas o de sus marcas comerciales, CIUDAD MADERAS. Solo sirve para fines de orientación.</i></span></strong>
+                                <!--	</tr>-->
+                                <!--</tbody>-->
+                            </table>
+                        </div>
+                        <!--            </div>-->
+                        <div class="row hide" style="text-align: center">
+                            <div class="container-fluid">
+                                <strong><span><i>Esta simulación constituye un ejercicio numérico que no implica ningún compromiso de Ciudad Maderas o de sus marcas comerciales, CIUDAD MADERAS. Solo sirve para fines de orientación.</i></span></strong>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -577,6 +584,8 @@
 
 
 <script>
+
+
     var myApp = angular.module ('myApp', ['checklist-model','datatables', 'datatables.buttons']);
     myApp.controller('myController', function ($scope, $http, $window, DTOptionsBuilder, DTColumnBuilder) {
         $scope.dtoptions = DTOptionsBuilder;
@@ -668,23 +677,17 @@
                         // console.log(posicionDate[1]);
                         // console.log(porciones[2]);
                         let formatDate = new Date($scope.fechaPagoField);
-                        // let year = formatDate.getFullYear();
-                        // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+                        let year = formatDate.getFullYear();
+                        let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
                         let day = (formatDate.getDate()<10) ? '0'+formatDate.getDate() : formatDate.getDate();
-                        let fechaPago = anioPay+'-'+mesPay+'-'+day;
-                        // var inputCapital = '<input name="dRet'+full["pago"]+'" type="number" id="idDiasRet'+full["pago"]+'"  onchange="pagoCapChange('+full["pago"]+')" placeholder="Días retardo" class="form-control">';
-                        var currentDateRow = '<input name="pagoDia'+full["pago"]+'" id="payDay'+full["pago"]+'" type="hidden" value="'+datePays+'"> ';
-                        var inputCapital = '<input name="dRet'+full["pago"]+'" type="date" id="idDiasRet'+full["pago"]+'" min="'+anioPay+'-'+mesPay+'-02" value="'+fechaPago+'"  placeholder="Días retardo" class="form-control">';/*max="'+anioPay+'-'+mesPay+'-'+dayPay+'"*/
-                        var button_action = '<button class="btn btn-a blue " style="margin-left: 2px" onclick="pagoCapChange('+full["pago"]+')"><i class="fa fa-check"></i></button>';
-
                         // return '<div class="justify-between ">'+inputCapital+currentDateRow+button_action+'</div>';
                         let formatDatePago = new Date(full["fechaDePago"]);
 
-                        let year = formatDatePago.getFullYear();
-                        let month = ((formatDatePago.getMonth()+1)<10)?'0'+(formatDatePago.getMonth()+1) : (formatDatePago.getMonth()+1);
+                        // let year = formatDatePago.getFullYear();
+                        // let month = ((formatDatePago.getMonth()+1)<10)?'0'+(formatDatePago.getMonth()+1) : (formatDatePago.getMonth()+1);
                         let dayP = (formatDatePago.getDate()<10) ? '0'+formatDatePago.getDate() : formatDatePago.getDate();
-                        let fechaPagoP = anioPay+'-'+mesPay+'-'+day;
-                        let fechaPagoExcel = day+'-'+mesPay+'-'+anioPay;
+                        let fechaPagoP = year+'-'+month+'-'+day;
+                        let fechaPagoExcel = day+'-'+month+'-'+year;
                         var fechaExcel = '<label class="hide"><center>'+fechaPagoExcel+'</center></label>';
                         var inputDate = '<input name="dRet'+full["pago"]+'" type="date" id="idDiasRet'+full["pago"]+'" value="'+fechaPagoP+'"  class="form-control" disabled>';/*max="'+anioPay+'-'+mesPay+'-'+dayPay+'"*/
                         return inputDate+fechaExcel;
@@ -995,17 +998,17 @@
                         }
                         // console.log($scope.SIField);
                         let formatDateFinish = new Date($scope.fechaPagoField);
-                        // let year = formatDate.getFullYear();
-                        // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+                        let year = formatDateFinish.getFullYear();
+                        let month = ((formatDateFinish.getMonth()+1)<10)?'0'+(formatDateFinish.getMonth()+1) : (formatDateFinish.getMonth()+1);
                         let dayPago = (formatDateFinish.getDate()<10) ? '0'+formatDateFinish.getDate() : formatDateFinish.getDate();
-                        let fechaPago = mes+'-'+dayPago+'-'+yearc;
+                        let fechaPago = month+'-'+dayPago+'-'+year;
                         let fechaInitEnd =  new Date(mes + '-' + day + '-' + yearc);
                         let fechaFinishEnd = new Date(fechaPago);
                         let fechaPagoToArray =  dayPago+'-'+mes+'-'+yearc;
 
 
                         var difference = dateDiffInDays(fechaInitEnd, fechaFinishEnd);
-                        // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
+                        console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
                         let diasRetraso = difference;
                         let IF = 0.601;
                         let mensualidad = total;
@@ -1164,13 +1167,13 @@
 
                         let formatDateInit = new Date( $scope.fechapago);
                         let formatDateFinish = new Date($scope.fechaPagoField);
-                        // let year = formatDate.getFullYear();
-                        // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+                        let yearPago = formatDateFinish.getFullYear();
+                        let monthPago = ((formatDateFinish.getMonth()+1)<10)?'0'+(formatDateFinish.getMonth()+1) : (formatDateFinish.getMonth()+1);
                         let dayPago = (formatDateFinish.getDate()<10) ? '0'+formatDateFinish.getDate() : formatDateFinish.getDate();
-                        let fechaPago = mes+'-'+dayPago+'-'+yearc;
+                        let fechaPago = monthPago+'-'+dayPago+'-'+yearPago;
                         let fechaInitEnd =  new Date(mes + '-' + day + '-' + yearc);
                         let fechaFinishEnd = new Date(fechaPago);
-                        let fechaPagoToArray =  dayPago+'-'+mes+'-'+yearc;
+                        let fechaPagoToArray =  $scope.fechaPagoField;
 
 
                         var difference = dateDiffInDays(fechaInitEnd, fechaFinishEnd);
@@ -1186,10 +1189,10 @@
                         range2.push({
                             "fecha": $scope.fechapago,
                             "pago": i + 1,
-                            "capital":$scope.capital2 = ($scope.p2 - $scope.interes_plan2),//($scope.infoMoratorio.capital = ($scope.p2 - $scope.interes_plan2))
+                            "capital":$scope.capital = ($scope.p2 - $scope.interes_plan2),//($scope.infoMoratorio.capital = ($scope.p2 - $scope.interes_plan2))
                             "interes": $scope.infoMoratorio.saldoNormal * $scope.infoMoratorio.interes_p2,
                             "fechaDePago":fechaPagoToArray,
-                            "importe": $scope.p2,
+                            "importe":$scope.infoMoratorio.capital,
                             "diasRetraso": difference,
                             "interesMoratorio": IM,
                             "totalFinal" : pagoFinal,
@@ -1197,7 +1200,7 @@
                             "deudaOrdinario":0,
                             "max" : max,
                             "min": min,
-                            "total": $scope.p2,
+                            "total": $scope.infoMoratorio.capital,
                             "saldo": $scope.infoMoratorio.si = $scope.infoMoratorio.si - $scope.p2+$scope.p2,//$scope.total2 = ($scope.total2 - $scope.capital2) //2-$scope.total2 = $scope.total2 - $scope.capital2+$scope.capital2
                             //$scope.total2 = ($scope.total2 - $scope.capital2) - $scope.interes_plan2
                             "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-$scope.capital2,
@@ -1216,24 +1219,7 @@
                     $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2);
                     // console.log($scope.alphaNumeric);
                     $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                            {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                            {
-                                extend: 'print',
-                                text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                titleAttr: 'Imprimir'
-                            },
-                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                            {
-                                extend: 'pdfHtml5',
-                                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                titleAttr: 'PDF',
-                                title: '',
-                                customize: function (doc) {
-                                    //pageMargins [left, top, right, bottom]
-                                    doc.pageMargins = [140, 40, 10, 50];
-                                    doc.alignment = 'center';
-                                }
-                            },
+                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
                         ]
                     ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                 }
@@ -1562,13 +1548,15 @@
 
                         let formatDateInit = new Date( $scope.fechapago);
                         let formatDateFinish = new Date($scope.fechaPagoField);
-                        // let year = formatDate.getFullYear();
-                        // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+
+
+                        let yearPago = formatDateFinish.getFullYear();
+                        let monthPago = ((formatDateFinish.getMonth()+1)<10)?'0'+(formatDateFinish.getMonth()+1) : (formatDateFinish.getMonth()+1);
                         let dayPago = (formatDateFinish.getDate()<10) ? '0'+formatDateFinish.getDate() : formatDateFinish.getDate();
-                        let fechaPago = mes+'-'+dayPago+'-'+yearc;
+                        let fechaPago = monthPago+'-'+dayPago+'-'+yearPago;
                         let fechaInitEnd =  new Date(mes + '-' + day + '-' + yearc);
                         let fechaFinishEnd = new Date(fechaPago);
-                        let fechaPagoToArray =  dayPago+'-'+mes+'-'+yearc;
+                        let fechaPagoToArray =  $scope.fechaPagoField;
 
 
                         var difference = dateDiffInDays(fechaInitEnd, fechaFinishEnd);
@@ -1583,7 +1571,7 @@
                         range2.push({
                             "fecha": $scope.fechapago,
                             "pago": i + 1,
-                            "capital": $scope.capital2 = ($scope.p2 - $scope.interes_plan2),
+                            "capital":$scope.infoMoratorio.capital,
                             "interes": $scope.infoMoratorio.saldoNormal * $scope.infoMoratorio.interes_p2,
                             "fechaDePago":fechaPagoToArray,
                             "importe": $scope.p2,
@@ -1592,7 +1580,7 @@
                             "totalFinal" : pagoFinal,
                             "deudaMoratorio": 0,
                             "deudaOrdinario":0,
-                            "total": $scope.p2,
+                            "total": $scope.infoMoratorio.capital,
                             "saldo":  $scope.infoMoratorio.si - $scope.p2+$scope.p2,//$scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital
                             "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-$scope.capital2,
                         });
@@ -1939,12 +1927,13 @@
                             let formatDateFinish = new Date($scope.fechaPagoField);
                             // let year = formatDate.getFullYear();
                             // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+                            let yearPago = formatDateFinish.getFullYear();
+                            let monthPago = ((formatDateFinish.getMonth()+1)<10)?'0'+(formatDateFinish.getMonth()+1) : (formatDateFinish.getMonth()+1);
                             let dayPago = (formatDateFinish.getDate()<10) ? '0'+formatDateFinish.getDate() : formatDateFinish.getDate();
-                            let fechaPago = mes+'-'+dayPago+'-'+yearc;
+                            let fechaPago = monthPago+'-'+dayPago+'-'+yearPago;
                             let fechaInitEnd =  new Date(mes + '-' + day + '-' + yearc);
                             let fechaFinishEnd = new Date(fechaPago);
-                            let fechaPagoToArray =  dayPago+'-'+mes+'-'+yearc;
-
+                            let fechaPagoToArray =  $scope.fechaPagoField;
 
                             var difference = dateDiffInDays(fechaInitEnd, fechaFinishEnd);
                             // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
@@ -1959,7 +1948,7 @@
                                 "fecha": $scope.fechapago,
                                 "fechaDePago":fechaPagoToArray,
                                 "pago": i + 1,
-                                "capital": ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),//($scope.infoMoratorio.capital = ($scope.p2 - $scope.interes_plan2))
+                                "capital": $scope.infoMoratorio.capital,//($scope.infoMoratorio.capital = ($scope.p2 - $scope.interes_plan2))
                                 "interes": ($scope.interes_plan2= ( $scope.infoMoratorio.saldoNormal * $scope.infoMoratorio.interes_p2)),
                                 "importe": $scope.p2,
                                 "diasRetraso": difference,
@@ -1968,7 +1957,7 @@
                                 "deudaOrdinario":0,
                                 "max" : max,
                                 "min": min,
-                                "total": $scope.p2,
+                                "total": $scope.infoMoratorio.capital,
                                 "saldo": $scope.infoMoratorio.si = $scope.infoMoratorio.si - $scope.p2+$scope.p2,//$scope.total2 = ($scope.total2 - $scope.capital2) - $scope.interes_plan2
                                 "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-$scope.capital2,
                             });
@@ -2041,11 +2030,13 @@
                             let formatDateFinish = new Date($scope.fechaPagoField);
                             // let year = formatDate.getFullYear();
                             // let month = ((formatDate.getMonth()+1)<10)?'0'+(formatDate.getMonth()+1) : (formatDate.getMonth()+1);
+                            let yearPago = formatDateFinish.getFullYear();
+                            let monthPago = ((formatDateFinish.getMonth()+1)<10)?'0'+(formatDateFinish.getMonth()+1) : (formatDateFinish.getMonth()+1);
                             let dayPago = (formatDateFinish.getDate()<10) ? '0'+formatDateFinish.getDate() : formatDateFinish.getDate();
-                            let fechaPago = mes+'-'+dayPago+'-'+yearc;
+                            let fechaPago = monthPago+'-'+dayPago+'-'+yearPago;
                             let fechaInitEnd =  new Date(mes + '-' + day + '-' + yearc);
                             let fechaFinishEnd = new Date(fechaPago);
-                            let fechaPagoToArray =  dayPago+'-'+mes+'-'+yearc;
+                            let fechaPagoToArray =  $scope.fechaPagoField;
 
 
                             var difference = dateDiffInDays(fechaInitEnd, fechaFinishEnd);
@@ -2063,7 +2054,7 @@
                                 "fecha" : $scope.dateCf,
                                 "fechaDePago":fechaPagoToArray,
                                 "pago" : i,
-                                "capital" : $scope.capital2 = ($scope.p3 - $scope.interes_plan3),
+                                "capital" : $scope.infoMoratorio.capital,
                                 "interes" : $scope.infoMoratorio.saldoNormal * $scope.infoMoratorio.interes_p3,//($scope.interes_plan3= ($scope.total3 * $scope.infoMoratorio.interes_p3))
                                 "importe": $scope.p3,
                                 "diasRetraso": diasRetraso,
@@ -2072,7 +2063,7 @@
                                 "deudaOrdinario":0,
                                 "max" : max,
                                 "min": min,
-                                "total" : $scope.p3,
+                                "total" : $scope.infoMoratorio.capital,
                                 "totalFinal" : pagoFinal,
                                 "saldo" : $scope.infoMoratorio.si = $scope.infoMoratorio.si - $scope.p3+$scope.p3,//($scope.total3 = ($scope.total3 -$scope.capital2))
                                 "saldoNormal":  $scope.infoMoratorio.saldoNormal=$scope.infoMoratorio.saldoNormal-$scope.capital3,
@@ -2093,29 +2084,11 @@
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2).concat($scope.range3);
                         console.log($scope.alphaNumeric);
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                {
-                                    extend: 'print',
-                                    text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir',
-                                    titleAttr: 'Imprimir'
-                                },
                                 {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                {
-                                    extend: 'pdfHtml5',
-                                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF',
-                                    titleAttr: 'PDF',
-                                    title: '',
-                                    customize: function (doc) {
-                                        //pageMargins [left, top, right, bottom]
-                                        doc.pageMargins = [50, 10, 50, 10];
-                                        doc.alignment = 'center';
-                                        doc.orientation = 'portrait ';
-                                    }
-                                },
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                     }
-                    /*termina }calculo de mensualidades*/
+                    /*termina calculo de mensualidades*/
                 }
             }
 
