@@ -330,7 +330,6 @@
 													<thead>
 														<tr>
 														<th>PROYECTO</th>
-														<!-- <th>CONDOMINIO</th> -->
 														<th>TIPO LOTE</th>
 														<th>SUPERFICIE</th>
 														<th>DESCRIPCIÓN</th>
@@ -341,18 +340,8 @@
 														<th>BONO</th>
 														<th>MSI</th>
 														<th>VALOR</th>
-														<!-- <th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-															<th>PLAN</th>
-															<th>TOTAL</th>
-															<th>ENGANCHE</th>
-															<th>M2</th>
-															
-															<th>DESARROLLO</th>
-															<th>TOT. COM.</th> -->
+														<th>FECHA INICIO</th>
+														<th>FECHA FIN</th>
 														</tr>
 													</thead>
 												</table>
@@ -434,7 +423,7 @@ $("#table_planes").ready(function() {
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'PAQUETES DESCUENTOS',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -465,12 +454,6 @@ $("#table_planes").ready(function() {
                         return '<p class="m-0">'+d.nombreResidencial+'</p>';
                     }
                 },
-                // {  
-                //     "width": "15%",
-                //     "data": function( d ){
-                //         return '<p class="m-0">'+d.nombre_condominio+'</p>';
-                //     }
-                // },
 				{  
                     "width": "10%",
                     "data": function( d ){
@@ -586,6 +569,16 @@ $("#table_planes").ready(function() {
 
 						}
                         
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_inicio+'</p>';
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_fin+'</p>';
                     }
                 }],
                 columnDefs: [{}],
