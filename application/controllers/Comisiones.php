@@ -5865,92 +5865,85 @@ public function InsertNeo(){
             $comision_abonada = $this->input->post("comision_abonada[]");
             $comision_pendiente = $this->input->post("comision_pendiente[]");
             $comision_dar = $this->input->post("comision_dar[]");
-            $num_usuarios = $this->input->post("num_usuarios[]");
+
             $pago_neo = $this->input->post("pago_neo");
             $porcentaje_abono = $this->input->post("porcentaje_abono");
             $abonado = $this->input->post("abonado");
             $total_comision = $this->input->post("total_comision");
             $pendiente = $this->input->post("pendiente");
             $idCliente = $this->input->post("idCliente");
+
             $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
             $lugar_p = $this->input->post('lugar_p');
             $totalNeto2 = $this->input->post('totalNeto2');
-            
 
             $banderita = 0;
             $PorcentajeAsumar=0;
-            //validar tipo venta
+            // 1.- validar tipo venta
             if($tipo_venta_insert <= 6 || $tipo_venta_insert == 11 || $tipo_venta_insert == 13){
               if($porcentaje_abono < 8){
                 $PorcentajeAsumar = 8 - $porcentaje_abono;
                 $banderita=1;
                 $porcentaje_abono =8;
               }
-           }
+            }
             
             $pivote=0;
 
-                $penalizacion = $this->Comisiones_model->validarPenalizacion($lote_1, $idCliente)->result_array();
-                $asesor = $penalizacion[0]['asesor'];
-                $coordinador = $penalizacion[0]['coordinador'];
-                $gerente = $penalizacion[0]['gerente'];
-                $total_penalizacion = $penalizacion[0]['total'];
+            for ($i=0; $i <count($id_usuario) ; $i++) { 
+
+              if($banderita == 1 && $id_rol[$i] == 45){
+                $banderita=0;
+
                 
-                // SI validar penalizacion > 0 que exista INSERTAR SOLO SIN 3,7,9
-                
-                if(sizeof($penalizacion) > 0 ){
+                $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
+                $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
+               
+              }
 
-                  $ACUM_RESTANTE = 0;
-                  $ACUM_ABONADO = 0;
-  
-                  for($i=0;$i<sizeof($id_usuario);$i++){
-                    
-    //                 $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
-    //                 $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
-                   
-    //               }
+              if($id_rol[$i] == 1){
+                $pivote=str_replace($replace,"",$comision_total[$i]);
+              }
 
-    //               if($id_rol[$i] == 1){
-    //                 $pivote=str_replace($replace,"",$comision_total[$i]);
-    //               }
+              $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
+            
+            }
+            $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+            $respuesta =  $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
 
-    //               $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
-                
-    //             }
-    //             $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-    //             $respuesta =  $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
-    
-    //                   if($banderita == 1){
-    //                     $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
-    //                      $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
+                  if($banderita == 1){
+                    $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
+                     $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
 
-    //                   }
+                  }
 
-                 
-    //           }
-
-
-    //           $validatePenalization = $this->Comisiones_model->validatePenalization($lote_1)->result_array();
-
-    //           if(sizeof($validatePenalization) > 0 ) {
-
-    //             $respuesta =  $this->InsertPena($lote_1);
-
-    //           }else{
-    //             $respuesta = true;
-    //           }}
-
-              
-
-    //           // $respuesta =  $this->InsertPena($lote_1);
              
-    //           // validar si aplica penalización
+          }
 
-    
-    
-    // }
-    // echo json_encode( $respuesta );
-    // }
+
+          $validatePenalization = $this->Comisiones_model->validatePenalization($lote_1)->result_array();
+
+          if(sizeof($validatePenalization) > 0 ) {
+
+            $respuesta =  $this->InsertPena($lote_1);
+
+          }else{
+            $respuesta = true;
+          }
+
+          // $respuesta =  $this->InsertPena($lote_1);
+         
+          // validar si aplica penalización
+
+
+
+}
+echo json_encode( $respuesta );
+}
+
+// public function porcentajes($cliente,$tipo,$vigencia){
+//   echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
+// }
 
 
     public function porcentajes($cliente,$tipoVenta){
