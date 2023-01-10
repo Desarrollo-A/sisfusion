@@ -41,6 +41,10 @@
     .noborderstable tr td{
         border:0px !important;
     }
+    .hover_focus{
+        border-bottom: 1px solid #f00;
+        animation-duration: 0.3s;
+    }
 </style>
 <body>
 
@@ -173,7 +177,7 @@ $datos = array();
 												<label style="font-size: 0.9em;">
 													<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
 														<?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
-															$cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/> Querétaro
+															$cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/> Querétaro
 												</label>
 											</div>
 										</div>
@@ -244,7 +248,7 @@ $datos = array();
 														<div class="radio">
 															<label style="font-size: 0.9em;">
 																<input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-																	<?php if ($cliente[0]->desarrollo == 27) {
+																	<?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 33) {
 																		echo "checked=true";
 																	}
 																	?>  value="5" style="font-size: 0.9em;"/> Cancún
@@ -428,13 +432,13 @@ $datos = array();
 
                             <div class="row">
                                 <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                    <label class="col-sm-2 label-on-left">RESIDENCIA:</label>
+                                    <label class="col-sm-2 label-on-left">RESIDENCIA(<small style="color: red;">*</small>):</label>
                                     <div class="col-sm-10 checkbox-radios">
                                         <div class="col-md-6 checkbox-radios required">
                                             <div class="radio text-right">
-                                                <label style="  font-size: 0.9em;">
-                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc == 0) {
+                                                <label style="  font-size: 0.9em;" id="label1">
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_nc === 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NACIONAL
@@ -444,9 +448,9 @@ $datos = array();
 
                                         <div class="col-md-6 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="font-size: 0.9em;">
-                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc == 1) {
+                                                <label style="font-size: 0.9em;" id="label2">
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_nc === 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> EXTRANJERO
@@ -456,16 +460,16 @@ $datos = array();
                                     </div>
                                 </div>
                                 <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                                    <label class="col-sm-4 label-on-left">¿IMPRIMES PAGARES?:</label>
+                                    <label class="col-sm-4 label-on-left">¿IMPRIME PAGARES?: <?php echo $cliente[0]->printPagare;?></label>
                                     <div class="col-sm-8 checkbox-radios">
                                         <div class="col-md-3 checkbox-radios required">
                                             <div class="radio text-left">
                                                 <label style="  font-size: 0.9em;">
                                                     <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare == 1) {
+                                                        <?php if ($cliente[0]->printPagare === 1) {
                                                             echo "checked=true";
                                                         }
-                                                        ?>> SI
+                                                        ?>> SÍ
                                                 </label>
                                             </div>
                                         </div>
@@ -474,7 +478,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="font-size: 0.9em;">
                                                     <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare == 0) {
+                                                        <?php if ($cliente[0]->printPagare === 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NO
@@ -2117,7 +2121,19 @@ $datos = array();
 		   alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
 		}
 		else {
-		   console.log('Continue...');
+            if (!$("input[name='tipoNc_valor']").is(':checked')) {
+                alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+                $('#tipoNc_valor').focus();
+                $('#label1').addClass('hover_focus');
+                $('#label2').addClass('hover_focus');
+                setTimeout(()=>{
+                    $('#label1').removeClass('hover_focus');
+                    $('#label2').removeClass('hover_focus');
+                },1500)
+            }
+            else {
+                console.log('Continue...');
+            }
 		}
 	}
 

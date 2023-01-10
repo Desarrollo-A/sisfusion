@@ -927,17 +927,16 @@ class Asesor_model extends CI_Model
 		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, aut.estatus 
+        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado, 1 estatus 
         FROM clientes AS cl			
         INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
         INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
         INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
-        INNER JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE ((cl.id_coordinador NOT IN (2562, 2541)) OR (cl.id_coordinador IN (2562, 2541) AND cl.id_asesor = 1908 AND cl.id_asesor = $id_asesor))
+        WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
         AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-        cl.status = 1 AND cl.id_asesor = $id_asesor AND cl.status = 1 ORDER BY cl.id_Cliente ASC");
+        cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
 	}
 

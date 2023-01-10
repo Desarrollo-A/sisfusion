@@ -6043,6 +6043,14 @@
 			$datos[$i]['asesor3'] = $data[$i]->asesor3;
 			$datos[$i]['asesor4'] = $data[$i]->asesor4;
 			$datos[$i]['asesor5'] = $data[$i]->asesor5;*/
+            $datos[$i]['observacionContratoUrgente'] = $data[$i]->observacionContratoUrgente;
+            $datos[$i]['modificado_historial'] = $data[$i]->modificado_historial;
+
+            $datos[$i]['estatus_lote'] = $data[$i]->estatus_lote;
+            $datos[$i]['tipo_venta'] = $data[$i]->tipo_venta;
+            $datos[$i]['color'] = $data[$i]->color;
+
+
 			$datos[$i]['firmaRL'] = $data[$i]->firmaRL;
 			$datos[$i]['validacionEnganche'] = $data[$i]->validacionEnganche;
 			$datos[$i]['sup'] = $data[$i]->sup;
@@ -19277,34 +19285,23 @@ tr td:hover { background: #666; color: #FFF; }
       $this->registrolote_modelo->aplicaLiberaciones($this->input->post('filtro4'), $valida);
     }
 
-	public function get_auts_by_lote_directivos($idLote)
-	{
+	public function get_auts_by_lote_directivos($idLote){
 		$data = $this->registrolote_modelo->get_auts_by_lote_directivos($idLote);
-//		print_r($data);
 		if($data != null) {
-
 			echo json_encode($data);
-
-		} else {
-
+		}
+		else {
 			echo json_encode(array());
-
 		}
 	}
 
 
-	function get_auts_by_lote($idLote)
-	{
+	function get_auts_by_lote($idLote){
 		$data = $this->registrolote_modelo->get_auts_by_lote($idLote);
-		//print_r($data);
 		if($data != null) {
-
 			echo json_encode($data);
-
 		} else {
-
 			echo json_encode(array());
-
 		}
 	}	
 

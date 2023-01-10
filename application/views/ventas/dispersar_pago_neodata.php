@@ -238,13 +238,18 @@
                     </div>
 
                     <form method="post"
-                          class="row"
+                          class="row neeed-validation"
                           id="penalizacion-form"
-                          autocomplete="off">
+                          autocomplete="off" novalidate>
                         <div class="modal-body">
                         <input type="hidden" name="id_lote" id="id_lote_penalizacion">
                         <input type="hidden" name="id_cliente" id="id_cliente_penalizacion">
- 
+                        <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <P>Comentarios:</P>
+                                    <textarea class="form-control" rows="2" name="comentario_aceptado" id="comentario_aceptado" placeholder="Agregue sus comentarios..." requiere></textarea></p>
+                                </div>
+                            </div>   
                         </div>
 
                         <div class="modal-footer">
@@ -284,9 +289,14 @@
                           id="Nopenalizacion-form"
                           autocomplete="off">
                         <div class="modal-body">
-                        <input type="hidden" name="id_lote" id="id_lote_cancelar">
-                        <input type="hidden" name="id_cliente" id="id_cliente_cancelar">
- 
+                            <input type="hidden" name="id_lote" id="id_lote_cancelar">
+                            <input type="hidden" name="id_cliente" id="id_cliente_cancelar">
+                                <div class="col-lg-12">
+                                    <div class="form-group is-empty">
+                                        <P>Comentarios:</P>
+                                        <textarea class="form-control" rows="2" name="comentario_rechazado" id="comentario_rechazado" placeholder="Agregue sus comentarios..."></textarea>
+                                    </div>
+                                </div>
                         </div>
 
                         <div class="modal-footer">
@@ -333,7 +343,7 @@
         <!-- modal -->
 
         <!-- modal verifyNEODATA -->
-        <div class="modal fade modal-alertas" id="modal_NEODATA2" role="dialog">
+        <!-- <div class="modal fade modal-alertas" id="modal_NEODATA2" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red" >
@@ -345,7 +355,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="modal fade" id="detalle-plan-modal" role="dialog">
             <div class="modal-dialog">
@@ -943,6 +953,7 @@
 
                 $('#id_lote_penalizacion').val(idLote);
                 $('#id_cliente_penalizacion').val(idCliente);
+                // $('#comentario_aceptado').val(idCliente);
 
                 // alert($('#id_cliente_penalizacion').val());
 
@@ -1137,7 +1148,7 @@
 
                                                 $("#modal_NEODATA .modal-body").append(`<div class="row">
                                                 <div class="col-md-3">
-                                                <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}">
+                                                <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}"><input id="num_usuarios" type="hidden" name="num_usuarios[]" value="${v.num_usuarios}"> 
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b></div>
                                                 <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]"  required readonly="true" type="hidden" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : parseFloat(v.porcentaje_decimal)}"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}%"></div>
                                                 <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
@@ -1156,8 +1167,6 @@
                                                     <input type="hidden" name="pendiente" id="pendiente" value="${formatMoney(total_comision-abonado)}">
                                                     <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
                                                     <input type="hidden" name="id_disparador" id="id_disparador" value="0">
-                                                     
-                               
                                                     <input type="hidden" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
                                                     `);
                                                 }
@@ -1330,6 +1339,7 @@
                     }); //FIN getStatusNeodata
                     
                     $("#modal_NEODATA").modal();
+                    
                 }
  
         }); //FIN VERIFY_NEODATA
@@ -1378,6 +1388,7 @@
                         $('#penalizacion-modal').modal("hide");
                         $("#id_lote_penalizacion").val("");
                         $("#id_cliente_penalizacion").val("");
+                        $("#comentario_aceptado").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
@@ -1438,6 +1449,7 @@
                         $('#Nopenalizacion-modal').modal("hide");
                         $("#id_lote_cancelar").val("");
                         $("#id_cliente_cancelar").val("");
+                        $("#comentario_rechazado").val("");
                         alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                         tabla_1.ajax.reload();
                     } else {
@@ -1533,45 +1545,7 @@
         }
     });
 
-    $("#form_NEODATA2").submit( function(e) {
-        e.preventDefault();
-    }).validate({
-        submitHandler: function( form ) {
-            $('#spiner-loader').removeClass('hidden');
-            var data = new FormData( $(form)[0] );
-            $.ajax({
-                url: url + 'Comisiones/InsertNeoCompartida',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                method: 'POST',
-                type: 'POST', // For jQuery < 1.9
-                success: function(data){
-                    if( data == 1 ){
-                        $('#spiner-loader').addClass('hidden');
-                        tabla_1.ajax.reload();
-                        alert("Dispersión guardada con exito.");
-                        $("#modal_NEODATA2").modal( 'hide' ); 
-                        function_totales();
-                    }else if (data == 2) {
-                        alert("Ya disperso otra persona esta comision");
-                        tabla_1.ajax.reload();
-                        $("#modal_NEODATA2").modal( 'hide' ); 
-                        function_totales();
-                        $('#spiner-loader').addClass('hidden');
-                    }else{
-                        $('#spiner-loader').addClass('hidden');
-                        alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                    }
-                },error: function(){
-                    $('#spiner-loader').addClass('hidden');
-                    alert("ERROR EN EL SISTEMA");
-                }
-            });
-        }
-    });
+    
 
     jQuery(document).ready(function(){
         jQuery('#editReg').on('hidden.bs.modal', function (e) {
@@ -1613,7 +1587,7 @@
     }
 
     $('#fecha1').change( function(){
-        fecha1 = $(this).val(); 
+        fecha1 = $(this).val(); fecha2
         var fecha2 = $('#fecha2').val();
         if(fecha2 == ''){
             alerts.showNotification("top", "right", "Selecciona la segunda fecha", "info");

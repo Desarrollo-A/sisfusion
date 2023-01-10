@@ -125,7 +125,7 @@
                                  <div class="card-content">
                                     <div class="encabezadoBox">
                                         <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
+                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago como ventas especiales)</p>
                                     </div>
                                     <div class="toolbar">
                                         <div class="row">

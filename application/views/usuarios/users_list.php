@@ -74,15 +74,7 @@
                                                         <th class="disabled-sorting">TELÉFONO</th>
                                                         <th class="disabled-sorting">TIPO</th>
                                                         <th class="disabled-sorting">SEDE</th>
-                                                        <th class="disabled-sorting">COORDINADOR</th>
-                                                        <th class="disabled-sorting">GERENTE</th>
-                                                        <th class="disabled-sorting">SUBDIRECTOR</th>
-                                                        <th class="disabled-sorting">DIRECTOR REGIONAL</th>
-                                                        <th class="disabled-sorting">TALLA</th>
-                                                        <th class="disabled-sorting">GÉNERO</th>
-                                                        <th class="disabled-sorting">HIJOS + 12</th>
-                                                        <th class="disabled-sorting">REINGRESO</th>
-                                                        <th class="disabled-sorting">BAJA</th>
+                                                        <th class="disabled-sorting">JEFE DIRECTO</th>
                                                         <th class="disabled-sorting">ACCIONES</th>
 
                                                     </tr>
@@ -162,7 +154,7 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group label-floating select-is-empty div_membertype">
                                                                         <label class="control-label"><small class="isRequired">*</small>Tipo de miembro</label>
-                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="getLeadersList()">
+                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un rol" data-size="7" data-container="body" required onchange="getLeadersList()">
                                                                         </select>
                                                                     </div>
                                                                 </div>

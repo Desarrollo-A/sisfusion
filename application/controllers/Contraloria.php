@@ -2,18 +2,11 @@
 class Contraloria extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Contraloria_model');
-		$this->load->model('registrolote_modelo');
-		$this->load->model('Clientes_model');
-		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
-		$this->load->model('General_model');
-		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->model((array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model')));
+		$this->load->library(array('session','form_validation', 'get_menu', 'phpmailer_lib', 'formatter'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-		$this->load->library('phpmailer_lib');
-		$this->load->library('formatter');
 		$this->validateSession();
-
 		date_default_timezone_set('America/Mexico_City');
 	}
 
@@ -105,18 +98,14 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->getCommissionPlans()->result_array());
     }
     
-	public function estatus_9_contraloria(){
+	public function estatus_9_contraloria() {
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/   
-		
-
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$datos['rl'] = $this->Contraloria_model->getRL();
-
-		  
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_9_contraloria",$datos);
 	}
+
 	public function estatus_10_contraloria(){
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
@@ -1686,7 +1675,10 @@ public function editar_registro_loteRevision_contraloria_proceceso6(){
     $comentario=$this->input->post('comentario');
     $modificado=date('Y-m-d H:i:s');
     $fechaVenc=$this->input->post('fechaVenc');
-
+	//quitar las cosas que le daban formato
+	$charactersNoPermit = array('$', ',');
+	$totalNeto = $this->input->post('totalNeto');
+	$totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
 
 
     $arreglo=array();
@@ -1696,6 +1688,7 @@ public function editar_registro_loteRevision_contraloria_proceceso6(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");
+	$arreglo["totalNeto"] = $totalNeto;
 	
 
 $horaActual = date('H:i:s');
@@ -2142,8 +2135,7 @@ $i = 0;
 
 
 
-  public function editar_registro_lote_contraloria_proceceso9(){
-
+public function editar_registro_lote_contraloria_proceceso9(){
 	$idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
     $nombreLote=$this->input->post('nombreLote');
@@ -2152,62 +2144,51 @@ $i = 0;
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
     $totalNeto2=$this->input->post('totalNeto2');
-	$rl=$this->input->post('rl');
-	$naci=$this->input->post('naci');
+	$rl = $this->input->post('rl');
+	$naci = $this->input->post('residencia');
     $charactersNoPermit = array('$',',');
     $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
-	
-	$array_cliente=array();
-	$array_cliente["tipo_nc"]=$naci;
+	$id_usuario = $this->session->userdata('id_usuario');
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]=9;
     $arreglo["idMovimiento"]=39;
     $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]= $this->session->userdata('id_usuario');
+    $arreglo["usuario"] = $id_usuario;
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
     $arreglo["fechaVenc"]= $modificado;
     $arreglo["totalNeto2"]=$totalNeto2;
-	$arreglo["rl"]=$rl;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=9;
     $arreglo2["idMovimiento"]=39;
     $arreglo2["nombreLote"]=$nombreLote;
     $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+    $arreglo2["usuario"] = $id_usuario;
     $arreglo2["perfil"]=$this->session->userdata('id_rol');
     $arreglo2["modificado"]=date("Y-m-d H:i:s");
     $arreglo2["fechaVenc"]= $fechaVenc;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;         
-    $arreglo2["idCliente"]= $idCliente;          
-	// $arreglo2["rl"]=$rl;
-
+    $arreglo2["idCliente"]= $idCliente;
+	
 	$validate = $this->Contraloria_model->validateSt9($idLote);
-	$resultNACI = $this->General_model->updateRecord('clientes',  $array_cliente, 'id_cliente', $idCliente);
-	//$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
 
-	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
+	if($validate == 1) {
+		if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) { 
+			$this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
+			$data['message'] = 'OK';
+			echo json_encode($data);
+		} else {
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
 		}
-	}else {
+	} else {
 		$data['message'] = 'FALSE';
 		echo json_encode($data);
 	}
-
-  }
-
-
-
-
-
+}
 
 
   public function editar_registro_loteRechazo_contraloria_proceceso9(){
@@ -3649,9 +3630,9 @@ public function return1(){
 			echo json_encode(array());
 		}
 	}
-	public function getRL (){
-		$data = $this->Contraloria_model->getRL();
-		echo json_encode($data);
-	}
+
+	public function fillSelectsForV9() {
+        echo json_encode($this->Contraloria_model->getCatalogs()->result_array());
+    }
 	
 }

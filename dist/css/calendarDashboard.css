@@ -917,7 +917,6 @@
 
 /* Color de la barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb {
-  border-radius: 10px;
   background-color: #c1c1c1;
 }
 
@@ -1253,19 +1252,12 @@
   font-family: FontAwesome !important;
 }
 
-#calendar .fc-toolbar-chunk .fc-googleSignIn-button {
-  display: none !important;
+#calendar .fc-toolbar-chunk .fc-googleBtn-button {
   background-color: transparent;
   box-shadow: none;
   border: none;
-  height: 37px;
-  width: 37px;
+  color: #EA4335;
   padding: 0;
-  border: 1px solid transparent;
-}
-
-#calendar .fc-toolbar-chunk .fc-googleSignIn-button img {
-  width: 85%;
 }
 
 #calendar .fc-toolbar-chunk .fc-googleLogout-button {

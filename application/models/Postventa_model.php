@@ -25,7 +25,7 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
@@ -107,17 +107,17 @@ class Postventa_model extends CI_Model
          VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
 
-    function getSolicitudes($begin, $end, $estatus)
+    function getSolicitudes($begin, $end, $filtro_vista)
     {
 
-        $idUsuario = $this->session->userdata('id_usuario');
-        $rol = $this->session->userdata('id_rol');
-        $Addwhere =   "";
-        if($rol == 57 && $idUsuario!= 10865){
-          $Addwhere =   " AND se.id_juridico = $idUsuario ";
-        }else{
-             $Addwhere =   "";
-        }
+        // $idUsuario = $this->session->userdata('id_usuario');
+        // $rol = $this->session->userdata('id_rol');
+        // $Addwhere =   "";
+        // if($rol == 57 && $idUsuario!= 10865){
+        //   $Addwhere =   " AND se.id_juridico = $idUsuario ";
+        // }else{
+        //      $Addwhere =   "";
+        // }
 
         $where = "";
         if($estatus == 0){
@@ -172,9 +172,8 @@ class Postventa_model extends CI_Model
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
-      
-        // echo $estatus;
+        $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_estatus;
+       // echo $estatus;
         $sqlAreaRechazo = '';
         if($area_rechazo != 0 && $area_rechazo != ''){
             $sqlAreaRechazo = " AND estatus_siguiente=$area_rechazo ";
@@ -211,9 +210,7 @@ class Postventa_model extends CI_Model
         }
         $banderasStatusRechazo = $actividades_x_estatus->estatus_siguiente == 5 ? ' ,bandera_admin=0 ' : ($actividades_x_estatus->estatus_siguiente == 7 ? ' ,bandera_comite=0' : '');
         $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 3 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 4 ? ' ,bandera_comite=1' : '');
-        if($actividades_x_estatus->estatus_siguiente == 8 || $actividades_x_estatus->estatus_siguiente == 6){
-            $banderasStatus2 = $actividades_x_estatus->estatus_siguiente == 6 ? ' ,bandera_admin=1 ' : ($actividades_x_estatus->estatus_siguiente == 8 ? ' ,bandera_comite=1' : '');
-        }
+
 
        
 
@@ -274,7 +271,7 @@ class Postventa_model extends CI_Model
             }
         }*/
 
-        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo  WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,numero_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
          VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",'".$actividades_x_estatus->clave_actividad."','".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
@@ -436,12 +433,43 @@ class Postventa_model extends CI_Model
             ORDER BY oxc.nombre");
         return $query->result();
     }
-
+    // Traer infomacion para la tabla de notarias
     function getNotarias()
     {
-        $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
-        return $query->result();
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
     }
+    // Eliminar los usuarios de la notaria
+    function updateNotarias($idnotaria){
+
+        $respuesta = $this->db->query("UPDATE Notarias SET estatus = 0 WHERE idNotaria = $idnotaria");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+        // Insertar usuarios en notaria
+    function insertNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $sede){
+
+        $respuesta = $this->db->query("INSERT INTO Notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES ('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', $sede, 1, 1)");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+
+    }
+
+        // Traer sedes
+        function listSedes(){
+            return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+         }
+
+
 
     function getValuadores(){
         $query = $this->db->query("SELECT * FROM Valuadores");

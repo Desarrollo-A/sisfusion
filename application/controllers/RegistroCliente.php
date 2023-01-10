@@ -7800,8 +7800,7 @@
 	}
 
 
-	public function updateAutsFromsDC()
-	{
+	public function updateAutsFromsDC(){
 		$tamanoOfAuts = ($_POST['numeroDeRow']);
     $response =  0 ;
 		$idCliente = ($_POST['idCliente']);
@@ -7817,13 +7816,11 @@
 		$motivoAut='';
 		$type = 0;
 
-		for($i=0; $i<$tamanoOfAuts; $i++)
-		{
+		for($i=0; $i<$tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
 			if ($_FILES["docArchivo".$i]["name"] != '' && $_FILES["docArchivo".$i]["name"] != null) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
-				/*archivo*/
 				$proyecto = str_replace(' ', '',$nombreResidencial);
 				$condominio = str_replace(' ', '',$nombreCondominio);
 				$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
@@ -7856,9 +7853,7 @@
 
 				$this->registrolote_modelo->insert_historial_documento($arreglo2);
 				if (move_uploaded_file($_FILES["docArchivo".$i]["tmp_name"],"static/documentos/cliente/expediente/".$expediente)) {
-					//        echo 'success';
 				}
-				/**/
 			}
 
 			$dataUPDAut = array(
@@ -7888,7 +7883,7 @@
 				}
         $response = 1 ;
         $code = 'success';
-        $mensaje = 'El usuario se ha registrado correctamente.';
+        $mensaje = 'La acción se ha realizado correctamente.';
         // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('success', 1);
 			}
@@ -7899,7 +7894,7 @@
         // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('error', 99);
         $code = 'warning';
-        $mensaje = 'El usuario no ha registrado correctamente.';
+        $mensaje = 'No se ha ejecutado la acción correctamente';
 			}
 		}
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
@@ -7913,7 +7908,6 @@
       // donde 1 es succes y 2 es error
     );
     echo json_encode ($respuesta);
-		// redirect(base_url()."index.php/registroCliente/directivosAut");
 	}
 
 	public function notifyUsers($idAut, $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $motivoAut)

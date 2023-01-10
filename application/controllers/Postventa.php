@@ -31,6 +31,8 @@ class Postventa extends CI_Controller
         }
     }
 
+    
+
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -72,6 +74,29 @@ class Postventa extends CI_Controller
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
         }
+    }
+
+    public function notaria(){
+        if($this->session->userdata('id_rol') == FALSE){
+            redirect(base_url());
+        }
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        switch ($this->session->userdata('id_rol')){
+            case '11': //ADMON
+            case '17': //CONTRALORIA
+            case '55': //POSTVENTA
+            case '56': //COMITE TECNICO
+            case '57': //TITULACION
+            case '62': //Proyectos
+            $this->load->view('template/header');
+            $this->load->view("postventa/notaria", $datos);
+            break;
+
+            default:
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'"</script>';
+                break;
+        }
+
     }
 
     public function getProyectos()
@@ -739,6 +764,43 @@ class Postventa extends CI_Controller
         }
     }
 
+    // Funciones para el apartado de notaria
+    public function getNotarias() {
+        $data['data'] = $this->Postventa_model->getNotarias()->result_array();
+            if ($data != null) {
+                    echo json_encode($data, JSON_NUMERIC_CHECK);
+                } else {
+                    echo json_encode(array());
+            }
+        }
+
+    // Funcion para eliminar los registros de la tabla notaria
+    public function updateNotarias(){
+
+            $respuesta = $this->Postventa_model->updateNotarias($this->input->post("idNotaria"));
+            echo json_encode($respuesta);
+
+    }
+    // Funcion para agregar a un nuevo notario
+    public function insertNotaria(){
+
+        $nombre_notaria = $this->input->post('notaria_nombre');
+        $notario_nombre = $this->input->post('notario_nombre');
+        $direccion = $this->input->post('direccion');
+        $correo = $this->input->post('correo');
+        $telefono = $this->input->post('telefono');
+        $sede = $this->input->post('sede');
+
+        $respuesta = $this->Postventa_model->insertNotaria($nombre_notaria, $notario_nombre, $direccion, $correo, $telefono, $sede);
+        echo json_encode($respuesta);
+    }
+
+    public function listSedes()
+    {
+        echo json_encode($this->Postventa_model->listSedes()->result_array());
+    }
+
+
     public function changeStatus()
     {
         $id_solicitud = $_POST['id_solicitud'];
@@ -1016,14 +1078,14 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function getNotarias()
-    {
-        $data = $this->Postventa_model->getNotarias();
-        if ($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
+    // public function getNotarias()
+    // {
+    //     $data = $this->Postventa_model->getNotarias();
+    //     if ($data != null)
+    //         echo json_encode($data);
+    //     else
+    //         echo json_encode(array());
+    // }
 
     public function getValuadores()
     {

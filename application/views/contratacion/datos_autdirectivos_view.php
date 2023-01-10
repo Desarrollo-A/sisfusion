@@ -1,5 +1,6 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+	<link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet" />
+	<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
 		<?php
@@ -32,30 +33,51 @@
 		$this->load->view('template/sidebar', $dato);
 		?>
 
+		<style>
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iAccepted {
+				color: #4caf50;
+			}
+
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iDenied {
+				color: #929292;
+			}
+
+			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iSend {
+				color: #103f75;
+			}
+
+			#addFile .radio-with-Icon i {
+				color: #eaeaea;
+			}
+
+			#addFile .radio-with-Icon i:hover {
+				color: #929292;
+			}
+		</style>
+
 		<!-- Modals -->
 		<!-- modal  INSERT COMENTARIOS-->
 		<div class="modal fade" id="addFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<form method="POST" name="sendAutsFromD" id="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>registroCliente/updateAutsFromsDC">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<center><h3 class="modal-title" id="myModalLabel"><b>Autorizaciones</b></h3></center>
+						<div class="modal-header d-flex justify-between align-center">
+							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
+							<label class="m-0">(<span class="items"></span>) autorizaciones pendientes</label>
 						</div>
-						<div class="modal-body">
-							<div id="loadAuts"></div>
-							<input type="hidden" name="numeroDeRow"  id="numeroDeRow" value="">
-							<input type="hidden" name="idCliente"  id="idCliente" value="">
-							<input type="hidden" name="idCondominio"  id="idCondominio" value="">
-							<input type="hidden" name="idLote"  id="idLote" value="">
-							<input type="hidden" name="id_autorizacion"  id="id_autorizacion" value="">
-							<input type="hidden" name="nombreResidencial"  id="nombreResidencial" value="">
-							<input type="hidden" name="nombreCondominio"  id="nombreCondominio" value="">
-							<input type="hidden" name="nombreLote"  id="nombreLote" value="">						
+						<div class="modal-body pl-0 pr-0">
+							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
+							<input hidden name="numeroDeRow" id="numeroDeRow">
+							<input hidden name="idCliente" id="idCliente">
+							<input hidden name="idCondominio" id="idCondominio">
+							<input hidden name="idLote" id="idLote">
+							<input hidden name="id_autorizacion" id="id_autorizacion">
+							<input hidden name="nombreResidencial" id="nombreResidencial">
+							<input hidden name="nombreCondominio" id="nombreCondominio">
+							<input hidden name="nombreLote" id="nombreLote">						
 						</div>
 						<div class="modal-footer">
 							<button type="submit"  class="btn btn-primary">Enviar autorización</button>
-						
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
 						</div>
 					</form>
@@ -107,7 +129,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-	<script>
+	<script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+	<script>	
 		$(document).ready(function() {
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
@@ -120,12 +143,17 @@
 			});
 		});
 
+		function changeName(e){
+			var fileName = e.files[0].name;
+			var relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+			relatedTarget[0].value = fileName;
+		}
+
 		$(document).on('change', '.btn-file :file', function() {
 			var input = $(this),
 				numFiles = input.get(0).files ? input.get(0).files.length : 1,
 				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
-			console.log('triggered');
 		});
 
 		let titulos = [];
@@ -136,7 +164,7 @@
 				$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
 				$( 'input', this ).on('keyup change', function () {
 					if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-					//	$('#addExp').DataTable().column(i).search(this.value).draw();
+						$('#addExp').DataTable().column(i).search(this.value).draw();
 					}
 				});
 			}
@@ -211,11 +239,7 @@
 							}
 						}
 					}
-				}, {
-                        text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
-                        titleAttr: 'Cargar vista inicial',
-                        className: "btn btn-azure reset-initial-values",
-                    }],
+				}],
 				pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {
@@ -288,65 +312,64 @@
 					var p = 0;
 					var opcionDenegado;
 					$.each(JSON.parse(data), function(i, item) {
+						<?php if( $this->session->userdata('id_rol') == 1 ) { ?>
+							opcionDenegado = '';
+						<?php } else { ?>
+							opcionDenegado = `<p class="radioOption-Item m-0 pl-1">
+												<input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
+												<label for="send${i}" class="cursor-point m-0">
+													<i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC"></i>
+												</label>
+											</p>`;
+						<?php } ?>
 
-						<?php
-						if($this->session->userdata('id_rol')==1)
-						{?>
-						opcionDenegado = '';
-						<?php
-						}
-						else
-						{
-						?>
-						opcionDenegado = '<label><input type="radio" name="accion'+i+'" value="3" required> Enviar a DC</label><br>';
-						<?php
-						}
-						?>
-
-
-						ctn ='<table width="100%">'+
-							'<tr>'+
-							'<td width="100%">' +
-							'<label>Solicitud asesor <small>('+item['fecha_creacion']+')</small>:</label><br><p><i>' + item['autorizacion']+'</i></p></td>' +
-							'<tr/>'+
-							'<tr>'+
-							'<td width="100%">' +
-							'<div class="form-group label-floating is-empty">\n' +
-							'                                            <label class="control-label">Comentario</label>\n' +
-							'<input type="text" name="observaciones'+i+'" class="form-control" placeholder="" required><br><br>' +
-							'                                        <span class="material-input"></span></div>' +
-
-							'<input type="hidden" name="idAutorizacion'+i+'"  value="'+item['id_autorizacion']+'">'+
-							'</td>' +
-							'<tr/>'+
-							'<tr>'+
-
-							'<td>' +
-							'<div class="input-group"><label class="input-group-btn"><span class="btn btn-primary btn-file">' +
-							'Seleccionar archivo&hellip;<input type="file" name="docArchivo'+i+'" id="expediente'+i+'" style="display: none;">' +
-							'</span></label><input type="text" class="form-control" id= "txtexp'+i+'" readonly></div><br><br>'+
-							'</td>' +
-							'<tr/>'+
-							'<tr>'+
-							'<div class="input-group" >' +
-							'<td style="text-align:center;">' +
-							'<div class="col-md-4">' +
-							'<label><input type="radio" name="accion'+i+'" value="0" required> Aceptar</label>' +
-							'</div>'+
-							'<div class="col-md-4">' +
-							'<label><input type="radio" name="accion'+i+'" value="2" required> Denegar</label>' +
-							'</div>'+
-							'<div class="col-md-4">' +
-							opcionDenegado +
-							'</div>'+
-							'</td>'+
-							'</div>'+
-							'</tr></table>'+
-							'<hr style="border:1px solid #eee">';
+						ctn = `
+							<div class="boxContent" style="margin-bottom:20px; padding: 10px; background: #f7f7f7; border-radius:15px">
+								<div class="d-flex">
+									<div class="w-80">
+										<small>
+											<label class="m-0" style="font-size: 11px; font-weight: 100;">Solicitud asesor ( ${ item['fecha_creacion'].substr(0,10) })</label>
+										</small>
+									</div>
+									<div class="w-20">
+										<div class="radio-with-Icon d-flex justify-end">
+											<p class="radioOption-Item m-0">
+												<input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
+												<label for="accept${i}" class="cursor-point m-0">
+													<i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Aceptar"></i>
+												</label>
+											</p>
+											<p class="radioOption-Item m-0 pl-1">
+												<input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
+												<label for="denied${i}" class="cursor-point m-0">
+													<i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Rechazar"></i>
+												</label>
+											</p>
+											${opcionDenegado}
+										</div>
+									</div>
+								</div>
+								<label>${ item['autorizacion'] }</label>
+								<div class="file-gph">
+									<input class="d-none" type="file" id="expediente${i}" name="docArchivo${i}" onchange="changeName(this)">
+									<input class="file-name" type="text" placeholder="No has seleccionada nada aún" >
+									<label class="upload-btn m-0" for="expediente${i}">
+										<span>Buscar</span>
+										<i class="fas fa-search"></i>
+									</label>
+								</div>
+								<div class="form-group label-floating is-empty">
+									<label class="control-label">Comentario</label>
+									<input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none; padding: 0 20px;">
+								</div>
+								<input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
+							</div>
+						`;
 						$('#loadAuts').append(ctn);
-
 						p++;
 					});
+					introJs().start();
+					$(".items").text(p);
 					$('#numeroDeRow').val(p);
 				});
 				$('#addFile').modal('show');
@@ -390,10 +413,9 @@
 					method: 'POST',
 					type: 'POST',
 					success: function(data){
-						$('#addExp').DataTable().ajax.reload(null, false );
+						$('#addExp').DataTable().ajax.reload( );
 						alerts.showNotification('top', 'right', 'Autorización enviada', 'success');
-						$('#addFile').modal('hide');
-					
+						$('#addFile').modal('hide');					
 					},
 					error: function( data ){
 						alerts.showNotification('top', 'right', 'Error al enviar autorización', 'danger');
@@ -416,81 +438,43 @@
 			$('#addExp').DataTable().ajax.reload();
 		});
 
-		$(document).ready(function () {
-			<?php
-			if($this->session->userdata('success') == 1){
-				echo 'alerts.showNotification("top","right","Se enviaron las autorizaciones correctamente", "success");';
-				echo 'console.log("logrado correctamente");';
-				$this->session->unset_userdata('success');
-			}
-			elseif($this->session->userdata('error') == 99){
-				echo 'alerts.showNotification("top","right","Ocurrio un error al enviar la autorización	", "danger");';
-				echo 'console.log("OCURRIO UN ERROR");';
-				$this->session->unset_userdata('error');
-			}
-			?>
-		});
 		$("#guardarImagen").click(function() {
-			alert('4444444444444444444');
-			//$("#fotoAlumno"),
 			let tr = $(this).closest('tr');
-	var comentario = $("#observaciones").val();
-    var archivos = $("#fotoAlumno")[0].files;
+			var comentario = $("#observaciones").val();
+			var archivos = $("#fotoAlumno")[0].files;
     
-	if (archivos.length > 0) {
-      var foto = archivos[0]; //Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
-      var lector = new FileReader();
-	
-	  var formData = new FormData();
+			if (archivos.length > 0) {
+				//Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
+				var foto = archivos[0]; 
+				var lector = new FileReader();
+				var formData = new FormData();
 
-      //Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
-      formData.append('foto', foto);
-	  formData.append('comentario', comentario);
+				//Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
+				formData.append('foto', foto);
+				formData.append('comentario', comentario);
+			}
+		});
 
-	  $.ajax({
-        url: "prueba",
-        data: formData,
-        type: 'POST',
-        contentType: false,
-        processData: false,
-        success: function(resultados) {
-          console.log("Petición terminada. Resultados", resultados);
-        }
-
-      });
-    }
-  });
-  $(document).on("click", ".reset-initial-values", function () {
-	$('#addExp').DataTable().ajax.reload(null, false );
-        });
-
-
-  $("#sendAutsFromD").on('submit', function(e){
-    e.preventDefault();
-	
-	var formData = new FormData(this);
-    $.ajax({
-        type: 'POST',
-        url: 'updateAutsFromsDC',
-        data: formData,
-		dataType: "json",
-        contentType: false,
-        processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
-        success: function(data) {
-			console.log(data.code);
-			console.log(data.mensaje);
-			console.log(data);
-                alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
-				$('#addFile').modal('hide');
-            
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
+		$("#sendAutsFromD").on('submit', function(e){
+			e.preventDefault();	
+			var formData = new FormData(this);
+			$.ajax({
+				type: 'POST',
+				url: general_base_url + 'RegistroCliente/updateAutsFromsDC',
+				data: formData,
+				dataType: "json",
+				contentType: false,
+				processData:false,
+				success: function(data) {
+						alerts.showNotification("top", "right", ""+data.mensaje+"", ""+data.code+"");
+						$('#addExp').DataTable().ajax.reload(null, false );
+						$('#addFile').modal('hide');
+					
+				},
+				error: function(){
+					alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+				}
+			});
+		});
 	</script>
 </body>

@@ -5,8 +5,56 @@ $(document).ready(function () {
         var fileName = target[0].files[0].name;
         relatedTarget.val(fileName);
     });
+    setInitialDates();
+    if( id_rol_global == 31 )
+        $('.generate').trigger('click');
+    else
+        $('.find-results').trigger('click');
 
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
 });
+
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+
+function setInitialDates() {
+    var beginDt = moment().startOf('year').format('DD/MM/YYYY');
+    var endDt = moment().format('DD/MM/YYYY');
+    $('.beginDate').val(beginDt);
+    $('.endDate').val(endDt);
+}
+
+function formatDate(date) {
+    var dateParts = date.split("/");
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+    return [year, month, day].join('-');
+}
+
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     if (i != 13) {
@@ -22,8 +70,7 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     }
 });
 
-function fillTableLotificacion2(fechaInicio, fechaFin) {
- 
+function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
         dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -35,34 +82,40 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4,5,6,7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
-                    
                             switch (columnIdx) {
                                 case 0:
-                                    return "Nombre";
+                                    return "ID REGISTRO";
                                     break;
                                 case 1:
-                                    return "Rol";
+                                    return "NOMBRE";
                                     break;
                                 case 2:
-                                    return "Forma de pago"
-                                case 3:
-                                    return "Sede";
+                                    return "ROL";
                                     break;
+                                case 3:
+                                    return "FORMA DE PAGO"
                                 case 4:
-                                    return "Monto con descuento";
-                                break;
+                                    return "SEDE";
+                                    break;
                                 case 5:
-                                    return "Monto sin descuento";
+                                    return "MONTO SIN DESCUENTO";
                                 break;
                                 case 6:
-                                    return "Monto internomex";
+                                    return "MONTO CON DESCUENTO";
                                 break;
                                 case 7:
-                                    return "Fecha de creación";
+                                    return "MONTO INTERNOMEX";
                                 break;
+                                case 8:
+                                    return "FECHA CAPTURA REGISTRO";
+                                break;
+                                case 9:
+                                    return "COMENTARIO";
+                                    break;
+                             
                             }
                         }
                     }
@@ -88,6 +141,12 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
             {
                 data: function (d) {
                
+                    return d.id_pagoi;
+                }
+            },
+            {
+                data: function (d) {
+               
                     return d.nombre;
                 }
             },
@@ -108,12 +167,12 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
-                    return d.monto_con_descuento;
+                    return d.monto_sin_descuento;
                 }
             },
             {
                 data: function (d) {
-                    return d.monto_sin_descuento;
+                    return d.monto_con_descuento;
                 }
             },
             {
@@ -123,9 +182,28 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
-                    return d.fecha_creacion   ;
+                    return d.fecha_creacion;
                 }
             },
+            {
+                data: function (d) {
+                    return d.comentario;
+                }
+            },
+            {
+               
+                data: function (d) {
+                    if (id_rol_global == 31) {
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
+                        '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    }
+                    else{
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    }
+                    
+                }
+                
+            }
         ],
         columnDefs: [{
             visible: false,
@@ -136,144 +214,95 @@ function fillTableLotificacion2(fechaInicio, fechaFin) {
             type: "POST",
             cache: false,
             data : {
-                fechaInicio : fechaInicio,
-                fechaFin     : fechaFin
+                beginDate: fechaInicio,
+                endDate: fechaFin
             }
         }
     });
 }
 
-function fillTableLotificacion(fechaInicio, fechaFin) {
-    $(".box-table").removeClass('hide');
+$(document).on('click', '.edit-monto-internomex', function(e){
+    id_pago = $(this).attr("data-id-pago");
+    monto = $(this).attr("data_monto_internomex")
+        $("#editMontoInternomex").modal();
+        $("#monto").val(monto);
+        $("#id_pago").val(id_pago);
 
-    generalDataTable = $('#tableLotificacion').dataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3,4,5,6,7],
-                    format: {
-                        header: function (d, columnIdx) {
-                    
-                            switch (columnIdx) {
-                                case 0:
-                                    return "Nombre";
-                                    break;
-                                case 1:
-                                    return "Rol";
-                                    break;
-                                case 2:
-                                    return "Forma de pago"
-                                case 3:
-                                    return "Sede";
-                                    break;
-                                case 4:
-                                    return "Monto con descuento";
-                                break;
-                                case 5:
-                                    return "Monto sin descuento";
-                                break;
-                                case 6:
-                                    return "Monto internomex";
-                                break;
-                                case 7:
-                                    return "Fecha de creación";
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        ],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        language: {
-            url: "../static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
+});
+
+$(document).on('click', '.see-bitacora', function(e){
+    id_pago = $(this).attr("data-id-pago");
+        
+        $.post("getBitacora/"+id_pago).done( function( data ){
+            $("#changesBitacora").modal();
+            $.each( JSON.parse(data), function(i, v){
+                fillChangelogUsers(v);
+            });
+        });
+
+
+});
+
+function fillChangelogUsers(v) {
+    var nombreMovimiento;
+    var dataMovimiento;
+
+            nombreMovimiento = v.col_afect;
+            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+        '            <br>\n' +
+        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+ 
+   
+
+    $("#changelogUsers").append('<li class="timeline-inverted">\n' +
+        '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
+        '    <div class="timeline-panel">\n' +
+        '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
+                    dataMovimiento +
+        '        <h6>\n' +
+        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha + ' - ' + v.usuario + '</span>\n' +
+        '        </h6>\n' +
+        '    </div>\n' +
+        '</li>');
+}
+
+$(document).on('click', '#aceptarMonto', function(e){
+    let monto = $("#monto").val();
+    let id_pago = $("#id_pago").val();
+    $.ajax({
+        type: 'POST',
+        url: 'updateMontoInternomex',
+        data: {
+            'monto': monto,
+            'id_pago': id_pago
+        },
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+            if (data.status == 200) {
+                $("#editMontoInternomex").modal("hide");
+                alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
+                let fechaInicio = formatDate( $(".beginDate").val());
+                let fechaFin = formatDate( $(".endDate").val());
+                fillTableLotificacion(fechaInicio, fechaFin);
+            } else {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
         },
-        destroy: true,
-        ordering: false,
-        columns: [
-            {
-                data: function (d) {
-               
-                    return d.nombre;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.rol;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.forma_pago;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sede;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_con_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_sin_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_internomex   ;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_creacion   ;
-                }
-            },
-        ],
-        columnDefs: [{
-            visible: false,
-            searchable: false
-        }],
-        ajax: {
-            url: "getPagosFinal",
-            type: "POST",
-            cache: false,
-            data : {
-                fechaInicio : fechaInicio,
-                fechaFin     : fechaFin
-            }
+         error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-}
+
+});
+
 
 
 $(document).on('click', '.searchByDateRange', function(){
-
-    var fechaStart = document.getElementById("startDate").value;
-    var fechaEnd = document.getElementById("endDate").value;
- 
-    if(fechaStart <= fechaEnd ){
-   
-        fillTableLotificacion2(fechaStart , fechaEnd);
-
+    let fechaInicio = formatDate( $(".beginDate").val());
+    let fechaFin = formatDate( $(".endDate").val());
+    if(fechaInicio <= fechaFin ){
+        fillTableLotificacion(fechaInicio, fechaFin);
     }else{
         alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
     }
@@ -281,36 +310,29 @@ $(document).on('click', '.searchByDateRange', function(){
 
 $(document).on('click', '.find-results', function () {
     $(".row-load").addClass("hide");
-   // $(".row-load").removeClass("hide");
     $(".box-table").removeClass("hide");
-    //fillTableLotificacion();
-    fillTableLotificacion();
-    document.getElementById('startDate').valueAsDate = new Date();
-    document.getElementById('endDate').valueAsDate = new Date();
+    let fechaInicio = formatDate( $(".beginDate").val());
+    let fechaFin = formatDate( $(".endDate").val());
+    fillTableLotificacion(fechaInicio, fechaFin);
 });
 
 $(document).on('click', '.generate', function () {
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
-    
 });
 
 $(document).on('click', '#downloadFile', function () {
-    //let lotes = $("#lotes").val();
     $.ajax({
         url: 'getPaymentsListByCommissionAgent',
         type: 'post',
         dataType: 'json',
-        /*data: {
-            "lotes": lotes
-        },*/
         beforeSend: function() {
             $('#spiner-loader').removeClass('hide');
           },
         success: function (response) {
             var len = response.length;
             var createXLSLFormatObj = [];
-            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede", "montoFinal"];
+            var xlsHeader = ["id_usuario", "nombreUsuario", 'sede', "tipoUsuario", "formaPago", "rfc", "nacionalidad", "montoSinDescuentos", "montoConDescuentosSede", "montoFinal", "comentario"];
             xlsHeader.push($(this).data('name'));
             createXLSLFormatObj.push(xlsHeader);
             for (var i = 0; i < len; i++) {
@@ -325,10 +347,12 @@ $(document).on('click', '#downloadFile', function () {
                 innerRowData.push(response[i]['montoSinDescuentos']);
                 innerRowData.push(response[i]['montoConDescuentosSede']);
                 innerRowData.push(response[i]['montoFinal']);
+                innerRowData.push(response[i]['comentario']);
                 createXLSLFormatObj.push(innerRowData);
             }
             /* File Name */
-            var filename = "PlantillaLotes_JSON_To_XLS.xlsx";
+            let date = new Date();
+            var filename = "PlantillaComisionistas_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
             /* Sheet Name */
             var ws_name = "Plantilla";
             //if (typeof console !== 'undefined') console.log(new Date());

@@ -1,5 +1,5 @@
 $('#tabla_ingresar_5 thead tr:eq(0) th').each( function (i) {
-    if(i!=0 && i!=1 && i!=13){
+    if(i != 0 && i != 1 && i != 13){
     var title = $(this).text();
     $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
     $( 'input', this ).on('keyup change', function () {
@@ -59,7 +59,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                 titleAttr: 'Registro estatus 5',
                 title:"Registro estatus 5",
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -101,7 +101,7 @@ tabla_5 = $("#tabla_ingresar_5").DataTable({
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
