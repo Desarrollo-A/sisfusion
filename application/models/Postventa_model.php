@@ -183,7 +183,7 @@ class Postventa_model extends CI_Model
          
         $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
         $notariaInterna = '';
-        if($estatus == 12 && $notaria == 0){
+        if($estatus->id_estatus == 12 && $notaria == 0){
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
         if($estatus->id_estatus == 12 && $notaria != 0){
