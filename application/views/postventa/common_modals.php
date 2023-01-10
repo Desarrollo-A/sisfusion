@@ -65,6 +65,10 @@
     </div>
 </div>
 
+
+
+
+
 <div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -227,50 +231,7 @@
                                 </div>
                             </div>
                             <!----------------------------->
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Se va a trabajar con Notaría externa? *</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Se va a trabajar con Notaría externa?" data-size="7" id="not" name="not"
-                                            data-live-search="true" required>
-                                        <option value="yes">Sí</option>
-                                        <option value="nou" selected>No</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--INPUT QUE SOLO SE MOSTRARAN SI SE VA A TRABAJAR CON UNA NOTARÍA EXTERNA-->
-                            <div id="ifNotaria" style="display:none">
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Correo</label>
-                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Teléfono</label>
-                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <p>*Estos campos son obligatorios.</p>
