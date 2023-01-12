@@ -234,8 +234,8 @@ class Contraloria_model extends CI_Model {
 		$id_usuario = $this->session->userdata('id_usuario');
 	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
-		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 8)// CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -334,8 +334,8 @@ class Contraloria_model extends CI_Model {
 		$id_usuario = $this->session->userdata('id_usuario');
 	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
-		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -426,8 +426,8 @@ class Contraloria_model extends CI_Model {
 			$id_usuario = $this->session->userdata('id_usuario');
 			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
-			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -482,8 +482,8 @@ class Contraloria_model extends CI_Model {
 
 			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
-			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA Y SLP
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3')";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
@@ -636,10 +636,13 @@ class Contraloria_model extends CI_Model {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 39 AND estatus = 1 ORDER BY id_opcion, nombre");
     }
 		
-	public function getMsni($typeTransaction, $key){
-        if($typeTransaction==1){
-            $query = $this->db-> query("SELECT *, idCondominio as ID FROM condominios WHERE status = 1 AND idResidencial =".$key);
-        }else if($typeTransaction==2){
+	public function getMsni($typeTransaction, $key) {
+        if($typeTransaction == 1) {
+            $query = $this->db-> query("SELECT co.idCondominio ID, co.nombre, lo.msi msni FROM condominios co 
+			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+			WHERE co.status = 1 AND co.idResidencial = $key
+			GROUP BY co.idCondominio, co.nombre, lo.msi ORDER BY co.idCondominio");
+        } else if($typeTransaction == 2) {
             $query = $this->db-> query("SELECT *, idLote as ID, nombreLote as nombre, msi as msni FROM lotes WHERE status = 1 AND idCondominio =".$key);
         }
 		return $query->result_array();
@@ -776,7 +779,7 @@ class Contraloria_model extends CI_Model {
 
 	public function getLotesTwo($idCondominio) {
 		$query = $this->db-> query("SELECT * FROM lotes lo
-		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549)
 		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
 		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
 		return $query->result_array();

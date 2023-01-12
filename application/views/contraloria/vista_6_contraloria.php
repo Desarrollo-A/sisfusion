@@ -332,15 +332,11 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
 
-
 var url = "<?=base_url()?>";
 var url2 = "<?=base_url()?>index.php/";
-
 var getInfo1 = new Array(6);
 var getInfo2 = new Array(6);
 var getInfo3 = new Array(6);
-
-
 var getInfo6 = new Array(1);
 var rol;
 
@@ -354,14 +350,10 @@ $('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
             }
         });
     }
-
 });
 
-
 $(document).ready(function(){
-
     rol = <?php echo $this->session->userdata('id_rol'); ?>
-	
     $.post(url + "Contraloria/get_sede", function(data) {
         var len = data.length;
         for(var i = 0; i<len; i++) {
@@ -371,508 +363,399 @@ $(document).ready(function(){
         }
         $("#ubicacion").selectpicker('refresh');
     }, 'json');
-
 });
 
+$("#tabla_ingresar_6").ready(function(){
+    let titulos = [];
+    $('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
+        if( i!=0 && i!=13){
+            var title = $(this).text();
+            titulos.push(title);
+        }
+    });
 
-$("#tabla_ingresar_6").ready( function(){
- 
-let titulos = [];
-$('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
- if( i!=0 && i!=13){
-  var title = $(this).text();
-
-  titulos.push(title);
-}
-});
-tabla_6 = $("#tabla_ingresar_6").DataTable({
+    tabla_6 = $("#tabla_ingresar_6").DataTable({
         dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: 'auto',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Registro estatus 6',
-                    title:"Registro estatus 6",
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                        format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 1:
-                                        return 'TIPO VENTA';
-                                        break;
-                                    case 2:
-                                        return 'PROYECTO'
-                                    case 3:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 4:
-                                        return 'LOTE';
-                                        break;
-                                    case 5:
-                                        return 'GERENTE';
-                                        break;
-                                    case 6:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 7:
-                                        return 'F. MOD';
-                                        break;
-                                    case 8:
-                                        return 'F. VENC';
-                                        break;
-                                    case 9:
-                                        return 'UC';
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                    className: 'btn buttons-pdf',
-                    titleAttr: 'Registro estatus 6',
-                    title: "Registro estatus 6",
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    exportOptions: {
-                      columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                      format: {
-                            header: function (d, columnIdx) {
-                                switch (columnIdx) {
-                                    case 1:
-                                        return 'TIPO VENTA';
-                                        break;
-                                    case 2:
-                                        return 'PROYECTO'
-                                    case 3:
-                                        return 'CONDOMINIO';
-                                        break;
-                                    case 4:
-                                        return 'LOTE';
-                                        break;
-                                    case 5:
-                                        return 'GERENTE';
-                                        break;
-                                    case 6:
-                                        return 'CLIENTE';
-                                        break;
-                                    case 7:
-                                        return 'F. MOD';
-                                        break;
-                                    case 8:
-                                        return 'F. VENC';
-                                        break;
-                                    case 9:
-                                        return 'UC';
-                                        break;
-                                }
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Registro estatus 6',
+                title:"Registro estatus 6",
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 1:
+                                    return 'TIPO VENTA';
+                                    break;
+                                case 2:
+                                    return 'PROYECTO'
+                                case 3:
+                                    return 'CONDOMINIO';
+                                    break;
+                                case 4:
+                                    return 'LOTE';
+                                    break;
+                                case 5:
+                                    return 'GERENTE';
+                                    break;
+                                case 6:
+                                    return 'CLIENTE';
+                                    break;
+                                case 7:
+                                    return 'F. MOD';
+                                    break;
+                                case 8:
+                                    return 'F. VENC';
+                                    break;
+                                case 9:
+                                    return 'UC';
+                                    break;
                             }
                         }
                     }
                 }
-            ],
-    language: {
-        url: "<?=base_url()?>/static/spanishLoader_v2.json",
-        paginate: {
-            previous: "<i class='fa fa-angle-left'>",
-            next: "<i class='fa fa-angle-right'>"
-        }
-    },
-"pageLength": 10,
-"bAutoWidth": false,
-"fixedColumns": true,
-"ordering": false,
-"columns": [
-{
-    "width": "3%",
-    "className": 'details-control',
-    "orderable": false,
-    "data" : null,
-    "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-},
-{
-		"data": function( d ){
-			var lblStats;
-
-				if(d.tipo_venta==1)
-					lblStats ='<span class="label label-danger">Venta Particular</span>';
-				else if(d.tipo_venta==2)
-					lblStats ='<span class="label label-success">Venta normal</span>';
-				else if(d.tipo_venta==3)
-					lblStats ='<span class="label label-warning">Bono</span>';
-				else if(d.tipo_venta==4)
-					lblStats ='<span class="label label-primary">Donación</span>';
-				else if(d.tipo_venta==5)
-					lblStats ='<span class="label label-info">Intercambio</span>';
-				else if(d.tipo_venta== null)
-					lblStats ='<span class="label label-info"></span>';
-				else
-                    lblStats ='<span class="label label-info"></span>';
+            },
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+                className: 'btn buttons-pdf',
+                titleAttr: 'Registro estatus 6',
+                title: "Registro estatus 6",
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                exportOptions: {
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                format: {
+                        header: function (d, columnIdx) {
+                            switch (columnIdx) {
+                                case 1:
+                                    return 'TIPO VENTA';
+                                    break;
+                                case 2:
+                                    return 'PROYECTO'
+                                case 3:
+                                    return 'CONDOMINIO';
+                                    break;
+                                case 4:
+                                    return 'LOTE';
+                                    break;
+                                case 5:
+                                    return 'GERENTE';
+                                    break;
+                                case 6:
+                                    return 'CLIENTE';
+                                    break;
+                                case 7:
+                                    return 'F. MOD';
+                                    break;
+                                case 8:
+                                    return 'F. VENC';
+                                    break;
+                                case 9:
+                                    return 'UC';
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        language: {
+            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        pageLength: 10,
+        bAutoWidth: false,
+        fixedColumns": true,
+        ordering: false,
+        columns: [
+            {
+                className: 'details-control',
+                orderable": false,
+                data : null,
+                defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+            },
+            {
+                "data": function( d ){
+                    var lblStats;
+                    if(d.tipo_venta==1)
+                        lblStats ='<span class="label label-danger">Venta Particular</span>';
+                    else if(d.tipo_venta==2)
+                        lblStats ='<span class="label label-success">Venta normal</span>';
+                    else if(d.tipo_venta==3)
+                        lblStats ='<span class="label label-warning">Bono</span>';
+                    else if(d.tipo_venta==4)
+                        lblStats ='<span class="label label-primary">Donación</span>';
+                    else if(d.tipo_venta==5)
+                        lblStats ='<span class="label label-info">Intercambio</span>';
+                    else if(d.tipo_venta== null)
+                        lblStats ='<span class="label label-info"></span>';
+                    else
+                        lblStats ='<span class="label label-info"></span>';
                 
-			return lblStats;
-		}
-},
-{
-    "width": "7%",
-    "data": function( d ){
-        return '<p class="m-0">'+d.nombreResidencial+'</p>';
-    }
-},
-{
-    "width": "8%",
-    "data": function( d ){
-		return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
-    }
-},
-{
-    "width": "10%",
-    "data": function( d ){
-        return '<p class="m-0">'+d.nombreLote+'</p>';
-	}
-}, 
-{
-	"width": "16%",
-    "data": function( d ){
-        return '<p class="m-0">'+d.gerente+'</p>';
-    }
-}, 
-{
-    "width": "16%",
-    "data": function( d ){
-        return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
-    }
-}, 
-{
-	"width": "8%",
-    "data": function( d ){
-        return '<p class="m-0">'+d.modificado+'</p>';
-    }
-}, 
-{
-	"width": "8%",
-    "data": function( d ){
-		
-		var fechaVenc;
-
-		if (d.idStatusContratacion == 5 && d.idMovimiento == 22 || d.idStatusContratacion == 5 && d.idMovimiento == 75 ||
-		d.idStatusContratacion == 5 && d.idMovimiento == 94) {
-				fechaVenc = 'Vencido';
-		} else if (d.idStatusContratacion == 5 && d.idMovimiento == 35 || d.idStatusContratacion == 2 && d.idMovimiento == 62) {
-				fechaVenc = d.fechaVenc;
-		}
-
-		return '<p class="m-0">'+fechaVenc+'</p>';
-    }
-}, 
-{
-	"width": "12%",
-    "data": function( d ){
-		var lastUc = (d.lastUc == null) ? 'Sin registro' : d.lastUc;
-		
-        return '<p class="m-0">'+lastUc+'</p>';
-    }
-},
-{ 
-    "width": "34%",
-    "orderable": false,
-    "data": function( data ){
-
-		var cntActions;
-
-if(data.vl == '1') {
-	cntActions = 'En proceso de Liberación';
-
-} else {
-		if(data.idStatusContratacion == 5 && data.idMovimiento == 35 && getFileExtension(data.expediente) == 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) == 'xlxs')
-		{
-			    cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
-				'<i class="fas fa-thumbs-up"></i></button>';
-
-				cntActions += '<center><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
-				'<i class="fas fa-thumbs-down"></i></button>';
-
-		}
-		else if(data.idStatusContratacion == 5 && data.idMovimiento == 35 && getFileExtension(data.expediente) != 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) != 'xlxs')
-		{
-			    cntActions = '<button data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="btn-data btn-blueMaderas noCorrida" title="Información"><i class="fas fa-exclamation"></i></button>';
-
-				cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
-				'<i class="fas fa-thumbs-up"></i></button>';
-
-				cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
-				'<i class="fas fa-thumbs-down"></i></button>';
-
-
-
-		}
-		else if(data.idStatusContratacion == 5 && data.idMovimiento == 22 && data.perfil == 15)
-		{
-
-
-			cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="regRevCorr btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-				'<i class="fas fa-thumbs-up"></i></button>';
-
-			cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
-				'<i class="fas fa-thumbs-down"></i></button>';
-
-
-		}
-		else if(data.idStatusContratacion == 5 && data.idMovimiento == 75 && (data.perfil == 32 || data.perfil == 13  || data.perfil == 17))
-		{
-	
-			cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="revStaCE btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-				'<i class="fas fa-thumbs-up"></i></button>';
-	
-		}
-
-		else if(data.idStatusContratacion == 5 && data.idMovimiento == 94 && data.perfil == 15)
-		{ 
-	 
-			cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-				'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-				'class="return1 btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-				'<i class="fas fa-thumbs-up"></i></button>';
-	
-		}
-		
-		else
-		{
-			cntActions = 'N/A';
-		}
-		
-        if(rol == 17){
-                cntActions += '<button href="#" title= "Cambio de sede" data-nomLote="'+data.nombreLote+'" ' +
-                    'data-lote="'+data.idLote+'" class="btn-data btn-details-grey change_sede">' +
-                    '<i class="fas fa-redo"></i></button>';
-
-        }
-		
-}
-		return "<div class='d-flex justify-center'>" + cntActions + "</div>";
-
-
-} 
-}
- 
-],
-
-columnDefs: [
-{
- "searchable": false,
- "orderable": false,
- "targets": 0
-},
- 
-],
-
-"ajax": {
-    "url": url2 + "contraloria/getregistroStatus6ContratacionContraloria",
-    "dataSrc": "",
-    "type": "POST",
-    cache: false,
-    "data": function( d ){
-    }
-},
-"order": [[ 1, 'asc' ]]
-
-});
+                    return lblStats;
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+d.nombreResidencial+'</p>';
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+d.nombreLote+'</p>';
+                }
+            }, 
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+d.gerente+'</p>';
+                }
+            }, 
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
+                }
+            }, 
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+d.modificado+'</p>';
+                }
+            }, 
+            {
+                data: function( d ){
+                    var fechaVenc;
+                    if (d.idStatusContratacion == 5 && d.idMovimiento == 22 || d.idStatusContratacion == 5 && d.idMovimiento == 75 ||
+                    d.idStatusContratacion == 5 && d.idMovimiento == 94)
+                            fechaVenc = 'Vencido';
+                    else if (d.idStatusContratacion == 5 && d.idMovimiento == 35 || d.idStatusContratacion == 2 && d.idMovimiento == 62)
+                            fechaVenc = d.fechaVenc;
+                    
+                    return '<p class="m-0">'+fechaVenc+'</p>';
+                }
+            }, 
+            {
+                data: function( d ){
+                    var lastUc = (d.lastUc == null) ? 'Sin registro' : d.lastUc; 
+                    return '<p class="m-0">'+lastUc+'</p>';
+                }
+            },
+            {
+                orderable: false,
+                data: function( data ){
+                    var cntActions;
+                    if(data.vl == '1') { 
+                        cntActions = 'En proceso de Liberación';
+                    } else {
+                        if(data.idStatusContratacion == 5 && data.idMovimiento == 35 && getFileExtension(data.expediente) == 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) == 'xlxs') {
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions += '<center><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
+                            '<i class="fas fa-thumbs-down"></i></button>';
+                        } else if(data.idStatusContratacion == 5 && data.idMovimiento == 35 && getFileExtension(data.expediente) != 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) != 'xlxs') {
+                            cntActions = '<button data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="btn-data btn-blueMaderas noCorrida" title="Información"><i class="fas fa-exclamation"></i></button>';
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
+                            '<i class="fas fa-thumbs-down"></i></button>';
+                        } else if(data.idStatusContratacion == 5 && data.idMovimiento == 22 && data.perfil == 15) {
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="regRevCorr btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
+                            
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
+                            '<i class="fas fa-thumbs-down"></i></button>';
+                        } else if(data.idStatusContratacion == 5 && data.idMovimiento == 75 && (data.perfil == 32 || data.perfil == 13  || data.perfil == 17)) {
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="revStaCE btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
+                        } else if(data.idStatusContratacion == 5 && data.idMovimiento == 94 && data.perfil == 15) { 
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                            'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                            'class="return1 btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
+                        } else {
+                            cntActions = 'N/A';
+                        }
+                        if(rol == 17){
+                            cntActions += '<button href="#" title= "Cambio de sede" data-nomLote="'+data.nombreLote+'" ' +
+                            'data-lote="'+data.idLote+'" class="btn-data btn-details-grey change_sede">' +
+                            '<i class="fas fa-redo"></i></button>';
+                        }
+                    }
+                    return "<div class='d-flex justify-center'>" + cntActions + "</div>";
+                } 
+            }
+        ],
+        columnDefs: [{
+            searchable: false,
+            orderable: false,
+            targets: 0
+        }],
+        ajax: {
+            url: url2 + "contraloria/getregistroStatus6ContratacionContraloria",
+            dataSrc: "",
+            type: "POST",
+            cache: false,
+            data: function( d ){}
+        },
+        order: [[1, 'asc']]
+    });
 
 
     $('#tabla_ingresar_6 tbody').on('click', 'td.details-control', function () {
-			 var tr = $(this).closest('tr');
-			 var row = tabla_6.row(tr);
-
-			 if (row.child.isShown()) {
-				 row.child.hide();
-				 tr.removeClass('shown');
-                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-             } else {
-				 var status;
-				 if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 35) {
-					 status = 'Status 5 listo (Contraloría) ';
-				 } else if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 62) {
-					 status = 'Status 2 enviado a Revisión (Asesor)';
-				 } else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 22) {
-					 status = 'Status 6 Rechazado (Juridico) ';
-				 } else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 75) {
-					 status = 'Status enviado a revisión (Contraloria)';
-				 } else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 94) {
-					 status = 'Status 6 Rechazado (Juridico)';
-				 }
-				 
-				 /*var informacion_adicional2 = '<table class="table text-justify">' +
-                     '<tr><b>INFORMACIÓN ADICIONAL</b>:' +
-                     '<td class="m-0"><strong>ESTATUS: </strong>'+status+'</td>' +
-                     '<td style="font-size: .8em"><strong>COMENTARIO: </strong>' + row.data().comentario + '</td>' +
-                     '<td style="font-size: .8em"><strong>COORDINADOR: </strong>'+row.data().coordinador+'</td>' +
-                     '<td style="font-size: .8em"><strong>ASESOR: </strong>'+row.data().asesor+'</td>' +
-                     '</tr>' +
-                     '</table>';*/
-
-                 var informacion_adicional = '<div class="container subBoxDetail">';
-                 informacion_adicional += '  <div class="row">';
-                 informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-                 informacion_adicional += '          <label><b>Información adicional</b></label>';
-                 informacion_adicional += '      </div>';
-                 informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
-                 informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
-                 informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
-                 informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
-                 informacion_adicional += '  </div>';
-                 informacion_adicional += '</div>';
-
-
-				 row.child(informacion_adicional).show();
-				 tr.addClass('shown');
-                 $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
-
-             }
-		 });
-
-
-
-		 $("#tabla_ingresar_6 tbody").on("click", ".regRevCorr", function(e){
-            e.preventDefault();
-
-            getInfo1[0] = $(this).attr("data-idCliente");
-            getInfo1[1] = $(this).attr("data-nombreResidencial");
-            getInfo1[2] = $(this).attr("data-nombreCondominio");
-            getInfo1[3] = $(this).attr("data-idcond");
-            getInfo1[4] = $(this).attr("data-nomlote");
-            getInfo1[5] = $(this).attr("data-idLote");
-            getInfo1[6] = $(this).attr("data-fecven");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#regRevCorrElab').modal('show');
-
-            });
-
-
-
-			$("#tabla_ingresar_6 tbody").on("click", ".revStaCE", function(e){
-            e.preventDefault();
-
-            getInfo2[0] = $(this).attr("data-idCliente");
-            getInfo2[1] = $(this).attr("data-nombreResidencial");
-            getInfo2[2] = $(this).attr("data-nombreCondominio");
-            getInfo2[3] = $(this).attr("data-idcond");
-            getInfo2[4] = $(this).attr("data-nomlote");
-            getInfo2[5] = $(this).attr("data-idLote");
-            getInfo2[6] = $(this).attr("data-fecven");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#regRevA7').modal('show');
-
-            });
-
-
-			$("#tabla_ingresar_6 tbody").on("click", ".return1", function(e){
-            e.preventDefault();
-
-            getInfo3[0] = $(this).attr("data-idCliente");
-            getInfo3[1] = $(this).attr("data-nombreResidencial");
-            getInfo3[2] = $(this).attr("data-nombreCondominio");
-            getInfo3[3] = $(this).attr("data-idcond");
-            getInfo3[4] = $(this).attr("data-nomlote");
-            getInfo3[5] = $(this).attr("data-idLote");
-            getInfo3[6] = $(this).attr("data-fecven");
-
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-
-            $('#modal_return1').modal('show');
-
-            });
-			
-			
-            $("#tabla_ingresar_6 tbody").on("click", ".change_sede", function(e){
-            e.preventDefault();
-
-            getInfo6[0] = $(this).attr("data-lote");
-            nombreLote = $(this).data("nomlote");
-            $(".lote").html(nombreLote);
-            $('#change_s').modal('show');
-
-            });
-
-
-
+        var tr = $(this).closest('tr');
+        var row = tabla_6.row(tr);
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+            $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
+        } else {
+            var status;
+            if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 35)
+                status = 'Status 5 listo (Contraloría) ';
+            else if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 62)
+                status = 'Status 2 enviado a Revisión (Asesor)';
+            else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 22)
+                status = 'Status 6 Rechazado (Juridico) ';
+            else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 75)
+                status = 'Status enviado a revisión (Contraloria)';
+            else if (row.data().idStatusContratacion == 5 && row.data().idMovimiento == 94)
+                status = 'Status 6 Rechazado (Juridico)';
+            var informacion_adicional = '<div class="container subBoxDetail">';
+            informacion_adicional += '  <div class="row">';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
+            informacion_adicional += '          <label><b>Información adicional</b></label>';
+            informacion_adicional += '      </div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
+            informacion_adicional += '  </div>';
+            informacion_adicional += '</div>';
+            row.child(informacion_adicional).show();
+            tr.addClass('shown');
+            $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+        }
+    });
+        
+    $("#tabla_ingresar_6 tbody").on("click", ".regRevCorr", function(e){
+        e.preventDefault();
+        getInfo1[0] = $(this).attr("data-idCliente");
+        getInfo1[1] = $(this).attr("data-nombreResidencial");
+        getInfo1[2] = $(this).attr("data-nombreCondominio");
+        getInfo1[3] = $(this).attr("data-idcond");
+        getInfo1[4] = $(this).attr("data-nomlote");
+        getInfo1[5] = $(this).attr("data-idLote");
+        getInfo1[6] = $(this).attr("data-fecven");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#regRevCorrElab').modal('show');
+    });
+        
+    $("#tabla_ingresar_6 tbody").on("click", ".revStaCE", function(e){
+        e.preventDefault();
+        getInfo2[0] = $(this).attr("data-idCliente");
+        getInfo2[1] = $(this).attr("data-nombreResidencial");
+        getInfo2[2] = $(this).attr("data-nombreCondominio");
+        getInfo2[3] = $(this).attr("data-idcond");
+        getInfo2[4] = $(this).attr("data-nomlote");
+        getInfo2[5] = $(this).attr("data-idLote");
+        getInfo2[6] = $(this).attr("data-fecven");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#regRevA7').modal('show');
+    });
+        
+    $("#tabla_ingresar_6 tbody").on("click", ".return1", function(e){
+        e.preventDefault();
+        getInfo3[0] = $(this).attr("data-idCliente");
+        getInfo3[1] = $(this).attr("data-nombreResidencial");
+        getInfo3[2] = $(this).attr("data-nombreCondominio");
+        getInfo3[3] = $(this).attr("data-idcond");
+        getInfo3[4] = $(this).attr("data-nomlote");
+        getInfo3[5] = $(this).attr("data-idLote");
+        getInfo3[6] = $(this).attr("data-fecven");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#modal_return1').modal('show');
+    });
+        
+    $("#tabla_ingresar_6 tbody").on("click", ".change_sede", function(e){
+        e.preventDefault();
+        getInfo6[0] = $(this).attr("data-lote");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#change_s').modal('show');
+    });
 });
 
-	function getFileExtension(filename) {		
-		  validaFile =  filename == null ? 0:
-						filename.split('.').pop();
-		  
-		  return validaFile;
-		
-	}
+function getFileExtension(filename) {		
+    validaFile =  filename == null ? 0:
+    filename.split('.').pop();
+    return validaFile;
+}
 
+$(document).on('click', '.regCorrElab', function () {
+    var idLote = $(this).attr("data-idLote");
+    var nomLote = $(this).attr("data-nomLote");
+	$('#nombreLoteregCor').val($(this).attr('data-nomLote'));
+	$('#idLoteregCor').val($(this).attr('data-idLote'));
+	$('#idCondominioregCor').val($(this).attr('data-idCond'));
+	$('#idClienteregCor').val($(this).attr('data-idCliente'));
+	$('#fechaVencregCor').val($(this).attr('data-fecVen'));
+	$('#nomLoteFakeEregCor').val($(this).attr('data-nomLote'));
+	nombreLote = $(this).data("nomlote");
+	$(".lote").html(nombreLote);
+	$('#regCorrElab').modal();
+});
 
-	/*regisgtrar Corrida*/
-	$(document).on('click', '.regCorrElab', function () {
-		var idLote = $(this).attr("data-idLote");
-		var nomLote = $(this).attr("data-nomLote");
-
-		$('#nombreLoteregCor').val($(this).attr('data-nomLote'));
-		$('#idLoteregCor').val($(this).attr('data-idLote'));
-		$('#idCondominioregCor').val($(this).attr('data-idCond'));
-		$('#idClienteregCor').val($(this).attr('data-idCliente'));
-		$('#fechaVencregCor').val($(this).attr('data-fecVen'));
-		$('#nomLoteFakeEregCor').val($(this).attr('data-nomLote'));
-
-		nombreLote = $(this).data("nomlote");
-		$(".lote").html(nombreLote);
-		$('#regCorrElab').modal();
-
-	});
-
-	function preguntaRegCorr() {
-
-		var idLote = $("#idLoteregCor").val();
-		var idCondominio = $("#idCondominioregCor").val();
-		var nombreLote = $("#nombreLoteregCor").val();
-		var idStatusContratacion = $("#idStatusContratacionregCor").val();
-		var idCliente = $("#idClienteregCor").val();
-		var fechaVenc = $("#fechaVencregCor").val();
-		var comentario = $("#comentarioregCor").val();
-		var enganche = $("#enganche").val();
-        var totalNeto = $("#totalNeto").val();
-
-		var parametros = {
-			"idLote": idLote,
-			"idCondominio": idCondominio,
-			"nombreLote": nombreLote,
-			"idStatusContratacion": idStatusContratacion,
-			"idCliente": idCliente,
-			"fechaVenc": fechaVenc,
-			"comentario": comentario,
-			"totalNeto": totalNeto
-		};
+function preguntaRegCorr() {
+    var idLote = $("#idLoteregCor").val();
+    var idCondominio = $("#idCondominioregCor").val();
+    var nombreLote = $("#nombreLoteregCor").val();
+    var idStatusContratacion = $("#idStatusContratacionregCor").val();
+    var idCliente = $("#idClienteregCor").val();
+    var fechaVenc = $("#fechaVencregCor").val();
+    var comentario = $("#comentarioregCor").val();
+    var enganche = $("#enganche").val();
+    var totalNeto = $("#totalNeto").val();
+	var parametros = {
+        "idLote": idLote,
+		"idCondominio": idCondominio,
+		"nombreLote": nombreLote,
+		"idStatusContratacion": idStatusContratacion,
+		"idCliente": idCliente,
+		"fechaVenc": fechaVenc,
+		"comentario": comentario,
+		"totalNeto": totalNeto
+	};
 
 
 		if (comentario.length <= 0 || $("#totalNeto").val().length == 0)

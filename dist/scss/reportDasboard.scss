@@ -17,42 +17,10 @@
     }
     .back{
         width: fit-content;
-        background-color: $white;
-        padding: 8px 2px;
-        border-radius: 5px;
-        .checkBox{
-          cursor: pointer;
-          user-select: none;
-          display: block;
-          line-height: inherit;
-          span{
-            font-size: 12px;
-            border-radius: 5px;
-            transition: 0.4s;
-            padding: 8px 15px;
-            color: $deepGray;
-            background-color: $white;
-            margin: 0 2px;
-            @media #{$smartphone} {
-                padding: 8px 35px;
-            }
-          }
-          span:hover{
-            box-shadow: none;
-          }
-          input{
-            pointer-events: none;
-            display: none;
-          }
-          input:checked + span{
-            color: $white;
-            background-color: $indigo;
-          }
-        }
-        @media #{$smartphone}{
-            width: 98%!important;
-            margin-bottom: 20px;
-        }
+        background-color: transparent;
+        padding: 3px 0px;
+        border-radius: 27px;
+        border: 1px solid $platinumScroll;
     }
     .gradientLeft{
         height: 100%;
@@ -141,7 +109,6 @@
         }
     }
     .selectMini{
-        //display: flex;
         align-items: center;
         background-color: transparent;
         color: $shadowBlue;
@@ -372,10 +339,21 @@
 }
 
 #tableFilters{
+    .btn-filter{
+        width: 100%;
+        background-color: #d8dde2;
+        border: none;
+        border-radius: 27px;
+        color: $blueIndigo;
+        font-weight: 400;
+        padding: 10px 25px;    
+    }
     .datesTable{
         border-radius: 27px;
-        border: 2px solid $platinumScroll;
-        padding: 0;
+        border: none;
+        background-color: $platinum;
+        padding: 3px 0;
+        color: $deepGray;
         align-items: center!important;
         .tableDates{
             text-align: center;
@@ -383,10 +361,85 @@
             padding: 0;
             height: fit-content!important;
         }
-        .tableSearch{
-            background-color: transparent!important;
-            box-shadow: none!important;
-            color: $gray;
+    }
+    .c-filter {
+        position: relative;
+        .c-filter__toggle {
+            width: 100%;
+            border: 0;
+            padding: 0.5rem 1rem;
+            border-radius: 27px;
+            background-color: $platinum;
+            padding: 10px 25px;
+            &::after{
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+                margin-left: 10px;
+                position: relative;
+                font-family: FontAwesome;
+                content: "\f0b0";
+            }
+            &--active::after{
+                font-family: FontAwesome; 
+                content: "\f077";
+            }
+        }
+        .c-filter__ul {
+            padding: 0;
+            border-radius: 4px;
+            position: absolute;
+            display: none;
+            margin: 0;
+            background-color: $white;
+            box-shadow: 0px 2px 9px -12px RGB(0 0 0/42%), 0 4px 25px 0px RGB(0 0 0/12%), 0 8px 10px -5px RGB(0 0 0/20%);
+            &--active {
+                display: block;
+                z-index: 999;
+                padding: 8px 15px;
+            }
+            .c-filter__item {
+                list-style: none;
+                display: block;
+                input {
+                    display: none;
+                }
+                input:checked ~ label:before {
+                    border: none;
+                    font-family: FontAwesome;
+                    content: "\f00c";
+                    display: flex;
+                    align-items: center;
+                    color: $blueIndigo;
+                }
+                label {
+                    display: block;
+                    padding: 5px;
+                    cursor: pointer;
+                    padding: 8px 8px 8px 35px;
+                    position: relative;
+                    margin: 0;
+                    font-weight: 100;
+                    color: $deepGray;
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        left: 10px;
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 4px;
+                        border: 1px solid #e6e6e6;
+                    }
+                    &:hover {
+                        background-color: #f4f5f7;
+                    }
+                    &:hover:before{
+                        border: 1px solid #c8c8c8;
+                    }
+                }
+            }
         }
     }
     .chartButton{

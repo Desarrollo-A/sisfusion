@@ -187,7 +187,7 @@
                                                 <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
                                                     <?php
                                                         setlocale(LC_ALL, 'es_ES');
-                                                        for ($i = 2019; $i <= 2022; $i++) {
+                                                        for ($i = 2019; $i <= 2023; $i++) {
                                                             $yearName  = $i;
                                                             echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                         }

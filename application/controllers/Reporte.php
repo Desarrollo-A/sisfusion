@@ -22,18 +22,8 @@ class Reporte extends CI_Controller {
     }
 
     public function getInformation(){
-        $currentYear = date("Y");
-
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            //si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
-            if( $typeTransaction==1){
-                $beginDate = "$currentYear-01-01";
-                $endDate = date("Y-m-d");
-            }else{
-                $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-                $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            }
             $id_usuario = $this->input->post("id_usuario");
             $where = $this->input->post("where");
             $rol = $this->input->post("type");
@@ -43,9 +33,16 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
-            $typeSale = $this->input->post("typeSale");
-            $currentYear = date("Y");
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction, $typeSale)->result_array();
+            /* Filtros grales*/
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
+            $typeSale = $this->input->post("filters")[0]["typeSale"];
+            $typeLote = $this->input->post("filters")[0]["typeLote"];
+            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
+            $estatus = $this->input->post("filters")[0]["estatus"]; 
+            /* Filtros grales*/
+
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -53,10 +50,8 @@ class Reporte extends CI_Controller {
     }
 
     public function getDataChart() {
-        $currentYear = date("Y");
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
-        $typeSale = $this->input->post('typeSale');
         $id_rol = $this->input->post('type');
         $render = $this->input->post('render');
         $asesor = $this->input->post("asesor");
@@ -64,16 +59,15 @@ class Reporte extends CI_Controller {
         $gerente = $this->input->post("gerente");
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
-
-        if($this->input->post("beginDate") == null && $this->input->post("endDate") == null){
-            $beginDate = "$currentYear-01-01";
-            $endDate = date("Y-m-d");
-        } else {
-            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
-            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
-        }
         
-        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $id_rol, $beginDate, $endDate, $typeSale, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional]);
+        /* Filtros grales*/
+        $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
+        $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
+        $typeSale = $this->input->post("filters")[0]["typeSale"];
+        $typeLote = $this->input->post("filters")[0]["typeLote"];
+        $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];    
+        $estatus = $this->input->post("filters")[0]["estatus"]; 
+        $data = $this->Reporte_model->getDataChart($general, $tipoChart, $id_rol, $beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional]);
 
         //Obtenemos solo array de ventas contratadas
         $vcArray = array_filter($data, function($element){
@@ -141,9 +135,14 @@ class Reporte extends CI_Controller {
 
     public function getDetails(){
         $typeTransaction = $this->input->post("transaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
-        
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        /*Filtros grales */
+        $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
+        $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
+        $typeSale = $this->input->post("filters")[0]["typeSale"];
+        $typeLote = $this->input->post("filters")[0]["typeLote"];
+        $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
+        $estatus = $this->input->post("filters")[0]["estatus"]; 
+        /*Filtros grales */
         $id_usuario = $this->input->post("id_usuario");
         $rol = $this->input->post("rol");
         $render = $this->input->post("render");
@@ -153,9 +152,8 @@ class Reporte extends CI_Controller {
         $gerente = $this->input->post("gerente");
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
-        $typeSale = $this->input->post("typeSale");
 
-        $data = $this->Reporte_model->getDetails($typeSale, $beginDate, $endDate, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -166,8 +164,14 @@ class Reporte extends CI_Controller {
     public function getLotesInformation(){
         if (isset($_POST) && !empty($_POST)) {
             $type = $this->input->post("type");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            /*Filtros grales */
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
+            $typeSale = $this->input->post("filters")[0]["typeSale"];
+            $typeLote = $this->input->post("filters")[0]["typeLote"];
+            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
+            $estatus = $this->input->post("filters")[0]["estatus"]; 
+            /*Filtros grales */
             $id_usuario = $this->input->post("user");
             $rol = $this->input->post("rol");
             $render = $this->input->post("render");
@@ -178,9 +182,9 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
-            $typeSale = $this->input->post("typeSale");
+            
 
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($typeSale, $beginDate, $endDate, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());
@@ -242,4 +246,8 @@ class Reporte extends CI_Controller {
         }
     }
 
+    public function getEstatusContratacionList(){
+        $data = $this->Reporte_model->getEstatusContratacionList()->result_array();
+        echo json_encode($data);
+    }
 }

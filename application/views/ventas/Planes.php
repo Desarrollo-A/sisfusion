@@ -330,7 +330,6 @@
 													<thead>
 														<tr>
 														<th>PROYECTO</th>
-														<!-- <th>CONDOMINIO</th> -->
 														<th>TIPO LOTE</th>
 														<th>SUPERFICIE</th>
 														<th>DESCRIPCIÓN</th>
@@ -341,18 +340,8 @@
 														<th>BONO</th>
 														<th>MSI</th>
 														<th>VALOR</th>
-														<!-- <th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-															<th>PLAN</th>
-															<th>TOTAL</th>
-															<th>ENGANCHE</th>
-															<th>M2</th>
-															
-															<th>DESARROLLO</th>
-															<th>TOT. COM.</th> -->
+														<th>FECHA INICIO</th>
+														<th>FECHA FIN</th>
 														</tr>
 													</thead>
 												</table>
@@ -415,15 +404,6 @@ $("#table_planes").ready(function() {
                 // }
             });
 
-            // $('#table_planes').on('xhr.dt', function(e, settings, json, xhr) {
-            //     var total = 0;
-            //     $.each(json.data, function(i, v) {
-            //         total += parseFloat(v.pago_cliente);
-            //     });
-            //     var to = formatMoney(total);
-            //     // document.getElementById("myText_nuevas").value = to;
-            // });
-
             tabla_nuevas = $("#table_planes").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
@@ -434,16 +414,10 @@ $("#table_planes").ready(function() {
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'PAQUETES DESCUENTOS',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                         format: {
                             header:  function (d, columnIdx) {
-                                if(columnIdx == 0){
-                                    return ' '+d +' ';
-                                }
-                                else{
-                                        return ' '+titulos[columnIdx-1] +' ';
-                                    }
-                                 
+                                return titulos[columnIdx];
                             }
                         }
                     },
@@ -465,12 +439,6 @@ $("#table_planes").ready(function() {
                         return '<p class="m-0">'+d.nombreResidencial+'</p>';
                     }
                 },
-                // {  
-                //     "width": "15%",
-                //     "data": function( d ){
-                //         return '<p class="m-0">'+d.nombre_condominio+'</p>';
-                //     }
-                // },
 				{  
                     "width": "10%",
                     "data": function( d ){
@@ -586,6 +554,16 @@ $("#table_planes").ready(function() {
 
 						}
                         
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_inicio+'</p>';
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_fin+'</p>';
                     }
                 }],
                 columnDefs: [{}],

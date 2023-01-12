@@ -1,5 +1,10 @@
 let chart, rolOnReport, idUserOnReport;
 
+document.querySelector(".c-filter__toggle").addEventListener("click", function () {
+    this.classList.toggle("c-filter__toggle--active");
+    document.querySelector(".c-filter__ul").classList.toggle("c-filter__ul--active");
+});
+
 function asDirector(userType){
     // 18: Fabián
     //  4: Asistente dirección administración
@@ -104,44 +109,23 @@ var initialOptions = {
     }
 }
 
-$('.infoMainSelector').unbind().on('click', function(e){
-    let c= $('input:checkbox.infoMainSelector:checked').length;
-    var checkboxSelected = $(this);
-    if (!checkboxSelected.is(":checked") && c<1) {
-        // do the confirmation thing here
-        e.preventDefault();
-        return false;
-    }
-
-    let selector1 = $('#typeSale1')[0];
-    let selector2 = $('#typeSale2')[0];
-    if( !selector1.checked && !selector2.checked ){
-        if(checkboxSelected[0] != selector1)
-            selector1.checked = true;
-        else selector2.checked = true;
-    }
-
-    $(".boxAccordions").html('');
-    loaderCharts();
-    initReport();
-});
-
 function readyReport(){
     $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    initReport();
     setInitialValuesReporte();
+    initReport();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
 
     $('[data-toggle="tooltip"]').tooltip();
+    setListEstatus();
 }
 
 async function initReport(){
     asDirector(userType);
-    typeSale = validateTypeSale();
-    getLastSales(typeSale, rolOnReport);
+    filters = validateFilters();
+    getLastSales(filters, rolOnReport);
     // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
@@ -156,25 +140,36 @@ async function initReport(){
     else 
         rolString = 'asesor';
     
-    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, null, [0, null, null, null, null, null, rolOnReport]);
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, [0, null, null, null, null, null, rolOnReport], filters);
 }
 
-function validateTypeSale(){
+function validateFilters(){
+    filters = [];
+    //Filtros con enganche / sin enganche
     let selector1 = $('#typeSale1')[0];
     let selector2 = $('#typeSale2')[0];
-    let transaction = '';
+    //Tipo de lote
+    let selector3 = $('#typeLote1')[0];
+    let selector4 = $('#typeLote2')[0];
+    // Con casa / sin casa
+    let selector5 = $('#typeBuild1')[0];
+    let selector6 = $('#typeBuild2')[0];
+    //Rango de fechas
+    let beginDate = $('#tableBegin').val();
+    let endDate = $('#tableEnd').val();
+    //Estauts de contratación
+    let estatus = $("#estatusContratacion").val();
 
-    if(selector1.checked && !selector2.checked){
-        transaction = selector1.value;
-    }else if(selector2.checked && !selector1.checked){
-        transaction = selector2.value;
-    }else if(selector1.checked && selector2.checked){
-        transaction = 3;
-    }else{
-        transaction = 0;
-    }
+    filters.push({
+        typeSale: (selector1.checked && !selector2.checked) ? selector1.value : (selector2.checked && !selector1.checked) ? selector2.value : ( selector1.checked && selector2.checked ) ? 3 : 0,
+        typeLote: (selector3.checked && !selector4.checked) ? selector3.value : (selector4.checked && !selector3.checked) ? selector4.value : ( selector3.checked && selector4.checked ) ? 3 : 0,
+        typeConstruccion: (selector5.checked && !selector6.checked) ? selector5.value : (selector6.checked && !selector5.checked) ? selector6.value : ( selector5.checked && selector6.checked ) ? 3 : 0,
+        begin: beginDate,
+        end: endDate,
+        estatus: estatus
+    });
 
-    return transaction;
+    return filters;
 }
 
 function createAccordions(option, render, rol){
@@ -217,8 +212,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
-    typeSale = validateTypeSale();
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -422,8 +416,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             cache: false,
             data: {
                 "typeTransaction": transaction,
-                "beginDate": dates != null ? formatDate(dates.begin): '',
-                "endDate":  dates != null ? formatDate(dates.end): '',
                 "where": '1',
                 "type": rol,
                 "id_usuario": id_usuario,
@@ -433,7 +425,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
-                "typeSale" : typeSale
+                "filters" : filters
             }
         }
     });
@@ -517,42 +509,43 @@ $(document).on('click', '.update-dataTable', function (e) {
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
-    let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
+    
+    let filters = validateFilters();
 
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); 
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
@@ -562,11 +555,11 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if( idUser == 28 || idUser == 30 ){
                 const table = "gerente";
-                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
-                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
             }
         } 
     }
@@ -682,8 +675,6 @@ $(document).on('click', '.btnSub', function () {
         table: $(this).closest('table'),
         thisVar: $(this),
         option: $(this).data("option"),
-        begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val()),
         leader: $(this).data("leader"),
         asesor: $(this).data("as"),
         coordinador: $(this).data("co"),
@@ -694,15 +685,13 @@ $(document).on('click', '.btnSub', function () {
     initDetailRow(data);
 });
 
-$(document).on('click', '#searchByDateRangeTable', async function (e) {
+$(document).on('click', '#filterAction', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
     loaderCharts();
-    typeSale = validateTypeSale();
 
-    let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
-    // let rol = userType == 2 ? await getRolDR(idUser): userType;
+    filters = validateFilters();
 
     let rolString;
     if ( rolOnReport == '1' )
@@ -716,8 +705,8 @@ $(document).on('click', '#searchByDateRangeTable', async function (e) {
     else 
         rolString = 'asesor';
     
-    getLastSales(typeSale, rolOnReport);
-    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, dates, [0, null, null, null, null, null, rolOnReport]);
+    getLastSales(filters, rolOnReport);
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -767,11 +756,11 @@ async function chartDetail(e, tipoChart){
     $("#modalChart #beginDate").val(finalBeginDate2);
     $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    typeSale = validateTypeSale();
-    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), typeSale);
+    filters = validateFilters();
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), filters);
 }
 
-function getSpecificChart(type, beginDate, endDate, typeSale){
+function getSpecificChart(type, beginDate, endDate, filters){
     $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
@@ -781,7 +770,7 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
             tipoChart: type, 
             beginDate: beginDate, 
             endDate: endDate, 
-            typeSale: typeSale, 
+            filters: filters, 
             type: rolOnReport,
             render: 1
         },
@@ -814,27 +803,21 @@ function getSpecificChart(type, beginDate, endDate, typeSale){
     });
 }
 
-function getLastSales(typeSale, rol){
-    let beginDate = $('#tableBegin').val()
-    let endDate = $('#tableEnd').val()
+function getLastSales(filters, rol){
     $('.loadChartMini').removeClass('d-none');
-
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
         data: {
             general: 1, 
-            tipoChart:'na', 
-            beginDate: beginDate, 
-            endDate: endDate,
-            typeSale: typeSale,
+            tipoChart:'na',
+            filters: filters,
             type: rol,
             render: 1
         },
         dataType: 'json',
         cache: false,
         success: function(data){
-            console.log("successs!");
             $('.loadChartMini').addClass('d-none');
             $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
@@ -1097,7 +1080,7 @@ function accordionToRemove(rol){
 function initDetailRow(dataObj){
     var detailRows = [];
     var tr = $(`#details-${dataObj.user}`).closest('tr');
-    var table = $(`#details-${dataObj.user}`).closest('table');
+    // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
@@ -1118,21 +1101,19 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
-    typeSale = validateTypeSale();
+    filters = validateFilters();
     $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
         render:  dataObj.render,
         transaction: dataObj.transaction,
-        beginDate: dataObj.begin,
-        endDate: dataObj.end,
         leader: dataObj.leader,
         asesor: dataObj.asesor,
         coordinador: dataObj.coordinador,
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
-        typeSale: typeSale
+        filters: filters
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
@@ -1203,6 +1184,7 @@ async function setInitialValuesReporte() {
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
 }
+
 function titleCase(string){
     return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }
@@ -1287,8 +1269,6 @@ $(document).on('click', '.btnModalDetails', function () {
         rol: $(this).data("rol"),
         option: $(this).data("option"),
         render: $(this).data("render"),
-        begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val()),
         asesor: $(this).data("as"),
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
@@ -1303,16 +1283,15 @@ $(document).on('click', '.btnModalDetails', function () {
 });
 
 function fillTableReport(dataObject) {
-    typeSale = validateTypeSale();
+    filters = validateFilters();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if(i != 0){
                     if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTable").DataTable().column(i)
-                            .search(this.value).draw();
+                        $("#lotesInformationTable").DataTable().column(i).search(this.value).draw();
                     }
                 }
             });
@@ -1502,14 +1481,12 @@ function fillTableReport(dataObject) {
                     "rol": dataObject.rol,
                     "render": dataObject.render,
                     "option": dataObject.option,
-                    "beginDate": dataObject.begin,
-                    "endDate": dataObject.end,
                     "asesor": dataObject.asesor,
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
                     "regional": dataObject.regional,
-                    "typeSale" : typeSale
+                    "filters" : filters
                 }
             }
         });
@@ -1727,14 +1704,12 @@ function fillTableReport(dataObject) {
                     "rol": dataObject.rol,
                     "render": dataObject.render,
                     "option": dataObject.option,
-                    "beginDate": dataObject.begin,
-                    "endDate": dataObject.end,
                     "asesor": dataObject.asesor,
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
                     "regional": dataObject.regional,
-                    "typeSale" : typeSale
+                    "filters" : filters
                 }
             }
         });
@@ -1761,4 +1736,15 @@ function formatMoney(n) {
         i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
         j = (j = i.length) > 3 ? j % 3 : 0;
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+function setListEstatus(){
+    $('#spiner-loader').removeClass('hide');
+    $.getJSON( base_url + "Reporte/getEstatusContratacionList").done( function( data ){
+        $('#spiner-loader').addClass('hide');
+        $.each( data, function( i, v){
+            $("#estatusContratacion").append($('<option>').val(data[i]['idStatusContratacion']).text(data[i]['nombreStatus'].toUpperCase()));
+        });
+        $("#estatusContratacion").selectpicker('refresh');
+    });
 }
