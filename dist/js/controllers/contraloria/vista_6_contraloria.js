@@ -245,26 +245,7 @@ $("#tabla_ingresar_6").ready(function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
-
-
-                            /*TESTING*/
-                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-                                'class="regRevCorr btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
-
-                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-                                'class="revStaCE btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
-                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
-                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-                                'class="return1 btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
-
-                            cntActions += '<button href="#" title= "Cambio de sede" data-nomLote="'+data.nombreLote+'" ' +
-                                'data-lote="'+data.idLote+'" class="btn-data btn-details-grey change_sede">' +
-                                '<i class="fas fa-redo"></i></button>';
+                            
                         }
                         else if(data.idStatusContratacion == 5 && data.idMovimiento == 22 && data.perfil == 15) {
                             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
