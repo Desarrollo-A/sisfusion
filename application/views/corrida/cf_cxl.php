@@ -1384,7 +1384,8 @@
 
             function calcularCF(){
 
-///////////////////////////////////////w
+///////////////////////////////////////
+
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
 
@@ -2010,14 +2011,14 @@
                 let cant = $('#cantidadEnganche').val();
                 if(porc==1 || cant==5000){
                     condicion_mes = 1;
-                    // console.log('Debe empezar 1 mese despúes ',condicion_mes);
+                    
                 }else if(porc==10 || porc==5){
                     condicion_mes = 2;
-                    // console.log('Debe empezar 2 meses despúes ',condicion_mes);
+                    
                 }else{
                     condicion_mes = 0;
                 }
-                // console.log("$scope.fechaApartado: ", $scope.fechaApartado);
+            
                 var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
                 var yearc;
                 if(month>12){
