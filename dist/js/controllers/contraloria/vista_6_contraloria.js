@@ -245,6 +245,7 @@ $("#tabla_ingresar_6").ready(function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
+                            
                         }
                         else if(data.idStatusContratacion == 5 && data.idMovimiento == 22 && data.perfil == 15) {
                             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
@@ -949,4 +950,16 @@ function formatCurrency(input, blur) {
     var updated_len = input_val.length;
     caret_pos = updated_len - original_len + caret_pos;
     input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+
+function closeWindow(){
+    $('#comentarioregCor').val('');
+    $('#totalNeto').val('');
+    $('#totalNetoR').val('');
+    $('#comentario1').val('');
+    $('#comentario2').val('');
+    $('#totalNetoRevA7').val('');
+    $('#comentario3').val('');
+    $('#totalReturn1').val('');
 }
