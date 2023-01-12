@@ -41,7 +41,7 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
@@ -117,7 +117,7 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="save1" class="btn btn-primary">Registrar</button>
 				</div>
 			</div>
@@ -146,7 +146,7 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="save2" class="btn btn-primary"> Registrar</button>
 				</div>
 			</div>
@@ -217,7 +217,7 @@
 
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="b_return1" class="btn btn-primary"> Registrar</button>
 				</div>
 			</div>
