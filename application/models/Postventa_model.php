@@ -335,7 +335,7 @@ class Postventa_model extends CI_Model
         }
     }
 
-    function getMotivosRechazos($tipoDocumento)
+    function motivos_rechazo($tipoDocumento)
     {
         $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND tipo_documento = $tipoDocumento");
         return $query->result();
