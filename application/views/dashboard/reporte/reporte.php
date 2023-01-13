@@ -43,12 +43,12 @@
                         <label tabindex='-1' for='typeLote2'>Comerciales</label>
                     </li>
                     <li class='c-filter__item'>
-                        <input type="checkbox" class="d-none" value="0" name="typeConstruccion" id="typeBuild1" checked>
-                        <label tabindex='-1' for='typeBuild1'>Sin casa</label>
-                    </li>
-                    <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="1" name="typeConstruccion" id="typeBuild2">
                         <label tabindex='-1' for='typeBuild2'>Con casa</label>
+                    </li>
+                    <li class='c-filter__item'>
+                        <input type="checkbox" class="d-none" value="0" name="typeConstruccion" id="typeBuild1" checked>
+                        <label tabindex='-1' for='typeBuild1'>Sin casa</label>
                     </li>
                 </ul>
             </div>

@@ -29,9 +29,9 @@ class Reporte_model extends CI_Model {
 
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $generalFilters = ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $generalFilters = ' AND ISNULL(totalValidado, 0.00) <= 10000';
         elseif( $typeSale == "2" )
-            $generalFilters = ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $generalFilters = ' AND ISNULL(totalValidado, 0.00) < 10000';
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -312,9 +312,9 @@ class Reporte_model extends CI_Model {
         $filtro = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= ' AND ISNULL(totalValidado, 0.00) < 10000';
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -473,9 +473,9 @@ class Reporte_model extends CI_Model {
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= ' AND ISNULL(totalValidado, 0.00) < 10000';
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -620,9 +620,9 @@ class Reporte_model extends CI_Model {
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
         elseif( $typeSale == "2" )
-            $filtroExt .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtroExt .= ' AND ISNULL(totalValidado, 0.00) < 10000';
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )

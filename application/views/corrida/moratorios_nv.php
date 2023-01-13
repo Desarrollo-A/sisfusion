@@ -1012,7 +1012,11 @@
                         let diasRetraso = difference;
                         let IF = 0.601;
                         let mensualidad = total;
-                        let IM = ((mensualidad * IF) /360)*diasRetraso;
+                        let IM = ((mensualidad * IF) / 360)*diasRetraso;
+                        console.log('IF', IF);
+                        console.log('mensualidad', mensualidad);
+                        console.log('diasRetraso', diasRetraso);
+                        console.log('IM', IM);
                         let pagoFinal = total + IM;
                         range.push({
                             "fecha": $scope.fechapago,
@@ -1180,10 +1184,15 @@
                         // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
                         let diasRetraso = difference;
                         let IF = 0.601;
-                        let mensualidad = $scope.p2;
+                        let mensualidad = $scope.infoMoratorio.capital;
                         let IM = ((mensualidad * IF) /360)*diasRetraso;
-                        let pagoFinal = $scope.p2 + IM;
+                        let pagoFinal = $scope.infoMoratorio.capital + IM;
 
+                        console.log('IF', IF);
+                        console.log('mensualidad', mensualidad);
+                        console.log('IM', IM);
+                        console.log('pagoFinal', pagoFinal);
+                        console.log('diasRetraso', diasRetraso);
 
 
                         range2.push({
@@ -1563,9 +1572,9 @@
                         // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
                         let diasRetraso = difference;
                         let IF = 0.601;
-                        let mensualidad = $scope.p2;
+                        let mensualidad = $scope.infoMoratorio.capital;
                         let IM = ((mensualidad * IF) /360)*diasRetraso;
-                        let pagoFinal = $scope.p2 + IM;
+                        let pagoFinal = $scope.infoMoratorio.capital + IM;
 
 
                         range2.push({
@@ -1939,9 +1948,9 @@
                             // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
                             let diasRetraso = difference;
                             let IF = 0.601;
-                            let mensualidad = $scope.p2;
+                            let mensualidad = $scope.infoMoratorio.capital;
                             let IM = ((mensualidad * IF) /360)*diasRetraso;
-                            let pagoFinal = $scope.p2 + IM;
+                            let pagoFinal = $scope.infoMoratorio.capital + IM;
 
 
                             range2.push({
@@ -2043,9 +2052,9 @@
                             // console.log('Diferencia de ',fechaInitEnd,' y ',fechaFinishEnd,' ES:[',difference,']');
                             let diasRetraso = difference;
                             let IF = 0.601;
-                            let mensualidad = $scope.p3;
+                            let mensualidad =  $scope.capital3;
                             let IM = ((mensualidad * IF) /360)*diasRetraso;
-                            let pagoFinal = $scope.p3 + IM;
+                            let pagoFinal = $scope.capital3+ IM;
 
 
 

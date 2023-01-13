@@ -1486,7 +1486,8 @@ public function get_sede(){
 			
 			$arreglo["asig_jur"] = $assigned_user;
 		}
-	  
+
+
 	  $validate = $this->Contraloria_model->validateSt6($idLote);
 
 	  if ($validate == 1) {
@@ -1644,7 +1645,8 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   $mail->Body = $mailContent;
 
 
-	$validate = $this->Contraloria_model->validateSt6($idLote);
+
+    $validate = $this->Contraloria_model->validateSt6($idLote);
 
 	if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
@@ -1837,9 +1839,11 @@ $i = 0;
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;     
 
-		$validate = $this->Contraloria_model->validateSt6($idLote);
 
-		if($validate == 1){
+    $validate = $this->Contraloria_model->validateSt6($idLote);
+
+
+    if($validate == 1){
 			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 					$data['message'] = 'OK';
 					echo json_encode($data);
@@ -2076,13 +2080,17 @@ $i = 0;
 
   public function editar_registro_loteRevision_contraloria6_AJuridico7(){
 
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
+      $idLote = $this->input->post('idLote');
+      $idCondominio = $this->input->post('idCondominio');
+      $nombreLote = $this->input->post('nombreLote');
+      $idCliente = $this->input->post('idCliente');
+      $comentario = $this->input->post('comentario');
+      $modificado = date('Y-m-d H:i:s');
+      $fechaVenc = $this->input->post('fechaVenc');
+      $charactersNoPermit = array('$', ',');
+      $totalNeto = $this->input->post('totalNeto');
+      $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+
 
 
     $arreglo=array();
@@ -2092,7 +2100,7 @@ $i = 0;
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["totalNeto"] = $totalNeto;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=6;
@@ -2107,10 +2115,11 @@ $i = 0;
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;     
 
-
 	$validate = $this->Contraloria_model->validateSt6($idLote);
 
-	if($validate == 1){
+
+
+      if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 				$data['message'] = 'OK';
 				echo json_encode($data);
@@ -3090,7 +3099,9 @@ public function return1(){
     $comentario=$this->input->post('comentario');
     $modificado=date('Y-m-d H:i:s');
     $fechaVenc=$this->input->post('fechaVenc');
-
+    $charactersNoPermit = array('$', ',');
+    $totalNeto = $this->input->post('totalNeto');
+    $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
 
 
     $arreglo=array();
@@ -3100,7 +3111,7 @@ public function return1(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["totalNeto"] = $totalNeto;
 	
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=6;
@@ -3113,7 +3124,7 @@ public function return1(){
     $arreglo2["fechaVenc"]= $modificado;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
+    $arreglo2["idCliente"]= $idCliente;
 
 		$validate = $this->Contraloria_model->validateSt6($idLote);
 
@@ -3138,9 +3149,7 @@ public function return1(){
 
 	$idLote=$this->input->post('idLote');
 	$ubicacion=$this->input->post('ubicacion');
-
 	$validate = $this->Contraloria_model->update_sede($idLote, $ubicacion);
-
 		if ($validate == TRUE){
 				$data['message'] = 'OK';
 				echo json_encode($data);

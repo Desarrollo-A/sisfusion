@@ -205,10 +205,9 @@ class Contratacion extends CI_Controller
 		$this->load->view("contraloria/completeInventory", $this->get_menu->get_menu_data($this->session->userdata('id_rol')));
 	}
 
-    public function sedesPorDesarrollos()
-    {
+    public function getCatalogosParaUltimoEstatus() {
     	$this->validateSession();
-        echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
+        echo json_encode($this->Contratacion_model->getCatalogosParaUltimoEstatus()->result_array());
     }
 
     public function downloadCompleteInventory () {

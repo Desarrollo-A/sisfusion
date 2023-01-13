@@ -441,10 +441,13 @@ class Contratacion_model extends CI_Model {
       WHERE lot.status = 1 and lot.idLote = $idLote ORDER BY lot.idLote");
    }
    
-   public function getSedesPorDesarrollos(){
-      return $this->db->query("SELECT re.sede_residencial id_sede, se.nombre FROM residenciales re
+   public function getCatalogosParaUltimoEstatus(){
+      return $this->db->query("SELECT re.sede_residencial id, se.nombre, 1 tipo FROM residenciales re
       INNER JOIN sedes se ON se.id_sede = re.sede_residencial
-      WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre");
+      WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre
+      UNION ALL
+      SELECT re.idResidencial id, UPPER(CAST(re.descripcion AS VARCHAR(75))) nombre, 2 tipo FROM residenciales re
+      WHERE re.status = 1 AND re.sede_residencial = 2");
    }
 
    public function getCompleteInventory ($sede_residencial) {
