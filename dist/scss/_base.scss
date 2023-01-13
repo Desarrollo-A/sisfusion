@@ -142,53 +142,59 @@
 /* Text */
 
 /* Vrbls colores */
-$white         : #ffffff;
-$cultured      : #f8f8f8;
-$platinumLight : #eeeeee;
-$grayDisabled  : #F1F1F1;
-$platinum      : #eaeaea;
-$platinumScroll: #c1c1c1;
-$deepGray      : #929292;
-$grey9         : #999999;
-$grayOxford    : #4e4e4e;
-$gray          : #333333;
-$grayDark      : #191B1C;
-$goldMaderas   : #96843D;
-$water         : #D1EEFF;
-$blueLight     : #5DADE2;
-$shadowBlue    : #7083A9;
-$aqua          : #54d2d2;
-$sky           : #00bcd4;
-$cerulean      : #00A0FF;
-$blueFrance    : #2C93E7;
-$azure         : #4382EF;
-$blueMaderas   : #0a548b;
-$blueIndigo    : #103f75;
-$blueSubmit    : #003d82;
-$blueIndigoDeep: #143860;
-$indigo        : #163960;
-$violetChin    : #8E6C88;
-$violetLight   : #9392e8;
-$violetBoots   : #563D7C;
-$redLight      : #f44336;
-$red           : #c01313;
-$redGoogle     : #EA4335;
-$jellyBean     : #df5a5a;
-$orangeYellow  : #ff9800;
-$orangeLight   : #f8aa4b;
-$greenExcel    : #209E63;
-$green         : #28B463;
-$harlequin     : #50d920;
-$acidGreen     : #AFB42B;
-$violet        : #702497;
-$lapisLazuli   : #22639B;
-$blueNCS       : #0089B7;
-$viridianGreen : #039590;
-$tiffanyBlue   : #00ACB8;
-$oceanGreen    : #4BBC8E;
-$caribbeanGreen: #00CDA3;
-$lightGreen    : #92E784;
-$sunny         : #F9F871;
+$white              : #ffffff;
+$cultured           : #f8f8f8;
+$platinumLight      : #eeeeee;
+$grayDisabled       : #F1F1F1;
+$platinum           : #eaeaea;
+$platinumScroll     : #c1c1c1;
+$deepGray           : #929292;
+$grey9              : #999999;
+$grey9Opacity       : #99999913;
+$grayOxford         : #4e4e4e;
+$gray               : #333333;
+$grayDark           : #191B1C;
+$goldMaderas        : #96843D;
+$water              : #D1EEFF;
+$blueLight          : #5DADE2;
+$shadowBlue         : #7083A9;
+$aqua               : #54d2d2;
+$sky                : #00bcd4;
+$cerulean           : #00A0FF;
+$blueFrance         : #2C93E7;
+$azure              : #4382EF;
+$blueMaderas        : #0a548b;
+$blueMaderasOpacity : #0a538b18;
+$blueIndigo         : #103f75;
+$blueSubmit         : #003d82;
+$blueIndigoDeep     : #143860;
+$indigo             : #163960;
+$violetChin         : #8E6C88;
+$violetChinOPacity  : #8e6c8818;
+$violetLight        : #9392e8;
+$violetBoots        : #563D7C;
+$redLight           : #f44336;
+$red                : #c01313;
+$redOpacity         : #c0131318;
+$redGoogle          : #EA4335;
+$jellyBean          : #df5a5a;
+$orangeYellow       : #ff9800;
+$orangeLight        : #f8aa4b;
+$greenExcel         : #209E63;
+$green              : #28B463;
+$greenOpacity       : #28b46218;
+$harlequin          : #50d920;
+$acidGreen          : #AFB42B;
+$violet             : #702497;
+$violetOpacity      : #70249718;
+$lapisLazuli        : #22639B;
+$blueNCS            : #0089B7;
+$viridianGreen      : #039590;
+$tiffanyBlue        : #00ACB8;
+$oceanGreen         : #4BBC8E;
+$caribbeanGreen     : #00CDA3;
+$lightGreen         : #92E784;
+$sunny              : #F9F871;
 /* END vrbls coloress */
 
 
@@ -416,7 +422,8 @@ $tv                 : "(min-width: 1280px)";
   }
 .btn-green{
     color: $green;
-    border: 1px solid $green;
+    border: none;
+    background-color: $greenOpacity;
 }
 .btn-green:hover{
     background-color: $green;
@@ -440,7 +447,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetDeep{
     color: $violet;
-    border: 1px solid $violet;
+    border: none;
+    background-color: $violetOpacity;
 }
 .btn-violetDeep:hover{
     background-color: $violet;
@@ -456,7 +464,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-blueMaderas{
     color: $blueMaderas;
-    border: 1px solid $blueMaderas;
+    border: none;
+    background-color: $blueMaderasOpacity;
 }
 .btn-blueMaderas:hover{
     background-color: $blueMaderas;
@@ -496,9 +505,9 @@ $tv                 : "(min-width: 1280px)";
     color: $white !important;
 }
 .btn-warning{
-    color:$red;
-    border: 1px solid $red;
-    background: none;
+    color: $red;
+    border: none;
+    background: $redOpacity;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
@@ -514,7 +523,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-details-grey{
     color:$grey9;
-    border:1px solid $grey9 !important;
+    border:none;
+    background-color: $grey9Opacity;
 }
 .btn-details-grey:hover{
     background:$grey9;
@@ -808,4 +818,8 @@ $tv                 : "(min-width: 1280px)";
 .isRequired{
     color: $redGoogle;
     margin: 0 3px;
+}
+
+table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+    white-space: nowrap!important;
 }

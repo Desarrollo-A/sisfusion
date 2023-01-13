@@ -139,6 +139,8 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago *</label>
@@ -162,6 +164,8 @@
                                     id="fContrato" name="fContrato" disabled/>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Clave catastral *</label>
@@ -186,58 +190,51 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
-                            <div id="ifClient" style="display:none">
-                                <div class="col-md-12 pr-0 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" >
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral"></label>
-                                        <input type="text" class="form-control datepicker"
-                                        id="fechaCA" name="fechaCA" placeholder="Fecha del contrato anterior"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--INFORMACIÓN DE NOTARÍA-->
-                            <div >
-                                <div class="col-md-3 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 pr-0">
-                                      <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
-                                      </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
-                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
-                                    </div>
-                                </div>
-                            </div>
-                            <!----------------------------->
-                           
-                            <div class="col-md-12 pr-0">
+                        <div class="row ifClient">
+                            <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <p>*Estos campos son obligatorios.</p>
+                                    <label class="control-label label-gral m-0">Nombre del titular anterior</label>
+                                    <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" >
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Fecha de contrato anterior</label>
+                                    <input type="text" class="form-control datepicker" id="fechaCA" name="fechaCA" style="background-color: #eaeaea; background-image:none; border-radius: 27px; text-align: center; color: #929292">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">RFC / Datos personales</label>
+                                    <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text">
                                 </div>
                             </div>
                         </div>
+                        <!--INFORMACIÓN DE NOTARÍA-->
+                        <div class="row">
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Aportaciones</label>
+                                    <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Descuentos</label>
+                                    <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                    </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Motivo</label>
+                                    <textarea id="motivo" name="motivo" class="text-modal"></textarea>
+                                    <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
+                                </div>
+                            </div>
+                        </div>
+                        <!----------------------------->
                         <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
                                 <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
