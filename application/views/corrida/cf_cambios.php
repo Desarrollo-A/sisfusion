@@ -485,8 +485,8 @@
                                         <label>Proyecto:<span class="required-label">*</span></label><br>
                                         <select id="proyectoS" ng-model = "proyecto"
                                                 ng-options = "item.descripcion for item in residencial"
-                                                 ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
-                                        width="100%">
+                                                ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
+                                                width="100%">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                         <p id="proyectotext" style="color: red;"></p>
@@ -1208,13 +1208,6 @@
 
             var descuentosAplicados = [];
 
-            // var range=[];
-            // var range2=[];
-            // var range3=[];
-
-            // $scope.range= 0;
-            // $scope.range2= 0;
-            // $scope.range3= 0;
             $scope.groupSetup = {
                 multiple: true,
                 formatSearching: 'Searching the group...',
@@ -1228,11 +1221,6 @@
                 var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.precioFinal;
-                // console.log('precioFinal sin infoLote', $scope.precioFinal);
-
-
-                //termina nueva sección
-
                 if($scope.proyecto.idResidencial==27){
                     if(porcentajeEnganche.val() == 0){
                         document.getElementById("day").disabled = true;
@@ -1255,17 +1243,12 @@
 
 
                 if($scope.proyecto.idResidencial==27){
-                    /*let porcetaje = 0.01;
-                    let porcentajeDanero = (porcetaje*r1);
-                    $scope.cantidad = porcentajeDanero;*/
                     let ef = cantidadEnganche.val();
                     var cantidadToGetP = (( 100 * ef)/r1);
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
                     console.log('De ',cantidadEnganche.val(),' el porcentaje es: ', cantidadToGetP);
-                    // $scope.engancheFinal = ef;
-                    // $scope.cantidad = ef;
 
                 }else{
                     let ef = cantidadEnganche.val();
@@ -1273,60 +1256,20 @@
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
-                    // if(r1>=500000){
                     if($scope.saldoFinal>=500000){
-                        // $('#porcentajeEnganche').attr('min', 1);
                         let porcetaje = 0.01;
                         let porcentajeDanero = (porcetaje*r1);
-                        // $('#cantidadEnganche').attr('min', porcentajeDanero);
-                        // if(porcentajeEnganche.val()<1){
-                        //     porcentajeEnganche.val(1);
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else if(cantidadEnganche.val()<porcentajeDanero){
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else{
-                        //     $scope.engancheFinal = cantidadEnganche.val();
-                        //     $scope.cantidad = cantidadEnganche.val();
-                        //
-                        // }
                     }
                     else{
-                        // $('#cantidadEnganche').attr('min', 5000);
                         console.log('antes:', $('#cantidadEnganche').val());
                         let totalTerreno = r1;
                         let porcetajeMin = 100*5000/totalTerreno;
-                        // $('#porcentajeEnganche').attr('min', porcetajeMin.toFixed(2));
-
-
-                        // if(cantidadEnganche.val()<5000){
-                        //     $('#porcentajeEnganche').val(porcetajeMin.toFixed(2));
-                        //     $scope.engancheFinal = 5000;
-                        //     $scope.cantidad = 5000;
-                        //     cantidadEnganche.val(5000);
-                        //     console.log('>');
-                        // }else{
-                        //     console.log( cantidadEnganche.val());
-                        //     let ef = cantidadEnganche.val();
-                        //     var cantidadToGetP = (( 100 * ef)/r1);
-                        //     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
-                        //
-                        //     $scope.engancheFinal = ef;
-                        //     $scope.cantidad = ef;
-                        //     console.log('*');
-                        // }
-                        // $scope.cantidad = parseInt(cantidadEnganche.val());
-
-
                     }
                 }
 
                 calcularCF();
                 console.log('despues:', cantidadEnganche.val());
             };
-
-
             $scope.resultCantidad = function () {
                 $scope.uno = parseFloat($scope.cantidad);
                 $scope.dos =  ($scope.uno / $scope.total);
@@ -1357,14 +1300,9 @@
                 calcularCF();
 
             };
-
-
             $scope.selected = {
 
             };
-
-            // $scope.porcentaje = $scope.porcentajeEng = 0;
-
             $scope.selectDescuentos = function(descuento, checked){
                 var idx = descuentosAplicados.indexOf(descuento);
                 if (idx >= 0 && !checked) {
@@ -1380,8 +1318,6 @@
                 console.log('Nuevo total', $scope.infoLote.precioTotal);
 
             }
-
-
             function calcularCF(){
 
 ///////////////////////////////////////w
@@ -1511,13 +1447,13 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         if(item.id_condicion == 3){
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
 
@@ -1525,7 +1461,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         // if(item.id_condicion == 5){
@@ -1547,14 +1483,13 @@
 
                 }
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length > 0){
-
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1564,7 +1499,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1574,7 +1509,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1594,7 +1529,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -1681,17 +1616,31 @@
                     console.log('AREA6');
                     // console.log('if1', r1);
                     let nuevoResultado=r1;
-
+                    // console.log('ALABERGA', $scope.decFin);
 
                     // console.log('Hay descuento al total y al enganche entra a ambos');
-                    angular.forEach(orderTotal, function(item, index) {
+                    angular.forEach(orderTotal, function(item, index, element) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
+                            // console.log('alaberga IASD');
                             porcentaje1 = (item.porcentaje/100);
-                            porcentaje2 = (r1 * porcentaje1);
+                            if($scope.add != undefined){
+                                // console.log('$scope.add[index-1]: index:', index,' - ', $scope.add[index-1]);
+                                if(index==0){
+                                    porcentaje2 = (r1 * porcentaje1);
+                                }else{
+                                    porcentaje2 = ($scope.add[index-1].pt * porcentaje1);
+                                }
+                            }else{
+                                porcentaje2 = (r1 * porcentaje1);
+                            }
+                            // porcentaje2 = ($scope.add[index-1].pt * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
-
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
+                            // console.log('porcentaje1', porcentaje1);
+                            // console.log('porcentaje2', porcentaje2);
+                            // console.log('nuevoResultado', nuevoResultado);
+                            // console.log('msi', msi);
                         }
 
 
@@ -1701,7 +1650,7 @@
                             porcentaje2 = parseFloat(item.porcentaje);
                             nuevoResultado -= (porcentaje2);
                             // r1 -= (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1711,7 +1660,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
                         if(item.id_condicion == 12){
@@ -1728,31 +1677,61 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             nuevoResultado -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
 
                         if(item.id_condicion == 12){
-
+                            console.log('if nuevoResultado', nuevoResultado);
                             a +=  porcentaje1;
                             b = nuevoResultado;
                             e = b/supLote;
                             c -=  porcentaje2;
-                            console.log('aI:', a);
-                        }else{
-
+                        }
+                        else{
+                            console.log('else nuevoResultado:', nuevoResultado);
                             a +=  porcentaje2;
-                            b = nuevoResultado;
-                            c = (b/supLote);
-                            console.log('aII:', a);
+                            // b = nuevoResultado;
+                            // c = (b/supLote);
+                            if($scope.add!=undefined){
+                                // console.log('ELSE element', element[index-1]);
+                                // console.log('ELSE $scope.add', $scope.add);
+                                if(index==0){
+                                    b = nuevoResultado;
+                                    c = (b/supLote);
+                                }else{
+                                    b = $scope.add[index-1].pt - porcentaje2;
+                                    c = ($scope.add[index-1].pm - ($scope.add[index-1].pm*porcentaje1));
+                                }
+
+                                // console.log('ELSE c', c);
+                            }else{
+                                b = nuevoResultado;
+                                c = (b/supLote);
+
+                                // console.log('ELSE c', c);
+
+                            }
+                            // console.log('ELSE a', a);
+                            // console.log('ELSE b', b);
+                            // console.log('ELSE c', c);
+                            // console.log('ELSE item.porcentaje', item.porcentaje);
+                            // console.log('ELSE porcentaje1', porcentaje1);
+                            // console.log('ELSE index', index);
+                            // console.log('ELSE e', e);
+
+
+
+
 
                         }
 
 
 
                         arreglo.push({
-                            ahorro: a, pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
+                            ahorro: a,
+                            pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
                             pt: b,
                             td:1,
                             porcentaje: item.porcentaje,
@@ -1788,13 +1767,20 @@
 
                     // enganche = parseFloat(cantidadEnganche);
 
-                    enganche = (r1 * (porcentajeDeEnganche / 100));
+                    enganche = (b * (porcentajeDeEnganche / 100));
                     // console.log('engancheOLV', enganche);
 
-                    angular.forEach(orderEnganche, function (item, index) {
+                    angular.forEach(orderEnganche, function (item, index, element) {
+
                         porcentaje1 = (item.porcentaje / 100);
                         porcentaje2 = (enganche * porcentaje1);
                         descEng = porcentaje2;
+                        console.log('porcentaje2', porcentaje2);
+                        console.log('descEng', descEng);
+                        console.log('item.porcentaj', item.porcentaje);
+                        console.log('enganche', enganche);
+                        console.log('porcentajeDeEnganche', porcentajeDeEnganche);
+                        // console.log('element', element);
 
                         ////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
                         if (item.eng_top == 1) {
@@ -1805,7 +1791,8 @@
                                 descEng = porcentaje2;
                                 enganche = (enganche - descEng);
                             }
-                        } else {
+                        }
+                        else {
                             descEng = porcentaje2;
                             enganche = (enganche - descEng);
                         }
@@ -1848,7 +1835,7 @@
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1858,7 +1845,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1868,7 +1855,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1888,7 +1875,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -2236,45 +2223,6 @@
                 }
                 // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
-                // if($scope.proyecto.idResidencial!=27){
-                //     if($scope.infoLote.precioTotal>500000){
-                //         //para mayores de 500,000
-                //         //total ---> 100%
-                //         //$scope.engancheFinal  ---> ?%
-                //
-                //         //total ---> 100%
-                //         //?  ---> 1%
-                //         let getMinimoDePorcentaje = (($scope.engancheFinal*100)/($scope.infoLote.r1));
-                //         getMinimoDePorcentaje = getMinimoDePorcentaje.toFixed(2);
-                //
-                //         let get1PercentCantidad = $scope.infoLote.r1 * 0.01;
-                //         if(getMinimoDePorcentaje<1){
-                //             //debe ser min el 1 %
-                //             $scope.engancheFinal = get1PercentCantidad;
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //         }
-                //     }
-                //     else{
-                //         //para menores de 500,000
-                //         console.log('entre a menor de 5000 enganche');
-                //         if($scope.cantidad<=5000){
-                //             //debe ser min 5000 en cantidad
-                //             $scope.engancheFinal = $scope.infoLote.engancheF = 5000;
-                //             // console.log('SIDD');
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //             // console.log('HARTHA');
-                //
-                //         }
-                //     }
-                //
-                // }else{
-                //     $scope.engancheFinal = $scope.infoLote.engancheF;
-                //     console.log('aqui jejej');
-                // }
                 $scope.engancheFinal = $scope.infoLote.engancheF;
                 // console.log('FINAL xd ',$scope.engancheFinal);
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;
@@ -2286,10 +2234,10 @@
                 $scope.precioFinal = parseFloat($scope.infoLote.precioTotal);
                 // console.log('engancheSum antes:',engancheSum);
                 $scope.precioFinal = ($scope.precioFinal    +(engancheSum+apartadoSum));
-                console.log('apartadoSum', apartadoSum);
-                console.log('engancheSum', engancheSum);
-                console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
-                console.log('enganche', enganche);
+                // console.log('apartadoSum', apartadoSum);
+                // console.log('engancheSum', engancheSum);
+                // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
+                // console.log('enganche', enganche);
                 $scope.preciom2F = ($scope.preciom2);
 
 
@@ -5594,18 +5542,10 @@
                 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
-
-
             $scope.paquetes = [];
-
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21},{age: 22}, {age: 23}, {age: 24}, {age: 25},{age: 26}, {age: 27}, {age: 28}, {age: 29},{age: 30}, {age: 31}, {age: 32},{age: 33}, {age: 34}, {age: 35}, {age: 36},{age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55},{age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62},{age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70},{age: 71}, {age: 72}, {age: 73}, {age: 74},{age: 75},{age: 76},{age: 77},{age: 78},{age: 79},{age: 80}]
-
-
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
-
-            // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
-            // $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5979,9 +5919,6 @@
                 /*termina nuevo*/
 
                 if(porcentajeEnganche.val() >= 5){/* || porcentajeEnganche.val() == 5*/
-                    // document.getElementById("day").disabled = false;
-                    // document.getElementById("aptdo").disabled = false;
-                    // document.getElementById("msdif").disabled = false;
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
                     calcularCF();
                 }
@@ -9545,8 +9482,6 @@
                 var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
 
                 var paquete = ($scope.descApply == undefined) ? 0 : $scope.descApply[0].id_paquete;
-                console.log("PAKETE");
-                console.log(paquete);
 
 
                 if(paquete > 0) {
@@ -9794,7 +9729,6 @@
         });
 
         $("#lote").change(function(){
-            // console.log('assdasd');
             document.getElementById("lotetext").innerHTML ='';
             $('#lote').css("border-color", "");
         });

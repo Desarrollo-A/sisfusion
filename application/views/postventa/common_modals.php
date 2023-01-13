@@ -8,21 +8,21 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <!-- <h4 class="modal-title card-title"><b>Comentarios adicionales: </b>CS2GTO-CIRH-005</h4> -->
-                <!-- <h4 class="modal-title card-title">Comentarios adicionales</h4> -->
+                <h4 class="modal-title card-title">Ingrese su comentario</h4>
+                <b id="actividad_siguiente"></b>
+
             </div>
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observaciones" id="observaciones" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="estatus_siguiente" id="estatus_siguiente">
-                    <input type="hidden" name="tipo" id="tipo">
+                    <input type="hidden" name="type" id="type">
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-simple btn-border">Enviar</button>
-                    <button type="button" class="btn btn-danger btn-simple btn-border" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -64,6 +64,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 <div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -206,70 +210,28 @@
                             </div>
                             <!--INFORMACIÓN DE NOTARÍA-->
                             <div >
-                                <div class="col-md-4 pr-0">
+                                <div class="col-md-3 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Capital</label>
-                                        <input id="capital" name="capital" class="form-control input-gral" type="text">
+                                        <label class="control-label label-gral">Aportaciones</label>
+                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
-                                <div class="col-md-4 pr-0">
+                                <div class="col-md-3 pr-0">
                                       <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Ordinario</label>
-                                        <input id="ordinario" name="ordinario" class="form-control input-gral" type="text">
+                                        <label class="control-label label-gral">Descuentos</label>
+                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
-                                <div class="col-md-4 pr-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Motivo</label>
-                                        <input id="motivo" name="motivo" class="form-control input-gral" type="text">
+                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
+                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
                                     </div>
                                 </div>
                             </div>
                             <!----------------------------->
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Se va a trabajar con Notaría externa? *</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Se va a trabajar con Notaría externa?" data-size="7" id="not" name="not"
-                                            data-live-search="true" required>
-                                        <option value="yes">Sí</option>
-                                        <option value="nou" selected>No</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--INPUT QUE SOLO SE MOSTRARAN SI SE VA A TRABAJAR CON UNA NOTARÍA EXTERNA-->
-                            <div id="ifNotaria" style="display:none">
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Correo</label>
-                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Teléfono</label>
-                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <p>*Estos campos son obligatorios.</p>

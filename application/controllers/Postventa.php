@@ -31,6 +31,8 @@ class Postventa extends CI_Controller
         }
     }
 
+    
+
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -793,6 +795,11 @@ class Postventa extends CI_Controller
         echo json_encode($respuesta);
     }
 
+    public function listSedes()
+    {
+        echo json_encode($this->Postventa_model->listSedes()->result_array());
+    }
+
 
     public function changeStatus()
     {
@@ -1152,9 +1159,9 @@ class Postventa extends CI_Controller
         );
         ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
-        if($_POST['not'] == 'nou'){
+      /*  if($_POST['not'] == 'nou'){
             $updateData['id_notaria'] = 0;
-        }
+        }*/
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1162,7 +1169,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
 
-        if ($_POST['not'] == 'yes'){
+        /*if ($_POST['not'] == 'yes'){
             $idSolicitud = $_POST['id_solicitud3'];
             $nombre_notaria = $_POST['nombre_notaria'];
             $nombre_notario = $_POST['nombre_notario'];
@@ -1174,7 +1181,7 @@ class Postventa extends CI_Controller
             return $informacion;
     
             return $this->Postventa_model->newNotaria($idSolicitud);
-        }   
+        } */  
 
     }
 
