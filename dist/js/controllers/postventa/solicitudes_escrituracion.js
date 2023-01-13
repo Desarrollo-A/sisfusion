@@ -417,6 +417,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 });
 
 $(document).on("submit", "#formPresupuesto", function (e) {
+    console.log("click");
     e.preventDefault();
     let idSolicitud = $("#id_solicitud3").val();
     let data = new FormData($(this)[0]);
@@ -922,16 +923,28 @@ function fillTable(beginDate, endDate, estatus) {
                             }
                         break;
                         case 3:
-                            // ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
                             if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                 /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
-                                // BOTON APROBAR    
-                                group_buttons += `<button id="presupuesto" data-area-actual=${userType} class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`;  
-                                group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                  // BOTON APROBAR 
+                                  group_buttons += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`; 
+                                  //group_buttons += `<button id="presupuesto" data-area-actual=${userType} class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;  
+                                group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 exp = d.expediente;
-                                permiso =1;
-                                group_buttons += permisos(permiso, exp, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                console.log('botones')
+                                console.log(exp);
+                                permiso =1;// exp == null || exp == '' || exp == 'null' ? 1 : 2;
+                                //group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>` : '';                                
                             }
+                            // // ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
+                            // if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                            //     /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
+                            //     // BOTON APROBAR    
+                            //     group_buttons += `<button id="presupuesto" data-area-actual=${userType} class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`;  
+                            //     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                            //     exp = d.expediente;
+                            //     permiso =1;
+                            //     group_buttons += permisos(permiso, exp, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                            // }
                             if (userType == 56 && d.bandera_admin == 1 && (d.bandera_comite == 0 ||  d.bandera_comite == null)) { 
                                 formBoton += `<button id="estatusL" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;   
                             }

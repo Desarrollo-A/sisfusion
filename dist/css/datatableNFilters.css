@@ -1354,6 +1354,7 @@ table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.data
 .boxContent .card .card-content .toolbar .input-gral:disabled {
   cursor: not-allowed;
   border: none;
+  opacity: 0.6;
 }
 
 .boxContent .card .card-content .toolbar .label-gral {

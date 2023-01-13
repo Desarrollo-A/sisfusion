@@ -120,19 +120,19 @@
                         <div class="row">
                             <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Nombre Completo</label>
+                                    <label class="control-label label-gral m-0">Nombre Completo</label>
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Nombre a quien escritura *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Tipo de escrituración *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Tipo de escrituración</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="Tipo de escrituracion" data-size="7" id="tipoE" name="tipoE"
                                             data-live-search="true" required>
@@ -143,7 +143,7 @@
                         <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus de pago *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Estatus de pago</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
@@ -153,7 +153,7 @@
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Superficie *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Superficie</label>
                                     <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
                                 </div>
                             </div>    
@@ -168,19 +168,19 @@
                         <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Clave catastral *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Clave catastral</label>
                                     <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus construcción *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Estatus construcción</label>
                                     <input id="construccionInfo" name="construccionInfo" value="" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior? *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> ¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
@@ -191,7 +191,7 @@
                                 </div>
                             </div>
                         </div>
-                            <!-- estos input solo se muestran si es si el select anterior -->
+                        <!-- estos input solo se muestran si es si el select anterior -->
                         <div class="row ifClient">
                             <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
@@ -230,7 +230,6 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Motivo</label>
                                     <textarea id="motivo" name="motivo" class="text-modal"></textarea>
-                                    <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
                                 </div>
                             </div>
                         </div>
