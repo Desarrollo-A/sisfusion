@@ -28,7 +28,16 @@
                                                         data-size="7" data-live-search="true" required>
                                                 </select>
                                             </div>
-                                        </div>                                        
+                                        </div> 
+                                        <div class="col-md-4 form-group hide" id="div_proyectos">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label">Proyectos</label>
+                                                <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0"
+                                                        data-style="btn" data-show-subtext="true"  title="Selecciona una empresa"
+                                                        data-size="7" data-live-search="true">
+                                                </select>
+                                            </div>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
