@@ -500,13 +500,13 @@ $(document).on('click', '#presupuesto', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
     console.log(area_actual);
-    if(area_actual == 55 && (data.estatus_actual == 6 || data.estatus_actual == 8 || data.estatus_actual == 4 || data.estatus_actual == 3)){
-       document.getElementById('RequestPresupuesto').style.display = "none";
+    if(area_actual == 57 && (data.estatus_actual == 9 || data.estatus_actual == 8 || data.estatus_actual == 4 || data.estatus_actual == 3)){
+       /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
        document.getElementById('estatusPago').disabled = true;
        document.getElementById('superficie').disabled = true;
-       document.getElementById('catastral').disabled = true;
+       document.getElementById('catastral').disabled = true;*/
        document.getElementById('cliente').disabled = true;
        document.getElementById('nombreT').disabled = true;
        document.getElementById('fechaCA').disabled = true;
@@ -1628,7 +1628,8 @@ function getNotarias(datos=null) {
             $('#cliente').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
             $("#cliente").selectpicker('refresh');
             $('#nombreT').val(data.nombre_anterior);
-            $('#fechaCA').val(data.fecha_anterior);      
+            let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
+            $('#fechaCA').val(fechaAnterior);
             $('#rfcDatos').val(data.RFC);
             $("#encabezado").html(`${data.nombreResidencial} / ${data.nombreCondominio} / ${data.nombreLote}`);
             //$('#tipoE').val(data.tipo_escritura).trigger('change');
