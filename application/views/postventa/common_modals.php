@@ -209,28 +209,7 @@
                                 </div>
                             </div>
                             <!--INFORMACIÓN DE NOTARÍA-->
-                            <div >
-                                <div class="col-md-3 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 pr-0">
-                                      <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
-                                      </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
-                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
-                                    </div>
-                                </div>
-                            </div>
-                            <!----------------------------->
+                            
                            
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
@@ -593,9 +572,9 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                            data-live-search="true" required>
+                                         required>
                                     </select>
                                 </div>
                             </div>
@@ -634,8 +613,8 @@
                                     <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="clienteI" name="clienteI"
-                                            data-live-search="true" disabled>
-                                            <option value ="default" selected disabled>Seleccione una opción</option>
+                                            data-live-search="true" >
+                                            <option value ="default" selected >Seleccione una opción</option>
                                             <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
@@ -646,23 +625,45 @@
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" disabled>
+                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Fecha del contrato anterior</label>
-                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" disabled>
+                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" disabled>
+                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 pr-0">
+                            <div >
+                                <div class="col-md-3 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Aportaciones</label>
+                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-0">
+                                      <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Descuentos</label>
+                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                      </div>
+                                </div>
+                                <div class="col-md-6 pr-0">
+                                    <div class="form-group label-floating is-focused">
+                                        <label class="control-label label-gral">Motivo</label>
+                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
+                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
+                                    </div>
+                                </div>
+                            </div>
+                            <!----------------------------->
+                           <!-- <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
                                     <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="number" required>
@@ -673,7 +674,7 @@
                                     <label class="control-label label-gral">Descuentos *</label>
                                     <textarea class="text-modal scroll-styles form-control input-gral" type="text" name="descuentos" id="descuentos" autofocus="true" require></textarea>
                                 </div>
-                            </div>
+                            </div>---->
                             <div class="col-sm-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <p>*Estos campos son obligatorios</p>
