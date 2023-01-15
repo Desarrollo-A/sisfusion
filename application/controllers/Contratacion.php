@@ -218,4 +218,9 @@ class Contratacion extends CI_Controller
             echo json_encode(array());
     }
     
+    public function sedesPorDesarrollos() {
+        $this->validateSession();
+        echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
+    }
+    
 }
