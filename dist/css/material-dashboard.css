@@ -1556,7 +1556,7 @@
  table.dataTable > thead > tr > td,
  table.dataTable > tbody > tr > td,
  table.dataTable > tfoot > tr > td {
-   padding: 0px !important;
+   padding: 2px 5px !important;
    outline: 0;
  }
  table.dataTable > thead > tr > th {
