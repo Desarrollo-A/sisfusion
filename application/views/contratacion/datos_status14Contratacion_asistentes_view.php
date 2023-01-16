@@ -75,7 +75,7 @@
                                                         <th>GERENTE</th>
                                                         <th>CLIENTE</th>
                                                         <?php
-                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54) { // ANALISTA DE COMISIONES Y SUBDIREECTOR CONSULTA (POPEA)
+                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIREECTOR CONSULTA (POPEA)
                                                         ?>
                                                         <th>ACCIONES</th>
                                                         <?php
@@ -235,7 +235,7 @@
                     }
                 }
                 <?php
-                if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54){ // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
+                if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63){ // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
                 ?>
                     , 
                     { 

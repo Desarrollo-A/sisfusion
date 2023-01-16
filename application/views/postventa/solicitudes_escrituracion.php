@@ -1,22 +1,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<link href="<?= base_url() ?>dist/css/table_escrituracion.css" rel="stylesheet" />
 
 <body>
     <div class="wrapper">
-        <?php 
-            /*-------------------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-            /*--------------------------------------------------------*/
-        ?>
+        <?php  $this->load->view('template/sidebar', ""); ?>
 
         <div class="content boxContent">
-
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -25,69 +15,53 @@
                                 <i class="fas fa-feather-alt fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Solicitudes Escrituración</h3>
+                                <h3 class="card-title center-align">Solicitudes escrituración</h3>
                                 <div class="toolbar">
                                     <div class="row"> 
                                         <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                             <div class="form-group label-floating select-is-empty">
-                                                <!--<label class="control-label">Estatus</label>-->
-                                                <select id="estatusE" name="estatusE"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona un estatus" data-size="7" required>
+                                                <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required>
                                                 </select>
                                             </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                         </div>
                                         <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="" autocomplete='off'/>
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="endDate" value="" autocomplete='off' />
-                                                                
-                                                            <button
-                                                                class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                id="searchByDateRange">
-                                                                <span
-                                                                    class="material-icons update-dataTable">search</span>
+                                                            <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off'/>
+                                                            <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                <span class="material-icons update-dataTable">search</span>
                                                             </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                            
-                                            <button class="btn btn-info btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="prospects-datatable"
-                                                name="prospects-datatable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID SOLICITUD</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>FECHA DE CREACIÓN</th>
-                                                        <th>COMENTARIOS</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ÁREA</th>
-                                                        <th>ACCIONES</th>
-                                                        <!-- <th>idEstatus</th> -->
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="prospects-datatable"
+                                            name="prospects-datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID SOLICITUD</th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>FECHA DE CREACIÓN</th>
+                                                    <th>COMENTARIOS</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ÁREA</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                               <?php include 'common_modals.php' ?>
@@ -116,22 +90,14 @@
     idUser = <?= $this->session->userdata('id_usuario') ?> ;
     typeTransaction = 1;
 	Shadowbox.init();
-    base_url = "<?=base_url()?>";
 </script>
 
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/postventa/table_escrituracion.js"></script>
-<!-- <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Classes/actionButtonsClass.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Helpers/helpers.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Services/services.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/escrituracion.js"></script> -->
-
+<script src="<?=base_url()?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
 </html>

@@ -1556,7 +1556,7 @@
  table.dataTable > thead > tr > td,
  table.dataTable > tbody > tr > td,
  table.dataTable > tfoot > tr > td {
-   padding: 5px !important;
+   padding: 0px !important;
    outline: 0;
  }
  table.dataTable > thead > tr > th {
@@ -10023,7 +10023,7 @@
    transform: translate3d(0, 5px, 0);
  }
  .tooltip.left .tooltip-arrow {
-   border-left-color: #FFFFFF;
+   border-left-color: #333333;
  }
  .tooltip.right .tooltip-arrow {
    border-right-color: #FFFFFF;
@@ -11732,4 +11732,9 @@
   .dashboard-nav-pills> li.active > a, .dashboard-nav-pills > li.active > a:focus, .dashboard-nav-pills > li.active > a:hover {
     border-bottom: none;
   }
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: transparent;
 }

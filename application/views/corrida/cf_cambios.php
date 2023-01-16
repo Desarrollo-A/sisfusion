@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="<?=base_url()?>dist/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 
 
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -57,6 +58,8 @@
     <link rel="stylesheet" href="<?= base_url("static/angular/datatable/buttons.dataTables.min.css")?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.7.0/lodash.min.js"></script>
     <script type="text/javascript" src="<?= base_url("dist/js/angularjs-dropdown-multiselect.js")?>"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/angular.checklist-model/0.1.3/checklist-model.min.js"></script>
@@ -269,13 +272,13 @@
             font-family: 'Open Sans', sans-serif;
             font-weight: 500;
         }
-        span{
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 500;
-        }
-        input select{
-            font-family: 'Open Sans', sans-serif;
-        }
+        /*span{*/
+        /*    font-family: 'Open Sans', sans-serif;*/
+        /*    font-weight: 500;*/
+        /*}*/
+        /*input select{*/
+        /*    font-family: 'Open Sans', sans-serif;*/
+        /*}*/
         .form-control {
             font-family: 'Open Sans', sans-serif;
             display: block;
@@ -353,7 +356,35 @@
 
         }
         /*Terminan los nuevos estilos*/
-
+        /*.select2-container--default .select2-selection--single .select2-selection__rendered {*/
+        /*    color: #555;*/
+        /*    line-height: 28px;*/
+        /*    font-weight: 400;*/
+        /*}*/
+        /*.select2-container--default .select2-selection--single {*/
+        /*    background-color: #fff;*/
+        /*    border: 1px solid #ccc;*/
+        /*    border-radius: 4px;*/
+        /*    height: 34px;*/
+        /*    width: 268px;*/
+        /*}*/
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 33px;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            line-height: 19px;
+            font-family: 'Open Sans', sans-serif;
+            text-transform: uppercase;
+        }
+        .select2-results__option[aria-selected] {
+            cursor: pointer;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="hold-transition register-page" ng-controller = "myController">
@@ -421,7 +452,8 @@
                                         </div >
                                         <div class="col-md-3 form-group" >
                                             <label>Edad:<span class="required-label">*</span> </label>
-                                            <select ng-model="age" id="edad" ng-options="item.age for item in ages" class="form-control" ng-change="getAge(age.age)">
+                                            <select ng-model="age" id="edad" ng-options="item.age for item in ages"
+                                                    class="selectList js-example-basic-single js-states form-control" ng-change="getAge(age.age)">
                                                 <option value = ""> - Selecciona la edad - </option>
                                             </select>
                                             <p id="edadtext" style="color:red;"></p>
@@ -449,9 +481,12 @@
 
                                 <!-- datos del proyecto -->
                                 <div class="row">
-                                    <div class="col-md-3 form-group" >
-                                        <label>Proyecto:<span class="required-label">*</span></label>
-                                        <select id="proyectoS" ng-model = "proyecto" ng-options = "item.descripcion for item in residencial" ng-change="onSelectChangep(proyecto)" class="form-control">
+                                    <div class="col-md-3" >
+                                        <label>Proyecto:<span class="required-label">*</span></label><br>
+                                        <select id="proyectoS" ng-model = "proyecto"
+                                                ng-options = "item.descripcion for item in residencial"
+                                                ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
+                                                width="100%">
                                             <option value = ""> - Selecciona un Proyecto - </option>
                                         </select>
                                         <p id="proyectotext" style="color: red;"></p>
@@ -460,7 +495,9 @@
                                     </div>
                                     <div class="col-md-2 form-group" id="condominioCont">
                                         <label>Condominio:<span class="required-label">*</span></label>
-                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios" ng-change="onSelectChangec(condominio)" class="form-control" style="text-transform: uppercase;">
+                                        <select id="condominioS" ng-model="condominio"
+                                                ng-options="item.nombre for item in condominios"
+                                                ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
                                             <option value = ""> - Selecciona un Condominio - </option>
                                         </select>
                                         <p id="condominiotext" style="color: red;"></p>
@@ -468,7 +505,9 @@
                                     </div>
                                     <div class="col-md-3 form-group" id="loteCont">
                                         <label>Lote:<span class="required-label">*</span></label>
-                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">
+                                        <select ng-model="lote" class="selectList js-example-basic-single js-states form-control"
+                                                id="lote" ng-options="item.nombreLote for item in lotes"
+                                                ng-change="onSelectChangel(lote)" >
                                             <option value = ""> - Selecciona un Lote - </option>
                                         </select>
                                         <p id="lotetext" style="color: red;"></p>
@@ -490,7 +529,8 @@
                                     </div>
                                     <div class="col-md-2 form-group" id="anioCont">
                                         <label>Años:<span class="required-label">*</span></label>
-                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()" disabled>
+                                        <select ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan"
+                                                class="selectList js-example-basic-single js-states form-contro" ng-change="getAgePlan()" disabled>
                                             <option value = ""> - Selecciona los años - </option>
                                         </select>
                                         <p id="aniotext" style="color: red;"></p>
@@ -501,7 +541,9 @@
                                 <div class="row" id="data_acg">
                                     <div class="col-md-4 form-group" >
                                         <label>Gerente:<span class="required-label">*</span></label>
-                                        <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes" ng-change="onSelectChangegerente(gerente)" class="form-control">
+                                        <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes"
+                                                ng-change="onSelectChangegerente(gerente)"
+                                                class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Gerente - </option>
                                         </select>
                                         <p id="gerentetext" style="color: red;"></p>
@@ -509,14 +551,16 @@
                                     <div class="col-md-4 form-group" >
                                         <label>Coordinador:<span class="required-label">*</span></label>
                                         <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"
-                                                ng-change="onSelectChangecoord(coordinador)" class="form-control" style="text-transform: uppercase;">
+                                                ng-change="onSelectChangecoord(coordinador)" style="text-transform: uppercase;"
+                                                class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Coordinador - </option>
                                         </select>
                                         <p id="cordinadortext" style="color:red;"></p>
                                     </div>
                                     <div class="col-md-4 form-group" >
                                         <label>Asesor:<span class="required-label">*</span></label>
-                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control">
+                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores"
+                                                class="selectList js-example-basic-single js-states form-control">
                                             <option value = ""> - Selecciona un Asesor - </option>
                                         </select>
                                         <p id="asesortext" style="color: red;"></p>
@@ -623,7 +667,7 @@
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
                                                                    ng-checked="checkedStatus"/>
-                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}% </span>
+                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}%</span>
                                                             <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
                                                             <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al Enganche.</span>
                                                             <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
@@ -1070,6 +1114,11 @@
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
+            $('.selectList').select2();
+            // $(".selectList").selectpicker('refresh');
+            $(".selectList").select2({
+                width: 'resolve' // need to override the changed default
+            });
         });
         /*------------------------------------------------------*/
         const selectElement = document.querySelector('#planSL');
@@ -1077,7 +1126,7 @@
         selectElement.addEventListener('change', (event) => {
             let cod = document.getElementById("planSL").value;
             if(cod == 'Contado'){
-                $("#yearplan").val($("#yearplan").data("default-value"));;
+                $("#yearplan").val($("#yearplan").data("default-value"));
             }
 
         });
@@ -1159,14 +1208,11 @@
 
             var descuentosAplicados = [];
 
-            // var range=[];
-            // var range2=[];
-            // var range3=[];
-
-            // $scope.range= 0;
-            // $scope.range2= 0;
-            // $scope.range3= 0;
-
+            $scope.groupSetup = {
+                multiple: true,
+                formatSearching: 'Searching the group...',
+                formatNoMatches: 'No group found'
+            };
 
 
             $scope.mesesdiferir = 0;
@@ -1175,11 +1221,6 @@
                 var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.precioFinal;
-                // console.log('precioFinal sin infoLote', $scope.precioFinal);
-
-
-                //termina nueva sección
-
                 if($scope.proyecto.idResidencial==27){
                     if(porcentajeEnganche.val() == 0){
                         document.getElementById("day").disabled = true;
@@ -1202,17 +1243,12 @@
 
 
                 if($scope.proyecto.idResidencial==27){
-                    /*let porcetaje = 0.01;
-                    let porcentajeDanero = (porcetaje*r1);
-                    $scope.cantidad = porcentajeDanero;*/
                     let ef = cantidadEnganche.val();
                     var cantidadToGetP = (( 100 * ef)/r1);
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
                     console.log('De ',cantidadEnganche.val(),' el porcentaje es: ', cantidadToGetP);
-                    // $scope.engancheFinal = ef;
-                    // $scope.cantidad = ef;
 
                 }else{
                     let ef = cantidadEnganche.val();
@@ -1220,60 +1256,20 @@
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
-                    // if(r1>=500000){
                     if($scope.saldoFinal>=500000){
-                        // $('#porcentajeEnganche').attr('min', 1);
                         let porcetaje = 0.01;
                         let porcentajeDanero = (porcetaje*r1);
-                        // $('#cantidadEnganche').attr('min', porcentajeDanero);
-                        // if(porcentajeEnganche.val()<1){
-                        //     porcentajeEnganche.val(1);
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else if(cantidadEnganche.val()<porcentajeDanero){
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else{
-                        //     $scope.engancheFinal = cantidadEnganche.val();
-                        //     $scope.cantidad = cantidadEnganche.val();
-                        //
-                        // }
                     }
                     else{
-                        // $('#cantidadEnganche').attr('min', 5000);
                         console.log('antes:', $('#cantidadEnganche').val());
                         let totalTerreno = r1;
                         let porcetajeMin = 100*5000/totalTerreno;
-                        // $('#porcentajeEnganche').attr('min', porcetajeMin.toFixed(2));
-
-
-                        // if(cantidadEnganche.val()<5000){
-                        //     $('#porcentajeEnganche').val(porcetajeMin.toFixed(2));
-                        //     $scope.engancheFinal = 5000;
-                        //     $scope.cantidad = 5000;
-                        //     cantidadEnganche.val(5000);
-                        //     console.log('>');
-                        // }else{
-                        //     console.log( cantidadEnganche.val());
-                        //     let ef = cantidadEnganche.val();
-                        //     var cantidadToGetP = (( 100 * ef)/r1);
-                        //     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
-                        //
-                        //     $scope.engancheFinal = ef;
-                        //     $scope.cantidad = ef;
-                        //     console.log('*');
-                        // }
-                        // $scope.cantidad = parseInt(cantidadEnganche.val());
-
-
                     }
                 }
 
                 calcularCF();
                 console.log('despues:', cantidadEnganche.val());
             };
-
-
             $scope.resultCantidad = function () {
                 $scope.uno = parseFloat($scope.cantidad);
                 $scope.dos =  ($scope.uno / $scope.total);
@@ -1304,14 +1300,9 @@
                 calcularCF();
 
             };
-
-
             $scope.selected = {
 
             };
-
-            // $scope.porcentaje = $scope.porcentajeEng = 0;
-
             $scope.selectDescuentos = function(descuento, checked){
                 var idx = descuentosAplicados.indexOf(descuento);
                 if (idx >= 0 && !checked) {
@@ -1327,13 +1318,9 @@
                 console.log('Nuevo total', $scope.infoLote.precioTotal);
 
             }
-
-
             function calcularCF(){
 
-///////////////////////////////////////
-                console.log('Cantidad enganche', $scope.cantidad);
-                console.log('Cantidad enganche porcentaje', $scope.porcentaje);
+///////////////////////////////////////w
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
 
@@ -1343,7 +1330,7 @@
 
 
 
-                var orderTotal = applyTotal.sort((a, b) => a.prioridad - b.prioridad)
+                var orderTotal = applyTotal.sort((a, b) => a.prioridad - b.prioridad);
 
 
 
@@ -1366,6 +1353,7 @@
                 var porcentaje2 = 0;
                 var porcentajeDeEnganche = $scope.porcentajeEng;
                 // var cantidadEnganche = $scope.cantidad;
+                // var r1 = $scope.total;
                 var r1 = $scope.total;
                 var descEng = 0;
                 var enganche = 0;
@@ -1395,7 +1383,6 @@
 ////////////////////////// FIN VARIABLES DESCRIPCION DE DESCUENTOS
 
                 if (porcentajeDeEnganche === 0 && orderEnganche.length === 0 && orderTotal.length === 0){
-                    console.log('AREA 1');
                     $scope.decFin = [];
                     if($scope.apartado>0){
                         r1 = (r1 - $scope.apartado);
@@ -1403,15 +1390,10 @@
 
                 } //OK
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length === 0){
-
-                    console.log('AREA 2');
                     $scope.decFin = [];
 
                     enganche = (r1 * (porcentajeDeEnganche / 100));
                     // enganche = parseFloat(cantidadEnganche);
-                    console.log('************************************');
-                    console.log('porcentajeDeEnganche', porcentajeDeEnganche);
-                    console.log('enganche', enganche);
                     r1 = (r1 - (enganche+$scope.apartado));
 
 
@@ -1460,19 +1442,18 @@
                     console.log('AREA4');
 
                     angular.forEach(orderTotal, function(item, index) {
-                        console.log('item: ', item);
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         if(item.id_condicion == 3){
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
 
@@ -1480,7 +1461,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = msi + item.msi_descuento;
+                            msi = msi + parseInt(item.msi_descuento);
                         }
 
                         // if(item.id_condicion == 5){
@@ -1502,17 +1483,13 @@
 
                 }
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length > 0){
-                    console.log('AREA5');
-
-                    // console.log('HEY');
-
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1522,7 +1499,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1532,7 +1509,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1552,7 +1529,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -1637,68 +1614,132 @@
                 }
                 else if(porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length > 0){
                     console.log('AREA6');
+                    // console.log('if1', r1);
+                    let nuevoResultado=r1;
+                    // console.log('ALABERGA', $scope.decFin);
 
                     // console.log('Hay descuento al total y al enganche entra a ambos');
-                    angular.forEach(orderTotal, function(item, index) {
+                    angular.forEach(orderTotal, function(item, index, element) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
+                            // console.log('alaberga IASD');
                             porcentaje1 = (item.porcentaje/100);
-                            porcentaje2 = (r1 * porcentaje1);
-                            r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
-
+                            if($scope.add != undefined){
+                                // console.log('$scope.add[index-1]: index:', index,' - ', $scope.add[index-1]);
+                                if(index==0){
+                                    porcentaje2 = (r1 * porcentaje1);
+                                }else{
+                                    porcentaje2 = ($scope.add[index-1].pt * porcentaje1);
+                                }
+                            }else{
+                                porcentaje2 = (r1 * porcentaje1);
+                            }
+                            // porcentaje2 = ($scope.add[index-1].pt * porcentaje1);
+                            nuevoResultado -= porcentaje2;
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
+                            // console.log('porcentaje1', porcentaje1);
+                            // console.log('porcentaje2', porcentaje2);
+                            // console.log('nuevoResultado', nuevoResultado);
+                            // console.log('msi', msi);
                         }
 
 
                         if(item.id_condicion == 3){
+                            console.log('ok2');
+
                             porcentaje2 = parseFloat(item.porcentaje);
-                            r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            nuevoResultado -= (porcentaje2);
+                            // r1 -= (r1 - porcentaje2);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
                         if(item.id_condicion == 4){
+                            console.log('ok3');
+
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
-                            r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            nuevoResultado -= porcentaje2;
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
                         if(item.id_condicion == 12){
+                            console.log('ok4');
+
                             // descuentoM2 = montoBono/supLote
                             porcentaje1 = item.porcentaje;
                             porcentaje2 = (porcentaje1 / supLote);
-                            r1 -= porcentaje1;
+                            nuevoResultado -= porcentaje1;
                         }
                         if(item.id_condicion == 13){
+                            console.log('ok5');
+
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
-                            r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            nuevoResultado -= porcentaje2;
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
 
                         if(item.id_condicion == 12){
+                            console.log('if nuevoResultado', nuevoResultado);
                             a +=  porcentaje1;
-                            b = r1;
+                            b = nuevoResultado;
                             e = b/supLote;
                             c -=  porcentaje2;
-                        }else{
+                        }
+                        else{
+                            console.log('else nuevoResultado:', nuevoResultado);
                             a +=  porcentaje2;
-                            b = r1;
-                            c = (b/supLote);
+                            // b = nuevoResultado;
+                            // c = (b/supLote);
+                            if($scope.add!=undefined){
+                                // console.log('ELSE element', element[index-1]);
+                                // console.log('ELSE $scope.add', $scope.add);
+                                if(index==0){
+                                    b = nuevoResultado;
+                                    c = (b/supLote);
+                                }else{
+                                    b = $scope.add[index-1].pt - porcentaje2;
+                                    c = ($scope.add[index-1].pm - ($scope.add[index-1].pm*porcentaje1));
+                                }
+
+                                // console.log('ELSE c', c);
+                            }else{
+                                b = nuevoResultado;
+                                c = (b/supLote);
+
+                                // console.log('ELSE c', c);
+
+                            }
+                            // console.log('ELSE a', a);
+                            // console.log('ELSE b', b);
+                            // console.log('ELSE c', c);
+                            // console.log('ELSE item.porcentaje', item.porcentaje);
+                            // console.log('ELSE porcentaje1', porcentaje1);
+                            // console.log('ELSE index', index);
+                            // console.log('ELSE e', e);
+
+
+
+
+
                         }
 
 
+
                         arreglo.push({
-                            ahorro: a, pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
+                            ahorro: a,
+                            pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
                             pt: b,
                             td:1,
                             porcentaje: item.porcentaje,
                             id_condicion: item.id_condicion,
                             msiExtra: item.msi_descuento
                         });
+                        // console.log('nuevoResultado',nuevoResultado);
+
                         $scope.add =arreglo;
 
 
@@ -1726,13 +1767,20 @@
 
                     // enganche = parseFloat(cantidadEnganche);
 
-                    enganche = (r1 * (porcentajeDeEnganche / 100));
-                    console.log('enganche', enganche);
+                    enganche = (b * (porcentajeDeEnganche / 100));
+                    // console.log('engancheOLV', enganche);
 
-                    angular.forEach(orderEnganche, function (item, index) {
+                    angular.forEach(orderEnganche, function (item, index, element) {
+
                         porcentaje1 = (item.porcentaje / 100);
                         porcentaje2 = (enganche * porcentaje1);
                         descEng = porcentaje2;
+                        console.log('porcentaje2', porcentaje2);
+                        console.log('descEng', descEng);
+                        console.log('item.porcentaj', item.porcentaje);
+                        console.log('enganche', enganche);
+                        console.log('porcentajeDeEnganche', porcentajeDeEnganche);
+                        // console.log('element', element);
 
                         ////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
                         if (item.eng_top == 1) {
@@ -1743,7 +1791,8 @@
                                 descEng = porcentaje2;
                                 enganche = (enganche - descEng);
                             }
-                        } else {
+                        }
+                        else {
                             descEng = porcentaje2;
                             enganche = (enganche - descEng);
                         }
@@ -1773,19 +1822,20 @@
                         });
                         $scope.add2 = arreglo2;
                         $scope.decFin = $scope.add.concat($scope.add2);
-
+                        r1=(f - enganche);
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
 
                     });
                 }
                 else{
+                    console.log('else', r1);
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
                             porcentaje1 = (item.porcentaje/100);
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             // console.log('condicion 1 y 2');
 
                         }
@@ -1795,7 +1845,7 @@
 
                             porcentaje2 = parseFloat(item.porcentaje);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
 
 
@@ -1805,7 +1855,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                         }
                         //aqui se agrega la validación la operación del bono
                         if(item.id_condicion == 12){
@@ -1825,7 +1875,7 @@
                             porcentaje1 = (item.porcentaje);
                             porcentaje2 = (supLote * porcentaje1);
                             r1 = (r1 - porcentaje2);
-                            msi = parseInt(msi + item.msi_descuento);
+                            msi = parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
                         }
 
@@ -1896,14 +1946,14 @@
                 let cant = $('#cantidadEnganche').val();
                 if(porc==1 || cant==5000){
                     condicion_mes = 1;
-                    console.log('Debe empezar 1 mese despúes ',condicion_mes);
+                    // console.log('Debe empezar 1 mese despúes ',condicion_mes);
                 }else if(porc==10 || porc==5){
                     condicion_mes = 2;
-                    console.log('Debe empezar 2 meses despúes ',condicion_mes);
+                    // console.log('Debe empezar 2 meses despúes ',condicion_mes);
                 }else{
                     condicion_mes = 0;
                 }
-                console.log("$scope.fechaApartado: ", $scope.fechaApartado);
+                // console.log("$scope.fechaApartado: ", $scope.fechaApartado);
                 var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
                 var yearc;
                 if(month>12){
@@ -2171,62 +2221,23 @@
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche
                 }
-                console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
+                // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
-                // if($scope.proyecto.idResidencial!=27){
-                //     if($scope.infoLote.precioTotal>500000){
-                //         //para mayores de 500,000
-                //         //total ---> 100%
-                //         //$scope.engancheFinal  ---> ?%
-                //
-                //         //total ---> 100%
-                //         //?  ---> 1%
-                //         let getMinimoDePorcentaje = (($scope.engancheFinal*100)/($scope.infoLote.r1));
-                //         getMinimoDePorcentaje = getMinimoDePorcentaje.toFixed(2);
-                //
-                //         let get1PercentCantidad = $scope.infoLote.r1 * 0.01;
-                //         if(getMinimoDePorcentaje<1){
-                //             //debe ser min el 1 %
-                //             $scope.engancheFinal = get1PercentCantidad;
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //         }
-                //     }
-                //     else{
-                //         //para menores de 500,000
-                //         console.log('entre a menor de 5000 enganche');
-                //         if($scope.cantidad<=5000){
-                //             //debe ser min 5000 en cantidad
-                //             $scope.engancheFinal = $scope.infoLote.engancheF = 5000;
-                //             // console.log('SIDD');
-                //         }else{
-                //             //se queda normal
-                //             $scope.engancheFinal = $scope.infoLote.engancheF;
-                //             // console.log('HARTHA');
-                //
-                //         }
-                //     }
-                //
-                // }else{
-                //     $scope.engancheFinal = $scope.infoLote.engancheF;
-                //     console.log('aqui jejej');
-                // }
                 $scope.engancheFinal = $scope.infoLote.engancheF;
+                // console.log('FINAL xd ',$scope.engancheFinal);
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;
-                console.log('Enganche Final etse sixd', $scope.engancheFinal);
+                // console.log('Enganche Final etse sixd', $scope.engancheFinal);
                 let apartadoSum = (parseFloat($scope.apartado) == 0) ? 0 : parseFloat($scope.apartado);
                 let engancheSum = (parseFloat($scope.infoLote.engancheF)==0) ? 0 : parseFloat($scope.infoLote.engancheF);
                 $scope.saldoFinal = parseFloat($scope.infoLote.precioTotal);
-
+                // console.log('ALABERGAAAA');
                 $scope.precioFinal = parseFloat($scope.infoLote.precioTotal);
+                // console.log('engancheSum antes:',engancheSum);
                 $scope.precioFinal = ($scope.precioFinal    +(engancheSum+apartadoSum));
-
-                console.log('$scope.infoLote.precioTotal ', $scope.infoLote.precioTotal );
-                console.log('apartadoSum ', apartadoSum );
-                console.log('engancheSum ', $scope.infoLote.engancheF );
-                console.log('$scope.saldoFinal  ', $scope.saldoFinal  );
-                console.log('tota ',parseFloat( $scope.infoLote.precioTotal)+parseFloat($scope.infoLote.engancheF ));
+                // console.log('apartadoSum', apartadoSum);
+                // console.log('engancheSum', engancheSum);
+                // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
+                // console.log('enganche', enganche);
                 $scope.preciom2F = ($scope.preciom2);
 
 
@@ -2518,7 +2529,7 @@
 
                                 if (i == ($scope.infoLote.meses - 1)){
                                     $scope.totalSegundoPlan = $scope.p2;
-
+                                    $scope.totalTercerPlan = 0;
                                 }
                                 $scope.finalMesesp2 = (range2.length);
                             }
@@ -3694,6 +3705,7 @@
 
                             }
                             $scope.finalMesesp2 = (range2.length);
+                            $scope.finalMesesp3 = 0;
 
 
                         }
@@ -5530,18 +5542,10 @@
                 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
-
-
             $scope.paquetes = [];
-
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21},{age: 22}, {age: 23}, {age: 24}, {age: 25},{age: 26}, {age: 27}, {age: 28}, {age: 29},{age: 30}, {age: 31}, {age: 32},{age: 33}, {age: 34}, {age: 35}, {age: 36},{age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55},{age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62},{age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70},{age: 71}, {age: 72}, {age: 73}, {age: 74},{age: 75},{age: 76},{age: 77},{age: 78},{age: 79},{age: 80}]
-
-
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
-
-            // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
-            // $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5915,9 +5919,6 @@
                 /*termina nuevo*/
 
                 if(porcentajeEnganche.val() >= 5){/* || porcentajeEnganche.val() == 5*/
-                    // document.getElementById("day").disabled = false;
-                    // document.getElementById("aptdo").disabled = false;
-                    // document.getElementById("msdif").disabled = false;
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
                     calcularCF();
                 }
@@ -5997,6 +5998,7 @@
                 let residencial = proyecto.idResidencial;
                 // console.log('residencial: ', residencial);
                 $('#loteCont').empty();
+                cleanCondominios();
                 if(residencial == 17 || residencial == 28){
                     $('#loteCont').removeClass('col-md-3');
                     $('#loteCont').addClass('col-md-2');
@@ -6004,7 +6006,7 @@
                     $('#anioCont').removeClass('col-md-2');
                     $('#anioCont').addClass('col-md-1');
                     content = ' <label>Lotes:<span class="required-label">*</span></label>';
-                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="loadCasasData(lote)" class="form-control">';
+                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="loadCasasData(lote)" class="selectListL js-example-basic-single js-states form-control">';
                     content += '<option value = ""> - Selecciona un Lote - </option>';
                     content += '</select>';
                     content += '<p id="lotetext" style="color: red;"></p>';
@@ -6018,25 +6020,36 @@
                     $('#anioCont').addClass('col-md-2');
 
                     content = ' <label>Lote:<span class="required-label">*</span></label>';
-                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="form-control">';
+                    content += '<select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes" ng-change="onSelectChangel(lote)" class="selectListL js-example-basic-single js-states form-control">';
                     content += '<option value = ""> - Selecciona un Lote - </option>';
                     content += '</select>';
                     content += '<p id="lotetext" style="color: red;"></p>';
                     $scope.tipo_casa = {nombre:null, casa:null};
+
                     $('#tcasa').addClass('hide');
                 }
+
+                // $(".selectList").selectpicker('refresh');
                 angular.element(document.querySelector('#loteCont')).append($compile(content)($scope)); //angular directive
 
                 $http.post('<?=base_url()?>index.php/corrida/getCondominioDisponibleA',{residencial: proyecto.idResidencial}).then(
+
                     function (response) {
                         // console.log('$scope.tipo_casa: ', $scope.tipo_casa);
+                        // $('#condominioS').val(null).trigger('change');
+                        // $('#condominioS').val(['']).trigger('change');
+                        // $('#condominioS').val(null).trigger('change');
+                        console.log('Lo que está aquí es:', $('#condominioS').val());
+
 
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
 
+                        // $('#condominioS').select2('destroy');
                         $scope.condominios = response.data;
+                        $('#condominioS').select2();
                         $scope.lotes = "";
                         $scope.plan = "";
                         // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}];
@@ -6116,6 +6129,8 @@
                     },
                     function (response) {
                     });
+
+
             }
 
             $scope.loadCasasData = function(lote){
@@ -6142,6 +6157,7 @@
             $scope.onSelectChangec = function(condominio) {
                 $http.post('<?=base_url()?>index.php/queryInventario/getLoteDisponibleA',{condominio: condominio.idCondominio}).then(
                     function (response) {
+                        cleanlotes();
                         $scope.lotes = response.data;
                         // console.log('$scope.lotes: ', $scope.lotes);
 
@@ -6224,9 +6240,12 @@
                                         doc.pageMargins = [ 140, 40, 10, 50 ];
                                         doc.alignment = 'center';}},]).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
                         }
+                        // console.log($('.selectListL').select2());
+                        $('.selectListL').select2()
                     },
                     function (response) {
                     });
+
             }
             $scope.onSelectChangel = function(lote) {
                 // console.log("Lotes: ", lote);
@@ -6296,7 +6315,7 @@
                                             dataInnerHTML = '                       <div class="col-md-4 form-group">\n' +
                                                 '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
                                                 '                                        <select ng-model="gerente" id="gerente"\n' +
-                                                '                                                ng-change="onSelectChangegerente(gerente)" class="form-control" >\n' +
+                                                '                                                ng-change="onSelectChangegerente(gerente)" class="selectList js-example-basic-single js-states form-control">\n' +
                                                 '                                            <option value=""> - Selecciona un Gerente -</option>\n' +
                                                 '                                            <option ng-repeat="gerentes in gerentes"  ng-value="gerentes.id_usuario"\n' +
                                                 '                                                    ng-selected="(gerentes.id_usuario== '+id_gerente+') ? selected :  false ">{{gerentes.nombreGerente}}</option>\n' +
@@ -6307,7 +6326,7 @@
                                                 '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreCoordinador for item in coordinadores"-->\n' +
                                                 '                                        <select ng-model="coordinador" id="coordinador"\n' +
-                                                '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control"\n' +
+                                                '                                                ng-change="onSelectChangecoord(coordinador)" class="selectList js-example-basic-single js-states form-control"\n' +
                                                 '                                                style="text-transform: uppercase;" >\n' +
                                                 '                                            <option value=""> - Selecciona un Coordinador -</option>\n' +
                                                 '                                            <option ng-repeat="coordinadores in coordinadores"  ng-value="coordinadores.idCoordinador"\n' +
@@ -6319,7 +6338,7 @@
                                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                                 '                                        <select ng-model="asesor" id="asesor"\n' +
-                                                '                                                class="form-control"  ng-change="onSelectChangeAsesor(asesor)">\n' +
+                                                '                                                class="selectList js-example-basic-single js-states form-control"  ng-change="onSelectChangeAsesor(asesor)">\n' +
                                                 '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                                 '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                                 '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
@@ -6332,7 +6351,9 @@
                                             $scope.asesor = id_asesor;
 
                                             angular.element(document.querySelector('#data_acg')).append($compile(dataInnerHTML)($scope)); //angular directive
+                                            $('.selectList').select2();
                                         },1000);
+
 
                                         $http.post('<?=base_url()?>index.php/Asesor/getGerente',{gerente: id_gerente}).then(
                                             function (response) {
@@ -6401,6 +6422,7 @@
 
                                 }
                             );
+
                         }
                         else{
                             $scope.id_clienteP = null;
@@ -6410,7 +6432,7 @@
                             el.empty();
                             dataInnerHTML = '                   <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes" ng-change="onSelectChangegerente(gerente)" class="form-control">\n' +
+                                '                                        <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes" ng-change="onSelectChangegerente(gerente)" class="selectList js-example-basic-single js-states form-control">\n' +
                                 '                                            <option value = ""> - Selecciona un Gerente - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="gerentetext" style="color: red;"></p>\n' +
@@ -6418,14 +6440,14 @@
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                 '                                        <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"\n' +
-                                '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control" style="text-transform: uppercase;">\n' +
+                                '                                                ng-change="onSelectChangecoord(coordinador)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">\n' +
                                 '                                            <option value = ""> - Selecciona un Coordinador - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="cordinadortext" style="color:red;"></p>\n' +
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
-                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
+                                '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="selectList js-example-basic-single js-states form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
                                 '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
@@ -6433,6 +6455,7 @@
 
 
                             angular.element(document.querySelector('#data_acg')).append($compile(dataInnerHTML)($scope)); //angular directive
+                            $('.selectList').select2();
                         }
                         // console.log("id_clienteP: ", $scope.id_clienteP);
                         document.getElementById("lotetext").innerHTML ='';
@@ -9459,8 +9482,6 @@
                 var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
 
                 var paquete = ($scope.descApply == undefined) ? 0 : $scope.descApply[0].id_paquete;
-                console.log("PAKETE");
-                console.log(paquete);
 
 
                 if(paquete > 0) {
@@ -9708,7 +9729,6 @@
         });
 
         $("#lote").change(function(){
-            // console.log('assdasd');
             document.getElementById("lotetext").innerHTML ='';
             $('#lote').css("border-color", "");
         });
@@ -9748,7 +9768,13 @@
 
 
         /*---------------*/
-
+        function cleanCondominios(){
+            $("#condominioS").val(null);
+            $('#lote').val(null);
+        }
+        function cleanlotes(){
+            $('#lote').val(null);
+        }
 
 
     </script>

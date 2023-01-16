@@ -68,6 +68,7 @@
 		}else if(time > '03:00' && '0'+time < '12:00'){
 			saludo = 'Buenos días';
 		}
+
 		const shortDate = `${date.getDate()} ${months[date.getMonth()]}`
 		
 		document.getElementById("time").textContent = time
@@ -75,10 +76,5 @@
 		document.getElementById("saludoTxt").textContent = saludo
 	}
 
-	function startClock() {
-		displayClock();
-	}
-
-	startClock()
-	
+	displayClock();
 </script>

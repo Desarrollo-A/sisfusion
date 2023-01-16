@@ -1209,107 +1209,43 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
 
 	}
 
-	public function finalStatus($id_sede){
-		/*$query = $this->db-> query("SELECT lotes.idLote, s.nombre as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-        lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-        fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
-        lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, sup, cl.fechaApartado,
-        concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
-        concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
-		STRING_AGG(lotes.status8Flag, '-') AS status8Flag, STRING_AGG(lotes.totalValidado, '-') AS totalValidado, 
-		STRING_AGG(movs.descripcion, '-') AS descripcion,
-		STRING_AGG(CASE
-			WHEN movs.idMovimiento IN (39, 26) THEN
-				'10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)'
-			WHEN movs.idMovimiento IN (40, 10, 67) THEN
-				'11. Validación de enganche (Administración)'
-			WHEN movs.idMovimiento IN (41) THEN
-				'12. Contrato firmado (Representante Legal)'
-			WHEN movs.idMovimiento IN (42) THEN
-				'13. Contrato listo y entregado asesores (Contraloría)'
-			WHEN movs.idMovimiento IN (68, 43) THEN
-				'14. Firma Acuse cliente (Asistentes Gerentes)'
-			WHEN movs.idMovimiento IN(44, 69) THEN
-				'15. Acuse entregado (Contraloría)'
-			WHEN movs.idMovimiento IN (18, 19, 20, 63, 84, 73) THEN
-				'2. Integración de Expediente (Contraloría)'
-			WHEN movs.idMovimiento IN (31, 85, 82) THEN
-				'2. Recepción de Expediente (ventas-asesor)'
-			WHEN movs.idMovimiento IN (2, 32) THEN
-				'3. Revisión Jurídico (Jurídico)'
-			WHEN movs.idMovimiento IN (33, 3) THEN
-				'4. Datos Verificados (Postventa)'
-			WHEN movs.idMovimiento IN (34, 4) THEN
-				'5. Revisión 100% (Contraloria)'
-			WHEN movs.idMovimiento IN (35, 22, 62, 75) THEN
-				'6. Corrida elaborada (Contraloría)'
-			WHEN movs.idMovimiento IN (83, 36, 6, 76) THEN
-				'7. Contrato elaborado (Jurídico)'
-			WHEN movs.idMovimiento IN (23) THEN 
-				'7. Elaboración de Contrato (Jurídico)'
-			WHEN movs.idMovimiento IN (37, 7, 77, 64, 66) THEN 
-				'8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)'
-			WHEN movs.idMovimiento IN (38, 65) THEN 
-				'9. Contrato recibido con firma de cliente (Contraloría)'
-			ELSE
-				'Not Set'
-		END, '-') AS procesoContratacion
-		FROM lotes as lotes
-        INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
-        LEFT JOIN sedes AS s ON s.id_sede = lotes.ubicacion
-        INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
-        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede
-        LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
-        LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
-        LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario
-		INNER JOIN movimientos as movs ON lotes.idMovimiento = movs.idMovimiento
-        WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45
-        GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno, sup, cl.fechaApartado,
-        lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
-        lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
-        residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
-        cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, lotes.referencia");
-		*/
+	public function finalStatus($id_sede, $residencial) {
+		if($id_sede == 2)
+			$where = "AND residencial.idResidencial = $residencial";
+		else
+			$where = "";
 		$query = $this->db-> query("SELECT lotes.idLote, s.nombre as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
         lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
         fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
         lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, sup, cl.fechaApartado,
-        concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
-		concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, 
-        concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
-		STRING_AGG(lotes.status8Flag, '-') AS status8Flag, STRING_AGG(lotes.totalValidado, '-') AS totalValidado, STRING_AGG(movs.descripcion, '-') AS descripcion,
-		lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, tv.tipo_venta, st.color
-		FROM lotes as lotes
+        UPPER(concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno)) as asesor, idAsesor,
+		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
+        UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,
+        lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, st.color, lotes.status8Flag, hl2.modificado fechaEstatus7
+        FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
-        LEFT JOIN sedes AS s ON s.id_sede = lotes.ubicacion
+		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
-        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede
+        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede $where
         LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
-        LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario
-		INNER JOIN movimientos as movs ON lotes.idMovimiento = movs.idMovimiento
-		
-		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+        LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lotes.idLote AND hl.idCliente = cl.id_cliente
-        
+		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idStatusContratacion = 7 AND idMovimiento = 37 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lotes.idLote AND hl2.idCliente = cl.id_cliente
         INNER JOIN statusLote st ON st.idStatusLote = lotes.idStatusLote
-        INNER JOIN tipo_venta tv ON tv.id_tventa = lotes.tipo_venta
-        
-		
-        WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lotes.tipo_venta
+        WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45 --AND lotes.idLote = 77802
         GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno, sup, cl.fechaApartado,
         lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado,
         lotes.modificado, CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
         residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, 
-        lotes.validacionEnganche, lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color
-		ORDER BY lotes.nombreLote");
+		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
+        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, 
+		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado");
 		return $query->result();
 	}
-
-// filtro de lotes por condominios y residencial (PARA EL INVENTARIO)
 
 	public function getInventario($condominio,$residencial)
 
@@ -6116,7 +6052,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
     public function getLotesGralTwo($condominio, $residencial) {
 		$query = $this->db-> query("SELECT * FROM lotes lo
-		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593)
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549)
 		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
 		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
 		if($query) {

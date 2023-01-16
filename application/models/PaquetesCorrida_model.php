@@ -31,13 +31,23 @@ class PaquetesCorrida_model extends CI_Model
         order by porcentaje");
     }
 
-    public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario){
+    public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario,$inicio,$fin){
         $this->db->query("UPDATE  l 
         set l.id_descuento = '$cadena_lotes',usuario='$usuario'
         from lotes l
         inner join condominios c on c.idCondominio=l.idCondominio 
         inner join residenciales r on r.idResidencial=c.idResidencial
-        where r.idResidencial in($desarrollos)  and l.idStatusLote!=2
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
+        $query_superdicie
+        $query_tipo_lote");
+        $this->db->query("UPDATE  l 
+        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        inner join clientes cl on cl.id_cliente=l.idCliente
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
+        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
         $query_superdicie
         $query_tipo_lote"); 
     }

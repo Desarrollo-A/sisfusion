@@ -456,7 +456,7 @@ class Caja_outside extends CI_Controller
 
         if ($datosView->id_coordinador == $datosView->id_asesor && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
             $voBoCoord = 0;
-        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
+        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626 && $datosView->id_gerente != 832) {
             $voBoCoord = 0;
         } else {
             $voBoCoord = $datosView->id_coordinador;
@@ -517,8 +517,8 @@ class Caja_outside extends CI_Controller
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
-            // 'id_regional_2' => $data['lider'][0]['id_regional_2'],
-            'flag_compartida' =>$datosView->flag_compartida
+            'flag_compartida' =>$datosView->flag_compartida,
+            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0
         );
         /*Inserta cliente*/
         $last_id = '';
@@ -1863,7 +1863,7 @@ class Caja_outside extends CI_Controller
 
                     if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
-                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
+                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626 && $data->asesores[0]->idGerente != 832) {
                         $voBoCoord = 0;
                     } else {
                         $voBoCoord = $data->asesores[0]->idCoordinador;
@@ -1897,7 +1897,7 @@ class Caja_outside extends CI_Controller
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        // $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
+                        $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
                         $fechaAccion = date("Y-m-d H:i:s");
@@ -2251,8 +2251,7 @@ class Caja_outside extends CI_Controller
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-            "id_regional" => $dataLider[0]['id_regional'],
-            "id_regional_2" => $dataLider[0]['id_regional_2']
+            "id_regional" => $dataLider[0]['id_regional']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();

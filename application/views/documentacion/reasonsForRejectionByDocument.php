@@ -71,21 +71,15 @@
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group label-floating select-is-empty m-0 p-0">
                                             <label class="control-label">Documentos</label>
-                                            <select id="documentos" name="documentos"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    title="Selecciona un documento" data-size="7">
+                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un documento" data-size="7">
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-2">
-                                        <button class="btn-rounded btn-s-greenLight apply-action" data-action="0"
-                                                id="addOption"
-                                                name="addOption" title="Agregar">
+                                        <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
                                             <i class="fas fa-plus"></i>
-                                        </button> <!-- ADD -->
+                                        </button>
                                     </div>
 
                                 </div>
@@ -153,8 +147,8 @@
 
     function fillTable(id_documento) {
         generalDataTable = $('#reasonsForRejectionTable').dataTable({
-            dom: "rtp",
-            width: "auto",
+            dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: "100%",
             pagingType: "full_numbers",
             fixedHeader: true,
             language: {
@@ -184,9 +178,10 @@
                 },
                 {
                     data: function (d) {
-                        let btns = '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas apply-action" data-action="1" data-id-motivo="' + d.id_motivo + '" data-nombre-documento="' + d.nombre_documento + '" data-motivo="' + d.motivo + '" title="Editar"><i class="fas fa-edit"></i></button>';
-                        btns += `<button class="btn-data btn-${d.estatus == 1 ? 'warning' : 'green'} apply-action" data-action="${d.estatus == 1 ? 2 : 3}" data-id-motivo="${d.id_motivo}" data-nombre-documento="${d.nombre_documento}" data-motivo="${d.motivo}" title="${d.estatus == 1 ? 'Desactivar' : 'Activar'}"><i class="fas fa-${d.estatus == 1 ? 'lock' : 'unlock'}"></i></button>`;
+                        let btns = '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas apply-action" data-action="1" data-id-motivo="' + d.id_motivo + '" data-nombre-documento="' + d.nombre_documento + '" data-motivo="' + d.motivo + '" data-toggle="tooltip" data-placement="left" title="Editar"><i class="fas fa-pen"></i></button>';
+                        btns += `<button class="btn-data btn-${d.estatus == 1 ? 'warning' : 'green'} apply-action" data-action="${d.estatus == 1 ? 2 : 3}" data-id-motivo="${d.id_motivo}" data-nombre-documento="${d.nombre_documento}" data-motivo="${d.motivo}"  data-toggle="tooltip" data-placement="left" title="${d.estatus == 1 ? 'Desactivar' : 'Activar'}"><i class="fas fa-${d.estatus == 1 ? 'lock' : 'unlock'}"></i></button>`;
                         btns += '</div>';
+                        $('[data-toggle="tooltip"]').tooltip();
                         return btns;
                     }
                 }
