@@ -483,5 +483,11 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto       
       WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
    }
+
+   public function getSedesPorDesarrollos(){
+      return $this->db->query("SELECT re.sede_residencial id_sede, se.nombre FROM residenciales re
+      INNER JOIN sedes se ON se.id_sede = re.sede_residencial
+      WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre");
+   }
      
 }

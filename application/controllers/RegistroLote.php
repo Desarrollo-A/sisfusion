@@ -6042,10 +6042,6 @@
 			$procesoContratacion = $this->getProcesoContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->validacionEnganche, $data[$i]->status8Flag);
 			$status = $this->getStatusContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->firmaRL, $data[$i]->validacionEnganche, $data[$i]->perfil);
 			list($fechaVencimiento, $fechaVenc2) = $this->getFechaVencimiento($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $data[$i]->modificado_historial);
-			
-			/*echo $fechaVencimiento;
-			exit;*/
-
 			list($diasRest, $arrayFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);			
 			list($diasVenc, $arrayFechas2, $diasVenc2) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
 			$statusFecha = $this->getStatusFecha($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $arrayFechas, $arrayFechas2);
@@ -6443,7 +6439,7 @@
 			$asige = 1;
 			if ($admon == 1){
 				$fechaHoy = date('Y-m-d');
-				$fechaDes = $fechaVenc2;
+				$fechaDes = date("Y-m-d", strtotime($fechaVenc2));
 				$arregloFechas = array();
 				$a = 0;
 				while ($fechaHoy <= $fechaDes) {
@@ -6466,7 +6462,7 @@
 			}
 			if ($asige == 1) {
 				$fechaHoy = date('Y-m-d');
-				$fechaDes = $fechaVenc;
+				$fechaDes = date("Y-m-d", strtotime($fechaVenc));
 				$arregloFechas = array();
 				$a = 0;
 				while ($fechaHoy <= $fechaDes) {
@@ -6487,14 +6483,9 @@
 				}
 				$diasRestAsige = count($arregloFechas);
 			}
-			if ($status8Flag == 1 && $validacionEnganche != 'VALIDADO')
-				$diasRest = $diasRestAdmon;
-			else if ($status8Flag == 0 && $validacionEnganche == 'VALIDADO')
-				$diasRest = $diasRestAsige;
-			else if ($status8Flag == 0 && $validacionEnganche != 'VALIDADO') {
-				$diasRest = $diasRestAsige;
-				$diasRest2 = $diasRestAdmon;
-			}
+
+			$diasRest = $diasRestAsige;
+			$diasRest2 = $diasRestAdmon;
 		}
 		else if ($idStatusContratacion == 11 AND $idMovimiento == 41) {
 			$fecha = $fechaVencimiento;
