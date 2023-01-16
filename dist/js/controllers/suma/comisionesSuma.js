@@ -1,4 +1,6 @@
 var totaPen = 0;
+let noDia = moment().weekday();
+let hora = moment().hour();
 
 function selectAll(e) {
     tota2 = 0;
@@ -158,22 +160,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             {
                 text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
                 action: function() {
-                    let actual=13;
-                    if(userSede == 8){
-                        actual=15;
-
-                    }
-                    var hoy = new Date();
-                    var dia = hoy.getDate();
-                    var mes = hoy.getMonth()+1;
-                    var anio = hoy.getFullYear();
-                    var hora = hoy.getHours();
-                    var minuto = hoy.getMinutes();
-
-                    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                    ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                    ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
+                    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                         if ($('input[name="idT[]"]:checked').length > 0) {
                             $('#spiner-loader').removeClass('hide');
                             
@@ -369,25 +356,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             searchable: false,
             className: 'dt-body-center',
             render: function(d, type, full, meta) {
-                let actual=13;
-                if(userSede == 8){
-                    actual=15;
-
-                }
-                var hoy = new Date();
-                var dia = hoy.getDate();
-                var mes = hoy.getMonth()+1;
-                var anio = hoy.getFullYear();
-                var hora = hoy.getHours();
-                var minuto = hoy.getMinutes();
-
-
-
-                if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
-                {
-
+                if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                     switch (full.id_forma_pago) {
                         case '1': //SIN DEFINIR
                         case 1: //SIN DEFINIR
@@ -1082,20 +1051,7 @@ function todos(){
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
-    let actual=13;
-    if(userSede == 8){
-        actual=15;
-    }
-
-    var hoy = new Date();
-    var dia = hoy.getDate();
-    var mes = hoy.getMonth()+1;
-    var anio = hoy.getFullYear();
-    var hora = hoy.getHours();
-    var minuto = hoy.getMinutes();
-
-    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
+    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
 
