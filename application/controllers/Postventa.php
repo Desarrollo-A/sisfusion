@@ -31,6 +31,8 @@ class Postventa extends CI_Controller
         }
     }
 
+    
+
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -793,6 +795,11 @@ class Postventa extends CI_Controller
         echo json_encode($respuesta);
     }
 
+    public function listSedes()
+    {
+        echo json_encode($this->Postventa_model->listSedes()->result_array());
+    }
+
 
     public function changeStatus()
     {
@@ -1142,19 +1149,19 @@ class Postventa extends CI_Controller
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
-            "cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
-            "nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
-            "RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
+            //"cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
+            //"nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
+            //"RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
             "tipo_escritura" => $data['tipoE'],
-            "aportacion" => $data['aportaciones'],
-            "descuento" => $data['descuentos'],
-            "motivo" => $data['motivo']
+           // "aportacion" => $data['aportaciones'],
+           // "descuento" => $data['descuentos'],
+           // "motivo" => $data['motivo']
         );
-        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
-        if($_POST['not'] == 'nou'){
+      /*  if($_POST['not'] == 'nou'){
             $updateData['id_notaria'] = 0;
-        }
+        }*/
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1162,7 +1169,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
 
-        if ($_POST['not'] == 'yes'){
+        /*if ($_POST['not'] == 'yes'){
             $idSolicitud = $_POST['id_solicitud3'];
             $nombre_notaria = $_POST['nombre_notaria'];
             $nombre_notario = $_POST['nombre_notario'];
@@ -1174,7 +1181,7 @@ class Postventa extends CI_Controller
             return $informacion;
     
             return $this->Postventa_model->newNotaria($idSolicitud);
-        }   
+        } */  
 
     }
 
@@ -2141,9 +2148,15 @@ class Postventa extends CI_Controller
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
-            "aportaciones" => $data['aportaciones'],
-            "descuentos" => $data['descuentos']
+            "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
+            "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
+            "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
+             "aportacion" => $data['aportaciones'],
+            "descuento" => $data['descuentos'],
+            "motivo" => $data['motivo']
         );
+        ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",strtotime($data['fechaCAI']));
+
         //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)

@@ -1,7 +1,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<link href="<?= base_url() ?>dist/css/table_escrituracion.css" rel="stylesheet" />
 
 <body>
     <div class="wrapper">
@@ -54,25 +53,14 @@
                         </div>
                         <div class="form-group">
                             <label class="label">Sede</label>
-                            <select class="selectpicker" name="sede" id="sede" required>
-                                <option value="" disabled="true">- Selecciona opcion -</option>
-                                <option value="1" >San Luis Potosi</option>
-                                <option value="2">Queretaro</option>
-                                <option value="3">Península</option>
-                                <option value="4">Ciudad de Mexico</option>
-                                <option value="5">León</option>
-                                <option value="6">Cancún</option>
-                                <option value="7">Estados Unidos</option>
-                                <option value="8">Tijuana</option>
-                                <option value="9">San Miguel de Allende</option>
-                                <option value="10">Texas USA</option>
-                                <option value="11">Monterrey</option>
+                            <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" required>
+                                <option disabled value="">Selecciona una opción</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <center>
-                                <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>
-                                <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                <button type="submit" class="btn btn-primary">GUARDAR</button>
+                                <button class="btn btn-danger" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
                             </center>
                         </div>
                     </div>
@@ -82,7 +70,6 @@
     </div>
 
         <div class="content boxContent">
-
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -97,7 +84,7 @@
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                             
                                             <!-- <button class="btn btn-info btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button> -->
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-usuario" data-whatever="">Agregar Notario</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-usuario" data-whatever="">Agregar Notaría</button>
                                         </div>
                                     </div>
                                 </div>
