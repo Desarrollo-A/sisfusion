@@ -457,6 +457,7 @@ $(document).on("submit", "#formPresupuesto", function (e) {
 $(document).on('click', '#request', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     document.getElementById('actividad_siguiente').innerHTML = '';
+    // document.getElementById('notariaVo').innerHTML = '';
 
     $('#id_solicitud').val(data.id_solicitud);
     $('#status').val(data.id_estatus);
@@ -465,11 +466,18 @@ $(document).on('click', '#request', function () {
     actividad_next = actividad_next.split('-');
     let area_next = $(this).attr('data-siguiente-area');
 
-    document.getElementById('actividad_siguiente').innerHTML = 'Estatus siguiente(s) - '+area_next+' - '+actividad_next[1];
+    document.getElementById('actividad_siguiente').innerHTML = 'Estatus siguiente: '+actividad_next[1];
 
     let type = $(this).attr('data-type');
-   // alert(data.id_estatus)
-    $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
+     $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
+     
+    //  if(data.id_estatus == 1){
+        
+    //     document.getElementById('notaria_siguiente').style.display = "show";
+        
+    //     // .innerHTML = '';
+    //      console.log('Si entra estatus 1');
+    // }
    // $('#type').val(2);
     $("#approveModal").modal();
 });
@@ -578,16 +586,53 @@ $(document).on('click', '#tree', function () {
     $("#documentTree").modal();
 });
 
-$(document).on('click', '#newNotary', function () {
+$(document).on('click', '#asignarNotariaButton', function () {
+
+    $('#asignarNotaria')[0].reset();
+
     var data = prospectsTable.row($(this).parents('tr')).data();
-    $('#idSolicitud').val(data.idSolicitud);
-    $('#nombre_notaria').val('');
-    $('#nombre_notario').val('');
-    $('#direccion').val('');
-    $('#correo').val('');
-    $('#telefono').val('');
+    let informacion_lote = $(this).attr('data-lote');
+    let solicitud = $(this).attr('data-solicitud');
+    console.log('solicitud: '+ solicitud);
+    $("#tipoNotaria").selectpicker('refresh');
+    document.getElementById('informacion_lote').innerHTML = 'Lote: '+informacion_lote;
+    $('#id_solicitud').val(solicitud);
+
+    $('#divnombre_notaria').hide();
+    $('#divnombre_notario').hide();
+    $('#divdireccion').hide();
+    $('#divcorreo').hide();
+    $('#divtelefono').hide();
+ 
     $("#altaNotario").modal();
 });
+
+ 
+
+$(document).on('change', '#tipoNotaria', function(e){
+
+    if ($(this).val()) {
+        $('#tipo_notaria').val($(this).val());
+        if ($(this).val() == 2) {
+            $('#asignarNotaria')[0].reset();
+            $('#divnombre_notaria').show().attr("required", true);
+            $('#divnombre_notario').show().attr("required", true);
+            $('#divdireccion').show().attr("required", true);
+            $('#divcorreo').show().attr("required", true);
+            $('#divtelefono').show().attr("required", true);
+
+        }else{
+
+            $('#divnombre_notaria').removeAttr("required").hide();
+            $('#divnombre_notario').removeAttr("required").hide();
+            $('#divdireccion').removeAttr("required").hide();
+            $('#divcorreo').removeAttr("required").hide();
+            $('#divtelefono').removeAttr("required").hide();
+
+         }
+    }
+})
+
 
 $(document).on('change', '#documents', function () {
     let idDocument = $(this).val();
@@ -862,8 +907,7 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    //return d.nombre;
-                    return 0;
+                    return d.cliente;
                 }
             },
             {
@@ -887,7 +931,7 @@ function fillTable(beginDate, endDate, estatus) {
             {
                 data: function (d) {
                     var aditional;
-                    var group_buttons = '';
+                    var group_buttons = '';     
                     let newBtn = '';
                     let formBoton = '';
                     let exp;
@@ -898,7 +942,8 @@ function fillTable(beginDate, endDate, estatus) {
                     }; 
 
                     switch (d.id_estatus) {
-                        case 1:
+    
+                            case 1: 
                             if (userType == 55) { 
                                 group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                 // BOTON APROBAR
@@ -920,15 +965,14 @@ function fillTable(beginDate, endDate, estatus) {
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
                                 if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
-                                      // BOTON APROBAR 
-                                      group_buttons += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
-                                      //group_buttons += `<button id="presupuesto" data-area-actual=${userType} class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`;  
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                      // BOTON APROBAR    
+                                    group_buttons += `<button id="presupuesto" data-area-actual=${userType} class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Presupuesto"><i class="fas fa-money-bill-wave"></i></button>`;  
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     exp = d.expediente;
                                     console.log('botones')
                                     console.log(exp);
-                                    permiso =1;// exp == null || exp == '' || exp == 'null' ? 1 : 2;
-                                    //group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';                                
+                                    permiso = 1;// exp == null || exp == '' || exp == 'null' ? 1 : 2;
+                                    //group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>` : '';                                
 
 
                                   //  formBoton += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -952,11 +996,11 @@ function fillTable(beginDate, endDate, estatus) {
                                     console.log('botones')
                                     console.log(exp);
                                     permiso =1;// exp == null || exp == '' || exp == 'null' ? 1 : 2;
-                                    //group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';                                
+                                    // group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>` : '';                                
 
 
-                                    //formBoton += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons += permisos(permiso, exp, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                  //  formBoton += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    group_buttons += permisos(permiso, exp, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton, datosEstatus);
                                 }
                                 if (userType == 11 && (d.bandera_admin == 0 || d.bandera_admin == null) && d.bandera_comite == 1) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
@@ -1049,13 +1093,21 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 12:
                                 if (userType == 57) { 
-                                   // group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                   // group_buttons += `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
-                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+
+                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;
                                    permiso = 2;
                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
 
                                 }
+
+                                if (d.bandera_notaria == 0 || d.bandera_notaria == 'NULL') { 
+                                    group_buttons += `<button id="asignarNotariaButton" data-solicitud="${d.id_solicitud}" data-lote="${d.nombreLote}" data-type="5" class="btn-data btn-secondary" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-file"></i></button>`;
+
+                                }else{
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;
+                                    
+                                }
+
                             break;
                             case 36:
                                 if (userType == 57) { 
@@ -1914,29 +1966,32 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
 }
 
 //INSERTAR NUEVA NOTARIA
-$(document).on("submit", "#newNotario", function (e) {
+$(document).on("submit", "#asignarNotaria", function (e) {
     e.preventDefault();
-    let idSolicitud = $("#idSolicitud").val();
+    let id_solicitud = $("#id_solicitud").val();
     let data = new FormData($(this)[0]);
     data.append('nombre_notaria', $('#nombre_notaria').val() == '' ? null : $('#nombre_notaria').val());
     data.append('nombre_notario', $('#nombre_notario').val() == '' ? null : $('#nombre_notario').val());
     data.append('direccion', $('#direccion').val() == '' ? null : $('#direccion').val());
     data.append('correo', $('#correo').val() == '' ? null : $('#correo').val());
     data.append('telefono', $('#telefono').val() == '' ? null : $('#telefono').val());
-    data.append("idSolicitud", idSolicitud);
-    //data.append('idSolicitud', $('#idSolicitud').val() == '' ? null : $('#idSolicitud').val());
+    data.append('id_solicitud', $('#id_solicitud').val() == '' ? null : $('#id_solicitud').val());
 
     $.ajax({
-        url: "nuevoNotario",
+        url: "registrarNotaria",
         data: data,
         cache: false,
         contentType: false,
         processData: false, 
         type: 'POST',
         success: function (response) {
-            alerts.showNotification("top", "right", "Se agrego una nueva Notaría.", "success");
+            if (response) {
+            alerts.showNotification("top", "right", "Se asignó correctamente una Notaría.", "success");
             $("#altaNotario").modal("hide");
             prospectsTable.ajax.reload();
+            }else{
+                alerts.showNotification("top", "right", "Error en asignar Notaría", "warning");
+            }
         }
     });
 });
