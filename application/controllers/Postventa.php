@@ -1735,19 +1735,23 @@ class Postventa extends CI_Controller
     }
 
     //NOTARIA
-    public function nuevoNotario()
+    public function registrarNotaria()
     {
-        $idSolicitud = $_POST['idSolicitud'];
+        $id_solicitud = $_POST['id_solicitud'];
+        $tipoNotaria =  $_POST['tipo_notaria'];
         $nombre_notaria = $_POST['nombre_notaria'];
         $nombre_notario = $_POST['nombre_notario'];
         $direccion = $_POST['direccion'];
         $correo = $_POST['correo'];
         $telefono = $_POST['telefono'];
 
-        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
-        return $informacion;
-
-        return $this->Postventa_model->insertNewNotaria($idSolicitud);
+        if($tipoNotaria == 2){
+            $response = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
+        }else{
+            $response = $this->Postventa_model->asignarNotariaInterna($id_solicitud);
+            
+        }
+        echo json_encode( array( "data" => $response));
     }
 
     public function getBudgetNotaria()
