@@ -26,12 +26,12 @@ class Reporte_model extends CI_Model {
             FROM    cte   
             WHERE   DateValue + 1 <= '$endDateDos'
         )";
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $generalFilters = ' AND ISNULL(totalValidado, 0.00) <= 10000';
+            $generalFilters = " AND $enganche <= 10000";
         elseif( $typeSale == "2" )
-            $generalFilters = ' AND ISNULL(totalValidado, 0.00) < 10000';
+            $generalFilters = " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -308,13 +308,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) < 10000';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -469,13 +469,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) < 10000';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -619,10 +619,11 @@ class Reporte_model extends CI_Model {
         /* Filtros de búsqueda */
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         if( $typeSale == "1" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) >= 10000';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtroExt .= ' AND ISNULL(totalValidado, 0.00) < 10000';
+            $filtroExt .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -1011,5 +1012,33 @@ class Reporte_model extends CI_Model {
     public function getEstatusContratacionList(){
         $query = $this->db->query("SELECT * FROM statuscontratacion WHERE idStatusContratacion NOT IN (8,11)");
         return $query;
+    }
+
+    public function getValorEnganche() {
+        $enganche = "CASE 
+                        WHEN (lo.totalValidado IS NULL OR lo.totalValidado = 0.00) 
+                            THEN
+                                (CASE
+                                    WHEN (lo.totalNeto IS NULL OR lo.totalNeto = 0.00)
+                                    THEN (
+                                        CASE
+                                            WHEN ds.cantidad IS NULL OR ds.cantidad = ''
+                                            THEN 0
+                                            ELSE
+                                                (CASE ISNUMERIC(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', ''))
+                                                    WHEN 1 THEN CAST(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', '')  AS decimal(16,2))
+                                                    ELSE 0
+                                                    END
+                                                )
+                                        END
+                                    )
+                                    ELSE
+                                    lo.totalNeto
+                                    END
+                                )
+                        ELSE
+                            lo.totalValidado 
+                        END";
+        return $enganche;
     }
 }
