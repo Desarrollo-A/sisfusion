@@ -166,6 +166,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-estructura"></div>
                                                             <div class="container-fluid mt-1" id="ch">
                                                             <div class="row">
                                                                 <div class="col-md-12 d-flex justify-end">
@@ -396,17 +397,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
-    <!--<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.css"/>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/pdfmake.min.js"></script>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/vfs_fonts.js"></script>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.js"></script>-->
-
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
     <script>
         userId = <?= $this->session->userdata('id_usuario') ?>;
         rolId = <?= $this->session->userdata('id_rol') ?>;
-
     </script>
-
     </html>
