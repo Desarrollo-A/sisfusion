@@ -1,4 +1,6 @@
 var totaPen = 0;
+let noDia = moment().weekday();
+let hora = moment().hour();
 
 function selectAll(e) {
     tota2 = 0;
@@ -152,28 +154,14 @@ $("#tabla_nuevas_comisiones").ready(function() {
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [
         
             {
                 text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
                 action: function() {
-                    let actual=13;
-                    if(userSede == 8){
-                        actual=15;
-
-                    }
-                    var hoy = new Date();
-                    var dia = hoy.getDate();
-                    var mes = hoy.getMonth()+1;
-                    var anio = hoy.getFullYear();
-                    var hora = hoy.getHours();
-                    var minuto = hoy.getMinutes();
-
-                    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                    ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                    ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
+                    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                         if ($('input[name="idT[]"]:checked').length > 0) {
                             $('#spiner-loader').removeClass('hide');
                             
@@ -369,25 +357,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             searchable: false,
             className: 'dt-body-center',
             render: function(d, type, full, meta) {
-                let actual=13;
-                if(userSede == 8){
-                    actual=15;
-
-                }
-                var hoy = new Date();
-                var dia = hoy.getDate();
-                var mes = hoy.getMonth()+1;
-                var anio = hoy.getFullYear();
-                var hora = hoy.getHours();
-                var minuto = hoy.getMinutes();
-
-
-
-                if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
-                {
-
+                if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                     switch (full.id_forma_pago) {
                         case '1': //SIN DEFINIR
                         case 1: //SIN DEFINIR
@@ -504,7 +474,8 @@ $("#tabla_revision_comisiones").ready(function() {
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -701,7 +672,8 @@ $("#tabla_pagadas_comisiones").ready(function() {
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -900,7 +872,8 @@ $("#tabla_pausadas_comisiones").ready(function() {
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -1082,20 +1055,7 @@ function todos(){
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
-    let actual=13;
-    if(userSede == 8){
-        actual=15;
-    }
-
-    var hoy = new Date();
-    var dia = hoy.getDate();
-    var mes = hoy.getMonth()+1;
-    var anio = hoy.getFullYear();
-    var hora = hoy.getHours();
-    var minuto = hoy.getMinutes();
-
-    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
+    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
 
