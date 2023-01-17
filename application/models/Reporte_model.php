@@ -26,12 +26,12 @@ class Reporte_model extends CI_Model {
             FROM    cte   
             WHERE   DateValue + 1 <= '$endDateDos'
         )";
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $generalFilters = ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $generalFilters = " AND $enganche <= 10000";
         elseif( $typeSale == "2" )
-            $generalFilters = ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $generalFilters = " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -308,13 +308,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -469,13 +469,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -619,10 +619,11 @@ class Reporte_model extends CI_Model {
         /* Filtros de búsqueda */
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtroExt .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtroExt .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -968,9 +969,76 @@ class Reporte_model extends CI_Model {
         ORDER BY t.fechaApartado");
         return $query;
     }
+
+    public function getLotesXStatus($beginDate, $endDate){
+        $query=$this->db->query("SELECT UPPER(CAST(re.descripcion AS VARCHAR(75))) proyecto, co.nombre condominio, lo.idLote, lo.nombreLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, se.nombre sede, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente,
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) nombreCoordinador,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        'VENTA ACTIVA' estatus, cl.fechaApartado, sc.nombreStatus estatusContratacion
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.status = 1
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.status = 1
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote  AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        INNER JOIN historial_lotes hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente AND hl2.modificado = hl.modificado AND hl2.status = 1
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion
+        INNER JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        WHERE lo.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+        UNION ALL
+        SELECT UPPER(CAST(re.descripcion AS VARCHAR(75))) proyecto, co.nombre condominio, lo.idLote, lo.nombreLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, se.nombre sede, 
+        UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente,
+        UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) nombreCoordinador,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        'VENTA CANCELADA' estatus, cl.fechaApartado, sc.nombreStatus estatusContratacion
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.status = 1
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.status = 1
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND YEAR(cl.fechaApartado) = 2022 AND isNULL(cl.noRecibo, '') != 'CANCELADO'
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        INNER JOIN historial_lotes hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente AND hl2.modificado = hl.modificado AND hl2.status = 0
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion
+        INNER JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        WHERE lo.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999' ORDER BY cl.fechaApartado");
+        return $query;
+    }
     
     public function getEstatusContratacionList(){
         $query = $this->db->query("SELECT * FROM statuscontratacion WHERE idStatusContratacion NOT IN (8,11)");
         return $query;
+    }
+
+    public function getValorEnganche() {
+        $enganche = "CASE 
+                        WHEN (lo.totalValidado IS NULL OR lo.totalValidado = 0.00) 
+                            THEN
+                                (CASE
+                                    WHEN (lo.totalNeto IS NULL OR lo.totalNeto = 0.00)
+                                    THEN (
+                                        CASE
+                                            WHEN ds.cantidad IS NULL OR ds.cantidad = ''
+                                            THEN 0
+                                            ELSE
+                                                (CASE ISNUMERIC(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', ''))
+                                                    WHEN 1 THEN CAST(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', '')  AS decimal(16,2))
+                                                    ELSE 0
+                                                    END
+                                                )
+                                        END
+                                    )
+                                    ELSE
+                                    lo.totalNeto
+                                    END
+                                )
+                        ELSE
+                            lo.totalValidado 
+                        END";
+        return $enganche;
     }
 }

@@ -122,6 +122,7 @@
                     &:disabled{
                         cursor: not-allowed;
                         border: none;
+                        opacity: 0.6;
                     }
                 }
                 .label-gral{
@@ -260,89 +261,132 @@
 }
 table.dataTable > thead > tr > th{
     padding: 0!important;
+    text-align: center;
 }
-    .table-striped{
-        border: none;
-        text-align: center;
-        width: 100%!important;
-        font-size: 13px;
-        tbody > tr.selected, tbody > tr > .selected {
-            background-color: $goldMaderas!important;
-            opacity: 0.6;
-            color: $white!important;
-        }
-        
-        tbody td.select-checkbox:before, tbody th.select-checkbox:before {
-            display: none;
-        }
-        
-        tr.selected td.select-checkbox:after, tr.selected th.select-checkbox:after {
-            display: none;
-        }
-        thead > tr > th {
-            background-color: $blueIndigo;
-            border: none;
-            color: $white; 
-            font-size: 10px;
-            text-align: center;
-            font-weight: 100;
-            .textoshead{
-                width:100%; 
-                background:$blueIndigo;
-                font-weight: 100; 
-                font-size: 10px; 
-                text-align: center!important;
-                margin: 5px 0;
-                border: 1px solid $blueIndigoDeep;
-                box-shadow: inset 0 0 12px 2px $blueIndigoDeep;
-                border-radius: 8px;
+table{
+    border: none;
+    text-align: center;
+    width: 100%!important;
+    font-size: 13px;
+    tbody > tr.selected, tbody > tr > .selected {
+        background-color: $goldMaderas!important;
+        opacity: 0.6;
+        color: $white!important;
+    }
+    
+    tbody td.select-checkbox:before, tbody th.select-checkbox:before {
+        display: none;
+    }
+    
+    tr.selected td.select-checkbox:after, tr.selected th.select-checkbox:after {
+        display: none;
+    }
+    thead tr {
+        background-color: $blueIndigoDeep;
+        th{
+            padding: 0px!important;
+            input{
+                margin: 4px;
+                border: 1px solid transparent;
+                border-radius: 5px;
+                color: $white;
+                text-align: center;
+                font-weight: 300;
+                font-size: 10px!important;
+                background-color: $blueIndigoDeep;
                 text-transform: uppercase;
-                &::placeholder {
-                    color:  $platinum;
-                    text-transform: uppercase;
+                &:active{
+                    border: 1px solid $white;
+                }
+                &:focus{
+                    border: 1px solid $white;
+                }
+                &::placeholder{
+                    color: $white;
                 }
             }
         }
-        .toggle-subTable{
-            color: $goldMaderas;
-            border-radius: 27px;
-            width: 27px;
-            height: 27px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            &:hover{
-                background-color: $goldMaderas;
-                color: $white;
-            }
-        }
-        .subBoxDetail{
-            background-color: $platinum;
-            border-radius: 10px;
-            padding: 15px 0;
-            label{
-                color: $gray;
-                font-weight: 100;
-            }
-        }
-        .boxSBtns{
-            background-color: $platinum;
-            border-radius: 30px;
-            padding: 10px;
+    }
+    .toggle-subTable{
+        color: $goldMaderas;
+        border-radius: 27px;
+        width: 27px;
+        height: 27px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover{
+            background-color: $goldMaderas;
+            color: $white;
         }
     }
+    .subBoxDetail{
+        background-color: $platinum;
+        border-radius: 10px;
+        padding: 15px 0;
+        label{
+            color: $gray;
+            font-weight: 100;
+        }
+    }
+    .boxSBtns{
+        background-color: $platinum;
+        border-radius: 30px;
+        padding: 10px;
+    }
+}
+.dataTables_scroll .container-fluid{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.dataTables_scrollBody::-webkit-scrollbar-track{
+    border-radius: 10px;
+    background-color: transparent;
+}
+/* El background del scroll (border)*/
+.dataTables_scrollBody::-webkit-scrollbar{
+    width: 2px;
+    height: 7px;
+    background-color: transparent;
+}
+/* Color de la barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb{
+    border-radius: 0px;
+    background-color: $platinumScroll;
+}
+/* Color del HOVER de barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+    background-color: $deepGray;
+}
+.dataTables_wrapper{
+    .container-fluid .row{
+        .dataTables_info{
+            padding: 0;
+            font-size: 12px;
+        }
+        .paging_full_numbers{
+            display: flex;
+            justify-content: flex-end;
+            @media #{$smartphone}{
+                display: flex;
+                justify-content: center;
+            }
+            @media #{$tablets}{
+                display: flex;
+                justify-content: center;
+            }
+        }
+        @media #{$smartphone}{
+            display: block!important;
+        }
+        @media #{$tablets}{
+            display: block;
+            text-align: center;
+        }
+    }
+}
     .dt-buttons{
         text-align: left;
-    }
-    .paginate_button i {
-        font-size: 18px;
-    }
-    .pagination>li>a:hover, .pagination>li>span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-        background-color: transparent!important;
-        color: $goldMaderas!important;
-    }
-    .paginate_button .active a {
-        box-shadow: none !important;
     }
     .dataTables_filter label {
         display: flex;

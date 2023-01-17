@@ -9,7 +9,7 @@ class Suma extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
+        // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
     }
 
     public function index() {}
@@ -259,62 +259,10 @@ class Suma extends CI_Controller
         $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
   
         date_default_timezone_set('America/Mexico_City');       
-        $fecha_actual = strtotime(date("d-m-Y H:i:00"));
-  
-        // fecha inicio
-        $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
-        $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
-        $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
-        $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
-        $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
-        $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
-        $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
-        $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
-        $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-        $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-        $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
-        // fecha fin
-        
-        // if($validar_sede == 8){
-        //   $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
-        //   $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
-        //   $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
-        //   $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
-        //   $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
-        //   $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
-        //   $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
-        //   $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
-        //   $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
-        //   $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
-        //   $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
-        // }else{
-        //   $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
-        //   $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
-        //   $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
-        //   $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
-        //   $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
-        //   $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
-        //   $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
-        //   $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
-        //   $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
-        //   $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
-        //   $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
-  
-        // }
-  
-        // $resultado = array("resultado" => 3);
-  
-        // if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
-        //   ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
-        //   ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
-        //   ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
-        //   ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
-        //   ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
-        //   ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-        //   ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
-        //   ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-        //   ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        //   ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
+        $numDia =  date('N', time());
+        $hora = date('H');
+
+        if( $numDia == '1' || ( $numDia == '2' && $hora <= '14' ) ){
             if($usuario != ''){
               $usuarioid = $usuario;
             }
@@ -381,6 +329,10 @@ class Suma extends CI_Controller
   
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
+        }
+        else{
+            echo json_encode(3);
+        }
     }
 
     public function revision_asimilados(){
@@ -462,10 +414,6 @@ class Suma extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("ventas/historial_comisiones_suma", $datos);  
     }
-
-    // public function getAsimiladosRevision(){
-    //     echo json_encode($this->Suma_model->getAsimiladosRevision()->result_array());
-    // }
 
     public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");
@@ -651,89 +599,93 @@ class Suma extends CI_Controller
     }
 
     public function cargaxml2($id_user = ''){
-
         $user =   $usuarioid =$this->session->userdata('id_usuario');
         $this->load->model('Usuarios_modelo');
       
         if(empty($id_user)){
           $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
-      
-        }else{
+        }
+        else{
           $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
-      
         }
        
-      $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
-      if( isset( $_FILES ) && !empty($_FILES) ){
-          $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
-          $config['allowed_types'] = 'xml';
-          //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
-          $this->load->library('upload', $config);
-          if( $this->upload->do_upload("xmlfile") ){
-              $xml_subido = $this->upload->data()['full_path'];
-              $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
-              if( $datos_xml['version'] >= 3.3){
-                $responsable_factura = $this->Suma_model->verificar_uuid( $datos_xml['uuidV'] );
-                if($responsable_factura->num_rows()>=1){
-                  $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+        $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+        if( isset( $_FILES ) && !empty($_FILES) ){
+            $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
+            $config['allowed_types'] = 'xml';
+            //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+            $this->load->library('upload', $config);
+            if( $this->upload->do_upload("xmlfile") ){
+                $xml_subido = $this->upload->data()['full_path'];
+                $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
+                if( $datos_xml['version'] >= 3.3){
+                    $responsable_factura = $this->Suma_model->verificar_uuid( $datos_xml['uuidV'] );
+                    if($responsable_factura->num_rows()>=1){
+                        $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+                    }
+                    else{
+                        if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+                            if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+                                $diasxmes = date('t');
+                                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+                                $fecha2 = date('Y-m-').$diasxmes;
+                                if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+                                    if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+                                        if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+                                            if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+                                                if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+                                                    if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+                                                        if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+                                                            $respuesta['respuesta'] = array( TRUE );
+                                                            $respuesta['datos_xml'] = $datos_xml;
+                                                        }
+                                                        else{
+                                                            $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+                                                        }//FINAL DE UNIDAD
+                                                    }
+                                                    else{
+                                                        $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+                                                    }//FINAL DE METODO DE PAGO
+                                                }
+                                                else{
+                                                    $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+                                                }//FINAL DE USO DEL CFDI
+                                            }
+                                            else{
+                                                $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+                                            }//FINAL DE FORMA DE PAGO
+                                        }
+                                        else{
+                                            $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+                                        }//FINAL DE REGIMEN FISCAL
+                                    }
+                                    else{
+                                    $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+                                    }//FINAL DE RFC VALIDO
+                                }
+                                else{
+                                $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+                                }          
+                            }
+                            else{
+                                $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+                            }
+                        }
+                        else{
+                            $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+                        }
+                    }
                 }
                 else{
-      
-                  if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
-             
-                  if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
-                    $diasxmes = date('t');
-                     $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
-                     $fecha2 = date('Y-m-').$diasxmes;
-                    if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
-      
-                  if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
-                  if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
-                  if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
-                  if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
-                  if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
-                  if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
-                    $respuesta['respuesta'] = array( TRUE );
-                    $respuesta['datos_xml'] = $datos_xml;
-                  }else{
-                    $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
-                  }//FINAL DE UNIDAD
-                  }else{
-                    $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
-                  }//FINAL DE METODO DE PAGO
-                  }else{
-                    $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
-                  }//FINAL DE USO DEL CFDI
-                  }else{
-                    $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
-                  }//FINAL DE FORMA DE PAGO
-                  }else{
-                    $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
-                  }//FINAL DE REGIMEN FISCAL
-                  }else{
-                  $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
-                  }//FINAL DE RFC VALIDO
-                }else{
-                  $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
-                }          
-                  }else{
-                  $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+                    $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
                 }
-      
-                }else{
-                  $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
-                }
-      
-              }
-              }else{
-                $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
-              }
-              unlink( $xml_subido );
+                unlink( $xml_subido );
             }
             else{
               $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
             }
-          }
-          echo json_encode( $respuesta );
         }
+        
+        echo json_encode( $respuesta );
+    }
 }

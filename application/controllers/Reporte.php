@@ -246,8 +246,25 @@ class Reporte extends CI_Controller {
         }
     }
 
+    public function getLotesXStatus(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getLotesXStatus($beginDate, $endDate)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
     public function getEstatusContratacionList(){
         $data = $this->Reporte_model->getEstatusContratacionList()->result_array();
         echo json_encode($data);
+    }
+
+    public function lotesXStatus(){        
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		$this->load->view('template/header');
+		$this->load->view("reportes/lotesXStatus_view",$datos);
     }
 }
