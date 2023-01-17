@@ -8,21 +8,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title">Ingrese su comentario</h4>
-                <b id="actividad_siguiente"></b>
+                <h4 class="modal-title card-title"><b>Avance de estatus</b></h4>
+                <i id="actividad_siguiente"></i>
 
             </div>
+
             
             <form id="approveForm" name="approveForm" method="post">
-                <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
-                    <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="type" id="type">
+                
+            <div class="modal-body">
+            <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+            <input type="hidden" name="id_solicitud" id="id_solicitud">
+            <input type="hidden" name="type" id="type">
 
                 </div>
                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    
                 </div>
             </form>
         </div>
@@ -36,7 +39,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Ingrese su comentario</h4>
+                <h4 class="modal-title">Rechazo de estatus</h4>
             </div>
             <form id="rejectForm" name="rejectForm" method="post">
                 <div class="modal-body">
@@ -444,48 +447,68 @@
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5></div>
+        <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Asignación de notaría</b></h4>
+                <i id="informacion_lote"></i>
+
+            </div>
             <div class="modal-body text-center">
-               <form id="newNotario" name="newNotario" method="post">
-                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+               <form id="asignarNotaria" name="asignarNotaria" method="post">
+               <input type="hidden" class="hide" id="id_solicitud" name="id_solicitud">
+               <input type="hidden" class="hide" id="tipo_notaria" name="tipo_notaria">
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-4 pr-0 pr-0">
+
+                            <div class="col-md-12 pr-0" >
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Tipo de Notaría</label>
+                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="1">Interna</option>
+                                        <option value="2">Externa</option>
+                                        </select>
+                                    </div>
+                                </div>
+ 
+                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                                     </div>
-                                </div>
-                                <div class="col-md-4 pr-0 pr-0">
+                                </div>  
+                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notario">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral" required>
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
                                     </div>
                                 </div>
-                                <div class="col-md-4 pr-0 pr-0">
+                                <div class="col-md-12 pr-0 pr-0" id="divdireccion">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral" required>
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
                                     </div>
                                 </div>
-                                <div class="col-md-4 pr-0 pr-0">
+                                <div class="col-md-6 pr-0 pr-0" id="divcorreo">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Correo</label>
-                                        <input type="email" id="correo" name="correo" class="form-control input-gral" required>
+                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
                                     </div>
                                 </div>
-                                <div class="col-md-4 pr-0 pr-0">
+                                <div class="col-md-6 pr-0 pr-0" id="divtelefono">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Teléfono</label>
-                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral" required>
+                                        <input type="number" id="telefono" name="telefono" class="form-control input-gral">
                                     </div>
                                 </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    </div>
+                    <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
                 </form> 
             </div>
         </div>

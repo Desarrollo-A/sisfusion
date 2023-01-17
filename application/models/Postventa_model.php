@@ -125,8 +125,8 @@ class Postventa_model extends CI_Model
         }else{
             $where = "";
         }
-        return $this->db->query("SELECT distinct(se.id_solicitud),se.cliente_anterior, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote,
-        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, 
+        return $this->db->query("SELECT distinct(se.id_solicitud), cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote,
+        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
         se.aportacion, ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,cp.area_actual,dc.expediente,dc.tipo_documento,dc.idDocumento,ar2.nombre as area_sig,
         
         (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
@@ -151,7 +151,7 @@ class Postventa_model extends CI_Model
         ) cr ON cr.estatus_siguiente = cp.estatus_siguiente
         
         GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, 
-        c.nombre, n.pertenece, se.id_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,ar2.nombre,
+        c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,ar2.nombre,
         cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, 
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
     }
@@ -533,19 +533,28 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("UPDATE solicitud_escrituracion SET idNotaria= $idNotaria, idValuador = $idValuador WHERE idSolicitud = $idSolicitud;");
     }
 
-    //INSERT NUEVA NOTARIA
-    function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
-        $idUsuario = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
-        VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+    //ASIGNAR NOTARIA EXTERNA
+    function asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $response = $this->db->query("INSERT INTO notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2, 1)");
         $insert_id = $this->db->insert_id();
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-        $estatus = $this->db->query("SELECT estatus FROM solicitudes_escrituracion WHERE id_solicitud = $idSolicitud")->row()->estatus;
-        //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
-        $this->db->query("UPDATE solicitudes_escrituracion SET id_notaria= $insert_id WHERE id_solicitud = $idSolicitud;");
-        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
-        VALUES(($estatus), 59, 1, GETDATE(), 12, $idSolicitud, $rol, 11, 'Cambio de Notaria', 0, $idUsuario);");
+        $response = $this->db->query("UPDATE solicitudes_escrituracion SET bandera_notaria = 1, id_notaria = $insert_id WHERE id_solicitud = $id_solicitud");
+        $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,12,0,'SE ASIGNÓ NOTARÍA EXTERNA',GETDATE(),$id_usuario,GETDATE(),$id_usuario,0)");
+        
+        // if ($response) {
+        //     return 1;
+        // } else {
+            return $response;
+        // }
+    }
+
+    //ASIGNAR NOTARIA INTERNA
+    function asignarNotariaInterna($id_solicitud){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $response = $this->db->query("UPDATE solicitudes_escrituracion SET bandera_notaria = 1, id_notaria = 0 WHERE id_solicitud = $id_solicitud");
+        $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,12,0,'SE ASIGNÓ NOTARÍA INTERNA',GETDATE(),$id_usuario,GETDATE(),$id_usuario,0)");
+        
+        return $response;
     }
 
     //INSERT NOTARIA DESDE POSTVENTA Y PASA AL STATUS 5
