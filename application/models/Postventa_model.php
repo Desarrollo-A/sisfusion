@@ -152,6 +152,39 @@ class Postventa_model extends CI_Model
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
     }
     
+    function getNotarias()
+    {
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
+    }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+     }
+
+    function updateNotarias($idnotaria){
+
+        $respuesta = $this->db->query("UPDATE Notarias SET estatus = 0 WHERE idNotaria = $idnotaria");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+    function insertNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $sede){
+
+        $respuesta = $this->db->query("INSERT INTO Notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES ('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', $sede, 1, 1)");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+
+    }
+    
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
     {
         $idUsuario = $this->session->userdata('id_usuario');
@@ -422,18 +455,15 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getNotarias()
-    {
-        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
-        FROM Notarias n
-        JOIN sedes s ON n.sede = s.id_sede
-        WHERE sede != 0 and n.estatus = 1
-        ORDER BY n.idNotaria");
-    }
+    // function getNotarias()
+    // {
+    //     $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
+    //     return $query->result();
+    // }
 
-    function listSedes(){
-        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
-     }
+    // function listSedes(){
+    //     return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+    //  }
 
 
     function getValuadores(){
