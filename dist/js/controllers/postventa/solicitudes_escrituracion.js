@@ -472,7 +472,23 @@ $(document).on('click', '#request', function () {
    // $('#type').val(2);
     $("#approveModal").modal();
 });
-
+$('#observations').keydown(function () {
+    document.getElementById('text-observations').innerHTML = '';
+    var max = 250;
+    var len = $(this).val().length;
+    if (len >= max) {
+        //alerts.showNotification("top", "right", "Limite de caracteres superado", "warning");
+        document.getElementById('text-observations').innerHTML = 'Limite de caracteres superado';
+        $('#ApproveF').addClass('disabled');    
+        document.getElementById('ApproveF').disabled = true;                    
+    } 
+    else {
+        document.getElementById('text-observations').innerHTML = '';
+        var ch = max - len;            
+        $('#ApproveF').removeClass('disabled');
+        document.getElementById('ApproveF').disabled = false;            
+    }
+}); 
 $(document).on('click', '#createDate', function () {
     let idNotaria = $(this).attr('data-idNotaria');
     let signDate = getSignDate(idNotaria);
@@ -2008,7 +2024,7 @@ function getEstatusConstruccion(estatus_construccion) {
     $('#spiner-loader').removeClass('hide');
     $("#construccion").find("option").remove();
     if(estatus_construccion == null || estatus_construccion == 0){
-        $("#construccion").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+        $("#construccion").append($('<option disabled selected>').val("").text("Seleccione una opción"));
     }
     $.post('getEstatusConstruccion', function(data) {
         var len = data.length;

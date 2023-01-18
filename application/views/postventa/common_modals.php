@@ -15,14 +15,15 @@
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" max="255" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <b id="text-observations" class="text-danger"></b>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                     <input type="hidden" name="type" id="type">
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="submit" id="ApproveF" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -134,7 +135,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Tipo de escrituración *</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="Tipo de escrituracion" data-size="7" id="tipoE" name="tipoE"
+                                             data-size="7" id="tipoE" name="tipoE"
                                             data-live-search="true" required>
                                     </select>
                                 </div>
@@ -143,7 +144,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus de pago *</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
+                                             data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
                                     </select>
@@ -152,7 +153,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Superficie *</label>
-                                    <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
+                                    <input id="superficie" name="superficie" class="form-control input-gral" value="" min="0" step="any" type="number" required>
                                 </div>
                             </div>    
                             <div class="col-md-4 pr-0">
@@ -261,7 +262,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Superficie</label>
-                                    <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
+                                    <input id="superficie2" name="superficie2" class="form-control input-gral" step="any" value="" type="number" disabled>
                                 </div>
                             </div>    
                             <div class="col-md-4 pr-0">
