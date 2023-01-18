@@ -1700,3 +1700,7 @@ table .boxSBtns {
   text-align: center;
   margin: 0 5px;
 }
+
+.form-group label.estiloEsc {
+  top: -34px !important;
+}
