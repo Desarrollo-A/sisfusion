@@ -25,11 +25,11 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
-    {
+    {   
         $num_cli = $this->db->query("SELECT CASE
                                                 WHEN idCliente IS NULL THEN 0
                                                 WHEN idCliente = '' THEN 0 
@@ -66,11 +66,7 @@ class Postventa_model extends CI_Model
         }
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        
         $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
-      //  print_r($data); 
-
-
         $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
@@ -87,7 +83,7 @@ class Postventa_model extends CI_Model
         ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
         personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
         fecha_modificacion,modificado_por)
-        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
         $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
@@ -155,7 +151,40 @@ class Postventa_model extends CI_Model
         cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, 
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
     }
-    
+
+    function getNotarias()
+    {
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
+    }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+     }
+
+    function updateNotarias($idnotaria){
+
+        $respuesta = $this->db->query("UPDATE Notarias SET estatus = 0 WHERE idNotaria = $idnotaria");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+    function insertNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $sede){
+
+        $respuesta = $this->db->query("INSERT INTO Notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES ('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', $sede, 1, 1)");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+
+    }
+
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
     {
         $idUsuario = $this->session->userdata('id_usuario');
@@ -426,18 +455,15 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getNotarias()
-    {
-        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
-        FROM Notarias n
-        JOIN sedes s ON n.sede = s.id_sede
-        WHERE sede != 0 and n.estatus = 1
-        ORDER BY n.idNotaria");
-    }
+    // function getNotarias()
+    // {
+    //     $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
+    //     return $query->result();
+    // }
 
-    function listSedes(){
-        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
-     }
+    // function listSedes(){
+    //     return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+    //  }
 
 
     function getValuadores(){

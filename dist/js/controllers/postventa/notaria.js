@@ -156,7 +156,7 @@ $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
               $('#notaria-datatable').DataTable().ajax.reload(null, false);
               CloseModalDelete2();
               alerts.showNotification("top", "right", "Notaría eliminada correctamente.", "success");
-              document.getElementById("form_abono").reset();
+              document.getElementById("form_abono");
             } else if(data == 0) {
               $('#notaria-datatable').DataTable().ajax.reload(null, false);
               CloseModalDelete2();

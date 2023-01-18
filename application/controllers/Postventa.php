@@ -138,6 +138,7 @@ class Postventa extends CI_Controller
         $idClient = $this->Postventa_model->getClient($idLote);
         $idClient = empty($idClient) ? -1 : $idClient;
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        // print_r(!empty($resDecode->data));
         if(!empty($resDecode->data)){
             $resDecode->data[0]->bandera_exist_cli = true;
         }else{
@@ -669,18 +670,18 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            /*echo $personalidad;
-            echo "<br>";
-            echo $idLote;
-            echo "<br>";
-            echo $idCliente;
-            echo "<br>";
-            echo $idPostventa;
-            echo "<br>";
-            print_r($resDecode->data[0]);
-            echo "<br>";
-            echo $usuarioJuridico->id_usuario;
-            echo "<br>";*/
+            // echo "Persona juridica dato".$personalidad."<br>";
+            // echo "<br>";
+            // echo $idLote;
+            // echo "<br>";
+            // echo $idCliente;
+            // echo "<br>";
+            // echo $idPostventa;
+            // echo "<br>";
+            // print_r($resDecode->data[0]);
+            // echo "<br>";
+            // echo $usuarioJuridico->id_usuario;
+            // echo "<br>";
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
                 $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
