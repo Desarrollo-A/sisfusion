@@ -52,7 +52,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function(e){
 
     $.ajax({
         type: 'POST',
-        url: general_base_url+'Usuarios/SubirPDFExtranjero',
+        url: general_base_url+'Suma/SubirPDFExtranjero',
         data: formData,
         contentType: false,
         cache: false,
@@ -78,7 +78,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function(e){
 $(document).on('click', '.verPDFExtranjero', function () {
     const $itself = $(this);
     Shadowbox.open({
-        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+general_base_url+'static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+general_base_url+'static/documentos/extranjero_suma/'+$itself.attr('data-usuario')+'"></iframe></div>',
         player: "html",
         title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
         width: 985,
@@ -210,7 +210,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                 },
                 attr: {
                     class: 'btn btn-azure',
-                    style: `${ (forma_pago != '2' && forma_pago != '5') ? 'position:relative; float:right' : 'display:none'}`
+                    style: `${ (forma_pago != '2') ? 'position:relative; float:right' : 'display:none'}`
                 }
             }, 
         {
