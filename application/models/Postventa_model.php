@@ -155,13 +155,13 @@ class Postventa_model extends CI_Model
         cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, 
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
     }
-
+    
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
     {
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
+        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite,id_notaria,bandera_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
       
         // echo $estatus;
         $sqlAreaRechazo = '';
@@ -170,12 +170,12 @@ class Postventa_model extends CI_Model
         }
 
          
-        $notaria = $this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
+        $notaria = $estatus->id_notaria; //$this->db->query("SELECT id_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row()->id_notaria;
         $notariaInterna = '';
-        if($estatus->id_estatus == 12 && $notaria == 0){
+        if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1){
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
-        if($estatus->id_estatus == 12 && $notaria != 0){
+        if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
             $notariaInterna = $pertenece == 0 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
         }
