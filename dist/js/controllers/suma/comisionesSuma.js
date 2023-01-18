@@ -1058,7 +1058,11 @@ function todos(){
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
+<<<<<<< Updated upstream
     if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
+=======
+    if( noDia == 1 || ( noDia == 2 && hora <= 15 )){
+>>>>>>> Stashed changes
         
         $.ajax({
             type: 'POST',
@@ -1133,11 +1137,19 @@ $(document).on("click", ".subir_factura_multiple", function() {
                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                         }
                     });
+<<<<<<< Updated upstream
                 }
                 else{
                     $('#spiner-loader').addClass('hide');
                     alerts.showNotification("top", "right", "Ya se ha cargado una factura, esperar al siguiente corte.", "danger");
                 }
+=======
+                }
+                else{
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Ya se ha cargado una factura, esperar al siguiente corte.", "danger");
+                }
+>>>>>>> Stashed changes
             },
             error: function() {
                 $('#spiner-loader').addClass('hide');
