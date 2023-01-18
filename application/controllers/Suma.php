@@ -727,7 +727,7 @@ class Suma extends CI_Controller
         move_uploaded_file($fileTmpPath, $dest_path);
 
 
-        $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc);
+        $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc, 'SUMA');
         echo json_encode($response);
     }
 }
