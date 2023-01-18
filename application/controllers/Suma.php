@@ -45,6 +45,15 @@ class Suma extends CI_Controller
         }
     }
 
+    public function validateWeek(){
+        $date = new DateTime();
+        $week = $date->format("W");
+        $user = $this->session->userdata('id_usuario');
+        $data = $this->Suma_model->validateWeek($week, $user)->result_array();
+        
+        echo json_encode($data);
+    }
+
     public function comisiones_suma(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
@@ -257,6 +266,8 @@ class Suma extends CI_Controller
     public function guardar_solicitud($usuario = ''){
         $validar_user = $this->session->userdata('id_usuario');
         $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
+        $date = new DateTime();
+        $week = $date->format("W");
   
         date_default_timezone_set('America/Mexico_City');       
         $numDia =  date('N', time());
@@ -300,7 +311,7 @@ class Suma extends CI_Controller
                     for ($i=0; $i <count($datos) ; $i++) { 
                       if(!empty($datos[$i])){
                         $id_com =  $datos[$i];
-                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
                         $this->Suma_model->update_acepta_solicitante($id_com);
                         $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
                       }
@@ -687,5 +698,36 @@ class Suma extends CI_Controller
         }
         
         echo json_encode( $respuesta );
+    }
+
+    public function SubirPDFExtranjero($id = '')
+    {
+        $id_usuario = $this->session->userdata('id_usuario');
+        $nombre = $this->session->userdata('nombre');
+        $opc = 0;
+
+        if ($id != '') {
+            $opc = 1;
+            $id_usuario = $this->input->post("id_usuario");
+            $nombre = $this->input->post("nombre");
+        }
+
+        date_default_timezone_set('America/Mexico_City');
+        $hoy = date("Y-m-d");
+
+
+        $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
+        $fileName = $_FILES['file-upload-extranjero']['name'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+        $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
+        $uploadFileDir = './static/documentos/extranjero_suma/';
+
+        $dest_path = $uploadFileDir . $newFileName;
+        move_uploaded_file($fileTmpPath, $dest_path);
+
+
+        $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc);
+        echo json_encode($response);
     }
 }
