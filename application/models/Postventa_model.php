@@ -25,11 +25,11 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
-    {
+    {   
         $num_cli = $this->db->query("SELECT CASE
                                                 WHEN idCliente IS NULL THEN 0
                                                 WHEN idCliente = '' THEN 0 
@@ -66,11 +66,7 @@ class Postventa_model extends CI_Model
         }
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        
         $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
-      //  print_r($data); 
-
-
         $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
@@ -87,7 +83,7 @@ class Postventa_model extends CI_Model
         ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
         personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
         fecha_modificacion,modificado_por)
-        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
         $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();

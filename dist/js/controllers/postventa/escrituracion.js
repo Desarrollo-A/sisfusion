@@ -32,8 +32,8 @@ $(document).on('submit', '#formEscrituracion', function (e) {
     const nom_id_butt = document.querySelector('.cont-button_apl');
     e.preventDefault();
     loading();
-    $('#'+nom_id_butt.children[0].id).prop('disabled', true);
-    $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
+    // $('#'+nom_id_butt.children[0].id).prop('disabled', true);
+    // $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
     let formData = new FormData(this);
     if(nom_id_butt.children[0].id == 'alta_cli'){
         AltaCli(formData);
@@ -70,7 +70,6 @@ function aportaciones(data) {
         type: 'POST',
         dataType: 'json',
         success: function (response) {
-            console.log(response);
             $('#spiner-loader').addClass('hide');
             if(response == true){
                 alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
@@ -151,7 +150,7 @@ function getInputData() {
         telefono: $('#telefono').val(),
         cel: $('#cel').val()
     }
-    return data;
+    return data;    
 };
 function NombreCompleto(e){
     var nom_com_cli = $('#nombre2').val() + " " + $('#ape1').val() + " " + $('#ape2').val();
@@ -194,9 +193,10 @@ function getClient(idLote) {
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
             $('#personalidad').val(data.personalidad);
             $('#check').removeClass("d-none");
+            
    
         }else{
-            alerts.showNotification("top", "right", "No se han encontrado registros.<br>Por favor ingresar la información solicitada.", "danger");
+            alerts.showNotification("top", "right", "No se han registros los datos del cliente.<br>Por favor ingresar la información solicita.", "warning");
             clearInputs();
             habilitarInputs(false);
             document.getElementById('nombre2').addEventListener('change', NombreCompleto);
@@ -250,6 +250,7 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
+            
             $('#check').removeClass("d-none");
         }
        
@@ -368,7 +369,7 @@ function habilitarInputs(resul){
         /*Cambio de id, nombre y etiuqueta del boton del formulario */
         const button_apli = document.querySelector('.cont-button_apl');
         button_apli.children[0].id = 'alta_cli';
-        button_apli.children[0].children[0].innerText = 'Alta de Cliente';
+        button_apli.children[0].children[0].innerText= 'Alta de Cliente';
         button_apli.children[0].children[1].innerText = 'Alta de Cliente';
     }
     //Habilita los RadioButton
