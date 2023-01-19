@@ -5,13 +5,7 @@
   
 <div class="wrapper ">
     
-	<?php
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);  
-	?>
+	<?php $this->load->view('template/sidebar', "");  ?>
 	<!--Contenido de la página-->
 
 	<div class="content boxContent">
@@ -75,10 +69,9 @@
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
                                                         <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusL">Liquidado</label>
-
+                                                        <label class="btn w-50" for = "estatusL">Liquidado</label>
                                                         <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusSL">Sin liquidar</label>
+                                                        <label class="btn w-50" for = "estatusSL">Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -87,17 +80,7 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <ol class="list-none">
-                                                        <h4 class="card-title">Documentos para Escrituración</h4>
-                                                        <li><b>1)</b> Identificación Oficial Vigente</li>
-                                                        <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
-                                                        <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
-                                                        <li><b>4)</b> Acta de Nacimiento</li>
-                                                        <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
-                                                        <li><b>6)</b> CURP(formato actualizado)</li>
-                                                        <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
-                                                        <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
-                                                        <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
-                                                        <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
+                                                        <div id="documentosPersonalidad"></div>
                                                     </ol>
                                                 </div>
                                                 <div class="col-md-7">
@@ -105,117 +88,117 @@
                                                         <!-- CAMPOS PARA LA CAPTURA DEL NOMBRE Y APELLIDOS POR SEPARADO -->
                                                         <div class="col-md-12 pl-0" id = "nom2_cli">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Nombre Completo</label>
+                                                                <label class="control-label estiloEsc label-gral">Nombre Completo</label>
                                                                 <input id="nombre2" name="nombre2" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0" id = "ape1_cli">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Apellido Paterno</label>
+                                                                <label class="control-label estiloEsc label-gral">Apellido Paterno</label>
                                                                 <input id="ape1" name="ape1" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0" id = "ape2_cli">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Apellido Materno</label>
+                                                                <label class="control-label estiloEsc label-gral">Apellido Materno</label>
                                                                 <input id="ape2" name="ape2" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <!--------------------------------------------------------------->
                                                         <div class="col-md-4 pl-0">
                                                             <div class="cont_ocu form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Ocupación</label>
+                                                                <label class="control-label estiloEsc label-gral">Ocupación</label>
                                                                 <input id="ocupacion" name="ocupacion" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Lugar de Origen</label>
+                                                                <label class="control-label estiloEsc label-gral">Lugar de Origen</label>
                                                                 <input id="origen" name="origen" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="EdoCiv">
-                                                                <label class="control-label label-gral">Estado Civil</label>
+                                                                <label class="control-label estiloEsc label-gral">Estado Civil</label>
                                                                 <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                             </div>
                                                         </div>    
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="RegCon">
-                                                                <label class="control-label label-gral">Régimen Conyugal</label>
+                                                                <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
                                                                 <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                                 <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Correo Electrónico</label>
+                                                                <label class="control-label estiloEsc label-gral">Correo Electrónico</label>
                                                                 <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Domicilio Actual</label>
+                                                                <label class="control-label estiloEsc label-gral">Domicilio Actual</label>
                                                                 <input id="direccion" name="direccion" class="form-control input-gral" type="text" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Calle fiscal</label>
+                                                                <label class="control-label estiloEsc label-gral">Calle fiscal</label>
                                                                 <input id="calleF" name="calleF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Número exterior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. ext.</label>
                                                                 <input id="numExtF" name="numExtF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Número interior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. int.</label>
                                                                 <input id="numIntF" name="numIntF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Colonia</label>
+                                                                <label class="control-label estiloEsc label-gral">Colonia</label>
                                                                 <input id="coloniaf" name="coloniaf" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Municipio</label>
+                                                                <label class="control-label estiloEsc label-gral">Municipio</label>
                                                                 <input id="municipiof" name="municipiof" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Estado</label>
+                                                                <label class="control-label estiloEsc label-gral">Estado</label>
                                                                 <input id="estadof" name="estadof" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Código postal</label>
+                                                                <label class="control-label estiloEsc label-gral">Código postal</label>
                                                                 <input id="cpf" name="cpf" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">RFC *</label>
+                                                                <label class="control-label estiloEsc label-gral">RFC *</label>
                                                                 <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Teléfono (casa)</label>
+                                                                <label class="control-label estiloEsc label-gral">Teléfono (casa)</label>
                                                                 <input id="telefono" name="telefono" class="form-control input-gral" type="number">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label label-gral">Teléfono (cel)</label>
+                                                                <label class="control-label estiloEsc label-gral">Teléfono (cel)</label>
                                                                 <input id="cel" name="cel" class="form-control input-gral" type="number">
                                                             </div>
                                                         </div>

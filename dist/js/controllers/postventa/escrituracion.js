@@ -32,8 +32,8 @@ $(document).on('submit', '#formEscrituracion', function (e) {
     const nom_id_butt = document.querySelector('.cont-button_apl');
     e.preventDefault();
     loading();
-    $('#'+nom_id_butt.children[0].id).prop('disabled', true);
-    $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
+    // $('#'+nom_id_butt.children[0].id).prop('disabled', true);
+    // $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
     let formData = new FormData(this);
     if(nom_id_butt.children[0].id == 'alta_cli'){
         AltaCli(formData);
@@ -70,7 +70,6 @@ function aportaciones(data) {
         type: 'POST',
         dataType: 'json',
         success: function (response) {
-            console.log(response);
             $('#spiner-loader').addClass('hide');
             if(response == true){
                 alerts.showNotification("top", "right", "Se ha creado la solicitud correctamente.", "success");
@@ -151,7 +150,7 @@ function getInputData() {
         telefono: $('#telefono').val(),
         cel: $('#cel').val()
     }
-    return data;
+    return data;    
 };
 function NombreCompleto(e){
     var nom_com_cli = $('#nombre2').val() + " " + $('#ape1').val() + " " + $('#ape2').val();
@@ -164,6 +163,37 @@ function getClient(idLote) {
         idLote: idLote
     }, function (data) {
         if(data.bandera_exist_cli){
+
+            if(data.personalidad == 1){
+                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Moral</h4></b></li>
+                <li><b>1) Acta constitutiva y poder notariado</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal actual).</i></li>
+                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+                <li><b>4) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+                <li><b>5) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+                <li><b>6) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+                <li><br></li>
+                <li><b><h4 class="card-title">Documentos Escrituración Apoderado Legal</h4></b></li>
+                <li><b>1) Identificación oficial vigente</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+                <li><b>3) Acta de Nacimiento</b>.</li>
+                <li><b>4) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+                <li><b>5) CURP </b><i>(Formato actualizado).</i></li>`);
+            }else if(data.personalidad == 2){
+                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Física</h4></b></li>
+                <li><b>1) Identificación oficial vigente</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+                <li><b>4) Acta de Nacimiento</b>.</li>
+                <li><b>5) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+                <li><b>6) CURP </b><i>(Formato actualizado).</i></li>
+                <li><b>7) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+                <li><b>8) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+                <li><b>9) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+                <li><b>10) Constancia de no adeudo de agua </b><i>(No obligatorio).</i></li>`);
+            }else{
+                $('#documentosPersonalidad').html('<li><b></b>Sin personalidad juridica asignada</li>');
+            }
 
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
@@ -194,9 +224,9 @@ function getClient(idLote) {
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
             $('#personalidad').val(data.personalidad);
             $('#check').removeClass("d-none");
-   
+        
         }else{
-            alerts.showNotification("top", "right", "No se han encontrado registros.<br>Por favor ingresar la información solicitada.", "danger");
+            alerts.showNotification("top", "right", "No se han registros los datos del cliente.<br>Por favor ingresar la información solicita.", "warning");
             clearInputs();
             habilitarInputs(false);
             document.getElementById('nombre2').addEventListener('change', NombreCompleto);
@@ -250,6 +280,7 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
+            
             $('#check').removeClass("d-none");
         }
        
@@ -368,7 +399,7 @@ function habilitarInputs(resul){
         /*Cambio de id, nombre y etiuqueta del boton del formulario */
         const button_apli = document.querySelector('.cont-button_apl');
         button_apli.children[0].id = 'alta_cli';
-        button_apli.children[0].children[0].innerText = 'Alta de Cliente';
+        button_apli.children[0].children[0].innerText= 'Alta de Cliente';
         button_apli.children[0].children[1].innerText = 'Alta de Cliente';
     }
     //Habilita los RadioButton

@@ -25,11 +25,11 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitudes_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
-    {
+    {   
         $num_cli = $this->db->query("SELECT CASE
                                                 WHEN idCliente IS NULL THEN 0
                                                 WHEN idCliente = '' THEN 0 
@@ -40,8 +40,7 @@ class Postventa_model extends CI_Model
         if($num_cli->row()->num_cli < 1){
             return $num_cli;
         }else{
-            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli,
-            oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
+            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli, oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
             FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.nacionalidad AND oxc.id_catalogo = 11
@@ -59,6 +58,51 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
+    // function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
+    // {
+    //     if(is_object($data)){
+    //         $data = (array)$data;
+    //     }
+    //     $idUsuario = $this->session->userdata('id_usuario');
+    //     $rol = $this->session->userdata('id_rol');
+    //     $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
+    //     $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
+    //     $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
+    //     $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
+    //     $clienteAnterior = $data['ult_ncliente'] != null ? 1:2;
+    //     $nombreClienteAnterior = $clienteAnterior == 1 ? $data['ult_ncliente']: NULL;
+    //     $rfcAnterior =  $clienteAnterior == 1 ? $data['ult_rfc']: NULL;
+    
+    //     /*$this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
+    //     , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
+    //     nombre_anterior, RFC, nombre, personalidad, id_juridico)
+    //      VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
+    //             $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");*/
+    //     $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral
+    //     ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
+    //     personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
+    //     fecha_modificacion,modificado_por)
+    //     VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+    //     $insert_id = $this->db->insert_id();
+    //     $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
+    //     $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
+    //     foreach ($opciones as $row) {
+    //         $opcion = $row['id_opcion'];
+    //         $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,$opcion,$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL);");
+    //     }
+    //     $y=0;
+
+    //     for($x=0;$x<9;$x++){
+    //         $y = $y<3 ? $y+1:1;
+    //         $this->db->query("INSERT INTO Presupuestos (expediente, idSolicitud, estatus, tipo, fecha_creacion, creado_por, modificado_por, bandera) 
+    //         VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
+    //     }
+
+    //     return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+    //      VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
+    // }
+
+    // $row['id_pago_i']
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
         if(is_object($data)){
@@ -66,35 +110,17 @@ class Postventa_model extends CI_Model
         }
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        
-        $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
-      //  print_r($data); 
-
-
-        $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
-        $clienteAnterior = $data['ult_ncliente'] != null ? 1:2;
-        $nombreClienteAnterior = $clienteAnterior == 1 ? $data['ult_ncliente']: NULL;
-        $rfcAnterior =  $clienteAnterior == 1 ? $data['ult_rfc']: NULL;
-    
-        /*$this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
-        , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
-        nombre_anterior, RFC, nombre, personalidad, id_juridico)
-         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
-                $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");*/
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral
-        ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
-        personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
-        fecha_modificacion,modificado_por)
-        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+      
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
-        $opcion =  $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60 : 72;
-        $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
+
+        $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
         foreach ($opciones as $row) {
-            $opcion = $row['id_opcion'];
-            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,$opcion,$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL);");
+            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,".$row['id_documento'].",$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL,".$row['obligatorio'].");");
         }
+        
         $y=0;
 
         for($x=0;$x<9;$x++){
@@ -103,9 +129,9 @@ class Postventa_model extends CI_Model
             VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
         }
 
-        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
-         VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por) VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
+    
 
     function getSolicitudes($begin, $end, $estatus)
     {
@@ -154,6 +180,39 @@ class Postventa_model extends CI_Model
         c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,ar2.nombre,
         cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, 
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
+    }
+    
+    function getNotarias()
+    {
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        FROM Notarias n
+        JOIN sedes s ON n.sede = s.id_sede
+        WHERE sede != 0 and n.estatus = 1
+        ORDER BY n.idNotaria");
+    }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+     }
+
+    function updateNotarias($idnotaria){
+
+        $respuesta = $this->db->query("UPDATE Notarias SET estatus = 0 WHERE idNotaria = $idnotaria");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+    function insertNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $sede){
+
+        $respuesta = $this->db->query("INSERT INTO Notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES ('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', $sede, 1, 1)");
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+
     }
     
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
@@ -429,18 +488,15 @@ class Postventa_model extends CI_Model
         return $query->result();
     }
 
-    function getNotarias()
-    {
-        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
-        FROM Notarias n
-        JOIN sedes s ON n.sede = s.id_sede
-        WHERE sede != 0 and n.estatus = 1
-        ORDER BY n.idNotaria");
-    }
+    // function getNotarias()
+    // {
+    //     $query = $this->db->query("SELECT * FROM Notarias WHERE sede != 0");
+    //     return $query->result();
+    // }
 
-    function listSedes(){
-        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
-     }
+    // function listSedes(){
+    //     return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+    //  }
 
 
     function getValuadores(){
