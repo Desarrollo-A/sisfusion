@@ -164,6 +164,37 @@ function getClient(idLote) {
     }, function (data) {
         if(data.bandera_exist_cli){
 
+            if(data.personalidad == 1){
+                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Moral</h4></b></li>
+                <li><b>1) Acta constitutiva y poder notariado</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal actual).</i></li>
+                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+                <li><b>4) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+                <li><b>5) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+                <li><b>6) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+                <li><br></li>
+                <li><b><h4 class="card-title">Documentos Escrituración Apoderado Legal</h4></b></li>
+                <li><b>1) Identificación oficial vigente</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+                <li><b>3) Acta de Nacimiento</b>.</li>
+                <li><b>4) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+                <li><b>5) CURP </b><i>(Formato actualizado).</i></li>`);
+            }else if(data.personalidad == 2){
+                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Física</h4></b></li>
+                <li><b>1) Identificación oficial vigente</b>.</li>
+                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+                <li><b>4) Acta de Nacimiento</b>.</li>
+                <li><b>5) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+                <li><b>6) CURP </b><i>(Formato actualizado).</i></li>
+                <li><b>7) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+                <li><b>8) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+                <li><b>9) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+                <li><b>10) Constancia de no adeudo de agua </b><i>(No obligatorio).</i></li>`);
+            }else{
+                $('#documentosPersonalidad').html('<li><b></b>Sin personalidad juridica asignada</li>');
+            }
+
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);
@@ -193,8 +224,7 @@ function getClient(idLote) {
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
             $('#personalidad').val(data.personalidad);
             $('#check').removeClass("d-none");
-            
-   
+        
         }else{
             alerts.showNotification("top", "right", "No se han registros los datos del cliente.<br>Por favor ingresar la información solicita.", "warning");
             clearInputs();

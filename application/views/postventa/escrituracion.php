@@ -5,13 +5,7 @@
   
 <div class="wrapper ">
     
-	<?php
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);  
-	?>
+	<?php $this->load->view('template/sidebar', "");  ?>
 	<!--Contenido de la página-->
 
 	<div class="content boxContent">
@@ -75,10 +69,9 @@
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
                                                         <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusL">Liquidado</label>
-
+                                                        <label class="btn w-50" for = "estatusL">Liquidado</label>
                                                         <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusSL">Sin liquidar</label>
+                                                        <label class="btn w-50" for = "estatusSL">Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -87,17 +80,7 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <ol class="list-none">
-                                                        <h4 class="card-title">Documentos para Escrituración</h4>
-                                                        <li><b>1)</b> Identificación Oficial Vigente</li>
-                                                        <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
-                                                        <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
-                                                        <li><b>4)</b> Acta de Nacimiento</li>
-                                                        <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
-                                                        <li><b>6)</b> CURP(formato actualizado)</li>
-                                                        <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
-                                                        <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
-                                                        <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
-                                                        <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
+                                                        <div id="documentosPersonalidad"></div>
                                                     </ol>
                                                 </div>
                                                 <div class="col-md-7">
@@ -167,13 +150,13 @@
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">Número exterior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. ext.</label>
                                                                 <input id="numExtF" name="numExtF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">Número interior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. int.</label>
                                                                 <input id="numIntF" name="numIntF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
