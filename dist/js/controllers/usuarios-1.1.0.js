@@ -300,7 +300,6 @@ $("#my_add_user_form").on('submit', function(e){
 });
 
 function getLeadersList(){
-    $('.col-estructura').html('');
     headquarter = $('#headquarter').val();
     type = $('#member_type').val();
     $("#leader").find("option").remove();
@@ -319,22 +318,6 @@ function getLeadersList(){
         }
         $('#leader').selectpicker('refresh');
     }, 'json');
-
-    if ( type == '7' || type == '9' ){
-        var row = $('.col-estructura');
-        row.append(`
-            <div class="col-sm-4">
-                <div class="form-group label-floating select-is-empty div_nuevaEstructura">
-                    <label class="control-label"><small class="isRequired">*</small>Nueva estructura</label>
-                    <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                        <option value="0">No</option>
-                        <option value="1">Sí</option>
-                    </select>
-                </div>
-            </div>
-        `);
-        $('#nueva_estructura').selectpicker('refresh');
-    }
 }
 
 function getLeadersListForEdit(headquarter, type, leader){
@@ -543,10 +526,10 @@ $(document).on('click', '.edit-user-information', function(e){
             else
                 leader = v.id_lider;
 
-            if ( v.id_rol == '9' || v.id_rol == '7' ){
+            if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
                 var row = $('.col-estructura');
                 row.append(`
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="form-group label-floating select-is-empty div_nuevaEstructura">
                             <label class="control-label"><small class="isRequired">*</small>Nueva estructura</label>
                             <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
@@ -643,18 +626,6 @@ function fillFields (v) {
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
-    else if (v.id_rol = 7 && v.nueva_estructura == 1)
-        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
-    else if (v.id_rol = 7 && v.nueva_estructura == 0)
-        $("#member_type option[value=7]").text("ASESOR");
-    else if (v.id_rol = 9 && v.nueva_estructura == 1)
-        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
-    else if (v.id_rol = 9 && v.nueva_estructura == 0)
-        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
-    else if (v.id_rol = 3 && v.nueva_estructura == 1)
-        $("#member_type option[value=3]").text("EMBAJADOR");
-    else if (v.id_rol = 3 && v.nueva_estructura == 0)
-        $("#member_type option[value=3]").text("GERENTE");
         
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);
@@ -667,31 +638,36 @@ function fillFields (v) {
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
 
-    $('#payment_method').selectpicker('refresh');
-    $('#headquarter').selectpicker('refresh');
-    $('#member_type').selectpicker('refresh');
-
     if(rol_asignado == 7 || rol_asignado== 3 || rol_asignado == 9 ){
         $('#ch'). show();
         document.getElementById("sedech").removeAttribute("required");
         $("#sedech").empty();
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
-                if(v.sedech == null){
-                    getSedesCH();
-                }else{
-                    getSedesCH(v.sedech,v.sucursalch);
-                }
-                $('#sedech').selectpicker('refresh');
-            }
-            else{
-                $('#ch'). hide();
-                document.getElementById("sedech").removeAttribute("required");
-                $("#sedech").empty();
-                document.getElementById("sucursal").removeAttribute("required");
-                $("#sucursal").empty();
-            }
-            $("#rol_actual").val(v.id_rol);
+        if(v.sedech == null) {
+            getSedesCH();
+        } else {
+            getSedesCH(v.sedech,v.sucursalch);
+        }
+        $('#sedech').selectpicker('refresh');
+        if (v.nueva_estructura == 1) {
+            $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+            $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+            $("#member_type option[value=3]").text("EMBAJADOR");
+        } else {
+            $("#member_type option[value=7]").text("ASESOR");
+            $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+            $("#member_type option[value=3]").text("GERENTE");
+        }
+    } else {
+        $('#ch'). hide();
+        document.getElementById("sedech").removeAttribute("required");
+        $("#sedech").empty();
+        document.getElementById("sucursal").removeAttribute("required");
+        $("#sucursal").empty();
+    }
+    
+    $("#rol_actual").val(v.id_rol);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
 }
@@ -828,3 +804,17 @@ function fillChangelogUsers(v) {
         '    </div>\n' +
         '</li>');
 }
+
+$(document).on('change', '#nueva_estructura', function() {
+    if ($(this).val() == 1) {
+        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+        $("#member_type option[value=3]").text("EMBAJADOR");
+    } else {
+        $("#member_type option[value=7]").text("ASESOR");
+        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+        $("#member_type option[value=3]").text("GERENTE");
+    }
+    $("#member_type").val('').selectpicker("refresh");
+    $("#leader").val('').selectpicker("refresh");
+});
