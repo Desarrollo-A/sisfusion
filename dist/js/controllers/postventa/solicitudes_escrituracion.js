@@ -444,7 +444,8 @@ $(document).on("submit", "#formPresupuesto", function (e) {
                 var win =  window.open("pdfPresupuesto/" + $('#id_solicitud3').val(), "_blank");
                 $('#spiner-loader').addClass('hide');
                 win.onload = function(){
-                    prospectsTable.ajax.reload();
+                    $('#formPresupuesto')[0].reset();
+                   prospectsTable.ajax.reload();
                 }
             }
         }, error: function () {
@@ -525,7 +526,8 @@ $(document).on('click', '#presupuesto', function () {
     var data = prospectsTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
     console.log(area_actual);
-    if(area_actual == 57 && (data.estatus_actual == 9 || data.estatus_actual == 8 || data.estatus_actual == 4 || data.estatus_actual == 3)){
+
+    if(area_actual == 55 && (data.estatus_actual == 9  || data.estatus_actual == 11)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
@@ -536,9 +538,9 @@ $(document).on('click', '#presupuesto', function () {
        document.getElementById('nombreT').disabled = true;
        document.getElementById('fechaCA').disabled = true;
        document.getElementById('rfcDatos').disabled = true;
-       /*document.getElementById('aportaciones').disabled = true;
+       document.getElementById('aportaciones').disabled = true;
        document.getElementById('descuentos').disabled = true;
-       document.getElementById('motivo').disabled = true;*/
+       document.getElementById('motivo').disabled = true;
     }
     // $('#id_solicitud3').val(data.idSolicitud);
     //alert(data.id_solicitud)
@@ -604,7 +606,7 @@ $(document).on('click', '#tree', function () {
 
 $(document).on('click', '#asignarNotariaButton', function () {
 
-    $('#asignarNotaria')[0].reset();
+    //$('#asignarNotaria')[0].reset();
 
     var data = prospectsTable.row($(this).parents('tr')).data();
     let informacion_lote = $(this).attr('data-lote');
@@ -613,37 +615,39 @@ $(document).on('click', '#asignarNotariaButton', function () {
     $("#tipoNotaria").selectpicker('refresh');
     document.getElementById('informacion_lote').innerHTML = 'Lote: '+informacion_lote;
     $('#id_solicitud').val(solicitud);
-
-    $('#divnombre_notaria').hide();
+    //$('#div_notaria').hide();
+    /*$('#divnombre_notaria').hide();
     $('#divnombre_notario').hide();
     $('#divdireccion').hide();
     $('#divcorreo').hide();
-    $('#divtelefono').hide();
+    $('#divtelefono').hide();*/
  
     $("#altaNotario").modal();
 });
 
- 
 
 $(document).on('change', '#tipoNotaria', function(e){
 
     if ($(this).val()) {
         $('#tipo_notaria').val($(this).val());
         if ($(this).val() == 2) {
-            $('#asignarNotaria')[0].reset();
-            $('#divnombre_notaria').show().attr("required", true);
-            $('#divnombre_notario').show().attr("required", true);
-            $('#divdireccion').show().attr("required", true);
-            $('#divcorreo').show().attr("required", true);
-            $('#divtelefono').show().attr("required", true);
+            $('#div_notaria').show();
+           // $('#asignarNotaria')[0].reset();
+
+            $('#nombre_notaria').attr("required", true);
+            $('#nombre_notario').attr("required", true);
+            $('#direccion').attr("required", true);
+            $('#correo').attr("required", true);
+            $('#telefono').attr("required", true);
 
         }else{
+            $('#div_notaria').hide();
 
-            $('#divnombre_notaria').removeAttr("required").hide();
-            $('#divnombre_notario').removeAttr("required").hide();
-            $('#divdireccion').removeAttr("required").hide();
-            $('#divcorreo').removeAttr("required").hide();
-            $('#divtelefono').removeAttr("required").hide();
+            $('#nombre_notaria').removeAttr("required");
+            $('#nombre_notario').removeAttr("required");
+            $('#direccion').removeAttr("required");
+            $('#correo').removeAttr("required");
+            $('#telefono').removeAttr("required");
 
          }
     }
@@ -1081,7 +1085,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 }
                             break;
                             case 9:
-                                if (userType == 57) { 
+                                if (userType == 55) { 
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
@@ -1096,13 +1100,11 @@ function fillTable(beginDate, endDate, estatus) {
                                     exp = d.expediente;
                                     permiso =1;// exp == null || exp == '' || exp == 'null' ? 1 : 2;
                                     //group_buttons += exp != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';                                
-
-
                                     group_buttons += permisos(permiso, exp, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
                                 }
                             break;
                             case 11:
-                                if (userType == 57) { 
+                                if (userType == 55) { 
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
@@ -1116,13 +1118,7 @@ function fillTable(beginDate, endDate, estatus) {
 
                                 }
 
-                                if (d.bandera_notaria == 0 || d.bandera_notaria == 'NULL') { 
-                                    group_buttons += `<button id="asignarNotariaButton" data-solicitud="${d.id_solicitud}" data-lote="${d.nombreLote}" data-type="5" class="btn-data btn-secondary" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-file"></i></button>`;
-
-                                }else{
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Aprobar"><i class="far fa-paper-plane"></i></button>`;
-                                    
-                                }
+                                
 
                             break;
                             case 36:
@@ -1700,6 +1696,16 @@ function getNotarias(datos=null) {
             $("#tipoE").selectpicker();
             $('#tipoE').val(data.tipo_escritura);
             $('select[name=tipoE]').change();
+
+            $('#tipoNotaria').val(data.id_notaria != 0 ? 2 : 1).trigger('change');
+            $("#tipoNotaria").selectpicker('refresh');
+            
+            $('#nombre_notaria').val(data.id_notaria != 0 ? data.nombre_notaria : '');
+            $('#nombre_notario').val(data.id_notaria != 0 ? data.nombre_notario : '');
+            $('#direccion').val(data.id_notaria != 0 ? data.direccion : '');
+            $('#correo').val(data.id_notaria != 0 ? data.correo : '');
+            $('#telefono').val(data.id_notaria != 0 ? data.telefono : '');
+            
 
             $('#spiner-loader').addClass('hide');
     }, 'json');
@@ -2364,8 +2370,8 @@ $(document).on("submit", "#formInformacion", function (e) {
     e.preventDefault();
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
-    data.append('aportaciones', $('#aportaciones').val() == '' ? null : $('#aportaciones').val());
-    data.append('descuentos', $('#descuentos').val() == '' ? null : $('#descuentos').val());
+    //data.append('aportaciones', $('#aportaciones').val() == '' ? null : $('#aportaciones').val());
+    //data.append('descuentos', $('#descuentos').val() == '' ? null : $('#descuentos').val());
     data.append("idSolicitud", idSolicitud);
     
     $.ajax({

@@ -25,7 +25,7 @@ class Postventa_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM lotes l
         WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
-        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitud_escrituracion))");
+        AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT idCliente FROM solicitudes_escrituracion))");
     }
 
     function getClient($idLote)
@@ -89,7 +89,7 @@ class Postventa_model extends CI_Model
         fecha_modificacion,modificado_por)
         VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
-        $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
+        $opcion =  $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60 : 72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
         foreach ($opciones as $row) {
             $opcion = $row['id_opcion'];
@@ -130,7 +130,7 @@ class Postventa_model extends CI_Model
         se.aportacion, ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,cp.area_actual,dc.expediente,dc.tipo_documento,dc.idDocumento,ar2.nombre as area_sig,
         
         (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
-        ELSE CONCAT(cp.clave_actividad ,' - ', cp.nombre_actividad ) END) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_siguiente, cr.tipo_permiso,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar
+        ELSE CONCAT(cp.clave_actividad ,' - ', cp.nombre_actividad ) END) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_siguiente, cr.tipo_permiso,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,se.cliente_anterior
         
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
@@ -141,7 +141,7 @@ class Postventa_model extends CI_Model
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cp.area_actual AND ar2.id_catalogo = 1
-        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud=se.id_solicitud AND dc.tipo_documento in(21) 
+        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud=se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in(3,4,6,8,9,10) THEN 21 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
         
@@ -176,8 +176,8 @@ class Postventa_model extends CI_Model
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
         if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1){
-            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
-            $notariaInterna = $pertenece == 0 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
+            $pertenece = $this->db->query("SELECT pertenece FROM solicitudes_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row()->pertenece;
+            $notariaInterna = $pertenece == 2 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
         }
        
         if($estatus->id_estatus == 3 && $estatus->bandera_admin == 1 && $estatus->bandera_comite == 0){
@@ -195,7 +195,10 @@ class Postventa_model extends CI_Model
             $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
         }
         else {
+            //print_r($notariaInterna);
+            //print_r("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $notariaInterna $sqlAreaRechazo and tipo_permiso=$type");
             $estatus = $estatus->id_estatus;
+            //print_r($estatus);
             $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $notariaInterna $sqlAreaRechazo and tipo_permiso=$type")->row();
         }
         $banderasStatusRechazo = $actividades_x_estatus->estatus_siguiente == 5 ? ' ,bandera_admin=0 ' : ($actividades_x_estatus->estatus_siguiente == 7 ? ' ,bandera_comite=0' : '');
@@ -458,13 +461,14 @@ class Postventa_model extends CI_Model
     function getBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
         cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
-		CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as nombre 
+		CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as nombre,n.* 
 		FROM solicitudes_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+        LEFT JOIN Notarias n ON n.idNotaria=se.id_notaria
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
