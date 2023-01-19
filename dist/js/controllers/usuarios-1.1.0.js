@@ -533,7 +533,6 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
-            console.log(v);
             
             let leader;
             if (v.id_rol == 9)
@@ -666,13 +665,10 @@ function fillFields (v) {
     $('#member_type').selectpicker('refresh');
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
-
-    $('#payment_method').selectpicker('refresh');
-    $('#headquarter').selectpicker('refresh');
-    $('#member_type').selectpicker('refresh');
+    $('#nueva_estructura').val(v.nueva_estructura).selectpicker('refresh');
 
     if(rol_asignado == 7 || rol_asignado== 3 || rol_asignado == 9 ){
-        $('#ch'). show();
+        $('#ch').show();
         document.getElementById("sedech").removeAttribute("required");
         $("#sedech").empty();
         document.getElementById("sucursal").removeAttribute("required");
