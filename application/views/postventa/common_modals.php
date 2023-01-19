@@ -568,7 +568,7 @@
 </div>
 
 <div class="modal fade" id="viewObservaciones" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="text-center m-0">Envío de Observaciones</h5>
@@ -578,23 +578,23 @@
                 <input type="text" class="hide" id="action" name="action">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para quién es la observación?" data-size="7" data-live-search="true">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <select id="pertenece" name="pertenece" class="selectpicker select-gral m-0 pb-1" data-style="btn" data-show-subtext="true" data-live-search="true" title="¿Para quién es la observación?" data-size="7" required>
                                 <option value="Postventa">Postventa</option>
                                 <option value="Proyectos">Proyectos</option>
                             </select>
                         </div>      
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observacionesS" name="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true" required>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <select id="observacionesS" name="observacionesS" class="selectpicker select-gral m-0 pb-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Observaciones" data-size="7" required>
                                 <option value="Corrección Documentos">Corrección documentos</option>
-                                <option value="Documentación Correcta">Documentación correcta</option>  
+                                <option value="Documentación Correcta">Documentación correcta</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Enviar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </div>
             </form>
         </div>
