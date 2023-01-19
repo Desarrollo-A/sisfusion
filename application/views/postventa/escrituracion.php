@@ -5,13 +5,7 @@
   
 <div class="wrapper ">
     
-	<?php
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);  
-	?>
+	<?php $this->load->view('template/sidebar', "");  ?>
 	<!--Contenido de la página-->
 
 	<div class="content boxContent">
@@ -75,10 +69,9 @@
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
                                                         <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusL">Liquidado</label>
-
+                                                        <label class="btn w-50" for = "estatusL">Liquidado</label>
                                                         <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
-                                                        <label class="btn btn-secondary w-50" for = "estatusSL">Sin liquidar</label>
+                                                        <label class="btn w-50" for = "estatusSL">Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -167,13 +160,13 @@
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">Número exterior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. ext.</label>
                                                                 <input id="numExtF" name="numExtF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">Número interior</label>
+                                                                <label class="control-label estiloEsc label-gral">No. int.</label>
                                                                 <input id="numIntF" name="numIntF" class="form-control input-gral" type="text">
                                                             </div>
                                                         </div>
