@@ -58,6 +58,51 @@ class Postventa_model extends CI_Model
         WHERE l.idLote = $idLote");
     }
 
+    // function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
+    // {
+    //     if(is_object($data)){
+    //         $data = (array)$data;
+    //     }
+    //     $idUsuario = $this->session->userdata('id_usuario');
+    //     $rol = $this->session->userdata('id_rol');
+    //     $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
+    //     $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
+    //     $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
+    //     $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
+    //     $clienteAnterior = $data['ult_ncliente'] != null ? 1:2;
+    //     $nombreClienteAnterior = $clienteAnterior == 1 ? $data['ult_ncliente']: NULL;
+    //     $rfcAnterior =  $clienteAnterior == 1 ? $data['ult_rfc']: NULL;
+    
+    //     /*$this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
+    //     , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
+    //     nombre_anterior, RFC, nombre, personalidad, id_juridico)
+    //      VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
+    //             $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");*/
+    //     $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral
+    //     ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
+    //     personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
+    //     fecha_modificacion,modificado_por)
+    //     VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+    //     $insert_id = $this->db->insert_id();
+    //     $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
+    //     $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
+    //     foreach ($opciones as $row) {
+    //         $opcion = $row['id_opcion'];
+    //         $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,$opcion,$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL);");
+    //     }
+    //     $y=0;
+
+    //     for($x=0;$x<9;$x++){
+    //         $y = $y<3 ? $y+1:1;
+    //         $this->db->query("INSERT INTO Presupuestos (expediente, idSolicitud, estatus, tipo, fecha_creacion, creado_por, modificado_por, bandera) 
+    //         VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
+    //     }
+
+    //     return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
+    //      VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
+    // }
+
+    // $row['id_pago_i']
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico)
     {
         if(is_object($data)){
@@ -65,31 +110,17 @@ class Postventa_model extends CI_Model
         }
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        $nombre = (!isset($data['ncliente']) || $data['ncliente'] = '') ? 'NULL' : $data['ncliente'];
-        $idConst = (!isset($data['idECons']) || $data['idECons'] = '') ? 'NULL' : $data['idECons'];
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
-        $clienteAnterior = $data['ult_ncliente'] != null ? 1:2;
-        $nombreClienteAnterior = $clienteAnterior == 1 ? $data['ult_ncliente']: NULL;
-        $rfcAnterior =  $clienteAnterior == 1 ? $data['ult_rfc']: NULL;
-    
-        /*$this->db->query("INSERT INTO solicitud_escrituracion (idLote, idCliente, estatus, fecha_creacion
-        , creado_por, fecha_modificacion, modificado_por, idArea, idPostventa, estatus_pago, clave_catastral, cliente_anterior,
-        nombre_anterior, RFC, nombre, personalidad, id_juridico)
-         VALUES($idLote, $idCliente, 0, GETDATE(), $idUsuario, GETDATE(),$idUsuario, $rol, $idPostventa, $idEstatus, '$claveCat', 
-                $clienteAnterior, '$nombreClienteAnterior', '$rfcAnterior', '$nombre', $personalidad, $idJuridico);");*/
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral
-        ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
-        personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
-        fecha_modificacion,modificado_por)
-        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+      
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
-        $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
-        $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
+
+        $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
         foreach ($opciones as $row) {
-            $opcion = $row['id_opcion'];
-            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,$opcion,$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL);");
+            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,".$row['id_documento'].",$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL,".$row['obligatorio'].");");
         }
+        
         $y=0;
 
         for($x=0;$x<9;$x++){
@@ -98,9 +129,9 @@ class Postventa_model extends CI_Model
             VALUES('', $insert_id, 0, $y,  GETDATE(), $idUsuario, $idUsuario, NULL);");
         }
 
-        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
-         VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
+        return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por) VALUES(0, 59, 4, GETDATE(), 1,$insert_id, $rol,0,'','', $idUsuario);");
     }
+    
 
     function getSolicitudes($begin, $end, $estatus)
     {
