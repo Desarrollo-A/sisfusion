@@ -80,17 +80,7 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <ol class="list-none">
-                                                        <h4 class="card-title">Documentos para Escrituración</h4>
-                                                        <li><b>1)</b> Identificación Oficial Vigente</li>
-                                                        <li><b>2)</b> RFC (Cédula o constancia de situación fiscal)</li>
-                                                        <li><b>3)</b> Comprobante de domicilio actual luz, agua o telefonía fija(antigüedad menor a 2 meses)</li>
-                                                        <li><b>4)</b> Acta de Nacimiento</li>
-                                                        <li><b>5)</b> Acta de Matrimonio (en su caso). *</li>
-                                                        <li><b>6)</b> CURP(formato actualizado)</li>
-                                                        <li><b>7)</b> Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **</li>
-                                                        <li><b>8)</b> Boleta predial al corriente y comprobante de pago retroactivo (si aplica)</li>
-                                                        <li><b>9)</b> Constancia no adeudo de mantenimiento (si aplica)</li>
-                                                        <li><b>10)</b> Constancia no adeudo de agua (si aplica)</li>
+                                                        <div id="documentosPersonalidad"></div>
                                                     </ol>
                                                 </div>
                                                 <div class="col-md-7">
