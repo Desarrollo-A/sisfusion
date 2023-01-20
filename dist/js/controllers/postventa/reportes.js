@@ -43,8 +43,9 @@ function dynamicColumns(columnData) {
 }
 function buildTable (columns, data){
     reportsTable = $('#reports-datatable').DataTable({
-        dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         pagingType: "full_numbers",
         language: {
             url: "../static/spanishLoader_v2.json",
