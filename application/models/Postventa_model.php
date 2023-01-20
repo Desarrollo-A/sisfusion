@@ -156,7 +156,7 @@ class Postventa_model extends CI_Model
         se.aportacion, ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,cp.area_actual,dc.expediente,dc.tipo_documento,dc.idDocumento,ar2.nombre as area_sig,
         
         (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
-        ELSE CONCAT(cp.clave_actividad ,' - ', cp.nombre_actividad ) END) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_siguiente, cr.tipo_permiso,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar
+        ELSE CONCAT(cp.clave_actividad ,' - ', cp.nombre_actividad ) END) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_siguiente, cr.tipo_permiso,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,se.cliente_anterior
         
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
@@ -167,7 +167,7 @@ class Postventa_model extends CI_Model
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cp.area_actual AND ar2.id_catalogo = 1
-        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud=se.id_solicitud AND dc.tipo_documento in(21) 
+        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud=se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in(3,4,6,8,9,10) THEN 18 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
         
@@ -235,8 +235,8 @@ class Postventa_model extends CI_Model
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
         if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1){
-            $pertenece = $this->db->query("SELECT pertenece FROM solicitud_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row();
-            $notariaInterna = $pertenece == 0 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
+            $pertenece = $this->db->query("SELECT pertenece FROM solicitudes_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row()->pertenece;
+            $notariaInterna = $pertenece == 2 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
         }
        
         if($estatus->id_estatus == 3 && $estatus->bandera_admin == 1 && $estatus->bandera_comite == 0){
@@ -254,7 +254,10 @@ class Postventa_model extends CI_Model
             $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
         }
         else {
+            //print_r($notariaInterna);
+            //print_r("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $notariaInterna $sqlAreaRechazo and tipo_permiso=$type");
             $estatus = $estatus->id_estatus;
+            //print_r($estatus);
             $actividades_x_estatus = $this->db->query("SELECT * FROM control_permisos WHERE estatus_actual=$estatus AND area_actual=$rol $notariaInterna $sqlAreaRechazo and tipo_permiso=$type")->row();
         }
         $banderasStatusRechazo = $actividades_x_estatus->estatus_siguiente == 5 ? ' ,bandera_admin=0 ' : ($actividades_x_estatus->estatus_siguiente == 7 ? ' ,bandera_comite=0' : '');
@@ -514,13 +517,14 @@ class Postventa_model extends CI_Model
     function getBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
         cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
-		CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as nombre 
+		CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as nombre,n.* 
 		FROM solicitudes_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente
         INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+        LEFT JOIN Notarias n ON n.idNotaria=se.id_notaria
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
@@ -1244,8 +1248,22 @@ function checkBudgetInfo($idSolicitud){
 
 
 
-
-
+    function getMotivosRechazos($tipoDocumento)
+    {
+        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND tipo_documento = $tipoDocumento");
+        return $query->result();
+    }
+    function getStatusSiguiente($estatus){
+        return $this->db->query("SELECT ae.nombre as actividad, cp.id_estatus, cp.bandera_vista, cp.estatus_actual, ae.clave as clave_actual, cp.nombre_actividad as actividad_actual, cp.area_actual, cp.estatus_siguiente, cr.clave_siguiente, cr.actividad_siguiente, cp.area_siguiente, cp.tipo_permiso, ar.nombre as area, cr.nombre_siguiente, pr.nombre as permiso
+        FROM actividades_escrituracion ae 
+        INNER JOIN control_permisos cp ON cp.clave_actividad LIKE ae.clave
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        INNER JOIN opcs_x_cats pr ON pr.id_opcion = cp.tipo_permiso AND pr.id_catalogo = 80
+        LEFT JOIN (SELECT DISTINCT(cl.clave_actividad) as clave_siguiente, cl.nombre_actividad as actividad_siguiente, cl.estatus_actual, cl.tipo_permiso,
+        av.nombre as nombre_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave WHERE cl.tipo_permiso = 1 
+        GROUP BY cl.estatus_actual, cl.clave_actividad, cl.nombre_actividad, cl.tipo_permiso, av.nombre) cr ON cr.estatus_actual = cp.estatus_siguiente
+        WHERE cp.tipo_permiso = 3 AND cp.estatus_actual in($estatus)")->result_array();
+    }
 
 
 
