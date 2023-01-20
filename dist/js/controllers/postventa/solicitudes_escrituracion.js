@@ -1087,8 +1087,8 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 9:
                                 if (userType == 55) { 
+                                    group_buttons += (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
@@ -2343,6 +2343,7 @@ function getBudgetInformacion(idSolicitud){
     $.post('getBudgetInformacion',{
         idSolicitud:idSolicitud
     }, function(data) {
+        console.log(data)
         $('#liquidado').val(data.nombrePago);
         $('#clienteI').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
         $("#clienteI").selectpicker('refresh');
@@ -2350,9 +2351,9 @@ function getBudgetInformacion(idSolicitud){
         let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
         $('#fechaCAI').val(fechaAnterior);
         $('#rfcDatosI').val(data.RFC);
-        $('#aportaciones').val(data.aportacion);
-        $('#descuentos').val(data.descuento);
-        $('#motivo').val(data.motivo);
+        $('#aportacionesI').val(data.aportacion);
+        $('#descuentosI').val(data.descuento);
+        $('#motivoI').val(data.motivo);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }

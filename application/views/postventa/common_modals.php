@@ -730,19 +730,19 @@
                                 <div class="col-md-3 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-3 pr-0">
                                       <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
+                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
                                         <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
                                     </div>
                                 </div>
