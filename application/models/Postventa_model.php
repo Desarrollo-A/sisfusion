@@ -41,12 +41,13 @@ class Postventa_model extends CI_Model
             return $num_cli;
         }else{
             return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli,
-            oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
+            oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica, oxc4.nombre as nombre_juridica
             FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.nacionalidad AND oxc.id_catalogo = 11
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = c.estado_civil AND oxc2.id_catalogo = 18
             LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = c.regimen_matrimonial AND oxc3.id_catalogo = 19
+            LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = c.personalidad_juridica AND oxc4.id_catalogo = 10
             WHERE l.idLote = $idLote");
         }
     }
@@ -83,7 +84,7 @@ class Postventa_model extends CI_Model
         ,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,
         personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,
         fecha_modificacion,modificado_por)
-        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+        VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
         $opcion = 60;// $personalidad == 2 || $personalidad == '' || $personalidad == null ? 60:72;
         $opciones = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo =  $opcion")->result_array();
@@ -1016,7 +1017,7 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getOpcCat($id_cat){
-        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' END AS etq
+        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' WHEN CAT.nombre = 'Personalidad jurídica' THEN 'perj' END AS etq
                                 FROM opcs_x_cats AS OPCAT
                                 INNER JOIN catalogos AS CAT
                                 ON OPCAT.id_catalogo = CAT.id_catalogo

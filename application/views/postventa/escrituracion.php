@@ -147,10 +147,18 @@
                                                                 <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-8 pl-0">
+                                                        <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral">Correo Electrónico</label>
                                                                 <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Apartado para el select de la persona jurididca -->
+                                                        <div class="col-md-4 pl-0" id="per_jur">
+                                                            <div class="form-group label-floating is-focused" id = "PerJur">
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona juridica</label>
+                                                                <select id="perj" name="perj" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
+                                                                <!-- <input id="perJ" name="perJ" class="form-control input-gral" type="text"> -->
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
@@ -203,7 +211,7 @@
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">RFC *</label>
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>RFC</label>
                                                                 <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
