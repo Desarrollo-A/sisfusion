@@ -66,7 +66,7 @@ function buildTable (columns, data){
         {
             targets: 0,
             render: function (data, type, full, meta){
-                return `<div class="row"><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a>${data}</a></div>`;
+                return `<div class="row"><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-chevron-down"></i></button><a>${data}</a></div>`;
 
             }
         }],
