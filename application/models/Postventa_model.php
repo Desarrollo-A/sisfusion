@@ -746,7 +746,7 @@ function checkBudgetInfo($idSolicitud){
             se.nombre, oxc.nombre estatus, cp.tiempo as dias, ce.fecha_creacion,
             CASE WHEN (se.id_juridico IS null) THEN oxc2.nombre 
                 ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as area
-            FROM solicitud_escrituracion se
+            FROM solicitudes_escrituracion se
             INNER JOIN lotes l ON se.idLote = l.idLote 
             INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
             INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
