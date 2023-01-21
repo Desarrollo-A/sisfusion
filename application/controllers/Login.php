@@ -78,6 +78,7 @@ class Login extends CI_Controller
 		case '67': // LEXINTEL
 		case '68': // DIRECTOR SUMA
 		case '69': // DIRECTOR GENERAL
+		case '70': // EJECUTIVO CONTRALORÍA JR
             redirect(base_url().'Administracion');
         break;
 
