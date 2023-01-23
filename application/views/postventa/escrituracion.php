@@ -48,9 +48,9 @@
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
                                                         <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
-                                                        <label class="btn w-50" for = "estatusL">Liquidado</label>
+                                                        <label class="btn w-50" for = "estatusL" disabled>Liquidado</label>
                                                         <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
-                                                        <label class="btn w-50" for = "estatusSL">Sin liquidar</label>
+                                                        <label class="btn w-50" for = "estatusSL" disabled>Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>

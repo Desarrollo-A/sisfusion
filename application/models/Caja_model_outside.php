@@ -144,6 +144,16 @@
         }
     }
 
+    public function getAllLotes($condominio){
+        $query = $this->db->query("SELECT idLote, nombreLote, idStatusLote FROM lotes WHERE idCondominio = $condominio AND status = 1")->result_array();
+        return $query;
+    }
+
+    public function getAllClientsByLote($lote){
+        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, fechaApartado FROM clientes WHERE idLote = $lote")->result_array();
+        return $query;
+    }
+
 
     public function table_datosBancarios()
     {
