@@ -581,7 +581,7 @@ class Usuarios_modelo extends CI_Model
             $estatus = 2;
         }
 
-        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(), $obs)");
+        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(), '$obs')");
         if (!$respuesta) {
             return 0;
         } else {

@@ -6212,16 +6212,16 @@
 		$fechaVencimiento2 = "";
 		if(in_array($idStatusContratacion, array(9, 6, 5, 1, 7, 13, 2)) && in_array($idMovimiento, array(26, 23, 22, 18, 19, 20, 75, 76, 73, 66, 16, 85)))
 			$fechaVencimiento = "Vencido";
-		else if(in_array($idStatusContratacion, array(1, 2, 6, 7, 8, 10, 3, 4, 5, 9, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 38, 39, 10, 43, 44, 84, 83, 82)))
+		else if(in_array($idStatusContratacion, array(1, 2, 6, 7, 8, 10, 3, 4, 5, 9, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 39, 10, 43, 44, 84, 83, 82)))
 			$fechaVencimiento = date("d-m-Y", strtotime($fechaVenc));
-		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67))) {
+		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67, 66))) {
 			$admon = 1;
 			$asige = 1;
 			if ($admon == 1) {
 				$fecha = $fechaEstatus7;
 				$arregloFechas = array();
 				$p = 0;
-				while ($p <= 3) {
+				while ($p < 1) {
 					$hoy_strtotime = strtotime($fecha);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6245,7 +6245,7 @@
 				$fecha = $fechaEstatus7;
 				$arregloFechas = array();
 				$p = 0;
-				while ($p <= 15) {
+				while ($p <= 14) {
 					$hoy_strtotime = strtotime($fecha);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6272,7 +6272,7 @@
 			$fecha = $fechaEstatus7;
 			$arregloFechas = array();
 			$p = 0;
-			while ($p <= 15) {
+			while ($p <= 14) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6411,7 +6411,7 @@
 		$arregloFechas = array();
 		$diasRest = 0;
 		$diasRest2 = 0;
-		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 38, 39, 10, 43, 44, 82, 83, 84))) {
+		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 39, 10, 43, 44, 82, 83, 84))) {
 			$fechaHoy = date('Y-m-d');
 			$fechaDes = $fechaVenc;
 			$arregloFechas = array();
@@ -6434,15 +6434,15 @@
 			}
 			$diasRest = count($arregloFechas);
 		}
-		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67))) {
+		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67, 66))) {
 			$admon = 1;
 			$asige = 1;
-			if ($admon == 1){
+			if ($admon == 1) {
 				$fechaHoy = date('Y-m-d');
 				$fechaDes = date("Y-m-d", strtotime($fechaVenc2));
 				$arregloFechas = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while ($fechaHoy < $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6465,7 +6465,7 @@
 				$fechaDes = date("Y-m-d", strtotime($fechaVenc));
 				$arregloFechas = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while ($fechaHoy < $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6483,7 +6483,6 @@
 				}
 				$diasRestAsige = count($arregloFechas);
 			}
-
 			$diasRest = $diasRestAsige;
 			$diasRest2 = $diasRestAdmon;
 		}
@@ -6491,7 +6490,7 @@
 			$fecha = $fechaVencimiento;
 			$arregloFechasA = array();
 			$u = 0;
-			while ($u <= 15) {
+			while ($u <= 14) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6562,7 +6561,7 @@
 		$arregloFechas2 = array();
 		$diasVenc = 0;
 		$diasVenc2 = 0;
-		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 37, 7, 38, 39, 10, 43, 44, 82, 83, 84))) {
+		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 37, 7, 39, 10, 43, 44, 82, 83, 84))) {
 			$fechaHoy = $fechaVenc;
 			$fechaDes = date('Y-m-d');
 			$arregloFechas2 = array();
@@ -6641,7 +6640,7 @@
 			$fecha = $fechaVencimiento;
 			$arregloFechasA = array();
 			$t = 0;
-			$days = ($validacionEnganche == '' && $status8Flag == 1) ? 15 : 0;
+			$days = ($validacionEnganche == '' && $status8Flag == 1) ? 14 : 0;
 			while ($t <= $days) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
