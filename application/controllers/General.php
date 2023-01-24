@@ -17,6 +17,9 @@ class General extends CI_Controller
     public function index()
     {
     }
+    function hola(){
+        return 'Esta función se encuentrá en General';
+    }
 
     public function validateSession()
     {
@@ -96,5 +99,9 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
+
+
+
+
 
 }

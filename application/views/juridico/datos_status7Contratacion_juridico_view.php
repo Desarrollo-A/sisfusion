@@ -583,7 +583,7 @@ if(data.vl == '1') {
 } else {
                  if (data.idStatusContratacion == 6 && data.idMovimiento == 23 || data.idStatusContratacion == 6 && data.idMovimiento == 95 ||
                             data.idStatusContratacion == 6 && data.idMovimiento == 97 && (data.perfil == 6 || data.perfil == 5 || data.perfil == 32 || 
-                            data.perfil == 13 || data.perfil == 7 || data.perfil == 9 || data.perfil == 17 || data.perfil == 3) ) {
+                            data.perfil == 13 || data.perfil == 7 || data.perfil == 9 || data.perfil == 17 || data.perfil == 3 || data.perfil == 70) ) {
                 
                     cntActions = '<center><li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
@@ -606,7 +606,7 @@ if(data.vl == '1') {
                         'class="btn-data btn-blueMaderas barcode" title="Ver código">' +
                     '<i class="fas fa-barcode"></i></button></li><br></center>';
                      
-                 } else if (data.idStatusContratacion == 6 && data.idMovimiento == 36 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 7) || data.idStatusContratacion == 6 && data.idMovimiento == 6 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17) ||
+                 } else if (data.idStatusContratacion == 6 && data.idMovimiento == 36 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 7|| data.perfil == 70) || data.idStatusContratacion == 6 && data.idMovimiento == 6 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70) ||
                      data.idStatusContratacion == 7 && data.idMovimiento == 83) { 
 
                     cntActions = '<center><li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +

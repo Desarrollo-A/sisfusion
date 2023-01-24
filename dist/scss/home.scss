@@ -90,6 +90,11 @@
     border: none!important;
     color: $white;
     .container-fluid{
+        span{
+            a{
+                color: $gray;
+            }
+        }
         a{
             color: $white;
             font-weight: bold;

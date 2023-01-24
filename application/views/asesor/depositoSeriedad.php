@@ -1079,6 +1079,11 @@ $('#condominio').change( function(){
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.", "danger");
+                    } else if(response.message == 'OBSERVACION_CONTRATO'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
                     }
                 },
                 error: function( data ){

@@ -71,7 +71,7 @@ class Contraloria_model extends CI_Model {
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
-		AND (perfil IN ('13', '32', 'contraloria', '17')) AND status = 1)) as lastUc
+		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
         FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -142,7 +142,7 @@ class Contraloria_model extends CI_Model {
 		cond.idCondominio, cl.expediente,
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
-		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17')) AND status = 1)) as lastUc
+		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
 	    FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -1116,6 +1116,11 @@ class Contraloria_model extends CI_Model {
 
 	function getCatalogs() {        
         return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78) AND estatus = 1 ORDER BY id_catalogo, nombre");
+    }
+
+    function validaCorrida($idLote){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote=".$idLote." AND tipo_doc=7 AND status=1;");
+        return $query->row();
     }
 
 }

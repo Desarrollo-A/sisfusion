@@ -258,7 +258,7 @@ $("#tabla_ingresar_6").ready(function(){
                                 'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
-                        else if(data.idStatusContratacion == 5 && data.idMovimiento == 75 && (data.perfil == 32 || data.perfil == 13  || data.perfil == 17)) {
+                        else if(data.idStatusContratacion == 5 && data.idMovimiento == 75 && (data.perfil == 32 || data.perfil == 13  || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="revStaCE btn-data btn-orangeYellow" title="Enviar estatus a Revisión">' +
@@ -272,7 +272,7 @@ $("#tabla_ingresar_6").ready(function(){
                         } else {
                             cntActions = 'N/A';
                         }
-                        if(rol == 17){
+                        if(rol == 17 || rol == 70){
                             cntActions += '<button href="#" title= "Cambio de sede" data-nomLote="'+data.nombreLote+'" ' +
                                 'data-lote="'+data.idLote+'" class="btn-data btn-details-grey change_sede">' +
                                 '<i class="fas fa-redo"></i></button>';
@@ -442,6 +442,12 @@ function preguntaRegCorr() {
                     $('#regCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                } else if(response.message == 'MISSING_CORRIDA'){
+                    $('#enviarAContraloriaGuardar').prop('disabled', false);
+                    $('#regCorrElab').modal('hide');
+                    $('#tabla_ingresar_6').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Primero debes cargar la CORRIDA FINANCIERA para" +
+                        " poder avanzar el lote", "danger");
                 } else if(response.message == 'FALSE'){
                     $('#enviarAContraloriaGuardar').prop('disabled', false);
                     $('#regCorrElab').modal('hide');

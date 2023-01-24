@@ -731,6 +731,7 @@ class Caja_outside extends CI_Controller
             $cd = json_decode(str_replace("'", '"', $casasDetail[0]['casasDetail']));
             $info = $this->caja_model_outside->getDatosLote($id_lote);
             if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
+                $tipo_casa = 2;
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                 foreach ($cd->tipo_casa as $value) {
@@ -750,7 +751,9 @@ class Caja_outside extends CI_Controller
                     'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
                     'nombreLote' => $nl
                 );
-            } else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
+            }
+            else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
+                $tipo_casa = 1;
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                 foreach ($cd->tipo_casa as $value) {
@@ -770,92 +773,9 @@ class Caja_outside extends CI_Controller
                     'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
                     'nombreLote' => $nl
                 );
-            } /*if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
-                $nl = $datosView->lotes[0]->nombre;
-                if (
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-011' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-021' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-030' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-031' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-032' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-045' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-046' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-047' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-054' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-064' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-079' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-080' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-090' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-033' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-048' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-049' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-067' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-089' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-091' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-098' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-100'
-                ) {
-                    $total = $info->total;
-                    $t = ($total + 2029185.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                } else {
-                    $total = $info->total;
-                    $t = ($total + 2104340.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                }
-            } else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
-                $nl = $datosView->lotes[0]->nombre;
-                if (
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-011' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-021' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-030' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-031' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-032' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-045' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-046' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-047' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-054' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-064' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-079' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-080' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-090' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-033' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-048' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-049' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-067' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-089' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-091' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-098' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-100'
-                ) {
-                    $total = $info->total;
-                    $t = ($total + 1037340.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                } else {
-                    $total = $info->total;
-                    $t = ($total + 1075760.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                }
-            }*/ else if ($datosView->lotes[0]->tipo_lote == 'TERRENO') {
+            }
+            else if ($datosView->lotes[0]->tipo_lote == 'TERRENO') {
+                $tipo_casa = 0;
                 $t = (($info->precio + 500) * $info->sup);
                 $e = ($t * 0.1);
                 $s = ($t - $e);
@@ -868,6 +788,11 @@ class Caja_outside extends CI_Controller
                 );
             }
             $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
+
+            $updateData = array(
+                "tipo_casa" => $tipo_casa
+            );
+            $result = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $last_id);//se actualiza el cliente
         }
         $validateLote = $this->caja_model_outside->validate($id_lote);
         ($validateLote == 1) ? TRUE : FALSE;
