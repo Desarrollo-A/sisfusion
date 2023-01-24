@@ -238,8 +238,6 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-		else if ($id_sede == 8)// CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 		
@@ -338,8 +336,6 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-		else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -430,8 +426,6 @@ class Contraloria_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -486,8 +480,6 @@ class Contraloria_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
