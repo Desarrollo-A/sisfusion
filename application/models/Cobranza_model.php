@@ -305,14 +305,21 @@ class Cobranza_model extends CI_Model {
     
     }
 
-    public function getReporteLotesPorComisionista($typeTransaction, $beginDate, $endDate, $where) {
-        /*$filter = "";
-        $filterTwo = "";
-        if ($typeTransaction == 1 || $typeTransaction == 3)  // FIRST LOAD || SEARCH BY DATE RANGE
-            $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-        else if($typeTransaction == 2) // SEARCH BY LOTE
-            $filterTwo = " AND l.idLote = $where";*/
-             
+    public function getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario) {
+        $filtroFecha = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        if($tipoUsuario == 7) // SE BUSCA COMO ASESOR
+            $filtroComisionista = "AND cl.id_asesor = $comisionista";   
+        else if($tipoUsuario == 9) // SE BUSCA COMO COORDINADOR
+            $filtroComisionista = "AND cl.id_coordinador = $comisionista";
+        else if($tipoUsuario == 3) // SE BUSCA COMO GERENTE
+            $filtroComisionista = "AND cl.id_gerente = $comisionista";
+        else if($tipoUsuario == 2) // SE BUSCA COMO SUBDIRECOR
+            $filtroComisionista = "AND cl.id_subdirector = $comisionista";
+        else if($tipoUsuario == 59) // SE BUSCA COMO DIRECTOR REGIONAL
+            $filtroComisionista = "AND cl.id_regional = $comisionista";
+        else // SE BUSCA COMO DIRECTOR COMERCIAL
+            $filtroComisionista = "";
+        
         $query="SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
         FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(se.nombre) plaza,
         lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
@@ -323,7 +330,7 @@ class Cobranza_model extends CI_Model {
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 $filtroComisionista $filtroFecha
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         INNER JOIN sedes se ON se.id_sede = cl.id_sede
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
@@ -343,9 +350,9 @@ class Cobranza_model extends CI_Model {
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        INNER JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = 5425
+        INNER JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista
         --INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425 AND cm.estatus = 1
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 $filtroComisionista $filtroFecha AND cm.estatus = 1
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede
         LEFT JOIN pago_comision pc ON pc.id_lote = lo.idLote    
