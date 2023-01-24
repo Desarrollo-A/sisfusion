@@ -38,12 +38,9 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/01/2022"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="01/01/2022"/>
-                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                    id="searchByDateRange">
+                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
                                                             </button>
                                                         </div>
@@ -54,11 +51,11 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables" id="box-masterCobranzaTable">
+                                <div class="material-datatables" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
                                         <div class="table-responsive">
                                             <table class="table-striped table-hover"
-                                                id="masterCobranzaTable" name="masterCobranzaTable">
+                                                id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                                 <thead>
                                                     <tr>
                                                         <th>PROYECTO</th>
