@@ -62,9 +62,7 @@ class Juridico_model extends CI_Model {
 			else
 				$filtroAsignacion = "";
 			
-			if($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
-			if($id_sede == 10) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
+			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";

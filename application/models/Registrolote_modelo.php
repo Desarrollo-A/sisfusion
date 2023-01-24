@@ -1232,7 +1232,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lotes.idLote AND hl.idCliente = cl.id_cliente
-		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idStatusContratacion = 7 AND idMovimiento = 37 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lotes.idLote AND hl2.idCliente = cl.id_cliente
+		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idMovimiento IN (37, 77) GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lotes.idLote AND hl2.idCliente = cl.id_cliente
         INNER JOIN statusLote st ON st.idStatusLote = lotes.idStatusLote
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lotes.tipo_venta
         WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45 --AND lotes.idLote = 77802

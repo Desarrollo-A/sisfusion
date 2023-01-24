@@ -304,6 +304,66 @@ class Cobranza_model extends CI_Model {
     
     
     }
+
+    public function getReporteLotesPorComisionista($typeTransaction, $beginDate, $endDate, $where) {
+        /*$filter = "";
+        $filterTwo = "";
+        if ($typeTransaction == 1 || $typeTransaction == 3)  // FIRST LOAD || SEARCH BY DATE RANGE
+            $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        else if($typeTransaction == 2) // SEARCH BY LOTE
+            $filterTwo = " AND l.idLote = $where";*/
+             
+        $query="SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(se.nombre) plaza,
+        lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
+        0 estatusComision, 0.00 porcentaje_decimal,
+        '0.00' comisionTotal, '0.00' abonoDispersado, '0.00' abonoPagado, 0 rec,
+        REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente
+        FROM lotes lo
+        INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+        INNER JOIN sedes se ON se.id_sede = cl.id_sede
+		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+        WHERE lo.status = 1 AND lo.registro_comision NOT IN (1, 7)
+        UNION ALL
+        SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(ISNULL(se.nombre, 'SIN ESPECIFICAR')) plaza,
+        lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
+        pc.bandera estatusComision, ISNULL(cm.porcentaje_decimal, 0.00) porcentaje_decimal,
+        FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
+        FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
+        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, cm.estatus rec,
+        REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
+        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente
+        FROM lotes lo
+        INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
+		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        INNER JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = 5425
+        --INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND id_asesor = 5425 AND cm.estatus = 1
+        LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN pago_comision pc ON pc.id_lote = lo.idLote    
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoPagado, id_comision FROM pago_comision_ind WHERE estatus IN (11) GROUP BY id_comision) pci2 ON cm.id_comision = pci2.id_comision
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+        WHERE lo.status = 1 ORDER BY nombreLote";
+        return $this->db->query($query);
+    }
+    
+    public function getOpcionesParaReporteComisionistas() {
+        return $this->db->query("SELECT id_usuario id_opcion, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombre, estatus atributo_extra, 1 id_catalogo
+		FROM usuarios 
+		WHERE id_rol IN (1, 2, 3, 9, 7) AND estatus != 0 AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%')
+		UNION ALL
+		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN (1, 2, 3, 9, 7, 59)
+		ORDER BY id_catalogo, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))");
+    }
     
 
 }

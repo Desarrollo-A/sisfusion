@@ -25,17 +25,12 @@ class Cobranza extends CI_Controller
         }
     }
 
-    public function masterCobranza()
-    {
-        if ($this->session->userdata('id_rol') == FALSE) {
+    public function masterCobranza() {
+        if ($this->session->userdata('id_rol') == FALSE)
             redirect(base_url());
-        }
-
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-            $this->load->view('template/header');
-           // $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
-             $this->load->view("cobranza/masterCobranza", $datos);
-   
+        $this->load->view('template/header');
+        $this->load->view("cobranza/masterCobranza", $datos);
     }
 
     public function getInformation()
@@ -207,6 +202,30 @@ class Cobranza extends CI_Controller
        
         $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
          echo json_encode($data);
+    }
+
+    public function reporteLotesPorComisionista() {
+        if ($this->session->userdata('id_rol') == FALSE)
+            redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("comisiones/reporteLotesPorComisionista_view", $datos);
+    }
+
+    public function getReporteLotesPorComisionista() {
+        if (isset($_POST) && !empty($_POST)) {
+            $typeTransaction = $this->input->post("typeTransaction");       
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $where = $this->input->post("where");
+            $data['data'] = $this->Cobranza_model->getReporteLotesPorComisionista($typeTransaction, $beginDate, $endDate, $where)->result_array();
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
+
+    public function getOpcionesParaReporteComisionistas() {
+        echo json_encode($this->Cobranza_model->getOpcionesParaReporteComisionistas()->result_array());
     }
 
 }

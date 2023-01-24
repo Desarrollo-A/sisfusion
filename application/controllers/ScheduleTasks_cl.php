@@ -57,9 +57,7 @@ public function sendRv5(){
 
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-  $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
-  $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+  $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
   $mail->addAddress('rigel.silva@prohabitacion.com');
   $mail->addAddress('rafael.bautista@ciudadmaderas.com');
   $mail->addAddress('vicky.paulin@ciudadmaderas.com');
@@ -72,7 +70,7 @@ public function sendRv5(){
   $mail->addAddress('grisell.malagon@ciudadmaderas.com');
   $mail->addAddress('karen.ponce@ciudadmaderas.com');
   $mail->addAddress('luz.angeles@ciudadmaderas.com');
-  $mail->addAddress('asistente.contraloria@ciudadmaderas.com');
+  $mail->addAddress('irene.vallejo@ciudadmaderas.com');
   //$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
 
 
@@ -1245,8 +1243,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
         $mail->addAddress('asistente.pv2@ciudadmaderas.com');
         $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
-        $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
-        $mail->addAddress('asistente.contraloria@ciudadmaderas.com');
+        $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
+        $mail->addAddress('irene.vallejo@ciudadmaderas.com');
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>
