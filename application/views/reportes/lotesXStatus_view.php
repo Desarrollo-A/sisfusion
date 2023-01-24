@@ -42,14 +42,14 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
-                                                <th>PRECIO FINAL</th>
-                                                <th>REFERENCIA</th>
-                                                <th>ASESOR</th>
-                                                <th>FECHA APARTADO</th>
+                                                <th>CLIENTE</th>
                                                 <th>SEDE</th>
-                                                <th>TIPO VENTA</th>
-                                                <th>FECHA CONTRATACIÓN</th>
-                                                <th>ESTATUS VENTA</th>
+                                                <th>GERENTE</th>
+                                                <th>COORDINADOR</th>
+                                                <th>ASESOR</th>
+                                                <th>ESTATUS</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>ESTATUS CONTRATACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -77,5 +77,5 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/reportes/reportesLotesApartados.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/reportes/lotesXStatus.js"></script>
 </body>

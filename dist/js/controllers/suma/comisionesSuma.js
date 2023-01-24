@@ -1,4 +1,6 @@
 var totaPen = 0;
+let noDia = moment().weekday();
+let hora = moment().hour();
 
 function selectAll(e) {
     tota2 = 0;
@@ -50,7 +52,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function(e){
 
     $.ajax({
         type: 'POST',
-        url: general_base_url+'Usuarios/SubirPDFExtranjero',
+        url: general_base_url+'Suma/SubirPDFExtranjero',
         data: formData,
         contentType: false,
         cache: false,
@@ -76,7 +78,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function(e){
 $(document).on('click', '.verPDFExtranjero', function () {
     const $itself = $(this);
     Shadowbox.open({
-        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+general_base_url+'static/documentos/extranjero/'+$itself.attr('data-usuario')+'"></iframe></div>',
+        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+general_base_url+'static/documentos/extranjero_suma/'+$itself.attr('data-usuario')+'"></iframe></div>',
         player: "html",
         title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
         width: 985,
@@ -152,28 +154,14 @@ $("#tabla_nuevas_comisiones").ready(function() {
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [
-        
             {
                 text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
                 action: function() {
-                    let actual=13;
-                    if(userSede == 8){
-                        actual=15;
-
-                    }
-                    var hoy = new Date();
-                    var dia = hoy.getDate();
-                    var mes = hoy.getMonth()+1;
-                    var anio = hoy.getFullYear();
-                    var hora = hoy.getHours();
-                    var minuto = hoy.getMinutes();
-
-                    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                    ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                    ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
+                    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                         if ($('input[name="idT[]"]:checked').length > 0) {
                             $('#spiner-loader').removeClass('hide');
                             
@@ -222,7 +210,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
                 },
                 attr: {
                     class: 'btn btn-azure',
-                    style: 'position:relative; float:right'
+                    style: `${ (forma_pago != '2') ? 'position:relative; float:right' : 'display:none'}`
                 }
             }, 
         {
@@ -369,25 +357,7 @@ $("#tabla_nuevas_comisiones").ready(function() {
             searchable: false,
             className: 'dt-body-center',
             render: function(d, type, full, meta) {
-                let actual=13;
-                if(userSede == 8){
-                    actual=15;
-
-                }
-                var hoy = new Date();
-                var dia = hoy.getDate();
-                var mes = hoy.getMonth()+1;
-                var anio = hoy.getFullYear();
-                var hora = hoy.getHours();
-                var minuto = hoy.getMinutes();
-
-
-
-                if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) ||
-                ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
-                {
-
+                if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
                     switch (full.id_forma_pago) {
                         case '1': //SIN DEFINIR
                         case 1: //SIN DEFINIR
@@ -504,7 +474,9 @@ $("#tabla_revision_comisiones").ready(function() {
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -701,7 +673,9 @@ $("#tabla_pagadas_comisiones").ready(function() {
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -900,7 +874,9 @@ $("#tabla_pausadas_comisiones").ready(function() {
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -1082,86 +1058,91 @@ function todos(){
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
-    let actual=13;
-    if(userSede == 8){
-        actual=15;
-    }
+    if( noDia == 1 || ( noDia == 2 && hora <= 14 )){
+        
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Suma/validateWeek`,
+            dataType: 'json',
+            beforeSend: function() {
+                $('#spiner-loader').removeClass('hide');
+            },
+            success: function(response) {
+                if(response.length == 0 ){
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}Suma/getComisionesByStatus`,
+                        data: {estatus: 1},
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#spiner-loader').addClass('hide');
+                            $("#modal_multiples .modal-body").html("");
+                            let sumaComision = 0;
+                            if (!data) {
+                                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                            }
+                            else {
+                                $("#modal_multiples .modal-body").html("");
+                                $("#modal_multiples .modal-header").html("");
 
-    var hoy = new Date();
-    var dia = hoy.getDate();
-    var mes = hoy.getMonth()+1;
-    var anio = hoy.getFullYear();
-    var hora = hoy.getHours();
-    var minuto = hoy.getMinutes();
-
-    if (((mes == 01 && dia == 02) || (mes == 01 && dia == 02 && hora <= 20)) || ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) || ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))){
-
-    $("#modal_multiples .modal-body").html("");
-    $("#modal_multiples .modal-header").html("");
-
-    $("#modal_multiples .modal-header").append(`<div class="row">
-        <div class="col-md-12 text-right">
-            <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true" style="font-size:40px;">&times;</span>
-            </button>
-        </div>
-    </div>`);
-    
-    c=0;
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}Suma/getComisionesByStatus`,
-        data: {estatus: 1},
-        dataType: 'json',
-        beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
-        },
-        success: function(data) {
-            $("#modal_multiples .modal-body").html("");
-            let sumaComision = 0;
-            if (!data) {
-                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
-            }
-            else {
-                if(data.length > 0){
-                    $("#modal_multiples .modal-body").append(`<div class="row">
-                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);                    
+                                $("#modal_multiples .modal-header").append(`<div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-size:40px;">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>`);
+                                
+                                c=0;
+                                if(data.length > 0){
+                                    $("#modal_multiples .modal-body").append(`<div class="row">
+                                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);                    
+                                }
+                                $.each(data, function(i, v) {
+                                    c++;
+            
+                                    abono_asesor = (v.total_comision);
+                                    $("#modal_multiples .modal-body").append('<div class="row">'+
+                                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                                });
+            
+                                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
+            
+                                $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
+                                $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
+                                $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
+                                '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
+                                '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
+                                '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
+                                '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
+                                ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
+                            }
+                            $('#spiner-loader').addClass('hide');
+                            $("#modal_multiples").modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+                        },
+                        error: function() {
+                            $('#spiner-loader').addClass('hide');
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                        }
+                    });
                 }
-                $.each(data, function(i, v) {
-                    c++;
-
-                    abono_asesor = (v.total_comision);
-                    $("#modal_multiples .modal-body").append('<div class="row">'+
-                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
-                });
-
-                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
-
-                $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
-                $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-                $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
-                '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
-                '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
-                '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
-                '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
-                '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
-                '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
-                '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
-                '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
-                '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
-                ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
+                else{
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Ya se ha cargado una factura, esperar al siguiente corte.", "danger");
+                }
+            },
+            error: function() {
+                $('#spiner-loader').addClass('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal al validar si ya se ha mandado factura.", "danger");
             }
-            $('#spiner-loader').addClass('hide');
-        },
-        error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-      });
-
-        $("#modal_multiples").modal({
-            backdrop: 'static',
-            keyboard: false
         });
     }
     else{

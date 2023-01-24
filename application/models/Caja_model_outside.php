@@ -144,6 +144,16 @@
         }
     }
 
+    public function getAllLotes($condominio){
+        $query = $this->db->query("SELECT idLote, nombreLote, idStatusLote FROM lotes WHERE idCondominio = $condominio AND status = 1")->result_array();
+        return $query;
+    }
+
+    public function getAllClientsByLote($lote){
+        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, fechaApartado FROM clientes WHERE idLote = $lote")->result_array();
+        return $query;
+    }
+
 
     public function table_datosBancarios()
     {
@@ -266,29 +276,31 @@
                         }
                     }
                 }
-                $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                fechaVenc = null, modificado = null, status8Flag = 0, 
-                ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
-                totalValidado = 0, validacionEnganche = 'NULL', 
-                fechaSolicitudValidacion = null, 
-                fechaRL = null, 
-                registro_comision = 8,
-                tipo_venta = $tv, 
-                observacionContratoUrgente = null,
-                firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
-                observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
-                fechaLiberacion = '".date("Y-m-d H:i:s")."', 
-                userLiberacion = '".$this->session->userdata('username')."',
-                precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
-                enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
-                WHERE idLote IN (".$row['idLote'].") and status = 1 ");
+                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
+                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                    fechaVenc = null, modificado = null, status8Flag = 0, 
+                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
+                    totalValidado = 0, validacionEnganche = 'NULL', 
+                    fechaSolicitudValidacion = null, 
+                    fechaRL = null, 
+                    registro_comision = 8,
+                    tipo_venta = $tv, 
+                    observacionContratoUrgente = null,
+                    firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
+                    observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
+                    fechaLiberacion = '".date("Y-m-d H:i:s")."', 
+                    userLiberacion = '".$this->session->userdata('username')."',
+                    precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
+                    enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
+                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
+                    WHERE idLote IN (".$row['idLote'].") and status = 1 ");
                 } else if ($datos['activeLE'] == 1){
                     $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
                     idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0,
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null,
                     fechaRL = null, 

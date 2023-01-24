@@ -755,7 +755,8 @@
 
 .btn-green {
   color: #28B463;
-  border: 1px solid #28B463;
+  border: none;
+  background-color: #28b46218;
 }
 
 .btn-green:hover {
@@ -775,7 +776,8 @@
 
 .btn-gray {
   color: #333333;
-  border: 1px solid #333333;
+  border: none;
+  background-color: #33333318;
 }
 
 .btn-gray:hover {
@@ -785,7 +787,8 @@
 
 .btn-violetDeep {
   color: #702497;
-  border: 1px solid #702497;
+  border: none;
+  background-color: #70249718;
 }
 
 .btn-violetDeep:hover {
@@ -795,7 +798,8 @@
 
 .btn-deepGray {
   color: #929292;
-  border: 1px solid #929292;
+  border: none;
+  background-color: #929292;
 }
 
 .btn-deepGray:hover {
@@ -805,7 +809,8 @@
 
 .btn-blueMaderas {
   color: #0a548b;
-  border: 1px solid #0a548b;
+  border: none;
+  background-color: #0a538b18;
 }
 
 .btn-blueMaderas:hover {
@@ -825,7 +830,8 @@
 
 .btn-violetBoots {
   color: #563D7C;
-  border: 1px solid #563D7C;
+  border: none;
+  background-color: #563D7C18;
 }
 
 .btn-violetBoots:hover {
@@ -845,7 +851,8 @@
 
 .btn-sky {
   color: #00bcd4;
-  border: 1px solid #00bcd4;
+  border: none;
+  background-color: #00bcd418;
 }
 
 .btn-sky:hover {
@@ -855,8 +862,8 @@
 
 .btn-warning {
   color: #c01313;
-  border: 1px solid #c01313;
-  background: none;
+  border: none;
+  background: #c0131318;
 }
 
 .btn-warning:hover, .btn-warning:focus {
@@ -876,7 +883,8 @@
 
 .btn-details-grey {
   color: #999999;
-  border: 1px solid #999999 !important;
+  border: none;
+  background-color: #99999913;
 }
 
 .btn-details-grey:hover {
@@ -1198,6 +1206,10 @@
 .isRequired {
   color: #EA4335;
   margin: 0 3px;
+}
+
+table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
+  white-space: nowrap !important;
 }
 
 .cargarPlan {

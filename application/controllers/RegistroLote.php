@@ -339,7 +339,7 @@
 			$mail = $this->phpmailer_lib->load();
 	
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
+			$mail->addAddress("irene.vallejo@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "mariela.sanchez@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
 			$mail->isHTML(true);
 			$mailContent = utf8_decode(
@@ -6010,10 +6010,8 @@
 	}
 
 	public function getFinalStatus() {
-		$datos = array();
-		$arregloFechas2 = array();
-		$arregloFechas = array();
-		$data = $this->registrolote_modelo->finalStatus($this->input->post("id_sede"));
+		$datos = array();		
+		$data = $this->registrolote_modelo->finalStatus($this->input->post("id_sede"), $this->input->post("residencial"));
 		for($i = 0; $i < count($data); $i ++) {
 			$datos[$i]['referencia'] = $data[$i]->referencia;
 			$datos[$i]['idLote'] = $data[$i]->idLote;
@@ -6043,10 +6041,10 @@
 			$datos[$i]['fechaApartado'] = $data[$i]->fechaApartado;
 			$procesoContratacion = $this->getProcesoContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->validacionEnganche, $data[$i]->status8Flag);
 			$status = $this->getStatusContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->firmaRL, $data[$i]->validacionEnganche, $data[$i]->perfil);
-			list($fechaVencimiento, $fechaVenc2) = $this->getFechaVencimiento($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag);
-			list($diasRest, arregloFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2);			
-			list($diasVenc, arregloFechas2, $diasVenc) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2);
-			$statusFecha = $this->getStatusFecha($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, arregloFechas, arregloFechas2);
+			list($fechaVencimiento, $fechaVenc2) = $this->getFechaVencimiento($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $data[$i]->modificado_historial);
+			list($diasRest, $arrayFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);			
+			list($diasVenc, $arrayFechas2, $diasVenc2) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
+			$statusFecha = $this->getStatusFecha($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $arrayFechas, $arrayFechas2);
 			$datos[$i]['procesoContratacion'] = $procesoContratacion;
 			$datos[$i]['status'] = $status;
 			$datos[$i]['fechaVencimiento'] =  $fechaVencimiento;
@@ -6058,10 +6056,14 @@
 			$datos[$i]['statusFecha'] = $statusFecha;
 			$datos[$i]['status8Flag'] = $data[$i]->status8Flag;
 		}
-		if ($datos != null)
-			echo json_encode($data['data'] = $datos);
-		else
-			echo json_encode(array());
+		if ($datos != null) {
+			$result['data'] = $datos;
+			echo json_encode($result);
+		}
+		else {
+			$result['data'] = array();
+			echo json_encode($result);
+		}
 	}
 
 	public function getProcesoContratacion($idStatusContratacion, $idMovimiento, $validacionEnganche, $status8Flag) {
@@ -6119,6 +6121,8 @@
 			$procesoContratacion = "11. Validación de enganche (Administración)";
 		else if ($idStatusContratacion == 13 && $idMovimiento == 68)
 			$procesoContratacion = "14. Firma Acuse cliente (Asistentes Gerentes)";
+		else
+			$procesoContratacion = "Sin especificar";
 
 		return $procesoContratacion;
 	}
@@ -6198,60 +6202,82 @@
 			$status = "Regreso a ventas 3 de (Status 7 jurídico)";
 		else if ($idStatusContratacion == 7 && $idMovimiento == 83)
 			$status = "Revisión de ventas 3 a (Status 7 jurídico)";
-		
+		else
+			$status = "Sin especificar";
 		return $status;
 	}
 
-	public function getFechaVencimiento($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag) {
+	public function getFechaVencimiento($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaUltimoEstatus) {
+		$fechaVencimiento = "";
+		$fechaVencimiento2 = "";
 		if(in_array($idStatusContratacion, array(9, 6, 5, 1, 7, 13, 2)) && in_array($idMovimiento, array(26, 23, 22, 18, 19, 20, 75, 76, 73, 66, 16, 85)))
 			$fechaVencimiento = "Vencido";
-		else if(in_array($idStatusContratacion, array(1, 2, 6, 7, 8, 10, 3, 4, 5, 9, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 38, 39, 10, 43, 44, 67, 84, 83, 82)))
+		else if(in_array($idStatusContratacion, array(1, 2, 6, 7, 8, 10, 3, 4, 5, 9, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 39, 10, 43, 44, 84, 83, 82)))
 			$fechaVencimiento = date("d-m-Y", strtotime($fechaVenc));
-		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38))) {
+		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67, 66))) {
+			$admon = 1;
+			$asige = 1;
+			if ($admon == 1) {
+				$fecha = $fechaEstatus7;
+				$arregloFechas = array();
+				$p = 0;
+				while ($p < 1) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+					if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" ||
+						$sig_fecha_feriado == "25-12") {
+					} else {
+						$arregloFechas[$p] = $sig_fecha;
+						$p++;
+					}
+					$fecha = $sig_fecha;
+				}
+				$d = end($arregloFechas);
+				$fechaVencimientoAdmon = date("d-m-Y", strtotime($d));
+			}
+			if ($asige == 1) {
+				$fecha = $fechaEstatus7;
+				$arregloFechas = array();
+				$p = 0;
+				while ($p <= 14) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+					if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" ||
+						$sig_fecha_feriado == "25-12") {
+					} else {
+						$arregloFechas[$p] = $sig_fecha;
+						$p++;
+					}
+					$fecha = $sig_fecha;
+				}
+				$d = end($arregloFechas);
+				$fechaVencimientoAsige = date("d-m-Y", strtotime($d));
+			}
+			$fechaVencimiento = $fechaVencimientoAsige;
+			$fechaVencimiento2 = $fechaVencimientoAdmon;
+		}
+		else if ($idStatusContratacion == 11 AND $idMovimiento == 41) {
 			$fecha = $fechaEstatus7;
 			$arregloFechas = array();
 			$p = 0;
-			while ($p <= 0) {
+			while ($p <= 14) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
 				$sig_fecha_dia = date('D', $sig_strtotime);
 				$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-				if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-					$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-					$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-					$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" ||
-					$sig_fecha_feriado == "25-12") {
-				} else {
-					$arregloFechas[$p] = $sig_fecha;
-					$p++;
-				}
-				$fecha = $sig_fecha;
-			}
-			$d = end($arregloFechas);
-			$fechaVencimiento2 = "";
-
-			if ($status8Flag == 1 && $validacionEnganche != 'VALIDADO')
-				$fechaVencimiento = date("d-m-Y", strtotime($d));
-			else if ($status8Flag == 0 && $validacionEnganche == 'VALIDADO')
-				$fechaVencimiento = date("d-m-Y", strtotime($fechaVenc));
-			else if ($status8Flag == 0 && $validacionEnganche != 'VALIDADO') {
-				$fechaVencimiento = date("d-m-Y", strtotime($fechaVenc));
-				$fechaVencimiento2 = date("d-m-Y", strtotime($d));
-			}
-		}
-		else if ($idStatusContratacion == 11 AND $idMovimiento == 41) {
-			$fecha = $fechaSolicitudValidacion;
-			$arregloFechas = array();
-			$p = 0;
-			while ($p <= 3) {
-				$hoy_strtotime = strtotime($fecha);
-				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-				$sig_fecha_dia = date('D', $sig_strtotime);
-				$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
 				if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
 					$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
 					$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -6381,8 +6407,11 @@
 		return [$fechaVencimiento, $fechaVencimiento2];
 	}
 
-	public function getDiasRestantes($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2) {
-		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 38, 39, 10, 43, 44, 67, 82, 83, 84))) {
+	public function getDiasRestantes($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
+		$arregloFechas = array();
+		$diasRest = 0;
+		$diasRest2 = 0;
+		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 39, 10, 43, 44, 82, 83, 84))) {
 			$fechaHoy = date('Y-m-d');
 			$fechaDes = $fechaVenc;
 			$arregloFechas = array();
@@ -6405,15 +6434,15 @@
 			}
 			$diasRest = count($arregloFechas);
 		}
-		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38))) {
+		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67, 66))) {
 			$admon = 1;
 			$asige = 1;
-			if ($admon == 1){
+			if ($admon == 1) {
 				$fechaHoy = date('Y-m-d');
-				$fechaDes = $fechaVenc2;
+				$fechaDes = date("Y-m-d", strtotime($fechaVenc2));
 				$arregloFechas = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while ($fechaHoy < $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6433,10 +6462,10 @@
 			}
 			if ($asige == 1) {
 				$fechaHoy = date('Y-m-d');
-				$fechaDes = $fechaVenc;
+				$fechaDes = date("Y-m-d", strtotime($fechaVenc));
 				$arregloFechas = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while ($fechaHoy < $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6454,20 +6483,14 @@
 				}
 				$diasRestAsige = count($arregloFechas);
 			}
-			if ($status8Flag == 1 && $validacionEnganche != 'VALIDADO')
-				$diasRest = $diasRestAdmon;
-			else if ($status8Flag == 0 && $validacionEnganche == 'VALIDADO')
-				$diasRest = $diasRestAsige;
-			else if ($status8Flag == 0 && $validacionEnganche != 'VALIDADO') {
-				$diasRest = $diasRestAsige;
-				$diasRest2 = $diasRestAdmon;
-			}
+			$diasRest = $diasRestAsige;
+			$diasRest2 = $diasRestAdmon;
 		}
 		else if ($idStatusContratacion == 11 AND $idMovimiento == 41) {
-			$fecha = $fechaSolicitudValidacion;
+			$fecha = $fechaVencimiento;
 			$arregloFechasA = array();
 			$u = 0;
-			while ($u <= 3) {
+			while ($u <= 14) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6534,8 +6557,11 @@
 		return [$diasRest, $arregloFechas, $diasRest2];
 	}
 
-	public function getDiasVencidos($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2) {
-		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 37, 7, 38, 39, 10, 43, 44, 67, 82, 83, 84))) {
+	public function getDiasVencidos($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
+		$arregloFechas2 = array();
+		$diasVenc = 0;
+		$diasVenc2 = 0;
+		if(in_array($idStatusContratacion, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14)) && in_array($idMovimiento, array(31, 32, 2, 33, 3, 34, 4, 35, 36, 6, 37, 7, 39, 10, 43, 44, 82, 83, 84))) {
 			$fechaHoy = $fechaVenc;
 			$fechaDes = date('Y-m-d');
 			$arregloFechas2 = array();
@@ -6558,7 +6584,7 @@
 			}
 			$diasVenc = count($arregloFechas2);
 		}
-		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38))) {
+		else if(in_array($idStatusContratacion, array(7, 8)) && in_array($idMovimiento, array(7, 37, 64, 77, 65, 38, 67))) {
 			$admon = 1;
 			$asige = 1;
 			if ($admon == 1) {
@@ -6566,7 +6592,7 @@
 				$fechaDes = date('Y-m-d');
 				$arregloFechas2 = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while (date("Y-m-d", strtotime($fechaHoy)) <= $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6585,11 +6611,11 @@
 				$diasVencAdmon = count($arregloFechas2);
 			}
 			if ($asige == 1) {
-				$fechaHoy = $fechaVenc;
+				$fechaHoy = $fechaVencimiento;
 				$fechaDes = date('Y-m-d');
 				$arregloFechas2 = array();
 				$a = 0;
-				while ($fechaHoy <= $fechaDes) {
+				while (date("Y-m-d", strtotime($fechaHoy)) <= $fechaDes) {
 					$hoy_strtotime = strtotime($fechaHoy);
 					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 					$sig_fecha = date("Y-m-d", $sig_strtotime);
@@ -6607,20 +6633,15 @@
 				}
 				$diasVencAsigue = count($arregloFechas2);
 			}
-			if ($status8Flag == 1 && $validacionEnganche != 'VALIDADO')
-				$diasRest = $diasVencAdmon;
-			else if ($status8Flag == 0 && $validacionEnganche == 'VALIDADO')
-				$diasRest = $diasVencAsigue;
-			else if ($status8Flag == 0 && $validacionEnganche != 'VALIDADO') {
-				$diasVenc = $diasVencAsigue;
-				$diasVenc2 = $diasVencAdmon;
-			}
+			$diasVenc = $diasVencAsigue;
+			$diasVenc2 = $diasVencAdmon;
 		}
 		else if ($idStatusContratacion == 11 AND $idMovimiento == 41) {
-			$fecha = $fechaSolicitudValidacion;
+			$fecha = $fechaVencimiento;
 			$arregloFechasA = array();
 			$t = 0;
-			while ($t <= 3) {
+			$days = ($validacionEnganche == '' && $status8Flag == 1) ? 14 : 0;
+			while ($t <= $days) {
 				$hoy_strtotime = strtotime($fecha);
 				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
@@ -6696,6 +6717,8 @@
 			$statusFecha = "En Tiempo";
 		else if ($idStatusContratacion == 15 AND $idMovimiento == 45)
 			$statusFecha = "Contratado";
+		else
+			$statusFecha = "Sin especificar";
 		return $statusFecha;
 	}
 

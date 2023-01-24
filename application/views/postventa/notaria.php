@@ -1,7 +1,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<link href="<?= base_url() ?>dist/css/table_escrituracion.css" rel="stylesheet" />
 
 <body>
     <div class="wrapper">

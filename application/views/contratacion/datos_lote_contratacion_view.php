@@ -600,7 +600,10 @@
 				{
 					"width": "14%",
 					"data": function(d){
-						return '<p>'+(d.nombreLote).toUpperCase()+'</p>';
+						if (d.casa == 1)
+							return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+						else
+							return (d.nombreLote).toUpperCase();
 					}
 				},
 				{
@@ -808,9 +811,8 @@
 				{
 					"width": "12%",
 					"data": function(d){
-						valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
-						'<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <p><p> <span class="label label-warning";">'+d.tipo_venta+'</span> <center>';
-
+						valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
+						`<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
 						return valTV;
 					}
 				},

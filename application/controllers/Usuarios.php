@@ -70,7 +70,7 @@ class Usuarios extends CI_Controller
             "apellido_paterno" => $_POST['last_name'],
             "apellido_materno" => $_POST['mothers_last_name'],
             "forma_pago" => $_POST['payment_method'],
-            "rfc" => $_POST['rfc'],
+            "rfc" => '',
             "tiene_hijos" => 2,
             "estatus" => 1,
             "sesion_activa" => 1,
@@ -123,7 +123,6 @@ class Usuarios extends CI_Controller
     public function getUsersList()
     {
         $data['data'] = $this->Usuarios_modelo->getUsersList()->result_array();
-        //$data['contrasena'] = desencriptar($data['contrasena']);
         echo json_encode($data);
     }
 
@@ -270,11 +269,12 @@ class Usuarios extends CI_Controller
 
                 $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal, $datosCH);
             }
-            $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
+            /* $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
             $id_lider = 0;
             $id_gerente = 0;
             $id_subdirector = 0;
             $id_regional = 0;
+            $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
             if ($_POST['member_type'] == 7) {
                 //Asesor
                 $id_lider = $_POST['leader'];
@@ -293,7 +293,7 @@ class Usuarios extends CI_Controller
                 $id_gerente = 0;
                 $id_subdirector = $_POST['leader']; //$getLider[0]['id_subdirector'];
                 $id_regional = $getLider[0]['id_lider'];
-            }
+            }*/
 
             $data = array(
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
@@ -308,6 +308,7 @@ class Usuarios extends CI_Controller
                 "id_lider" => $_POST['leader'],
                 "usuario" => trim($_POST['username']),
                 "contrasena" => encriptar($_POST['contrasena']),
+                "nueva_estructura" =>  $nueva_estructura,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
                 "sedech" => $sedeCH,

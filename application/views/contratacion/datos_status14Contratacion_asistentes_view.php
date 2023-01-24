@@ -247,14 +247,14 @@
                                 cntActions = 'En proceso de Liberación';
                             } 
                             else {
-                                if(data.idStatusContratacion == 13 && data.idMovimiento == 43 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)){
+                                if(data.idStatusContratacion == 13 && data.idMovimiento == 43 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)){
                                         cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                         'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                         'class="btn-data btn-green editReg" title="Registrar estatus">' +
                                         '<i class="far fa-thumbs-up"></i></button>';
 
                                 }
-                                else if(data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)){
+                                else if(data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)){
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                                 'class="revCont btn-data btn-orangeYellow" title= "Registrar Status">' +

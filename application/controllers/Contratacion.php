@@ -67,8 +67,7 @@ class Contratacion extends CI_Controller
         echo json_encode($this->Contratacion_model->get_estatus_lote()->result_array());
     }
 
-    public function get_inventario($estatus, $condominio, $proyecto)
-    {
+    public function get_inventario($estatus, $condominio, $proyecto) {
 		$this->validateSession();
         $a = 'null';
         if ($estatus != $a && $condominio != $a && $proyecto != $a)
@@ -205,10 +204,9 @@ class Contratacion extends CI_Controller
 		$this->load->view("contraloria/completeInventory", $this->get_menu->get_menu_data($this->session->userdata('id_rol')));
 	}
 
-    public function sedesPorDesarrollos()
-    {
+    public function getCatalogosParaUltimoEstatus() {
     	$this->validateSession();
-        echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
+        echo json_encode($this->Contratacion_model->getCatalogosParaUltimoEstatus()->result_array());
     }
 
     public function downloadCompleteInventory () {
@@ -217,6 +215,11 @@ class Contratacion extends CI_Controller
             echo json_encode($data);
         } else
             echo json_encode(array());
+    }
+    
+    public function sedesPorDesarrollos() {
+        $this->validateSession();
+        echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
     }
     
 }

@@ -130,6 +130,54 @@ class Caja_outside extends CI_Controller
         }
     }
 
+    public function getAllCondominios()
+    {
+        $proyecto =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($proyecto)){
+            $idResidencial = $proyecto["idResidencial"];
+            if($idResidencial != null || $idResidencial != ""){
+                $condominios = $this->caja_model_outside->getCondominio($idResidencial);
+                if ($condominios != null || !empty($condominios))
+                    echo json_encode($condominios);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Proyecto"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getAllLotes(){
+        $proyecto =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($proyecto)){
+            $idCondominio = $proyecto["idCondominio"];
+            if( $idCondominio != null || $idCondominio != "" ){
+                $lotes = $this->caja_model_outside->getAllLotes($idCondominio);
+                if ($lotes != null || !empty($lotes))
+                    echo json_encode($lotes);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Condominio"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getAllClientsByLote(){
+        $data =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($data)){
+            $idLote = $data["idLote"];
+            if( $idLote != null || $idLote != "" ){
+                $clientes = $this->caja_model_outside->getAllClientsByLote($idLote);
+                if ($clientes != null || !empty($clientes))
+                    echo json_encode($clientes);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Lote"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
 
     public function getLotee()
     {
@@ -410,7 +458,6 @@ class Caja_outside extends CI_Controller
     public function addClient()
     {
         $dataPost = file_get_contents("php://input");
-        //$response['resultado'] = FALSE;
         $datosView = json_decode($dataPost);
 
         /************testing datas *************/
@@ -518,7 +565,8 @@ class Caja_outside extends CI_Controller
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
             'flag_compartida' =>$datosView->flag_compartida,
-            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0
+            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
+            
         );
         /*Inserta cliente*/
         $last_id = '';
@@ -2562,4 +2610,5 @@ class Caja_outside extends CI_Controller
     public function getTipoLote() {
         echo json_encode($this->caja_model_outside->getTipoLote());
     }
+    
 }
