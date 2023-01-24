@@ -339,7 +339,7 @@
 			$mail = $this->phpmailer_lib->load();
 	
 			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
+			$mail->addAddress("irene.vallejo@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "mariela.sanchez@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
 			$mail->isHTML(true);
 			$mailContent = utf8_decode(
