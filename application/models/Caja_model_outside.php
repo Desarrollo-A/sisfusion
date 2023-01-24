@@ -1158,6 +1158,7 @@
                 $info = $this->getDatosLote($array_casas[$c][0]);
 
                 if ($array_casas[$c][1] == 'STELLA') {
+                    $tipo_casa = 2;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Stella') {
@@ -1175,7 +1176,9 @@
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
                     $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
-                } else if ($array_casas[$c][1] == 'AURA') {
+                }
+                else if ($array_casas[$c][1] == 'AURA') {
+                    $tipo_casa = 1;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Aura') {
@@ -1263,7 +1266,7 @@
  
              }*/ else if ($array_casas[$c][1] == 'TERRENO') {
 
-
+                    $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);
                     $e = ($t * 0.1);
                     $s = ($t - $e);
@@ -1276,6 +1279,7 @@
 
                 }
                 $this->addClientToLote($array_casas[$c][0], $update_pcasas);
+                $this->db->query("UPDATE clientes SET tipo_casa=".$tipo_casa." WHERE id_cliente=".$cliente_id);
             }
 
         }
