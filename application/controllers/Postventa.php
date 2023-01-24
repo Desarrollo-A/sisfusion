@@ -155,6 +155,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ocupacion = $idClient->row()->ocupacion;
                 $resDecode->data[0]->regimen_matrimonial = $idClient->row()->regimen_matrimonial;
                 $resDecode->data[0]->estado_civil = $idClient->row()->estado_civil;
+                $resDecode->data[0]->nombre_juridica = $idClient->row()->nombre_juridica;
                 echo json_encode($resDecode->data[0]);
             } else {
                 $resDecode->data[0]->bandera_exist_cli = false;
@@ -612,7 +613,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
-        $personalidad = $_POST['personalidad'];
+        $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
       //  print_r($resDecode->data[0]);
         $dataFiscal = array(
@@ -669,7 +670,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
-        $personalidad = $_POST['personalidad'];
+        $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
@@ -686,6 +687,7 @@ class Postventa extends CI_Controller
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
             $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            // echo"Esto es lo que trae el usuario".$usuarioJuridico."<br>";
             if (!$usuarioJuridico) {
                 $this->Postventa_model->restablecerJuridicosAsignados();
                 $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
@@ -693,9 +695,8 @@ class Postventa extends CI_Controller
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
             $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
-            //echo "Personalidad: ".$personalidad."\n";
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
-            //echo "idLote:".$idLote."\n";
+            // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
             //echo "idCliente:".$idCliente."\n";
             $idPostventa = (!isset($idPostventa) || $idPostventa == '') ? 'NULL' : $idPostventa;
@@ -714,7 +715,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ncliente = $_POST['nombreComp'];
                 $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -1131,9 +1132,10 @@ class Postventa extends CI_Controller
         );
         //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
-      /*  if($_POST['not'] == 'nou'){
+        if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
-        }*/
+            $updateData['bandera_notaria'] = 1;
+        }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1141,7 +1143,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
 
-        /*if ($_POST['not'] == 'yes'){
+        if ($_POST['tipoNotaria'] == 2){
             $idSolicitud = $_POST['id_solicitud3'];
             $nombre_notaria = $_POST['nombre_notaria'];
             $nombre_notario = $_POST['nombre_notario'];
@@ -1149,11 +1151,14 @@ class Postventa extends CI_Controller
             $correo = $_POST['correo'];
             $telefono = $_POST['telefono'];
 
-            $informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+            $informacion = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
+          
+
+            //$informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
             return $informacion;
     
-            return $this->Postventa_model->newNotaria($idSolicitud);
-        } */  
+            //return $this->Postventa_model->newNotaria($idSolicitud);
+        } 
 
     }
 
@@ -1603,7 +1608,7 @@ class Postventa extends CI_Controller
                                                                 <b>Teléfono</b><br>
                                                                 ' . $data->telefono . '
                                                             </td>
-                                                            <td style="font-size: 1e;">
+                                                            <td style="font-size: 1em;">
                                                                 <b>Dirección</b><br>
                                                                 ' . $data->direccion . '
                                                             </td>

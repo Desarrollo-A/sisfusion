@@ -78,7 +78,7 @@ class Contratacion_model extends CI_Model {
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -94,8 +94,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
       LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       WHERE lot.status = 1 and lot.idCondominio IN ($condominio) AND lot.idStatusLote = $estatus ORDER BY lot.idLote");
    }
 
@@ -114,7 +114,7 @@ class Contratacion_model extends CI_Model {
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
       FROM [lotes] lot 
       INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
       INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -130,8 +130,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
       LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       WHERE lot.status = 1 and lot.idStatusLote = 100 ORDER BY lot.idLote");
    }
 
@@ -151,7 +151,7 @@ class Contratacion_model extends CI_Model {
             $prospectingPlaceDetail lugar_prospeccion, 
             lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
             lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-            sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+            sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
             FROM [lotes] lot
             INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
             INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -167,8 +167,8 @@ class Contratacion_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
             LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
             LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
             FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
             WHERE lot.status = 1 and lot.idStatusLote = $estatus ORDER BY lot.idLote");
          } else {
             return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.total, 
@@ -184,7 +184,7 @@ class Contratacion_model extends CI_Model {
             $prospectingPlaceDetail lugar_prospeccion, 
             lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
             lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-            sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+            sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
             FROM [lotes] lot
             INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
             INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -200,8 +200,8 @@ class Contratacion_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
             LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
             LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
             FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
             WHERE lot.status = 1 and res.idResidencial IN ($proyecto) AND lot.idStatusLote = $estatus ORDER BY con.nombre, lot.idLote");
          }
      }
@@ -221,7 +221,7 @@ class Contratacion_model extends CI_Model {
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
       FROM [lotes] lot 
       INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
       INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -237,8 +237,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
       LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       WHERE lot.status = 1 and lot.idStatusLote = $estatus ORDER BY lot.idLote");
    }
 
@@ -260,7 +260,7 @@ class Contratacion_model extends CI_Model {
          $prospectingPlaceDetail lugar_prospeccion, 
          lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
          lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-         sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+         sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
          FROM lotes lot 
          INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
          INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -276,8 +276,8 @@ class Contratacion_model extends CI_Model {
          LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
          LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
          LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
-         FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1     
+         FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1   
+         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35  
          WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
       } else {
          return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, 
@@ -295,7 +295,7 @@ class Contratacion_model extends CI_Model {
          $prospectingPlaceDetail lugar_prospeccion, 
          lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
          lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-         sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+         sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
          FROM lotes lot 
          INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
          INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -311,8 +311,8 @@ class Contratacion_model extends CI_Model {
          LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
          LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
          LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
          FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
          WHERE lot.status = 1 and res.idResidencial IN ($proyecto) ORDER BY res.nombreResidencial, con.nombre, lot.idLote");
       }
    }
@@ -332,7 +332,7 @@ class Contratacion_model extends CI_Model {
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
-      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, oxc2.nombre nombre_tipo_casa
+      sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
       FROM lotes lot INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
@@ -347,8 +347,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
       LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
-      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       WHERE lot.status = 1 and res.idResidencial IN ($proyecto) AND lot.idCondominio IN ($condominio) ORDER BY lot.idLote");
    }
 

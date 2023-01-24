@@ -193,6 +193,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- estos input solo se muestran si es si el select anterior -->
                         <div class="row ifClient">
                             <div class="col-md-12 pr-0 pr-0">
@@ -215,6 +216,51 @@
                             </div>
                         </div>
                         <!--INFORMACIÓN DE NOTARÍA-->
+                         <!----------------------------->
+                         <div class="col-md-12 pr-0" >
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Tipo de Notaría</label>
+                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="1">Interna</option>
+                                        <option value="2">Externa</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="div_notaria" style="display: none;">
+                                    <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Nombre de la Notaría</label>
+                                            <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-6 pr-0 pr-0" id="divnombre_notario">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Nombre del notario</label>
+                                            <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pr-0 pr-0" id="divdireccion">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Dirección</label>
+                                            <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pr-0 pr-0" id="divcorreo">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Correo</label>
+                                            <input type="email" id="correo" name="correo" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pr-0 pr-0" id="divtelefono">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Teléfono</label>
+                                            <input type="number" id="telefono" name="telefono" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                </div>
+                        <!----------------------------->
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
@@ -235,7 +281,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!----------------------------->
+                       
                         <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
                                 <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
@@ -443,7 +489,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
+<!--<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
@@ -512,7 +558,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>--->
 
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -684,19 +730,19 @@
                                 <div class="col-md-3 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-3 pr-0">
                                       <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
                                         <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
+                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
                                         <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
                                     </div>
                                 </div>

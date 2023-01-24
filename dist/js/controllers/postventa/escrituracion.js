@@ -29,12 +29,14 @@ $(document).on('click', '#email', function () {
 })
 
 $(document).on('submit', '#formEscrituracion', function (e) {
+    $('#perj').prop('disabled', false);
     const nom_id_butt = document.querySelector('.cont-button_apl');
     e.preventDefault();
     loading();
     // $('#'+nom_id_butt.children[0].id).prop('disabled', true);
     // $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
     let formData = new FormData(this);
+    console.log(formData)
     if(nom_id_butt.children[0].id == 'alta_cli'){
         AltaCli(formData);
     }else{
@@ -55,11 +57,11 @@ function complete() {
 }
 
 function aportaciones(data) {
+    $('#perj').prop('disabled', false);
     let idLote = $('#lotes').val();
     let idCliente = $('#idCliente').val();
     let idPostventa = $('#idPostventa').val();
     data.append('idLote', idLote);
-
     $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: 'aportaciones',
@@ -144,6 +146,7 @@ function getInputData() {
         ecivil: $('#ecivil').val(),
         rconyugal: $('#rconyugal').val(),
         correo: $('#correo').val(),
+        perj: $('#perj').val(),
         direccionf: $('#direccionf').val(),
         direccion: $('#direccion').val(),
         rfc: $('#rfc').val(),
@@ -158,6 +161,8 @@ function NombreCompleto(e){
     e.target.value = e.target.value.toUpperCase();
 }
 function getClient(idLote) {
+    getOpcCat('10', ['perj']);
+
     $('#spiner-loader').removeClass('hide');
     $.post('getClient', {
         idLote: idLote
@@ -208,7 +213,23 @@ function getClient(idLote) {
             document.getElementById('rconyugal').title=data.regimen_matrimonial;//pendiente
             document.getElementById('RegCon').children[1].children[0].title = data.regimen_matrimonial;
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = data.regimen_matrimonial;
-            
+
+            if(data.personalidad !=0 && data.personalidad != null && data.personalidad != 4){
+                $('#perj').prop('disabled', true);
+                // $('#perj').val(data.personalidad).trigger('change');
+                $("#perj").selectpicker();
+                $('#perj').val(data.personalidad);
+                $('select[name=perj]').change();
+                // document.getElementById('perj').title=data.personalidad;//pendiente
+                // document.getElementById('PerJur').children[1].children[0].title = data.nombre_juridica;
+                // document.getElementById('PerJur').children[1].children[0].children[0].innerText = data.nombre_juridica;
+            }
+            else{
+                // console.log("Entrar aqui");
+                $('#perj').prop('disabled', false);
+                $('#personalidad').val(data.personalidad);
+            }
+                $("#perj").selectpicker('refresh');
             //$('#rconyugal').val(data.regimen_matrimonial);//pendiente
             $('#correo').val(data.correo);
             // $('#direccionf').val(); //nosotros insertamos
@@ -222,11 +243,10 @@ function getClient(idLote) {
             $('#referencia').val(data.referencia);
             $('#empresa').val(data.empresa);
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
-            $('#personalidad').val(data.personalidad);
             $('#check').removeClass("d-none");
         
         }else{
-            alerts.showNotification("top", "right", "No se han registros los datos del cliente.<br>Por favor ingresar la información solicita.", "warning");
+            alerts.showNotification("top", "right", "No se han encontrado los datos del cliente.<br>Por favor ingresar la información requerida.", "warning");
             clearInputs();
             habilitarInputs(false);
             document.getElementById('nombre2').addEventListener('change', NombreCompleto);
@@ -249,6 +269,10 @@ function getClient(idLote) {
             document.getElementById('RegCon').children[1].children[0].title = '';
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
 
+            document.getElementById('perj').title = '';
+            document.getElementById('PerJur').children[1].children[0].title = '';
+            document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
+
             $('#nombre2').val(data.ncliente);
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
@@ -264,7 +288,7 @@ function getClient(idLote) {
             $('#referencia').val(data.referencia);
             $('#empresa').val(data.empresa);
             data.idEstatus == 8 ? $("#estatusL").prop("checked", true):$("#estatusSL").prop("checked", true);
-            $('#personalidad').val(data.personalidad);
+            $('#personalidada').val(data.personalidad);
             /*$('#ecivil').val('');//pendiente, este es el codigo que estaba anteriormente
             //$('#rconyugal').val('');//pendiente
             $('#correo').val('');
@@ -280,7 +304,8 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
-            
+            $("#perj").selectpicker('refresh');
+
             $('#check').removeClass("d-none");
         }
        
@@ -362,6 +387,7 @@ function clearInputs(){
     $('#ecivil').val('');
     $('#rconyugal').val('');
     $('#correo').val('');
+    $('#perj').val('');
     $('#direccionf').val('');
     $('#direccion').val('');
     $('#rfc').val('');
@@ -381,9 +407,12 @@ function clearInputs(){
     $('#calleF').val('');
 }
 function habilitarInputs(resul){
+        console.log(resul);
     if(resul){
         $('#ape1_cli').hide();
         $('#ape2_cli').hide();
+        // document.getElementById('per_jur').disabled = resul;
+        // $('#perj').prop('disabled',true);
         document.getElementById('nom2_cli').className = "col-md-12 pl-0";
         /*Cambio de id, nombre y etiuqueta del boton del formulario a su estado original */
         const button_apli = document.querySelector('.cont-button_apl');
@@ -394,6 +423,7 @@ function habilitarInputs(resul){
         //Mostramos campos para apellidos 
         $('#ape1_cli').show();
         $('#ape2_cli').show();
+        // $('#per_jur').show();
         //Modificamos el tamaño del div para los tres campos de nombre y apellidos
         document.getElementById('nom2_cli').className = "col-md-4 pl-0";
         /*Cambio de id, nombre y etiuqueta del boton del formulario */
@@ -405,15 +435,18 @@ function habilitarInputs(resul){
     //Habilita los RadioButton
     document.getElementById('estatusL').disabled = resul;
     document.getElementById('estatusSL').disabled = resul;
-    //Habilitamos Todos los campos para el llenado de informacion
+    //Habilitamos Todos los campos para el llenado de infodata.lengthrmacion
     document.getElementById('nombre2').disabled = resul;
     document.getElementById('ocupacion').disabled = resul;
     document.getElementById('origen').disabled = resul;
     document.getElementById('ecivil').disabled = resul;
     document.getElementById('rconyugal').disabled = resul;
     document.getElementById('correo').disabled = resul;
+    // document.getElementById('perj').disabled = resul;
     document.getElementById('direccion').disabled = resul;
+
 }
+
 function getOpcCat(id_cat, element) {
     for (let index = 0; index < element.length; index++) {
         $("#"+element[index]).find("option").remove();
