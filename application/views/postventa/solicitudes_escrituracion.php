@@ -10,10 +10,15 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Solicitudes</a>
+                            </li>
+
+                            <li><a href="#solicitudesCanceladas" role="tab"  data-toggle="tab">Carga testimonio</a>
+                                </li>
+                        </ul>
                         <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-feather-alt fa-2x"></i>
-                            </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Solicitudes escrituración</h3>
                                 <div class="toolbar">
