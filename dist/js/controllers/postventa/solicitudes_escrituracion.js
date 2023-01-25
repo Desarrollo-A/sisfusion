@@ -325,7 +325,7 @@ $(document).on("click", ".upload", function () {
 });
 
 $(document).on("click", "#sendRequestButton", function (e) {
-    var info = prospectsTable.page.info();
+    var info = escrituracionTable.page.info();
     console.log(info)
     console.log(info.page)
     e.preventDefault();
@@ -398,7 +398,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         // createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
                     }else if(details == 3){
                         var tr = $(`#docs${idSolicitud}`).closest('tr');
-                        var row = prospectsTable.row(tr);
+                        var row = escrituracionTable.row(tr);
                         createDocRowOtros(row, tr, $(`#docs${idSolicitud}`),contador);
                     }else if(details == 4){
                         var tr = $(`#pago${idSolicitud}`).closest('tr');
@@ -1674,9 +1674,8 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
                 break;
             default:
                 break;
-        }   
-           
-        prospectsTable.ajax.reload( null , false );
+        }
+        escrituracionTable.ajax.reload(null,false);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -1825,7 +1824,7 @@ function createDocRow(row, tr, thisVar){
         idEstatus: row.data().idEstatus
     }).done(function (data) {
         //if()
-        //prospectsTable.ajax.reload(null,false);
+        //escrituracionTable.ajax.reload(null,false);
         row.data().solicitudes = JSON.parse(data);
       
        /* if(row.data().solicitudes[0].estatus_solicitud == 4 && row.data().solicitudes[0].num_exp == 2){
@@ -1834,12 +1833,12 @@ function createDocRow(row, tr, thisVar){
             if(contador == 1){
                 console.log('CONTADOR MAS 1')
                 console.log('YA LA RECARGO')
-               // prospectsTable.ajax.reload();
+               // escrituracionTable.ajax.reload();
               
             }
         }*/
-        prospectsTable.row(tr).data(row.data());
-        row = prospectsTable.row(tr);
+        escrituracionTable.row(tr).data(row.data());
+        row = escrituracionTable.row(tr);
         row.child(buildTableDetail(row.data().solicitudes, $('.details-control').attr('data-permisos'))).show();
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
@@ -2255,11 +2254,11 @@ if(estatusAct4.includes(row.data().solicitudes[0].estatus_solicitud)){
                 console.log(index1)
                 if(contador == 1){
                     if(row.data().solicitudes[index1].expediente != null ){
-                        prospectsTable.ajax.reload(null,false);
+                        escrituracionTable.ajax.reload(null,false);
                     }
                 }else if(contador == 2){
                     if(row.data().solicitudes[index1].expediente == null){
-                        prospectsTable.ajax.reload(null,false);
+                        escrituracionTable.ajax.reload(null,false);
                     }
                 }
                // console.log(row.data().solicitudes[index1]);
@@ -2271,12 +2270,12 @@ if(estatusAct4.includes(row.data().solicitudes[0].estatus_solicitud)){
             if(contador == 1){
                 console.log('CONTADOR MAS 1')
                 console.log('YA LA RECARGO')
-               // prospectsTable.ajax.reload();
+               // escrituracionTable.ajax.reload();
               
             }
         }*/
-        prospectsTable.row(tr).data(row.data());
-        row = prospectsTable.row(tr);
+        escrituracionTable.row(tr).data(row.data());
+        row = escrituracionTable.row(tr);
         console.log($('.details-control-pago').attr('data-permisos'));
         row.child(buildTableDetail(row.data().solicitudes, $('.details-control-otros').attr('data-permisos'))).show();
         tr.addClass('shown');
