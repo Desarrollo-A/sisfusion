@@ -14,23 +14,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-$("#comisionista").on('change', function() {
-    let estatusComisionista = $('#comisionista option:selected').data('estatus');
-    console.log(estatusComisionista);
-    let html = '';
-    $(".lblEstatus").html('');
-    if (estatusComisionista == '3'){
-        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
-        `;
-    }
-    else{
-        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
-        `;
-    }
-    $(".lblEstatus").append(html);
-});
-
-sp = { // MJ: SELECT PICKER
+sp = { // MJ: DATE PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -50,6 +34,23 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
+$("#comisionista").on('change', function() {
+    let estatusComisionista = $('#comisionista option:selected').data('estatus');
+    console.log(estatusComisionista);
+    let html = '';
+    $(".lblEstatus").html('');
+    if (estatusComisionista == '3'){
+        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
+        `;
+    }
+    else{
+        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
+        `;
+    }
+    $(".lblEstatus").append(html);
+});
+
+
 let titulos_intxt = [];
 $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
     $(this).css('text-align', 'center');
@@ -63,12 +64,12 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
             }
 
             let total=0, totalAbonado = 0, totalPagado = 0;
-            var index = $('#masterCobranzaTable').DataTable().rows({
+            var index = $('#reporteLotesPorComisionista').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
 
-            var data = $('#masterCobranzaTable').DataTable().rows(index).data();
+            var data = $('#reporteLotesPorComisionista').DataTable().rows(index).data();
             $.each(data, function(i, v) {
                 total = total + parseFloat(v.comisionTotal);
                 totalAbonado = totalAbonado + parseFloat(v.abonoDispersado);
@@ -83,7 +84,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
     }
 });
 
-$('#masterCobranzaTable').on('xhr.dt', function(e, settings, json, xhr) {
+$('#reporteLotesPorComisionista').on('xhr.dt', function(e, settings, json, xhr) {
     let total=0, totalAbonado = 0, totalPagado = 0;
     let jsonObject = JSON.parse(JSON.stringify(json)).data;
     for(let i=0; i < jsonObject.length; i++){
@@ -98,8 +99,8 @@ $('#masterCobranzaTable').on('xhr.dt', function(e, settings, json, xhr) {
     
 });
 
-function fillTable(typeTransaction, beginDate, endDate, where) {
-    generalDataTable = $('#masterCobranzaTable').dataTable({
+function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
+    generalDataTable = $('#reporteLotesPorComisionista').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
