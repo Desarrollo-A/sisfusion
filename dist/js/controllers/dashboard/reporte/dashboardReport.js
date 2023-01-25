@@ -251,6 +251,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
     generalDataTable = $("#table"+option).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        scrollX: true,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -308,7 +309,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         ],
         destroy: true,
         ordering: false,
-        scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
             paginate: {
