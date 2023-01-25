@@ -366,6 +366,71 @@ class Contratacion_model extends CI_Model {
                                 WHERE idLote = ".$lote." ORDER BY modificado");                       
      }
 
+     function getInventarioData($estatus, $condominio, $proyecto){
+         $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
+        $condicion = '';
+         if ($estatus != 'null' && $condominio != 'null' && $proyecto != 'null'){
+             $condicion = ' AND lot.idCondominio IN ('.$condominio.') AND lot.idStatusLote = '.$estatus.' ORDER BY lot.idLote ';
+         }
+         if ($proyecto != 'null' && $condominio == 'null' && $estatus != 'null'){
+             if($proyecto==0){
+                 $condicion = ' AND lot.idStatusLote = '.$estatus.' ORDER BY lot.idLote ';
+             }else{
+                 $condicion = ' AND res.idResidencial IN ('.$proyecto.') AND lot.idStatusLote = '.$estatus.' ORDER BY con.nombre, lot.idLote ';
+             }
+         }
+         if ($proyecto == 'null' && $condominio == 'null' && $estatus != 'null'){
+             $condicion = ' AND lot.idStatusLote = '.$estatus.' ORDER BY lot.idLote ';
+         }
+         if ($proyecto != 'null' && $condominio == 'null' && $estatus == 'null'){
+            if($proyecto==0){
+                $condicion = ' ORDER BY con.nombre, lot.idLote ';
+            }else{
+                $condicion = ' AND res.idResidencial IN ('.$proyecto.') ORDER BY res.nombreResidencial, con.nombre, lot.idLote';
+            }
+         }
+         if ($proyecto != 'null' && $condominio != 'null' && $estatus == 'null'){
+             $condicion = ' AND res.idResidencial IN ('.$proyecto.') AND lot.idCondominio IN ('.$condominio.') ORDER BY lot.idLote';
+         }
+         if ($proyecto == 'null' && $condominio == 'null' && $estatus == 'null'){
+             $condicion = ' AND lot.idStatusLote = 100 ORDER BY lot.idLote';
+         }
+         $query = $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.totalNeto2,
+          lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
+          CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, lot.msi as msni,
+          CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+          CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+          CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+          CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
+          CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as coordinador2,
+          CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as gerente2,
+          lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
+          CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
+          $prospectingPlaceDetail lugar_prospeccion, 
+          lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+          lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
+          sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa
+          FROM lotes lot
+          INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
+          INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+          INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
+          LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
+          LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente 
+          LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+          LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+          LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+          LEFT JOIN usuarios asesor2 ON lot.idAsesor = asesor2.id_usuario
+          LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
+          LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+          LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+          LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+          LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
+          FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
+          LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
+          WHERE lot.status = 1 ".$condicion);
+
+        return $query->result_array();
+     }
 
      function get_datos_proceso($lote){
          return $this->db->query("SELECT idHistorialLote, nombreLote, UPPER(statuslote.nombre) as stlt, comentario, UPPER(perfil) as perfil,

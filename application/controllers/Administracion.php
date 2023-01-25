@@ -13,7 +13,6 @@ class Administracion extends CI_Controller{
 
                      //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
          $this->load->library(array('session','form_validation', 'get_menu'));
-         $this->load->library('general');
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
         $this->load->library('phpmailer_lib');
