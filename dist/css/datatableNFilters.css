@@ -1166,11 +1166,10 @@
   overflow: hidden;
   transition: linear 0.3s;
   margin: 0;
-  background-color: transparent!important;
 }
 
 .radio_container input[type="radio"]:checked + label {
-  background-color: #103f75!important;
+  background-color: #103f75;
   color: #ffffff;
   transition: 0.3s;
 }
@@ -1207,10 +1206,6 @@
 .isRequired {
   color: #EA4335;
   margin: 0 3px;
-}
-
-table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
-  white-space: nowrap !important;
 }
 
 .boxContent .nav-tabs-cm {
