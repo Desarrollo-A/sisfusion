@@ -1975,8 +1975,9 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
                 break;
             default:
                 break;
-        }
-        prospectsTable.ajax.reload();
+        }   
+           
+        prospectsTable.ajax.reload( null , false );
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }

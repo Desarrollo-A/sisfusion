@@ -20,6 +20,11 @@ $(document).on('change', '#lotes', function () {
     clearInputs();
 })
 
+$(document).on('change', '#perj', function (){
+        var perJur = $('#perj').val();
+        archivosCaptura(perJur);
+    })
+
 $(document).on('click', '#print', function () {
     print();
 })
@@ -36,7 +41,6 @@ $(document).on('submit', '#formEscrituracion', function (e) {
     // $('#'+nom_id_butt.children[0].id).prop('disabled', true);
     // $('#'+nom_id_butt.children[0].id).css('background-color', 'gray');
     let formData = new FormData(this);
-    console.log(formData)
     if(nom_id_butt.children[0].id == 'alta_cli'){
         AltaCli(formData);
     }else{
@@ -160,46 +164,50 @@ function NombreCompleto(e){
     $('#nombre').val(nom_com_cli.toUpperCase());
     e.target.value = e.target.value.toUpperCase();
 }
+
+function archivosCaptura(personalidad){
+if(personalidad == 1){
+    $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Moral</h4></b></li>
+    <li><b>1) Acta constitutiva y poder notariado</b>.</li>
+    <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal actual).</i></li>
+    <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+    <li><b>4) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+    <li><b>5) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+    <li><b>6) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+    <li><br></li>
+    <li><b><h4 class="card-title">Documentos Escrituración Apoderado Legal</h4></b></li>
+    <li><b>1) Identificación oficial vigente</b>.</li>
+    <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+    <li><b>3) Acta de Nacimiento</b>.</li>
+    <li><b>4) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+    <li><b>5) CURP </b><i>(Formato actualizado).</i></li>`);
+}else if(personalidad == 2){
+    $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Física</h4></b></li>
+    <li><b>1) Identificación oficial vigente</b>.</li>
+    <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
+    <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
+    <li><b>4) Acta de Nacimiento</b>.</li>
+    <li><b>5) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
+    <li><b>6) CURP </b><i>(Formato actualizado).</i></li>
+    <li><b>7) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
+    <li><b>8) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
+    <li><b>9) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
+    <li><b>10) Constancia de no adeudo de agua </b><i>(No obligatorio).</i></li>`);
+}else{
+    $('#documentosPersonalidad').html('<li><b></b>Sin personalidad juridica asignada</li>');
+}
+}
+
 function getClient(idLote) {
     getOpcCat('10', ['perj']);
-
     $('#spiner-loader').removeClass('hide');
     $.post('getClient', {
         idLote: idLote
     }, function (data) {
+
+        archivosCaptura(data.personalidad);
+
         if(data.bandera_exist_cli){
-
-            if(data.personalidad == 1){
-                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Moral</h4></b></li>
-                <li><b>1) Acta constitutiva y poder notariado</b>.</li>
-                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal actual).</i></li>
-                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
-                <li><b>4) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
-                <li><b>5) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
-                <li><b>6) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
-                <li><br></li>
-                <li><b><h4 class="card-title">Documentos Escrituración Apoderado Legal</h4></b></li>
-                <li><b>1) Identificación oficial vigente</b>.</li>
-                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
-                <li><b>3) Acta de Nacimiento</b>.</li>
-                <li><b>4) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
-                <li><b>5) CURP </b><i>(Formato actualizado).</i></li>`);
-            }else if(data.personalidad == 2){
-                $('#documentosPersonalidad').html(`<li><b><h4 class="card-title">Documentos Escrituración Persona Física</h4></b></li>
-                <li><b>1) Identificación oficial vigente</b>.</li>
-                <li><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></li>
-                <li><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></li>
-                <li><b>4) Acta de Nacimiento</b>.</li>
-                <li><b>5) Acta de Matrimonio </b><i>(No obligatorio).</i></li>
-                <li><b>6) CURP </b><i>(Formato actualizado).</i></li>
-                <li><b>7) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></li>
-                <li><b>8) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></li>
-                <li><b>9) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></li>
-                <li><b>10) Constancia de no adeudo de agua </b><i>(No obligatorio).</i></li>`);
-            }else{
-                $('#documentosPersonalidad').html('<li><b></b>Sin personalidad juridica asignada</li>');
-            }
-
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);
@@ -216,16 +224,10 @@ function getClient(idLote) {
 
             if(data.personalidad !=0 && data.personalidad != null && data.personalidad != 4){
                 $('#perj').prop('disabled', true);
-                // $('#perj').val(data.personalidad).trigger('change');
                 $("#perj").selectpicker();
                 $('#perj').val(data.personalidad);
-                $('select[name=perj]').change();
-                // document.getElementById('perj').title=data.personalidad;//pendiente
-                // document.getElementById('PerJur').children[1].children[0].title = data.nombre_juridica;
-                // document.getElementById('PerJur').children[1].children[0].children[0].innerText = data.nombre_juridica;
             }
             else{
-                // console.log("Entrar aqui");
                 $('#perj').prop('disabled', false);
                 $('#personalidad').val(data.personalidad);
             }
@@ -251,13 +253,7 @@ function getClient(idLote) {
             habilitarInputs(false);
             document.getElementById('nombre2').addEventListener('change', NombreCompleto);
             document.getElementById('ape1').addEventListener('change', NombreCompleto);
-            document.getElementById('ape2').addEventListener('change', NombreCompleto);
-             /*$('#lotes').val('');
-            $("#lotes").selectpicker('refresh');
-            clearInputs();
-            getLotes($('#condominio').val());
-            alerts.showNotification("top", "right", "No se han encontrado registros.", "danger");*/
-            
+            document.getElementById('ape2').addEventListener('change', NombreCompleto);            
             //Limpiamos los valores del select corerespondientes al estado civil
             document.getElementById('ecivil').title = '';//pendiente
             document.getElementById('EdoCiv').children[1].children[0].title = '';
@@ -407,7 +403,6 @@ function clearInputs(){
     $('#calleF').val('');
 }
 function habilitarInputs(resul){
-        console.log(resul);
     if(resul){
         $('#ape1_cli').hide();
         $('#ape2_cli').hide();
