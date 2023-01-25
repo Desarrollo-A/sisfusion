@@ -51,9 +51,17 @@
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
 <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true}, 'google_translate_element');
+    }
+</script>
+
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
-
+    let id_rol_general = <?= $this->session->userdata('id_rol') ?> ;
+    let id_usuario_general =  <?= $this->session->userdata('id_usuario') ?>;
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
@@ -63,9 +71,6 @@
                 || $this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5
                 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 9)
             { }
-//                if ($this->session->userdata('no_show_modal_info')==0) {
-//                    echo '$("#avisoNovedades").modal("toggle");';
-//                }
 
          ?>
 	});
@@ -105,7 +110,6 @@
     var mySound = new Audio('../static/tono-mensaje.mp3');
    
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
-    console.log(im);
     if ($(window).width() < 996){
         console.log("chico");
     }

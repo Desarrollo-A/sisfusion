@@ -45,6 +45,15 @@ class Suma extends CI_Controller
         }
     }
 
+    public function validateWeek(){
+        $date = new DateTime();
+        $week = $date->format("W");
+        $user = $this->session->userdata('id_usuario');
+        $data = $this->Suma_model->validateWeek($week, $user)->result_array();
+        
+        echo json_encode($data);
+    }
+
     public function comisiones_suma(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
@@ -200,56 +209,62 @@ class Suma extends CI_Controller
         $sol=$this->input->post('idcomision');  
         $consulta_comisiones = $this->db->query("SELECT id_pago_suma FROM pagos_suma where id_pago_suma IN (".$sol.")");
         $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-       
-        if( $consulta_comisiones->num_rows() > 0 ){
-            $consulta_comisiones = $consulta_comisiones->result_array();
-            $sep = ',';
-            $id_pago_i = '';
 
-            $data=array();
-            $pagoInvoice = array();
+        if( ($opinionCumplimiento != NULL && $formaPagoUsuario == 5) || $formaPagoUsuario != 5){
+            if( $consulta_comisiones->num_rows() > 0 ){
+                $consulta_comisiones = $consulta_comisiones->result_array();
+                $sep = ',';
+                $id_pago_i = '';
 
-            foreach ($consulta_comisiones as $row) {
-                $id_pago_i .= implode($sep, $row);
-                $id_pago_i .= $sep;
+                $data=array();
+                $pagoInvoice = array();
 
-                $row_arr=array(
-                    'id_pago' => $row['id_pago_suma'],
-                    'id_usuario' =>  $id_user_Vl,
-                    'fecha_movimiento' => date('Y-m-d H:i:s'),
-                    'estatus' => 2,
-                    'comentario' =>  'COLABORADOR ENVÍO A DTO. SUMA' 
-                );
-                array_push($data,$row_arr);
+                foreach ($consulta_comisiones as $row) {
+                    $id_pago_i .= implode($sep, $row);
+                    $id_pago_i .= $sep;
 
-                if ($formaPagoUsuario == 5) { // Pago extranjero
-                    $pagoInvoice[] = array(
-                        'id_pago_suma' => $row['id_pago_suma'],
-                        'nombre_archivo' => $opinionCumplimiento->archivo_name,
-                        'estatus' => 1,
-                        'modificado_por' => $id_user_Vl,
-                        'fecha_registro' => date('Y-m-d H:i:s')
+                    $row_arr=array(
+                        'id_pago' => $row['id_pago_suma'],
+                        'id_usuario' =>  $id_user_Vl,
+                        'fecha_movimiento' => date('Y-m-d H:i:s'),
+                        'estatus' => 2,
+                        'comentario' =>  'COLABORADOR ENVÍO A DTO. SUMA' 
                     );
+                    array_push($data,$row_arr);
+
+                    if ($formaPagoUsuario == 5) { // Pago extranjero
+                        $pagoInvoice[] = array(
+                            'id_pago_suma' => $row['id_pago_suma'],
+                            'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                            'estatus' => 1,
+                            'modificado_por' => $id_user_Vl,
+                            'fecha_registro' => date('Y-m-d H:i:s')
+                        );
+                    }
                 }
+                $id_pago_i = rtrim($id_pago_i, $sep);
+            
+                $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
+                $ins_b = $this->Suma_model->insert_historial($data);
+                if ($formaPagoUsuario == 5) {
+                    $this->PagoInvoice_model->insertManySuma($pagoInvoice);
+                }
+            
+                if($up_b == true && $ins_b == true){
+                    $data_response = 1;
+                    echo json_encode($data_response);
+                } else {
+                    $data_response = 0;
+                    echo json_encode($data_response);
+                } 
             }
-            $id_pago_i = rtrim($id_pago_i, $sep);
-        
-            $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
-            $ins_b = $this->Suma_model->insert_historial($data);
-            if ($formaPagoUsuario == 5) {
-                $this->PagoInvoice_model->insertManySuma($pagoInvoice);
-            }
-          
-            if($up_b == true && $ins_b == true){
-                $data_response = 1;
-                echo json_encode($data_response);
-            } else {
+            else{
                 $data_response = 0;
                 echo json_encode($data_response);
-            } 
+            }
         }
         else{
-            $data_response = 0;
+            $data_response = 2;
             echo json_encode($data_response);
         }
     }
@@ -257,6 +272,8 @@ class Suma extends CI_Controller
     public function guardar_solicitud($usuario = ''){
         $validar_user = $this->session->userdata('id_usuario');
         $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
+        $date = new DateTime();
+        $week = $date->format("W");
   
         date_default_timezone_set('America/Mexico_City');       
         $numDia =  date('N', time());
@@ -300,7 +317,7 @@ class Suma extends CI_Controller
                     for ($i=0; $i <count($datos) ; $i++) { 
                       if(!empty($datos[$i])){
                         $id_com =  $datos[$i];
-                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
                         $this->Suma_model->update_acepta_solicitante($id_com);
                         $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
                       }
@@ -685,7 +702,37 @@ class Suma extends CI_Controller
               $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
             }
         }
-        
         echo json_encode( $respuesta );
+    }
+
+    public function SubirPDFExtranjero($id = '')
+    {
+        $id_usuario = $this->session->userdata('id_usuario');
+        $nombre = $this->session->userdata('nombre');
+        $opc = 0;
+
+        if ($id != '') {
+            $opc = 1;
+            $id_usuario = $this->input->post("id_usuario");
+            $nombre = $this->input->post("nombre");
+        }
+
+        date_default_timezone_set('America/Mexico_City');
+        $hoy = date("Y-m-d");
+
+
+        $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
+        $fileName = $_FILES['file-upload-extranjero']['name'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+        $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
+        $uploadFileDir = './static/documentos/extranjero_suma/';
+
+        $dest_path = $uploadFileDir . $newFileName;
+        move_uploaded_file($fileTmpPath, $dest_path);
+
+
+        $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc, 'SUMA');
+        echo json_encode($response);
     }
 }

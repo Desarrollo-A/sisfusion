@@ -574,14 +574,14 @@ class Usuarios_modelo extends CI_Model
         return  $query = $this->db->query("SELECT * FROM opinion_cumplimiento WHERE id_usuario = " . $id_usuario . " order by fecha_creacion desc");
     }
 
-    function SaveCumplimiento($user, $pdf, $opc)
+    function SaveCumplimiento($user, $pdf, $opc, $obs = 'NULL')
     {
         $estatus = 1;
         if ($opc == 1) {
             $estatus = 2;
         }
 
-        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(),'NULL')");
+        $respuesta = $this->db->query("INSERT INTO opinion_cumplimiento VALUES ($user,'$pdf',$estatus,GETDATE(), '$obs')");
         if (!$respuesta) {
             return 0;
         } else {

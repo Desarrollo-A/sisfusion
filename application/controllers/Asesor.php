@@ -3611,7 +3611,13 @@ class Asesor extends CI_Controller
         $arreglo["modificado"] = date("Y-m-d H:i:s");
         $arreglo["comentario"] = $this->input->post('comentario');
 
-        if ($this->session->userdata('id_rol') == 17)
+        $data = $this->Asesor_model->revisaOU($idLote);
+        if(count($data)>=1){
+            $data['message'] = 'OBSERVACION_CONTRATO';
+            echo json_encode($data);
+            exit;
+        }else{
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)
             $documentsNumber = 3;
         else
             $documentsNumber = 4;
@@ -3620,16 +3626,19 @@ class Asesor extends CI_Controller
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
 
-        if ((COUNT($documentsValidation) < $documentsNumber) && ($validacion)) {
+        if ((COUNT($documentsValidation) != $documentsNumber) && ($validacion)) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } else if(COUNT($documentsValidation) < $documentsNumber) {
+        }
+        else if(COUNT($documentsValidation) != $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } else if($validacion) {
+        }
+        else if($validacion) {
             $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
-        } else {
+        }
+        else {
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
@@ -3702,7 +3711,8 @@ class Asesor extends CI_Controller
 
                 }
 
-            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            }
+            elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
                 $fechaAccion = date("Y-m-d H:i:s");
                 $hoy_strtotime2 = strtotime($fechaAccion);
@@ -3800,7 +3810,7 @@ class Asesor extends CI_Controller
             }
 
         }
-
+        }
     }
 
 
