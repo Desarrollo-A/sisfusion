@@ -1208,10 +1208,6 @@
   margin: 0 3px;
 }
 
-table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
-  white-space: nowrap !important;
-}
-
 .input-gral {
   background-color: #eaeaea !important;
   color: #929292 !important;
