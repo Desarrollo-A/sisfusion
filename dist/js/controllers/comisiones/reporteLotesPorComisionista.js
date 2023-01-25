@@ -9,42 +9,12 @@ $(document).ready(function () {
         $('#comisionista').selectpicker('refresh');
         $('#tipoUsuario').selectpicker('refresh');
     });
-
+    setInitialValuesReporte();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    /*
-    fillTable(typeTransaction, beginDate, endDate, where) PARAMS;
-        typeTransaction:
-            1 = ES LA PRIMERA VEZ QUE SE LLENA LA TABLA O NO SE SELECCIONÓ UN RANGO DE FECHA (MUESTRA LO DEL AÑO ACTUAL)
-            2 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL ID DE LOTE INGRESADO)
-            3 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL RANGO DE FECHA SELECCIONADO)
-        beginDate
-            FECHA INICIO
-        endDate
-            FECHA FIN
-        where
-            ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
-    */
-    setInitialValues();
 });
 
-$("#comisionista").on('change', function() {
-    let estatusComisionista = $('#comisionista option:selected').data('estatus');
-    console.log(estatusComisionista);
-    let html = '';
-    $(".lblEstatus").html('');
-    if (estatusComisionista == '3'){
-        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
-        `;
-    }
-    else{
-        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
-        `;
-    }
-    $(".lblEstatus").append(html);
-});
-
-sp = { // MJ: SELECT PICKER
+sp = { // MJ: DATE PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -64,25 +34,42 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
+$("#comisionista").on('change', function() {
+    let estatusComisionista = $('#comisionista option:selected').data('estatus');
+    console.log(estatusComisionista);
+    let html = '';
+    $(".lblEstatus").html('');
+    if (estatusComisionista == '3'){
+        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
+        `;
+    }
+    else{
+        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
+        `;
+    }
+    $(".lblEstatus").append(html);
+});
+
+
 let titulos_intxt = [];
-$('#masterCobranzaTable thead tr:eq(0) th').each( function (i) {
+$('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxt.push(title);
     if (i != 16) {
         $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
-            if ($('#masterCobranzaTable').DataTable().column(i).search() !== this.value ) {
-                $('#masterCobranzaTable').DataTable().column(i).search(this.value).draw();
+            if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value ) {
+                $('#reporteLotesPorComisionista').DataTable().column(i).search(this.value).draw();
             }
 
             let total=0, totalAbonado = 0, totalPagado = 0;
-            var index = $('#masterCobranzaTable').DataTable().rows({
+            var index = $('#reporteLotesPorComisionista').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
 
-            var data = $('#masterCobranzaTable').DataTable().rows(index).data();
+            var data = $('#reporteLotesPorComisionista').DataTable().rows(index).data();
             $.each(data, function(i, v) {
                 total = total + parseFloat(v.comisionTotal);
                 totalAbonado = totalAbonado + parseFloat(v.abonoDispersado);
@@ -97,7 +84,7 @@ $('#masterCobranzaTable thead tr:eq(0) th').each( function (i) {
     }
 });
 
-$('#masterCobranzaTable').on('xhr.dt', function(e, settings, json, xhr) {
+$('#reporteLotesPorComisionista').on('xhr.dt', function(e, settings, json, xhr) {
     let total=0, totalAbonado = 0, totalPagado = 0;
     let jsonObject = JSON.parse(JSON.stringify(json)).data;
     for(let i=0; i < jsonObject.length; i++){
@@ -112,8 +99,8 @@ $('#masterCobranzaTable').on('xhr.dt', function(e, settings, json, xhr) {
     
 });
 
-function fillTable(typeTransaction, beginDate, endDate, where) {
-    generalDataTable = $('#masterCobranzaTable').dataTable({
+function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
+    generalDataTable = $('#reporteLotesPorComisionista').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -237,10 +224,10 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             type: "POST",
             cache: false,
             data: {
-                "typeTransaction": typeTransaction,
                 "beginDate": beginDate,
                 "endDate": endDate,
-                "where": where
+                "comisionista": comisionista,
+                "tipoUsuario": tipoUsuario
             }
         }
     });
@@ -256,7 +243,9 @@ $(document).on("click", "#searchByLote", function () {
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    fillTable(3, finalBeginDate, finalEndDate, 0);
+    let comisionista = $("#comisionista").val();
+    let tipoUsuario = $("#tipoUsuario").val();
+    fillTable(finalBeginDate, finalEndDate, comisionista, tipoUsuario);
 });
 
 function formatMoney(n) {
@@ -269,8 +258,15 @@ function formatMoney(n) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
-function setInitialValues() {
+$(document).on("click", ".reset-initial-values", function () {
+    $("#comisionista").val('').selectpicker('refresh');
+    $("#tipoUsuario").val('').selectpicker('refresh');
+    setInitialValuesReporte();
+});
+
+function setInitialValuesReporte() {
     // BEGIN DATE
+     // BEGIN DATE
     const fechaInicio = new Date();
     // Iniciar en este año, este mes, en el día 1
     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
@@ -280,13 +276,9 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    fillTable(1, finalBeginDate, finalEndDate, 0);
-}
+    finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
-$(document).on("click", ".reset-initial-values", function () {
-    setInitialValues();
-    $(".idLote").val('');
-    $(".textoshead").val('');
-    $("#beginDate").val('01/01/2022');
-    $("#endDate").val('01/01/2022');
-});
+    $('#beginDate').val(finalBeginDate2);
+    $('#endDate').val(finalEndDate2);
+}
