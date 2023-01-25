@@ -45,19 +45,20 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="prospects-datatable"
-                                            name="prospects-datatable">
+                                        <table class="table-striped table-hover" id="escrituracion-datatable"
+                                            name="escrituracion-datatable">
                                             <thead>
                                                 <tr>
                                                     <th>ID SOLICITUD</th>
                                                     <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
+                                                    <!-- <th>CONDOMINIO</th> -->
                                                     <th>LOTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>FECHA DE CREACIÓN</th>
-                                                    <th>COMENTARIOS</th>
                                                     <th>ESTATUS</th>
                                                     <th>ÁREA</th>
+                                                    <th>COMENTARIOS</th>
+                                                    <th>OBSERVACIONES</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

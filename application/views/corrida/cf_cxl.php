@@ -11,7 +11,12 @@
 
 
     <?php
-    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32')
+    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7'
+        && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16'
+        && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5'
+        && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19'
+        && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32'
+        && $this->session->userdata('id_rol') != '70')
     {
         redirect(base_url().'login');
     }
@@ -633,10 +638,6 @@
                                 </legend>
 
 
-
-
-
-                                <!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
                                 <div class="row">
                                     <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
                                         <div class="foreach">
@@ -662,7 +663,7 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day.day == 15 && porcentajeEng==10">
+                                                <div ng-if="day.day == 15 && porcentajeEng>=10">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
@@ -1228,11 +1229,6 @@
                 var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.precioFinal;
-                // console.log('precioFinal sin infoLote', $scope.precioFinal);
-
-
-                //termina nueva sección
-
                 if($scope.proyecto.idResidencial==27){
                     if(porcentajeEnganche.val() == 0){
                         document.getElementById("day").disabled = true;
@@ -1243,29 +1239,36 @@
                 }
                 else{
                     if(porcentajeEnganche.val() >= 10 || porcentajeEnganche.val() == 5){/**/
+                        console.log('10 y 5');
                         document.getElementById("day").disabled = false;
                         document.getElementById("aptdo").disabled = false;
                         document.getElementById("msdif").disabled = false;
                     }else{
-                        document.getElementById("day").disabled = true;
-                        document.getElementById("aptdo").disabled = false;
-                        document.getElementById("msdif").disabled = true;
+                        console.log('ELSEEEE DE 10 - 5');
+                        if(porcentajeEnganche.val() >= 10 ){
+                            console.log('INSIDE 10');
+                            document.getElementById("day").disabled = false;
+                            document.getElementById("aptdo").disabled = false;
+                            document.getElementById("msdif").disabled = false;
+                        }else{
+                            console.log('INSIDE else 10');
+
+                            document.getElementById("day").disabled = false;
+                            document.getElementById("aptdo").disabled = false;
+                            document.getElementById("msdif").disabled = false;
+                        }
+
                     }
                 }
 
 
                 if($scope.proyecto.idResidencial==27){
-                    /*let porcetaje = 0.01;
-                    let porcentajeDanero = (porcetaje*r1);
-                    $scope.cantidad = porcentajeDanero;*/
                     let ef = cantidadEnganche.val();
                     var cantidadToGetP = (( 100 * ef)/r1);
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
                     console.log('De ',cantidadEnganche.val(),' el porcentaje es: ', cantidadToGetP);
-                    // $scope.engancheFinal = ef;
-                    // $scope.cantidad = ef;
 
                 }else{
                     let ef = cantidadEnganche.val();
@@ -1273,52 +1276,14 @@
                     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
                     $scope.porcentaje = cantidadToGetP;
                     $scope.porcentajeEng = cantidadToGetP;
-                    // if(r1>=500000){
                     if($scope.saldoFinal>=500000){
-                        // $('#porcentajeEnganche').attr('min', 1);
                         let porcetaje = 0.01;
                         let porcentajeDanero = (porcetaje*r1);
-                        // $('#cantidadEnganche').attr('min', porcentajeDanero);
-                        // if(porcentajeEnganche.val()<1){
-                        //     porcentajeEnganche.val(1);
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else if(cantidadEnganche.val()<porcentajeDanero){
-                        //     cantidadEnganche.val(porcentajeDanero.toFixed(2));
-                        //     $scope.cantidad = porcentajeDanero;
-                        // }else{
-                        //     $scope.engancheFinal = cantidadEnganche.val();
-                        //     $scope.cantidad = cantidadEnganche.val();
-                        //
-                        // }
                     }
                     else{
-                        // $('#cantidadEnganche').attr('min', 5000);
                         console.log('antes:', $('#cantidadEnganche').val());
                         let totalTerreno = r1;
                         let porcetajeMin = 100*5000/totalTerreno;
-                        // $('#porcentajeEnganche').attr('min', porcetajeMin.toFixed(2));
-
-
-                        // if(cantidadEnganche.val()<5000){
-                        //     $('#porcentajeEnganche').val(porcetajeMin.toFixed(2));
-                        //     $scope.engancheFinal = 5000;
-                        //     $scope.cantidad = 5000;
-                        //     cantidadEnganche.val(5000);
-                        //     console.log('>');
-                        // }else{
-                        //     console.log( cantidadEnganche.val());
-                        //     let ef = cantidadEnganche.val();
-                        //     var cantidadToGetP = (( 100 * ef)/r1);
-                        //     porcentajeEnganche.val(parseFloat(cantidadToGetP).toFixed(2));
-                        //
-                        //     $scope.engancheFinal = ef;
-                        //     $scope.cantidad = ef;
-                        //     console.log('*');
-                        // }
-                        // $scope.cantidad = parseInt(cantidadEnganche.val());
-
-
                     }
                 }
 

@@ -22,38 +22,17 @@
                                 <h3 class="card-title center-align">Escrituración</h3>
                                 <div class="container-fluid">
                                     <div class="row">
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Proyecto</label>
-                                                <select name="proyecto" id="proyecto"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona un proyecto" data-size="7" required>
-                                                </select>
-                                            </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
+                                            <label class="control-label">Prospectos</label>
+                                            <select class="selectpicker select-gral m-0" name="proyecto" id="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body"></select>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Condominio</label>
-                                                <select id="condominio" name="condominio"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona un condominio" data-size="7" required>
-                                                </select>
-                                            </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
+                                            <label class="control-label">Condominio</label>
+                                            <select class="selectpicker select-gral m-0" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" data-container="body"></select>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Lote</label>
-                                                <select id="lotes" name="lotes"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona un lote" data-size="7" required>
-                                                </select>
-                                            </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
+                                            <label class="control-label">Lote</label>
+                                            <select class="selectpicker select-gral m-0" id="lotes" name="lotes data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
                                         </div>
                                     </div>
                                     <form id="formEscrituracion">
@@ -69,9 +48,9 @@
                                                     <label class="control-label">Estatus del Lote</label>
                                                     <div class="radio_container w-100">
                                                         <input class="d-none d-none generate btn-check" type="radio" name="estatus" value = 8 id="estatusL" value="" autocomplete="off" disabled>
-                                                        <label class="btn w-50" for = "estatusL">Liquidado</label>
+                                                        <label class="btn w-50" for = "estatusL" disabled>Liquidado</label>
                                                         <input class="d-none find-results btn-check" type="radio" name="estatus" value = 37 id="estatusSL" value="" autocomplete="off" disabled>
-                                                        <label class="btn w-50" for = "estatusSL">Sin liquidar</label>
+                                                        <label class="btn w-50" for = "estatusSL" disabled>Sin liquidar</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,10 +109,18 @@
                                                                 <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-8 pl-0">
+                                                        <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral">Correo Electrónico</label>
                                                                 <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Apartado para el select de la persona jurididca -->
+                                                        <div class="col-md-4 pl-0" id="per_jur">
+                                                            <div class="form-group label-floating is-focused" id = "PerJur">
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona juridica</label>
+                                                                <select id="perj" name="perj" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
+                                                                <!-- <input id="perJ" name="perJ" class="form-control input-gral" type="text"> -->
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12 pl-0">
@@ -186,7 +173,7 @@
                                                         </div>
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
-                                                                <label class="control-label estiloEsc label-gral">RFC *</label>
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>RFC</label>
                                                                 <input id="rfc" name="rfc" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>

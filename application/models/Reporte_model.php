@@ -862,8 +862,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
             INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
@@ -883,8 +882,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
             INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
             INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
@@ -902,8 +900,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado 
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
@@ -920,8 +917,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede  
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'

@@ -3,7 +3,8 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"){
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"
+            || $this->session->userdata('id_rol')=="70"){
             /*-----------//contraloria--------------------------------------------*/
             $datos = array();
             $datos = $datos4;

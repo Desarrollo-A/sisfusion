@@ -10,7 +10,6 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <!-- Canonical SEO -->
-
     <!--  Social tags      -->
         <!--  -->  <meta name="keywords" content="Sistema de administracion de procesos internos Ciudad Maderas MaderasCRM &reg;">
         <!---->    <meta name="description" content="Sistema de administracion de procesos internos Ciudad Maderas MaderasCRM &reg;">
@@ -139,7 +138,7 @@
                                         </div>
                                         <div class="footer text-center">
                                             <?=form_hidden('token',$token)?>
-                                            <button type="submit" class="btn btn-green btn-simple btn-wd btn-lg" id="btnEnter">Ingresar</button>
+                                            <button type="submit" class="btn btn-green btn-simple btn-wd btn-lg" id="btnEnter">INGRESAR</button>
                                             <?=form_close()?>
                                         </div>
                                     </div>

@@ -40,12 +40,14 @@ class Postventa_model extends CI_Model
         if($num_cli->row()->num_cli < 1){
             return $num_cli;
         }else{
-            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli, oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica
+            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli,
+            oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica, oxc4.nombre as nombre_juridica
             FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.nacionalidad AND oxc.id_catalogo = 11
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = c.estado_civil AND oxc2.id_catalogo = 18
             LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = c.regimen_matrimonial AND oxc3.id_catalogo = 19
+            LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = c.personalidad_juridica AND oxc4.id_catalogo = 10
             WHERE l.idLote = $idLote");
         }
     }
@@ -138,18 +140,19 @@ class Postventa_model extends CI_Model
 
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-        $Addwhere =   "";
-        if($rol == 57 && $idUsuario!= 10865){
-          $Addwhere =   " AND se.id_juridico = $idUsuario ";
-        }else{
-             $Addwhere =   "";
-        }
 
-        $where = "";
+        $AddWhere = "";
+      
         if($estatus == 0){
-            $where = "AND ctrl.idRol = $rol AND ctrl.permisos != 0";
+        //PROPIOS
+            if($rol == 57 && $idUsuario!= 10865){
+                $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
+            }else{
+                $AddWhere  = " WHERE cp.area_actual = $rol ";
+            }
         }else{
-            $where = "";
+            //TODOS
+            $AddWhere = " ";
         }
         return $this->db->query("SELECT distinct(se.id_solicitud), cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote,
         cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
@@ -166,8 +169,7 @@ class Postventa_model extends CI_Model
         INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.tipo_permiso not in (0)
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cp.area_actual AND ar2.id_catalogo = 1
-        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud=se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in(3,4,6,8,9,10) THEN 18 ELSE 11 END) 
+        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
@@ -182,6 +184,9 @@ class Postventa_model extends CI_Model
         cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, de4.contrato,
         cr.nombre_siguiente, cr.tipo_permiso,dc.expediente,dc.tipo_documento,dc.idDocumento,se.bandera_comite,se.bandera_admin,se.estatus_construccion,se.nombre_a_escriturar,cp.area_actual,se.cliente_anterior");
     }
+
+
+
     
     function getNotarias()
     {
@@ -710,7 +715,7 @@ function checkBudgetInfo($idSolicitud){
             se.nombre, oxc.nombre estatus, cp.tiempo as dias, ce.fecha_creacion,
             CASE WHEN (se.id_juridico IS null) THEN oxc2.nombre 
                 ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as area
-            FROM solicitud_escrituracion se
+            FROM solicitudes_escrituracion se
             INNER JOIN lotes l ON se.idLote = l.idLote 
             INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
             INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
@@ -1014,7 +1019,7 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getOpcCat($id_cat){
-        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' END AS etq
+        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' WHEN CAT.nombre = 'Personalidad jurídica' THEN 'perj' END AS etq
                                 FROM opcs_x_cats AS OPCAT
                                 INNER JOIN catalogos AS CAT
                                 ON OPCAT.id_catalogo = CAT.id_catalogo

@@ -8206,57 +8206,65 @@
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
 
+        $data = $this->Asesor_model->revisaOU($idLote);
+        if(count($data)>=1){
+            $data['message'] = 'OBSERVACION_CONTRATO';
+            echo json_encode($data);
+            exit;
+        }
+        else{
+            $proyecto = str_replace(' ', '',$nombreResidencial);
+            $condominio = str_replace(' ', '',$nombreCondominio);
+            $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
+            $condom = substr($condominioQuitaN, 0, 3);
+            $cond= strtoupper($condom);
+            $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+            $date= date('dmYHis');
+            $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
-		$proyecto = str_replace(' ', '',$nombreResidencial);
-		$condominio = str_replace(' ', '',$nombreCondominio);
-		$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-		$condom = substr($condominioQuitaN, 0, 3);
-		$cond= strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-		$date= date('dmYHis');
-		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
+            $nombArchivo= $composicion;
+            $expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
 
-		$nombArchivo= $composicion;
-		$expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
-
-		$fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
-
-
-		if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
-
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
-			$validaMove = $move == FALSE ? 0 : 1;
-
-			if ($validaMove == 1) {
-
-				$arreglo=array();
-				$arreglo["expediente"] = $expediente.'.'.$fileExt;
+            $fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
 
 
-                $arreglo2=array();
-				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
-				$arreglo2["modificado"]= date('Y-m-d H:i:s');
-				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
-				$this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
-				$this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+            if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
 
-				$response['message'] = 'OK';
-				echo json_encode($response);
+                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
+                $validaMove = $move == FALSE ? 0 : 1;
 
-			} else if ($validaMove == 0){
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			} else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
+                if ($validaMove == 1) {
 
-		} else {
+                    $arreglo=array();
+                    $arreglo["expediente"] = $expediente.'.'.$fileExt;
 
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
 
-		}
+                    $arreglo2=array();
+                    $arreglo2["expediente"]= $expediente.'.'.$fileExt;
+                    $arreglo2["modificado"]= date('Y-m-d H:i:s');
+                    $arreglo2["idUser"]= $this->session->userdata('id_usuario');
+                    $this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
+                    $this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+
+                    $response['message'] = 'OK';
+                    echo json_encode($response);
+
+                } else if ($validaMove == 0){
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
+
+            } else {
+
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+
+            }
+        }
+
 	}
 
 	public function deleteFile(){
