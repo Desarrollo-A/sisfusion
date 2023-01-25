@@ -1,14 +1,12 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
-    .boxContent .bootstrap-select button {
-        background-color: transparent!important;
-    }
-</style>
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar', ""); ?>
         <style>
+            .boxContent .bootstrap-select button {
+                background-color: transparent!important;
+            }
             .form-group{
                 margin: 0px;
             }
@@ -97,9 +95,6 @@
                                                     <button type="submit" class="btn-data-gral btn-s-blue btn-block" id="buscarBtn">Guardar</button>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1 d-flex align-center">
-                                                <input class="m-0 mr-2" type="checkbox" onclick="showPassword()"> Mostrar contraseña
-                                            </div> -->
                                         </form>
                                     </div>
                                 </div>

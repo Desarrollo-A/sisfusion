@@ -1325,6 +1325,10 @@ table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.data
   color: #ffffff;
 }
 
+.footer .container-fluid span a {
+  color: #333333;
+}
+
 .footer .container-fluid a {
   color: #ffffff;
   font-weight: bold;

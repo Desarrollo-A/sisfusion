@@ -1132,9 +1132,10 @@ class Postventa extends CI_Controller
         );
         //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
-      /*  if($_POST['not'] == 'nou'){
+        if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
-        }*/
+            $updateData['bandera_notaria'] = 1;
+        }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1142,7 +1143,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
 
-        /*if ($_POST['not'] == 'yes'){
+        if ($_POST['tipoNotaria'] == 2){
             $idSolicitud = $_POST['id_solicitud3'];
             $nombre_notaria = $_POST['nombre_notaria'];
             $nombre_notario = $_POST['nombre_notario'];
@@ -1150,11 +1151,14 @@ class Postventa extends CI_Controller
             $correo = $_POST['correo'];
             $telefono = $_POST['telefono'];
 
-            $informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+            $informacion = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
+          
+
+            //$informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
             return $informacion;
     
-            return $this->Postventa_model->newNotaria($idSolicitud);
-        } */  
+            //return $this->Postventa_model->newNotaria($idSolicitud);
+        } 
 
     }
 
@@ -1604,7 +1608,7 @@ class Postventa extends CI_Controller
                                                                 <b>Teléfono</b><br>
                                                                 ' . $data->telefono . '
                                                             </td>
-                                                            <td style="font-size: 1e;">
+                                                            <td style="font-size: 1em;">
                                                                 <b>Dirección</b><br>
                                                                 ' . $data->direccion . '
                                                             </td>

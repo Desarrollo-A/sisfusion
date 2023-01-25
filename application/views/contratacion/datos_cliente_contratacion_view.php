@@ -21,6 +21,7 @@
         case '12':
         case '40': // COBRANZA
         case '53': // COBRANZA
+        case '70': // COBRANZA
             // code...
             $datos = array();
             $datos = $datos4;

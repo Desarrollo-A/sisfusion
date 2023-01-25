@@ -96,8 +96,18 @@ class VentasAsistentes_model extends CI_Model {
 
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17)// MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
+        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)// MJ: ES CONTRALORÍA CORPORATIVA
+        {
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815){
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            }
+            else{
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
+            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
+
+        }
         else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
         else { // MJ: ES VENTAS
@@ -231,8 +241,16 @@ class VentasAsistentes_model extends CI_Model {
 	
 
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 17) // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {// MJ: ES CONTRALORÍA CORPORATIVA
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815){
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            }
+            else{
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 ".$filtroUsuarioBR;
+        }
         else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63)  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
         else { // MJ: ES VENTAS
@@ -258,7 +276,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
         cond.idCondominio, l.observacionContratoUrgente AS vl
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientesd cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario

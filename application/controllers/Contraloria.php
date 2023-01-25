@@ -1369,7 +1369,8 @@ public function get_sede(){
 			  $arreglo["fechaVenc"] = $fecha;
 		  }
 
-	  } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+	  }
+	  elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
 		  $fechaAccion = date("Y-m-d H:i:s");
 		  $hoy_strtotime2 = strtotime($fechaAccion);
@@ -1491,14 +1492,22 @@ public function get_sede(){
 	  $validate = $this->Contraloria_model->validateSt6($idLote);
 
 	  if ($validate == 1) {
-		  if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-			  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
-			  $data['message'] = 'OK';
-			  echo json_encode($data);
-		  } else {
-			  $data['message'] = 'ERROR';
-			  echo json_encode($data);
-		  }
+	      //se valida si existe una corrida en el árbol de documentos
+	      $corrida = $this->Contraloria_model->validaCorrida($idLote);
+	      if(empty($corrida->expediente)){
+              $data['message'] = 'MISSING_CORRIDA';
+              echo json_encode($data);
+          }else{
+              if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
+                  $data['message'] = 'OK';
+                  echo json_encode($data);
+              } else {
+                  $data['message'] = 'ERROR';
+                  echo json_encode($data);
+              }
+          }
+
 	  } else {
 		  $data['message'] = 'FALSE';
 		  echo json_encode($data);

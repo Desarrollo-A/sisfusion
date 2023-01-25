@@ -600,10 +600,10 @@
 				{
 					"width": "14%",
 					"data": function(d){
-						if (d.tipo_casa == 0)
+						if (d.casa == 1)
+							return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+						else
 							return (d.nombreLote).toUpperCase();
-						else 
-							return `${d.nombreLote} <br><br> <span class="label" style="background:#880E4F; color:#FCE4EC;">${d.nombre_tipo_casa}</span>`
 					}
 				},
 				{
@@ -811,8 +811,8 @@
 				{
 					"width": "12%",
 					"data": function(d){
-						valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_st}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
-						`<center><span class="label" style="background:#${d.background_st}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
+						valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
+						`<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
 						return valTV;
 					}
 				},
