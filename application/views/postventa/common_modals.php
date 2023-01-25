@@ -687,13 +687,19 @@
                     <h4 id="secondaryLabelDetail">Información</h4>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-6 pr-0">
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">¿Lote liquidado?</label>
                                     <input id="liquidado" name="liquidado" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 pr-0">
+                            <div class="col-md-4 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Estatus construcción</label>
+                                    <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
@@ -761,7 +767,7 @@
                                 </div>
                             </div>---->
                             <div class="col-sm-12 pr-0">
-                                <div class="form-group text-left m-0">
+                                <div class="form-group text-left m-0" id="information_campos">
                                     <p>*Estos campos son obligatorios</p>
                                 </div>
                             </div>
