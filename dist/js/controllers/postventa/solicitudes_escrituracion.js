@@ -940,7 +940,6 @@ function fillTable(beginDate, endDate, estatus) {
                 }
             },
             {
-                "width": "10%",
                 data: function (d) {
                     //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
                     return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
@@ -957,8 +956,8 @@ function fillTable(beginDate, endDate, estatus) {
             {
                 data: function (d) {
                     //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
-                    return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
-                }
+                    return d.ultimo_comentario;
+                 }
             },
             {
                 data: function (d) {
