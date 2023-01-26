@@ -51,11 +51,9 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="reports-datatable"
-                                                name="reports-datatable">
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="reports-datatable"
+                                            name="reports-datatable">
+                                        </table>
                                     </div>
                                 </div>
                             </div>

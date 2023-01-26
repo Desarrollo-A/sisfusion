@@ -549,7 +549,7 @@ $("#table_planes").ready(function() {
 							break;
 
 							default:
-								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
+								return '<p class="m-0"><b>'+(d.porcentaje)+'</b></p>';
 							break;
 
 						}

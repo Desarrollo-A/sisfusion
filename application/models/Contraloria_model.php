@@ -71,7 +71,7 @@ class Contraloria_model extends CI_Model {
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
-		AND (perfil IN ('13', '32', 'contraloria', '17')) AND status = 1)) as lastUc
+		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
         FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -142,7 +142,7 @@ class Contraloria_model extends CI_Model {
 		cond.idCondominio, cl.expediente,
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
-		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17')) AND status = 1)) as lastUc
+		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
 	    FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -234,12 +234,10 @@ class Contraloria_model extends CI_Model {
 		$id_usuario = $this->session->userdata('id_usuario');
 	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
-		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-		else if ($id_sede == 8)// CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 		
@@ -334,12 +332,10 @@ class Contraloria_model extends CI_Model {
 		$id_usuario = $this->session->userdata('id_usuario');
 	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
-		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
+		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERRE Y TEXAS USA
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-		else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -426,12 +422,10 @@ class Contraloria_model extends CI_Model {
 			$id_usuario = $this->session->userdata('id_usuario');
 			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
-			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY Y TEXAS USA
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -482,12 +476,10 @@ class Contraloria_model extends CI_Model {
 
 			if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 				$filtroSede = "";
-			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP Y MONTERREY
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11')";
+			else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY Y TEXAS USA
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
-			else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -1124,6 +1116,11 @@ class Contraloria_model extends CI_Model {
 
 	function getCatalogs() {        
         return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78) AND estatus = 1 ORDER BY id_catalogo, nombre");
+    }
+
+    function validaCorrida($idLote){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote=".$idLote." AND tipo_doc=7 AND status=1;");
+        return $query->row();
     }
 
 }

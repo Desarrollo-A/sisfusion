@@ -149,10 +149,12 @@ $grayDisabled       : #F1F1F1;
 $platinum           : #eaeaea;
 $platinumScroll     : #c1c1c1;
 $deepGray           : #929292;
+$deepGrayOpacity    : #92929218;
 $grey9              : #999999;
 $grey9Opacity       : #99999913;
 $grayOxford         : #4e4e4e;
 $gray               : #333333;
+$grayOpacity        : #33333318;
 $grayDark           : #191B1C;
 $goldMaderas        : #96843D;
 $water              : #D1EEFF;
@@ -160,6 +162,7 @@ $blueLight          : #5DADE2;
 $shadowBlue         : #7083A9;
 $aqua               : #54d2d2;
 $sky                : #00bcd4;
+$skyOpacity         : #00bcd418;
 $cerulean           : #00A0FF;
 $blueFrance         : #2C93E7;
 $azure              : #4382EF;
@@ -173,6 +176,7 @@ $violetChin         : #8E6C88;
 $violetChinOPacity  : #8e6c8818;
 $violetLight        : #9392e8;
 $violetBoots        : #563D7C;
+$violetBootsOpacity : #563D7C18;
 $redLight           : #f44336;
 $red                : #c01313;
 $redOpacity         : #c0131318;
@@ -439,7 +443,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-gray{
     color: $gray;  
-    border: 1px solid $gray;
+    border: none;
+    background-color: $grayOpacity;
 }
 .btn-gray:hover{
     background-color: $gray;
@@ -456,7 +461,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-deepGray{
     color: $deepGray;
-    border: 1px solid $deepGray;
+    border: none;
+    background-color: $deepGray;
 }
 .btn-deepGray:hover{
     color: $deepGray;
@@ -481,7 +487,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetBoots{
     color:$violetBoots;
-    border: 1px solid $violetBoots;
+    border: none;
+    background-color: $violetBootsOpacity;
 }
 .btn-violetBoots:hover {
     background-color: $violetBoots;
@@ -498,7 +505,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-sky{
     color: $sky;
-    border: 1px solid $sky;
+    border: none;
+    background-color: $skyOpacity;
 }
 .btn-sky:hover {
     background-color: $sky;
@@ -818,8 +826,4 @@ $tv                 : "(min-width: 1280px)";
 .isRequired{
     color: $redGoogle;
     margin: 0 3px;
-}
-
-table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
-    white-space: nowrap!important;
 }

@@ -10,10 +10,15 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#solicitudesCRM" role="tab"  data-toggle="tab">Solicitudes</a>
+                            </li>
+
+                            <li><a href="#solicitudesCanceladas" role="tab"  data-toggle="tab">Carga testimonio</a>
+                                </li>
+                        </ul>
                         <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-feather-alt fa-2x"></i>
-                            </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Solicitudes escrituración</h3>
                                 <div class="toolbar">
@@ -45,19 +50,20 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="prospects-datatable"
-                                            name="prospects-datatable">
+                                        <table class="table-striped table-hover" id="escrituracion-datatable"
+                                            name="escrituracion-datatable">
                                             <thead>
                                                 <tr>
                                                     <th>ID SOLICITUD</th>
                                                     <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
+                                                    <!-- <th>CONDOMINIO</th> -->
                                                     <th>LOTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>FECHA DE CREACIÓN</th>
-                                                    <th>COMENTARIOS</th>
                                                     <th>ESTATUS</th>
                                                     <th>ÁREA</th>
+                                                    <th>COMENTARIOS</th>
+                                                    <th>OBSERVACIONES</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

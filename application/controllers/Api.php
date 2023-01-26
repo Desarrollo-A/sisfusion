@@ -37,7 +37,7 @@ class Api extends CI_Controller
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
                         "data" => array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr"),
                     );
-                    $token = JWT::encode($data, '&66a5k_f7k133+c9r$OFt');
+                    $token = JWT::encode($data, '977929_5117+8773_');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);

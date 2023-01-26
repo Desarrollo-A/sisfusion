@@ -138,6 +138,7 @@ class Postventa extends CI_Controller
         $idClient = $this->Postventa_model->getClient($idLote);
         $idClient = empty($idClient) ? -1 : $idClient;
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
+        // print_r(!empty($resDecode->data));
         if(!empty($resDecode->data)){
             $resDecode->data[0]->bandera_exist_cli = true;
         }else{
@@ -154,6 +155,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ocupacion = $idClient->row()->ocupacion;
                 $resDecode->data[0]->regimen_matrimonial = $idClient->row()->regimen_matrimonial;
                 $resDecode->data[0]->estado_civil = $idClient->row()->estado_civil;
+                $resDecode->data[0]->nombre_juridica = $idClient->row()->nombre_juridica;
                 echo json_encode($resDecode->data[0]);
             } else {
                 $resDecode->data[0]->bandera_exist_cli = false;
@@ -172,7 +174,7 @@ class Postventa extends CI_Controller
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
-        $pdf->SetTitle('Documentos para Escrituración persona física');
+        $pdf->SetTitle('Documentos para Escrituración');
         $pdf->SetSubject('escrituracion (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, solicitud');
         // se pueden modificar en el archivo tcpdf_config.php de libraries/config
@@ -195,8 +197,87 @@ class Postventa extends CI_Controller
         $pdf->setPageMark();
 
         $informacion = $this->Postventa_model->getClient($data)->row();
-        $persona = $informacion->personalidad_juridica == 2 ? 'Persona física':'persona moral';
+        $personalidad = $informacion->personalidad_juridica;
+        $persona = $informacion->personalidad_juridica == 2 ? 'Persona Física':'Persona Moral';
 
+        if($personalidad == 1){
+            
+            $Opcion10 = '<b>10) Constancia de no adeudo de agua </b><i>(No obligatorio).</i>';
+            
+            $tableFinal = '
+            <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                <tr>
+                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 1.5em; ">Datos del comprador – '.$persona.'</b></td>
+                </tr>
+            </table>
+            <br>    
+            <div class="row"> 
+            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                <tr>
+                    <td style="font-size: 1em;"><b>Nombre completo:</b><br>'.$informacion->nombre.'</td>
+                    <td style="font-size: 1em;"><b>Ocupación:</b><br>'.$informacion->ocupacion.'</td>
+                    <td style="font-size: 1em;"><b>Lugar de origen:</b><br>'.$informacion->nacionalidad.'</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 1em;"><b>Domicilio actual:</b><br>'.$informacion->domicilio_particular.'</td>
+                    <td style="font-size: 1em;"><b>Domicilio fiscal:</b><br>'.$informacion->domicilio_particular.'</td>
+                    <td style="font-size: 1em;"><b>Personalidad jurídica:</b><br>'.$persona.'</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 1em;"><b>Estado civil:</b><br>'.$informacion->estado_civil.'</td>
+                    <td style="font-size: 1em;"><b>Régimen conyugal:</b><br>'.$informacion->regimen_matrimonial.'</td>
+                    <td style="font-size: 1em;"><b>RFC:</b><br>'.$informacion->rfc.'</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 1em;"><b>Teléfono (casa):</b><br>'.$informacion->telefono1.'</td>
+                    <td style="font-size: 1em;"><b>Teléfono (celular):</b><br>'.$informacion->telefono2.'</td>
+                    <td style="font-size: 1em;"><b>Correo electrónico:</b><br><center>'.$informacion->correo.'</center></td>
+                </tr>
+            </table>';
+
+        }else{
+
+            $Opcion10 = '<b>10) Acta constitutiva y poder notariado.</b>';
+
+            $tableFinal = '
+            <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                <tr>
+                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 1.5em; ">Datos del comprador – '.$persona.'</b></td>
+                </tr>
+            </table>                            
+            <br>
+            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+            <tr>
+                <td style="font-size: 1em;"><b>Razón social:</b><br>'.$informacion->nombre.'</td>
+                <td style="font-size: 1em;"><b>RFC:</b><br>'.$informacion->rfc.'</td>
+                <td style="font-size: 1em;"><b>Domicilio fiscal:</b><br>'.$informacion->domicilio_particular.'</td>
+                </tr>
+            <tr>
+                <td style="font-size: 1em;"><b>Personalidad jurídica:</b><br>'.$persona.'</td>
+                <td style="font-size: 1em;"><b>Teléfono(s):</b><br>'.$informacion->telefono1.' '.$informacion->telefono2.'</td>
+                <td style="font-size: 1em;"><b>Correo electrónico:</b><br><center>'.$informacion->correo.'</center></td>
+            </tr>
+            </table>
+            <br>
+            
+            <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                <tr>
+                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 1.5em; ">Generales del Apoderado Legal</b></td>
+                </tr>
+            </table>                            
+            <br>
+
+            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+            <tr>
+                <td style="font-size: 1em;"><b>Nombre completo:</b><br>'.$informacion->nombre.'</td>
+                <td style="font-size: 1em;"><b>Ocupación:</b><br>'.$informacion->ocupacion.'</td>
+                <td style="font-size: 1em;"><b>Lugar de origen:</b><br>'.$informacion->nacionalidad.'</td>
+            </tr>
+           
+            </table>
+            <br>';
+
+        }
 
         $html = '
         <!DOCTYPE html>
@@ -218,178 +299,68 @@ class Postventa extends CI_Controller
                                         <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                             <tr>
                                                 <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
+                                                <td colspan="2" align="right"><b style="font-size: 1.5em; "> Documentación para Escriturar<BR></b>
                                                 </td>
                                             </tr>
                                         </table>
-                                        <br><br>
-                                        <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – '.$persona.'</b>
-                                                </td>
-                                            </tr>
-                                        </table>                            
-                                        <br>                       
-                                        <div class="row">                
-                                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                    <b>Nombre completo:</b><br>
-                                                    ' . $informacion->nombre . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                    <b>Ocupación:</b><br>
-                                                    ' . $informacion->ocupacion . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                    <b>Lugar de origen:</b><br>
-                                                    ' . $informacion->nacionalidad . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Domicilio actual:</b><br>
-                                                        ' . $informacion->domicilio_particular . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Domicilio Fiscal:</b><br>
-                                                        ' . $informacion->domicilio_particular . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                
-                                                    <td style="font-size: 1em;">
-                                                        <b>Estado civil:</b><br>
-                                                        ' . $informacion->estado_civil . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Régimen conyugal:</b><br>
-                                                        ' . $informacion->regimen_matrimonial . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>RFC:</b><br>
-                                                        ' . $informacion->rfc . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Teléfono (casa):</b><br>
-                                                        ' . $informacion->telefono1 . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Teléfono (celular):</b><br>
-                                                        ' . $informacion->telefono2 . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Correo electrónico:</b><br>
-                                                        <center>' . $informacion->correo . '</center>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <br>
-                                            <br>
-                                            <br>
+                                        <br>
+                                       
+                                        <div class="row">       
+                                           '.$tableFinal.'
+                                            
                                             <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
+                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 1.5em; ">Documentos para Escrituración</b>
                                                     </td>
                                                 </tr>
                                             </table>                            
                                             <br><br>
-                                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: left;" width="690">
                                                 <tr>
-                                                    <td colspan="2" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Área</b>
-                                                    </td>
-                                                    <td colspan="3" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Documento</b>
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Status</b>
-                                                    </td>
+                                                    <td colspan="1" style="font-size: 1em;border: 1px solid #ddd; text-align: center;"><b>Área</b></td>
+                                                    <td colspan="4" style="font-size: 1em;border: 1px solid #ddd; text-align: center;"><b>Documento</b></td>
+                                                    <td colspan="1" style="font-size: 1em;border: 1px solid #ddd; text-align: center;"><b>Estatus</b></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="2" rowspan="10" style="font-size: 1em;border: 1px solid #ddd;text-align: center;align: middle;">
-                                                        <b>POSTVENTA</b>
-                                                    </td>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        1) Identificación oficial vigente
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="1" rowspan="10" style="font-size: 1em;border: 1px solid #ddd;text-align: center;align: middle;"><b>POSTVENTA</b></td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>1) Identificación oficial vigente</b>.</td>
+                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        2) RFC (Cédula o constancia de situación fiscal)
-                                                    </td>
-                                                    <td colspan="1"style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>2) RFC </b><i>(Cédula o constancia de situación fiscal).</i></td>
+                                                    <td colspan="1"style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        3) Comprobante de domicilio actual luz, agua o telefonía fija(antiguedad menor a 2 meses)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>3) Comprobante de domicilio </b><i>(Luz, agua o telefonía fija con antigüedad menor a 2 meses).</i></td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        4) Acta de nacimiento
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>4) Acta de Nacimiento</b>.</td>
+                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        5) Acta de matrimonio (en su caso). *
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>5) Acta de Matrimonio </b><i>(No obligatorio).</i></td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        6) CURP(formato actualizado)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>6) CURP </b><i>(Formato actualizado).</i></td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        7) Formas de pago (todos los comprobantes de pago a mensualidades / estados de cuenta bancarios) **
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>7) Formas de pago <b style="color:red">*</b></b><i>(Todos los comprobantes de pagos a mensualidades / estados de cuenta bancarios).</i></td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        8) Boleta predial al corriente y comprobante de pago retroactivo (si aplica)
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>8) Boleta predial al corriente y pago retroactivo </b><i>(No obligatorio).</i></td>
+                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        9) Constancia no adeudo mantenimiento (si aplica)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;"><b>9) Constancia de no adeudo mantenimiento </b><i>(No obligatorio).</i></td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        10) Constancia no adeudo de agua (si aplica)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
+                                                    <td colspan="4" style="font-size: 0.9em;border: 1px solid #ddd;">'.$Opcion10.'</td>
+                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;"></td>                                                   
                                                 </tr>
                                             </table>
                                         </div>
@@ -403,237 +374,237 @@ class Postventa extends CI_Controller
 
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '1', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
         ob_end_clean();
-        $pdf->Output(utf8_decode("Informacion.pdf"), 'I');
+        $pdf->Output(utf8_decode(" Documentación para Escriturar.pdf"), 'I');
     }
 
-    public function sendMail()
-    {
-        $data = $_POST['data'];
-        $this->load->library('email');
-        $mail = $this->email;
+    // public function sendMail()
+    // {
+    //     $data = $_POST['data'];
+    //     $this->load->library('email');
+    //     $mail = $this->email;
 
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
+    //     $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Documentos para Escrituración"));
-        $mailContent = '
-        <!DOCTYPE html>
-            <html lang="es_mx"  ng-app="CRM">
-                <head>
-                    <style>
-                    legend {
-                        background-color: #296D5D;
-                        color: #fff;
-                    }           
-                    </style>
-                </head>
-                <body>
-                    <section class="content">
-                        <div class="row">
-                            <div class="col-xs-10 col-md-offset-1">
-                                <div class="box">
-                                    <div class="box-body">
-                                        <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                                <td colspan="2" align="right"><b style="font-size: 1.7em; "> Documentos para Escrituración<BR></b>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <br><br>
-                                        <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
-                                            <tr>
-                                                <td colspan="2" style="padding: 3px 6px; ">
-                                                    <b style="font-size: .8em; ">
-                                                        Estimado ' . $data['nombre'] . '<br>
-                                                        En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la información para iniciar con el proceso de escrituración
-                                                        como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar Notaria<br>
-                                                        El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, también aprovecho y envió el check list
-                                                        en solicitud a la recepción de todos los documentos al momento de escriturar, estos documentos deben ser necesarios para efectuar la entrega del proyecto de escrituración 
-                                                        con la Notaria:
-                                                    </b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
-                                                </td>
-                                            </tr>
-                                        </table>                            
-                                        <br>                       
-                                        <div class="row">                
-                                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Nombre completo:</b><br>
-                                                        ' . $data['nombre'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Ocupacíon:</b><br>
-                                                        ' . $data['ocupacion'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Lugar de origen:</b><br>
-                                                        ' . $data['origen'] . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Domicilio actual:</b><br>
-                                                        ' . $data['direccionf'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Domicilio Fiscal:</b><br>
-                                                        ' . $data['direccionf'] . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Estado civil:</b><br>
-                                                        ' . $data['ecivil'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Régimen conyugal:</b><br>
-                                                        ' . $data['rconyugal'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>RFC:</b><br>
-                                                        ' . $data['rfc'] . '
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Teléfono (casa):</b><br>
-                                                        ' . $data['telefono'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Teléfono (celular):</b><br>
-                                                        ' . $data['cel'] . '
-                                                    </td>
-                                                    <td style="font-size: 1em;">
-                                                        <b>Correo electrónico:</b><br>
-                                                        ' . $data['correo'] . '
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <br>
-                                            <br>
-                                            <br>
-                                            <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                                <tr>
-                                                    <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
-                                                    </td>
-                                                </tr>
-                                            </table>                            
-                                            <br><br>
-                                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                                <tr>
-                                                    <td colspan="2" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Área</b>
-                                                    </td>
-                                                    <td colspan="3" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Documento</b>
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 1em;border: 1px solid #ddd;">
-                                                        <b>Status</b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" rowspan="10" style="font-size: 1em;border: 1px solid #ddd;text-align: center;align: middle;">
-                                                        <b>POSTVENTA</b>
-                                                    </td>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        1) Identificación oficial vigente
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        2) RFC (Cédula o constancia de situación fiscal)
-                                                    </td>
-                                                    <td colspan="1"style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        3) Comprobante de domicilio actual luz, agua o telefonia fija(antigüedad menor a 2 meses)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        4) Acta de nacimiento
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        5) Acta de matrimonio (en su caso). *
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        6) CURP(formato actualizado)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        7) Formas de pago (todos los comprobantes de pago a mensialidades / estados de cuenta bancarios) **
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        8) Boleta predial al corriente y comprobante de pago retroactivo (si aplica)
-                                                    </td>
-                                                    <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        9) Constancia no adeudo mantenimiento (si aplica)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        10) Constancia no adeudo de agua (si aplica)
-                                                    </td>
-                                                    <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
-                                                        <b></b>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                <body>
-            </html>';
+    //     $mail->to('programador.analista18@ciudadmaderas.com');
+    //     $mail->Subject(utf8_decode("Documentos para Escrituración"));
+    //     $mailContent = '
+    //     <!DOCTYPE html>
+    //         <html lang="es_mx"  ng-app="CRM">
+    //             <head>
+    //                 <style>
+    //                 legend {
+    //                     background-color: #296D5D;
+    //                     color: #fff;
+    //                 }           
+    //                 </style>
+    //             </head>
+    //             <body>
+    //                 <section class="content">
+    //                     <div class="row">
+    //                         <div class="col-xs-10 col-md-offset-1">
+    //                             <div class="box">
+    //                                 <div class="box-body">
+    //                                     <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
+    //                                         <tr>
+    //                                             <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
+    //                                             <td colspan="2" align="right"><b style="font-size: 1.7em; "> Requisitos para Escrituración<BR></b>
+    //                                             </td>
+    //                                         </tr>
+    //                                     </table>
+    //                                     <br><br>
+    //                                     <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+    //                                         <tr>
+    //                                             <td colspan="2" style="padding: 3px 6px; ">
+    //                                                 <b style="font-size: .8em; ">
+    //                                                     Estimado ' . $data['nombre'] . '<br>
+    //                                                     En seguimiento a su visita en oficina de Ciudad Maderas Querétaro, envio la información para iniciar con el proceso de escrituración
+    //                                                     como primer paso es la solicitud del presupuesto para conocer el monto a pagar por la escritura y asignar Notaria<br>
+    //                                                     El presupuesto que envió es informativo, sin valor avalúo por parte del perito y es con el costo estimado, también aprovecho y envió el check list
+    //                                                     en solicitud a la recepción de todos los documentos al momento de escriturar, estos documentos deben ser necesarios para efectuar la entrega del proyecto de escrituración 
+    //                                                     con la Notaria:
+    //                                                 </b>
+    //                                             </td>
+    //                                         </tr>
+    //                                         <tr>
+    //                                             <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos del comprador – Persona Física</b>
+    //                                             </td>
+    //                                         </tr>
+    //                                     </table>                            
+    //                                     <br>                       
+    //                                     <div class="row">                
+    //                                         <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+    //                                             <tr>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Nombre completo:</b><br>
+    //                                                     ' . $data['nombre'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Ocupacíon:</b><br>
+    //                                                     ' . $data['ocupacion'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Lugar de origen:</b><br>
+    //                                                     ' . $data['origen'] . '
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Domicilio actual:</b><br>
+    //                                                     ' . $data['direccionf'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Domicilio Fiscal:</b><br>
+    //                                                     ' . $data['direccionf'] . '
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Estado civil:</b><br>
+    //                                                     ' . $data['ecivil'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Régimen conyugal:</b><br>
+    //                                                     ' . $data['rconyugal'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>RFC:</b><br>
+    //                                                     ' . $data['rfc'] . '
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Teléfono (casa):</b><br>
+    //                                                     ' . $data['telefono'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Teléfono (celular):</b><br>
+    //                                                     ' . $data['cel'] . '
+    //                                                 </td>
+    //                                                 <td style="font-size: 1em;">
+    //                                                     <b>Correo electrónico:</b><br>
+    //                                                     ' . $data['correo'] . '
+    //                                                 </td>
+    //                                             </tr>
+    //                                         </table>
+    //                                         <br>
+    //                                         <br>
+    //                                         <br>
+    //                                         <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
+    //                                             <tr>
+    //                                                 <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Documentos para Escrituración</b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                         </table>                            
+    //                                         <br><br>
+    //                                         <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+    //                                             <tr>
+    //                                                 <td colspan="2" style="font-size: 1em;border: 1px solid #ddd;">
+    //                                                     <b>Área</b>
+    //                                                 </td>
+    //                                                 <td colspan="3" style="font-size: 1em;border: 1px solid #ddd;">
+    //                                                     <b>Documento</b>
+    //                                                 </td>
+    //                                                 <td colspan="1" style="font-size: 1em;border: 1px solid #ddd;">
+    //                                                     <b>Estatus</b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="2" rowspan="10" style="font-size: 1em;border: 1px solid #ddd;text-align: left;left: middle;">
+    //                                                     <b>POSTVENTA</b>
+    //                                                 </td>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     1) Identificación oficial vigente
+    //                                                 </td>
+    //                                                 <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     2) RFC (Cédula o constancia de situación fiscal)
+    //                                                 </td>
+    //                                                 <td colspan="1"style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     3) Comprobante de domicilio actual luz, agua o telefonia fija(antigüedad menor a 2 meses)
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     4) Acta de nacimiento
+    //                                                 </td>
+    //                                                 <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     5) Acta de matrimonio (en su caso).
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     6) CURP (formato actualizado)
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     7) Formas de pago (todos los comprobantes de pago a mensialidades / estados de cuenta bancarios)
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     8) Boleta predial al corriente y comprobante de pago retroactivo (si aplica)
+    //                                                 </td>
+    //                                                 <td colspan="1" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     9) Constancia no adeudo mantenimiento (si aplica)
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                             <tr>
+    //                                                 <td colspan="3" style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     10) Constancia no adeudo de agua (si aplica)
+    //                                                 </td>
+    //                                                 <td colspan="1"  style="font-size: 0.9em;border: 1px solid #ddd;">
+    //                                                     <b></b>
+    //                                                 </td>
+    //                                             </tr>
+    //                                         </table>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </section>
+    //             <body>
+    //         </html>';
 
-        $mail->message($mailContent);
-        $response = $mail->send();
-        echo json_encode($response);
-    }
+    //     $mail->message($ );
+    //     $response = $mail->send();
+    //     echo json_encode($response);
+    // }
 
     public function aportaciones()
     {
@@ -642,7 +613,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
-        $personalidad = $_POST['personalidad'];
+        $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
       //  print_r($resDecode->data[0]);
         $dataFiscal = array(
@@ -669,18 +640,18 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            /*echo $personalidad;
-            echo "<br>";
-            echo $idLote;
-            echo "<br>";
-            echo $idCliente;
-            echo "<br>";
-            echo $idPostventa;
-            echo "<br>";
-            print_r($resDecode->data[0]);
-            echo "<br>";
-            echo $usuarioJuridico->id_usuario;
-            echo "<br>";*/
+            // echo "Persona juridica dato".$personalidad."<br>";
+            // echo "<br>";
+            // echo $idLote;
+            // echo "<br>";
+            // echo $idCliente;
+            // echo "<br>";
+            // echo $idPostventa;
+            // echo "<br>";
+            // print_r($resDecode->data[0]);
+            // echo "<br>";
+            // echo $usuarioJuridico->id_usuario;
+            // echo "<br>";
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
                 $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
@@ -699,7 +670,7 @@ class Postventa extends CI_Controller
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
-        $personalidad = $_POST['personalidad'];
+        $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
@@ -716,6 +687,7 @@ class Postventa extends CI_Controller
         $responseInsert = $this->insertPostventaDF($dataFiscal);
         if($responseInsert->resultado == 1){
             $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
+            // echo"Esto es lo que trae el usuario".$usuarioJuridico."<br>";
             if (!$usuarioJuridico) {
                 $this->Postventa_model->restablecerJuridicosAsignados();
                 $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
@@ -723,9 +695,8 @@ class Postventa extends CI_Controller
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
             $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
-            //echo "Personalidad: ".$personalidad."\n";
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
-            //echo "idLote:".$idLote."\n";
+            // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
             //echo "idCliente:".$idCliente."\n";
             $idPostventa = (!isset($idPostventa) || $idPostventa == '') ? 'NULL' : $idPostventa;
@@ -744,7 +715,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ncliente = $_POST['nombreComp'];
                 $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -1161,9 +1132,10 @@ class Postventa extends CI_Controller
         );
         //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
-      /*  if($_POST['not'] == 'nou'){
+        if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
-        }*/
+            $updateData['bandera_notaria'] = 1;
+        }
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1171,7 +1143,7 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
 
-        /*if ($_POST['not'] == 'yes'){
+        if ($_POST['tipoNotaria'] == 2){
             $idSolicitud = $_POST['id_solicitud3'];
             $nombre_notaria = $_POST['nombre_notaria'];
             $nombre_notario = $_POST['nombre_notario'];
@@ -1179,11 +1151,14 @@ class Postventa extends CI_Controller
             $correo = $_POST['correo'];
             $telefono = $_POST['telefono'];
 
-            $informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+            $informacion = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
+          
+
+            //$informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
             return $informacion;
     
-            return $this->Postventa_model->newNotaria($idSolicitud);
-        } */  
+            //return $this->Postventa_model->newNotaria($idSolicitud);
+        } 
 
     }
 
@@ -1633,7 +1608,7 @@ class Postventa extends CI_Controller
                                                                 <b>Teléfono</b><br>
                                                                 ' . $data->telefono . '
                                                             </td>
-                                                            <td style="font-size: 1e;">
+                                                            <td style="font-size: 1em;">
                                                                 <b>Dirección</b><br>
                                                                 ' . $data->direccion . '
                                                             </td>
@@ -1737,19 +1712,23 @@ class Postventa extends CI_Controller
     }
 
     //NOTARIA
-    public function nuevoNotario()
+    public function registrarNotaria()
     {
-        $idSolicitud = $_POST['idSolicitud'];
+        $id_solicitud = $_POST['id_solicitud'];
+        $tipoNotaria =  $_POST['tipo_notaria'];
         $nombre_notaria = $_POST['nombre_notaria'];
         $nombre_notario = $_POST['nombre_notario'];
         $direccion = $_POST['direccion'];
         $correo = $_POST['correo'];
         $telefono = $_POST['telefono'];
 
-        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
-        return $informacion;
-
-        return $this->Postventa_model->insertNewNotaria($idSolicitud);
+        if($tipoNotaria == 2){
+            $response = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
+        }else{
+            $response = $this->Postventa_model->asignarNotariaInterna($id_solicitud);
+            
+        }
+        echo json_encode( array( "data" => $response));
     }
 
     public function getBudgetNotaria()

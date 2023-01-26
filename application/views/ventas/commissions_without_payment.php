@@ -8,6 +8,7 @@
             case '17': // SUBDIRECTOR CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
             case '11': // ADMINISTRACIÓN
+            case '70': // EJECUTIVO CONTRALORIA JR
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;

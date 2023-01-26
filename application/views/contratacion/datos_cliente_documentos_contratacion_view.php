@@ -449,6 +449,7 @@
 								data: null,
 								render: function ( data, type, row ){
 									// if(data.flag_compartida == 1){
+                                    var disabled_option = myFunctions.revisaObservacionUrgente(data.observacionContratoUrgente);
 										datos = data.id_asesor;
 										if (getFileExtension(data.expediente) == "pdf") {
 											if(data.tipo_doc == 8){
@@ -484,7 +485,7 @@
 												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
 												// 
 												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1)){
-													file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+													file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
 												} else {
 													file = '<button id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
 												}
@@ -773,7 +774,13 @@
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
-						} else if(response.message == 'ERROR'){
+						}
+                        else if(response.message == 'OBSERVACION_CONTRATO'){
+                            alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás subir documentación" +
+                                " hasta que el proceso de liberación haya concluido.", "danger");
+                            $('#sendFile').prop('disabled', false);
+                        }
+						else if(response.message == 'ERROR'){
 							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
 							$('#sendFile').prop('disabled', false);
 						}

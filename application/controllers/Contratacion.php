@@ -67,9 +67,17 @@ class Contratacion extends CI_Controller
         echo json_encode($this->Contratacion_model->get_estatus_lote()->result_array());
     }
 
-    public function get_inventario($estatus, $condominio, $proyecto)
-    {
+    public function get_inventario($estatus, $condominio, $proyecto) {
 		$this->validateSession();
+
+		$data = $this->Contratacion_model->getInventarioData($estatus, $condominio, $proyecto);
+		if($data!=null){
+            print_r(json_encode($data));
+        }else{
+		    print_r(json_encode(array()));
+        }
+//		print_r($data);
+		exit;
         $a = 'null';
         if ($estatus != $a && $condominio != $a && $proyecto != $a)
             echo json_encode($this->Contratacion_model->get_datos_inventario($estatus, $condominio)->result_array());

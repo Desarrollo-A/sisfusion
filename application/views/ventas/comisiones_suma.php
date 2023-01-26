@@ -532,6 +532,7 @@
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
+        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         Shadowbox.init();
     </script>
     <script src="<?=base_url()?>dist/js/controllers/suma/comisionesSuma.js"></script>

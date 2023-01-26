@@ -65,34 +65,11 @@ class Asesor_model extends CI_Model
             return $this->getMenuPadreEspecial($idUsuario);
         }
 
-		if ($this->session->userdata('id_usuario') == 4415 || $this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911 || $this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
+		if ($this->session->userdata('estatus') == 3)  { // ES GREENHAM , COREANO, BADABUM, CONTACT CENTER
            $complemento='';
-           if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
-               $complemento = ", 'Prospectos'";
-           }
             return $this->db->query("SELECT * FROM Menu2 WHERE rol=".$rol." AND nombre IN ('Inicio', 'Comisiones' $complemento) AND estatus = 1 order by orden asc");
         } else {
-            if ($rol == 33) { // ES UN USUARIO DE CONSULTA
-                if ($this->session->userdata('id_usuario') == 2896) { // ES PATRICIA MAYA
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND estatus = 1 order by orden asc");
-                } else { // ES OTRO USUARIO DE CONSULTA Y NO VE COMISIONES
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol = $rol AND nombre NOT IN ('Inicio', 'Comisiones','Usuarios') AND estatus = 1 order by orden asc");
-                }
-            } else {
-                if ($this->session->userdata('id_usuario') == 2762) {
-                    return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 ORDER BY orden ASC");
-                } else {
-                    if($this->session->userdata('id_rol') == 32){
-                        $complemento='';
-                        $complemento = $this->session->userdata('id_usuario') == 2767 ? "" : ",'Pagos'"; 
-
-                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato' $complemento) ORDER BY orden ASC");
-
-                    }else{
-                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 AND nombre NOT IN ('Reemplazo contrato') ORDER BY orden ASC");
-                    }
-                }
-            }
+                        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 ORDER BY orden ASC");           
         }
     }
 
@@ -102,21 +79,7 @@ class Asesor_model extends CI_Model
         if ($this->existeUsuarioMenuEspecial($idUsuario)) {
             return $this->getMenuHijoEspecial($idUsuario);
         }
-        
-        $complemento="";
-        if($this->session->userdata('id_usuario') == 6578 || $this->session->userdata('id_usuario') == 9942 || $this->session->userdata('id_usuario') == 9911){
-            $complemento = " AND idmenu in(296,307,308,879)";
-        }
-        if(($this->session->userdata('id_usuario') != 2826 && $this->session->userdata('id_usuario') != 2767 && $this->session->userdata('id_usuario') != 2754 && $this->session->userdata('id_usuario') != 2749) && $this->session->userdata('id_rol') == 32){
-            $complemento = " AND idmenu not in(1091)";
-        }
-        if(($this->session->userdata('id_usuario') != 1297 && $this->session->userdata('id_usuario') != 826) && $this->session->userdata('id_rol') == 8){
-            $complemento = " AND idmenu not in(1980)";
-        }
-        if(($this->session->userdata('id_usuario') != 5107) && $this->session->userdata('id_rol') == 33){
-            $complemento = " AND idmenu not in(1105)";
-        }
-        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1 $complemento order by orden asc");
+        return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1  order by orden asc");
     }
 
     function getActiveBtn($var, $rol)
@@ -136,14 +99,14 @@ class Asesor_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
             (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
-                    WHERE id_usuario = $idUsuario AND es_padre = 1) ORDER BY orden");
+                    WHERE id_usuario = $idUsuario AND es_padre = 1) AND estatus=1 ORDER BY orden");
     }
 
     public function getMenuHijoEspecial($idUsuario)
     {
         return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
             (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
-                    WHERE id_usuario = $idUsuario AND es_padre = 0) ORDER BY orden");
+                    WHERE id_usuario = $idUsuario AND es_padre = 0) AND estatus=1 ORDER BY orden");
     }
 
     /*---------------------------------------FIN MENU-------------------------------------*/
@@ -1803,6 +1766,13 @@ class Asesor_model extends CI_Model
     }
     function getWstatus1($id_lote){
         $query = $this->db->query("SELECT * FROM autorizaciones WHERE estatus=1 AND idLote=".$id_lote);
+        return $query->result_array();
+    }
+
+
+    function revisaOU($idLote){
+        //esta funcion revisa si el lote esta en ObservacionContratoUrgente
+        $query = $this->db->query("SELECT * FROM lotes WHERE observacionContratoUrgente='1' AND idLote=".$idLote);
         return $query->result_array();
     }
 }
