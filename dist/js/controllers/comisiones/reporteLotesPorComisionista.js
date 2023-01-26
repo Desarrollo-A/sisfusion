@@ -38,7 +38,7 @@ $("#comisionista").on('change', function() {
     let estatusComisionista = $('#comisionista option:selected').data('estatus');
     let rolComisionista = $('#comisionista option:selected').data('rol');
     let htmlEstatus = '';
-    let htmlRol = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">${rolComisionista}</span>`;
+    let htmlRol = `<span style="background-color: #D2B4DE; padding: 4px 14px; border-radius: 20px; color: #4A235A; font-weight: 500; font-size: 12px;">${rolComisionista}</span>`;
     $(".lblEstatus").html('');
     $(".lblRolActual").html('');
     if (estatusComisionista == '3')
