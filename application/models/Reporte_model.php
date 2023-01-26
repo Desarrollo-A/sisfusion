@@ -29,7 +29,7 @@ class Reporte_model extends CI_Model {
         $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $generalFilters = " AND $enganche <= 10000";
+            $generalFilters = " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
             $generalFilters = " AND $enganche < 10000";
         
@@ -673,13 +673,14 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, $fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote,
             FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
-			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, $fechaApartado, GETDATE()) AS diasApartado
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, $fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
             INNER JOIN statusContratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
             INNER JOIN statusLote st ON st.idStatusLote = lo.idStatusLote
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             $joinHist
             $filtroSt
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
@@ -698,7 +699,8 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
-            CONVERT(VARCHAR, $fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, $fechaApartado
+            CONVERT(VARCHAR, $fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, 
+            cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, $fechaApartado
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             // $statusLote = ($type == 4 || $type == 44) ? "AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)" : "";
@@ -720,11 +722,12 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, $fechaApartado, 103) fechaApartado, st.nombreStatus, 'Cancelado' estatusLote, CONVERT(VARCHAR, hl.modificado, 103) fechaLiberacion, oxc.nombre motivoLiberacion,
             FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
-			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, $fechaApartado, GETDATE()) AS diasApartado
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, $fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
             LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
             LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
@@ -749,7 +752,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, $fechaApartado, 103), st.nombreStatus,
             cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional,
-            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, $fechaApartado
+            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, $fechaApartado
             ORDER BY st.nombreStatus");
         }
         return $query;       

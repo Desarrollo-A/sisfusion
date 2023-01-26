@@ -56,7 +56,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxt.push(title);
-    if (i != 16) {
+    if (i != 21) {
         $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value ) {
@@ -111,7 +111,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -159,6 +159,11 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 else
                     return d.plaza;
             }},
+            {data: 'nombreAsesor'},
+            {data: 'nombreCoordinador'},
+            {data: 'nombreGerente'},
+            {data: 'nombreSubdirector'},
+            {data: 'nombreRegional'},
             { data: function (d) {
                 if(d.rec == 8)
                     return '-';
@@ -184,6 +189,8 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                         labelStatus = `<span class="label" style="background:#A9DFBF; color:#145A32">LIQUIDADA</span>`;
                     else if (d.registroComision == 1)
                         labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">ACTIVA</span></span>`;
+                    else 
+                        labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DEFINIR ESTATUS</span>`;
                 }
                 return labelStatus;
             }},
