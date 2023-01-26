@@ -1,5 +1,23 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<style>
+    table thead tr th {
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 0.8em;
+    }
+    tfoot tr{
+         background: #143860;
+     }
+    table tfoot tr th{
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 1.3em;
+        text-align: center;
+    }
+</style>
 <body>
 	<div class="wrapper">
 		<?php
@@ -234,7 +252,7 @@
 									<div class="row">
 										<div class="col-md-4 form-group">
 											<div class="form-group">
-												<label class="m-0" for="proyecto">Proyecto</label>
+												<label class="m-0" for="proyecto">Proyecto*</label>
 												<select id="proyecto" name="proyecto"
 														class="selectpicker select-gral"
 														data-style="btn" data-show-subtext="true"
@@ -554,12 +572,7 @@
 				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 				format: {
 					header:  function (d, columnIdx) {
-						if(columnIdx == 0){
 							return ' '+d +' ';
-							}
-
-									return ' '+titulos[columnIdx-1] +' ';
-
 						}
 					}
 				}
