@@ -181,14 +181,25 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         }
     }
     
-    public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos){
-        return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (SELECT DISTINCT(id_descuento) descuentos
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        where l.idStatusLote!=2 and r.idResidencial in($desarrollos) AND id_descuento is not null
+    public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
+        return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
+        SELECT DISTINCT(id_descuento) descuentos
+        FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
         $query_superdicie
-        $query_tipo_lote) t")->result_array();
+        $query_tipo_lote
+        UNION ALL
+        SELECT DISTINCT(id_descuento) descuentos
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        where l.idStatusLote = 3 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
+        $query_superdicie
+        $query_tipo_lote
+        ) t")->result_array();
     }
 
     public function getPaquetesById($id_paquete){
