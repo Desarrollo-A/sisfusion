@@ -326,11 +326,21 @@ class Cobranza_model extends CI_Model {
         0 estatusComision, 0.00 porcentaje_decimal,
         '0.00' comisionTotal, '0.00' abonoDispersado, '0.00' abonoPagado, 0 rec,
         REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
-        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
+        ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
+        ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 $filtroComisionista $filtroFecha
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subidirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         INNER JOIN sedes se ON se.id_sede = cl.id_sede
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
@@ -345,13 +355,23 @@ class Cobranza_model extends CI_Model {
         ISNULL(pci3.abonoDispersado, '0.00') abonoDispersado, 
         ISNULL(pci2.abonoPagado, '0.00') abonoPagado, cm.estatus rec,
         REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
-        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente
+        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
+        ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
+        ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
         INNER JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista AND cm.estatus != 8
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 $filtroComisionista $filtroFecha
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subidirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede
         LEFT JOIN pago_comision pc ON pc.id_lote = lo.idLote    
@@ -368,13 +388,23 @@ class Cobranza_model extends CI_Model {
         ISNULL(pci3.abonoDispersado, '0.00') abonoDispersado, 
         ISNULL(pci2.abonoPagado, '0.00') abonoPagado, cm.estatus rec,
         REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
-        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente
+        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
+        ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
+        ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
         INNER JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista AND cm.estatus = 8
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 $filtroComisionista $filtroFecha
+        LEFT JOIN clientes cl ON cl.id_cliente = cm.idCliente $filtroComisionista $filtroFecha
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subidirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede
         LEFT JOIN pago_comision pc ON pc.id_lote = lo.idLote    

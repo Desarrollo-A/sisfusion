@@ -99,6 +99,11 @@
                                                         <th>CLIENTE</th>
                                                         <th>FECHA APARTADO</th>
                                                         <th>SEDE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
                                                         <th>ESTATUS CONTRATACIÓN</th>
                                                         <th>ESTATUS VENTA</th>
                                                         <th>ESTATUS COMISIÓN</th>
