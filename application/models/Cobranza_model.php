@@ -370,7 +370,7 @@ class Cobranza_model extends CI_Model {
         INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subidirector
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede
@@ -403,7 +403,7 @@ class Cobranza_model extends CI_Model {
         INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subidirector
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede
@@ -422,9 +422,9 @@ class Cobranza_model extends CI_Model {
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
 		WHERE us.id_rol IN (1, 2, 3, 9, 7) AND us.estatus != 0 AND (us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '' ) NOT LIKE '%test_%' AND ISNULL(us.correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%')
 		UNION ALL
-		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo, 0 atributo_extra2
+		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo,'0' atributo_extra2
         FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN (1, 2, 3, 9, 7, 59)
-		ORDER BY id_catalogo, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))");
+		ORDER BY id_catalogo, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))");
     }
     
 
