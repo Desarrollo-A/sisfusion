@@ -452,7 +452,7 @@ $(document).on("submit", "#formPresupuesto", function (e) {
                 $('#spiner-loader').addClass('hide');
                 win.onload = function(){
                     $('#formPresupuesto')[0].reset();
-                   escrituracionTable.ajax.reload();
+                   escrituracionTable.ajax.reload(null,false);
                 }
             }
         }, error: function () {
@@ -799,6 +799,8 @@ $(document).on('click', '.treePresupuesto', function () {
     var detailRows = [];
     var tr = $(this).closest('tr');
     var row = escrituracionTable.row(tr);
+    console.log('lllllllllllllllllllllllll');
+    console.log(row)
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
         console.log('PRIMER IF')
@@ -812,6 +814,7 @@ $(document).on('click', '.treePresupuesto', function () {
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
         // createDocRowPresupuesto(row, tr, $(this));
+        console.log('NNNNNNNNNNNNNNNNNNNNNNNN');
         createRowNotarias(row, tr, $(this), row.data().id_solicitud);
 
         // Add to the 'open' array
@@ -1093,6 +1096,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 13:
                                 if (userType == 57) { 
+                                    group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                 }
                             break;
@@ -1294,6 +1298,9 @@ function getNotarias(datos=null) {
     $(".notaria-select").append($('<option disabled>').val("0").text("Seleccione una opción"));
 
     $.post('getNotarias', function (data) {
+        console.log(data.data)
+        console.log(data[0])
+        data = data.data;
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idNotaria'];
@@ -1306,11 +1313,13 @@ function getNotarias(datos=null) {
             // $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             $(".notaria-select").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
-       
+       console.log('GET NOTARIAS')
+       console.log(datos)
         // $("#notaria").selectpicker('refresh');
         $(".notaria-select").selectpicker('refresh');
         if(datos != null){
-            let selects = $(`#notarias-${datos.idSolicitud}`).find('.selectpicker.notaria-select');
+            console.log('ENTRA AL DATOS != NULL')
+            let selects = $(`#notarias-${datos.id_solicitud}`).find('.selectpicker.notaria-select');
        console.log('selects1',selects);
        selects.each( function( index, element ){
            console.log('selects',element.id);
@@ -1911,7 +1920,7 @@ function saveEstatusLote(idSolicitud, data){
             if (response == 1) {
                 $("#estatusLModal").modal("hide");
                 $('#spiner-loader').addClass('hide');
-                escrituracionTable.ajax.reload();
+                escrituracionTable.ajax.reload(null,false);
                 alerts.showNotification("top", "right", "Registro editado correctamente.", "success");
             }
         }, error: function () {
@@ -2106,7 +2115,7 @@ $(document).on("submit", "#formInformacion", function (e) {
         success: function (response) {
             alerts.showNotification("top", "right", "Se agrego la información.", "success");
             $("#informacionModal").modal("hide");
-            escrituracionTable.ajax.reload();
+            escrituracionTable.ajax.reload(null,false);
         }
     });
 });
@@ -2120,7 +2129,7 @@ $(document).on('change', '#not', function () {
     }
 });
 function buildDetailTableNotaria(data, permisos) {
-    let notarias = `<table id="notarias-${data.idSolicitud}" class="table subBoxDetail">`;
+    let notarias = `<table id="notarias-${data.id_solicitud}" class="table subBoxDetail">`;
     notarias += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     notarias += '<td>' + '<b>' + '# ' + '</b></td>';
     notarias += '<td>' + '<b>' + 'NOTARIA ' + '</b></td>';
@@ -2135,7 +2144,7 @@ function buildDetailTableNotaria(data, permisos) {
         notarias += '<td> ' + (i + 1) + ' </td>';
         notarias += `<td class="d-flex direction-row justify-center align-center"> 
         ${permisos == 1 ? 
-                        `<select id="notaria-${i}-${data.idSolicitud}" name="notaria" class="selectpicker select-gral m-0 notaria-select" data-style="btn" data-show-subtext="true"
+                        `<select id="notaria-${i}-${data.id_solicitud}" name="notaria" class="selectpicker select-gral m-0 notaria-select" data-style="btn" data-show-subtext="true"
                         data-live-search="true" data-container="body" title="Selecciona un estatus" data-size="7" required></select>`: 
                         `${data.notarias[i] ? data.notarias[i].nombre_notaria:''}`
                     
@@ -2144,7 +2153,7 @@ function buildDetailTableNotaria(data, permisos) {
         notarias += `<td id="desc">${permisos != 1 && data.notarias[i] ? data.notarias[i].direccion: ''}</td>`;
         notarias += '<td><div class="d-flex justify-center">';
         notarias += `<button  class="btn-data btn-blueMaderas ${data.notarias[i] != undefined ? 'modalPresupuestos':'saveNotaria'}" 
-        data-idNxS ="${data.notarias[i] ? data.notarias[i].idNxS:null}" data-idSolicitud="${data.idSolicitud}" data-toggle="tooltip" 
+        data-idNxS ="${data.notarias[i] ? data.notarias[i].idNotariaxSolicitud:null}" data-idSolicitud="${data.id_solicitud}" data-toggle="tooltip" 
         data-placement="left" title="presupuestos">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
         </button>`;
         notarias += '</div></td></tr>';
@@ -2215,13 +2224,13 @@ function buildUploadCards(idNxS){
                 <div class="d-flex direction-column">
                 ${
                     element.expediente == '' ? '<div class="d-flex justify-end mb-1"></div>':
-                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <i data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNxS}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt upload"></i></i></div>`:'<div class="d-flex justify-end mb-1"></div>' 
+                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <i data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt upload"></i></i></div>`:'<div class="d-flex justify-end mb-1"></div>' 
                 }
                 ${
-                    element.expediente == '' && permisos == 1 ? `<i data-details="2" data-action="1" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNxS}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload"></i>`
+                    element.expediente == '' && permisos == 1 ? `<i data-details="2" data-action="1" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload"></i>`
                     :
                     element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5"></i>`
-                    :`<i id="preview" data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNxS}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 watchIcon_modal"></i>`
+                    :`<i id="preview" data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 watchIcon_modal"></i>`
                 }
 
                     <span class="mt-2">Presupuesto</span>
