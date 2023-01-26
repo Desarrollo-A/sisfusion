@@ -2,7 +2,7 @@ $(document).ready(function () {
     $.getJSON("getOpcionesParaReporteComisionistas").done(function(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
-                $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr('data-estatus', data[i]['atributo_extra']).text(data[i]['nombre']));
+                $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 2) // TIPO DE USUARIO SELECT
                 $("#tipoUsuario").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
@@ -36,18 +36,18 @@ sp = { // MJ: DATE PICKER
 
 $("#comisionista").on('change', function() {
     let estatusComisionista = $('#comisionista option:selected').data('estatus');
-    console.log(estatusComisionista);
-    let html = '';
+    let rolComisionista = $('#comisionista option:selected').data('rol');
+    let htmlEstatus = '';
+    let htmlRol = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">${rolComisionista}</span>`;
     $(".lblEstatus").html('');
-    if (estatusComisionista == '3'){
-        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
-        `;
-    }
-    else{
-        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
-        `;
-    }
-    $(".lblEstatus").append(html);
+    $(".lblRolActual").html('');
+    if (estatusComisionista == '3')
+        htmlEstatus = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>`;
+    else
+        htmlEstatus = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>`;
+
+    $(".lblEstatus").append(htmlEstatus);
+    $(".lblRolActual").append(htmlRol);
 });
 
 
