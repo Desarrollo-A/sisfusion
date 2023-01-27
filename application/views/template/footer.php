@@ -51,13 +51,6 @@
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
 <script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true}, 'google_translate_element');
-    }
-</script>
-
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= $this->session->userdata('id_rol') ?> ;

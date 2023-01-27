@@ -51,7 +51,7 @@
                                     <?php if($this->session->userdata('id_rol') == 31){?>
                                         <div class="row aligned-row pb-3" id="tipo_pago_selector">
                                             <div class="form-group col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <label>Tipo de pago</label>
+                                                <label>Tipo de pago*</label>
                                                 <select class="selectpicker select-gral m-0" title="Seleccione una opción"
                                                         id="tipo_accion" onchange="validaTipoPago(this.value)">
                                                     <option value="1">Pago lotes</option>
@@ -217,9 +217,9 @@
                                         </div>
                                     </div>
         <!-- INICIO Modal para bitácora -->
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
 
-        <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
 

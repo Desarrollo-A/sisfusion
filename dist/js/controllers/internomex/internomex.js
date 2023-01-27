@@ -204,7 +204,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 }
             },
             {
-               
+                "visible": false,
                 data: function (d) {
                     if (id_rol_global == 31) {
                         return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
@@ -442,7 +442,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
                         console.log(XMLHttpRequest.status);
-                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalode nuevo 009.', "danger");
+                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
                         if (XMLHttpRequest.status == 301){
                             alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
                         }
