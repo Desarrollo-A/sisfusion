@@ -24,7 +24,6 @@
 			</script>
 			<a href="https://www.ciudadmaderas.com/" >Ciudad Maderas</a>, Departamento de TI
 		</p>
-        <div id="google_translate_element" class="google" style="color: #333"></div>
 	</div>
 
 </footer>
