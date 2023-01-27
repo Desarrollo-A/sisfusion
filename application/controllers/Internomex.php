@@ -111,9 +111,9 @@
     $this->load->view("internomex/load_final_payment", $datos);
   }
 
-  public function getPaymentsListByCommissionAgent()
+  public function getPaymentsListByCommissionAgent($tipo_pago)
   {
-    $data = $this->Internomex_model->getCommissions()->result_array();
+    $data = $this->Internomex_model->getCommissions($tipo_pago)->result_array();
     echo json_encode($data);
   }
 
@@ -124,7 +124,9 @@
     echo json_encode($data);
   }
 
-  public function insertInformation() {
+  public function insertInformation($tipo_pago) {
+//        print_r($tipo_pago);
+//        exit;
     if (!isset($_POST))
       echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
     else {
@@ -181,7 +183,9 @@
                   "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
                   "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
                   "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal),
-                  "comentario" => $decodedData[$i]->comentario);
+                  "comentario" => $decodedData[$i]->comentario,
+                  "tipo_pago" => $tipo_pago
+                );
                 $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
                 array_push($insertArrayData, $commonData);
               }
