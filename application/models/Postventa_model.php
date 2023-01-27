@@ -135,14 +135,19 @@ class Postventa_model extends CI_Model
     }
     
 
-    function getSolicitudes($begin, $end, $estatus)
-    {
-
+    function getSolicitudes($begin, $end, $estatus, $tipo_tabla)
+    {   
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
-
+        $filtroTabla = "";
         $AddWhere = "";
-      
+        if($tipo_tabla == 1){
+            $filtroTabla = "AND se.id_estatus in (45,48)";
+        }else{
+            $filtroTabla = "AND se.id_estatus not in (45,48)";
+        }
+
+
         if($estatus == 0){
         //PROPIOS
             if($rol == 57 && $idUsuario!= 10865){
@@ -180,7 +185,7 @@ class Postventa_model extends CI_Model
         INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1
         WHERE cl.clasificacion in (1)
         GROUP BY cl.nombre_actividad, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cp.estatus_siguiente
-        $AddWhere
+        $AddWhere $filtroTabla
         GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion");
     }
 
