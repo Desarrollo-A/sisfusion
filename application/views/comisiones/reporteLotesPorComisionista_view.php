@@ -1,9 +1,30 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
+    <style>
+        .box_cash h6{
+            line-height: 19px;
+            font-size: 10px;
+            font-weight: 100;
+            color: #999;
+        }
+        .box_cash span{
+            font-size: 25px;
+            font-weight: 600;
+            color: #4e4e4e;
+        }
+        .estatus{
+            background-color: #32cd3238;
+            border-radius: 20px;
+            padding: 3px 10px;
+            color: limegreen;
+            font-weight: 400;
+            font-size: 12px;
+        }
+    </style>
     <div class="wrapper ">
         <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63)))
+            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -21,19 +42,15 @@
                                 <h3 class="card-title center-align">Reporte de lotes por comisionista</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Comisionista</label>
-                                                <select id="comisionista" name="comisionista" class="form-control input-gral pl-0" required>
-											        <option value="0" disabled selected>Seleccione una opción</option>
-                                                </select>
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                            <label class="label-gral"><span class="isRequired">*</span>Comisionista</label><label class="lblEstatus ml-2"></label><label class="lblRolActual ml-2"></label>
+                                            <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                         </div>
-                                        <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Tipo de usuario</label>
-                                                <select id="tipoUsuario" name="tipoUsuario" class="form-control input-gral pl-0" required>
-											        <option value="0" disabled selected>Seleccione una opción</option>
-                                                </select>
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                            <label class="label-gral"><span class="isRequired">*</span>Tipo de usuario</label>
+                                            <select class="selectpicker select-gral m-0" id="tipoUsuario" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                         </div>
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
@@ -46,6 +63,23 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                            <div class="box_cash">
+                                                <h6>TOTAL COMISIÓN<br><span id="txt_totalComision" class="cash">$0.00</span></h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                            <div class="box_cash">
+                                                <h6>TOTAL ABONADO<br><span id="txt_totalAbonado" class="cash">$0.00</span></h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                            <div class="box_cash">
+                                                <h6>TOTAL PAGADO<br><span id="txt_totalPagado" class="cash">$0.00</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -65,6 +99,11 @@
                                                         <th>CLIENTE</th>
                                                         <th>FECHA APARTADO</th>
                                                         <th>SEDE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
                                                         <th>ESTATUS CONTRATACIÓN</th>
                                                         <th>ESTATUS VENTA</th>
                                                         <th>ESTATUS COMISIÓN</th>

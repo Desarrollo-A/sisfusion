@@ -549,7 +549,7 @@ $("#table_planes").ready(function() {
 							break;
 
 							default:
-								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
+								return '<p class="m-0"><b>'+(d.porcentaje)+'</b></p>';
 							break;
 
 						}
@@ -1202,7 +1202,7 @@ function ConsultarPlanes(){
 	$('#spiner-loader').removeClass('hide');
 	ClearAll2();
 	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val()};
+		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
 		$.post('getPaquetes',params, function(data) {
 			let countPlanes = data.length;
 			if(countPlanes >1){

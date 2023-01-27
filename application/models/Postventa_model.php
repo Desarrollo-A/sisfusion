@@ -152,17 +152,20 @@ class Postventa_model extends CI_Model
         //PROPIOS
             if($rol == 57 && $idUsuario!= 10865){
                 $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
+            }else if($rol == 11){
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus = 4 AND se.bandera_admin IS NULL)  ";
+            }else if($rol == 56){
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus = 3 AND se.bandera_comite IS NULL) ";
             }else{
-                $AddWhere  = " WHERE cp.area_actual = $rol ";
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) ";
             }
         }else{
             //TODOS
             $AddWhere = " ";
         }
-
-        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, 
-        concat((select[dbo].[DiasLaborales](se.fecha_modificacion ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato
-       
+        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente , cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales](se.fecha_modificacion ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato, 
+        (CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END ) ultimo_comentario
+        -- ISNULL(he.descripcion, '-') ultimo_comentario
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
@@ -173,7 +176,7 @@ class Postventa_model extends CI_Model
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
-        LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
+        LEFT JOIN (SELECT TOP 1 h.id_solicitud, (CASE WHEN h.tipo_movimiento = 1 THEN mr.motivo ELSE h.descripcion END) AS descripcion FROM historial_escrituracion h LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(h.descripcion AS INT) GROUP BY h.id_solicitud, h.descripcion, mr.motivo, h.tipo_movimiento) he ON he.id_solicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 18 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.nombre_actividad, cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', cl.nombre_actividad ) as nombre_estatus_siguiente
@@ -195,7 +198,7 @@ class Postventa_model extends CI_Model
         return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
         FROM Notarias n
         JOIN sedes s ON n.sede = s.id_sede
-        WHERE sede != 0 and n.estatus = 1
+        WHERE sede != 0 and n.Estatus = 1
         ORDER BY n.idNotaria");
     }
 
@@ -335,8 +338,8 @@ class Postventa_model extends CI_Model
         $num_movimiento = $type == 3 ? 1 : 0;
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo  WHERE id_solicitud = $id_solicitud");
-        return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,$num_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
-         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",0,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
+        return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
+         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",$num_movimiento,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
         /*return $this->db->query("INSERT INTO control_estatus (idStatus, idCatalogo, tipo, fecha_creacion, next, idEscrituracion, idArea, newStatus, comentarios, motivos_rechazo, modificado_por)
          VALUES(($estatus), 59, $type, GETDATE(), ($next), $id_solicitud, $rol, ($newStatus), '$comentarios', $motivos_rechazo, $idUsuario);");*/
     }
@@ -852,7 +855,7 @@ function checkBudgetInfo($idSolicitud){
     {
         $query = $this->db->query("SELECT nxu.*, n.nombre_notaria, n.direccion FROM notarias_x_usuario nxu 
         INNER JOIN Notarias n ON n.idNotaria = nxu.id_notaria
-        WHERE id_solicitud = $idSolicitud AND n.estatus = 1");
+        WHERE id_solicitud = $idSolicitud AND n.Estatus = 1");
         return $query->result_array();
     }
 

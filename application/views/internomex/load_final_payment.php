@@ -47,13 +47,27 @@
                                         <h3 class="card-title center-align">Consulta pago final</h3>
                                         <p class="center-align">A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</p>
                                     <?php } ?>
+
+                                    <?php if($this->session->userdata('id_rol') == 31){?>
+                                        <div class="row aligned-row pb-3" id="tipo_pago_selector">
+                                            <div class="form-group col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <label>Tipo de pago</label>
+                                                <select class="selectpicker select-gral m-0" title="Seleccione una opción"
+                                                        id="tipo_accion" onchange="validaTipoPago(this.value)">
+                                                    <option value="1">Pago lotes</option>
+                                                    <option value="2">Pago suma</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php }?>
+
                                     <div class="row aligned-row">
                                         <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="radio_container w-100">
                                                 <?php if ($this->session->userdata('id_rol') == 31) { ?>
-                                                    <input class="d-none generate" type="radio" name="radio" id="one" checked>
-                                                    <label for="one" class="w-50">Cargar</label>
-                                                    <input class="d-none find-results" type="radio" name="radio" id="two">
+                                                    <input class="d-none generate" type="radio" disabled="true" id="one" checked>
+                                                    <label for="one" class="w-50" disabled="true" id="cargarLabel" style="background: #bfbfbf !important;cursor: not-allowed">Cargar</label>
+                                                    <input class="d-none find-results" type="radio" disabled="true" id="two">
                                                     <label for="two" class="w-50">Consultar</label>
                                                 <?php } else { ?>
                                                     <input class="d-none" type="radio" name="radio" id="one" disabled>
@@ -101,6 +115,7 @@
                                                 <th>MONTO CON DESCUENTO</th>
                                                 <th>MONTO INTERNOMEX</th>
                                                 <th>FECHA CAPTURA REGISTRO</th>
+                                                <th>TIPO PAGO</th>
                                                 <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
