@@ -283,26 +283,17 @@ class Cobranza_model extends CI_Model {
         return $this->db->query($cmd);
     }
     
-     function getComments($pago){
-    //     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
-    // CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-    // FROM historial_comisiones hc 
-    // INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-    // INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-    // WHERE hc.id_pago_i = $pago  
-    // ORDER BY hc.fecha_movimiento DESC");
-    $this->db->query("SET LANGUAGE Español;");
-    return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, 
-    convert(nvarchar(20), hc.fecha_movimiento, 113) date_final,
-    hc.fecha_movimiento,
-    CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-    FROM historial_comisiones hc 
-    INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-    INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-    WHERE hc.id_pago_i = $pago
-    ORDER BY hc.fecha_movimiento DESC");
-    
-    
+    function getComments($pago){
+        $this->db->query("SET LANGUAGE Español;");
+        return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, 
+        convert(nvarchar(20), hc.fecha_movimiento, 113) date_final,
+        hc.fecha_movimiento,
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        FROM historial_comisiones hc 
+        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_pago_i = $pago
+        ORDER BY hc.fecha_movimiento DESC");
     }
 
     public function getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario) {
@@ -416,7 +407,7 @@ class Cobranza_model extends CI_Model {
     }
     
     public function getOpcionesParaReporteComisionistas() {
-        return $this->db->query("SELECT us.id_usuario id_opcion, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+        return $this->db->query("SELECT us.id_usuario id_opcion, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
         us.estatus atributo_extra, 1 id_catalogo, oxc.nombre atributo_extra2
 		FROM usuarios us
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
@@ -424,7 +415,7 @@ class Cobranza_model extends CI_Model {
 		UNION ALL
 		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo,'0' atributo_extra2
         FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN (1, 2, 3, 9, 7, 59)
-		ORDER BY id_catalogo, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))");
+		ORDER BY id_catalogo, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))");
     }
     
 
