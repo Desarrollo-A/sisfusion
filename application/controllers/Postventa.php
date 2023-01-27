@@ -728,8 +728,9 @@ class Postventa extends CI_Controller
         $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
         $estatus = $this->input->post("estatus");
+        $tipo_tabla = $this->input->post("tipo_tabla");
         $v = strtotime($this->input->post("endDate"));
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus)->result_array();
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla)->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
