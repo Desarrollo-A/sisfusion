@@ -408,7 +408,8 @@
 					url: general_base_url + 'Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
 					dataSrc: ""
 				},
-				buttons: [{
+				buttons: [
+				    {
 					extend: 'excelHtml5',
 					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 					className: 'btn buttons-excel',
@@ -600,7 +601,8 @@
 				"ordering": true,
 				"fixedColumns": true,
 				"columns":
-				[{
+				[
+				    {
 					"width": "10%",
 					data: 'nombreResidencial'
 				},
@@ -910,6 +912,36 @@
 						}
 					}
 				},
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.idStatusContratacion+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCliente+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCopropietario+'</p>';
+                            }
+                        }
+                    },
 				{
 					"width": "8%",
 					"data": function( d ){
