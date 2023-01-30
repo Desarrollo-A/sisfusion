@@ -212,7 +212,7 @@ $(document).on("click", "#preview", function () {
     }
 
     Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:9999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:99999999999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
         player: "html",
         title: `Visualizando archivo: ${itself.attr('data-doc')} `,
         width: 985,
@@ -2306,7 +2306,7 @@ function getBudgetInformacion(idSolicitud){
     $.post('getBudgetInformacion',{
         idSolicitud:idSolicitud
     }, function(data) {
-        if(data.id_estatus != 5 && data.id_estatus != 2){
+        if(data.id_estatus != 5 && data.id_estatus != 2 && data.id_estatus != 4){
             $('#RequestInformacion').addClass('hide');
             $('#information_campos').addClass('hide');
             document.getElementById('construccionI').disabled = true;
