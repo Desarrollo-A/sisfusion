@@ -1265,7 +1265,7 @@ function fillTable(beginDate, endDate, estatus) {
 
 // Inicia el llenado para la tabla de carga testimonio
 function fillTableCarga(beginDate, endDate, estatus) {
-    escrituracionTableTestimonio = $('#carga-datatable').DataTable({
+    escrituracionTableTest = $('#carga-datatable').DataTable({
     dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: "100%",
     scrollX: true,
