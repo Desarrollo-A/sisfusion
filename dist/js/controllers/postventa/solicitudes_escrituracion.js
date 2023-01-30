@@ -265,7 +265,7 @@ $(document).on("click", "#searchByDateRange", function () {
 
 $(document).on("click", "#dateSubmit", function () {
     let signDate = $("#signDate").val();
-    let idSolicitud = $("#idSolicitud").val();
+    let idSolicitud = $("#idSolicitudFecha").val();
     let signDateFinal = formatDate2(signDate);
     let type = $("#type").val();
     $('#spiner-loader').removeClass('hide');
@@ -273,10 +273,11 @@ $(document).on("click", "#dateSubmit", function () {
         signDate: signDateFinal,
         idSolicitud: idSolicitud
     }, function (data) {
-        if (data == true) {
-            changeStatus(idSolicitud, 3, `Nueva fecha para firma: ${signDateFinal}`, type);
-        }
         $('#spiner-loader').addClass('hide');
+        $('#dateModal').modal("hide");
+        if (data == true) {
+            changeStatus(idSolicitud, 2, `Nueva fecha para firma: ${signDateFinal}`,type);
+        }
     }, 'json');
 });
 
@@ -300,6 +301,8 @@ $(document).on("click", ".upload", function () {
     $("#idNxS").val(idNxS);
     $("#details").val($(this).data("details"));
     if (action == 1 || action == 2 || action == 4) {
+        console.log('action upload')
+        console.log(action)
         document.getElementById("mainLabelText").innerHTML = action == 1 ? "Seleccione el archivo que desees asociar." : action == 2 ? "¿Estás seguro de eliminar el archivo?" : "Seleccione los motivos de rechazo que asociarás al documento.";
         document.getElementById("secondaryLabelDetail").innerHTML = action == 1 ? "El documento que hayas elegido se almacenará de manera automática una vez que des clic en guardar." : action == 2 ? "El documento se eliminará de manera permanente una vez que des clic en Guardar." : "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en Guardar.";
         if (action == 1) { // ADD FILE
@@ -402,6 +405,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         var row = escrituracionTable.row(tr);
                         createDocRow(row, tr, $(`#trees${idSolicitud}`));
                     }else if(details == 2){
+                        console.log('details =2, buildUploadCards')
                         let idNxS = $("#idNxS").val();
                         buildUploadCards(idNxS);
                         // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
@@ -417,7 +421,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
                     }
                     else{
-                        escrituracionTable.ajax.reload();
+                        escrituracionTable.ajax.reload(null,false);
                     }
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
@@ -521,7 +525,7 @@ $(document).on('click', '#createDate', function () {
     let idNotaria = $(this).attr('data-idNotaria');
     let signDate = getSignDate(idNotaria);
     $('#signDate').val(signDate);
-    $('#idSolicitud').val($(this).attr('data-idSolicitud'));
+    $('#idSolicitudFecha').val($(this).attr('data-idSolicitud'));
     $('#type').val(1);
     $("#dateModal").modal();
 });
@@ -582,7 +586,7 @@ $(document).on('click', '#newDate', function () {
     let idNotaria = $(this).attr('data-idNotaria');
     let signDate = getSignDate(idNotaria);
     $('#signDate').val(signDate);
-    $('#idSolicitud').val($(this).attr('data-idSolicitud'));
+    $('#idSolicitudFecha').val($(this).attr('data-idSolicitud'));
     $('#type').val(3);
     $("#dateModal").modal();
 });
@@ -808,11 +812,17 @@ $(document).on('submit', '#formEstatusLote', function (e) {
 
 $(document).on('click', '.treePresupuesto', function () {
     var detailRows = [];
+
     var tr = $(this).closest('tr');
+    console.log('tr')
+    console.log(tr)
     var row = escrituracionTable.row(tr);
     console.log('lllllllllllllllllllllllll');
     console.log(row)
     var idx = $.inArray(tr.attr('id'), detailRows);
+    console.log('idx')
+    console.log(idx)
+    //SI EL ROW DETAILS ESTA DESPLEGADO, ESCONDEERLO
     if (row.child.isShown()) {
         console.log('PRIMER IF')
         tr.removeClass('details');
@@ -820,7 +830,9 @@ $(document).on('click', '.treePresupuesto', function () {
 
         // Remove from the 'open' array
         detailRows.splice(idx, 1);
+        console.log(detailRows);
     } else {
+        //DESPLEGAR EL ROW DETAILS
         console.log('ELSE')
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
@@ -983,8 +995,7 @@ function fillTable(beginDate, endDate, estatus) {
                 data: function (d) {
                     var aditional;
                     var group_buttons = '';     
-                    let newBtn = '';
-                    let formBoton = '';
+                    let btnsAdicionales = ''; //variable para botones que se envian a la funcion de permisos
                     let exp;
                     let permiso;
                     let bandera_request=0;
@@ -1055,17 +1066,9 @@ function fillTable(beginDate, endDate, estatus) {
                                 }
                             break;
                             case 6:
-                                if (userType == 55) {
-                                    group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                    bandera_request = d.contrato == 1 ? 1 : 0;
-                                }
-                            break;
                             case 8:
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {      
-                                    /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
-                                    // BOTON APROBAR 
+                            case 10:
+                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
@@ -1073,72 +1076,150 @@ function fillTable(beginDate, endDate, estatus) {
                                 }
                             break;
                             case 9:
+                            case 11:
                                 if (userType == 55) { 
                                     group_buttons += (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
-                            case 10:
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
-                                    /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
-                                      // BOTON APROBAR
-                                    group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;    
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
-                            break;
-                            case 11:
-                                if (userType == 55) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
-                            break;
                             case 12:
                                 if (userType == 57) { 
-
-                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                   btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                    permiso = 2;
-                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-
-                                }
-                            break;
-                            case 36:
-                                if (userType == 57) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                 }
                             break;
                             case 13:
-                                if (userType == 57) { 
-                                    group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                }
-                            break;
                             case 16:
                                 if (userType == 57) { 
+                                    bandera_request = d.banderaPresupuesto == 1 ? 1 : 0;
+                                    group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+                                }
+                            break;
+                            case 14:
+                            case 17:
+                                if (userType == 55) { 
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                    group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
+
+                                }
+                            break;
+                            case 15:
+                                if (userType == 55) { 
+                                    bandera_request = 1;
+                                }
+                            break;
+                            case 18:
+                            case 21:
+                                if (userType == 11) { 
+                                    bandera_request = d.expediente != null ? 1 : 0;
+                                    permiso=1;
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
+
+                                }
+                            break;
+                            case 19:
+                                if (userType == 55) { 
+                                    //BOTONES DANI
+                                    group_buttons += `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 20:
+                                if (userType == 57) { 
+                                    //BOTONES DANI
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 22:
+                                if (userType == 55) { 
+                                    //BOTONES DANI
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 23:
+                                if (userType == 57) { 
+                                    //BOTONES DANI
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 26:
+                                if (userType == 57) {
+
+                                    group_buttons += d.fecha_firma != null ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
+                                    bandera_request = d.fecha_firma != null ? 1 : 0;
+
+                                }
+                            break;
+                            case 27:
+                                if (userType == 55) {
+                                    //revisar si se muestran mas datos o solo avance
+                                    bandera_request = 1;
+                                }
+                            break;
+                            case 28:
+                                if (userType == 55) {
+                                    //revisar si se muestran mas datos o solo avance
+                                    bandera_request = 1;
+                                    group_buttons +=  `<button id="newDate" data-idSolicitud=${d.id_solicitud} data-idNotaria=${d.id_notaria} class="btn-data btn-orangeYellow"  data-toggle="tooltip" data-placement="left"  title="Nueva fecha"><i class="fas fa-calendar-alt"></i></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 30:
+                                if (userType == 57) {
+                                    //revisar si se muestran mas datos o solo avance
+                                    group_buttons += d.fecha_firma != null ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
+                                    bandera_request = 1;
+                                }
+                            break;
+                            case 39:
+                            case 44:
+                                    if (userType == 11) { 
+                                        bandera_request = d.expediente != null ? 1 : 0;
+                                        permiso = 1;
+                                        group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                                    }
+                            break;
+                            case 42:
+                            case 45:
+                                    if (userType == 55) { 
+                                        bandera_request = d.expediente != null ? 1 : 0;
+                                        permiso = 1;
+                                        group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                                    }
+                            break;
+                            case 43:
+                                if (userType == 55) {
+                                    //revisar si se muestran mas datos o solo avance
+                                    group_buttons += d.fecha_firma != null ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
+                                    bandera_request = 1;
+                                }
+                            break;
+                            case 46:
+                            case 52:
+                                if (userType == 57) { 
+                                    bandera_request = d.expediente != null ? 1 : 0;
+                                    permiso = 1;
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                                }
+                            break;
+                            case 47:
+                            case 50:
+                                if (userType == 57) { 
+                                    bandera_request = d.expediente != null ? 1 : 0;
+                                    permiso = 1;
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                 }
                             break;
                             case 37:
                                 if (userType == 57) { 
                                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                }
-                            break;
-                            case 14:
-                                if (userType == 55) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
-                            break;
-                            case 19:
-                                if (userType == 55) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
-                            break;
-                            case 18:
-                                if (userType == 11) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
                             case 38:
@@ -1620,8 +1701,19 @@ function displayInput(idDocumento) {
     $("#documentsSection").removeClass("hide");
 }
 
-function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud, aditional, newBtn,datosEstatus) {
-  
+function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud, banderaBoton, BtnsAdicionales,datosEstatus) {
+/**
+ * MO: Esta función recibe 8 parametros
+ * permiso: 1 escritura, 2 lectura, 3 especial (ver botones adicionales, ver archivos, rechazar solicitud y avanzar solicitud), 4 especial (especial ver botones adicionales y avanzar solicitud)
+ * expediente: columna de la db con el nombre del archivo enviado
+ * idDocumento: ID del documentos de la tabla documentos_escrituración
+ * tipo_documento: tipo documento de la tabla documentos_escritutación y catalago documentación_escrituración
+ * idSolicutd: ID de la solicitud en uso
+ * BanderaBoton: Este parametro se usa para saber si hay botones declados en el datatable y enviados a esta funcion para concatenarlos con los botones creados en esta función
+ * BanderaBoton: 2 no hay botones adicionales, 1 si hay botones adicionales
+ * BtnsAdicionales: parametro donde vienen los botones declarados en el datatable para concatenarlos con los botones creados en esta fución
+ * datosEstatus: es un array donde vienen datos del área siguiente solo para mostrarlos en el modal de avance
+ *  */  
 
     let botones = '';
     switch (permiso) {
@@ -1629,49 +1721,46 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
             botones += ``;
             break;
         case 1: //escritura
-        console.log(datosEstatus);
             if (expediente == null || expediente == '' || expediente == 'null') {
-                console.log('expediente null');
-                if (aditional == 2) {
-                    //modal paso 22
+                if (banderaBoton == 2) {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
                 }else {
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
-                    botones += newBtn;
+                    botones += BtnsAdicionales;
                 }
             } else {
                 console.log('expediente cargado');
-                if (aditional == 2) {
+                if (banderaBoton == 2) {
                     console.log('adicional 2');
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
                 } else {
                     console.log('adicional 1');
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
-                    botones += newBtn;
+                    botones += BtnsAdicionales;
                 }
                 //VISTA PREVIA DOCUEMENTOS
                 botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
                 //SI YA SE CARGO LA COPIA CERTIFICADA AGREGAR BOTON PARA CARGAR OTRO ARCHIVO Y BLOQUEAR LA ACCIÓN DE ENVIAR
                 //botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action="1" class="btn-data btn-sky upload" data-toggle="tooltip" data-placement="left" title="Cargar"><i class="fas fa-trash"></i></button>`;
-                botones += `<button id="request" data-siguiente-area="${datosEstatus.area_sig}" data-siguiente_actividad="${datosEstatus.nombre_estatus_siguiente}" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar"><i class="fas fa-paper-plane"></i></button>`;
+              //PENDIENTE  botones += `<button id="request" data-siguiente-area="${datosEstatus.area_sig}" data-siguiente_actividad="${datosEstatus.nombre_estatus_siguiente}" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar"><i class="fas fa-paper-plane"></i></button>`;
             }
             break;
         case 2: //lectura
-            if (aditional == 1) {
-                botones += newBtn;
+            if (banderaBoton == 1) {
+                botones += BtnsAdicionales;
             }
             if (expediente != 1) {
                 botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
             }
             break;
-        case 3: //especial
+        case 3: //especial ver botones adicionales, ver archivos, rechazar solicitud y avanzar solicitud
             if (expediente == null || expediente == '' || expediente == 'null') {
-                if (aditional == 1) {
-                    botones += newBtn;
+                if (banderaBoton == 1) {
+                    botones += BtnsAdicionales;
                 }
             } else {
-                if (aditional == 1) {
-                    botones += newBtn;
+                if (banderaBoton == 1) {
+                    botones += BtnsAdicionales;
                 }
                 if (expediente != 1) {
                     botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
@@ -1681,9 +1770,9 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
 
             }
             break;
-        case 4: //especial
-            if (aditional == 1) {
-                botones += newBtn;
+        case 4: //especial ver botones adicionales y avanzar solicitud
+            if (banderaBoton == 1) {
+                botones += BtnsAdicionales;
             }
             if (expediente == 2) {// 2 CUANDO NINGÚN DOCUMENTO TENGA MOTIVOS DE RECHAZO
                 botones += '<button id="request" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar"><i class="fas fa-paper-plane"></i></button>';
@@ -2086,8 +2175,23 @@ function createDocRowPresupuesto(row, tr, thisVar){
         $('#spiner-loader').addClass('hide');
     });
 }
+//MO: Se crea objeto para recargar la tabla y desplegar el row details
+let datosPresupuestos = new Object();
+function RecargarTablePresupuestos(){
+    console.log('funcion recargar');
+    console.log(datosPresupuestos);
+    escrituracionTable.ajax.reload(null,false);
+    createRowNotarias(datosPresupuestos.row, datosPresupuestos.tr, datosPresupuestos.thisVar, datosPresupuestos.idSolicitud)
+}
 
 function createRowNotarias(row, tr, thisVar, idSolicitud){
+    //MO: Guardamos los parametros recibidos en una variable global para usarlos en la funcion que desplega el row details
+    datosPresupuestos = {
+        "row" : row,
+        "tr" : tr,
+        "thisVar" : thisVar,
+        "idSolicitud" : idSolicitud
+    }
     console.log('row', row);
     console.log('rowData', row.data());
 
@@ -2097,7 +2201,7 @@ function createRowNotarias(row, tr, thisVar, idSolicitud){
         row.data().notarias = JSON.parse(data);
         escrituracionTable.row(tr).data(row.data());
         row = escrituracionTable.row(tr);
-        row.child(buildDetailTableNotaria(row.data(), $('.treePresupuesto').attr('data-permisos'))).show();
+        row.child(crearDetailsPresupuestos(row.data(), $('.treePresupuesto').attr('data-permisos'))).show();
         // selectedNotarias(row.data());
         tr.addClass('shown');
         thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
@@ -2271,7 +2375,7 @@ $(document).on('change', '#not', function () {
         $('#ifNotaria').hide();
     }
 });
-function buildDetailTableNotaria(data, permisos) {
+function crearDetailsPresupuestos(data, permisos) {
     let notarias = `<table id="notarias-${data.id_solicitud}" class="table subBoxDetail">`;
     notarias += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     notarias += '<td>' + '<b>' + '# ' + '</b></td>';
@@ -2337,6 +2441,7 @@ function saveNotaria(idSolicitud, idNotaria, thisVar){
                 $('#spiner-loader').addClass('hide');
             } else {
                 const tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
+                
                 const row = escrituracionTable.row(tr);
                 console.log('tr', tr);
                 console.log('rowSave2', row.data());
@@ -2359,6 +2464,7 @@ function buildUploadCards(idNxS){
         dataType:'json',
         success: function (response) {
             console.log(response);
+            console.log(response[0].id_solicitud);
             let html = '';
           response.forEach(element =>{
 
@@ -2384,7 +2490,7 @@ function buildUploadCards(idNxS){
           })
           $('#body_uploads').append(html);
           $('#spiner-loader').addClass('hide');
-
+          console.log('TERMINA SUCCESS')
         }
     });
 }

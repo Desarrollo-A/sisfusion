@@ -67,7 +67,61 @@
     </div>
 </div>
 
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-md boxContent">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <i onclick="RecargarTablePresupuestos()" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+            </div>
+            <div class="modal-body text-center toolbar m-0 p-0">
+                <input type="text" class="hide" id="idNxS">
+                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body text-center">
+                <h4 class="card-title" id="mainLabelText"></h4>
+                <p id="secondaryLabelDetail"></p>
+                <div class="file-gph" id="selectFileSection">
+                    <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
+                    <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
+                    <label class="upload-btn m-0" for="uploadedDocument">
+                        <span>Seleccionar</span>
+                        <i class="fas fa-folder-open"></i>
+                    </label>
+                </div>
+                <div class="input-group hide" id="rejectReasonsSection">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple required></select>
+                    </div>
+                </div>
+                <input type="text" class="hide" id="idSolicitud">
+                <input type="text" class="hide" id="idDocumento">
+                <input type="text" class="hide" id="documentType">
+                <input type="text" class="hide" id="docName">
+                <input type="text" class="hide" id="action">
+                <input type="text" class="hide" id="details">
+                <input type="text" class="hide" id="presupuestoType">
+                <input type="text" class="hide" id="idPresupuesto">
+                <input type="text" class="hide" id="idNxS">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -441,7 +495,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="text" class="hide" id="idSolicitud">
+                <input type="text" class="hide" id="idSolicitudFecha">
                 <input type="text" class="hide" id="type">
             </div>
             <div class="modal-footer">
@@ -790,58 +844,3 @@
     </div>
 </div>
 
-<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-md boxContent">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <i data-dismiss="modal" class="fas fa-times fl-r"></i>
-                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
-            </div>
-            <div class="modal-body text-center toolbar m-0 p-0">
-                <input type="text" class="hide" id="idNxS">
-                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"></div>
-            <div class="modal-body text-center">
-                <h4 class="card-title" id="mainLabelText"></h4>
-                <p id="secondaryLabelDetail"></p>
-                <div class="file-gph" id="selectFileSection">
-                    <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
-                    <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
-                    <label class="upload-btn m-0" for="uploadedDocument">
-                        <span>Seleccionar</span>
-                        <i class="fas fa-folder-open"></i>
-                    </label>
-                </div>
-                <div class="input-group hide" id="rejectReasonsSection">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" id="rejectionReasons" data-live-search="true" multiple required></select>
-                    </div>
-                </div>
-                <input type="text" class="hide" id="idSolicitud">
-                <input type="text" class="hide" id="idDocumento">
-                <input type="text" class="hide" id="documentType">
-                <input type="text" class="hide" id="docName">
-                <input type="text" class="hide" id="action">
-                <input type="text" class="hide" id="details">
-                <input type="text" class="hide" id="presupuestoType">
-                <input type="text" class="hide" id="idPresupuesto">
-                <input type="text" class="hide" id="idNxS">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
