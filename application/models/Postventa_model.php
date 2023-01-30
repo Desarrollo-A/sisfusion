@@ -163,9 +163,8 @@ class Postventa_model extends CI_Model
             //TODOS
             $AddWhere = " ";
         }
-        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente , cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales](se.fecha_modificacion ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato, 
-        (CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END ) ultimo_comentario
-        -- ISNULL(he.descripcion, '-') ultimo_comentario
+        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente , cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END) rechazo, concat((select[dbo].[DiasLaborales](se.fecha_modificacion ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato, 
+        (CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END) ultimo_comentario
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
@@ -187,7 +186,6 @@ class Postventa_model extends CI_Model
         GROUP BY cl.nombre_actividad, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cp.estatus_siguiente
         $AddWhere $filtroTabla
         GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion");
-
     }
 
 
