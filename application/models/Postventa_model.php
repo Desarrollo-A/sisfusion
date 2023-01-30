@@ -155,7 +155,7 @@ class Postventa_model extends CI_Model
             }else if($rol == 11){
                 $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL)  ";
             }else if($rol == 56){
-                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus (3,2) AND se.bandera_comite IS NULL) ";
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (3,2) AND se.bandera_comite IS NULL) ";
             }else{
                 $AddWhere  =   " WHERE cp.area_actual in ($rol) ";
             }
