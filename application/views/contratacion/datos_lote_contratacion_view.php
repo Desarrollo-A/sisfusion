@@ -1,5 +1,23 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<style>
+    table thead tr th {
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 0.8em;
+    }
+    tfoot tr{
+         background: #143860;
+     }
+    table tfoot tr th{
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 1.3em;
+        text-align: center;
+    }
+</style>
 <body>
 	<div class="wrapper">
 		<?php
@@ -234,7 +252,7 @@
 									<div class="row">
 										<div class="col-md-4 form-group">
 											<div class="form-group">
-												<label class="m-0" for="proyecto">Proyecto</label>
+												<label class="m-0" for="proyecto">Proyecto*</label>
 												<select id="proyecto" name="proyecto"
 														class="selectpicker select-gral"
 														data-style="btn" data-show-subtext="true"
@@ -390,7 +408,8 @@
 					url: general_base_url + 'Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
 					dataSrc: ""
 				},
-				buttons: [{
+				buttons: [
+				    {
 					extend: 'excelHtml5',
 					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 					className: 'btn buttons-excel',
@@ -554,12 +573,7 @@
 				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 				format: {
 					header:  function (d, columnIdx) {
-						if(columnIdx == 0){
 							return ' '+d +' ';
-							}
-
-									return ' '+titulos[columnIdx-1] +' ';
-
 						}
 					}
 				}
@@ -587,7 +601,8 @@
 				"ordering": true,
 				"fixedColumns": true,
 				"columns":
-				[{
+				[
+				    {
 					"width": "10%",
 					data: 'nombreResidencial'
 				},
@@ -897,6 +912,36 @@
 						}
 					}
 				},
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.idStatusContratacion+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCliente+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "width": "8%",
+                        "data": function( d ){
+                            if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCopropietario+'</p>';
+                            }
+                        }
+                    },
 				{
 					"width": "8%",
 					"data": function( d ){

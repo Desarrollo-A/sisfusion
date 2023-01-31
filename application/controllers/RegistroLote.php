@@ -6041,9 +6041,9 @@
 			$datos[$i]['fechaApartado'] = $data[$i]->fechaApartado;
 			$procesoContratacion = $this->getProcesoContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->validacionEnganche, $data[$i]->status8Flag);
 			$status = $this->getStatusContratacion($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->firmaRL, $data[$i]->validacionEnganche, $data[$i]->perfil);
-			list($fechaVencimiento, $fechaVenc2) = $this->getFechaVencimiento($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $data[$i]->modificado_historial);
-			list($diasRest, $arrayFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);			
-			list($diasVenc, $arrayFechas2, $diasVenc2) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
+			list($fechaVencimiento, $fechaVenc2) = $this->getFechaVencimiento($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->fechaEstatus7, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $data[$i]->modificado_historial, $data[$i]->fechaEstatus8);
+			list($diasRest, $arrayFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);			
+			list($diasVenc, $arrayFechas2, $diasVenc2) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
 			$statusFecha = $this->getStatusFecha($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $arrayFechas, $arrayFechas2);
 			$datos[$i]['procesoContratacion'] = $procesoContratacion;
 			$datos[$i]['status'] = $status;
@@ -6207,7 +6207,7 @@
 		return $status;
 	}
 
-	public function getFechaVencimiento($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaUltimoEstatus) {
+	public function getFechaVencimiento($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaUltimoEstatus, $fechaEstatus8) {
 		$fechaVencimiento = "";
 		$fechaVencimiento2 = "";
 		if(in_array($idStatusContratacion, array(9, 6, 5, 1, 7, 13, 2)) && in_array($idMovimiento, array(26, 23, 22, 18, 19, 20, 75, 76, 73, 66, 16, 85)))
@@ -6218,7 +6218,7 @@
 			$admon = 1;
 			$asige = 1;
 			if ($admon == 1) {
-				$fecha = $fechaEstatus7;
+				$fecha = $idMovimiento == 67 ? $fechaEstatus8 : $fechaEstatus7;
 				$arregloFechas = array();
 				$p = 0;
 				while ($p < 1) {
@@ -6292,7 +6292,7 @@
 			$d = end($arregloFechas);
 			$fechaVencimiento = date("d-m-Y", strtotime($d));
 		}
-		else if(in_array($idStatusContratacion, array(10, 8, 12)) && in_array($idMovimiento, array(40, 67, 42))) {
+		else if(in_array($idStatusContratacion, array(10, 12)) && in_array($idMovimiento, array(40, 42))) {
 			date_default_timezone_set('America/Mexico_City');
 			$horaInicio = date("08:00:00");
 			$horaFin = date("16:00:00");
@@ -6407,7 +6407,7 @@
 		return [$fechaVencimiento, $fechaVencimiento2];
 	}
 
-	public function getDiasRestantes($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
+	public function getDiasRestantes($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
 		$arregloFechas = array();
 		$diasRest = 0;
 		$diasRest2 = 0;
@@ -6531,7 +6531,7 @@
 			}
 			$diasRest = count($arregloFechas);
 		}
-		else if(in_array($idStatusContratacion, array(10, 8, 12)) && in_array($idMovimiento, array(40, 67, 42))) {
+		else if(in_array($idStatusContratacion, array(10, 12)) && in_array($idMovimiento, array(40, 42))) {
 			$fechaHoy = date('Y-m-d');
 			$fechaDes = $fechaSolicitudValidacion;
 			$arregloFechas = array();
@@ -6557,7 +6557,7 @@
 		return [$diasRest, $arregloFechas, $diasRest2];
 	}
 
-	public function getDiasVencidos($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $fechaEstatus7, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
+	public function getDiasVencidos($idStatusContratacion, $idMovimiento, $fechaVenc, $fechaSolicitudValidacion, $validacionEnganche, $status8Flag, $fechaVenc2, $fechaVencimiento) {
 		$arregloFechas2 = array();
 		$diasVenc = 0;
 		$diasVenc2 = 0;
@@ -6684,7 +6684,7 @@
 			}
 			$diasVenc = count($arregloFechas2);
 		}
-		else if(in_array($idStatusContratacion, array(10, 8, 12)) && in_array($idMovimiento, array(40, 67, 42))){
+		else if(in_array($idStatusContratacion, array(10, 12)) && in_array($idMovimiento, array(40, 42))){
 			$fechaHoy = $fechaSolicitudValidacion;
 			$fechaDes = date('Y-m-d');
 			$arregloFechas2 = array();

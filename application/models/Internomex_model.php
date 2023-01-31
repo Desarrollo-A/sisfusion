@@ -152,17 +152,19 @@ class Internomex_model extends CI_Model {
         ,c.nombre sede, g.nombre forma_pago, CONVERT(varchar, p.fecha_creacion, 20) fecha_creacion,
         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, 
         CASE WHEN (p.comentario IS NULL OR CAST(p.comentario AS VARCHAR(250)) = '') THEN '--' ELSE p.comentario END comentario,
-        u.id_rol, d.nombre rol 
+        u.id_rol, d.nombre rol, tp.nombre as tipo_pago
         FROM  pagos_internomex p
         INNER JOIN usuarios u on u.id_usuario = p.id_usuario
         INNER JOIN sedes c on c.id_sede = p.forma_pago 
         INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
         INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
+        INNER JOIN opcs_x_cats tp ON tp.id_catalogo=86 AND tp.id_opcion = p.tipo_pago
         WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
     }
 
-    public function getCommissions() {
-        return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
+    public function getCommissions($tipo_pago) {
+        if($tipo_pago==1){
+            return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
         se.nombre sede, oxc0.nombre tipoUsuario, oxc2.nombre formaPago, u0.rfc,oxc1.nombre nacionalidad, 
         FORMAT(SUM(pci.abono_neodata), 'C') montoSinDescuentos,
         (CASE u0.forma_pago WHEN 3 THEN FORMAT(SUM(pci.abono_neodata) - ((SUM(pci.abono_neodata) * se.impuesto) / 100), 'C') 
@@ -179,6 +181,25 @@ class Internomex_model extends CI_Model {
         GROUP BY u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), 
         se.nombre, oxc0.nombre, oxc2.nombre, u0.rfc,oxc1.nombre, u0.forma_pago, se.impuesto, u0.id_rol
         ORDER BY CASE u0.id_rol WHEN 3 THEN 4 WHEN 9 THEN 5 WHEN 7 THEN 6 ELSE u0.id_rol END");
+        }elseif($tipo_pago==2){
+            return $this->db->query("SELECT u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreUsuario, 
+        ISNULL(se.nombre, 'Sin especificar') sede, oxc0.nombre tipoUsuario, oxc2.nombre formaPago, u0.rfc,oxc1.nombre nacionalidad, 
+        FORMAT(SUM(ps.total_comision), 'C') montoSinDescuentos,
+        (CASE u0.forma_pago WHEN 3 THEN FORMAT(SUM(ps.total_comision) - ((SUM(ps.total_comision) * se.impuesto) / 100), 'C') 
+        ELSE FORMAT(SUM(ps.total_comision), 'C') END) montoConDescuentosSede, '0.00' montoFinal, '' comentario
+        FROM pagos_suma ps
+        INNER JOIN comisiones_suma co ON co.referencia = ps.referencia
+        INNER JOIN usuarios u0 ON u0.id_usuario = ps.id_usuario
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.id_rol AND oxc0.id_catalogo = 1
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = u0.nacionalidad AND oxc1.id_catalogo = 11
+        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.forma_pago AND oxc2.id_catalogo = 16
+        LEFT JOIN sedes se ON CAST(se.id_sede AS VARCHAR(15)) = CAST(u0.id_sede AS VARCHAR(15))
+        WHERE ps.estatus = 1 -- AND pci.id_usuario = 3142
+        GROUP BY u0.id_usuario, UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), 
+        se.nombre, oxc0.nombre, oxc2.nombre, u0.rfc,oxc1.nombre, u0.forma_pago, se.impuesto, u0.id_rol
+        ORDER BY CASE u0.id_rol WHEN 3 THEN 4 WHEN 9 THEN 5 WHEN 7 THEN 6 ELSE u0.id_rol END");
+        }
+
     }
 
     public function verifyData($id_usuario) {

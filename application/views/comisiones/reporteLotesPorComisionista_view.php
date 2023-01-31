@@ -43,7 +43,7 @@
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                                            <label class="label-gral"><span class="isRequired">*</span>Comisionista</label><label class="lblEstatus ml-2"></label>
+                                            <label class="label-gral"><span class="isRequired">*</span>Comisionista</label><label class="lblEstatus ml-2"></label><label class="lblRolActual ml-2"></label>
                                             <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                         </div>
                                         <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
@@ -99,6 +99,11 @@
                                                         <th>CLIENTE</th>
                                                         <th>FECHA APARTADO</th>
                                                         <th>SEDE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
                                                         <th>ESTATUS CONTRATACIÓN</th>
                                                         <th>ESTATUS VENTA</th>
                                                         <th>ESTATUS COMISIÓN</th>

@@ -1221,7 +1221,8 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         UPPER(concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno)) as asesor, idAsesor,
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,
-        lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, st.color, lotes.status8Flag, hl2.modificado fechaEstatus7
+        lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, 
+		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
@@ -1233,6 +1234,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lotes.idLote AND hl.idCliente = cl.id_cliente
 		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idMovimiento IN (37, 77) GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lotes.idLote AND hl2.idCliente = cl.id_cliente
+		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 AND idMovimiento IN (67) GROUP BY idLote, idCliente) hl3 ON hl3.idLote = lotes.idLote AND hl3.idCliente = cl.id_cliente
         INNER JOIN statusLote st ON st.idStatusLote = lotes.idStatusLote
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lotes.tipo_venta
         WHERE cl.status=1 AND lotes.status = 1 AND lotes.idStatusContratacion <> 15 AND lotes.idMovimiento <> 45 --AND lotes.idLote = 77802
@@ -1243,7 +1245,7 @@ gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, 
-		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado");
+		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado, hl3.modificado");
 		return $query->result();
 	}
 

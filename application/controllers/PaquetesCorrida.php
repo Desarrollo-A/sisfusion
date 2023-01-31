@@ -377,6 +377,8 @@ public function getPaquetes(){
   /***/
   $inicio = $this->input->post("inicio");
   $fin = $this->input->post("fin");
+  $fechaInicio = $this->input->post("fechaInicio");
+  $fechaFin = $this->input->post("fechaFin");
   $query_superdicie = '';
   $query_tipo_lote = '';
   //Superficie
@@ -410,7 +412,7 @@ public function getPaquetes(){
     $query_tipo_lote = '';
   }
 
- $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos);
+ $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin;
 
  $data = array();
  if(count($row) == 0){
