@@ -60,7 +60,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -74,19 +73,19 @@
                                 <div class="toolbar">
                                     <div class="container-fluid">
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un proyecto" data-size="7" id="residenciales_escrituracion" data-live-search="true"></select>
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                                <select class="selectpicker select-gral m-0" id="residenciales_escrituracion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body"></select>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral condominios_escrituracion" data-style="btn btn-primary btn-round" title="Selecciona un condominio" data-size="7" id="condominios_escrituracion" data-live-search="true"></select>
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                                <select class="selectpicker select-gral condominios_escrituracion m-0" id="condominios_escrituracion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" data-container="body"></select>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                <select class="selectpicker select-gral" data-style="btn btn-primary btn-round" title="Selecciona un lote" data-size="7" id="lotes_escrituracion" data-live-search="true"></select>
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                                <select class="selectpicker select-gral condominios_escrituracion m-0" id="lotes_escrituracion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container-fluid realBox pt-1 hide">
+                                <!-- <div class="container-fluid realBox pt-1 hide">
                                     <div class="row">
                                         <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
                                             <div class="panel panel-info">
@@ -188,7 +187,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
