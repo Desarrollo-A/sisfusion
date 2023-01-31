@@ -164,6 +164,7 @@ class Usuarios_modelo extends CI_Model
             case '32': // CONTRALORÍA CORPORATIVA
             case '63': // CONTRALORÍA CORPORATIVA
             case '33': // CONSULTA (CONTROL INTERNO)
+            case '40': // COBRANZA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
