@@ -83,7 +83,7 @@
     </style>
     <div class="wrapper ">
         <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63)))
+            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -199,11 +199,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="material-datatables" id="box-masterCobranzaTable">
+                                <br>
+                                <div class="material-datatables" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
                                         <div class="table-responsive">
                                             <table class="table-striped table-hover"
-                                                id="masterCobranzaTable" name="masterCobranzaTable">
+                                                id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                                 <thead>
                                                     <tr>
                                                         <th>PROYECTO</th>
@@ -213,6 +214,11 @@
                                                         <th>CLIENTE</th>
                                                         <th>FECHA APARTADO</th>
                                                         <th>SEDE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
                                                         <th>ESTATUS CONTRATACIÓN</th>
                                                         <th>ESTATUS VENTA</th>
                                                         <th>ESTATUS COMISIÓN</th>

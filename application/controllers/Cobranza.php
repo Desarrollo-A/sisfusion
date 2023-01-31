@@ -214,11 +214,11 @@ class Cobranza extends CI_Controller
 
     public function getReporteLotesPorComisionista() {
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");       
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-            $where = $this->input->post("where");
-            $data['data'] = $this->Cobranza_model->getReporteLotesPorComisionista($typeTransaction, $beginDate, $endDate, $where)->result_array();
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $comisionista = $this->input->post("comisionista");       
+            $tipoUsuario = $this->input->post("tipoUsuario");
+            $data['data'] = $this->Cobranza_model->getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario)->result_array();
             echo json_encode($data);
         } else
             json_encode(array());
@@ -226,6 +226,19 @@ class Cobranza extends CI_Controller
 
     public function getOpcionesParaReporteComisionistas() {
         echo json_encode($this->Cobranza_model->getOpcionesParaReporteComisionistas()->result_array());
+    }
+
+    public function getDetalleVentasPorComisionista() {
+        $comisionista = $this->input->post("comisionista");
+        $ventasActivasPorRol = $this->Cobranza_model->getVentasActivasPorRol($comisionista)->result_array();
+        if (count($ventasActivasPorRol) > 0) {
+            for($i = 0; $i < count($ventasActivasPorRol); $i ++) {
+                $ventasActivasPorRol[$i]['datos'] = $this->Cobranza_model->getVentasActivasPorRolPorAnio($comisionista, $ventasActivasPorRol[$i]['columna'])->result_array();
+            }
+            echo json_encode($ventasActivasPorRol);
+        }
+        else
+            echo json_encode(array());
     }
 
 }

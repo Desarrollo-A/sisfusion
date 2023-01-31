@@ -707,7 +707,7 @@ $('#proyecto').change( function(){
        });
 
 $(document).on('change','#proyecto, #condominio, #estatus', function() {
-	ix_proyecto = $("#proyecto").val();
+    ix_proyecto = ($("#proyecto").val().length<=0) ? 0 : $("#proyecto").val();
    	ix_condominio = $("#condominio").val();
    	ix_estatus = $("#estatus").val();
 

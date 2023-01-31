@@ -2,7 +2,7 @@ $(document).ready(function () {
     $.getJSON("getOpcionesParaReporteComisionistas").done(function(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
-                $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr('data-estatus', data[i]['atributo_extra']).text(data[i]['nombre']));
+                $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 2) // TIPO DE USUARIO SELECT
                 $("#tipoUsuario").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
@@ -35,19 +35,21 @@ sp = { // MJ: DATE PICKER
 }
 
 $("#comisionista").on('change', function() {
+    $('#reporteLotesPorComisionista').DataTable().clear().destroy();
+    colocarValoresTotales('0.00', '0.00', '0.00');  
     let estatusComisionista = $('#comisionista option:selected').data('estatus');
-    console.log(estatusComisionista);
-    let html = '';
+    let rolComisionista = $('#comisionista option:selected').data('rol');
+    let htmlEstatus = '';
+    let htmlRol = `<span style="background-color: #F4ECF7; padding: 4px 14px; border-radius: 20px; color: #5B2C6F; font-weight: 500; font-size: 12px;">${rolComisionista}</span>`;
     $(".lblEstatus").html('');
-    if (estatusComisionista == '3'){
-        html = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>
-        `;
-    }
-    else{
-        html = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>
-        `;
-    }
-    $(".lblEstatus").append(html);
+    $(".lblRolActual").html('');
+    if (estatusComisionista == '3')
+        htmlEstatus = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>`;
+    else
+        htmlEstatus = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>`;
+
+    $(".lblEstatus").append(htmlEstatus);
+    $(".lblRolActual").append(htmlRol);
 });
 
 
@@ -56,7 +58,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxt.push(title);
-    if (i != 16) {
+    if (i != 21) {
         $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value ) {
@@ -75,9 +77,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each( function (i) {
                 totalAbonado = totalAbonado + parseFloat(v.abonoDispersado);
                 totalPagado = totalPagado + parseFloat(v.abonoPagado);
             });
-            document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
-            document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
-            document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
+            colocarValoresTotales(total, totalAbonado, totalPagado);  
         });
 
         
@@ -92,11 +92,7 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function(e, settings, json, xhr) 
         totalAbonado = totalAbonado + parseFloat(jsonObject[i].abonoDispersado);
         totalPagado = totalPagado + parseFloat(jsonObject[i].abonoPagado);
     }
-    
-    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
-    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
-    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
-    
+    colocarValoresTotales(total, totalAbonado, totalPagado);    
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
@@ -111,18 +107,13 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
                             }
                         }
                 }
-            },
-            {
-                text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
-                titleAttr: 'Cargar vista inicial',
-                className: "btn btn-azure reset-initial-values",
             }
         ],
         pagingType: "full_numbers",
@@ -159,6 +150,11 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 else
                     return d.plaza;
             }},
+            {data: 'nombreAsesor'},
+            {data: 'nombreCoordinador'},
+            {data: 'nombreGerente'},
+            {data: 'nombreSubdirector'},
+            {data: 'nombreRegional'},
             { data: function (d) {
                 if(d.rec == 8)
                     return '-';
@@ -184,6 +180,8 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                         labelStatus = `<span class="label" style="background:#A9DFBF; color:#145A32">LIQUIDADA</span>`;
                     else if (d.registroComision == 1)
                         labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">ACTIVA</span></span>`;
+                    else 
+                        labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DEFINIR ESTATUS</span>`;
                 }
                 return labelStatus;
             }},
@@ -233,14 +231,8 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
     });
 }
 
-$(document).on("click", "#searchByLote", function () {
-    let idLote = $("#idLote").val();
-    let finalBeginDate = $("#beginDate").val();
-    let finalEndDate = $("#endDate").val();
-    fillTable(2, finalBeginDate, finalEndDate, idLote);
-});
-
 $(document).on("click", "#searchByDateRange", function () {
+    colocarValoresTotales('0.00', '0.00', '0.00'); 
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let comisionista = $("#comisionista").val();
@@ -258,27 +250,28 @@ function formatMoney(n) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
-$(document).on("click", ".reset-initial-values", function () {
-    $("#comisionista").val('').selectpicker('refresh');
-    $("#tipoUsuario").val('').selectpicker('refresh');
-    setInitialValuesReporte();
-});
-
 function setInitialValuesReporte() {
     // BEGIN DATE
      // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
+     const fechaInicio = new Date();
+     // Iniciar en este año, este mes, en el día 1
+     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+     // END DATE
+     const fechaFin = new Date();
+     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+     finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
      finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
 
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
 }
+
+function colocarValoresTotales(total, totalAbonado, totalPagado) {
+    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
+    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
+    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
+}
+

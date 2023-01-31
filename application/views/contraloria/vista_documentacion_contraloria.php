@@ -4,19 +4,10 @@
 <div class="wrapper ">
 	<?php
 	//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12")//contratacion
-		{
-			
-			$datos = array();
-			$datos = $datos4;
-			$datos = $datos2;
-			$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
-		}
+	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12" || $this->session->userdata('id_rol')=="70"|| $this->session->userdata('id_rol') == "71")//contratacion
+		$this->load->view('template/sidebar', "");
 	else
-	{
 		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-	}
 	?>
 
 
@@ -523,23 +514,24 @@ c                                    </span>
 							data: null,
 							render: function ( data, type, row )
 							{
+							    var disabled_option = myFunctions.revisaObservacionUrgente(data.observacionContratoUrgente);
 
 								if (getFileExtension(data.expediente) == "pdf") {
 									if(data.tipo_doc == 8){
-										file = '<center><a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
+										file = '<center><a class="pdfLink3 btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
 									} else if(data.tipo_doc == 66){
-										file = '<center><a class="verEVMKTD btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a></center>';
+										file = '<center><a class="verEVMKTD btn-data btn-warning" '+disabled_option+' data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a></center>';
 									}else {
-										file = '<center><a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
+										file = '<center><a class="pdfLink btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
 									}
 								}
 
 								else if (getFileExtension(data.expediente) == "xlsx") {
 
 									if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94){
-										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" class="btn-data btn-green-excel"> <i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" '+disabled_option+' class="btn-data btn-green-excel"> <i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
 									} else {
-										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" class="btn-data btn-green-excel"><i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a></center>';
+										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" '+disabled_option+' class="btn-data btn-green-excel"><i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a></center>';
 									}
 
 								}
@@ -552,7 +544,7 @@ c                                    </span>
                                                 'data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" ' +
                                                 'data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" ' +
                                                 'data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" ' +
-                                                'data-idLote="'+data.idLote+'"><i class="fa fa-upload" aria-hidden="true"></i></button>';
+                                                'data-idLote="'+data.idLote+'" '+disabled_option+'><i class="fa fa-upload" aria-hidden="true"></i></button>';
 										} else {
 											file = '<center><button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
 										}
@@ -565,24 +557,24 @@ c                                    </span>
 								}
 
 								else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
-									file = '<center><a class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a></center>';
+									file = '<center><a class="btn-data btn-blueMaderas pdfLink2" '+disabled_option+' data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a></center>';
 								}
                                 else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
-                                    file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+                                    file = '<a class="btn-data btn-blueMaderas pdfLink22" '+disabled_option+' data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
                                 }
 								else if (getFileExtension(data.expediente) == "Autorizaciones") {
-									file = '<a href="#" class="btn-data btn-warning seeAuts" title= "Autorizaciones" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
+									file = '<a href="#" class="btn-data btn-warning seeAuts" '+disabled_option+' title= "Autorizaciones" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
 								}
 								else if (getFileExtension(data.expediente) == "Prospecto") {
-									file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'" data-lp="'+data.lugar_prospeccion+'"><i class="fas fa-user-check"></i></a>';
+									file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" '+disabled_option+' title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'" data-lp="'+data.lugar_prospeccion+'"><i class="fas fa-user-check"></i></a>';
 								}
 								else
 								{
 									if(data.tipo_doc == 66){
-										file = '<center><a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a></center>';
+										file = '<center><a class="verEVMKTD btn-data btn-acidGreen" '+disabled_option+' data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a></center>';
 										}
 										else{
-											file = '<center><a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a></center>';
+											file = '<center><a class="pdfLink btn-data btn-acidGreen" '+disabled_option+' data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a></center>';
 										}
 									
 								}
@@ -902,7 +894,6 @@ c                                    </span>
 			$('#verAutorizacionesAsesor').modal('show');
 		});
 	});
-
 
 
 </script>

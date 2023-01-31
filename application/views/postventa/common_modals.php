@@ -47,10 +47,10 @@
                         <div class="col-lg-12 form-group p-0 m-0" id="rechazo">
                                 <label class="label-gral">Área de rechazo</label>
                                 <select class="selectpicker select-gral m-0" name="area_rechazo" id="area_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
-                                <b id="area_selected"></b>
-                            </div>
+                                
+                                </div>  
                             <div class="col-lg-12 form-group p-0 m-0">
-                                <label class="label-gral">Seleccione el motivo de rechazo.</label>
+                                <label class="label-gral">Seleccione el motivo de rechazo <b id="area_selected"></b></label>
                                 <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                                 <input type="hidden" name="id_solicitud2" id="id_solicitud2">
                                 <input type="hidden" name="estatus" id="estatus">
@@ -67,8 +67,21 @@
     </div>
 </div>
 
-
-
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-md boxContent">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <i onclick="RecargarTablePresupuestos()" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+            </div>
+            <div class="modal-body text-center toolbar m-0 p-0">
+                <input type="text" class="hide" id="idNxS">
+                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
@@ -109,6 +122,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 <div class="modal fade" id="presupuestoModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
@@ -478,7 +495,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="text" class="hide" id="idSolicitud">
+                <input type="text" class="hide" id="idSolicitudFecha">
                 <input type="text" class="hide" id="type">
             </div>
             <div class="modal-footer">
@@ -646,6 +663,43 @@
     </div>
 </div>            
 
+
+<!--<div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Estatus de construcción</b></h4>
+                <i id="actividad_siguiente"></i>
+
+            </div>
+
+            
+            <form id="approveForm" name="approveForm" method="post">
+                <div class="modal-body">
+                <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Selecciona un estatus</label>
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
+                                         required>
+                                    </select>
+                                </div>
+                            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>--->
+
+
 <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
         <div class="modal-content card">
@@ -677,25 +731,40 @@
     </div>
 </div>
 
-<div class="modal fade" id="informacionModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog boxContent">
-        <div class="modal-content card">
+ 
+<div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Información de cliente</b></h4>
+                <i id="actividad_siguiente"></i>
+            </div>
+
             <form class="card-content" id="formInformacion" name="formInformacion" method="POST">
-                <input type="hidden" name="idSolicitud" id="idSolicitud">
-                <div class="modal-body text-center toolbar m-0 p-0">
-                    <h3 id="mainLabelText"></h3>
-                    <h4 id="secondaryLabelDetail">Información</h4>
-                    <div class="container-fluid">
+            <input type="hidden" name="idSolicitud" id="idSolicitud">
+            
+            <div class="modal-body">
+
+                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">¿Lote liquidado?</label>
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Lote liquidado?</label>
                                     <input id="liquidado" name="liquidado" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> Estatus construcción</label>
+                                    <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="clienteI" name="clienteI"
                                             data-live-search="true" >
@@ -715,7 +784,7 @@
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Fecha del contrato anterior</label>
+                                        <label class="control-label label-gral btn-round">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
@@ -727,70 +796,51 @@
                                 </div>
                             </div>
                             <div >
-                                <div class="col-md-3 pr-0">
+                                <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Aportaciones</label>
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Aportaciones</label>
                                         <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
-                                <div class="col-md-3 pr-0">
+                                <div class="col-md-6 pr-0">
                                       <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Descuentos</label>
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Descuentos</label>
                                         <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
-                                <div class="col-md-6 pr-0">
+                                <div class="col-md-12 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Motivo</label>
+                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" required></textarea>
                                         <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
                                     </div>
                                 </div>
                             </div>
-                            <!----------------------------->
-                           <!-- <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
-                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="number" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Descuentos *</label>
-                                    <textarea class="text-modal scroll-styles form-control input-gral" type="text" name="descuentos" id="descuentos" autofocus="true" require></textarea>
-                                </div>
-                            </div>---->
+
                             <div class="col-sm-12 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <p>*Estos campos son obligatorios</p>
+                                <div class="form-group text-left m-0" id="information_campos">
+                                    <p><b style="color:red;">*</b> Estos campos son obligatorios</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                     </div>
+            </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" id="RequestInformacion" class="btn btn-success btn-simple">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        </div>
+
+
+                        <!-- <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
                                 <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="RequestInformacion" class="btn btn-primary mt-2">Guardar</button>
                             </div>                
-                        </div>
-                    </div>
-                </div>
+                        </div> -->
+                   
             </form>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-md boxContent">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <i data-dismiss="modal" class="fas fa-times fl-r"></i>
-                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
-            </div>
-            <div class="modal-body text-center toolbar m-0 p-0">
-                <input type="text" class="hide" id="idNxS">
-                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

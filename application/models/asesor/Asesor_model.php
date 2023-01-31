@@ -1768,6 +1768,13 @@ class Asesor_model extends CI_Model
         $query = $this->db->query("SELECT * FROM autorizaciones WHERE estatus=1 AND idLote=".$id_lote);
         return $query->result_array();
     }
+
+
+    function revisaOU($idLote){
+        //esta funcion revisa si el lote esta en ObservacionContratoUrgente
+        $query = $this->db->query("SELECT * FROM lotes WHERE observacionContratoUrgente='1' AND idLote=".$idLote);
+        return $query->result_array();
+    }
 }
     
 

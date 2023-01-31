@@ -11,7 +11,12 @@
 
 
     <?php
-    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32')
+    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7'
+        && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16'
+        && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5'
+        && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19'
+        && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32'
+        && $this->session->userdata('id_rol') != '70')
     {
         redirect(base_url().'login');
     }
@@ -633,10 +638,6 @@
                                 </legend>
 
 
-
-
-
-                                <!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
                                 <div class="row">
                                     <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
                                         <div class="foreach">
@@ -662,7 +663,7 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day.day == 15 && porcentajeEng==10">
+                                                <div ng-if="day.day == 15 && porcentajeEng>=10">
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
@@ -1208,6 +1209,13 @@
 
             var descuentosAplicados = [];
 
+            // var range=[];
+            // var range2=[];
+            // var range3=[];
+
+            // $scope.range= 0;
+            // $scope.range2= 0;
+            // $scope.range3= 0;
             $scope.groupSetup = {
                 multiple: true,
                 formatSearching: 'Searching the group...',
@@ -1231,13 +1239,25 @@
                 }
                 else{
                     if(porcentajeEnganche.val() >= 10 || porcentajeEnganche.val() == 5){/**/
+                        console.log('10 y 5');
                         document.getElementById("day").disabled = false;
                         document.getElementById("aptdo").disabled = false;
                         document.getElementById("msdif").disabled = false;
                     }else{
-                        document.getElementById("day").disabled = true;
-                        document.getElementById("aptdo").disabled = false;
-                        document.getElementById("msdif").disabled = true;
+                        console.log('ELSEEEE DE 10 - 5');
+                        if(porcentajeEnganche.val() >= 10 ){
+                            console.log('INSIDE 10');
+                            document.getElementById("day").disabled = false;
+                            document.getElementById("aptdo").disabled = false;
+                            document.getElementById("msdif").disabled = false;
+                        }else{
+                            console.log('INSIDE else 10');
+
+                            document.getElementById("day").disabled = false;
+                            document.getElementById("aptdo").disabled = false;
+                            document.getElementById("msdif").disabled = false;
+                        }
+
                     }
                 }
 
@@ -1270,6 +1290,8 @@
                 calcularCF();
                 console.log('despues:', cantidadEnganche.val());
             };
+
+
             $scope.resultCantidad = function () {
                 $scope.uno = parseFloat($scope.cantidad);
                 $scope.dos =  ($scope.uno / $scope.total);
@@ -1300,9 +1322,14 @@
                 calcularCF();
 
             };
+
+
             $scope.selected = {
 
             };
+
+            // $scope.porcentaje = $scope.porcentajeEng = 0;
+
             $scope.selectDescuentos = function(descuento, checked){
                 var idx = descuentosAplicados.indexOf(descuento);
                 if (idx >= 0 && !checked) {
@@ -1318,9 +1345,12 @@
                 console.log('Nuevo total', $scope.infoLote.precioTotal);
 
             }
+
+
             function calcularCF(){
 
-///////////////////////////////////////w
+///////////////////////////////////////
+
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
 
@@ -1946,14 +1976,14 @@
                 let cant = $('#cantidadEnganche').val();
                 if(porc==1 || cant==5000){
                     condicion_mes = 1;
-                    // console.log('Debe empezar 1 mese despúes ',condicion_mes);
+
                 }else if(porc==10 || porc==5){
                     condicion_mes = 2;
-                    // console.log('Debe empezar 2 meses despúes ',condicion_mes);
+
                 }else{
                     condicion_mes = 0;
                 }
-                // console.log("$scope.fechaApartado: ", $scope.fechaApartado);
+
                 var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
                 var yearc;
                 if(month>12){
@@ -5542,10 +5572,18 @@
                 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
+
+
             $scope.paquetes = [];
+
             $scope.ages = [{age: 18}, {age: 19}, {age: 20}, {age: 21},{age: 22}, {age: 23}, {age: 24}, {age: 25},{age: 26}, {age: 27}, {age: 28}, {age: 29},{age: 30}, {age: 31}, {age: 32},{age: 33}, {age: 34}, {age: 35}, {age: 36},{age: 37}, {age: 38}, {age: 39}, {age: 40}, {age: 41}, {age: 42}, {age: 43}, {age: 44}, {age: 45}, {age: 46}, {age: 47}, {age: 48}, {age: 49}, {age: 50}, {age: 51}, {age: 52}, {age: 53}, {age: 54}, {age: 55},{age: 56}, {age: 57}, {age: 58}, {age: 59}, {age: 60}, {age: 61}, {age: 62},{age: 63}, {age: 64}, {age: 65}, {age: 66}, {age: 67}, {age: 68}, {age: 69}, {age: 70},{age: 71}, {age: 72}, {age: 73}, {age: 74},{age: 75},{age: 76},{age: 77},{age: 78},{age: 79},{age: 80}]
+
+
             $scope.diasDiferidos = [1, 2, 3, 4, 5, 6];
+
+            // $scope.diasEnganche = [{day: 7}, {day: 25}, {day: 'Diferido'}, {day:'Limpiar'}];
             $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
+            // $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
 
@@ -5919,6 +5957,9 @@
                 /*termina nuevo*/
 
                 if(porcentajeEnganche.val() >= 5){/* || porcentajeEnganche.val() == 5*/
+                    // document.getElementById("day").disabled = false;
+                    // document.getElementById("aptdo").disabled = false;
+                    // document.getElementById("msdif").disabled = false;
                     $scope.diasEnganche = [{day: 15}, {day: 30}, {day: 'Diferido'}, {day:'Limpiar'}];
                     calcularCF();
                 }
@@ -9482,6 +9523,8 @@
                 var apartado = ($scope.apartado == undefined) ? 0 : $scope.apartado;
 
                 var paquete = ($scope.descApply == undefined) ? 0 : $scope.descApply[0].id_paquete;
+                console.log("PAKETE");
+                console.log(paquete);
 
 
                 if(paquete > 0) {
@@ -9729,6 +9772,7 @@
         });
 
         $("#lote").change(function(){
+            // console.log('assdasd');
             document.getElementById("lotetext").innerHTML ='';
             $('#lote').css("border-color", "");
         });

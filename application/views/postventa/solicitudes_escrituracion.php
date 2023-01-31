@@ -10,61 +10,129 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-feather-alt fa-2x"></i>
-                            </div>
+                    <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#solicitudes" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
+                            </li>
+
+                            <li>
+                                <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
+                             </li>
+                        </ul>
+                        <div class="card card no-shadow m-0">
                             <div class="card-content">
-                                <h3 class="card-title center-align">Solicitudes escrituración</h3>
-                                <div class="toolbar">
-                                    <div class="row"> 
-                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required>
-                                                </select>
+                              <div class="nav-tabs-custom">
+                                <div class="tab-content p-2">
+                                    <div class="tab-pane active" id="solicitudes">
+                                        <!-- <h3 class="card-title center-align">Solicitudes escrituración</h3> -->
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Solicitudes escrituración</h3>
                                             </div>
-                                        </div>
-                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                        </div>
-                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                            <div class="container-fluid p-0">
-                                                <div class="row">
-                                                    <div class="col-md-12 p-r">
-                                                        <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off'/>
-                                                            <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                <span class="material-icons update-dataTable">search</span>
-                                                            </button>
+                                        <div class="toolbar">
+                                            <div class="row"> 
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                </div>
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-md-12 p-r">
+                                                                <div class="form-group d-flex">
+                                                                    <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off'/>
+                                                                    <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
+                                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                        <span class="material-icons update-dataTable">search</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                            <div class="material-datatables">
+                                                <div class="form-group">
+                                                    <table class="table-striped table-hover" id="escrituracion-datatable"
+                                                        name="escrituracion-datatable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID SOLICITUD</th>
+                                                                <th>PROYECTO</th>
+                                                                <!-- <th>CONDOMINIO</th> -->
+                                                                <th>LOTE</th>
+                                                                <th>CLIENTE</th>
+                                                                <th>FECHA DE CREACIÓN</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>ÁREA</th>
+                                                                <th>COMENTARIOS</th>
+                                                                <th>OBSERVACIONES</th>
+                                                                <th>ACCIONES</th>
+                                                            </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <?php include 'common_modals.php' ?>
+                                        </div>
+                                        <div class="tab-pane" id="carga_test">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Carga testimonio</h3>
+                                            </div>
+                                        <div class="toolbar">
+                                            <div class="row"> 
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                    <div class="form-group label-floating select-is-empty"></div>
+                                                </div>
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                </div>
+                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-md-12 p-r">
+                                                                <div class="form-group d-flex">
+                                                                    <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off'/>
+                                                                    <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
+                                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                        <span class="material-icons update-dataTable">search</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                            <table class="table-striped table-hover" id="carga-datatable"
+                                                                    name="carga-datatable">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ID SOLICITUD</th>
+                                                                            <th>PROYECTO</th>
+                                                                            <!-- <th>CONDOMINIO</th> -->
+                                                                            <th>LOTE</th>
+                                                                            <th>CLIENTE</th>
+                                                                            <th>FECHA DE CREACIÓN</th>
+                                                                            <th>ESTATUS</th>
+                                                                            <th>ÁREA</th>
+                                                                            <th>COMENTARIOS</th>
+                                                                            <th>OBSERVACIONES</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                            </table>
+                                                        </div>
+                                                </div>
+                                                <?php include 'common_modals.php' ?>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table class="table-striped table-hover" id="prospects-datatable"
-                                            name="prospects-datatable">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID SOLICITUD</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>FECHA DE CREACIÓN</th>
-                                                    <th>COMENTARIOS</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>ÁREA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
-                              <?php include 'common_modals.php' ?>
                             </div>
                         </div>
                     </div>
