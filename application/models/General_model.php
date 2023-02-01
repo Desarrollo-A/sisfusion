@@ -73,6 +73,7 @@ class General_model extends CI_Model
         return $this->db->query("SELECT idLote, UPPER(nombreLote) nombreLote, idStatusLote, msi FROM lotes WHERE status = 1 AND idCondominio IN ($idCondominio)")->result_array();
     }
 
+
     public function addRecord($table, $data) // MJ: AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA DATA A INSERTAR
     {
         if ($data != '' && $data != null) {
@@ -85,6 +86,17 @@ class General_model extends CI_Model
                 $this->db->trans_commit();
                 return true;
             }
+        } else
+            return false;
+    } 
+
+    public function addRecordDos($table, $data) { // MJ: AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA DATA A INSERTAR
+        if ($data != '' && $data != null) {
+            $response = $this->db->insert($table, $data);
+            if ($response)
+                return true;
+            else
+                return false;
         } else
             return false;
     }

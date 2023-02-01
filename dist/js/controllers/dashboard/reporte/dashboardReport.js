@@ -13,7 +13,8 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' ){
+    //  72: Dirección biofísica
+    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -1052,6 +1053,7 @@ function accordionToRemove(rol){
         case 58: // Asistente dirección general
         case 63: // Control interno
         case 69: // Dirección general
+        case 72: // Dirección biofísica
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();

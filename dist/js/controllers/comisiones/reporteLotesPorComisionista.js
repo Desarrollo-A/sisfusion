@@ -1,14 +1,38 @@
 $(document).ready(function () {
-    $.getJSON("getOpcionesParaReporteComisionistas").done(function(data) {
+    let seeAll = 0;
+    if( id_rol_general == 1 || id_rol_general == 4 || id_rol_general == 18 || id_rol_general == 63){
+        seeAll = 1;
+    }
+
+    $.post('getOpcionesParaReporteComisionistas', { seeAll:  seeAll}, function(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 2) // TIPO DE USUARIO SELECT
                 $("#tipoUsuario").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
+        
+        if( id_rol_general != 1 && id_rol_general != 4 && id_rol_general != 18 && id_rol_general != 63){
+            console.log(id_rol_general);
+            $("#comisionista").val(id_usuario_general);
+            let estatusComisionista = $('#comisionista option:selected').data('estatus');
+            let rolComisionista = $('#comisionista option:selected').data('rol');
+            let htmlEstatus = '';
+            let htmlRol = `<span>${rolComisionista}</span> )`;
+            $(".lblEstatus").html('');
+            $(".lblRolActual").html('');
+            if (estatusComisionista == '3')
+                htmlEstatus = `( <span>Inactivo comisionando</span> / `;
+            else
+                htmlEstatus = `( <span>Activo</span> / `;
+            $(".lblEstatus").append(htmlEstatus);
+            $(".lblRolActual").append(htmlRol);
+        }
+
         $('#comisionista').selectpicker('refresh');
         $('#tipoUsuario').selectpicker('refresh');
-    });
+    }, 'json');
+    
     setInitialValuesReporte();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
@@ -35,19 +59,19 @@ sp = { // MJ: DATE PICKER
 }
 
 $("#comisionista").on('change', function() {
+    $("#rowTotales").addClass("d-none");
     $('#reporteLotesPorComisionista').DataTable().clear().destroy();
     colocarValoresTotales('0.00', '0.00', '0.00');  
     let estatusComisionista = $('#comisionista option:selected').data('estatus');
     let rolComisionista = $('#comisionista option:selected').data('rol');
     let htmlEstatus = '';
-    let htmlRol = `<span style="background-color: #F4ECF7; padding: 4px 14px; border-radius: 20px; color: #5B2C6F; font-weight: 500; font-size: 12px;">${rolComisionista}</span>`;
+    let htmlRol = `<span>${rolComisionista}</span> )`;
     $(".lblEstatus").html('');
     $(".lblRolActual").html('');
     if (estatusComisionista == '3')
-        htmlEstatus = `<span style="background-color: #ffbc421c; padding: 4px 14px; border-radius: 20px; color: #ffbc42; font-weight: 500; font-size: 12px;">Inactivo comisionando</span>`;
+        htmlEstatus = `( <span>Inactivo comisionando</span> / `;
     else
-        htmlEstatus = `<span style="background-color: #4caf501c; padding: 4px 14px; border-radius: 20px; color: #4caf50; font-weight: 500; font-size: 12px;">Activo</span>`;
-
+        htmlEstatus = `( <span>Activo</span> / `;
     $(".lblEstatus").append(htmlEstatus);
     $(".lblRolActual").append(htmlRol);
 });
@@ -232,23 +256,72 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
-    colocarValoresTotales('0.00', '0.00', '0.00'); 
-    let finalBeginDate = $("#beginDate").val();
-    let finalEndDate = $("#endDate").val();
-    let comisionista = $("#comisionista").val();
-    let tipoUsuario = $("#tipoUsuario").val();
-    fillTable(finalBeginDate, finalEndDate, comisionista, tipoUsuario);
+    if( $("#comisionista").val() != '' && $("#tipoUsuario").val() != '' ){
+        colocarValoresTotales('0.00', '0.00', '0.00'); 
+        let finalBeginDate = $("#beginDate").val();
+        let finalEndDate = $("#endDate").val();
+        let comisionista = $("#comisionista").val();
+        let tipoUsuario = $("#tipoUsuario").val();
+        fillTable(finalBeginDate, finalEndDate, comisionista, tipoUsuario);
+        $("#rowTotales").removeClass("d-none");
+    }
+    else{
+		alerts.showNotification("top", "right", "No se han seleccionado algunos o ningún campo", "danger");
+    }
 });
 
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-}
+$(document).on("click", "#detailComisionistaBtn", function () {
+    $(".timelineR").html('');
+    var idComisionista = `${ $("#comisionista").val() == '' ? id_usuario_general : $("#comisionista").val()}`;
+    let orderedArray = [];
+    $.post('getDetalleVentasPorComisionista', { comisionista: idComisionista }, function(data) {
+        let html='';
+        for(let i=0; i < data.length; i++){
+            if (data[i].totalVentas != 0){
+                for ( let j = 0; j < data[i].datos.length; j++ ){
+                    let found = orderedArray.find(e => e.anio == data[i].datos[j].anio);
+                    if( found == undefined ){
+                        orderedArray.push({
+                            anio: data[i].datos[j].anio,
+                            datos: [{
+                                rol: data[i].columna,
+                                total: data[i].datos[j].total
+                            }]
+                        });
+                    }
+                    else{
+                        found.datos.push({
+                            rol: data[i].columna,
+                            total: data[i].datos[j].total
+                        })
+                    }
+                }
+            }
+        }
+
+        for(let i=0; i < orderedArray.length; i++){
+            let htmlRol = '';
+            for(let j=0; j < orderedArray[i].datos.length; j++){
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}</div>`;
+            }
+
+            html += `<div class="tl-item">
+                        <div class="tl-dot b-warning"></div>
+                        <div class="tl-content">
+                            <div><b>${orderedArray[i].anio}</b></div>
+                            ${htmlRol}
+                        </div>
+                    </div>`;
+        }
+        html += `<div class="tl-item">
+                    <div class="b-warning"></div>
+                    <div class="tl-content">
+                    </div>
+                </div>`;
+        $(".timelineR").append(html);
+        $("#detailComisionistaModal").modal();
+    }, 'json');
+});
 
 function setInitialValuesReporte() {
     // BEGIN DATE
