@@ -9,7 +9,7 @@
                     <i class="material-icons">clear</i>
                 </button>
                 <h4 class="modal-title card-title"><b>Avance de estatus</b></h4>
-                <i id="actividad_siguiente"></i>
+                <p id="actividad_siguiente"></p>
 
             </div>
 
@@ -700,7 +700,34 @@
 </div>--->
 
 
-<div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Asignar estatus de Construcción</b></h4>
+                <p id="informacion_lote_construccion"></p>
+            </div>
+            <form id="formEstatusLote" name="formEstatusLote" method="post">
+                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
+                <div class="modal-body">
+                    <!-- <label>Selecciona un estatus</label> -->
+                    <select class="form-control select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
         <div class="modal-content card">
             <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
@@ -715,7 +742,7 @@
                                             title="Estatus construcción" data-size="7" id="construccion" name="construccion"
                                          required>
                                     </select>
-                                </div>
+                                </div>ASAS
                             </div>
                         </div>
                         <div class="row">
@@ -729,7 +756,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> -->
 
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -740,7 +767,7 @@
                     <i class="material-icons">clear</i>
                 </button>
                 <h4 class="modal-title card-title"><b>Información de cliente</b></h4>
-                <i id="actividad_siguiente"></i>
+                <p id="actividad_siguiente"></p>
             </div>
 
             <form class="card-content" id="formInformacion" name="formInformacion" method="POST">

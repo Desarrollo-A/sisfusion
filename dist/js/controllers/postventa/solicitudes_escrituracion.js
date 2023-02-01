@@ -489,7 +489,8 @@ $(document).on('click', '#request', function () {
     actividad_next = actividad_next.split('-');
     let area_next = $(this).attr('data-siguiente-area');
 
-    document.getElementById('actividad_siguiente').innerHTML = 'Estatus siguiente: '+actividad_next[1];
+    document.getElementById('actividad_siguiente').innerHTML = '<br><p style="color:#154360;">Estatus siguiente: <b>'+actividad_next[0]+' - '+actividad_next[1]+'</b> <br> Área(s) siguiente(s): <b>'+ ((data.id_estatus == 1) ? 'Administración y Comité Técnico':actividad_next[2])+'</b></p>';
+    
 
     let type = $(this).attr('data-type');
      $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
@@ -797,6 +798,9 @@ $(document).on('click', '.details-control-pago', function () {
 
 $(document).on('click', '#estatusL', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
+    document.getElementById('informacion_lote_construccion').innerHTML = ''
+    document.getElementById('informacion_lote_construccion').innerHTML = '<br><p style="color:#154360;">Estatus a Lote: <b>'+data.nombreLote+'</b></p>';
+
     $('#id_solicitudEstatus').val(data.id_solicitud);
     let estatus_construccion = $(this).attr('data-estatus-construccion');
     getEstatusConstruccion(estatus_construccion);
