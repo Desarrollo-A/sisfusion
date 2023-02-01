@@ -289,7 +289,7 @@ class Reporte_model extends CI_Model {
             } else
                 $filtro .= "";
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69 || $id_rol == 72) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB, LIC. GASTÓN Y CONNIE
             $comodin2 = 'LEFT';
             if ($render == 1) { // PRIMERA CARGA
                 $filtro .= "";
