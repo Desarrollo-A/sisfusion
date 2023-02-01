@@ -725,8 +725,8 @@ class Postventa extends CI_Controller
 
     public function getSolicitudes()
     {
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
         $estatus = $this->input->post("estatus");
         $tipo_tabla = $this->input->post("tipo_tabla");
         $v = strtotime($this->input->post("endDate"));
@@ -2531,7 +2531,20 @@ function saveNotaria(){
      
     }
     // public function 
+    public function nuevoNotario()
+    {
+        $idSolicitud = $_POST['idSolicitud'];
+        $nombre_notaria = $_POST['nombre_notaria'];
+        $nombre_notario = $_POST['nombre_notario'];
+        $direccion = $_POST['direccion'];
+        $correo = $_POST['correo'];
+        $telefono = $_POST['telefono'];
 
+        $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
+        return $informacion;
+
+        return $this->Postventa_model->insertNewNotaria($idSolicitud);
+    }
       
 }
 
