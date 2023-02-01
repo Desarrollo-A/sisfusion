@@ -13,13 +13,6 @@
             font-weight: 600;
             color: #4e4e4e;
         }
-        .estatus{
-            background-color: #4caf501f;
-            color: #4caf50;
-            border-radius: 10px;
-            padding: 1px 10px;
-        }
-
         .timelineR {
             position: relative;
             border-color: rgba(160, 175, 185, .15);
@@ -79,11 +72,24 @@
         .b-warning {
             border-color: #243D7C!important;
         }
+        
+        #rowTotales label{
+            font-size: 12px;
+        }
 
+        #detailComisionistaBtn{
+            background-color: #14386026; 
+            color: #143860; 
+            padding: 2px 10px 3px; 
+            border-radius: 20px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            cursor: pointer;
+        }
     </style>
     <div class="wrapper ">
         <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8)))
+            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -93,34 +99,13 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-between">
-                        <h5 class="modal-title" id="exampleModalLabel">Detalle de comisiones</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Detalle total de comisiones</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body pt-0">
                         <div class="timelineR p-4 block mb-4">
-                            <div class="tl-item">
-                                <div class="tl-dot b-warning"></div>
-                                <div class="tl-content">
-                                    <div><b>2019</b></div>
-                                    <div class="tl-date mt-1">Asesor comisiones <b>2</b></div>
-                                    <div class="tl-date mt-1"></div>
-                                </div>
-                            </div>
-                            <!-- <div class="tl-item">
-                                <div class="tl-dot b-warning"></div>
-                                <div class="tl-content">
-                                    <div><b>2020</b></div>
-                                    <div class="tl-date mt-1">Asesor comisiones 3</div>
-                                    <div class="tl-date mt-1">Coordinador comisiones 5</div>
-                                </div>
-                            </div> -->
-                            <div class="tl-item">
-                                <div class="b-warning"></div>
-                                <div class="tl-content">
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,7 +126,7 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                                                <label class="label-gral"><span class="isRequired">*</span>Comisionista</label><label class="lblEstatus ml-2"></label>
+                                                <label class="label-gral"><span class="isRequired">*</span>Comisionista</label>
                                                 <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
                                             <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
@@ -167,14 +152,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row aligned-row mt-1">
-                                            <div class="col-12 col-sm-2 col-md-2 col-lg-2 d-flex align-center">
-                                                <button style="border: none; background: transparent; width: fit-content; padding: 0;" data-toggle="modal" data-target="#detailComisionistaModal" id="detailComisionista">
-                                                    <i class="fas fa-user mr-2" style="color: #eaeaea; font-size: 40px"></i>
-                                                </button>
+                                        <div class="row aligned-row mt-1 d-none" id="rowTotales">
+                                            <div class="col-12 col-sm-2 col-md-2 col-lg-2 pr-0 d-flex align-center">
                                                 <div>
-                                                    <label style="font-size:12px; margin:0">Estatus <span class="estatus">Activo</span></label>
-                                                    <label style="font-size:12px">Rol <span class="estatus">Subdirector</span></label>
+                                                    <label class="m-0" style="font-weight:100">Estatus. <span class="lblEstatus"></span></label>
+                                                    <br>
+                                                    <label class="m-0" style="font-weight:100">Rol. <span class="lblRolActual"></span></label>
+                                                    <br>
+                                                    <span id="detailComisionistaBtn">Desglose de comisiones</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-10 col-md-10 col-lg-10">
