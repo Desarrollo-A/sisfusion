@@ -1,6 +1,10 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
+<style>
+    .modal-backdrop{
+        z-index:9;
+    }
+</style>
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -20,7 +24,7 @@
                     <b id="text-observations" class="text-danger"></b>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
                     <input type="hidden" name="type" id="type">
-
+                    <input type="hidden" name="status" id="status">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
@@ -67,7 +71,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static" style="z-index: 99;">
     <div class="modal-dialog modal-md boxContent">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -505,7 +509,56 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5></div>
+            <div class="modal-body text-center">
+               <form id="newNotario" name="newNotario" method="post">
+                    <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre del notario</label>
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Dirección</label>
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Correo</label>
+                                        <input type="email" id="correo" name="correo" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-0 pr-0">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Teléfono</label>
+                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
 <!--<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -525,7 +578,7 @@
                         <div class="container-fluid">
                             <div class="row">
 
-                            <div class="col-md-12 pr-0" >
+                           <div class="col-md-12 pr-0" >
                                     <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">Tipo de Notaría</label>
                                         <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
@@ -575,7 +628,7 @@
             </div>
         </div>
     </div>
-</div>--->
+</div>-->
 
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
