@@ -137,14 +137,19 @@ class Postventa_model extends CI_Model
 
     function getSolicitudes($begin, $end, $estatus, $tipo_tabla)
     {   
+        
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $filtroTabla = "";
         $AddWhere = "";
+        $WhereFechas = "";
         if($tipo_tabla == 1){
             $filtroTabla = "AND se.id_estatus in (45,48)";
         }else{
             $filtroTabla = "AND se.id_estatus not in (45,48)";
+        }
+        if($begin != 0){
+          $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
 
 
@@ -173,7 +178,7 @@ class Postventa_model extends CI_Model
         INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.tipo_permiso not in (0)
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(44,55) THEN 19 WHEN se.id_estatus in(45,48) THEN 14 ELSE 11 END) 
+        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(44,55) THEN 19 WHEN se.id_estatus in(45,48) THEN 14 WHEN se.id_estatus in(29,40) THEN 15 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN (SELECT TOP 1 h.id_solicitud, (CASE WHEN h.tipo_movimiento = 1 THEN mr.motivo ELSE h.descripcion END) AS descripcion FROM historial_escrituracion h LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(h.descripcion AS INT) GROUP BY h.id_solicitud, h.descripcion, mr.motivo, h.tipo_movimiento) he ON he.id_solicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.id_solicitud
@@ -185,7 +190,7 @@ class Postventa_model extends CI_Model
         INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1
         WHERE cl.clasificacion in (1)
         GROUP BY cl.nombre_actividad, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cp.estatus_siguiente
-        $AddWhere $filtroTabla
+        $AddWhere $filtroTabla $WhereFechas
         GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma");
 
     }
@@ -424,18 +429,18 @@ class Postventa_model extends CI_Model
 
     function getDocumentsClient($idSolicitud, $status, $notariaExterna)
     {
-        $docNotariaExterna = ($notariaExterna) ? '' : ',23';
+        $docNotariaExterna = ($notariaExterna) ? '' : ',20';
 
         if($status == 9){
             $tipo_doc = "IN (11,13,20 $docNotariaExterna)";
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
-        }elseif($status == 12){
-            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,20,21)';
+        }elseif($status == 19 ||$status == 22 || $status == 24){
+            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,21)';
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
-        }elseif($status == 20){
-            $tipo_doc = 'IN ()';
+        }elseif($status == 29 || $status == 40){
+            $tipo_doc = 'IN (15)';
         }elseif($status == 23){
             $tipo_doc = 'IN (22)';
         }elseif($status == 24){
@@ -1244,7 +1249,21 @@ function checkBudgetInfo($idSolicitud){
     }
 
 
-
+ //INSERT NUEVA NOTARIA
+ function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+    $idUsuario = $this->session->userdata('id_usuario');
+    $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
+    VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+    $insert_id = $this->db->insert_id();
+    $idSolicitud = $_POST['idSolicitud'];
+    $rol = $this->session->userdata('id_rol');
+    $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $idSolicitud")->row()->id_estatus;
+    $estatus_siguiente = $estatus == 19 || $estatus == 22 ? 20 : 25;
+    //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    $this->db->query("UPDATE solicitudes_escrituracion SET id_notaria= $insert_id WHERE id_solicitud = $idSolicitud;");
+    return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
+    VALUES($idSolicitud,".$estatus.",0,'Cambio de Notaria',GETDATE(),$idUsuario,GETDATE(),$idUsuario,$estatus_siguiente);");
+}
 
 
 
