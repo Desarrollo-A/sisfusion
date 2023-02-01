@@ -12,8 +12,21 @@ $(document).ready(function () {
                 $("#tipoUsuario").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
         
-        if( id_rol_general != 1 || id_rol_general != 4 || id_rol_general != 18 || id_rol_general != 63){
+        if( id_rol_general != 1 && id_rol_general != 4 && id_rol_general != 18 && id_rol_general != 63){
+            console.log(id_rol_general);
             $("#comisionista").val(id_usuario_general);
+            let estatusComisionista = $('#comisionista option:selected').data('estatus');
+            let rolComisionista = $('#comisionista option:selected').data('rol');
+            let htmlEstatus = '';
+            let htmlRol = `<span>${rolComisionista}</span> )`;
+            $(".lblEstatus").html('');
+            $(".lblRolActual").html('');
+            if (estatusComisionista == '3')
+                htmlEstatus = `( <span>Inactivo comisionando</span> / `;
+            else
+                htmlEstatus = `( <span>Activo</span> / `;
+            $(".lblEstatus").append(htmlEstatus);
+            $(".lblRolActual").append(htmlRol);
         }
 
         $('#comisionista').selectpicker('refresh');
@@ -49,6 +62,18 @@ $("#comisionista").on('change', function() {
     $("#rowTotales").addClass("d-none");
     $('#reporteLotesPorComisionista').DataTable().clear().destroy();
     colocarValoresTotales('0.00', '0.00', '0.00');  
+    let estatusComisionista = $('#comisionista option:selected').data('estatus');
+    let rolComisionista = $('#comisionista option:selected').data('rol');
+    let htmlEstatus = '';
+    let htmlRol = `<span>${rolComisionista}</span> )`;
+    $(".lblEstatus").html('');
+    $(".lblRolActual").html('');
+    if (estatusComisionista == '3')
+        htmlEstatus = `( <span>Inactivo comisionando</span> / `;
+    else
+        htmlEstatus = `( <span>Activo</span> / `;
+    $(".lblEstatus").append(htmlEstatus);
+    $(".lblRolActual").append(htmlRol);
 });
 
 
@@ -232,19 +257,6 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 
 $(document).on("click", "#searchByDateRange", function () {
     if( $("#comisionista").val() != '' && $("#tipoUsuario").val() != '' ){
-        let estatusComisionista = $('#comisionista option:selected').data('estatus');
-        let rolComisionista = $('#comisionista option:selected').data('rol');
-        let htmlEstatus = '';
-        let htmlRol = `<span style="font-size: 12px;"><b>${rolComisionista}</b></span>`;
-        $(".lblEstatus").html('');
-        $(".lblRolActual").html('');
-        if (estatusComisionista == '3')
-            htmlEstatus = `<span style="font-size: 12px;"><b>Inactivo comisionando</b></span>`;
-        else
-            htmlEstatus = `<span style="font-size: 12px;"><b>Activo</b></span>`;
-
-        $(".lblEstatus").append(htmlEstatus);
-        $(".lblRolActual").append(htmlRol);
         colocarValoresTotales('0.00', '0.00', '0.00'); 
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
