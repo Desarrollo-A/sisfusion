@@ -728,7 +728,7 @@ async function prospectsTable(){
     $('.table-dinamic').empty();
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
+    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
