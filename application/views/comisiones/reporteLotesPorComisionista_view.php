@@ -89,7 +89,7 @@
     </style>
     <div class="wrapper ">
         <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7)))
+            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7, 9, 3, 2, 1, 4)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -125,15 +125,25 @@
                                 <div class="toolbar">
                                     <div class="container-fluid">
                                         <div class="row">
-                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                                                <label class="label-gral"><span class="isRequired">*</span>Comisionista</label>
+                                            <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                                                <div class="d-flex justify-between">
+                                                    <label class="label-gral">
+                                                        <span class="isRequired">*</span>Comisionista
+                                                        <span class="lblEstatus"></span> 
+                                                        <span class="lblRolActual"></span>
+                                                    </label>
+                                                    <label>
+                                                        
+                                                        <span id="detailComisionistaBtn"><i class="fas fa-info"></i></span>
+                                                    </label>
+                                                </div>
                                                 <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
-                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
+                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
                                                 <label class="label-gral"><span class="isRequired">*</span>Tipo de usuario</label>
                                                 <select class="selectpicker select-gral m-0" id="tipoUsuario" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
-                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-md-12 p-r">
@@ -152,33 +162,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row aligned-row mt-1 d-none" id="rowTotales">
-                                            <div class="col-12 col-sm-2 col-md-2 col-lg-2 pr-0 d-flex align-center">
-                                                <div>
-                                                    <label class="m-0" style="font-weight:100">Estatus. <span class="lblEstatus"></span></label>
-                                                    <br>
-                                                    <label class="m-0" style="font-weight:100">Rol. <span class="lblRolActual"></span></label>
-                                                    <br>
-                                                    <span id="detailComisionistaBtn">Desglose de comisiones</span>
+                                        <div class="row mt-1 d-none" id="rowTotales">
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                                <div class="box_cash">
+                                                    <h6>TOTAL COMISIÓN<br><span id="txt_totalComision" class="cash">$0.00</span></h6>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-10 col-md-10 col-lg-10">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
-                                                        <div class="box_cash">
-                                                            <h6>TOTAL COMISIÓN<br><span id="txt_totalComision" class="cash">$0.00</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
-                                                        <div class="box_cash">
-                                                            <h6>TOTAL ABONADO<br><span id="txt_totalAbonado" class="cash">$0.00</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
-                                                        <div class="box_cash">
-                                                            <h6>TOTAL PAGADO<br><span id="txt_totalPagado" class="cash">$0.00</span></h6>
-                                                        </div>
-                                                    </div>
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                                <div class="box_cash">
+                                                    <h6>TOTAL ABONADO<br><span id="txt_totalAbonado" class="cash">$0.00</span></h6>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
+                                                <div class="box_cash">
+                                                    <h6>TOTAL PAGADO<br><span id="txt_totalPagado" class="cash">$0.00</span></h6>
                                                 </div>
                                             </div>
                                         </div>
