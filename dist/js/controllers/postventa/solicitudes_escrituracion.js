@@ -1098,13 +1098,17 @@ function fillTable(beginDate, endDate, estatus) {
 
                                 }
                             break;
-                            case 12:
-                                if (userType == 57) { 
-
-                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                   permiso = 2;
-                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-
+                            case 15:
+                                if (userType == 55) { 
+                                    bandera_request = 1;
+                                }
+                            break;
+                            case 18:
+                            case 21:
+                                if (userType == 11) { 
+                                    bandera_request = d.expediente != null ? 1 : 0;
+                                    permiso=1;
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
                                 }
                             break;
                             case 19:
@@ -1181,6 +1185,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 41:
                                     if (userType == 55) {
                                         //revisar si se muestran mas datos o solo avance
+                                        group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                         bandera_request = d.expediente != null ? 1 : 0;
                                         permiso=2;
                                         group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
@@ -1198,7 +1203,8 @@ function fillTable(beginDate, endDate, estatus) {
                             case 45:
                                     if (userType == 55) { 
                                         bandera_request = d.expediente != null ? 1 : 0;
-                                        permiso = 1;
+                                        group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                        permiso = 2;
                                         group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                     }
                             break;
@@ -1293,13 +1299,11 @@ function fillTableCarga(beginDate, endDate, estatus) {
             data: function (d) {
                 return d.id_solicitud
             }
-
         },
         {
             data: function (d) {
                 return d.nombreResidencial
             }
-
         },
         {
             data: function (d) {
@@ -1318,14 +1322,11 @@ function fillTableCarga(beginDate, endDate, estatus) {
         },
         {
             data: function (d) {
-                //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
                 return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
-                // <center><span>(${d.area})</span><center></center>
             }
         },
         {
             data: function (d) {
-                //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                 return `<center>${d.area}</center>`;
             }
         },
@@ -1344,25 +1345,22 @@ function fillTableCarga(beginDate, endDate, estatus) {
             data: function (d) {
                 var aditional;
                 var group_buttons = '';     
-                let newBtn = '';
                 let formBoton = '';
-                let exp;
                 let permiso;
                 let bandera_request=0;
                 var datosEstatus = {
                     area_sig: d.area_sig,
                     nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                 }; 
-
                 switch (d.id_estatus) {
-
-                        case 45:
-                        case 48: 
-                            bandera_request = 1 ;
+                        case 47:
+                        case 50: 
+                        if (userType == 57) { 
+                            bandera_request = d.expediente != null ? 1 : 0;
+                            permiso = 1;
+                            group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                        }
                         break;
-
-
-                  
                     default:
                         break;
                 }
@@ -1986,7 +1984,7 @@ $(document).on("submit", "#newNotario", function (e) {
         success: function (response) {
             alerts.showNotification("top", "right", "Se agrego una nueva Notaría.", "success");
             $("#altaNotario").modal("hide");
-            prospectsTable.ajax.reload();
+            escrituracionTable.ajax.reload(null,false);
         }
     });
 });
