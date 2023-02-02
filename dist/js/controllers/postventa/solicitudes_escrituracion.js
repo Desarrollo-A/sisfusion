@@ -80,7 +80,6 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
     getEstatusEscrituracion();
     setInitialValues();
-    setInitialValuesTest();
 
     $(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
@@ -222,7 +221,7 @@ $(document).on("click", "#searchByDateTest", function (){
     let finalEndDate = $("#finalDate").val();
     let fDate = formatDate(finalBeginDate);
     let fEDate = formatDate(finalEndDate);
-    fillTableCarga(fDate, fEDate);
+    fillTableCarga(fDate, fEDate,$('#estatusE').val());
 })
 
 $(document).on("click", "#dateSubmit", function () {
@@ -1384,8 +1383,8 @@ function fillTableCarga(beginDate, endDate, estatus) {
         type: "POST",
         cache: false,
         data: {
-            "startDate": startDate,
-            "finalDate": finalDate,
+            "beginDate": beginDate,
+            "endDate": endDate,
             "estatus": 0,
             "tipo_tabla": 1
         }
