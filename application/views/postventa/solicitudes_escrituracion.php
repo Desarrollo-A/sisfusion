@@ -89,23 +89,23 @@
                                                 </div>
                                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                                 </div>
-                                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="container-fluid p-0">
-                                                        <div class="row">
-                                                            <div class="col-md-12 p-r">
-                                                                <div class="form-group d-flex">
-                                                                    <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off'/>
-                                                                    <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                        <span class="material-icons update-dataTable">search</span>
-                                                                    </button>
+                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-md-12 p-r">
+                                                                    <div class="form-group d-flex">
+                                                                        <input type="text" class="form-control datepicker" id="startDate" value="" autocomplete='off'/>
+                                                                        <input type="text" class="form-control datepicker" id="finalDate" value="" autocomplete='off' />
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateTest">
+                                                                            <span class="material-icons update-dataTable">search</span>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                                 <div class="material-datatables">
                                                     <div class="form-group">
                                                             <table class="table-striped table-hover" id="carga-datatable"
