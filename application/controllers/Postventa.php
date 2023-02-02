@@ -774,6 +774,9 @@ class Postventa extends CI_Controller
         echo json_encode($this->Postventa_model->listSedes()->result_array());
     }
 
+    public function getDetalleNota($id_solicitud){
+        echo json_encode($this->Postventa_model->getDetalleNota($id_solicitud)->result_array());
+    }
 
     public function changeStatus()
     {

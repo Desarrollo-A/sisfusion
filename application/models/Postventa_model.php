@@ -52,6 +52,15 @@ class Postventa_model extends CI_Model
         }
     }
 
+    function getDetalleNota($id_solicitud){
+        return $this->db->query("SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, he.descripcion, he.fecha_creacion 
+        FROM solicitudes_escrituracion se
+        JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
+        JOIN usuarios us ON he.creado_por = us.id_usuario
+        WHERE se.id_solicitud = $id_solicitud AND he.descripcion <> ''
+	    ORDER BY he.fecha_creacion ASC");
+    }
+
     function getEmpRef($idLote){
         return $this->db->query("SELECT l.referencia, r.empresa
         FROM lotes l
@@ -151,7 +160,6 @@ class Postventa_model extends CI_Model
         if($begin != 0){
           $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
-
 
         if($estatus == 0){
         //PROPIOS
