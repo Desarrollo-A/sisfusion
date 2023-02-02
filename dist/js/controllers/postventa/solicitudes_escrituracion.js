@@ -17,6 +17,16 @@ $('#carga-datatable thead tr:eq(0) th').each( function (i) {
         }
     });
 });
+
+$('#notas-datatable thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#notas-datatable').DataTable().column(i).search() !== this.value ) {
+            $('#notas-datatable').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
  
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -70,6 +80,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
     getEstatusEscrituracion();
     setInitialValues();
+    setInitialValuesTest();
 
     $(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
@@ -265,7 +276,7 @@ $(document).on("click", "#searchByDateRange", function () {
     let fDate = formatDate(finalBeginDate);
     let fEDate = formatDate(finalEndDate);
     fillTable(fDate, fEDate, $('#estatusE').val());
-    fillTableCarga(fDate, fEDate, $('#estatusE').val());
+    
 });
 $(document).on('click', '#createDate', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
@@ -289,6 +300,15 @@ $(document).on('click', '#newDate', function () {
     $('#type').val(3);
     $("#dateModal").modal();
 });
+
+$(document).on("click", "#searchByDateTest", function (){
+    let finalBeginDate = $("#startDate").val();
+    let finalEndDate = $("#finalDate").val();
+    let fDate = formatDate(finalBeginDate);
+    let fEDate = formatDate(finalEndDate);
+    fillTableCarga(fDate, fEDate);
+})
+
 $(document).on("click", "#dateSubmit", function () {
     let signDate = $("#signDate").val();
     let idSolicitud = $("#idSolicitudFecha").val();
@@ -535,6 +555,36 @@ $(document).on('click', '#request', function () {
    // $('#type').val(2);
     $("#approveModal").modal();
 });
+
+$(document).on('click', '.comentariosModel', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    id_solicitud = $(this).attr("data-idSolicitud");
+    lote = $(this).attr("data-lotes")
+    $("#comentariosModal").modal();
+    $("#nameLote").append('<p><h5 style="color:#21618C;">Historial de la solicitud: <b style="color:#21618C;">'+id_solicitud+'</b></h5></p>');
+    $("#infoLote").append('<p><h5 style="color:#21618C;">Lote: <b style="color:#21618C;">'+lote+'</b></h5></p>');
+    $.getJSON("getDetalleNota/"+id_solicitud).done( function( data ){
+        if(data != ""){
+        $.each( data, function(i, v){ 
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.descripcion+'</i><br><b style="color:#39A1C0">'+v.fecha_creacion+'</b><b style="color:gray;"> - '+v.nombre+'</b></p></div>');
+        });
+            }else{
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>');  
+            }
+    });
+});
+
+function cleanCommentsAsimilados() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    var myCommentsLote = document.getElementById('nameLote');
+    var myCommentsInfo = document.getElementById('infoLote');
+    myCommentsList.innerHTML = '';
+    myCommentsLote.innerHTML = '';
+    myCommentsInfo.innerHTML = '';
+}
+
 $('#observations').keydown(function () {
     document.getElementById('text-observations').innerHTML = '';
     var max = 250;
@@ -1279,6 +1329,7 @@ function fillTable(beginDate, endDate, estatus) {
                     if(bandera_request == 1){
                         group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
+                       group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Comentarios Proceso"><i class="fas fa-sticky-note"></i></button>`;
                     return '<div class="d-flex justify-center">' + group_buttons + '<div>';
                 }
             },
@@ -1366,7 +1417,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
         {
             data: function (d) {
                 //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
-                return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
+                return d.ultimo_comentario
             }
         },
         {
@@ -1404,6 +1455,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 if(bandera_request == 1){
                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                 }
+                group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Comentarios Proceso"><i class="fas fa-sticky-note"></i></button>`;
                 return '<div class="d-flex justify-center">' + group_buttons + '<div>';
             }
         },
@@ -1419,9 +1471,9 @@ function fillTableCarga(beginDate, endDate, estatus) {
         type: "POST",
         cache: false,
         data: {
-            "beginDate": beginDate,
-            "endDate": endDate,
-            "estatus":estatus,
+            "startDate": startDate,
+            "finalDate": finalDate,
+            "estatus": 0,
             "tipo_tabla": 1
         }
     }
@@ -1475,6 +1527,9 @@ function setInitialValues() {
     
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
+    $('#startDate').val(finalBeginDate);
+    $('#finalDate').val(finalEndDate2);
+
     fillTable(0, 0, $('#estatusE').val());
     fillTableCarga(0, 0, $('#estatusE').val());
 }
