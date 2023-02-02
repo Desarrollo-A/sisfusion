@@ -57,7 +57,7 @@ class Postventa_model extends CI_Model
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
-        WHERE se.id_solicitud = $id_solicitud AND he.descripcion <> ''
+        WHERE se.id_solicitud = $id_solicitud AND (he.descripcion != '' AND he.descripcion != 'NULL')
 	    ORDER BY he.fecha_creacion ASC");
     }
 
