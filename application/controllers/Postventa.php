@@ -783,22 +783,11 @@ class Postventa extends CI_Controller
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
 
-       /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
-            $comentarios = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        }elseif ($type == 2) {
-            $motivos_rechazo = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }*/
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
     
-        var_dump($id_solicitud,$type,$motivos_rechazo, $area_rechazo);
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
-        // }elseif($type == 3) {
-        //     $comentarios = $_POST['comentarios'];
-        //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        // }
+
 
         echo json_encode($informacion);
     }

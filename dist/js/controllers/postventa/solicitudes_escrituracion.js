@@ -1441,7 +1441,7 @@ function setInitialValues() {
     $('#endDate').val(finalEndDate2);
     $('#startDate').val(finalBeginDate);
     $('#finalDate').val(finalEndDate2);
-
+/*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
     fillTable(0, 0, $('#estatusE').val());
     fillTableCarga(0, 0, $('#estatusE').val());
 }
