@@ -2543,7 +2543,6 @@ function saveNotaria(){
         $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
         return $informacion;
 
-        return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }
       
 }
