@@ -124,7 +124,7 @@ class Postventa_model extends CI_Model
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
       
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,0,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
 
         $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
@@ -146,14 +146,19 @@ class Postventa_model extends CI_Model
 
     function getSolicitudes($begin, $end, $estatus, $tipo_tabla)
     {   
+        
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $filtroTabla = "";
         $AddWhere = "";
+        $WhereFechas = "";
         if($tipo_tabla == 1){
             $filtroTabla = "AND se.id_estatus in (45,48)";
         }else{
             $filtroTabla = "AND se.id_estatus not in (45,48)";
+        }
+        if($begin != 0){
+          $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
 
         if($estatus == 0){
@@ -161,9 +166,9 @@ class Postventa_model extends CI_Model
             if($rol == 57 && $idUsuario!= 10865){
                 $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
             }else if($rol == 11){
-                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus = 4 AND se.bandera_admin IS NULL)  ";
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL)  ";
             }else if($rol == 56){
-                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus = 3 AND se.bandera_comite IS NULL) ";
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (3,2) AND se.bandera_comite IS NULL) ";
             }else{
                 $AddWhere  =   " WHERE cp.area_actual in ($rol) ";
             }
@@ -171,30 +176,30 @@ class Postventa_model extends CI_Model
             //TODOS
             $AddWhere = " ";
         }
-        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente , cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales](se.fecha_modificacion ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato, 
-        (CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END ) ultimo_comentario
-        -- ISNULL(he.descripcion, '-') ultimo_comentario
+        return $this->db->query("SELECT distinct(se.id_solicitud), se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,se.id_notaria,
+        se.fecha_firma,(CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END) ultimo_comentario
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.tipo_permiso not in (0)
+        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.clasificacion in (1)
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 ELSE 11 END) 
+        LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(44,55) THEN 19 WHEN se.id_estatus in(45,48) THEN 14 WHEN se.id_estatus in(29,40) THEN 15 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN (SELECT TOP 1 h.id_solicitud, (CASE WHEN h.tipo_movimiento = 1 THEN mr.motivo ELSE h.descripcion END) AS descripcion FROM historial_escrituracion h LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(h.descripcion AS INT) GROUP BY h.id_solicitud, h.descripcion, mr.motivo, h.tipo_movimiento) he ON he.id_solicitud = se.id_solicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 18 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.id_solicitud
-        LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.nombre_actividad, cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', cl.nombre_actividad ) as nombre_estatus_siguiente
+        LEFT JOIN (SELECT DISTINCT(cl.clave_actividad),  cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente
         FROM control_permisos cl 	
         INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave
         INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1
         WHERE cl.clasificacion in (1)
         GROUP BY cl.nombre_actividad, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cp.estatus_siguiente
-        $AddWhere $filtroTabla AND se.fecha_creacion BETWEEN '$begin' AND '$end'
-        GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion");
+        $AddWhere $filtroTabla $WhereFechas
+        GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma");
 
     }
 
@@ -432,17 +437,17 @@ class Postventa_model extends CI_Model
 
     function getDocumentsClient($idSolicitud, $status, $notariaExterna)
     {
-        $docNotariaExterna = ($notariaExterna) ? '' : ',23';
+        $docNotariaExterna = ($notariaExterna) ? '' : ',20';
 
         if($status == 9){
             $tipo_doc = "IN (11,13,20 $docNotariaExterna)";
-        }elseif($status == 11){
+        }elseif($status == 18){
             $tipo_doc = 'IN (7)';
-        }elseif($status == 12){
-            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,20,21)';
+        }elseif($status == 19 ||$status == 22 || $status == 24){
+            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,21)';
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
-        }elseif($status == 20){
+        }elseif($status == 29 || $status == 40){
             $tipo_doc = 'IN (15)';
         }elseif($status == 23){
             $tipo_doc = 'IN (22)';
@@ -558,12 +563,16 @@ function checkBudgetInfo($idSolicitud){
 
     function saveDate($signDate, $idSolicitud)
     {
-        return $this->db->query("UPDATE solicitud_escrituracion SET fechaFirma = '$signDate' WHERE idSolicitud = $idSolicitud");
+        $newDate = date("d-m-Y H:i:s", strtotime($signDate));
+        $id_usuario = $this->session->userdata('id_usuario');
+        return $this->db->query("UPDATE solicitudes_escrituracion SET fecha_firma = '$signDate' WHERE id_solicitud = $idSolicitud");
+        /* return $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($idSolicitud,26,0,'Nueva fecha para firma: $newDate',GETDATE(),$id_usuario,GETDATE(),$id_usuario,27)");*/
     }
 
     function getFileNameByDoctype($idSolicitud, $docType)
     {
         return $this->db->query("SELECT * FROM documentos_escrituracion WHERE idSolicitud = $idSolicitud AND tipo_documento = $docType");
+
     }
 
     function getInfoSolicitud($idSolicitud)
@@ -1248,7 +1257,21 @@ function checkBudgetInfo($idSolicitud){
     }
 
 
-
+ //INSERT NUEVA NOTARIA
+ function insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono){
+    $idUsuario = $this->session->userdata('id_usuario');
+    $this->db->query("INSERT INTO Notarias(nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece)
+    VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2);");
+    $insert_id = $this->db->insert_id();
+    $idSolicitud = $_POST['idSolicitud'];
+    $rol = $this->session->userdata('id_rol');
+    $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $idSolicitud")->row()->id_estatus;
+    $estatus_siguiente = $estatus == 19 || $estatus == 22 ? 20 : 25;
+    //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    $this->db->query("UPDATE solicitudes_escrituracion SET id_notaria= $insert_id WHERE id_solicitud = $idSolicitud;");
+    return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
+    VALUES($idSolicitud,".$estatus.",0,'Cambio de Notaria',GETDATE(),$idUsuario,GETDATE(),$idUsuario,$estatus_siguiente);");
+}
 
 
 

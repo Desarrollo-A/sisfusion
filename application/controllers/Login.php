@@ -81,6 +81,8 @@ class Login extends CI_Controller
 		case '68': // DIRECTOR SUMA
 		case '69': // DIRECTOR GENERAL
 		case '70': // EJECUTIVO CONTRALORÍA JR
+		case '71': // AUXILIAR DE ARCHIVO
+		case '72': // DIRECCIÓN BIOFÍSICA
             redirect(base_url().'Administracion');
         break;
 
