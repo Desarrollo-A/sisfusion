@@ -2554,7 +2554,7 @@ function saveNotaria(){
         return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }
       
-}
+
 
 
     public function validarDocumentoss(){
