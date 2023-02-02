@@ -782,6 +782,7 @@ class Postventa extends CI_Controller
     {
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
+
        /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
             $comentarios = $_POST['comentarios'];
             $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
@@ -792,7 +793,7 @@ class Postventa extends CI_Controller
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
     
-
+        var_dump($id_solicitud,$type,$motivos_rechazo, $area_rechazo);
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
         // }elseif($type == 3) {
         //     $comentarios = $_POST['comentarios'];
@@ -882,21 +883,19 @@ class Postventa extends CI_Controller
                 $folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
                 break;
             case 12:
-                $folder = "static/documentos/postventa/escrituracion/ESTATUS_CONSTRUCCION/";
-                break;
-            case 13:
+                // antes fue 13
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
                 break;
-            case 14:
-                $folder = "static/documentos/postventa/escrituracion/PROYECTO/";
-                break;
-            case 15:
+            case 13:
+                // fue 15
                 $folder = "static/documentos/postventa/escrituracion/FACTURA/";
                 break;
-            case 16:
+            case 14:
+                // fue 16
                 $folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
                 break;
-            case 17:
+            case 15:
+                // fue la 17
                 $folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
                 break;
             case 18:
@@ -905,20 +904,26 @@ class Postventa extends CI_Controller
             case 19:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
                 break;
-            case 20:
+            case 17:
+                // fue 20
                 $folder = "static/documentos/postventa/escrituracion/OTROS/";
                 break;
             case 21:
+                // fue 21
                 $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
                 break;
-            case 22:
+            case 20:
+                // fue 22
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
                 break;
             case 23:
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;
+                break;  
         }
         return $folder;
+
+
+
     }
 
     function updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $exists, $idDocumento, $presupuestoType = null, $estatus_validacion = null, $idPresupuesto = null, $idNxS= null)
@@ -2408,7 +2413,7 @@ function saveNotaria(){
           if($validacion){
               $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicitud($solicitud,$opciones);
               $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
-              
+              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
           }else{
               $respuesta = array();
           }
@@ -2549,6 +2554,325 @@ function saveNotaria(){
         return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }
       
+}
+
+
+    public function validarDocumentoss(){
+        $motivo = 0;
+        $estatus_validacion       = $this->input->post('estatus_validacion');
+        $Iddocumento       = $this->input->post('Iddocumentos');
+        $tipo       = $this->input->post('idOpcion');
+        $validado_por  =   $this->session->userdata('id_usuario');
+        $editado  =   $this->session->userdata('id_usuario');
+        $modificado =  date("Y-m-d H:i:s");
+        $opcionEditar  =   $this->input->post('opcionEditar');
+        if($estatus_validacion ==2){
+            $proceso  =   $this->input->post('proceso');
+            $motivo  =   $this->input->post('motivo');
+            $insertArray = array(
+                'id_motivo'      => $motivo,
+                'id_documento'   => $Iddocumento,
+                'tipo'           => $tipo, 
+                'estatus'        => 0,
+                'tipo_proceso'   => $proceso,
+                'creado_por'     => $validado_por,
+                'fecha_creacion' => $modificado,
+            );
+            $respuestaAct = $this->Postventa_model->insertMotivoPorDoc( $insertArray);
+            
+        }
+        $insertArray = array(
+            'estatus_validacion'      =>   $opcionEditar ,
+            'validado_por'          => $validado_por,
+            'editado'             => 1, 
+            'modificado_por'     => $validado_por  ,
+            'modificado'             => $modificado, 
+        );
+        $updates = $this->Postventa_model->actualizarDocs( $Iddocumento ,$insertArray);
+        if($updates ){
+            $respuesta =  array(
+              "response_code" => 200, 
+              "response_type" => 'success',
+              "message" => "Validado correctamente");
+          }else{
+            $respuesta =  array(
+              "response_code" => 400, 
+              "response_type" => 'error',
+              "message" => "Validado Incorrecto");
+          }  
+          echo json_encode ($respuesta);
+    }
+
+    
+    public function descuentoUpdateTis(){
+
+        $id_solicitud       = $this->input->post('id_solicitud');
+        $id_titulacion       = $this->input->post('id_titulacion');
+        $id_titulacionviejo       = $this->input->post('idTitular');
+        $id_titulacionneuvo       = $this->input->post('titulares');
+          $arr_update = array( 
+            "id_titulacion" => $id_titulacionneuvo,
+                            );
+        $update = $this->Postventa_model->cambiarTitulacion($id_solicitud,$arr_update); 
+        $info =  $this->session->userdata('id_usuario');                          
+        $insertArray = array(
+            'id_parametro'      => intval($id_solicitud) ,
+            'tipo'              => 'update ',
+            'anterior'          => intval($id_titulacionviejo),
+            'nuevo'             => intval($id_titulacionneuvo), 
+            'col_afect'         => 'id_titulacion',
+            'tabla'             => 'solicitudes_escrituracion',
+            'fecha_creacion'    =>  date("Y-m-d H:i:s"),
+            'creado_por'        =>  intval($info) ,
+        );
+        $updates = $this->Postventa_model->updateauditoria($insertArray);
+        if($update){
+          $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "actividad actualizado satisfactoriamente");
+        }else{
+          $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'error',
+            "message" => "actividad no actualizada, intentalo más tarde");
+        }
+        echo json_encode ($respuesta);
+      } 
+
+      public function getDocumentosPorSolicitudss()
+      {
+          $solicitud      = $this->input->post('solicitud');
+          $status        = $this->input->post('estatus');
+          $notariaExterna = ''; 
+          $validacion     = true;
+        // var_dump ($solicitud, $estatus);
+        if($status == 9){
+            $opciones = " (11,13,20 )";
+        }else if($status == 11){
+            $opciones = ' (7)';
+        }else if($status == 12){
+            $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
+        }else if($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
+            $opciones = ' (17,18)';
+        }else if($status == 20){
+            $opciones = ' (15)';
+        }else if($status == 23){
+            $opciones = ' (22)';
+        }else if($status == 24){
+            $opciones = ' (16)';
+        }
+
+
+          if($solicitud == '' || $status == '')
+          {
+              $validacion = false;
+          }
+          if($validacion){
+
+              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
+              $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
+
+              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
+          }else{
+              $respuesta = array();
+          }
+   
+          
+          echo json_encode($respuesta);
+      }
+
+      public function UParchivosFromss(){
+		$tamanoOfAuts = (1);
+    	$indexx = ($_POST['indexx']);
+        $solicitud = ($_POST['solicitudId']);   
+        $tipoDocuemento = ($_POST['iddocumento']);
+        $estatus_validacion = 0;
+        // $lote = ($_POST['lote']);
+             // CONSULTAR SI EXISTE UN DOCUMENTO
+             if($this->Postventa_model->validarExisteDocumento($tipoDocuemento ,$solicitud))
+             {   
+                // NO EXISTE DOCUMENTO AGREGAMOS NORMAL
+                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
+                    $aleatorio = rand(100,1000);
+                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
+                    // $proyecto = str_replace(' ', '',$nombreResidencial);
+                    // $condominio = str_replace(' ', '',$nombreCondominio);
+                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
+                    // $condom = substr($condominioQuitaN, 0, 3);
+                    // $cond= strtoupper($condom);
+                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+                    $date = date('dmYHis');
+                     $expediente = $date."_".$aleatorio."_".$expediente;
+
+                    $ruta = $this->getFolderFile($tipoDocuemento);
+                    $info =  $this->session->userdata('id_usuario');
+                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
+                        $response   = 1 ;
+                        $code       = 'success';
+                        $mensaje    = 'La acción se ha realizado correctamente.';
+                        $arrayInsertDocumentos = array(
+                            'movimiento'    => 'creacion de documento escrituracion',
+                            'expediente'    =>  $expediente,
+                            'modificado'    => date("Y-m-d H:i:s"),
+                            'status'       => 1, 
+                            'idSolicitud'   => $solicitud ,
+                            'idUsuario'     => $info ,
+                            'tipo_documento' => $tipoDocuemento,
+
+                            'fecha_creacion' => date("Y-m-d H:i:s"),
+                            // 'estatus_validacion' => $estatus_validacion, 
+                        );
+    
+                        $ultimoInsert =   $this->Postventa_model->insertDocumentNuevo($arrayInsertDocumentos);
+                       
+     
+                    }else{
+                        $response   = 2 ;
+                        $code       = 'warning';
+                        $mensaje    = 'No se ha ejecutado la acción correctamente';
+                        $ultimoInsert = 0;
+                    }
+             }else{
+                $response   = 2 ;
+                        $code       = 'warning';
+                        $mensaje    = 'No se ha ejecutado la acción correctamente';
+                        $ultimoInsert = 0;
+             }
+            
+            } else {
+                // ELIMINAMOS DOCUMENTO ACUTALIZANDO DATOS
+
+                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
+                    $aleatorio = rand(100,1000);
+                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
+                    // $proyecto = str_replace(' ', '',$nombreResidencial);
+                    // $condominio = str_replace(' ', '',$nombreCondominio);
+                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
+                    // $condom = substr($condominioQuitaN, 0, 3);
+                    // $cond= strtoupper($condom);
+                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+                    $date = date('dmYHis');
+                    $expediente = $date."_".$aleatorio."_".$expediente;
+                    $ruta = $this->getFolderFile($tipoDocuemento);
+                    $info =  $this->session->userdata('id_usuario');
+                    $documento = $this->Postventa_model->validarExisteDocumentos($tipoDocuemento ,$solicitud);
+                    $clave = $documento->idDocumento; 
+                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
+                        $response   = 1 ;
+                        $code       = 'success';
+                        $mensaje    = 'La acción se ha realizado correctamente.';
+                        $arrayInsertDocumentos = array(
+                            'movimiento'    => 'creacion de documento escrituracion',
+                            'expediente'    =>  $expediente,
+                            'modificado'    =>  date("Y-m-d H:i:s"),
+                            'status'        =>  1,
+                            // 'estatus_validacion' => $estatus_validacion, 
+                        );
+                        $updates = $this->Postventa_model->actualizarDocs( $clave ,$arrayInsertDocumentos);
+                        $response   = 1 ;
+                        $code       = 'success';
+                        $mensaje    = 'La acción se ha realizado correctamente.';
+                        $ultimoInsert = $clave ;
+                    
+                    }else{
+                        $response   = 2 ;
+                        $code       = 'warning';
+                        $mensaje    = 'No se ha ejecutado la acción correctamente';
+                        $ultimoInsert = 0;
+                    }
+
+                
+             }
+
+
+		
+			}
+
+    $respuesta = array(
+      'code'    => $response,
+      'mensaje' => $mensaje,
+      'respuesta' => $response,
+      'ultimoInsert' =>  $ultimoInsert,
+
+      // donde 1 es succes y 2 es error
+    );
+    echo json_encode ($respuesta);
+	}
+
+
+    public function deleteFileActualizadoss()
+    {
+        $documentType = $this->input->post('documentType');
+        $presupuestoType = null;
+        $idSolicitud = $this->input->post('idSolicitud');
+        $idDocumento = $this->input->post('idDocumento');
+        if( $documentType == 13){
+            $presupuestoType = $this->input->post('presupuestoType');
+            $updateDocumentData = array(
+                "expediente" => '',
+                "modificado_por" => $this->session->userdata('id_usuario'),
+            );
+        }else{
+            $updateDocumentData = array(
+                "expediente" => null,
+                "movimiento" => '',
+                "modificado" => date('Y-m-d H:i:s'),
+                "estatus_validacion" => null,
+                "idUsuario" => $this->session->userdata('id_usuario'),
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "status" => 1
+            );
+            
+        }
+        // var_dump($idDocumento , $documentType);
+        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
+        $folder = $this->getFolderFile($documentType);
+        $file = $folder . $filename;
+        if (file_exists($file))
+            unlink($file);  
+            // AQUI SE VA A AACTUALIZAR
+            $arrayInsertDocumentos = array(
+                'expediente'    => null,
+                'estatus_validacion' => null, 
+                'movimiento'    => 'creacion de documento escrituracion',
+                'modificado'    =>  date("Y-m-d H:i:s"),
+                'status'        =>  0, 
+            );
+            $updates = $this->Postventa_model->actualizarDocs( $idDocumento ,$arrayInsertDocumentos);
+        // $response = $this->Postventa_model->eliminarDoc( $idDocumento);
+        echo json_encode($updates);
+        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
+    }
+
+    public function descargarDocsss()
+    {
+        $this->load->helper('download');
+        $name = $this->input->post('name');
+        $documentType = $this->input->post('documentType');
+        var_dump( $documentType,  $name);
+        $folders = $this->getFolderFile($documentType);
+        $Ruta = $folders.$name;
+        var_dump(  $Ruta );
+        force_download($Ruta, NULL);     
+    }
+
+    public function motivosRechazos(){
+        $tipoDocuemento = $this->input->post("tipoDocumento");
+        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
+        echo json_encode ($motivosRechazo); 
+    }
+  
+    public function cambiarEstatusDocsSiguienteMotivo(){
+
+        $tipoDocuemento = $this->input->post("tipoDocumento");
+        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
+        echo json_encode ($motivosRechazo); 
+
+    }
+  
+
+
 }
 
  

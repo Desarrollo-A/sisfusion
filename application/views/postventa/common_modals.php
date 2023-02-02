@@ -962,3 +962,74 @@
     </div>
 </div>
 
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-md boxContent">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <i data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+            </div>
+            <div class="modal-body text-center toolbar m-0 p-0">
+                <input type="text" class="hide" id="idNxS">
+                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- inicio de modal -->
+
+<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                        </div>
+                        <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+
+                        </div>
+                        <div class="modal-footer">
+                            <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
+                                
+                            <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!-- fin modal -->   
+<!-- fin modal -->   
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                <div class="modal-header">
+                <h3 class="text-center">Validacion de documentos</h3>
+                    
+                </div>
+                    <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
+                    
+                    </div>
+                <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                      
+                </div>
+                </div>
+            </div>
+            </div>     
+          
+<!-- fin modal -->
+
+
+
+
+
+

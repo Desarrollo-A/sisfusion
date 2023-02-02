@@ -1199,14 +1199,6 @@ function checkBudgetInfo($idSolicitud){
 
     }
     
-    function documentosNecesarios( $estatus){
-
-        $cmd=("SELECT * FROM opcs_x_cats WHERE id_catalogo = 72 AND id_opcion in  $estatus");
-        $query = $this->db->query($cmd);
-        return $query->result_array();
-
-    }   
-    
     function insertDocumentNuevo($insertDocumentNuevo)
     {
      
@@ -1215,6 +1207,7 @@ function checkBudgetInfo($idSolicitud){
         
         return $afftectedRows > 0 ? $this->db->insert_id() : FALSE ;
     }
+
     public function  eliminarDoc($idDocumento)
     {
         $this->db->where('idDocumento', $idDocumento);
@@ -1273,7 +1266,88 @@ function checkBudgetInfo($idSolicitud){
     VALUES($idSolicitud,".$estatus.",0,'Cambio de Notaria',GETDATE(),$idUsuario,GETDATE(),$idUsuario,$estatus_siguiente);");
 }
 
+    
+    function getDocumentosPorSolicituds($solicitud, $opciones )
+    {
+        $cmd="SELECT de.idDocumento, de.movimiento, de.expediente, de.modificado, 
+        de.status , de.idSolicitud ,de.idUsuario 
+        ,de.tipo_documento,
+        does.descripcion as nombre, 
+        does.id_documento as id_opcion,
+        de.modificado as documento_modificado_por ,
+        de.creado_por as documento_creado_por , 
+        de.fecha_creacion as creacion_documento , 
+        de.estatus_validacion as estatusValidacion , 
+        se.id_estatus as estatus_solicitud , 
+        de.estatus_validacion as validacion
+        , se.id_solicitud, se.estatus_construccion 
+        FROM documentos_escrituracion de, solicitudes_escrituracion se , documentacion_escrituracion does 
+        where de.expediente IS NOT NULL 
+        AND de.tipo_documento = does.id_documento
+        AND se.id_solicitud = de.idSolicitud 
+        AND does.id_documento in $opciones 
+        AND de.idSolicitud = $solicitud";
+ 
 
+
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+
+    }
+    
+    function documentosNecesarios( $estatus){
+
+        $cmd=("SELECT * FROM documentacion_escrituracion WHERE id_documento  in  $estatus");
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+
+    }   
+
+    public function motivosRechazo($tipo_doc){
+        $cmd=("SELECT * FROM motivos_rechazo WHERE tipo_documento =  $tipo_doc");
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+        
+    }  
+    
+    function insertMotivoPorDoc($insertDocumentNuevo)
+    {
+     
+        $this->db->insert('motivos_rechazo_x_documento', $insertDocumentNuevo);
+        $afftectedRows = $this->db->affected_rows();
+        
+        return $afftectedRows > 0 ? $this->db->insert_id() : FALSE ;
+    }
+
+
+    function  validarExisteDocumento ($tipoDocuemento, $solicitud )
+    {
+        $cmd=("SELECT * FROM documentos_escrituracion where idSolicitud = $solicitud and tipo_documento = $tipoDocuemento ");
+        $query = $this->db->query($cmd);
+        $resultados = $query->num_rows() ;
+        return  $resultados > 0 ? FALSE : TRUE;
+        
+        // FLASE SI EXISTE ALGUN DATO FALSE ES PORQUE NO EXISTE 
+        // TIENE QUE SER ASI POR EL CONTROLADOR
+    }
+    function  validarExisteDocumentos ($tipoDocuemento, $solicitud )
+    {
+        $cmd=("SELECT * FROM documentos_escrituracion where idSolicitud = $solicitud and tipo_documento = $tipoDocuemento ");
+        $query = $this->db->query($cmd);
+        return $query->row();
+        // FLASE SI EXISTE ALGUN DATO FALSE ES PORQUE NO EXISTE 
+        // TIENE QUE SER ASI POR EL CONTROLADOR
+    }
+
+
+    function  traerEstatus ($solicitud )
+    {
+        $cmd=("SELECT * FROM solicitudes_escrituracion where id_solicitud =  $solicitud ");
+        $query = $this->db->query($cmd);
+        return $query->row();
+        // FLASE SI EXISTE ALGUN DATO FALSE ES PORQUE NO EXISTE 
+        // TIENE QUE SER ASI POR EL CONTROLADOR
+    }
 
 
 
