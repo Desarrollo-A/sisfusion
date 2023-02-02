@@ -124,7 +124,7 @@ class Postventa_model extends CI_Model
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
       
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,0,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario)");
         $insert_id = $this->db->insert_id();
 
         $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
@@ -166,7 +166,7 @@ class Postventa_model extends CI_Model
             if($rol == 57 && $idUsuario!= 10865){
                 $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
             }else if($rol == 11){
-                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL)  ";
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL) ";
             }else if($rol == 56){
                 $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (3,2) AND se.bandera_comite IS NULL) ";
             }else{
@@ -183,7 +183,7 @@ class Postventa_model extends CI_Model
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.clasificacion in (1)
+        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista = 1
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(44,55) THEN 19 WHEN se.id_estatus in(45,48) THEN 14 WHEN se.id_estatus in(29,40) THEN 15 ELSE 11 END) 
