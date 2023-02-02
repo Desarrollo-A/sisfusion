@@ -2553,10 +2553,7 @@ function saveNotaria(){
 
         return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }
-      
-}
-
-
+    
     public function validarDocumentoss(){
         $motivo = 0;
         $estatus_validacion       = $this->input->post('estatus_validacion');
@@ -2873,6 +2870,10 @@ function saveNotaria(){
   
 
 
+
+      
 }
+
+
 
  
