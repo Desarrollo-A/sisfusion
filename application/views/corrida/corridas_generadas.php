@@ -436,7 +436,7 @@
                             data: null,
                             render: function (data, type, row){
                                 let container_btnc;
-                                <?php if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){?>
+                                <?php if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 70){?>
                                     if((data.idStatusContratacion == 5 || data.idStatusContratacion==2) && (data.idMovimiento==35 || data.idMovimiento==22 || data.idMovimiento==62 || data.idMovimiento==75 || data.idMovimiento==94) && data.status==1){
                                         container_btnc =  '<center><a href="<?php echo base_url()?>Corrida/editacf/'+ data.id_corrida +'" target="_blank" style="padding:10px 0px"><button class="btn-data btn-green ' +
                                             'btn-fab btn-fab-mini"><i class="fas fa-money-check-alt"></i></button></a></center>';
