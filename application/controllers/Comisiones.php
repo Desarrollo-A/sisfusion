@@ -6951,36 +6951,94 @@ for ($d=0; $d <count($dos) ; $d++) {
    
     public function descuentoUpdateCertificaciones(){
 
-      $estatus       = $this->input->post('estatus');
-      $id_descuento       = $this->input->post('id_descuento');
-      $monto              = $this->input->post('monto');
-      $pago_individual    = $this->input->post('pago_individual');
-      $estatus_certificacion = $this->input->post('estatus_certificacion');
-      $comentario         = 'Descuento aplicado ';
+      $banderaSoloEstatus     = $this->input->post('banderaSoloEstatus');
+      $statu                  = $this->input->post('statu'); 
+      $estatus                = $this->input->post('estatus');
+      $id_descuento           = $this->input->post('id_descuento');
+      $monto                  = $this->input->post('monto');
+      $pago_individual        = $this->input->post('pago_individual');
+      $estatus_certificacion  = $this->input->post('estatus_certificacion');
+      $comentario             = 'Descuento aplicado ';
+      $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
+      $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
+      $complemento            = '01:01:00.000';
 
-      if($estatus === '1'){
-   
+      if(!$banderaSoloEstatus ){
         $arr_update = array( 
-     
-          "estatus"   => 1,
-          "monto"           =>  $monto,
-          "pago_individual" =>  $pago_individual,
-          "detalles"      =>  $comentario,
+    
           "estatus_certificacion" => $estatus_certificacion,
                           );
-      }else {
-        $arr_update = array(    
-                       
-          // "pagos_activos"   => $pagos_activos,
-          "monto"           =>  $monto,
-          "pago_individual" =>  $pago_individual,
-          "detalles"      =>  $comentario,
-          "estatus_certificacion" => $estatus_certificacion,                  
-        );
 
+      }else{
+
+        if($estatus === '1'){
+      //  if del estatus
+          $arr_update = array( 
+            "estatus"   => 1,
+            "monto"           =>  $monto,
+            "pago_individual" =>  $pago_individual,
+            "detalles"      =>  $comentario,
+            "estatus_certificacion" => $estatus_certificacion,
+                            );
+  
+                            if($banderaPagosActivos == 1 ){
+                              $pagos_activos = 1;
+                              $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+                              // $estatus = 5;  
+                              $arr_update["estatus"] = $estatus ;
+                              $arr_update["pagos_activos"] = $pagos_activos ;
+                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                            }
+                            else if($banderaPagosActivos == 2){
+                              $pagos_activos = 0;
+                              $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+                              $estatus = 5;  
+                              $arr_update["estatus"] = $estatus ;
+                              $arr_update["pagos_activos"] = $pagos_activos ;
+                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                    
+                            }
+                            else{
+                    
+                            }
+        }else {
+          // if del estatus
+         
+          $arr_update = array(    
+            
+            // "pagos_activos"   => $pagos_activos,
+            "monto"           =>  $monto,
+            "pago_individual" =>  $pago_individual,
+            "detalles"      =>  $comentario,
+            "estatus_certificacion" => $estatus_certificacion,                  
+          );
+          if($banderaPagosActivos == 1 ){
+            $pagos_activos = 1;
+            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+            // $estatus = 5;  
+            $arr_update["estatus"] = $estatus ;
+            $arr_update["pagos_activos"] = $pagos_activos ;
+            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+          }
+          else  if($banderaPagosActivos == 2){
+            $pagos_activos = 0;
+            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+            $estatus = 5;  
+            $arr_update["estatus"] = $estatus ;
+            $arr_update["pagos_activos"] = $pagos_activos ;
+            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+  
+          }
+          else{
+  
+          }
+        }
+     
       }
+     
       // $pagos_activos      =  $this->input->post('pagos_activos');
         // enviamos la info al model si se realiza un cambio esperamos respuesta
+    
       $update = $this->Comisiones_model->descuentos_universidad($id_descuento,$arr_update);                           
       if($update){
         $respuesta =  array(
