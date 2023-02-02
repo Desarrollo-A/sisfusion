@@ -10,8 +10,45 @@
                 </button>
                 <h4 class="modal-title card-title"><b>Avance de estatus</b></h4>
                 <i id="actividad_siguiente"></i>
-
             </div>
+
+        <div class="modal fade" id="comentariosModal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <div class="d-flex" style="background: #AED6F1; justify-content: space-around; align-items: center; padding: 0 17px">
+                                <div id="nameLote"></div>
+                                <div id="infoLote"></div>
+                            </div>
+                                <!-- <ul class="nav nav-tabs" role="tablist" style="background: #AED6F1;">
+                                        <div class="container">
+                                            <div class="row">
+                                                    
+                                            <div>
+                                        </div>
+                                </ul> -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card card-plain">
+                                                    <div class="card-content">
+                                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             
             <form id="approveForm" name="approveForm" method="post">
