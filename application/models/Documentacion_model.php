@@ -191,11 +191,11 @@ class Documentacion_model extends CI_Model
 
     function getReasonsForRejectionByDocument($id_documento, $tipo_proceso)
     {
-        return $this->db->query("SELECT id_motivo, oxc.nombre nombre_documento, mr.motivo, mr.estatus,
+        return $this->db->query("SELECT id_motivo, oxc.descripcion nombre_documento, mr.motivo, mr.estatus,
         CASE mr.estatus WHEN 1 THEN '<span class=\"label\" style=\"background:#81C784\">ACTIVO</span>'
         ELSE '<span class=\"label\" style=\"background:#E57373\">INACTIVO</span>' END estatus_motivo
         FROM motivos_rechazo mr 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = mr.tipo_documento AND oxc.id_catalogo = 60
+        INNER JOIN documentacion_escrituracion oxc ON oxc.id_documento = mr.tipo_documento 
         WHERE mr.tipo_documento = $id_documento AND mr.tipo_proceso = $tipo_proceso");
     }
 
