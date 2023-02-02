@@ -998,7 +998,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 11 || userType == 56) { 
                                     group_buttons += userType == 56 ?
                                      `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fas fa-tools"></i></button>` :
-                                     `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
+                                     `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                    bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != '' ) ? 1 
                                      : userType == 56 && (d.estatus_construccion != 0 && d.estatus_construccion != null) ? 1  : 0;
                                     }
@@ -1010,7 +1010,7 @@ function fillTable(beginDate, endDate, estatus) {
                                       // BOTON APROBAR    
                                     bandera_request = d.contrato == 1 ? 1 : 0;
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
+                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                                 if (userType == 56 && d.bandera_admin == 1 && (d.bandera_comite == 0 ||  d.bandera_comite == null)) { 
@@ -1033,13 +1033,13 @@ function fillTable(beginDate, endDate, estatus) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
                                     // BOTON APROBAR
                                     bandera_request = userType == 11 && d.nombre_anterior  != null ? 1 : 0;
-                                    group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
+                                    group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                 }
                             break;
                             case 5:
                                 if (userType == 11) { 
                                     bandera_request = 1;
-                                    group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
+                                    group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                 }
                             break;
                             case 7:
@@ -1055,7 +1055,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 10:
                                 if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
+                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     bandera_request = d.contrato == 1 ? 1 : 0;
                                 }
@@ -1064,7 +1064,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 11:
                                 if (userType == 55) { 
                                     group_buttons += (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';
-                                    group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
+                                    group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     
                                     group_buttons += ` <button id="subirDocumentos" name="subirDocumentos" data-type="1" class="btn-data btn-green subirDocumentos " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-folder-open"></i></button>
@@ -1244,7 +1244,7 @@ function fillTable(beginDate, endDate, estatus) {
                     if(bandera_request == 1){
                         group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
-                       group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Comentarios Proceso"><i class="fas fa-sticky-note"></i></button>`;
+                       group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                     return '<div class="d-flex justify-center">' + group_buttons + '<div>';
                 }
             },
@@ -1370,7 +1370,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 if(bandera_request == 1){
                     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                 }
-                group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Comentarios Proceso"><i class="fas fa-sticky-note"></i></button>`;
+                group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                 return '<div class="d-flex justify-center">' + group_buttons + '<div>';
             }
         },
