@@ -6,6 +6,7 @@
         color:#fff;
         font-weight: lighter;
         font-size: 0.8em;
+        text-align: center;
     }
     tfoot tr{
          background: #143860;
@@ -603,17 +604,14 @@
 				"columns":
 				[
 				    {
-					"width": "10%",
 					data: 'nombreResidencial'
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						return '<p>'+(d.nombreCondominio).toUpperCase()+'</p>';
 					}
 				},
 				{
-					"width": "14%",
 					"data": function(d){
 						if (d.casa == 1)
 							return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
@@ -622,19 +620,16 @@
 					}
 				},
 				{
-					"width": "14%",
 					"data": function(d){
 						return '<p>'+ d.idLote +'</p>';
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						return '<p>'+d.superficie+'<b> m<sup>2</sup></b></p>';
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 
 				var preciot;
@@ -694,7 +689,6 @@
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						if (d.totalNeto2 == null || d.totalNeto2 == '' || d.totalNeto2 == undefined) {
 							return '$0.00';
@@ -704,7 +698,6 @@
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 
 
@@ -766,11 +759,9 @@
 					}
 				},
 				{
-					"width": "10%",
 					data: 'referencia'
 				},
 				{
-					"width": "5%",
 					data: 'msni'
 				},
 				{
@@ -803,28 +794,7 @@
 						return gerente;
 					}
 				},
-				// {
-				// 	data: function(d){
-				// 		var subdirector;
-				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				// 			subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
-				// 		else
-				// 			subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
-				// 		return subdirector;
-				// 	}
-				// },
-				// {
-				// 	data: function(d){
-				// 		var regional;
-				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				// 			regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
-				// 		else
-				// 			regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
-				// 		return regional;
-				// 	}
-				// },
 				{
-					"width": "12%",
 					"data": function(d){
 						valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
 						`<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
@@ -832,7 +802,6 @@
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10){
@@ -851,7 +820,6 @@
 					}
 				},
 				{
-					"width": "16%",
 					"data": function(d){
 						if(d.comentario=='NULL'||d.comentario=='null'||d.comentario==null){
 							return ' - ';
@@ -863,11 +831,9 @@
 					}
 				},
 				{
-					"width": "10%",
 					data: 'lugar_prospeccion'
 				},
 				{
-					"width": "8%",
 					"data": function( d ){
 						if(d.fecha_validacion  == ' ' || d.fecha_validacion  == null || d.fecha_validacion  == ''   ){
 							return '<p> SIN ESPECIFICAR </p>';
@@ -877,43 +843,12 @@
 					}
 				},
 				{
-					"width": "8%",
 					"data": function( d ){
 						return '<p>$ '+formatMoney(d.cantidad_enganche)+'</p>';
 					}
 				},
-				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.idStatusContratacion+'</p>';
-						}
-					}
-				},
-				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.nombreCliente+'</p>';
-						}
-					}
-				},
-				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.nombreCopropietario+'</p>';
-						}
-					}
-				},
                     {
-                        "width": "8%",
+                        "visible": (rol==11) ? true : false,
                         "data": function( d ){
                             if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
                                 return '<p> SIN ESPECIFICAR </p>';
@@ -923,7 +858,7 @@
                         }
                     },
                     {
-                        "width": "8%",
+                        "visible": (rol==11) ? true : false,
                         "data": function( d ){
                             if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
                                 return '<p> SIN ESPECIFICAR </p>';
@@ -933,7 +868,7 @@
                         }
                     },
                     {
-                        "width": "8%",
+                        "visible": (rol==11) ? true : false,
                         "data": function( d ){
                             if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
                                 return '<p> SIN ESPECIFICAR </p>';
@@ -943,7 +878,6 @@
                         }
                     },
 				{
-					"width": "8%",
 					"data": function( d ){
 						return '<center><button class="btn-data  btn-details-grey to-comment ver_historial" value="' + d.idLote +'" data-nomLote="'+d.nombreLote+'" data-tipo-venta="'+d.tipo_venta+'"><i class="fas fa-history"></i></button></center>';
 					}
