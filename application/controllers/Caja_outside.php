@@ -513,10 +513,13 @@ class Caja_outside extends CI_Controller
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
 
+        $apartadoXReubicacion = ( $datosView->concepto == 'REUBICACION') ? '1' : '0';
+        
+
         $dataInsertCliente = array(
-            'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
+            'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
-            'id_gerente' => $datosView->id_gerente,/*$data['prospecto'][0]['id_gerente']*/
+            'id_gerente' => $datosView->id_gerente,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -566,7 +569,9 @@ class Caja_outside extends CI_Controller
             'id_regional' => $data['lider'][0]['id_regional'],
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
-            
+            'apartadoXReubicacion' => $apartadoXReubicacion,
+            'fechaApartadoReubicacion' => isset( $datosView->concepto ) ? $datosView->concepto : null,
+            'id_cliente_reubicacion' => isset( $datosView->id_cliente_reubicacion ) ? $datosView->id_cliente_reubicacion : null
         );
         /*Inserta cliente*/
         $last_id = '';
