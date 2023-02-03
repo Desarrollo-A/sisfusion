@@ -1340,6 +1340,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 var group_buttons = '';     
                 let formBoton = '';
                 let permiso;
+                let btnsAdicionales = '';
                 let bandera_request=0;
                 var datosEstatus = {
                     area_sig: d.area_sig,
