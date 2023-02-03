@@ -184,7 +184,7 @@ class Postventa_model extends CI_Model
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
         INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista in (1)
-        INNER JOIN control_permisos cs ON se.id_estatus = cs.estatus_actual and cs.clasificacion in (1,2,3)
+        INNER JOIN control_permisos cs ON se.id_estatus = cs.estatus_actual and cs.clasificacion in (1,2)
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(46,52) THEN 19 WHEN se.id_estatus in(47,50) THEN 14 WHEN se.id_estatus in(29,40,33,41) THEN 15 WHEN se.id_estatus in(39,44,42,45) THEN 13 ELSE 11 END) 
