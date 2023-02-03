@@ -74,7 +74,6 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <?php include 'common_modals.php' ?>
                                         </div>
                                         <div class="tab-pane" id="carga_test">
                                             <div class="encabezadoBox">
