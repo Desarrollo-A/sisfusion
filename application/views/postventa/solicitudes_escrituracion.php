@@ -4,7 +4,7 @@
 
 <body>
     <div class="wrapper">
-        <?php $this->load->view('template/sidebar', ""); ?>
+        <?php  $this->load->view('template/sidebar', ""); ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -152,7 +152,8 @@
     userType = <?= $this->session->userdata('id_rol') ?>;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
     typeTransaction = 1;
-    Shadowbox.init();
+	Shadowbox.init();
+
 </script>
 
 <!-- MODAL WIZARD -->

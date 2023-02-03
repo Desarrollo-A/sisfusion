@@ -732,28 +732,43 @@
                                     </div>
 
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                        <div class="col-md-12 form-group">
-                                            <label>Días para pagar Enganche: </label>
-                                            <select ng-model="day" id="day" ng-options="item.day for item in diasEnganche" class="form-control" ng-change="daysEng(); ChengecheckEngDif">
-                                                <option value=""> - Selecciona los días de enganche - </option>
-                                            </select>
-                                        </div>
-                                        <!--<div ng-if="checkEngDif">-->
-                                        <div class="col-md-6 form-group" >
-                                            <label>Apartado ($):</label>
-                                            <div class="input-group" >
-                                                <span class="input-group-addon" id="basic-addon1">$</span>
-                                                <input input-currency ng-model="apartado" class="form-control" id="aptdo" ng-blur="ChengecheckEngDif()">
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="form-group col-md-12" id="dppe">
+                                                <label>Días para pagar Enganche: </label>
+                                                <select ng-model="day" id="day"
+                                                        ng-options="item.day for item in diasEnganche" class="form-control"
+                                                        ng-change="daysEng(); ChengecheckEngDif">
+                                                    <option value=""> - Selecciona los días de enganche -</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group hide" id="select_mce">
+                                                <label>Incluir mensulidades en el enganche diferido:</label><br>
+<!--                                                <select name="mensualidad_con_enganche" id="mensualidad_con_enganche" ng-change="changeDaysEng()">-->
+<!--                                                    <option value="1">Si</option>-->
+<!--                                                    <option value="2">No</option>-->
+<!--                                                </select>-->
+                                                <input type="checkbox" name="mensualidad_con_enganche" ng-model="mensualidad_con_enganche" ng-change="checkMensualidadEnganche()"
+                                                       id="mensualidad_con_enganche" >
                                             </div>
                                         </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <!--<div ng-if="checkEngDif">-->
+                                            <div class="col-md-6 form-group" >
+                                                <label>Apartado ($):</label>
+                                                <div class="input-group" >
+                                                    <span class="input-group-addon" id="basic-addon1">$</span>
+                                                    <input input-currency ng-model="apartado" class="form-control" id="aptdo" ng-blur="ChengecheckEngDif()">
+                                                </div>
+                                            </div>
 
-                                        <div class="col-md-6 form-group" >
-                                            <label>Meses a diferir:</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="basic-addon1">#</span>
-                                                <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control" ng-change="changeDaysEng()" id="msdif" >
-                                                    <option value = ""> - Selecciona los años - </option>
-                                                </select>
+                                            <div class="col-md-6 form-group" >
+                                                <label>Meses a diferir:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" id="basic-addon1">#</span>
+                                                    <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control" ng-change="changeDaysEng()" id="msdif" >
+                                                        <option value = ""> - Selecciona los años - </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <!--</div>-->
@@ -874,7 +889,7 @@
                                 <tr ng-repeat= "i in rangEd">
                                     <td class="text-center">{{ i.fecha | date:'dd-mm-yyyy'}}</td>
                                     <td class="text-center">{{ i.pago }}</td>
-                                    <td class="text-center">{{ i.total | currency }}</td>
+                                    <td class="text-center">{{ (i.total - i.mensualidad) | currency }}</td>
                                 </tr>
 
 
@@ -1349,7 +1364,7 @@
 
             function calcularCF(){
 
-///////////////////////////////////////
+                ///////////////////////////////////////
 
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
@@ -1364,7 +1379,7 @@
 
 
 
-//////////////////////////////////////
+                //////////////////////////////////////
 
                 var applyEnganche = descuentosAplicados.filter(function(condicion) {
                     return condicion.apply  == '0';
@@ -1978,8 +1993,12 @@
                     condicion_mes = 1;
                     
                 }else if(porc==10 || porc==5){
-                    condicion_mes = 2;
-                    
+                    if($scope.day.day =='Diferido' && porc==10){
+                        condicion_mes = 1;
+                        console.log($scope.day.day);
+                    }else{
+                        condicion_mes = 2;
+                    }
                 }else{
                     condicion_mes = 0;
                 }
@@ -2117,8 +2136,20 @@
 
 
                 ){
-                    var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
-                } else if ($scope.descDateEnero == 1 || $scope.descDateEneroMerida == 1 || $scope.descDateEneroMeridaC == 1 || $scope.descDateEneroLM1 == 1 || $scope.descDateEneroLM2 == 1
+                    console.log('V1');
+                    var mes ;
+                    //
+                    // if($scope.day.day=='Diferido' && $scope.mesesdiferir>0 && $scope.mensualidad_con_enganche==true){
+                        // mes = (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
+                        // console.log('$scope.fechaApartado', $scope.fechaApartado);
+                        // console.log('condicion_mes', condicion_mes);
+                    // }else{
+                        mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
+                    // }
+                    // console.log('El mes a empezar es:' + mes);
+
+                }
+                else if ($scope.descDateEnero == 1 || $scope.descDateEneroMerida == 1 || $scope.descDateEneroMeridaC == 1 || $scope.descDateEneroLM1 == 1 || $scope.descDateEneroLM2 == 1
                     || $scope.descDateEneroLM3 == 1 || $scope.descDateEneroLM1C == 1 || $scope.descDateEneroLM2C == 1
                     || $scope.descDateEneroL1 == 1 || $scope.descDateEneroL2 == 1 || $scope.descDateEneroL3 == 1 || $scope.descDateEneroL4 == 1
 
@@ -2128,26 +2159,37 @@
                     || $scope.descDateEneroS1YS2 == 1
 
                 ){
+                    console.log('V2');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (9+condicion_mes));
-                } else if ($scope.descDateOctubre == 1){
+                }
+                    else if ($scope.descDateOctubre == 1){
+                    console.log('V3');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (6+condicion_mes));
-                } else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1){
+                }
+                    else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1){
+                    console.log('V4');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (1+condicion_mes));
-                } else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
+                }
+                    else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
 
                     || $scope.descDateSepL2 == 1 || $scope.descDateSepL3 == 1 || $scope.descDateSepL4 == 1 || $scope.descDateSepL5 == 1
                     || $scope.descDateSepAllQro1 == 1 || $scope.descDateSepAllQro2 == 1
 
                 ){
+                    console.log('V5');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (5+condicion_mes));
-                } else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
+                }
+                    else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
                     || $scope.cinco_milLM == 1){
+                    console.log('V6');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
                 }
                 else if ($scope.descMSI == 1 ){
+                    console.log('V7');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (5+condicion_mes));
                 }
                 else if ($scope.veinteJ_milM == 1 || $scope.cinco_milM == 1 || $scope.veinticinco_milLM2 == 1){
+                    console.log('V8');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
                 }
                 if(mes >12){
@@ -2160,8 +2202,8 @@
 
 
 /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
-
-                if($scope.day && $scope.apartado && $scope.mesesdiferir > 0){
+                if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == false || $scope.mensualidad_con_enganche == undefined)
+                {
                     var engd = (enganche - $scope.apartado);
                     var engd2 = (engd/$scope.mesesdiferir);
                     var saldoDif = ($scope.precioFinal - $scope.apartado);
@@ -2219,23 +2261,69 @@
                             "capital" : engd2,
                             "interes" : 0,
                             "total" : engd2,
-                            "saldo" : saldoDif -= engd2,
+                            "saldo" :  ($scope.mensualidad_con_enganche==undefined || $scope.mensualidad_con_enganche==false ) ? r1 = saldoDif -= engd2 : saldoDif -= engd2,
 
                         });
                         mes++;
                     }
 
                     $scope.rangEd= rangEd;
-
+                }
+                else{
+                    var rangEd=[];
+                    $scope.rangEd = rangEd;
                 }
 
 /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
 
 
 
+                let mesesDiferir;
+                if($scope.mensualidad_con_enganche==true){
+                    mesesDiferir = 0;
+                    console.log('mad', mesesDiferir);
+                }else{
+                    mesesDiferir = $scope.mesesdiferir;
+                    console.log('mad', mesesDiferir);
 
+                }
+
+                let apartadoSum = (parseFloat($scope.apartado) == 0) ? 0 : parseFloat($scope.apartado);
+                let engancheSum = (parseFloat(enganche)==0) ? 0 : parseFloat(enganche);
+
+                let r1_virtual;
+                if($scope.day.day=='Diferido' && $scope.mesesdiferir>0 && $scope.porcentaje==10){
+                    //
+                    //         $scope.saldoFinal += engancheSum;
+                    let indexDescArr = $scope.decFin.length;
+                    let lastPrice;
+                    if(indexDescArr==0){
+                        $scope.precioFinal = $scope.saldoFinal - apartadoSum;
+                    }else{
+                        $scope.precioFinal = $scope.decFin[(indexDescArr-1)].pt;
+                    }
+                    if($scope.mensualidad_con_enganche==true){
+
+                        $scope.saldoFinal = ((parseFloat(r1)+engancheSum));
+                        r1 = (r1+apartadoSum);
+                        r1_virtual = $scope.saldoFinal;
+
+                    }else{
+                        r1_virtual = r1;
+                        $scope.saldoFinal = (parseFloat(r1)+engancheSum) - apartadoSum;
+
+                    }
+                    // $scope.precioFinal = $scope.saldoFinal - apartadoSum;
+
+                }else{
+                    r1_virtual = r1;
+                    $scope.saldoFinal = parseFloat(r1);
+                    console.log($scope.decFin);
+                    $scope.precioFinal = parseFloat(r1);
+                    $scope.precioFinal = ($scope.precioFinal + (engancheSum+apartadoSum));
+                }
                 $scope.infoLote={
-                    precioTotal: r1,
+                    precioTotal: r1_virtual,
                     yPlan: $scope.age_plan,
                     msn: msi,/*$scope.msni*/
                     casaFlag: $scope.casaFlag,
@@ -2247,27 +2335,22 @@
                     interes_p2: ($scope.casaFlag==1) ? 0.011083333 : 0.01,
                     interes_p3: ($scope.casaFlag==1) ? 0.011083333 : 0.0125,
                     contadorInicial: 0,
-                    capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan*12)),
+                    capital: (mesesDiferir > 0) ? (r1 / (($scope.age_plan*12) - mesesDiferir)) : (r1 / ($scope.age_plan*12)),
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche
-                }
+                };
                 // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
                 $scope.engancheFinal = $scope.infoLote.engancheF;
                 // console.log('FINAL xd ',$scope.engancheFinal);
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;
                 // console.log('Enganche Final etse sixd', $scope.engancheFinal);
-                let apartadoSum = (parseFloat($scope.apartado) == 0) ? 0 : parseFloat($scope.apartado);
-                let engancheSum = (parseFloat($scope.infoLote.engancheF)==0) ? 0 : parseFloat($scope.infoLote.engancheF);
-                $scope.saldoFinal = parseFloat($scope.infoLote.precioTotal);
-                // console.log('ALABERGAAAA');
-                $scope.precioFinal = parseFloat($scope.infoLote.precioTotal);
-                // console.log('engancheSum antes:',engancheSum);
-                $scope.precioFinal = ($scope.precioFinal    +(engancheSum+apartadoSum));
-                // console.log('apartadoSum', apartadoSum);
-                // console.log('engancheSum', engancheSum);
-                // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
-                // console.log('enganche', enganche);
+
+
+
+
+                // $scope.precioFinal = parseFloat($scope.infoLote.precioTotal);
+                // $scope.precioFinal = ($scope.precioFinal + (engancheSum+apartadoSum));
                 $scope.preciom2F = ($scope.preciom2);
 
 
@@ -2279,324 +2362,95 @@
                 if($scope.infoLote.meses >=12 && $scope.infoLote.meses <= 36) {
 
                     var range=[];
-                    if($scope.descMSI == 0){
-                        ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
-                    } else if($scope.descMSI == 1){
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                         ini = $scope.infoLote.contadorInicial;
+                        console.log('P1');
+                    }
+                    else{
+                        if($scope.descMSI == 0){
+                            ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
+                        } else if($scope.descMSI == 1){
+                            ini = $scope.infoLote.contadorInicial;
+                        }
+
                     }
 
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true)
+                    {
+                        ini = $scope.infoLote.contadorInicial;
+                        var engd = (enganche - $scope.apartado);
+                        var engd2 = (engd/$scope.mesesdiferir);
+                        var saldoDif = ($scope.precioFinal - $scope.apartado);
 
-                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                        var rangEd=[];
+                        for (var e = 0; e < $scope.mesesdiferir; e++) {
 
-
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
-
-                        ini =  $scope.infoLote.contadorInicial;
-
-                        if($scope.noPagomensualidad == 1){
-
-
-                            var rangePlanc=[];
-
-
-                            for (var i = ini; i < 12; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-                                rangePlanc.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : 0,
-                                    "interes" : 0,
-                                    "total" : 0,
-                                    "saldo" : $scope.saldoFinal,
-
-                                });
-                                mes++;
-
-                                $scope.finalMesesp1PlanC = rangePlanc.length;
-                                ini = rangePlanc.length;
+                            if(mes == 13){
+                                mes = '01';
+                                yearc++;
+                            }
+                            if(mes == 2){
+                                mes = '02';
+                            }
+                            if(mes == 3){
+                                mes = '03';
+                            }
+                            if(mes == 4){
+                                mes = '04';
+                            }
+                            if(mes == 5){
+                                mes = '05';
+                            }
+                            if(mes == 6){
+                                mes = '06';
+                            }
+                            if(mes == 7){
+                                mes = '07';
+                            }
+                            if(mes == 8){
+                                mes = '08';
+                            }
+                            if(mes == 9){
+                                mes = '09';
+                            }
+                            if(mes == 10){
+                                mes = '10';
+                            }
+                            if(mes == 11){
+                                mes = '11';
+                            }
+                            if(mes == 12){
+                                mes = '12';
                             }
 
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.fechaApartado;
+                            // if(e == 0){
+                            //     $scope.fechaPM = $scope.dateCf;
+                            // }
+                            // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
 
-                            $scope.rangePlanc = rangePlanc;
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
-
-                            for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                                if(i == 12){
-                                    $scope.fechaPM = $scope.dateCf;
-                                }
-
-
-                                range.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : $scope.infoLote.capital,
-                                    "interes" : 0,
-                                    "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
-
-                                });
-                                mes++;
-
-                                if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
-                                    $scope.total2 = $scope.infoLote.precioTotal;
-                                    $scope.totalPrimerPlan = $scope.infoLote.capital + $scope.infoLote.interes_p1;
-
-                                }
-
-                                $scope.finalMesesp1 = range.length;
-                                ini2 = (range.length + rangePlanc.length);
-                            }
-                            $scope.range= range;
-
-                            //////////
-
-                            $scope.p2 = ($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1 )-1);
-
-                            var range2=[];
-
-                            for (var i = ini2; i < ($scope.infoLote.meses + 12); i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                                $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
-                                range2.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                                    "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
-                                    "total" : $scope.p2,
-                                    "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
-
-                                });
-                                mes++;
-
-
-                                if (i == ($scope.infoLote.meses - 1)){
-                                    $scope.totalSegundoPlan = $scope.p2;
-                                    $scope.totalTercerPlan = 0;
-                                }
-                                $scope.finalMesesp2 = (range2.length);
-                            }
-                            $scope.range2= range2;
-
-
-
-                            // $scope.alphaNumeric = $scope.rangEd.concat($scope.range);
-                            // $scope.alphaNumeric = $scope.dani.concat($scope.range2);
-                            // $scope.alphaNumeric = $scope.range.concat($scope.range2);
-
-
-                            $scope.alphaNumeric = $scope.rangePlanc.concat($scope.range).concat($scope.range2);
-
-
-
-                            $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                    {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                    {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                    {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                    {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                            //pageMargins [left, top, right, bottom]
-                                            doc.pageMargins = [ 140, 40, 10, 50 ];
-                                            doc.alignment = 'center';
-
-                                        }},
-                                ]
-                            ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
-
-
-
+                            rangEd.push({
+                                "fecha" :  day + '-' + mes + '-' + yearc,
+                                "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
+                                "capital" : engd2,
+                                "interes" : 0,
+                                "total" : engd2 + $scope.infoLote.capital,
+                                "mensualidad" : $scope.infoLote.capital,
+                                "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
+                            });
+                            mes++;
                         }
 
 
-                    }
+                        $scope.rangEd= rangEd;
 
-                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
+                        //regresamos el contador de mes para que empiece la corrida normal
+                        $scope.rangEd.map(()=>{
+                            mes = mes - 1;
+                        });
+
+                    }
 
 
 
@@ -3157,342 +3011,101 @@
                     }
                 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
                 /////////// TABLES X 4 A 10 AÑOS ////////////
                 if($scope.infoLote.meses >=48 && $scope.infoLote.meses <=120 ) {
 
                     var range=[];
 
 
-                    if($scope.descMSI == 0){
-                        ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
-                    } else if($scope.descMSI == 1){
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                         ini = $scope.infoLote.contadorInicial;
+                        console.log('P1');
+                    }
+                    else{
+                        if($scope.descMSI == 0){
+                            ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
+                        } else if($scope.descMSI == 1){
+                            ini = $scope.infoLote.contadorInicial;
+                        }
+
                     }
 
-//////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true)
+                    {
+                        ini = $scope.infoLote.contadorInicial;
+                        var engd = (enganche - $scope.apartado);
+                        var engd2 = (engd/$scope.mesesdiferir);
+                        var saldoDif = ($scope.precioFinal - $scope.apartado);
 
+                        var rangEd=[];
+                        for (var e = 0; e < $scope.mesesdiferir; e++) {
 
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
-
-                        ini =  $scope.infoLote.contadorInicial;
-
-
-                        if($scope.noPagomensualidad == 1){
-
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
-                            var rangePlanc=[];
-
-
-                            for (var i = ini; i < 12; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-                                rangePlanc.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : 0,
-                                    "interes" : 0,
-                                    "total" : 0,
-                                    "saldo" : $scope.saldoFinal,
-
-                                });
-                                mes++;
-
-                                $scope.finalMesesp1PlanC = rangePlanc.length;
-                                ini = rangePlanc.length;
+                            if(mes == 13){
+                                mes = '01';
+                                yearc++;
+                            }
+                            if(mes == 2){
+                                mes = '02';
+                            }
+                            if(mes == 3){
+                                mes = '03';
+                            }
+                            if(mes == 4){
+                                mes = '04';
+                            }
+                            if(mes == 5){
+                                mes = '05';
+                            }
+                            if(mes == 6){
+                                mes = '06';
+                            }
+                            if(mes == 7){
+                                mes = '07';
+                            }
+                            if(mes == 8){
+                                mes = '08';
+                            }
+                            if(mes == 9){
+                                mes = '09';
+                            }
+                            if(mes == 10){
+                                mes = '10';
+                            }
+                            if(mes == 11){
+                                mes = '11';
+                            }
+                            if(mes == 12){
+                                mes = '12';
                             }
 
-
-                            $scope.rangePlanc = rangePlanc;
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
-
-                            for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                                if(i == 12){
-                                    $scope.fechaPM = $scope.dateCf;
-                                }
-
-                                range.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : $scope.infoLote.capital,
-                                    "interes" : 0,
-                                    "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
-
-                                });
-                                mes++;
-
-                                if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
-                                    $scope.total2 = $scope.infoLote.precioTotal;
-                                    $scope.totalPrimerPlan = $scope.infoLote.capital + $scope.infoLote.interes_p1;
-
-                                }
-
-                                $scope.finalMesesp1 = range.length;
-                                ini2 = (range.length + rangePlanc.length);
-
-
-                            }
-                            $scope.range= range;
-
-                            //////////
-
-                            $scope.p2 = ($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1 )-1);
-
-                            var range2=[];
-
-
-                            for (var i = ini2; i < ($scope.infoLote.meses + 12); i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-                                $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
-                                range2.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                                    "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
-                                    "total" : $scope.p2,
-                                    "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
-
-                                });
-
-                                mes++;
-
-                                if (i == ($scope.infoLote.meses - 1)){
-                                    $scope.totalSegundoPlan = $scope.p2;
-
-                                }
-                                $scope.finalMesesp2 = (range2.length);
-
-
-                            }
-                            $scope.range2= range2;
-
-
-                            $scope.alphaNumeric = $scope.rangePlanc.concat($scope.range).concat($scope.range2);
-
-                            // $scope.alphaNumeric = $scope.range.concat($scope.range2);
-
-
-
-                            $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                    {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                    {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                    {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                    {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                            //pageMargins [left, top, right, bottom]
-                                            doc.pageMargins = [ 140, 40, 10, 50 ];
-                                            doc.alignment = 'center';
-
-                                        }},
-                                ]
-                            ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
-
-
-
-
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.fechaApartado;
+                            // if(e == 0){
+                            //     $scope.fechaPM = $scope.dateCf;
+                            // }
+                            // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
+
+                            rangEd.push({
+                                "fecha" :  day + '-' + mes + '-' + yearc,
+                                "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
+                                "capital" : engd2,
+                                "interes" : 0,
+                                "total" : engd2 + $scope.infoLote.capital,
+                                "mensualidad" : $scope.infoLote.capital,
+                                "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
+                            });
+                            mes++;
                         }
 
 
+                        $scope.rangEd= rangEd;
+
+                        //regresamos el contador de mes para que empiece la corrida normal
+                        $scope.rangEd.map(()=>{
+                            mes = mes - 1;
+                        });
+
                     }
-
-//////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
-
-
-
 
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
@@ -4167,441 +3780,105 @@
 
 
                 }
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                 /////////// TABLES X 11 A 20 AÑOS ////////////
                 if($scope.infoLote.meses >= 132 && $scope.infoLote.meses <= 240) {
-
                     var range=[];
 
 
-                    if($scope.descMSI == 0){
-                        ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
-                    } else if($scope.descMSI == 1){
+                    // if($scope.descMSI == 0){
+                    //     ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
+                    // } else if($scope.descMSI == 1){
+                    //     ini = $scope.infoLote.contadorInicial;
+                    // }
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                         ini = $scope.infoLote.contadorInicial;
+                        console.log('P1');
+                    }else{
+                        if($scope.descMSI == 0){
+                            ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
+                        } else if($scope.descMSI == 1){
+                            ini = $scope.infoLote.contadorInicial;
+                        }
+
                     }
 
+                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true)
+                    {
+                        ini = $scope.infoLote.contadorInicial;
+                        var engd = (enganche - $scope.apartado);
+                        var engd2 = (engd/$scope.mesesdiferir);
+                        var saldoDif = ($scope.precioFinal - $scope.apartado);
 
-                    //////////////////////// ON PLAN CONTRUCTOR ////////////////////////////////////
+                        var rangEd=[];
+                        for (var e = 0; e < $scope.mesesdiferir; e++) {
 
-
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 1) {
-
-                        ini =  $scope.infoLote.contadorInicial;
-
-
-                        if($scope.noPagomensualidad == 1){
-                            var rangePlanc=[];
-
-
-                            for (var i = ini; i < 12; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-                                rangePlanc.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : 0,
-                                    "interes" : 0,
-                                    "total" : 0,
-                                    "saldo" : $scope.saldoFinal,
-
-                                });
-                                mes++;
-
-                                $scope.finalMesesp1PlanC = rangePlanc.length;
-                                ini = rangePlanc.length;
+                            if(mes == 13){
+                                mes = '01';
+                                yearc++;
+                            }
+                            if(mes == 2){
+                                mes = '02';
+                            }
+                            if(mes == 3){
+                                mes = '03';
+                            }
+                            if(mes == 4){
+                                mes = '04';
+                            }
+                            if(mes == 5){
+                                mes = '05';
+                            }
+                            if(mes == 6){
+                                mes = '06';
+                            }
+                            if(mes == 7){
+                                mes = '07';
+                            }
+                            if(mes == 8){
+                                mes = '08';
+                            }
+                            if(mes == 9){
+                                mes = '09';
+                            }
+                            if(mes == 10){
+                                mes = '10';
+                            }
+                            if(mes == 11){
+                                mes = '11';
+                            }
+                            if(mes == 12){
+                                mes = '12';
                             }
 
-
-                            $scope.rangePlanc = rangePlanc;
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
-
-                            for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-                                if(i == 12){
-                                    $scope.fechaPM = $scope.dateCf;
-                                }
-
-
-                                range.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : $scope.infoLote.capital,
-                                    "interes" : 0,
-                                    "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                    "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
-
-                                });
-                                mes++;
-
-                                if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
-                                    $scope.total2 = $scope.infoLote.precioTotal;
-                                    $scope.totalPrimerPlan = $scope.infoLote.capital + $scope.infoLote.interes_p1;
-
-
-                                }
-
-
-                                $scope.finalMesesp1 = range.length;
-                                ini2 = (range.length + rangePlanc.length);
-
-
-                            }
-                            $scope.range= range;
-
-                            //////////
-
-                            $scope.p2 = ($scope.infoLote.interes_p2 *  Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1) * $scope.total2) / ( Math.pow(1 + $scope.infoLote.interes_p2, ($scope.infoLote.meses + 12) - $scope.infoLote.mesesSinInteresP1 )-1);
-
-                            var range2=[];
-
-                            for (var i = ini2; i < 120; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-                                $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
-                                $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
-                                range2.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i + 1,
-                                    "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
-                                    "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
-                                    "total" : $scope.p2,
-                                    "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
-
-                                });
-                                mes++;
-
-
-                                if (i == 119){
-                                    $scope.total3 = $scope.total2;
-                                    $scope.totalSegundoPlan = $scope.p2;
-
-                                }
-                                $scope.finalMesesp2 = (range2.length);
-
-                            }
-                            $scope.range2= range2;
-
-
-
-                            //////////
-
-
-
-                            $scope.p3 = ($scope.infoLote.interes_p3 *  Math.pow(1 + $scope.infoLote.interes_p3, ($scope.infoLote.meses + 12) - 120) * $scope.total3) / ( Math.pow(1 + $scope.infoLote.interes_p3, ($scope.infoLote.meses + 12) - 120)-1);
-
-
-                            var range3=[];
-
-                            for (var i = 121; i < ($scope.infoLote.meses + 12) + 1; i++) {
-
-                                if( (mes == 13) || (mes == 14) || (mes == 15) ){
-
-
-                                    if(mes == 13){
-
-                                        mes = '01';
-                                        yearc++;
-
-                                    } else if (mes == 14) {
-
-                                        mes = '02';
-                                        yearc++;
-
-                                    } else if (mes == 15) {
-
-                                        mes = '03';
-                                        yearc++;
-
-                                    }
-
-
-                                }
-
-                                if(mes == 2){
-                                    mes = '02';
-                                }
-                                if(mes == 3){
-                                    mes = '03';
-                                }
-                                if(mes == 4){
-                                    mes = '04';
-                                }
-                                if(mes == 5){
-                                    mes = '05';
-                                }
-                                if(mes == 6){
-                                    mes = '06';
-                                }
-                                if(mes == 7){
-                                    mes = '07';
-                                }
-                                if(mes == 8){
-                                    mes = '08';
-                                }
-                                if(mes == 9){
-                                    mes = '09';
-                                }
-                                if(mes == 10){
-                                    mes = '10';
-                                }
-                                if(mes == 11){
-                                    mes = '11';
-                                }
-                                if(mes == 12){
-                                    mes = '12';
-                                }
-
-                                $scope.dateCf = day + '-' + mes + '-' + yearc;
-
-
-
-                                $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
-                                $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
-                                var interes_3 = ($scope.interes_plan3= ($scope.total3 * $scope.infoLote.interes_p3));
-                                var saldoFinal_3 = ($scope.total3 = ($scope.total3 -$scope.capital2));
-
-                                range3.push({
-
-                                    "fecha" : $scope.dateCf,
-                                    "pago" : i,
-                                    "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
-                                    "interes" : (interes_3 <= 0) ? Math.abs(interes_3) : interes_3,
-                                    "total" : $scope.p3,
-                                    "saldo" : (saldoFinal_3 <= 0) ? Math.abs(saldoFinal_3) : saldoFinal_3,
-
-                                });
-                                mes++;
-
-
-                                if (i == 122){
-                                    $scope.totalTercerPlan = $scope.p3;
-
-                                }
-                                $scope.finalMesesp3 = (range3.length);
-
-                            }
-
-                            $scope.range3= range3;
-
-
-
-                            $scope.alphaNumeric = $scope.rangePlanc.concat($scope.range).concat($scope.range2).concat($scope.range3);
-
-
-
-
-                            // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
-
-                            $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                                    {extend: 'copy', text: '<i class="fa fa-files-o"></i> Copiar'},
-                                    {extend: 'print', text: '<i class="fa fa-print" aria-hidden="true"></i> Imprimir', titleAttr: 'Imprimir'},
-                                    {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'},
-                                    {extend: 'pdfHtml5', text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF', titleAttr: 'PDF', title: '', customize: function(doc) {
-                                            //pageMargins [left, top, right, bottom]
-                                            doc.pageMargins = [ 140, 40, 10, 50 ];
-                                            doc.alignment = 'center';
-
-                                        }},
-                                ]
-                            ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
-
-
-
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.fechaApartado;
+                            // if(e == 0){
+                            //     $scope.fechaPM = $scope.dateCf;
+                            // }
+                             // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
+
+                            rangEd.push({
+                                "fecha" :  day + '-' + mes + '-' + yearc,
+                                "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
+                                "capital" : engd2,
+                                "interes" : 0,
+                                "total" : engd2 + $scope.infoLote.capital,
+                                "mensualidad" : $scope.infoLote.capital,
+                                "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
+                            });
+                            mes++;
                         }
 
 
+                        $scope.rangEd= rangEd;
+
+                        //regresamos el contador de mes para que empiece la corrida normal
+                        $scope.rangEd.map(()=>{
+                            mes = mes - 1;
+                        });
+
                     }
-
-                    //////////////////////// OFF PLAN CONTRUCTOR ////////////////////////////////////
-
 
                     if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
 
@@ -4679,17 +3956,20 @@
                                 if(i == 0){
                                     $scope.fechaPM = $scope.dateCf;
                                 }
-                            } else if($scope.helpMxMerida1 == 1 || $scope.helpMxMerida3 == 1){
+                            }
+                            else if($scope.helpMxMerida1 == 1 || $scope.helpMxMerida3 == 1){
                                 if(i == 8){
                                     $scope.fechaPM = $scope.dateCf;
                                 }
-                            } else if($scope.helpMxMerida2 == 1 || $scope.helpMxMerida4 == 1){
+                            }
+                            else if($scope.helpMxMerida2 == 1 || $scope.helpMxMerida4 == 1){
 
                                 if(i == 4){
                                     $scope.fechaPM = $scope.dateCf;
                                 }
 
-                            } else {
+                            }
+                            else {
                                 if(i == 0){
                                     $scope.fechaPM = $scope.dateCf;
                                 }
@@ -4724,18 +4004,38 @@
 
                                 $scope.infoLote.capital = mensualidad;
                             }
+                            let longitud_diferidos = $scope.rangEd.length;
+
+                            if($scope.day.day=='Diferido'){
+                                if(i>longitud_diferidos && $scope.mensualidad_con_enganche==true){
+                                    console.log('i', i);
+                                    console.log('longitud_diferidos', longitud_diferidos);
+                                    console.log('$scope.mensualidad_con_enganche', $scope.mensualidad_con_enganche);
+                                    range.push({
+                                        "fecha" : $scope.dateCf,
+                                        "pago" : i + 1,
+                                        "capital" : $scope.infoLote.capital,
+                                        "interes" : 0,
+                                        "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
+                                        "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+
+                                    });
+                                }
+                            }
+                            else{
+                                range.push({
+                                    "fecha" : $scope.dateCf,
+                                    "pago" : i + 1,
+                                    "capital" : $scope.infoLote.capital,
+                                    "interes" : 0,
+                                    "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
+                                    "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+
+                                });
+                            }
 
 
 
-                            range.push({
-                                "fecha" : $scope.dateCf,
-                                "pago" : i + 1,
-                                "capital" : $scope.infoLote.capital,
-                                "interes" : 0,
-                                "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
-
-                            });
                             mes++;
 
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
@@ -4744,14 +4044,21 @@
 
 
                             }
-
-                            if($scope.descMSI == 0){
-                                ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
-
-                            } else if($scope.descMSI == 1){
+                            if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                                 ini2 = range.length;
+                                console.log('ini2', ini2);
+                            }else{
+                                if($scope.descMSI == 0 ){
+                                    ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
+
+                                } else if($scope.descMSI == 1){
+                                    ini2 = range.length;
+
+                                }
 
                             }
+
+
 
 
                             $scope.finalMesesp1 = (range.length);
@@ -5203,6 +4510,7 @@
                     if($scope.infoLote.mesesSinInteresP1 == 36) {
 
 
+
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
 
                             if( (mes == 13) || (mes == 14) || (mes == 15) ){
@@ -5274,20 +4582,29 @@
                             if($scope.helpMxMerida1 == 0 && $scope.helpMxMerida2 == 0 && $scope.helpMxMerida3 == 0 && $scope.helpMxMerida4 == 0){
                                 if(i == 0){
                                     $scope.fechaPM = $scope.dateCf;
+                                    console.log('F1', $scope.fechaPM);
                                 }
-                            } else if($scope.helpMxMerida1 == 1 || $scope.helpMxMerida3 == 1){
+                            }
+                            else if($scope.helpMxMerida1 == 1 || $scope.helpMxMerida3 == 1){
                                 if(i == 8){
                                     $scope.fechaPM = $scope.dateCf;
+                                    console.log('F2', $scope.fechaPM);
                                 }
-                            } else if($scope.helpMxMerida2 == 1 || $scope.helpMxMerida4 == 1){
+                            }
+                            else if($scope.helpMxMerida2 == 1 || $scope.helpMxMerida4 == 1){
 
                                 if(i == 4){
                                     $scope.fechaPM = $scope.dateCf;
+                                    console.log('F3', $scope.fechaPM);
+
                                 }
 
-                            } else {
+                            }
+                            else {
                                 if(i == 0){
                                     $scope.fechaPM = $scope.dateCf;
+                                    console.log('F4', $scope.fechaPM);
+
                                 }
                             }
 
@@ -5318,16 +4635,54 @@
                                 $scope.infoLote.capital = mensualidad;
                             }
 
-                            range.push({
+                            if($scope.day.day=='Diferido' && $scope.mensualidad_con_enganche==true){
+                                let longitud_diferidos = $scope.rangEd.length;
+                                if((i+1) <= longitud_diferidos ){
+                                    range.push({
 
-                                "fecha" : $scope.dateCf,
-                                "pago" : i + 1,
-                                "capital" : $scope.infoLote.capital,
-                                "interes" : 0,
-                                "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
-                                "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+                                        "fecha" : $scope.dateCf,
+                                        "pago" : i + 1,
+                                        "capital" : $scope.infoLote.capital + $scope.rangEd[i].capital,
+                                        "interes" : 0,
+                                        "total" : ($scope.infoLote.capital + $scope.infoLote.interes_p1) + $scope.rangEd[i].capital,
+                                        "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - ($scope.infoLote.capital + $scope.rangEd[i].capital),
 
-                            });
+                                    });
+                                }else{
+                                    range.push({
+
+                                        "fecha" : $scope.dateCf,
+                                        "pago" : i + 1,
+                                        "capital" : $scope.infoLote.capital,
+                                        "interes" : 0,
+                                        "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
+                                        "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+                                    });
+                                }
+
+                            }
+                            else{
+                                range.push({
+
+                                    "fecha" : $scope.dateCf,
+                                    "pago" : i + 1,
+                                    "capital" : $scope.infoLote.capital,
+                                    "interes" : 0,
+                                    "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
+                                    "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+
+                                });
+                            }
+                            // range.push({
+                            //
+                            //     "fecha" : $scope.dateCf,
+                            //     "pago" : i + 1,
+                            //     "capital" : $scope.infoLote.capital,
+                            //     "interes" : 0,
+                            //     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
+                            //     "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
+                            //
+                            // });
                             mes++;
 
                             if (i == ($scope.infoLote.mesesSinInteresP1 - 1)){
@@ -5336,14 +4691,31 @@
 
 
                             }
+                            //
+                            // if($scope.descMSI == 0){
+                            //     ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
+                            //
+                            // } else if($scope.descMSI == 1){
+                            //     ini2 = range.length;
+                            //
+                            // }
 
-                            if($scope.descMSI == 0){
-                                ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
 
-                            } else if($scope.descMSI == 1){
+                            if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                                 ini2 = range.length;
+                            }else{
+                                if($scope.descMSI == 0 ){
+                                    ini2 = ($scope.mesesdiferir > 0) ? (range.length + $scope.mesesdiferir) : range.length;
+
+                                } else if($scope.descMSI == 1){
+                                    ini2 = range.length;
+
+                                }
 
                             }
+
+
+
 
 
                             $scope.finalMesesp1 = (range.length);
@@ -5422,7 +4794,6 @@
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
@@ -5547,8 +4918,12 @@
                         }
 
                         $scope.range3= range3;
-
-                        $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
+                        if($scope.day.day=='Diferido' && $scope.mensualidad_con_enganche==true){
+                            $scope.validaEngDif =  [];
+                        }else{
+                            $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
+                        }
+                        // $scope.validaEngDif = ($scope.mesesdiferir > 0) ? $scope.rangEd : [];
                         $scope.alphaNumeric = $scope.validaEngDif.concat($scope.range).concat($scope.range2).concat($scope.range3);
 
                         // $scope.alphaNumeric = $scope.range.concat($scope.range2).concat($scope.range3);
@@ -5570,7 +4945,7 @@
                     }
 
                 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             }
 
 
@@ -5586,14 +4961,19 @@
             // $scope.porcentaje = $('#porcentajeEnganche').val();
 
 
-
+            $scope.checkMensualidadEnganche = function(){
+                // console.log('que onda');
+                calcularCF();
+            };
 
             $scope.daysEng = function() {
                 $scope.daysEnganche = $scope.day.day;
+                //chacha
                 // console.log("Andamos debuggeando: ", $scope.day.day);
                 var TuFecha = new Date();
                 var dias = parseInt($scope.daysEnganche);
                 TuFecha.setDate(TuFecha.getDate() + dias);
+
                 if($scope.day.day != 'Diferido')
                 {
                     $scope.fechaEng = TuFecha.getDate() + '-' + (TuFecha.getMonth() + 1) + '-' + TuFecha.getFullYear();
@@ -5660,6 +5040,10 @@
                     $scope.fechaEng = 'Fecha Indefinida';
                     if($scope.day.day =='Diferido')
                     {
+
+
+
+
                         var apartado = angular.element( document.querySelector( '#aptdo' ) );
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var porcentajeEnganche = angular.element( document.querySelector( '#porcentajeEnganche' ) );
@@ -5668,7 +5052,12 @@
                             porcentajeEnganche.prop('disabled', true);
                             cantidadEnganche.prop('disabled', true);
                         }
-
+                        if(porcentajeEnganche.val() == 10){
+                            $('#dppe').removeClass('col-md-12');
+                            $('#dppe').addClass('col-md-6');
+                            $('#select_mce').removeClass('hide');
+                            $('#select_mce').addClass('col-md-6');
+                        }
                         $( '#aptdo' ).prop( "disabled", false );
                         $( '#msdif' ).prop( "disabled", false );
                         var finalLenght = $scope.decFin.length;
@@ -5833,7 +5222,7 @@
                 /*nuevo*/
                 var porcentajeEnganche = angular.element( document.querySelector('#porcentajeEnganche') );
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
-                var r1 = $scope.precioFinal;
+                // var r1 = $scope.precioFinal;
                 if($scope.proyecto.idResidencial==27){
                     if(porcentajeEnganche.val() == 0){
                         document.getElementById("day").disabled = true;
@@ -5863,7 +5252,7 @@
                     //porcentajeEnganche    ---  ?
                     //porcentajeEnganche*r1/100
                     let pe = porcentajeEnganche.val();
-                    var cantidadFromPorcnt = (pe*r1)/100;
+                    var cantidadFromPorcnt = (pe*$scope.precioFinal)/100;
                     cantidadEnganche.val(parseFloat(cantidadFromPorcnt));
                     // $scope.porcentaje = cantidadToGetP;
                     // $scope.porcentajeEng = cantidadToGetP;
@@ -5880,75 +5269,10 @@
                 }
                 else{
                     let pe = porcentajeEnganche.val();
-                    var cantidadFromPorcnt = (pe*r1)/100;
+                    var cantidadFromPorcnt = (pe*$scope.precioFinal)/100;
                     cantidadEnganche.val(parseFloat(cantidadFromPorcnt));
                     $scope.engancheFinal = cantidadFromPorcnt;
                     $scope.cantidad = cantidadFromPorcnt;
-
-                    // if(r1>=500000){
-                    //
-                    //     // var engToShow  =   r1/ 100;
-                    //     var engToShow  =   (r1 * (porcentajeEnganche.val() / 100));
-                    //     let porcetajeMin = 100*engToShow/r1;
-                    //
-                    //     var engToShowDeberia  =   r1/ 100;
-                    //     let porcetajeMinDeberia = 100*engToShowDeberia/r1;
-                    //
-                    //     console.log('engToShow', engToShow);
-                    //     if (cantidadEnganche.val()<=engToShow || porcentajeEnganche.val()<=porcetajeMin) {
-                    //         if (engToShow == 0) {
-                    //             cantidadEnganche.val(engToShowDeberia);
-                    //             $scope.cantidad = engToShowDeberia;
-                    //             $scope.engancheFinal = engToShowDeberia;
-                    //             console.log('*asdasdasd*', porcetajeMinDeberia);
-                    //             // $scope.porcentaje = porcetajeMinDeberia.toFixed(2);
-                    //             porcentajeEnganche.val(porcetajeMinDeberia.toFixed(2));
-                    //             $scope.porcentaje = porcentajeEnganche.val();
-                    //             calcularCF();
-                    //         } else {
-                    //             console.log('asd.l.');
-                    //             cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
-                    //             $scope.cantidad = parseFloat(engToShow).toFixed(2);
-                    //             $scope.engancheFinal = parseFloat(engToShow).toFixed(2);
-                    //             $scope.porcentaje = porcentajeEnganche.val();
-                    //             calcularCF();
-                    //         }
-                    //
-                    //     } else {
-                    //         cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
-                    //         $scope.cantidad = parseFloat(engToShow).toFixed(2);
-                    //         $scope.engancheFinal = parseFloat(engToShow).toFixed(2);
-                    //         $scope.porcentaje = porcentajeEnganche.val();
-                    //         calcularCF();
-                    //     }
-                    // }
-                    // else{
-                    //     let porcetajeMin = 100*5000/r1;
-                    //     var engToShow  =   (r1 * (porcentajeEnganche.val() / 100));
-                    //     console.log('engToShow', engToShow);
-                    //     if (engToShow < 5000) {
-                    //         if (engToShow == 0) {
-                    //
-                    //         } else {
-                    //             console.log('KK1', porcentajeEnganche.val());
-                    //             cantidadEnganche.val(5000);
-                    //             $scope.cantidad = 5000;
-                    //             $scope.engancheFinal = 5000;
-                    //             $scope.porcentaje = porcetajeMin.toFixed(2);
-                    //             porcentajeEnganche.val(porcetajeMin.toFixed(2));
-                    //             calcularCF();
-                    //         }
-                    //
-                    //     } else {
-                    //
-                    //         console.log('KK2', porcentajeEnganche.val());
-                    //         cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
-                    //         $scope.cantidad = parseFloat(engToShow).toFixed(2);
-                    //         $scope.engancheFinal = parseFloat(engToShow).toFixed(2);
-                    //         $scope.porcentaje = porcentajeEnganche.val();
-                    //         calcularCF();
-                    //     }
-                    // }
                 }
 
 
@@ -5970,40 +5294,6 @@
 
 
 
-
-
-
-                // if(r1>=500000){
-                //     $('#porcentajeEnganche').attr('min', 1);
-                //     let porcetaje = 0.01;
-                //     let porcentajeDanero = (porcetaje*r1);
-                //     $('#cantidadEnganche').attr('min', porcentajeDanero);
-                //     if(porcentajeEnganche.val()<1){
-                //         porcentajeEnganche.value=1;
-                //         cantidadEnganche.val(porcentajeDanero);
-                //         $scope.engancheFinal = porcentajeDanero;
-                //     }else if(cantidadEnganche.val()<porcentajeDanero){
-                //         cantidadEnganche.val(porcentajeDanero);
-                //         $scope.engancheFinal = porcentajeDanero;
-                //     }
-                // }else{
-                //     $('#cantidadEnganche').attr('min', 5000);
-                //     let totalTerreno = r1;
-                //     let porcetajeMin = 100*5000/totalTerreno;
-                //     $('#porcentajeEnganche').attr('min', porcetajeMin);
-                //
-                //     if(porcentajeEnganche.val()<porcetajeMin){
-                //         porcentajeEnganche.val(porcetajeMin.toFixed(2));
-                //         cantidadEnganche.val(5000);
-                //         $scope.engancheFinal = 5000;
-                //         $scope.cantidad = 5000;
-                //     }else if(cantidadEnganche.val()<5000){
-                //         cantidadEnganche.val(5000);
-                //         $scope.engancheFinal = 5000;
-                //         $scope.cantidad = 5000;
-                //     }
-                // }
-                // calcularCF();
             };
 
             $scope.onChangeProcentaje=()=>{
@@ -7604,6 +6894,7 @@
 
 
 
+                        $scope.day = '';
                         $scope.superficie = response.data[0].sup;
                         $scope.preciom2 = response.data[0].precio;
                         $scope.total = response.data[0].total;
@@ -7679,10 +6970,10 @@
                                 let porcentajeAprox = (porcentajeDanero*100/response.data[0].total)
                                 // $('#cantidadEnganche').attr('min', porcentajeDanero);
                                 if(engancheCalculadoCR >= response.data[0].enganche){
-                                    $('#porcentajeEnganche').val(10);
+                                    // $('#porcentajeEnganche').val(10);
                                     // console.log('aqui 1 %:',  $('#porcentajeEnganche').val());
                                 }else{
-                                    $('#porcentajeEnganche').val(porcentajeAprox);
+                                    // $('#porcentajeEnganche').val(porcentajeAprox);
                                     // console.log('aqui 2 %:', $('#porcentajeEnganche').val());
                                 }
                                 console.log('engancheCalculadoCR', engancheCalculadoCR);
@@ -7723,7 +7014,6 @@
             $scope.onSelectChangeLC = function(tipo_casa , lote) {
                 // console.log("tipo_casa: ", tipo_casa);
                 // console.log("lote: ", lote);
-
                 $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa: tipo_casa}).then(
                     function (response) {
 
