@@ -383,6 +383,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     }
                     else{
                         escrituracionTable.ajax.reload(null,false);
+                        escrituracionTableTest.ajax.reload(null,false);
                     }
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
@@ -1923,6 +1924,7 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
         }   
            
         escrituracionTable.ajax.reload( null , false );
+        escrituracionTableTest.ajax.reload(null,false);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }

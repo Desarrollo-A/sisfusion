@@ -441,7 +441,7 @@ class Postventa_model extends CI_Model
         $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 1 ? ',2,10' : ($notariaExterna->personalidad_juridica == 2 ? ',16,21' : '' );
 
         if($status == 9){
-            $tipo_doc = "IN (11,13,20 $docNotariaExterna)";
+            $tipo_doc = "IN (11,13 $docNotariaExterna)";
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
         }elseif($status == 19 ||$status == 22 || $status == 24){
@@ -1235,7 +1235,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getMotivosRechazos($tipoDocumento)
     {
-        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND tipo_documento = $tipoDocumento");
+        $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 3 AND tipo_documento = $tipoDocumento");
         return $query->result();
     }
     function getStatusSiguiente($estatus){
