@@ -431,29 +431,29 @@ class Postventa_model extends CI_Model
 
     function existNotariaExterna($idSolicitud)
     {
-        $notariaExterna = $this->db->query("SELECT idControl FROM control_estatus WHERE idEscrituracion = $idSolicitud 
-                                        AND comentarios LIKE '%Se trabajara con Notaría externa%'");
+        $notariaExterna = $this->db->query("SELECT id_notaria,personalidad_juridica FROM solicitudes_escrituracion WHERE id_solicitud=$idSolicitud");
         return $notariaExterna->row();
     }
 
     function getDocumentsClient($idSolicitud, $status, $notariaExterna)
     {
-        $docNotariaExterna = ($notariaExterna) ? '' : ',20';
+        $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
+        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 1 ? ',2,10' : ($notariaExterna->personalidad_juridica == 2 ? ',16,21' : '' );
 
         if($status == 9){
             $tipo_doc = "IN (11,13,20 $docNotariaExterna)";
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
         }elseif($status == 19 ||$status == 22 || $status == 24){
-            $tipo_doc = 'IN (1,2,3,4,5,6,8,9,10,12,14,21)';
+            $tipo_doc = "IN (1,2,3,4,5,6,8,9,10,11,12,17,18 $docPersonalidadJuridica)";
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
-        }elseif($status == 29 || $status == 40){
+        }elseif($status == 29 || $status == 35 || $status == 40){
             $tipo_doc = 'IN (15)';
-        }elseif($status == 23){
-            $tipo_doc = 'IN (22)';
-        }elseif($status == 24){
-            $tipo_doc = 'IN (16)';
+        }elseif($status == 47 || $status == 50){
+            $tipo_doc = 'IN (14)';
+        }elseif($status == 42 || $status == 52){
+            $tipo_doc = 'IN (19)';
         }
 
         $query = $this->db->query("SELECT de.idDocumento, de.movimiento, de.expediente, de.modificado, de.status , de.idSolicitud ,de.idUsuario ,de.tipo_documento,
