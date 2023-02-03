@@ -60,12 +60,19 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="fas fa-file fa-2x"></i>
-                        </div>
+                        <ul class="nav nav-tabs nav-tabs-cm">
+                                    <li class="active">
+                                        <a href="#rechazo_documento" role="tab" id="reasonsForRejectionTable" data-toggle="tab">Rechazo por documento</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#rechazo_solicitud" role="tab" id="reasoForApplicationTable" data-toggle="tab">Rechazo por solicitud</a>
+                                    </li>
+                        </ul>
+                    <div class="card card no-shadow m-0">
                         <div class="card-content">
-                            <div class="toolbar">
+                            <div class="nav-tabs-custom">
+                              <div class="tab-content p-2">      
                                 <h3 class="card-title center-align">Adminstrador - motivos de rechazo por documento</h3>
                                 <div class="row aligned-row">
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -80,28 +87,29 @@
                                         <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
                                             <i class="fas fa-plus"></i>
                                         </button>
-                                    </div>
+                                            </div>
 
-                                </div>
-                            </div>
-                            <br>
-                            <div class="material-datatables" id="box-reasonsForRejectionTable">
-                                <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-striped table-hover"
-                                               id="reasonsForRejectionTable" name="reasonsForRejectionTable">
-                                            <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>DOCUMENTO</th>
-                                                <th>MOTIVO</th>
-                                                <th>ESTATUS</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                        </div>
                                     </div>
-                                </div>
+                                    <br>
+                                    <div class="material-datatables" id="box-reasonsForRejectionTable">
+                                        <div class="form-group">
+                                            <div class="table-responsive">
+                                                <table class="table-striped table-hover"
+                                                    id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>DOCUMENTO</th>
+                                                        <th>MOTIVO</th>
+                                                        <th>ESTATUS</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                 </div>
                             </div>
                         </div>
                     </div>
