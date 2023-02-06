@@ -68,6 +68,7 @@
                                                                 <th>FECHA DE CREACIÓN</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>ÁREA</th>
+                                                                <th>ASIGNADA A</th>
                                                                 <th>COMENTARIOS</th>
                                                                 <th>OBSERVACIONES</th>
                                                                 <th>ACCIONES</th>
@@ -119,6 +120,7 @@
                                                                             <th>FECHA DE CREACIÓN</th>
                                                                             <th>ESTATUS</th>
                                                                             <th>ÁREA</th>
+                                                                            <th>ASIGNADA A</th>
                                                                             <th>COMENTARIOS</th>
                                                                             <th>OBSERVACIONES</th>
                                                                             <th>ACCIONES</th>
