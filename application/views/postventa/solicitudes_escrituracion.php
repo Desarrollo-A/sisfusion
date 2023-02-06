@@ -66,6 +66,7 @@
                                                                 <th>FECHA DE CREACIÓN</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>ÁREA</th>
+                                                                <th>ASIGNADA A</th>
                                                                 <th>COMENTARIOS</th>
                                                                 <th>OBSERVACIONES</th>
                                                                 <th>ACCIONES</th>
@@ -102,25 +103,28 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="material-datatables">
-                                                <div class="form-group">
-                                                    <table class="table-striped table-hover" id="carga-datatable" name="carga-datatable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID SOLICITUD</th>
-                                                                <th>PROYECTO</th>
-                                                                <!-- <th>CONDOMINIO</th> -->
-                                                                <th>LOTE</th>
-                                                                <th>CLIENTE</th>
-                                                                <th>FECHA DE CREACIÓN</th>
-                                                                <th>ESTATUS</th>
-                                                                <th>ÁREA</th>
-                                                                <th>COMENTARIOS</th>
-                                                                <th>OBSERVACIONES</th>
-                                                                <th>ACCIONES</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                            <table class="table-striped table-hover" id="carga-datatable"
+                                                                    name="carga-datatable">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ID SOLICITUD</th>
+                                                                            <th>PROYECTO</th>
+                                                                            <!-- <th>CONDOMINIO</th> -->
+                                                                            <th>LOTE</th>
+                                                                            <th>CLIENTE</th>
+                                                                            <th>FECHA DE CREACIÓN</th>
+                                                                            <th>ESTATUS</th>
+                                                                            <th>ÁREA</th>
+                                                                            <th>ASIGNADA A</th>
+                                                                            <th>COMENTARIOS</th>
+                                                                            <th>OBSERVACIONES</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                            </table>
+                                                        </div>
                                                 </div>
                                             </div>
                                             <?php include 'common_modals.php' ?>

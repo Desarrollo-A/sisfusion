@@ -840,74 +840,74 @@ class Postventa extends CI_Controller
         switch ($documentType) {
             case 1:
                 $folder = "static/documentos/postventa/escrituracion/INE/";
-                break;
+            break;
             case 2:
                 $folder = "static/documentos/postventa/escrituracion/RFC/";
-                break;
+            break;
             case 3:
                 $folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
-                break;
+            break;
             case 4:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
-                break;
+            break;
             case 5:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
-                break;
+            break;
             case 6:
                 $folder = "static/documentos/postventa/escrituracion/CURP/";
-                break;
+            break;
             case 7:
                 $folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
-                break;
+            break;
             case 8:
                 $folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
-                break;
+            break;
             case 9:
                 $folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
-                break;
+            break;
             case 10:
                 $folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
-                break;
+            break;
             case 11:
                 $folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
-                break;
+            break;
             case 12:
                 // antes fue 13
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
-                break;
+            break;
             case 13:
                 // fue 15
                 $folder = "static/documentos/postventa/escrituracion/FACTURA/";
-                break;
+            break;
             case 14:
                 // fue 16
                 $folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
-                break;
+            break;
             case 15:
                 // fue la 17
                 $folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
-                break;
-            case 18:
-                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-                break;
-            case 19:
+            break;
+            case 16:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
-                break;
+            break;
             case 17:
                 // fue 20
                 $folder = "static/documentos/postventa/escrituracion/OTROS/";
-                break;
-            case 21:
+            break;
+            case 18:
                 // fue 21
                 $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
-                break;
-            case 20:
+            break;
+            case 19:
                 // fue 22
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
-                break;
-            case 23:
+            break;
+            case 20:
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;  
+            break;
+            case 21:
+                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+            break;  
         }
         return $folder;
 
