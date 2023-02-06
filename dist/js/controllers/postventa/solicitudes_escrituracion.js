@@ -2565,7 +2565,7 @@ function buildUploadCards(idNxS){
 
 function createDocRowOtros(row, tr, thisVar,contador = 0){
 //FUNCIÓN PARA CREAR ROWDETAILS DE LA ACTIVIDAD APE004 CARGA DE CONTRATO Y OTROS
-    let v = 0;
+    var v = 0;
     $.post("getDocumentsClient", {
         idEscritura: row.data().id_solicitud,
         idEstatus:row.data().id_estatus
@@ -2587,6 +2587,7 @@ if(estatusAct4.includes(row.data().solicitudes[0].estatus_solicitud)){
             }
         }
         if(v==1){
+            console.log('v');
             escrituracionTable.ajax.reload(null,false);
             createDocRowOtros(rowOtros.row,rowOtros.tr,rowOtros.this);
         }else{

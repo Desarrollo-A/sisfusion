@@ -1024,7 +1024,7 @@ class Postventa extends CI_Controller
         $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
         $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
