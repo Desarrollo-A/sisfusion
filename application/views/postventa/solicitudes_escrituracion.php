@@ -18,7 +18,7 @@
                                 <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
                             </li>
                         </ul>
-                        <div class="card no-shadow m-0">
+                        <div class="card card no-shadow m-0" >
                             <div class="card-content">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
@@ -76,6 +76,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="tab-pane" id="carga_test">
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Carga testimonio</h3>
