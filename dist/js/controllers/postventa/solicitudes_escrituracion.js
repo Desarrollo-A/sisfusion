@@ -471,7 +471,6 @@ $(document).on('click', '#request', function () {
 $(document).on('click', '.comentariosModel', function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    cleanCommentsAsimilados();
 
     id_solicitud = $(this).attr("data-idSolicitud");
     lote = $(this).attr("data-lotes")
