@@ -800,14 +800,14 @@ class Postventa extends CI_Controller
         $presupuestoType = null;
         $idPresupuesto = null;
         $idNxS = null;
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $idPresupuesto = $this->input->post('idPresupuesto');
             $idNxS = $this->input->post('idNxS');
         }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
-        if($documentType == 13){
+        if($documentType == 12){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
             /*if($documentInfo->estatus == 22){
@@ -977,7 +977,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
 
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
@@ -1426,7 +1426,7 @@ class Postventa extends CI_Controller
         $mail->Subject(utf8_decode("Presupuesto escrituracion"));
         // $mail->message('');
 
-        $doc = $this->getFileNameByDoctype($idSolicitud, 13);
+        $doc = $this->getFileNameByDoctype($idSolicitud, 12);
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
         $response = $mail->send();
@@ -2477,7 +2477,7 @@ function saveNotaria(){
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
@@ -2795,7 +2795,7 @@ function saveNotaria(){
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',

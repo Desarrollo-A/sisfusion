@@ -419,7 +419,7 @@ class Postventa_model extends CI_Model
 
     function getFilename($idDocumento, $documentType=null)
     {
-        if($documentType == 13){
+        if($documentType == 12){
             return $this->db->query("SELECT * FROM Presupuestos WHERE idPresupuesto = $idDocumento");
         }else{
             return $this->db->query("SELECT * FROM documentos_escrituracion WHERE idDocumento = $idDocumento");
@@ -428,7 +428,7 @@ class Postventa_model extends CI_Model
 
     function replaceDocument($updateDocumentData, $idDocumento, $documentType = null)
     {
-        if($documentType == 13){
+        if($documentType == 12){
             $response = $this->db->update("Presupuestos", $updateDocumentData, "idPresupuesto = $idDocumento");
         }else{
             $response = $this->db->update("documentos_escrituracion", $updateDocumentData, "idDocumento = $idDocumento");
