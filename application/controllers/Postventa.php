@@ -792,8 +792,7 @@ class Postventa extends CI_Controller
         }*/
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
-    
-        var_dump($id_solicitud,$type,$motivos_rechazo, $area_rechazo);
+
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
         // }elseif($type == 3) {
         //     $comentarios = $_POST['comentarios'];
@@ -2642,10 +2641,12 @@ function saveNotaria(){
 
       public function getDocumentosPorSolicitudss()
       {
+        
           $solicitud      = $this->input->post('solicitud');
           $status        = $this->input->post('estatus');
           $notariaExterna = ''; 
           $validacion     = true;
+
         // var_dump ($solicitud, $estatus);
         if($status == 9){
             $opciones = " (11,13,20 )";
@@ -2655,14 +2656,13 @@ function saveNotaria(){
             $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
         }else if($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $opciones = ' (17,18)';
-        }else if($status == 20){
-            $opciones = ' (15)';
+        }else if($status == 19 || $status == 20){
+            $opciones = ' (1,2,3,4,5,6,8,9,10,16,20,21)';
         }else if($status == 23){
             $opciones = ' (22)';
         }else if($status == 24){
-            $opciones = ' (16)';
+               $opciones = ' (16)';
         }
-
 
           if($solicitud == '' || $status == '')
           {
