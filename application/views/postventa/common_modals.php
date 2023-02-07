@@ -28,12 +28,6 @@
        <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="material-icons">clear</i>
-                    </button>
-                </div>
-                
                 <div class="modal-body">
                     <div class="container mt-5 mb-5">
                         <div class="row">
@@ -52,50 +46,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-                    
-
-
-        <div class="modal fade" id="comentariosModalOriginal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <div class="d-flex" style="background: #AED6F1; justify-content: space-around; align-items: center; padding: 0 17px">
-                                <div id="nameLote"></div>
-                                <div id="infoLote"></div>
-                            </div>
-                                <!-- <ul class="nav nav-tabs" role="tablist" style="background: #AED6F1;">
-                                        <div class="container">
-                                            <div class="row">
-                                                    
-                                            <div>
-                                        </div>
-                                </ul> -->
-                                <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card card-plain">
-                                                    <div class="card-content">
-                                                        <div class="overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                      </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cancelar</button>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
-
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
