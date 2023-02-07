@@ -40,11 +40,9 @@
                             <div class="col-md-6 offset-md-3">
                                 <p id="titulo_comentarios"></p>
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="card card-plain">
-                                                    <div class="card-content">
+                                                    <div class="card-content card card-plain">
                                                     <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
                                                     </div>
                                                 </div>
@@ -57,9 +55,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-             
+                    
 
 
         <div class="modal fade" id="comentariosModalOriginal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
