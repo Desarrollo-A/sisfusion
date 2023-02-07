@@ -334,7 +334,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("idSolicitud", idSolicitud);
         data.append("idDocumento", $("#idDocumento").val());
         data.append("documentType", $("#documentType").val());
-        if($("#documentType").val() == 13){
+        if($("#documentType").val() == 12){
             data.append("presupuestoType", $("#presupuestoType").val());
             data.append("idPresupuesto", $("#idPresupuesto").val());
             data.append("idNxS", $("#idNxS").val());
@@ -483,9 +483,10 @@ $(document).on('click', '.comentariosModel', function (e) {
             $("#comments-list-asimilados").append(`<div class="col-lg-12"><li><a style="color:${v.color}">${v.nombre}</a><a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`);
         });
             }else{
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>');  
+                $("#comments-list-asimilados").append(`<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`);  
             }
     });
+
 });
 
 function cleanCommentsAsimilados() {
@@ -896,6 +897,7 @@ $(document).on('click', '.modalPresupuestos', function(){
     $("#idNxS").val(idNxS);
     buildUploadCards(idNxS);
     $('#loadPresupuestos').modal();
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 $(document).on('click', '.modalCopiaCertificada', function(){
@@ -903,6 +905,7 @@ $(document).on('click', '.modalCopiaCertificada', function(){
     $("#idNxS2").val(idNxS);
     buildUploadCards(idNxS);
     $('#loadPresupuestos').modal();
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 // inicia el llenado de la tabla para las solicitudes
@@ -1822,7 +1825,7 @@ function buildTableDetail(data, permisos) {
     console.log('buildTableDetail')
     console.log(permisos)
     var filtered = data.filter(function(value){ 
-        if(value.tipo_documento == 13 && value.estatusActual == 11 && value.estatusPropuesta != 1){
+        if(value.tipo_documento == 12 && value.estatusActual == 11 && value.estatusPropuesta != 1){
         }else{
             return value;
         }
@@ -1857,7 +1860,7 @@ function buildTableDetail(data, permisos) {
         // MJ: TIENE PERMISOS (ESCRITURA) && (LA RAMA ESTÁ SIN VALIDAR O RECHAZADA) && VALIDACIÓN ESTATUS
         if (permisos == 1 && (v.ev == null || v.ev == 2) && v.estatus_solicitud == 20 && (v.tipo_documento == 7 || v.tipo_documento == 13 || v.tipo_documento == 18)){
             solicitudes += ``;
-            if(v.tipo_documento == 13){
+            if(v.tipo_documento == 12){
                 if(v.estatusPropuesta == null || v.estatusPropuesta == 0){
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
                 }else{
@@ -1879,7 +1882,7 @@ function buildTableDetail(data, permisos) {
 
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }else if (permisos == 2 && v.estatus_solicitud == 11) {
-            if(v.tipo_documento == 13 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
+            if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
                 solicitudes += ``;
             }else{
                 if (v.ev == 1) // MJ: VALIDADO OK
@@ -2311,13 +2314,13 @@ function buildTableDetailP(data, permisos) {
         
         solicitudes += '<td><div class="d-flex justify-center">';
         if(permisos == 1){
-            solicitudes += `<button data-idDocumento="${v.idPresupuesto}" data-documentType="13" data-presupuestoType="${v.tipo}" data-idSolicitud=${v.idSolicitud} data-details ="2" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+            solicitudes += `<button data-idDocumento="${v.idPresupuesto}" data-documentType="12" data-presupuestoType="${v.tipo}" data-idSolicitud=${v.id_solicitud} data-details ="2" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
   
         if (v.expediente == null || v.expediente == '')
             solicitudes += '';
         else
-            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="13" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
+            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="12" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
 
         solicitudes += '</div></td></tr>';
 
@@ -2548,13 +2551,13 @@ function buildUploadCards(idNxS){
                 <div class="d-flex direction-column">
                 ${
                     element.expediente == '' ? '<div class="d-flex justify-end mb-1"></div>':
-                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <i data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt upload"></i></i></div>`:'<div class="d-flex justify-end mb-1"></div>' 
+                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <a href="#" title="Borrar" data-details="2" data-toggle="tooltip" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt text-danger upload"></i></a></div>`:'<div class="d-flex justify-end mb-1"></div>' 
                 }
                 ${
-                    element.expediente == '' && permisos == 1 ? `<i data-details="2" data-action="1" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload"></i>`
+                    element.expediente == '' && permisos == 1 ? `<a href="#" title="Subir documento" data-details="2" data-action="1" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload" style="color: #E5E7E9;"></a>`
                     :
-                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5"></i>`
-                    :`<i id="preview" data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 watchIcon_modal"></i>`
+                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5" style="color: #E5E7E9;" data-toggle="tooltip" title="Sin documento"></i>`
+                    :`<a href="#" id="preview" data-details="2" title="Ver documento" data-doc="${element.expediente}" data-action="2" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 text-info watchIcon_modal"></a>`
                 }
 
                     <span class="mt-2">Presupuesto</span>
@@ -2565,6 +2568,7 @@ function buildUploadCards(idNxS){
           })
           $('#body_uploads').append(html);
           $('#spiner-loader').addClass('hide');
+          $('[data-toggle="tooltip"]').tooltip();
           console.log('TERMINA SUCCESS')
         }
     });
