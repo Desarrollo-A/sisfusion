@@ -471,16 +471,16 @@ $(document).on('click', '#request', function () {
 $(document).on('click', '.comentariosModel', function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
+    cleanCommentsAsimilados();
 
     id_solicitud = $(this).attr("data-idSolicitud");
     lote = $(this).attr("data-lotes")
     $("#comentariosModal").modal();
-    $("#nameLote").append('<p><h5 style="color:#21618C;">Historial de la solicitud: <b style="color:#21618C;">'+id_solicitud+'</b></h5></p>');
-    $("#infoLote").append('<p><h5 style="color:#21618C;">Lote: <b style="color:#21618C;">'+lote+'</b></h5></p>');
+     $("#titulo_comentarios").append('<h4>Movimientos de Lote: <b>'+lote+'</b></h4>');
     $.getJSON("getDetalleNota/"+id_solicitud).done( function( data ){
         if(data != ""){
-        $.each( data, function(i, v){ 
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.descripcion+'</i><br><b style="color:#39A1C0">'+v.fecha_creacion+'</b><b style="color:gray;"> - '+v.nombre+'</b></p></div>');
+        $.each( data, function(i, v){
+            $("#comments-list-asimilados").append(`<div class="col-lg-12"><li><a style="color:${v.color}">${v.nombre}</a><a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`);
         });
             }else{
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>');  
@@ -490,11 +490,9 @@ $(document).on('click', '.comentariosModel', function (e) {
 
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    var myCommentsInfo = document.getElementById('infoLote');
+    var myCommentsLote = document.getElementById('titulo_comentarios');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
-    myCommentsInfo.innerHTML = '';
 }
 
 $('#observations').keydown(function () {
