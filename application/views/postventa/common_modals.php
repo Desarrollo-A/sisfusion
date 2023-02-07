@@ -4,6 +4,8 @@
     .modal-backdrop{
         z-index:9;
     }
+ 
+
 </style>
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -17,7 +19,50 @@
 
             </div>
 
-        <div class="modal fade" id="comentariosModal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
+        
+
+
+
+
+ 
+       <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="container mt-5 mb-5">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <p id="titulo_comentarios"></p>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card card-plain">
+                                                    <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+             
+
+
+        <div class="modal fade" id="comentariosModalOriginal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">

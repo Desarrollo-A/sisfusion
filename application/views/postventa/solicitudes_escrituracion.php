@@ -76,6 +76,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
                                         <div class="tab-pane" id="carga_test">
                                             <div class="encabezadoBox">
