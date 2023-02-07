@@ -39,7 +39,7 @@
                                             <div class="col-md-12">
                                                 <div class="card card-plain">
                                                     <div class="card-content">
-                                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                        <div class="overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,8 +113,8 @@
     <div class="modal-dialog modal-md boxContent">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <i onclick="RecargarTablePresupuestos()" data-dismiss="modal" class="fas fa-times fl-r"></i>
-                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+                <i onclick="RecargarTablePresupuestos()" data-toggle="tooltip" title="Cerrar" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">Carga de presupuestos</h4><br>
             </div>
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">

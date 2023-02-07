@@ -53,12 +53,20 @@ class Postventa_model extends CI_Model
     }
 
     function getDetalleNota($id_solicitud){
-        return $this->db->query("SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, he.descripcion, he.fecha_creacion 
+        return $this->db->query("(SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, he.descripcion, he.fecha_creacion,he.tipo_movimiento 
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
-        WHERE se.id_solicitud = $id_solicitud AND (he.descripcion != '' AND he.descripcion != 'NULL')
-	    ORDER BY he.fecha_creacion ASC");
+        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento=0 AND (he.descripcion != '' AND he.descripcion != 'NULL')
+	   )
+		UNION(SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, mr.motivo as descripcion, he.fecha_creacion,he.tipo_movimiento  
+        FROM solicitudes_escrituracion se
+        JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
+        JOIN usuarios us ON he.creado_por = us.id_usuario
+		JOIN motivos_rechazo mr ON mr.id_motivo=he.descripcion AND he.tipo_movimiento=1
+        WHERE se.id_solicitud = $id_solicitud AND (he.descripcion != '' AND he.descripcion != 'NULL') AND he.numero_estatus NOT IN(28,31)
+	    )
+		 ORDER BY he.fecha_creacion DESC");
     }
 
     function getEmpRef($idLote){
@@ -410,7 +418,7 @@ class Postventa_model extends CI_Model
 
     function getFilename($idDocumento, $documentType=null)
     {
-        if($documentType == 13){
+        if($documentType == 12){
             return $this->db->query("SELECT * FROM Presupuestos WHERE idPresupuesto = $idDocumento");
         }else{
             return $this->db->query("SELECT * FROM documentos_escrituracion WHERE idDocumento = $idDocumento");
@@ -419,7 +427,7 @@ class Postventa_model extends CI_Model
 
     function replaceDocument($updateDocumentData, $idDocumento, $documentType = null)
     {
-        if($documentType == 13){
+        if($documentType == 12){
             $response = $this->db->update("Presupuestos", $updateDocumentData, "idPresupuesto = $idDocumento");
         }else{
             $response = $this->db->update("documentos_escrituracion", $updateDocumentData, "idDocumento = $idDocumento");
