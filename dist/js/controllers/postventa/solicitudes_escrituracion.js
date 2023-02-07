@@ -451,8 +451,6 @@ $(document).on('click', '#request', function () {
     $('#observations').val('');
     let actividad_next = $(this).attr('data-siguiente_actividad');
     actividad_next = actividad_next.split('-');
-    let area_next = $(this).attr('data-siguiente-area');
-
     document.getElementById('actividad_siguiente').innerHTML = '<br><p style="color:#154360;">Estatus siguiente: <b>'+actividad_next[0]+' - '+actividad_next[1]+'</b> <br> Área(s) siguiente(s): <b>'+ ((data.id_estatus == 1) ? 'Administración y Comité Técnico':actividad_next[2])+'</b></p>';
     
 
@@ -1384,7 +1382,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 }
                 $('[data-toggle="tooltip"]').tooltip();
                 if(bandera_request == 1){
-                    group_buttons += `<button id="request" data-num-table="2" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                    group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                 }
                 group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                 return '<div class="d-flex justify-center">' + group_buttons + '<div>';
