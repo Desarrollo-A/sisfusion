@@ -2653,9 +2653,9 @@ function saveNotaria(){
           $status        = $this->input->post('estatus');
           $notariaExterna = ''; 
           $validacion     = true;
-
+          $notariaExterna = $this->Postventa_model->existNotariaExterna($solicitud);
         // var_dump ($solicitud, $estatus);
-        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 1 ? ',2,10' : ($notariaExterna->personalidad_juridica == 2 ? ',16,21' : '' );
+        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
         $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
 
         if($status == 9){
@@ -2673,12 +2673,8 @@ function saveNotaria(){
         }elseif($status == 42 || $status == 52){
             $opciones = 'IN (19)';
         }
-
 // 
 // 
-   
-
-
           if($solicitud == '' || $status == '')
           {
               $validacion = false;
