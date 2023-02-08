@@ -2423,8 +2423,6 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     if(banderaEditarEstatus == escritoPorUsuario ){
         banderaSoloEstatus = true ;
         }
-
-
     if(tipoDescuento == 3){
         estatus = 1;
     }else{
@@ -2434,6 +2432,9 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     fechaSeleccionada = document.getElementById("fechaIncial").value;
     console.log('fechaSeleecionada');
     console.log(fechaSeleccionada); 
+    if(fechaSeleccionada == '' ){
+        console.log('error');
+    }
     console.log('fecha');    
     console.log(fecha.getFullYear() );    
     year = fecha.getFullYear()
@@ -2466,10 +2467,10 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     // Se compara las fechas son para 
     if( ( f2 != '' ) &&   (f2 > f1 || f2 == f1)){
         console.log('entrando en el if de las fechas');
-        if(diaNumerico <= 5  ){
+        if(diaNumerico <= 5 && mesNumerico == mes2Numerico ){
             banderaPagosActivos = 1;
                         // && mesNumerico == mes2Numerico  
-        }else if(diaNumerico >= 5 ){
+        }else if(diaNumerico >= 5 ||  mesNumerico >= mes2Numerico  ){
             banderaPagosActivos = 2 ;
         }else {
             banderaPagosActivos = 0;
@@ -2477,7 +2478,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     }else if(f2 < f1){
         alerts.showNotification("top", "right", "Upss, La fecha seleccionada es menor que la fecha actual", "warning");
     }else{
-        alerts.showNotification("top", "right", "Upss,ak parecer algo salio mal intentalo nuevamente", "warning");
+        alerts.showNotification("top", "right", "Upss,al parecer algo salio mal intentalo nuevamente", "warning");
     }
 
 
