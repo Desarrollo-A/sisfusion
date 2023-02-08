@@ -456,14 +456,14 @@ class Postventa_model extends CI_Model
     function getDocumentsClient($idSolicitud, $status, $notariaExterna)
     {
         $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
-        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 1 ? ',2,10' : ($notariaExterna->personalidad_juridica == 2 ? ',16,21' : '' );
+        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
 
         if($status == 9){
             $tipo_doc = "IN (11,13 $docNotariaExterna)";
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
-        }elseif($status == 19 ||$status == 22 || $status == 24){
-            $tipo_doc = "IN (1,2,3,4,5,6,8,9,10,11,12,17,18 $docPersonalidadJuridica)";
+        }elseif($status == 19 ||$status == 22 || $status == 24 || $status == 20 || $status == 25 || $status == 34){
+            $tipo_doc = "IN (1,3,4,5,6,8,9,11,12,17,18 $docPersonalidadJuridica $docNotariaExterna)";
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
         }elseif($status == 29 || $status == 35 || $status == 40){
@@ -472,8 +472,7 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'IN (14)';
         }elseif($status == 42 || $status == 52){
             $tipo_doc = 'IN (19)';
-        }
-        elseif($status == 48 || $status == 51 || $status == 53){
+        }elseif($status == 48 || $status == 51 || $status == 53){
             $tipo_doc = 'IN (14,19)';
         }
 
@@ -481,7 +480,7 @@ class Postventa_model extends CI_Model
         de.modificado as documento_modificado_por, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as documento_creado_por, de.fecha_creacion as creacion_documento ,
         de.estatus_validacion as estatusValidacion ,opc.id_documento , de.estatus_validacion as validacion,
         opc.descripcion  , opc.fecha_creacion, se.id_solicitud , se.id_estatus as estatus_solicitud, se.estatus_construccion,
-		   (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) as estatus_validacion,de.estatus_validacion ev,
+		(CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END) as estatus_validacion,de.estatus_validacion ev,
         (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) as colour,de.editado,
 		(CASE WHEN mr.motivo IS NULL THEN 'SIN MOTIVO RECHAZO' ELSE mr.motivo END) as motivos_rechazo,
 		(CASE WHEN de.validado_por IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(userV.nombre, ' ', userV.apellido_paterno, ' ', userV.apellido_materno) END ) AS validado_por
