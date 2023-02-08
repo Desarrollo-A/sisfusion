@@ -1370,14 +1370,14 @@
   line-height: 1.5 !important;
 }
 
-.boxContent .card .card-content .toolbar .beginDate, .boxContent .card .card-content .toolbar #beginDate, .boxContent .card .card-content .toolbar #idLote {
+.boxContent .card .card-content .toolbar .beginDate, .boxContent .card .card-content .toolbar #beginDate, .boxContent .card .card-content .toolbar #idLote, .boxContent .card .card-content .toolbar #startDate {
   background-color: #eaeaea !important;
   border-radius: 27px 0 0 27px !important;
   background-image: initial !important;
   text-align: center !important;
 }
 
-.boxContent .card .card-content .toolbar .endDate, .boxContent .card .card-content .toolbar #endDate {
+.boxContent .card .card-content .toolbar .endDate, .boxContent .card .card-content .toolbar #endDate, .boxContent .card .card-content .toolbar #finalDate {
   background-color: #eaeaea !important;
   border-radius: 0 !important;
   background-image: initial !important;

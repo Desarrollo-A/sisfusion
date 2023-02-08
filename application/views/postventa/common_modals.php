@@ -4,6 +4,8 @@
     .modal-backdrop{
         z-index:9;
     }
+ 
+
 </style>
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -17,29 +19,25 @@
 
             </div>
 
-        <div class="modal fade" id="comentariosModal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <div class="d-flex" style="background: #AED6F1; justify-content: space-around; align-items: center; padding: 0 17px">
-                                <div id="nameLote"></div>
-                                <div id="infoLote"></div>
-                            </div>
-                                <!-- <ul class="nav nav-tabs" role="tablist" style="background: #AED6F1;">
-                                        <div class="container">
-                                            <div class="row">
-                                                    
-                                            <div>
-                                        </div>
-                                </ul> -->
+        
+
+
+
+
+ 
+       <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container mt-5 mb-5">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <p id="titulo_comentarios"></p>
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="card card-plain">
-                                                    <div class="card-content">
-                                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <div class="card-content card card-plain">
+                                                    <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
                                                     </div>
                                                 </div>
                                             </div>
@@ -47,14 +45,13 @@
                                     </div>
                                 </div>
                             </div>
-                      </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cancelar</button>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
-
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
@@ -113,8 +110,8 @@
     <div class="modal-dialog modal-md boxContent">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <i onclick="RecargarTablePresupuestos()" data-dismiss="modal" class="fas fa-times fl-r"></i>
-                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+                <i onclick="RecargarTablePresupuestos()" data-toggle="tooltip" title="Cerrar" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">Carga de presupuestos</h4><br>
             </div>
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">

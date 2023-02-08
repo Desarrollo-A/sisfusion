@@ -802,21 +802,10 @@ class Postventa extends CI_Controller
         $id_solicitud = $_POST['id_solicitud'];
         $type = $_POST['type'];
 
-       /* if ($type == 1 || $type == 3 || $type == 4 || $type == 5) {
-            $comentarios = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        }elseif ($type == 2) {
-            $motivos_rechazo = $_POST['comentarios'];
-            $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, 'NULL', $motivos_rechazo);
-        }*/
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
-
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
-        // }elseif($type == 3) {
-        //     $comentarios = $_POST['comentarios'];
-        //     $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $comentarios, 0);
-        // }
+
 
         echo json_encode($informacion);
     }
@@ -829,14 +818,14 @@ class Postventa extends CI_Controller
         $presupuestoType = null;
         $idPresupuesto = null;
         $idNxS = null;
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $idPresupuesto = $this->input->post('idPresupuesto');
             $idNxS = $this->input->post('idNxS');
         }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
-        if($documentType == 13){
+        if($documentType == 12){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
             /*if($documentInfo->estatus == 22){
@@ -869,74 +858,74 @@ class Postventa extends CI_Controller
         switch ($documentType) {
             case 1:
                 $folder = "static/documentos/postventa/escrituracion/INE/";
-                break;
+            break;
             case 2:
                 $folder = "static/documentos/postventa/escrituracion/RFC/";
-                break;
+            break;
             case 3:
                 $folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
-                break;
+            break;
             case 4:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
-                break;
+            break;
             case 5:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
-                break;
+            break;
             case 6:
                 $folder = "static/documentos/postventa/escrituracion/CURP/";
-                break;
+            break;
             case 7:
                 $folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
-                break;
+            break;
             case 8:
                 $folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
-                break;
+            break;
             case 9:
                 $folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
-                break;
+            break;
             case 10:
                 $folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
-                break;
+            break;
             case 11:
                 $folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
-                break;
+            break;
             case 12:
                 // antes fue 13
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
-                break;
+            break;
             case 13:
                 // fue 15
                 $folder = "static/documentos/postventa/escrituracion/FACTURA/";
-                break;
+            break;
             case 14:
                 // fue 16
                 $folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
-                break;
+            break;
             case 15:
                 // fue la 17
                 $folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
-                break;
-            case 18:
-                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-                break;
-            case 19:
+            break;
+            case 16:
                 $folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
-                break;
+            break;
             case 17:
                 // fue 20
                 $folder = "static/documentos/postventa/escrituracion/OTROS/";
-                break;
-            case 21:
+            break;
+            case 18:
                 // fue 21
                 $folder = "static/documentos/postventa/escrituracion/CONTRATO/";
-                break;
-            case 20:
+            break;
+            case 19:
                 // fue 22
                 $folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
-                break;
-            case 23:
+            break;
+            case 20:
                 $folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;  
+            break;
+            case 21:
+                $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+            break;  
         }
         return $folder;
 
@@ -1006,7 +995,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
 
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
@@ -1053,7 +1042,7 @@ class Postventa extends CI_Controller
         $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
         $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
@@ -1455,7 +1444,7 @@ class Postventa extends CI_Controller
         $mail->Subject(utf8_decode("Presupuesto escrituracion"));
         // $mail->message('');
 
-        $doc = $this->getFileNameByDoctype($idSolicitud, 13);
+        $doc = $this->getFileNameByDoctype($idSolicitud, 12);
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
         $response = $mail->send();
@@ -2506,7 +2495,7 @@ function saveNotaria(){
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
@@ -2569,7 +2558,6 @@ function saveNotaria(){
         $informacion = $this->Postventa_model->insertNewNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
         return $informacion;
 
-        return $this->Postventa_model->insertNewNotaria($idSolicitud);
     }
       
 
@@ -2834,7 +2822,7 @@ function saveNotaria(){
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
