@@ -729,27 +729,9 @@ class Postventa extends CI_Controller
         $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
         $estatus = $this->input->post("estatus");
         $tipo_tabla = $this->input->post("tipo_tabla");
-        $v = strtotime($this->input->post("endDate"));
 
-        if($estatus == 9){
-            $opciones = "IN (11,13,20 $docNotariaExterna)";
-        }elseif($estatus == 18){
-            $opciones = 'IN (7)';
-        }elseif($estatus == 19 ||$estatus == 22 || $estatus == 24 || $estatus = 20){
-            $opciones = "IN (1,2,3,4,5,6,8,9,10,11,12,17,18 )";
-        }elseif($estatus == 3 || $estatus == 4 || $estatus == 6 || $estatus == 8 || $estatus == 10 ){
-            $opciones = 'IN (17,18)';
-        }elseif($estatus == 29 || $estatus == 35 || $estatus == 40){
-            $opciones = 'IN (15)';
-        }elseif($estatus == 47 || $estatus == 50){
-            $opciones = 'IN (14)';
-        }elseif($estatus == 42 || $estatus == 52){
-            $opciones = 'IN (19)';
-        }else{
-            $opciones = '';
-        }
 
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla , $opciones)->result_array();
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla )->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
