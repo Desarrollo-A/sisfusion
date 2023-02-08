@@ -2150,6 +2150,7 @@ function getEstatusConstruccion(estatus_construccion) {
             //$("#construccion").selectpicker('refresh');
 
         }
+        $("#construccion").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
