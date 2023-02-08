@@ -1110,21 +1110,22 @@ function fillTable(beginDate, endDate, estatus) {
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso=1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
-                           
-                                //     case 12:
-                                // if (userType == 57) { 
+                                }
+                                    break;
+                                    case 12:
+                                if (userType == 57) { 
                                     
-                                //     group_buttons += `<button id="newNotary" data-permisos="2" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                    group_buttons += `<button id="newNotary" data-permisos="2" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
 
-                                //     group_buttons += ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
-                                //     <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estxatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;  
-                                //     group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                //     permiso = 2;
+                                    group_buttons += ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
+                                    <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estxatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;  
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    permiso = 2;
                                     
-                                //     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-                                // //    formBoton += `<button id="request" data-siguie    nte-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                // //    permiso = 2;
-                                // //    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                //    formBoton += `<button id="request" data-siguie    nte-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                //    permiso = 2;
+                                //    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
                                     
                                  }
 
@@ -3696,76 +3697,71 @@ $(document).on('click', '#revisarDocs', function () {
             console.log(documentType)
 
         switch (documentType) {
-            case 1:
-                folder = "INE/";
-                break;
-            case 2:
-                folder = "RFC/";
-                break;
-            case 3:
-                folder = "COMPROBANTE_DE_DOMICILIO/";
-                break;
-            case 4:
-                folder = "ACTA_DE_NACIMIENTO/";
-                break;
-            case 5:
-                folder = "ACTA_DE_MATRIMONIO/";
-                break;
-            case 6:
-                folder = "CURP/";
-                break;
-            case 7:
-                folder = "FORMAS_DE_PAGO/";
-                break;
-            case 8:
-                folder = "BOLETA_PREDIAL/";
-                break;
-            case 9:
-                folder = "CONSTANCIA_MANTENIMIENTO/";
-                break;
-            case 10:
-                folder = "CONSTANCIA_AGUA/";
-                break;
-            case 11:
-                folder = "SOLICITUD_PRESUPUESTO/";
-                break;
+
+            case '1':
+                folder = "static/documentos/postventa/escrituracion/INE/";
+            break;
+            case '2':
+                folder = "static/documentos/postventa/escrituracion/RFC/";
+            break;
+            case '3':
+                folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
+            break;
+            case '4':
+                folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
+            break;
+            case '5':
+                folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
+            break;
+            case '6':
+                folder = "static/documentos/postventa/escrituracion/CURP/";
+            break;
+            case '7':
+                folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
+            break;
+            case '8':
+                folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
+            break;
+            case '9':
+                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
+            break;
+            case '10':
+                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
+            break;
+            case '11':
+                folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
+            break;
             case '12':
-                // antes fue 13
-                folder = "PRESUPUESTO/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
+            break;
             case '13':
-                // fue 15
-                folder = "FACTURA/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/FACTURA/";
+            break;
             case '14':
-                // fue 16
-                folder = "TESTIMONIO/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
+            break;
             case '15':
-                // fue la 17
-                folder = "PROYECTO_ESCRITURA/";
-                break;
-            case 18:
-                folder = "RFC_MORAL/";
-                break;
-            case 19:
-                folder = "ACTA_CONSTITUTIVA/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
+            break;
+            case '16':
+                folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
+            break;
             case '17':
-                // fue 20
-                folder = "OTROS/";
-                break;
-            case '21':
-                // fue 21
-                folder = "CONTRATO/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/OTROS/";
+            break;
+            case '18':
+                folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+            break;
+            case '19':
+                folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
+            break;
             case '20':
-                // fue 22
-                folder = "COPIA_CERTIFICADA/";
-                break;
-            case '23':
-                folder = "PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;
+                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
+            break;
+            case '21':
+                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+            break;
+
             default :
             folder = ""
             break; 
