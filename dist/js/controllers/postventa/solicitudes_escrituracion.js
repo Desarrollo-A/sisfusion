@@ -334,7 +334,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("idSolicitud", idSolicitud);
         data.append("idDocumento", $("#idDocumento").val());
         data.append("documentType", $("#documentType").val());
-        if($("#documentType").val() == 13){
+        if($("#documentType").val() == 12){
             data.append("presupuestoType", $("#presupuestoType").val());
             data.append("idPresupuesto", $("#idPresupuesto").val());
             data.append("idNxS", $("#idNxS").val());
@@ -383,6 +383,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     }
                     else{
                         escrituracionTable.ajax.reload(null,false);
+                        escrituracionTableTest.ajax.reload(null,false);
                     }
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
@@ -439,7 +440,9 @@ $(document).on("submit", "#formPresupuesto", function (e) {
 });
 
 $(document).on('click', '#request', function () {
-    var data = escrituracionTable.row($(this).parents('tr')).data();
+    let num_table = $(this).attr('data-num-table');
+   var data = num_table == 1 ?  escrituracionTable.row($(this).parents('tr')).data() :  escrituracionTableTest.row($(this).parents('tr')).data();
+    //var data = escrituracionTable.row($(this).parents('tr')).data();
     document.getElementById('actividad_siguiente').innerHTML = '';
     // document.getElementById('notariaVo').innerHTML = '';
 
@@ -448,8 +451,6 @@ $(document).on('click', '#request', function () {
     $('#observations').val('');
     let actividad_next = $(this).attr('data-siguiente_actividad');
     actividad_next = actividad_next.split('-');
-    let area_next = $(this).attr('data-siguiente-area');
-
     document.getElementById('actividad_siguiente').innerHTML = '<br><p style="color:#154360;">Estatus siguiente: <b>'+actividad_next[0]+' - '+actividad_next[1]+'</b> <br> Área(s) siguiente(s): <b>'+ ((data.id_estatus == 1) ? 'Administración y Comité Técnico':actividad_next[2])+'</b></p>';
     
 
@@ -474,26 +475,24 @@ $(document).on('click', '.comentariosModel', function (e) {
     id_solicitud = $(this).attr("data-idSolicitud");
     lote = $(this).attr("data-lotes")
     $("#comentariosModal").modal();
-    $("#nameLote").append('<p><h5 style="color:#21618C;">Historial de la solicitud: <b style="color:#21618C;">'+id_solicitud+'</b></h5></p>');
-    $("#infoLote").append('<p><h5 style="color:#21618C;">Lote: <b style="color:#21618C;">'+lote+'</b></h5></p>');
+     $("#titulo_comentarios").append('<h4>Movimientos de Lote: <b>'+lote+'</b></h4>');
     $.getJSON("getDetalleNota/"+id_solicitud).done( function( data ){
         if(data != ""){
-        $.each( data, function(i, v){ 
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.descripcion+'</i><br><b style="color:#39A1C0">'+v.fecha_creacion+'</b><b style="color:gray;"> - '+v.nombre+'</b></p></div>');
+        $.each( data, function(i, v){
+            $("#comments-list-asimilados").append(`<div class="col-lg-12"><li><a style="color:${v.color}">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`);
         });
             }else{
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>');  
+                $("#comments-list-asimilados").append(`<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`);  
             }
     });
+
 });
 
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    var myCommentsInfo = document.getElementById('infoLote');
+    var myCommentsLote = document.getElementById('titulo_comentarios');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
-    myCommentsInfo.innerHTML = '';
 }
 
 $('#observations').keydown(function () {
@@ -897,6 +896,7 @@ $(document).on('click', '.modalPresupuestos', function(){
     $("#idNxS").val(idNxS);
     buildUploadCards(idNxS);
     $('#loadPresupuestos').modal();
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 $(document).on('click', '.modalCopiaCertificada', function(){
@@ -904,6 +904,7 @@ $(document).on('click', '.modalCopiaCertificada', function(){
     $("#idNxS2").val(idNxS);
     buildUploadCards(idNxS);
     $('#loadPresupuestos').modal();
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 // inicia el llenado de la tabla para las solicitudes
@@ -924,6 +925,7 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
+                "width": "5%",
                 data: function (d) {
                     return d.id_solicitud
                 }
@@ -952,7 +954,6 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    //return `<center><span><b>${d.idEstatus == 91 ? '1/2':d.idEstatus == 92 ? 3:d.idEstatus} - ${d.estatus}</b></span><center>`;   
                     return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
@@ -960,13 +961,17 @@ function fillTable(beginDate, endDate, estatus) {
             {
                 
                 data: function (d) {
-                    //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                     return `<center>${d.area}</center>`;
                 }
             },
             {
+                
                 data: function (d) {
-                    //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
+                    return `<center>${d.asignada_a}</center>`;
+                }
+            },
+            {
+                data: function (d) {
                     return d.ultimo_comentario;
                  }
             },
@@ -997,7 +1002,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO AUN NO DAN SU ESTATUS
                                 if (userType == 11 || userType == 56) { 
                                     group_buttons += userType == 56 ?
-                                     `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fas fa-tools"></i></button>` :
+                                     `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>` :
                                      `<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                    bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != '' ) ? 1 
                                      : userType == 56 && (d.estatus_construccion != 0 && d.estatus_construccion != null) ? 1  : 0;
@@ -1017,7 +1022,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 /**SI COMITÉ TÉCNICO NO HA DADO SU ESTATUS Y ADMINISTRACIÓN SI*/
                                     // BOTON APROBAR
                                     group_buttons +=  d.estatus_construccion != 0 && d.estatus_construccion != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` :'';
-                                    group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fas fa-tools"></i></button>`;   
+                                    group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>`;   
                               }
                               break;
                             case 4:
@@ -1063,7 +1068,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 9:
                             case 11:
                                 if (userType == 55) { 
-                                    group_buttons += (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` : '';
+                                    bandera_request = (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? 1 : 0;
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
                                     group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;                           
                                 }
@@ -1071,9 +1076,10 @@ function fillTable(beginDate, endDate, estatus) {
                             case 12:
                             case 36:
                                 if (userType == 57) { 
-                                   btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    bandera_request = 1;
+                                   //btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                    permiso = 2;
-                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
                                 }
                             break;
                             case 13:
@@ -1088,8 +1094,8 @@ function fillTable(beginDate, endDate, estatus) {
                             case 17:
                             case 38:
                                 if (userType == 55) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
+                                    bandera_request = d.banderaPresupuesto == 1 ? 1 : 0;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
 
                                 }
@@ -1114,8 +1120,8 @@ function fillTable(beginDate, endDate, estatus) {
                                     //BOTONES DANI
                                     group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
                                     group_buttons += ` <button id="subirDocumentos" name="subirDocumentos" data-type="1" class="btn-data btn-green subirDocumentos " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-folder-open"></i></button>`;
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
+                                    bandera_request = 1;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
                             case 20:
@@ -1123,15 +1129,15 @@ function fillTable(beginDate, endDate, estatus) {
                             case 34:
                                 if (userType == 57) { 
                                     //BOTONES DANI
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
+                                    bandera_request = 1;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
                             case 23:
                                 if (userType == 57) { 
                                     //BOTONES DANI
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
+                                    bandera_request = 1;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
                             case 26:
@@ -1226,13 +1232,22 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 37:
                                 if (userType == 57) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    bandera_request = 1;
                                 }
                             break;
                             case 38:
                                 if (userType == 55) { 
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
+                                    bandera_request = 1;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                }
+                            break;
+                            case 48:
+                            case 51:
+                            case 53:
+                                if (userType == 17) { 
+                                    bandera_request = 1;
+                                    group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="2" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                 }
                             break;
                       
@@ -1241,7 +1256,7 @@ function fillTable(beginDate, endDate, estatus) {
                     }
                     $('[data-toggle="tooltip"]').tooltip();
                     if(bandera_request == 1){
-                        group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                        group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                        group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                     return '<div class="d-flex justify-center">' + group_buttons + '<div>';
@@ -1289,6 +1304,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
     ordering: false,
     columns: [
         {
+            "width": "5%",
             data: function (d) {
                 return d.id_solicitud
             }
@@ -1321,6 +1337,12 @@ function fillTableCarga(beginDate, endDate, estatus) {
         {
             data: function (d) {
                 return `<center>${d.area}</center>`;
+            }
+        },
+        {
+                
+            data: function (d) {
+                return `<center>${d.asignada_a}</center>`;
             }
         },
         {
@@ -1360,7 +1382,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 }
                 $('[data-toggle="tooltip"]').tooltip();
                 if(bandera_request == 1){
-                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                    group_buttons += `<button id="request" data-num-table="2" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                 }
                 group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                 return '<div class="d-flex justify-center">' + group_buttons + '<div>';
@@ -1448,7 +1470,7 @@ function getMotivosRechazos(tipo_documento,estatus) {
     $("#motivos_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $("#area_rechazo").find("option").remove();
     $("#area_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
-    let showSelect = estatus == 3 || estatus == 4 || estatus == 29 ? 'show' : 'none';
+    let showSelect = estatus == 3 || estatus == 4 || estatus == 29 || estatus == 48 ? 'show' : 'none';
 
     //estatus = estatus == 3 || estatus == 4 ? '3,4' : estatus;
     if(estatus != 3 && estatus != 4){
@@ -1790,7 +1812,7 @@ function buildTableDetail(data, permisos) {
     console.log('buildTableDetail')
     console.log(permisos)
     var filtered = data.filter(function(value){ 
-        if(value.tipo_documento == 13 && value.estatusActual == 11 && value.estatusPropuesta != 1){
+        if(value.tipo_documento == 12 && value.estatusActual == 11 && value.estatusPropuesta != 1){
         }else{
             return value;
         }
@@ -1823,9 +1845,9 @@ function buildTableDetail(data, permisos) {
 
         solicitudes += '<td><div class="d-flex justify-center">';
         // MJ: TIENE PERMISOS (ESCRITURA) && (LA RAMA ESTÁ SIN VALIDAR O RECHAZADA) && VALIDACIÓN ESTATUS
-        if (permisos == 1 && (v.ev == null || v.ev == 2) && v.estatus_solicitud == 10 && (v.tipo_documento == 7 || v.tipo_documento == 13 || v.tipo_documento == 18)){
+        if (permisos == 1 && (v.ev == null || v.ev == 2) && v.estatus_solicitud == 20 && (v.tipo_documento == 7 || v.tipo_documento == 13 || v.tipo_documento == 18)){
             solicitudes += ``;
-            if(v.tipo_documento == 13){
+            if(v.tipo_documento == 12){
                 if(v.estatusPropuesta == null || v.estatusPropuesta == 0){
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
                 }else{
@@ -1843,11 +1865,11 @@ function buildTableDetail(data, permisos) {
                 solicitudes += ``;
             }
         }
-        else if(permisos == 1 && (v.ev == null || v.ev == 2) && v.estatus_solicitud == 10){
+        else if(permisos == 1 && (v.ev == null || v.ev == 2) && v.estatus_solicitud == 11){
 
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }else if (permisos == 2 && v.estatus_solicitud == 11) {
-            if(v.tipo_documento == 13 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
+            if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
                 solicitudes += ``;
             }else{
                 if (v.ev == 1) // MJ: VALIDADO OK
@@ -1923,6 +1945,7 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
         }   
            
         escrituracionTable.ajax.reload( null , false );
+        escrituracionTableTest.ajax.reload(null,false);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -2278,13 +2301,13 @@ function buildTableDetailP(data, permisos) {
         
         solicitudes += '<td><div class="d-flex justify-center">';
         if(permisos == 1){
-            solicitudes += `<button data-idDocumento="${v.idPresupuesto}" data-documentType="13" data-presupuestoType="${v.tipo}" data-idSolicitud=${v.idSolicitud} data-details ="2" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+            solicitudes += `<button data-idDocumento="${v.idPresupuesto}" data-documentType="12" data-presupuestoType="${v.tipo}" data-idSolicitud=${v.id_solicitud} data-details ="2" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-cloud-upload-alt"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
   
         if (v.expediente == null || v.expediente == '')
             solicitudes += '';
         else
-            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="13" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
+            solicitudes += `<button id="preview" data-idDocumento="${v.idPresupuesto}" data-doc="${v.expediente}" data-documentType="12" data-presupuestoType="${v.tipo}"  class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
 
         solicitudes += '</div></td></tr>';
 
@@ -2515,13 +2538,13 @@ function buildUploadCards(idNxS){
                 <div class="d-flex direction-column">
                 ${
                     element.expediente == '' ? '<div class="d-flex justify-end mb-1"></div>':
-                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <i data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt upload"></i></i></div>`:'<div class="d-flex justify-end mb-1"></div>' 
+                    element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <a href="#" title="Borrar" data-details="2" data-toggle="tooltip" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt text-danger upload"></i></a></div>`:'<div class="d-flex justify-end mb-1"></div>' 
                 }
                 ${
-                    element.expediente == '' && permisos == 1 ? `<i data-details="2" data-action="1" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload"></i>`
+                    element.expediente == '' && permisos == 1 ? `<a href="#" title="Subir documento" data-details="2" data-action="1" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload" style="color: #E5E7E9;"></a>`
                     :
-                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5"></i>`
-                    :`<i id="preview" data-details="2" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="13" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 watchIcon_modal"></i>`
+                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5" style="color: #E5E7E9;" data-toggle="tooltip" title="Sin documento"></i>`
+                    :`<a href="#" id="preview" data-details="2" title="Ver documento" data-doc="${element.expediente}" data-action="2" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 text-info watchIcon_modal"></a>`
                 }
 
                     <span class="mt-2">Presupuesto</span>
@@ -2532,6 +2555,7 @@ function buildUploadCards(idNxS){
           })
           $('#body_uploads').append(html);
           $('#spiner-loader').addClass('hide');
+          $('[data-toggle="tooltip"]').tooltip();
           console.log('TERMINA SUCCESS')
         }
     });
@@ -2540,7 +2564,7 @@ function buildUploadCards(idNxS){
 
 function createDocRowOtros(row, tr, thisVar,contador = 0){
 //FUNCIÓN PARA CREAR ROWDETAILS DE LA ACTIVIDAD APE004 CARGA DE CONTRATO Y OTROS
-    let v = 0;
+    var v = 0;
     $.post("getDocumentsClient", {
         idEscritura: row.data().id_solicitud,
         idEstatus:row.data().id_estatus
@@ -2562,6 +2586,7 @@ if(estatusAct4.includes(row.data().solicitudes[0].estatus_solicitud)){
             }
         }
         if(v==1){
+            console.log('v');
             escrituracionTable.ajax.reload(null,false);
             createDocRowOtros(rowOtros.row,rowOtros.tr,rowOtros.this);
         }else{
