@@ -992,7 +992,6 @@ function fillTable(beginDate, endDate, estatus) {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                     }; 
-
                     switch (d.id_estatus) {
     
                             case 1: 
@@ -1111,11 +1110,66 @@ function fillTable(beginDate, endDate, estatus) {
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso=1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
+                            case 12:
+                                if (userType == 57) { 
+                                    
+                                    group_buttons += `<button id="newNotary" data-permisos="2" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+
+                                    group_buttons += ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
+                                    <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estxatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;  
+                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                    permiso = 2;
+                                    
+                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                //    formBoton += `<button id="request" data-siguie    nte-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                //    permiso = 2;
+                                //    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                    
                                 }
                             break;
+
                             case 19:
                             case 22:
                             case 24:
+                                    if (userType == 55) { 
+                                        //BOTONES DANI
+                                        console.log(d);
+                        
+                                        group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+
+                                        group_buttons += ` <button id="subirDocumentos" name="subirDocumentos" data-type="1" class="btn-data btn-green subirDocumentos " data-toggle="tooltip" data-persona='${d.personalidad_juridica}' data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-folder-open"></i></button>`;
+                                        // if(d.validacion55 == 1 ){
+
+                                            group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                        
+                                        // }
+                                       
+                                        group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
+                                    }
+
+                            case 20:
+
+                                    if (userType == 57) { 
+                                        formBoton = ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
+                                                    <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;
+                                       formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                       permiso = 2;
+                                       group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                    }
+
+                            break;
+                            case 34:
+                                console.log(d);
+                                if (userType == 57) { 
+                                    formBoton = ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
+                                                <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;
+                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                   permiso = 2;
+                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
+                                }
+
+                            break;
+                            case 22:
                                 if (userType == 55) { 
                                     //BOTONES DANI
                                     group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
@@ -2693,7 +2747,7 @@ $(document).on('click', '#bajarConMotivo', function () {
 
         },              
         error : (a, b, c) => {
-            alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            alerts.showNotification("top", "right", "Error pruebelo más tarde.", "error");
         }
 
     });
@@ -2800,7 +2854,7 @@ $.ajax({
         alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
     },              
     error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
     }
 
 });
@@ -2867,7 +2921,7 @@ $.ajax({
 
     },              
     error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
     }
 
 });
@@ -2908,12 +2962,30 @@ $(document).on('click', '#revisarDocs', function () {
                 console.log(data)
                 InfoModal = '';
                 InfoModalF = '';
+
                 data.misDocumentos.forEach(function(Losmios,Numero ){
                         
                     ruta =   folders(Losmios.id_opcion);
                     
                     // ruta =    "CURP/";
                 InfoModal += '   <div class="row"  >';
+                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+                InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" >'+Numero+' </input>';
+                InfoModal += ' </div>';
+                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+                InfoModal += ' <input class="form-control" type="text" id="solicitudP" name="solicitudP">'+Losmios.idSolicitud+'  </input>';
+                InfoModal += ' </div>';
+                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+                InfoModal += ' <input class="form-control" type="text" id="SolicitudPs" name="SolicitudPs">'+Losmios.idSolicitud+'  </input>';
+                InfoModal += ' </div>';
+
+                
+            //     <div class="col-md-4">
+            //     <div class="form-group">
+            //         <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
+            //     </div>
+            // </div>
+
                 InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
                 InfoModal += '  </div>';
                  
@@ -2996,7 +3068,7 @@ $(document).on('click', '#revisarDocs', function () {
                 }); 
             },               
             error : (a, b, c) => {
-                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+                alerts.showNotification("top", "right", "Error pruebelo más tarde.", "error");
             }
 
         });
@@ -3006,9 +3078,13 @@ $(document).on('click', '#revisarDocs', function () {
 // function para abrir modal 
 // aqui se construye cuando se abren los modal de documentos 
 // aqui se consulta y se construye
+    
     $(document).on('click', '#subirDocumentos', function () {
 
+    let personas ;
         idStatus = $(this).attr("data-info");
+        persona = $(this).attr("data-persona");
+      personas = persona;
         solicitudes = $(this).attr("data-solicitud");           
     let solicitud = solicitudes ;
     let estatus = idStatus;
@@ -3031,9 +3107,11 @@ $(document).on('click', '#revisarDocs', function () {
         dataType: "json",
         data: 
         {
+
             // "pagos_activos"     : pagos_activos,
             "estatus" : estatus,
             "solicitud" : solicitud
+
         }, 
       success: function(data) {
         // alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
@@ -3047,23 +3125,47 @@ $(document).on('click', '#revisarDocs', function () {
         InfoModal += '      <h5 id="mainLabelText"></h5>'; 
         InfoModal += '   <div class="row"  >';
         // fin del row1
-        // FUCNTIOPNM PARA ELIMINAR LOS DOCUMENTOS QUE YA TENGO 
+        // FUCNTIOPNM PARA ELIMINAR LOS DOCUMENTOS QUE YA TENGO
+        let IdSolicitudS ='';
+    
+
+        
         if(data.length  != 0){
+            console.log('preguntar para eliminar del ');
+            data.nuevosDocs.forEach(function(Documentos,index){
+
+                IdSolicitudS = Documentos.idSolicitud;
+
+            })
             data.losDocumentos.forEach(function(elemento,i){
                 // console.log(data.misDocumentos.length);
                 data.misDocumentos.forEach(function(elementos,e){
-                    if( elemento.id_documento == elementos.id_opcion )
+                    if( elemento.id_documento == elementos.id_opcion && (personas == 2 )  )
                     {
-                        console.log('mensaje para analizar si son iguales');
-                        banderaEliminar = true;    
-                        // arr[index] = element + index;
-                        data.losDocumentos[i] = '' , i;                       
-                        banderaTengoDocumentos = true;
+                       
+                            banderaEliminar = true;    
+                            // arr[index] = element + index;
+                            data.losDocumentos[i] = '' , i;                       
+                            banderaTengoDocumentos = true;
+                       
                     } 
                     })
             })
         }
         // FIN DE FUNTION PARA ELIMINAR LOS DOCUEMTNOS QUE TENGO 
+
+
+        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+        InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" > </input>';
+        InfoModal += ' </div>';
+        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+        InfoModal += ' <input class="form-control" type="text" id="solicitudP" name="solicitudP">'+IdSolicitudS+'  </input>';
+        InfoModal += ' </div>';
+        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
+        InfoModal += ' <input class="form-control" type="text" id="SolicitudPs" name="SolicitudPs">  </input>';
+        InfoModal += ' </div>';
+
+
 
         if(banderaTengoDocumentos){
             InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
@@ -3073,7 +3175,8 @@ $(document).on('click', '#revisarDocs', function () {
         } 
         if(data.length  != 0){
             data.losDocumentos.forEach(function(faltantes,inde ){
-            console.log(faltantes);
+                console.log('FALTANTES');
+                console.log(faltantes);
                 if(faltantes != '')
                 {
                   
@@ -3113,12 +3216,12 @@ $(document).on('click', '#revisarDocs', function () {
             let estatusVal = 0;
             let estatusVariable = '' ;
             let bandera = 0 ;
+            let banderaNoTocar = true;
             let motivo = []; 
             data.misDocumentos.forEach(function(Losmios,Numero ){
                 ruta =   folders(Losmios.id_opcion);
                 // console.log(Numero);
                 // console.log(Losmios.id_opcion)
-           
                 // console.log(motivo[Numero]);
                 // console.log(motivo.length);
                 InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
@@ -3139,8 +3242,16 @@ $(document).on('click', '#revisarDocs', function () {
                         estatusVal = 'CARGADO';
                         estatusVariable = ' <span class="label" style="background:#177DE9;" > '+estatusVal +'  </span>';
                     }
-                    InfoModal += '  <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
+
+                    if(Losmios.id_opcion == 12 || Losmios.id_opcion == 17 || Losmios.id_opcion == 18){
+                    // se valida documentos que no solo se deben  de mostrar,,,,
+
+                        bandera = true;
+                    
+                    }
+
                     InfoModal += '      <p style="font-size: 1em: color: #E92017;"> DOCUMENTO '+Losmios.nombre +' </p>';
+                    InfoModal += '  <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
                     InfoModal += '      <div name="estatusActual'+Numero+'" id="estatusActual'+Numero+'" >';
                     InfoModal += '      '+ estatusVariable +' ';
                     InfoModal += '      </div>';
@@ -3154,7 +3265,7 @@ $(document).on('click', '#revisarDocs', function () {
                         InfoModal += '   <a href="#" id="borrarDoc" name="borrarDoc" data-index="'+Numero+'"  data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
                         'data-cambiada="0" class="btn-data btn-warning cancelReg" title="BORRAR">' +
                         '<i class="fas fa-trash-alt"></i></a>'; 
-                        
+                    
                         InfoModal += '  </div>';
                     }
                   
@@ -3187,7 +3298,7 @@ $(document).on('click', '#revisarDocs', function () {
         // $('#documentTree').modal('toggle');
     },              
     error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+        alerts.showNotification("top", "right", "Error pruebelo más tarde.", "error");
     }
 
 });
@@ -3348,7 +3459,7 @@ $(document).on('click', '#revisarDocs', function () {
             });
         }
         });
-
+            
         $(document).on("click", "#cambiarEstatus", function () {
             idStatus = $(this).attr("data-estatus");
             solicitudes = $(this).attr("data-solicitud");
@@ -3365,7 +3476,6 @@ $(document).on('click', '#revisarDocs', function () {
                     url: 'getDocumentosPorSolicitudss',
                     data: 
                     {
-                        "type" : type,
                         "estatus" : estatus,
                         "solicitud" : solicitud
                     } , 
@@ -3390,6 +3500,7 @@ $(document).on('click', '#revisarDocs', function () {
                                 })
                         })
                     }
+                    console.log(docs);
                     if(docs.length == data.losDocumentos.length && banderaUnRechazado == true){
                             console.log(docs);
                         
@@ -3434,6 +3545,7 @@ $(document).on('click', '#revisarDocs', function () {
             var folder;
            
       switch (itself.attr('data-documentType')) {
+   
         case '1':
             folder = "INE";
         break;
@@ -3500,7 +3612,6 @@ $(document).on('click', '#revisarDocs', function () {
         default:
             break;
     }
-        
             Shadowbox.open({
                 content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
                 player: "html",
@@ -3511,82 +3622,119 @@ $(document).on('click', '#revisarDocs', function () {
         });
 
 
+        $(document).on('click', '#botonCancelarDoc', function () {
+
+            // alert('aqui cancelamos el nodal y recargarmos');
+            var SolicitudID = document.getElementById('solicitudP').value;
+            
+            console.log(SolicitudID);
+
+            $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
+            $('#documentTreeAr').modal('hide')
+
+        });
+
+        
+        $(document).on('click', '#CancelarRevisarDocs', function () {
+
+            // alert('aqui cancelamos el nodal y recargarmos');
+            // var SolicitudID = document.getElementById('solicitudP').value;
+            // $.ajax({
+            //     type: 'POST',
+            //     url: 'existeNegado',
+            //     data: 
+            //         solicitud :1,
+
+            //     } , 
+            //     dataType: "json",                               
+            //     success: function(data) {
+            //         console.log(data);
+            //         if(!data){
+
+            //         }else{
+            //             $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
+            //         }
+            //     },
+            //     error: function(){
+            //         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            //     }
+            // });
+
+        });
+        
+        
 
 
     function folders (documentType){
             console.log(documentType)
 
         switch (documentType) {
-            case 1:
-                folder = "INE/";
-                break;
-            case 2:
-                folder = "RFC/";
-                break;
-            case 3:
-                folder = "COMPROBANTE_DE_DOMICILIO/";
-                break;
-            case 4:
-                folder = "ACTA_DE_NACIMIENTO/";
-                break;
-            case 5:
-                folder = "ACTA_DE_MATRIMONIO/";
-                break;
-            case 6:
-                folder = "CURP/";
-                break;
-            case 7:
-                folder = "FORMAS_DE_PAGO/";
-                break;
-            case 8:
-                folder = "BOLETA_PREDIAL/";
-                break;
-            case 9:
-                folder = "CONSTANCIA_MANTENIMIENTO/";
-                break;
-            case 10:
-                folder = "CONSTANCIA_AGUA/";
-                break;
-            case 11:
-                folder = "SOLICITUD_PRESUPUESTO/";
-                break;
-            case 12:
-                // antes fue 13
-                folder = "PRESUPUESTO/";
-                break;
-            case 13:
-                // fue 15
-                folder = "FACTURA/";
-                break;
-            case 14:
-                // fue 16
-                folder = "TESTIMONIO/";
-                break;
-            case 15:
-                // fue la 17
-                folder = "PROYECTO_ESCRITURA/";
-                break;
-            case 18:
-                folder = "RFC_MORAL/";
-                break;
-            case 19:
-                folder = "ACTA_CONSTITUTIVA/";
-                break;
-            case 17:
-                // fue 20
-                folder = "OTROS/";
-                break;
-            case 16:
-                // fue 21
-                folder = "CONTRATO/";
-                break;
-            case 20:
-                // fue 22
-                folder = "COPIA_CERTIFICADA/";
-                break;
-            case 23:
-                folder = "PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;
+            case '1':
+                folder = "static/documentos/postventa/escrituracion/INE/";
+            break;
+            case '2':
+                folder = "static/documentos/postventa/escrituracion/RFC/";
+            break;
+            case '3':
+                folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
+            break;
+            case '4':
+                folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
+            break;
+            case '5':
+                folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
+            break;
+            case '6':
+                folder = "static/documentos/postventa/escrituracion/CURP/";
+            break;
+            case '7':
+                folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
+            break;
+            case '8':
+                folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
+            break;
+            case '9':
+                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
+            break;
+            case '10':
+                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
+            break;
+            case '11':
+                folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
+            break;
+            case '12':
+                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
+            break;
+            case '13':
+                folder = "static/documentos/postventa/escrituracion/FACTURA/";
+            break;
+            case '14':
+                folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
+            break;
+            case '15':
+                folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
+            break;
+            case '16':
+                folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
+            break;
+            case '17':
+                folder = "static/documentos/postventa/escrituracion/OTROS/";
+            break;
+            case '18':
+                folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+            break;
+            case '19':
+                folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
+            break;
+            case '20':
+                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
+            break;
+            case '21':
+                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+            break;
+            default :
+            folder = ""
+            break; 
         }
         return folder;
     } 

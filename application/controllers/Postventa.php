@@ -730,7 +730,26 @@ class Postventa extends CI_Controller
         $estatus = $this->input->post("estatus");
         $tipo_tabla = $this->input->post("tipo_tabla");
         $v = strtotime($this->input->post("endDate"));
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla)->result_array();
+
+        if($estatus == 9){
+            $opciones = "IN (11,13,20 $docNotariaExterna)";
+        }elseif($estatus == 18){
+            $opciones = 'IN (7)';
+        }elseif($estatus == 19 ||$estatus == 22 || $estatus == 24 || $estatus = 20){
+            $opciones = "IN (1,2,3,4,5,6,8,9,10,11,12,17,18 )";
+        }elseif($estatus == 3 || $estatus == 4 || $estatus == 6 || $estatus == 8 || $estatus == 10 ){
+            $opciones = 'IN (17,18)';
+        }elseif($estatus == 29 || $estatus == 35 || $estatus == 40){
+            $opciones = 'IN (15)';
+        }elseif($estatus == 47 || $estatus == 50){
+            $opciones = 'IN (14)';
+        }elseif($estatus == 42 || $estatus == 52){
+            $opciones = 'IN (19)';
+        }else{
+            $opciones = '';
+        }
+
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla , $opciones)->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -785,7 +804,6 @@ class Postventa extends CI_Controller
 
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
-    
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
 
 
@@ -2630,26 +2648,35 @@ function saveNotaria(){
 
       public function getDocumentosPorSolicitudss()
       {
+        
           $solicitud      = $this->input->post('solicitud');
           $status        = $this->input->post('estatus');
           $notariaExterna = ''; 
           $validacion     = true;
+
         // var_dump ($solicitud, $estatus);
+        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 1 ? ',2,10' : ($notariaExterna->personalidad_juridica == 2 ? ',16,21' : '' );
+        $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
+
         if($status == 9){
-            $opciones = " (11,13,20 )";
-        }else if($status == 11){
-            $opciones = ' (7)';
-        }else if($status == 12){
-            $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
-        }else if($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
-            $opciones = ' (17,18)';
-        }else if($status == 20){
-            $opciones = ' (15)';
-        }else if($status == 23){
-            $opciones = ' (22)';
-        }else if($status == 24){
-            $opciones = ' (16)';
+            $opciones = "IN (11,13,20 $docNotariaExterna)";
+        }elseif($status == 18){
+            $opciones = 'IN (7)';
+        }elseif($status == 19 ||$status == 22 || $status == 24 || $status = 20){
+            $opciones = "IN (1,3,4,5,6,8,9,11,12,17,18 $docPersonalidadJuridica $docNotariaExterna)";
+        }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
+            $opciones = 'IN (17,18)';
+        }elseif($status == 29 || $status == 35 || $status == 40){
+            $opciones = 'IN (15)';
+        }elseif($status == 47 || $status == 50){
+            $opciones = 'IN (14)';
+        }elseif($status == 42 || $status == 52){
+            $opciones = 'IN (19)';
         }
+
+// 
+// 
+   
 
 
           if($solicitud == '' || $status == '')
@@ -2858,7 +2885,13 @@ function saveNotaria(){
         echo json_encode ($motivosRechazo); 
 
     }
-  
+    public function existeNegado(){
+        $solicitud = $this->input->post("solicitud");
+        $RespuestaRechazo = $this->Postventa_model->existeNegado($solicitud);
+        
+        echo json_encode($RespuestaRechazo);
+
+    }
 
 
 
