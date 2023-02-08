@@ -1020,7 +1020,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 56 && d.bandera_admin == 1 && (d.bandera_comite == 0 ||  d.bandera_comite == null)) { 
                                 /**SI COMITÉ TÉCNICO NO HA DADO SU ESTATUS Y ADMINISTRACIÓN SI*/
                                     // BOTON APROBAR
-                                    group_buttons +=  d.estatus_construccion != 0 && d.estatus_construccion != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` :'';
+                                    bandera_request =  d.estatus_construccion != 0 && d.estatus_construccion != null ? 1 :0;
                                     group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>`;   
                               }
                               break;
@@ -2983,7 +2983,7 @@ $(document).on('click', '#revisarDocs', function () {
                         
                     ruta =   folders(Losmios.id_opcion);
                     
-                    // ruta =    "static/documentos/postventa/escrituracion/CURP/";
+                    // ruta =    "CURP/";
                 InfoModal += '   <div class="row"  >';
                 InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
                 InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" >'+Numero+' </input>';
@@ -3638,6 +3638,8 @@ $(document).on('click', '#revisarDocs', function () {
         case '21':
             folder = "RFC_MORAL";
         break;
+        default:
+            break;
     }
             Shadowbox.open({
                 content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
@@ -3769,74 +3771,67 @@ $(document).on('click', '#revisarDocs', function () {
 
             case '1':
                 folder = "static/documentos/postventa/escrituracion/INE/";
-                break;
+            break;
             case '2':
                 folder = "static/documentos/postventa/escrituracion/RFC/";
-                break;
+            break;
             case '3':
                 folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
-                break;
+            break;
             case '4':
                 folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
-                break;
+            break;
             case '5':
                 folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
-                break;
+            break;
             case '6':
                 folder = "static/documentos/postventa/escrituracion/CURP/";
-                break;
+            break;
             case '7':
                 folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
-                break;
+            break;
             case '8':
                 folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
-                break;
+            break;
             case '9':
                 folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
-                break;
+            break;
             case '10':
                 folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
-                break;
+            break;
             case '11':
                 folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
-                break;
+            break;
             case '12':
-                // antes fue 13
                 folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
-                break;
+            break;
             case '13':
-                // fue 15
                 folder = "static/documentos/postventa/escrituracion/FACTURA/";
-                break;
+            break;
             case '14':
-                // fue 16
                 folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
-                break;
+            break;
             case '15':
-                // fue la 17
                 folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
-                break;
-            case '18':
-                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-                break;
-            case '19':
+            break;
+            case '16':
                 folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
-                break;
+            break;
             case '17':
-                // fue 20
                 folder = "static/documentos/postventa/escrituracion/OTROS/";
-                break;
-            case '21':
-                // fue 21
+            break;
+            case '18':
                 folder = "static/documentos/postventa/escrituracion/CONTRATO/";
-                break;
-            case '20':
-                // fue 22
+            break;
+            case '19':
                 folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
-                break;
-            case '23':
+            break;
+            case '20':
                 folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-                break;
+            break;
+            case '21':
+                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+            break;
             default :
             folder = ""
             break; 
