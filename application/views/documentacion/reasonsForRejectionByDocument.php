@@ -148,6 +148,66 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                    <input id="idLote" class="hide">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="btn_save" class="btn btn-primary" onclick="saveRejectReason()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content boxContent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                            <i class="fas fa-file fa-2x"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="toolbar">
+                                <h3 class="card-title center-align">Adminstrador - motivos de rechazo por documento y solicitud</h3>
+                                <div class="row aligned-row">
+                                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <div class="form-group label-floating select-is-empty m-0 p-0">
+                                            <label class="control-label">Documentos</label>
+                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un documento" data-size="7">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-2">
+                                        <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br>
+                            <div class="material-datatables" id="box-reasonsForRejectionTable">
+                                <div class="form-group">
+                                    <div class="table-responsive">
+                                        <table class="table-striped table-hover"
+                                               id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>DOCUMENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,22 +216,35 @@
     </div>
     </div><!--main-panel close-->
 
-    <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+<?php $this->load->view('template/footer'); ?>
+<!--DATATABLE BUTTONS DATA EXPORT-->
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            getCatalogOptions(60);
-        });
-        var url = "<?= base_url() ?>";
+<script> 
+    $(document).ready(function () {
+    $("#documentos").empty().selectpicker('refresh');
+    $.ajax({
+        url: url + 'Documentacion/getCatalogOptions',
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#documentos").append($('<option>').val(response[i]['id_opcion']).attr('data-catalogo', response[i]['id_catalogo']).text(response[i]['nombre']));
+            }
+            $("#documentos").append($('<option>').val(0).attr('data-catalogo', 0).text('POR SOLICITUD'));
+            $("#documentos").selectpicker('refresh');
+        }
+    });
+
+    });
+    var url = "<?=base_url()?>";
 
         $('#reasonsForRejectionTable thead tr:eq(0) th').each(function(i) {
             const title = $(this).text();
@@ -184,7 +257,38 @@
                             .search(this.value)
                             .draw();
                     }
-                });
+                },
+                {
+                    data: function (d) {
+                        return d.motivo;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.estatus_motivo;
+                    }
+                },
+                {
+                    data: function (d) {
+                        let btns = '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas apply-action" data-action="1" data-id-motivo="' + d.id_motivo + '" data-nombre-documento="' + d.nombre_documento + '" data-motivo="' + d.motivo + '" data-toggle="tooltip" data-placement="left" title="Editar"><i class="fas fa-pen"></i></button>';
+                        btns += `<button class="btn-data btn-${d.estatus == 1 ? 'warning' : 'green'} apply-action" data-action="${d.estatus == 1 ? 2 : 3}" data-id-motivo="${d.id_motivo}" data-nombre-documento="${d.nombre_documento}" data-motivo="${d.motivo}"  data-toggle="tooltip" data-placement="left" title="${d.estatus == 1 ? 'Desactivar' : 'Activar'}"><i class="fas fa-${d.estatus == 1 ? 'lock' : 'unlock'}"></i></button>`;
+                        btns += '</div>';
+                        $('[data-toggle="tooltip"]').tooltip();
+                        return btns;
+                    }
+                }
+            ],
+            columnDefs: [{
+                visible: false
+            }],
+            ajax: {
+                url: 'getReasonsForRejectionByDocument',
+                type: "POST",
+                cache: false,
+                data: {
+                    "id_documento": id_documento,
+                    "tipo_proceso": id_documento == 0 ? 3 : 2
+                }
             }
         });
 

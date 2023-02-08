@@ -479,7 +479,7 @@ $(document).on('click', '.comentariosModel', function (e) {
     $.getJSON("getDetalleNota/"+id_solicitud).done( function( data ){
         if(data != ""){
         $.each( data, function(i, v){
-            $("#comments-list-asimilados").append(`<div class="col-lg-12"><li><a style="color:${v.color}">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`);
+            $("#comments-list-asimilados").append(`<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`);
         });
             }else{
                 $("#comments-list-asimilados").append(`<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`);  

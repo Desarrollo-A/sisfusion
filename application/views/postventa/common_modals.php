@@ -37,7 +37,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                     <div class="card-content card card-plain">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
                                                     </div>
                                                 </div>
                                             </div>
