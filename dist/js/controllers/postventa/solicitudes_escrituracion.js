@@ -1111,26 +1111,7 @@ function fillTable(beginDate, endDate, estatus) {
                                     permiso=1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
                                 }
-                                    break;
-                                    case 12:
-                                if (userType == 57) { 
-                                    
-                                    group_buttons += `<button id="newNotary" data-permisos="2" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
-
-                                    group_buttons += ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
-                                    <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estxatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;  
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    permiso = 2;
-                                    
-                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-                                //    formBoton += `<button id="request" data-siguie    nte-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                //    permiso = 2;
-                                //    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-                                    
-                                 }
-
                             break;
-
                             case 19:
                             case 22:
                             case 24:
@@ -3574,6 +3555,7 @@ $(document).on('click', '#revisarDocs', function () {
             var folder;
            
       switch (itself.attr('data-documentType')) {
+   
         case '1':
             folder = "INE";
         break;
@@ -3761,7 +3743,6 @@ $(document).on('click', '#revisarDocs', function () {
             case '21':
                 folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
             break;
-
             default :
             folder = ""
             break; 
