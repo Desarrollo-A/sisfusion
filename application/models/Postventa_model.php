@@ -154,9 +154,9 @@ class Postventa_model extends CI_Model
     }
     
 
-    function getSolicitudes($begin, $end, $estatus, $tipo_tabla)
+    function getSolicitudes($begin, $end, $estatus, $tipo_tabla, $opciones = null)
     {   
-        
+                
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
         $filtroTabla = "";
@@ -170,6 +170,20 @@ class Postventa_model extends CI_Model
         if($begin != 0){
           $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
+        if($opciones != ''){
+            $asterisco = ("de2.result,de2.no_rechazos,de2.estatusValidacion as validacion55 ,");
+            $extraDeConsulta = " LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
+            THEN 0 ELSE 1 END result, 
+            CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
+            COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
+            FROM documentos_escrituracion WHERE tipo_documento  $opciones GROUP BY idSolicitud)  de2 ON de2.idSolicitud = se.id_solicitud ";
+            $asterisco2 =(" ,de2.result,de2.no_rechazos,de2.estatusValidacion           ");
+        }else{
+            $asterisco = " ";
+            $asterisco2 = " ";
+            $extraDeConsulta = " ";
+        }
+      
 
         if($estatus == 0){
         //PROPIOS
@@ -202,6 +216,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10) THEN 18 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(46,52) THEN 19 WHEN se.id_estatus in(47,50) THEN 14 WHEN se.id_estatus in(29,40,33,41) THEN 15 WHEN se.id_estatus in(39,44,42,45) THEN 13 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
         LEFT JOIN (SELECT TOP 1 h.id_solicitud, (CASE WHEN h.tipo_movimiento = 1 THEN mr.motivo ELSE h.descripcion END) AS descripcion FROM historial_escrituracion h LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(h.descripcion AS INT) GROUP BY h.id_solicitud, h.descripcion, mr.motivo, h.tipo_movimiento) he ON he.id_solicitud = se.id_solicitud
+        $extraDeConsulta
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 18 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.id_solicitud
@@ -1306,7 +1321,7 @@ function checkBudgetInfo($idSolicitud){
         where de.expediente IS NOT NULL 
         AND de.tipo_documento = does.id_documento
         AND se.id_solicitud = de.idSolicitud 
-        AND does.id_documento in $opciones 
+        AND does.id_documento  $opciones 
         AND de.idSolicitud = $solicitud";
  
 
@@ -1318,7 +1333,7 @@ function checkBudgetInfo($idSolicitud){
     
     function documentosNecesarios( $estatus){
 
-        $cmd=("SELECT * FROM documentacion_escrituracion WHERE id_documento  in  $estatus");
+        $cmd=("SELECT * FROM documentacion_escrituracion WHERE id_documento   $estatus");
         $query = $this->db->query($cmd);
         return $query->result_array();
 
@@ -1371,7 +1386,15 @@ function checkBudgetInfo($idSolicitud){
     }
 
 
+    function existeNegado($solicitud){
+        $cmd=("SELECT * FROM documentos_escrituracion  where tipo_documento in (1,2,3,4,5,6,8,9,10,11,12,17,18 ) AND idSolicitud = $solicitud AND 
+        (estatus_validacion IS NULL OR estatus_validacion = 2)");
+        $query = $this->db->query($cmd);
+        $resultados = $query->num_rows() ;
+        return  $resultados > 0 ? FALSE : TRUE;
+    
 
+    }
 
 
 }

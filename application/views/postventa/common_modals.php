@@ -984,7 +984,7 @@
 
 <!-- inicio de modal -->
 
-<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
                 <div class="modal-dialog  modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1005,7 +1005,7 @@
             </div>
 <!-- fin modal -->   
 <!-- fin modal -->   
-<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar">
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -1016,7 +1016,7 @@
                     
                     </div>
                 <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                       
                 </div>
                 </div>

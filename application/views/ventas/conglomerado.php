@@ -44,7 +44,7 @@
                         <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
                     </div>
                     <div class="modal-body" >
-                        <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label class="label">Certificaciones*</label>       
                                     <select class="form-control certificaciones" name="certificaciones" id="certificaciones">
@@ -52,7 +52,8 @@
                                             <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
                                         <?php } } ?>
                                     </select>
-                                </div>
+                                </div>      
+                    </div>
                                 <div class="col-md-4" style="display:none;">
                                     <div class="form-group">
                                         <input class="form-control" type="text"   name="dineroPagado" id="dineroPagado" readonly>
@@ -82,9 +83,13 @@
                                     <div class="form-group">
                                         <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
                                     </div>
+                                </div>   
+                                  <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="precioOrginal" id="precioOrginal" readonly>
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6"> 
+                        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label class="label">Descripcion:</label> 
                                     <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
@@ -92,6 +97,18 @@
                                     </span>        
                                 </div>
                         </div>
+                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
+                                    <div class="form-group">
+                                    <label class="label">Fecha nueva*</label>  
+                                            <div class="row">
+                                                <div class="col-md-12 p-r">
+                                                    <div class="form-group d-flex"> 
+                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial" value="01/01/2021" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
                     </div>
                     <div class="modal-footer">
                             <div class="row">
@@ -722,7 +739,7 @@
 
                                         <div class="col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Monto total recaudado<b>:</b> $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
                                             </h5>
                                         </div>
@@ -749,7 +766,7 @@
 
                                         <div class="col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Monto total recaudado<b>:</b> $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
                                             </h5>
                                         </div>
@@ -778,7 +795,7 @@
 
                                         <div class="col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Monto total recaudado<b>:</b> $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
                                             </h5>
                                         </div>
@@ -807,7 +824,7 @@
 
                                         <div class="col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Monto total recaudado<b>:</b> $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
                                             </h5>
                                         </div>
