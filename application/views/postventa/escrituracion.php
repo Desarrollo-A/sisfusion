@@ -32,7 +32,7 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
                                             <label class="control-label">Lote</label>
-                                            <select class="selectpicker select-gral m-0" id="lotes" name="lotes data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
+                                            <select class="selectpicker select-gral m-0" id="lotes" name="lotes" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
                                         </div>
                                     </div>
                                     <form id="formEscrituracion">
