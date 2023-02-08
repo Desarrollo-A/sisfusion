@@ -191,11 +191,13 @@ class Documentacion_model extends CI_Model
 
     function getReasonsForRejectionByDocument($id_documento, $tipo_proceso)
     {
-        return $this->db->query("SELECT id_motivo, oxc.descripcion nombre_documento, mr.motivo, mr.estatus,
-        CASE mr.estatus WHEN 1 THEN '<span class=\"label\" style=\"background:#81C784\">ACTIVO</span>'
-        ELSE '<span class=\"label\" style=\"background:#E57373\">INACTIVO</span>' END estatus_motivo
-        FROM motivos_rechazo mr 
-        INNER JOIN documentacion_escrituracion oxc ON oxc.id_documento = mr.tipo_documento 
+        return $this->db->query("SELECT id_motivo, 
+        CASE WHEN oxc.descripcion IS NULL THEN 'POR SOLICITUD' ELSE oxc.descripcion END nombre_documento, 
+        mr.motivo, mr.estatus,
+                CASE mr.estatus WHEN 1 THEN '<span class=\"label\" style=\"background:#81C784\">ACTIVO</span>'
+                ELSE '<span class=\"label\" style=\"background:#E57373\">INACTIVO</span>' END estatus_motivo
+                FROM motivos_rechazo mr 
+                LEFT JOIN documentacion_escrituracion oxc ON oxc.id_documento = mr.tipo_documento 
         WHERE mr.tipo_documento = $id_documento AND mr.tipo_proceso = $tipo_proceso");
     }
 
@@ -210,5 +212,9 @@ class Documentacion_model extends CI_Model
         return $this->db->query("SELECT * FROM lotes lo
         INNER JOIN solicitud_escrituracion se ON se.idLote = lo.idLote
         WHERE lo.idCondominio = $idCondominio");
+    }
+    function getCatalogOptions()
+    {
+        return $this->db->query("SELECT id_documento as id_opcion,descripcion as nombre,id_documento as id_catalago FROM documentacion_escrituracion");
     }
 }
