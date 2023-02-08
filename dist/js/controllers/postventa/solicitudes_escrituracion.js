@@ -1021,7 +1021,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 56 && d.bandera_admin == 1 && (d.bandera_comite == 0 ||  d.bandera_comite == null)) { 
                                 /**SI COMITÉ TÉCNICO NO HA DADO SU ESTATUS Y ADMINISTRACIÓN SI*/
                                     // BOTON APROBAR
-                                    group_buttons +=  d.estatus_construccion != 0 && d.estatus_construccion != null ? `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>` :'';
+                                    bandera_request =  d.estatus_construccion != 0 && d.estatus_construccion != null ? 1 :0;
                                     group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>`;   
                               }
                               break;
@@ -2912,7 +2912,7 @@ $(document).on('click', '#revisarDocs', function () {
                         
                     ruta =   folders(Losmios.id_opcion);
                     
-                    // ruta =    "static/documentos/postventa/escrituracion/CURP/";
+                    // ruta =    "CURP/";
                 InfoModal += '   <div class="row"  >';
                 InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
                 InfoModal += '  </div>';
@@ -3434,58 +3434,69 @@ $(document).on('click', '#revisarDocs', function () {
             var folder;
            
       switch (itself.attr('data-documentType')) {
-   
-        case '8':
-            folder = 'BOLETA_PREDIAL';
-            break;
-        case '9':
-            folder = 'CONSTANCIA_MANTENIMIENTO';
-            break;
-        case '10':
-            folder = 'CONSTANCIA_AGUA';
-            break;
+        case '1':
+            folder = "INE";
+        break;
+        case '2':
+            folder = "RFC";
+        break;
+        case '3':
+            folder = "COMPROBANTE_DE_DOMICILIO";
+        break;
+        case '4':
+            folder = "ACTA_DE_NACIMIENTO";
+        break;
+        case '5':
+            folder = "ACTA_DE_MATRIMONIO";
+        break;
+        case '6':
+            folder = "CURP";
+        break;
         case '7':
-            folder = 'FORMAS_DE_PAGO';
-            break;
+            folder = "FORMAS_DE_PAGO";
+        break;
+        case '8':
+            folder = "BOLETA_PREDIAL";
+        break;
+        case '9':
+            folder = "CONSTANCIA_MANTENIMIENTO";
+        break;
+        case '10':
+            folder = "CONSTANCIA_AGUA";
+        break;
         case '11':
-            folder = 'SOLICITUD_PRESUPUESTO';
-            break;
+            folder = "SOLICITUD_PRESUPUESTO";
+        break;
         case '12':
-            folder = 'PRESUPUESTO';
-            break;
+            folder = "PRESUPUESTO";
+        break;
         case '13':
-            folder = 'FACTURA';
-            break;
+            folder = "FACTURA";
+        break;
         case '14':
-            folder = 'TESTIMONIO';
-            break;
+            folder = "TESTIMONIO";
+        break;
         case '15':
-            folder = 'PROYECTO_ESCRITURA';
-            break;
+            folder = "PROYECTO_ESCRITURA";
+        break;
         case '16':
-            folder = 'TESTIMONIO';
-            break;
+            folder = "ACTA_CONSTITUTIVA";
+        break;
         case '17':
-            folder = 'OTROS';
-            break;
+            folder = "OTROS";
+        break;
         case '18':
-            folder = 'CONTRATO';
-            break; 
+            folder = "CONTRATO";
+        break;
         case '19':
-            folder = 'COPIA_CERTIFICADA';
+            folder = "COPIA_CERTIFICADA";
         break;
         case '20':
-            folder = 'OTROS';
-            break;
-        case '21':
-            folder = 'CONTRATO';
-            break;
-        case '22':
-            folder = 'COPIA_CERTIFICADA';
+            folder = "PRESUPUESTO_NOTARIA_EXTERNA";
         break;
-        case '23':
-            folder = 'PRESUPUESTO_NOTARIA_EXTERNA';
-            break;
+        case '21':
+            folder = "RFC_MORAL";
+        break;
         default:
             break;
     }
@@ -3507,74 +3518,74 @@ $(document).on('click', '#revisarDocs', function () {
 
         switch (documentType) {
             case 1:
-                folder = "static/documentos/postventa/escrituracion/INE/";
+                folder = "INE/";
                 break;
             case 2:
-                folder = "static/documentos/postventa/escrituracion/RFC/";
+                folder = "RFC/";
                 break;
             case 3:
-                folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
+                folder = "COMPROBANTE_DE_DOMICILIO/";
                 break;
             case 4:
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
+                folder = "ACTA_DE_NACIMIENTO/";
                 break;
             case 5:
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
+                folder = "ACTA_DE_MATRIMONIO/";
                 break;
             case 6:
-                folder = "static/documentos/postventa/escrituracion/CURP/";
+                folder = "CURP/";
                 break;
             case 7:
-                folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
+                folder = "FORMAS_DE_PAGO/";
                 break;
             case 8:
-                folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
+                folder = "BOLETA_PREDIAL/";
                 break;
             case 9:
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
+                folder = "CONSTANCIA_MANTENIMIENTO/";
                 break;
             case 10:
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
+                folder = "CONSTANCIA_AGUA/";
                 break;
             case 11:
-                folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
+                folder = "SOLICITUD_PRESUPUESTO/";
                 break;
             case 12:
                 // antes fue 13
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
+                folder = "PRESUPUESTO/";
                 break;
             case 13:
                 // fue 15
-                folder = "static/documentos/postventa/escrituracion/FACTURA/";
+                folder = "FACTURA/";
                 break;
             case 14:
                 // fue 16
-                folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
+                folder = "TESTIMONIO/";
                 break;
             case 15:
                 // fue la 17
-                folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
+                folder = "PROYECTO_ESCRITURA/";
                 break;
             case 18:
-                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
+                folder = "RFC_MORAL/";
                 break;
             case 19:
-                folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
+                folder = "ACTA_CONSTITUTIVA/";
                 break;
             case 17:
                 // fue 20
-                folder = "static/documentos/postventa/escrituracion/OTROS/";
+                folder = "OTROS/";
                 break;
             case 16:
                 // fue 21
-                folder = "static/documentos/postventa/escrituracion/CONTRATO/";
+                folder = "CONTRATO/";
                 break;
             case 20:
                 // fue 22
-                folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
+                folder = "COPIA_CERTIFICADA/";
                 break;
             case 23:
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
+                folder = "PRESUPUESTO_NOTARIA_EXTERNA/";
                 break;
         }
         return folder;
