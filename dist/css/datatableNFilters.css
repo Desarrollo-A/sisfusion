@@ -1704,3 +1704,19 @@ table .boxSBtns {
 .form-group label.estiloEsc {
   top: -34px !important;
 }
+
+.uploadIcon_modal {
+  color: #eaeaea;
+}
+
+.select-const {
+  background-color: #eaeaea !important;
+  color: #929292 !important;
+  border-radius: 27px !important;
+  background-image: none !important;
+  padding: 0 15px;
+}
+
+.form-group.is-focused select.form-control {
+  background-color: #eaeaea;
+}
