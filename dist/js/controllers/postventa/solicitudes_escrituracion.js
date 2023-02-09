@@ -2148,7 +2148,6 @@ function getEstatusConstruccion(estatus_construccion) {
             //$("#construccion").selectpicker('refresh');
 
         }
-     //   $("#construccion").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -2592,9 +2591,9 @@ function buildUploadCards(idNxS){
                     element.expediente != '' && permisos == 1 ? `<div class="d-flex justify-end mb-1"> <a href="#" title="Borrar" data-details="2" data-toggle="tooltip" data-doc="${element.expediente}" data-action="2" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-trash-alt text-danger upload"></i></a></div>`:'<div class="d-flex justify-end mb-1"></div>' 
                 }
                 ${
-                    element.expediente == '' && permisos == 1 ? `<a href="#" title="Subir documento" data-details="2" data-action="1" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload" style="color: #E5E7E9;"></a>`
+                    element.expediente == '' && permisos == 1 ? `<a href="#" title="Subir documento" data-details="2" data-action="1" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="fas fa-cloud-upload-alt fs-5 uploadIcon_modal upload"></a>`
                     :
-                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5" style="color: #E5E7E9;" data-toggle="tooltip" title="Sin documento"></i>`
+                    element.expediente == '' && permisos != 1 ? `<i class="far fa-file-excel nodata_icon fs-5" data-toggle="tooltip" title="Sin documento"></i>`
                     :`<a href="#" id="preview" data-details="2" title="Ver documento" data-doc="${element.expediente}" data-action="2" data-toggle="tooltip" data-idSolicitud=${element.id_solicitud} data-documentType="12" data-idDocumento="${element.idPresupuesto}" data-idPresupuesto= "${element.idPresupuesto}" data-idNxS= "${element.idNotariaxSolicitud}" data-presupuestoType="${element.tipo}" class="far fa-file-pdf fs-5 text-info watchIcon_modal"></a>`
                 }
 
