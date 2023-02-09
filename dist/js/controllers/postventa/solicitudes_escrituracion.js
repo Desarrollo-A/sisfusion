@@ -1124,8 +1124,7 @@ function fillTable(beginDate, endDate, estatus) {
                                         group_buttons += ` <button id="subirDocumentos" name="subirDocumentos" data-type="1" class="btn-data btn-green subirDocumentos " data-toggle="tooltip" data-persona='${d.personalidad_juridica}' data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-folder-open"></i></button>`;
                                         // if(d.validacion55 == 1 ){
 
-                                            group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                        
+                                        bandera_request = 1;                                        
                                         // }
                                        
                                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
