@@ -604,7 +604,12 @@
                             $('#editReg').modal('hide');
                             $('#Jtabla').DataTable().ajax.reload();
                             alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                        } else if(response.message == 'FALSE'){
+                        }else if(response.message == 'MISSING_CARTA_UPLOAD'){
+                            $('#save1').prop('disabled', false);
+                            $('#editReg').modal('hide');
+                            $('#Jtabla').DataTable().ajax.reload();
+                            alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+                        }else if(response.message == 'FALSE'){
                             $('#save1').prop('disabled', false);
                             $('#editReg').modal('hide');
                             $('#Jtabla').DataTable().ajax.reload();
