@@ -8206,6 +8206,8 @@
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
 
+
+
         $data = $this->Asesor_model->revisaOU($idLote);
         if(count($data)>=1){
             $data['message'] = 'OBSERVACION_CONTRATO';

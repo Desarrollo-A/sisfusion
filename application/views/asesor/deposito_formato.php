@@ -487,6 +487,34 @@ $datos = array();
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col col-xs-12 col-sm-12 col-md-offset-6 col-md-6 col-lg-offset-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
+                                    <label class="col-sm-4 label-on-left">CARTA DOMICILIO CM:</label>
+                                    <div class="col-sm-8 checkbox-radios">
+                                        <div class="col-md-3 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="  font-size: 0.9em;">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_comprobanteD === 1) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>>SI
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="font-size: 0.9em;">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="2" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_comprobanteD === 2) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> NO
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
 							<hr>
@@ -2143,10 +2171,11 @@ $datos = array();
         if(valor == 1){
             //si es de residencia extranjera se debe de preguntar si imprime pagares
             $('#pagarePart').removeClass('hide');
+            $('#domicilioCarta').removeClass('hide');
         }else{
             //se vuelve a quitar el apartado de pagares
             $('#pagarePart').addClass('hide');
-
+            $('#domicilioCarta').addClass('hide');
         }
     }
     function historialCampoHtml(data) {
