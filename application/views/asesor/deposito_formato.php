@@ -438,7 +438,7 @@ $datos = array();
                                             <div class="radio text-right">
                                                 <label style="  font-size: 0.9em;" id="label1">
                                                     <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc === 0) {
+                                                        <?php if ($cliente[0]->tipo_nc == 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NACIONAL
@@ -450,7 +450,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="font-size: 0.9em;" id="label2">
                                                     <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc === 1) {
+                                                        <?php if ($cliente[0]->tipo_nc == 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> EXTRANJERO
@@ -494,7 +494,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="  font-size: 0.9em;">
                                                     <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_comprobanteD === 1) {
+                                                        <?php if ($cliente[0]->tipo_comprobanteD == 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>>SI
@@ -506,7 +506,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="font-size: 0.9em;">
                                                     <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="2" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_comprobanteD === 2) {
+                                                        <?php if ($cliente[0]->tipo_comprobanteD == 2) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NO
