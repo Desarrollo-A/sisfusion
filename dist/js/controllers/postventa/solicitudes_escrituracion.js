@@ -1135,7 +1135,7 @@ function fillTable(beginDate, endDate, estatus) {
                                     if (userType == 57) {   
                                         formBoton = ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
                                                     <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;
-                                       formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                       bandera_request = 1;
                                        formBoton += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                        permiso = 2;
                                        group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
@@ -1147,7 +1147,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 57) { 
                                     formBoton = ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
                                                 <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;
-                                   formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                   bandera_request = 1;
                                    permiso = 2;
                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
                                 }
@@ -1169,9 +1169,8 @@ function fillTable(beginDate, endDate, estatus) {
                                        
                                         formBoton = ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
                                                     <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;
-                                       formBoton += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                                       bandera_request = 1;
                                        formBoton += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                    
                                        permiso = 2;
                                        group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
                                     }
