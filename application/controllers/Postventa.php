@@ -2400,7 +2400,7 @@ function saveNotaria(){
               $validacion = false;
           }
           if($validacion){
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicitud($solicitud,$opciones);
+              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
               $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
               $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
           }else{
@@ -2501,8 +2501,6 @@ function saveNotaria(){
         $file = $folder . $filename;
         if (file_exists($file))
             unlink($file);
-
-        $response = $this->Postventa_model->eliminarDoc( $idDocumento);
         echo json_encode($response);
         // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
     }

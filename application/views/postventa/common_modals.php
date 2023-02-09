@@ -801,9 +801,7 @@
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
-                    <!-- <label>Selecciona un estatus</label> -->
-                    <select class="form-control select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
-                    </select>
+                    <select class="selectpicker select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" data-style="btn" data-live-search="true" data-container="body" required></select>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
@@ -899,7 +897,7 @@
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral btn-round">Fecha del contrato anterior</label>
+                                        <label class="control-label estiloEsc label-gral btn-round">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
