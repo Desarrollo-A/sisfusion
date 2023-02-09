@@ -3371,7 +3371,7 @@ $(document).on('click', '#revisarDocs', function () {
             formData.append('idDocumento', documento);
             $.ajax({
                 type: 'POST',
-                url: 'deleteFileActualizado',
+                url: 'deleteFileActualizado2',
                 data: formData, 
                 dataType: "json",
                 contentType: false,
@@ -3698,76 +3698,6 @@ $(document).on('click', '#revisarDocs', function () {
             console.log(documentType)
 
         switch (documentType) {
-
-            case '1':
-                folder = "static/documentos/postventa/escrituracion/INE/";
-            break;
-            case '2':
-                folder = "static/documentos/postventa/escrituracion/RFC/";
-            break;
-            case '3':
-                folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
-            break;
-            case '4':
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
-            break;
-            case '5':
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
-            break;
-            case '6':
-                folder = "static/documentos/postventa/escrituracion/CURP/";
-            break;
-            case '7':
-                folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
-            break;
-            case '8':
-                folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
-            break;
-            case '9':
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
-            break;
-            case '10':
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
-            break;
-            case '11':
-                folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
-            break;
-            case '12':
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
-            break;
-            case '13':
-                folder = "static/documentos/postventa/escrituracion/FACTURA/";
-            break;
-            case '14':
-                folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
-            break;
-            case '15':
-                folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
-            break;
-            case '16':
-                folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
-            break;
-            case '17':
-                folder = "static/documentos/postventa/escrituracion/OTROS/";
-            break;
-            case '18':
-                folder = "static/documentos/postventa/escrituracion/CONTRATO/";
-            break;
-            case '19':
-                folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
-            break;
-            case '20':
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-            break;
-            case '21':
-                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-            break;
-
-
-
-
-
-
 
             case '1':
                 folder = "static/documentos/postventa/escrituracion/INE/";
