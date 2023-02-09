@@ -3353,7 +3353,7 @@ $(document).on('click', '#revisarDocs', function () {
             formData.append('idDocumento', documento);
             $.ajax({
                 type: 'POST',
-                url: 'deleteFileActualizado',
+                url: 'deleteFileActualizado2',
                 data: formData, 
                 dataType: "json",
                 contentType: false,

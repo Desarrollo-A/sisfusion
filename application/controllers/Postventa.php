@@ -2794,7 +2794,7 @@ function saveNotaria(){
 	}
 
 
-    public function deleteFileActualizadoss()
+    public function deleteFileActualizado2()
     {
         $documentType = $this->input->post('documentType');
         $presupuestoType = null;
