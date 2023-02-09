@@ -309,5 +309,12 @@ class VentasAsistentes_model extends CI_Model {
         FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
 		return $query->row();
 	}
+
+	public function validaCartaCM($idCliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
+        INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
+        return $query->result_array();
+    }
  
 }
