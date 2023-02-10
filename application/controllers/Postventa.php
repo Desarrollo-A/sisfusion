@@ -2418,7 +2418,8 @@ function saveNotaria(){
               $validacion = false;
           }
           if($validacion){
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicitud($solicitud,$opciones);
+              $respuesta['Rechazos'] = 'mfdj';
+              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
               $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
               $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
           }else{
@@ -2489,41 +2490,6 @@ function saveNotaria(){
 	}
 
 
-    public function deleteFileActualizado()
-    {
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idSolicitud = $this->input->post('idSolicitud');
-        $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 12){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $updateDocumentData = array(
-                "expediente" => '',
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-        }else{
-            $updateDocumentData = array(
-                "expediente" => null,
-                "movimiento" => '',
-                "modificado" => date('Y-m-d H:i:s'),
-                "estatus_validacion" => null,
-                "idUsuario" => $this->session->userdata('id_usuario'),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "status" => 1
-            );
-            
-        }
-        
-        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
-        $folder = $this->getFolderFile($documentType);
-        $file = $folder . $filename;
-        if (file_exists($file))
-            unlink($file);
-
-        $response = $this->Postventa_model->eliminarDoc( $idDocumento);
-        echo json_encode($response);
-        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
-    }
 
     public function descargarInf(){
         $documentType = $this->input->post('documentType');
@@ -2572,6 +2538,11 @@ function saveNotaria(){
         $editado  =   $this->session->userdata('id_usuario');
         $modificado =  date("Y-m-d H:i:s");
         $opcionEditar  =   $this->input->post('opcionEditar');
+        $insertArrayActualizarEstatus = array(
+            'estatus'        => 0
+            );
+            
+        $respuestaAct = $this->Postventa_model->actualizarMotivosRechazo(  $tipo , $Iddocumento,$insertArrayActualizarEstatus);
         if($estatus_validacion ==2){
             $proceso  =   $this->input->post('proceso');
             $motivo  =   $this->input->post('motivo');
@@ -2579,7 +2550,7 @@ function saveNotaria(){
                 'id_motivo'      => $motivo,
                 'id_documento'   => $Iddocumento,
                 'tipo'           => $tipo, 
-                'estatus'        => 0,
+                'estatus'        => 1,
                 'tipo_proceso'   => $proceso,
                 'creado_por'     => $validado_por,
                 'fecha_creacion' => $modificado,
@@ -2681,10 +2652,10 @@ function saveNotaria(){
           }
           if($validacion){
 
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
-
-              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
+              $respuesta['rechazos']        = $this->Postventa_model->rechazosDeDocs($solicitud);
+              $respuesta['misDocumentos']   = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
+              $respuesta['losDocumentos']   = $this->Postventa_model->documentosNecesarios($opciones);
+              $respuesta['nuevosDocs']      = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
           }else{
               $respuesta = array();
           }

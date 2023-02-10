@@ -1111,26 +1111,7 @@ function fillTable(beginDate, endDate, estatus) {
                                     permiso=1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
                                 }
-                                    break;
-                                    case 12:
-                                if (userType == 57) { 
-                                    
-                                    group_buttons += `<button id="newNotary" data-permisos="2" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
-
-                                    group_buttons += ` <button id="revisarDocs" name="revisarDocs" data-type="5" class="btn-data btn-green revisarDocs " data-toggle="tooltip" data-info="${d.id_estatus}" data-solicitud='${d.id_solicitud}' data-placement="top" title="documentos"><i class="fas fa-archive"></i></button>
-                                    <button id="cambiarEstatus" name="cambiarEstatus" class="btn-data btn-blueMaderas" data-estxatus="${d.id_estatus}" data-solicitud="${d.id_solicitud}" title="ENVIAR DOCUMENTOS"><i class="fa fa-share"></i></button>`;  
-                                    group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                    permiso = 2;
-                                    
-                                    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-                                //    formBoton += `<button id="request" data-siguie    nte-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                //    permiso = 2;
-                                //    group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, formBoton,datosEstatus);
-                                    
-                                 }
-
                             break;
-
                             case 19:
                             case 22:
                             case 24:
@@ -1146,10 +1127,13 @@ function fillTable(beginDate, endDate, estatus) {
                                             group_buttons += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                         
                                         // }
-                                       
+                                       0
                                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                    }
+                                    }else if(userType == 57)
+                                    {
 
+                                    }
+                            break;
                             case 20:
 
                                     if (userType == 57) {   
@@ -2958,7 +2942,7 @@ $(document).on('click', '#revisarDocs', function () {
     let estatus = idStatus;
     let ruta = '';
     var documentos  = '';
-
+    var rechazos = [];
     var cuerpoModal = document.getElementById('documentos_revisar');
     cuerpoModal.innerHTML = documentos;
     $("#documentosRevisar").modal();
@@ -2973,16 +2957,18 @@ $(document).on('click', '#revisarDocs', function () {
                 "estatus" : estatus,
                 "solicitud" : solicitud
             }, 
-            success: function(data) {
+            success: function(data) 
+            {
+
                 console.log(data);
-                console.log(data)
                 InfoModal = '';
                 InfoModalF = '';
-
+                data.rechazos.forEach(function(rechazo,indexR){
+                    rechazos[indexR] = rechazo;
+                });
                 data.misDocumentos.forEach(function(Losmios,Numero ){
-                        
-                    ruta =   folders(Losmios.id_opcion);
-                    
+
+                ruta =   folders(Losmios.id_opcion);    
                     // ruta =    "CURP/";
                 InfoModal += '   <div class="row"  >';
                 InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
@@ -3128,7 +3114,8 @@ $(document).on('click', '#revisarDocs', function () {
         mandarSolicitud.innerHTML = documentos;
     var BotonMandar = '';
         mandarSolicitud.innerHTML = BotonMandar;
-
+    var rechazos = [];
+    
     $("#documentTreeAr").modal();
         $.ajax({
         url : 'getDocumentosPorSolicitudss',
@@ -3146,7 +3133,9 @@ $(document).on('click', '#revisarDocs', function () {
         // alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
         // document.getElementById('updateDescuento').disabled = false;
         // $('#tabla-general').DataTable().ajax.reload(null, false );
-       console.log(data);
+        
+
+        console.log(data);
         banderaEliminar =   true
         // inicio del row
         const No_existen = []; 
@@ -3160,6 +3149,12 @@ $(document).on('click', '#revisarDocs', function () {
 
         
         if(data.length  != 0){
+        
+            data.rechazos.forEach(function(rechazo,indexR){
+                rechazos[indexR] = rechazo;
+            });
+
+
             console.log('preguntar para eliminar del ');
             data.nuevosDocs.forEach(function(Documentos,index){
 
@@ -3182,7 +3177,7 @@ $(document).on('click', '#revisarDocs', function () {
             })
         }
         // FIN DE FUNTION PARA ELIMINAR LOS DOCUEMTNOS QUE TENGO 
-
+        
 
         InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
         InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" > </input>';
@@ -3210,20 +3205,19 @@ $(document).on('click', '#revisarDocs', function () {
                 {
                   
                     InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
-     
                     InfoModal += '  </div>';
 
-
-                    InfoModal += '  <div class="col-6 col-sm-6 col-md-6 col-lg-6 "> ' ;
+                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 "> ' ;
                     InfoModal += '      <p style="font-size: 0.8em: color: #E92017;"> DOCUMENT0 :'+faltantes.descripcion +' </p>';
+        
                     // estatusVariable = ' <span class="label" style="background:#177DE9;" > '+estatusVal +'  </span>';
                     InfoModal += '      <p style="font-size: 0.9em; style="background:#177DE9;">  </p>';
                     InfoModal += '      <hr style="color: #0056b2;" />';
                     InfoModal += '   <br> '
                     InfoModal += '  </div>';
 
-                    InfoModal += '  <div class="col-5 col-sm-5 col-md-5 col-lg-5 ">';
-                    InfoModal += '  <div name="cambioAlsubir'+inde+'" id="cambioAlsubir'+inde+'" >';
+                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
+                    InfoModal += '  <div class="row" name="cambioAlsubir'+inde+'" id="cambioAlsubir'+inde+'" >';
                     InfoModal += '      <input hidden name="numeroDeRow" id="numeroDeRow">';
                     InfoModal += '      <div class="file">';
                     InfoModal += '           <input class="form-control input-gral" id="docSubir'+inde+'" name="docSubir'+inde+'"  type="file" >';
@@ -3232,9 +3226,11 @@ $(document).on('click', '#revisarDocs', function () {
                     'class="btn-data btn-green editReg" title="ACTUALIZAR" data-cambiada="1" data-index="'+inde+'" data-solicitud="'+solicitud+'" data-documento="'+faltantes.id_documento +'" data-nomLote="2" data-idCond="">'+
                     '<i class="fas fa-upload"></i></button>';
                     InfoModal += '  </div>';
+
+                    
                     InfoModal += '  </div>';
 
-                    InfoModal += '  <div class="col-1 col-sm-1 col-md-1 col-lg-1 ">';
+                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
                     InfoModal += '  <div name="cambioAlsubir1'+inde+'" id="cambioAlsubir1'+inde+'" >';
              
                     InfoModal += '  </div>';                
@@ -3245,7 +3241,6 @@ $(document).on('click', '#revisarDocs', function () {
             let estatusVal = 0;
             let estatusVariable = '' ;
             let bandera = 0 ;
-            let banderaNoTocar = true;
             let motivo = []; 
             data.misDocumentos.forEach(function(Losmios,Numero ){
                 ruta =   folders(Losmios.id_opcion);
@@ -3278,19 +3273,40 @@ $(document).on('click', '#revisarDocs', function () {
                         bandera = true;
                     
                     }
+                    let flag = true;
+                    let mensajeRechazo  
+                    rechazos.forEach(function(recha,indeRecha ){
 
-                    InfoModal += '      <p style="font-size: 1em: color: #E92017;"> DOCUMENTO '+Losmios.nombre +' </p>';
-                    InfoModal += '  <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
+                        if(Losmios.tipo_documento  == recha.tipo_documento)
+                        {
+                            mensajeRechazo = ' <p class="fst-italic">Rechazo :'+recha.motivo +'.</p>'  
+                            flag = true
+                        }else{
+      
+                            if(flag ){
+                                flag = false
+                                mensajeRechazo = ' <p class="fst-italic">Sin motivo rechazo.</p>'
+                            }
+                        }
+                    });
+                  
+                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
                     InfoModal += '      <div name="estatusActual'+Numero+'" id="estatusActual'+Numero+'" >';
+                    if(flag ){
+                        InfoModal += mensajeRechazo;
+                        }else{ InfoModal += mensajeRechazo;}
+                    InfoModal += '      <p style="font-size: 1em: "> DOCUMENTO '+Losmios.nombre +' </p>';
                     InfoModal += '      '+ estatusVariable +' ';
                     InfoModal += '      </div>';
                     InfoModal += '      <hr style="color: #0056b2;" />';
                     InfoModal += '  </div>';
-
-                    InfoModal += '  <div class="col-5 col-  sm-5 col-md-5 col-lg-5 ">';
+                    InfoModal += '      <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
+                   
+                    InfoModal += ' </div>';
+                    InfoModal += '  <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
                     InfoModal += '  <div name="cambioBajar'+Numero+'" id="cambioBajar'+Numero+'" >';
                     if(!bandera){
-                        InfoModal += '   <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
+                        InfoModal += '   <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
                         InfoModal += '   <a href="#" id="borrarDoc" name="borrarDoc" data-index="'+Numero+'"  data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
                         'data-cambiada="0" class="btn-data btn-warning cancelReg" title="BORRAR">' +
                         '<i class="fas fa-trash-alt"></i></a>'; 
