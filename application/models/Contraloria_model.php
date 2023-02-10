@@ -631,7 +631,7 @@ class Contraloria_model extends CI_Model {
 	public function getMsni($typeTransaction, $key) {
         if($typeTransaction == 1) {
             $query = $this->db-> query("SELECT co.idCondominio ID, co.nombre, lo.msi msni FROM condominios co 
-			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.status = 1
 			WHERE co.status = 1 AND co.idResidencial = $key
 			GROUP BY co.idCondominio, co.nombre, lo.msi ORDER BY co.idCondominio");
         } else if($typeTransaction == 2) {
