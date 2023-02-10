@@ -16,6 +16,52 @@ $(document).on("click", "#searchByDateRange", function () {
     
 });
 
+sp = { // MJ: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes();
+        var dateTime = date+' '+time;
+
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true,
+            }
+        });
+    }
+}
+
+sp2 = { // CHRIS: SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker2').datetimepicker({
+            format: 'DD/MM/YYYY LT',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            },
+            minDate:new Date(),
+        });
+    }
+}
+
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
@@ -194,7 +240,6 @@ function setInitialValues() {
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
     finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    console.log("Fecha"+finalBeginDate2);
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
