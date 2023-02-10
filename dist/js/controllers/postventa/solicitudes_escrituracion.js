@@ -925,62 +925,70 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
-                "width": "5%",
+                "width": "0.5%",
                 data: function (d) {
                     return d.id_solicitud
                 }
 
             },
-            {
+            {   
+                "width": "2.5%",
                 data: function (d) {
                     return d.nombreResidencial
                 }
 
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return d.nombreLote
                 }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return d.cliente;
                 }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return d.fecha_creacion;
                 }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
             },
             {
-                
+                "width": "2.5%",
                 data: function (d) {
                     return `<center>${d.area}</center>`;
                 }
             },
             {
-                
+                "width": "2.5%",
                 data: function (d) {
                     return `<center>${d.asignada_a}</center>`;
                 }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return d.ultimo_comentario;
                  }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
                 }
             },
-            {
+            {   
+                "width": "3%",
                 data: function (d) {
                     var aditional;
                     var group_buttons = '';     
