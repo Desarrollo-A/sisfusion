@@ -2370,6 +2370,26 @@ class Asesor extends CI_Controller
         $printPagare = $this->input->post('imprimePagare');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
+        //revisar si coloco que no quiere la carta, revisar si hay un registro en el arbol
+        //si es así hayq ue borrar la rama ya que no la estará utilizando
+        if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
+            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+
+            if(count($revisar_registro)>0){
+                $ubicacion = getFolderFile($revisar_registro[0]['tipo_doc']);
+                $filename = $revisar_registro[0]['expediente'];
+                //revisar si hay algun documento
+                $array_key = array("idDocumento" => $revisar_registro[0]['idDocumento']);
+                $tabla = 'historial_documento';
+                if($filename=='' || $filename==NULL){
+                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
+                }else{
+                    $eliminar_archivo = delete_img($ubicacion, $filename);
+                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
+                }
+            }
+        }
         /*****MARTHA DEBALE OPTION*******/
 //        $descuento_mdb = $this->input->post('descuento_mdb');
         /*************/
@@ -5715,5 +5735,13 @@ class Asesor extends CI_Controller
     public function getReporteAsesores(){
         $data['data'] = $this->Asesor_model->reporteAsesor()->result_array();
         echo json_encode($data);
+    }
+
+    function getFolderFile($documentType)
+    {
+        if ($documentType == 7) $folder = "static/documentos/cliente/corrida/";
+        else if ($documentType == 8) $folder = "static/documentos/cliente/contrato/";
+        else $folder = "static/documentos/cliente/expediente/";
+        return $folder;
     }
 }
