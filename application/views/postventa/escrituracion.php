@@ -123,10 +123,16 @@
                                                                 <!-- <input id="perJ" name="perJ" class="form-control input-gral" type="text"> -->
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-12 pl-0">
+                                                        <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral">Domicilio Actual</label>
                                                                 <input id="direccion" name="direccion" class="form-control input-gral" type="text" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label estiloEsc label-gral">Valor de operación de contrato</label>
+                                                                <input id="valorC" name="valorC" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
