@@ -114,6 +114,8 @@ class VentasAsistentes_model extends CI_Model {
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+                $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 

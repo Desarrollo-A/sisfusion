@@ -44,7 +44,8 @@ class Administracion extends CI_Controller{
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
 			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68' && 
 			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '70' &&
-            $this->session->userdata('id_rol') != '71' && $this->session->userdata('id_rol') != '72'
+            $this->session->userdata('id_rol') != '71' && $this->session->userdata('id_rol') != '72' &&
+            $this->session->userdata('id_rol') != '73'
         ) {
 			redirect(base_url() . 'login');
 		}
