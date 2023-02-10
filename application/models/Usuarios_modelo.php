@@ -98,7 +98,7 @@ class Usuarios_modelo extends CI_Model
                 FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                 LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                WHERE ($id_sede AND id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND correo NOT LIKE '%test_%' AND correo NOT LIKE '%OOAM%')
+                WHERE ($id_sede AND id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '') NOT LIKE '%test_%' AND ISNULL(correo, '') NOT LIKE '%OOAM%')
                 $id_usuario
                 ORDER BY nombre");
                 break;
@@ -165,6 +165,7 @@ class Usuarios_modelo extends CI_Model
             case '63': // CONTRALORÍA CORPORATIVA
             case '33': // CONSULTA (CONTROL INTERNO)
             case '40': // COBRANZA
+            case '73': // PRACTICANTE CONTRALORÍA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
@@ -296,12 +297,12 @@ class Usuarios_modelo extends CI_Model
         }
     }
 
-    function getLeadersList($headquarter, $type)
-    {
+    function getLeadersList($headquarter, $type) {
+        $id_lider = $this->session->userdata('id_lider');
         switch ($type) {
             case '2': // SUBDIRECTOR
-                return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                        id_rol = 1 AND estatus = 1 ORDER BY nombre");
+                return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios 
+                WHERE (id_rol = 1 AND estatus = 1) OR (id_usuario = $id_lider) OR (id_sede LIKE '%$headquarter%' AND id_rol = 2) ORDER BY nombre");
                 break;
             case '3': // GERENTE
                 $sede = '';
