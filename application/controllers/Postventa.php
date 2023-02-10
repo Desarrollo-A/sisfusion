@@ -738,6 +738,20 @@ class Postventa extends CI_Controller
         }
     }
 
+    // Traer los datos de la tabla reporte de solicitudes
+    public function getReportes()
+    {   
+        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+        $data['data'] = $this->Postventa_model->getReportes($beginDate, $endDate)->result_array();
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    // Finaliza la extraccion de datos
+
     // Funciones para el apartado de notaria
     public function getNotarias() {
         $data['data'] = $this->Postventa_model->getNotarias()->result_array();
@@ -1861,170 +1875,6 @@ class Postventa extends CI_Controller
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
         }
-    }
-
-    function getData(){
-        $data = $this->Postventa_model->getData_contraloria()->result();
-        switch ($this->session->userdata('id_rol')){
-            case '17': //CONTRALORIA 
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Dias de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ],
-                );
-            break;
-
-            case 55: //POSTVENTA
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio' 
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
-                );
-            break;
-
-            case 57: //TITULACION
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Area',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
-                );
-            break;
-        }
-        $data = json_decode(json_encode($data), True);
-
-        for ($i = 0; $i < count($data); $i++) {
-            $a = 0;
-            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
-                $data[$i]['atrasado']  = 'EN TIEMPO';
-                $data[$i]['diferencia']  = 0;
-            }
-            else{
-                $endDate = date('m/d/Y h:i:s a', time());
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
-            }
-        }
-
-        $array = [
-            "columns" => $columns,
-            "data" => $data
-        ];
-        if ($data != null)
-            echo json_encode($array);
-        else
-            echo json_encode(array());
     }
 
     public function getEstatusEscrituracion()
