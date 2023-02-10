@@ -460,7 +460,7 @@ $datos = array();
                                     </div>
                                 </div>
                                 <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                                    <label class="col-sm-5 label-on-left">¿IMPRIME PAGARES?(<small style="color: red;">*</small>): <?php echo $cliente[0]->printPagare;?></label>
+                                    <label class="col-sm-5 label-on-left">¿IMPRIME PAGARES?(<small style="color: red;">*</small>):</label>
                                     <div class="col-sm-7 checkbox-radios">
                                         <div class="col-md-3 checkbox-radios required">
                                             <div class="radio text-left">
@@ -478,7 +478,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="font-size: 0.9em;" id="labelNo1">
                                                     <input type="radio" name="imprimePagare" id="imprimePagare2" required="true" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare === 0) {
+                                                        <?php if ($cliente[0]->printPagare == 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NO
