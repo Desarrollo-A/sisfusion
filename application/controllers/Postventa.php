@@ -612,6 +612,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
+        $valor_contrato = $_POST['valorC'];
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
@@ -653,7 +654,7 @@ class Postventa extends CI_Controller
             // echo $usuarioJuridico->id_usuario;
             // echo "<br>";
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
-                $resDecode->data[0], $usuarioJuridico->id_usuario);
+                $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -2471,39 +2472,7 @@ function saveNotaria(){
 	}
 
 
-    public function deleteFileActualizado()
-    {
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idSolicitud = $this->input->post('idSolicitud');
-        $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 12){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $updateDocumentData = array(
-                "expediente" => '',
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-        }else{
-            $updateDocumentData = array(
-                "expediente" => null,
-                "movimiento" => '',
-                "modificado" => date('Y-m-d H:i:s'),
-                "estatus_validacion" => null,
-                "idUsuario" => $this->session->userdata('id_usuario'),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "status" => 1
-            );
-            
-        }
-        
-        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
-        $folder = $this->getFolderFile($documentType);
-        $file = $folder . $filename;
-        if (file_exists($file))
-            unlink($file);
-        echo json_encode($response);
-        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
-    }
+
 
     public function descargarInf(){
         $documentType = $this->input->post('documentType');
@@ -2798,24 +2767,7 @@ function saveNotaria(){
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 12){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $updateDocumentData = array(
-                "expediente" => '',
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-        }else{
-            $updateDocumentData = array(
-                "expediente" => null,
-                "movimiento" => '',
-                "modificado" => date('Y-m-d H:i:s'),
-                "estatus_validacion" => null,
-                "idUsuario" => $this->session->userdata('id_usuario'),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "status" => 1
-            );
-            
-        }
+
         // var_dump($idDocumento , $documentType);
         $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
         $folder = $this->getFolderFile($documentType);
@@ -2831,7 +2783,6 @@ function saveNotaria(){
                 'status'        =>  0, 
             );
             $updates = $this->Postventa_model->actualizarDocs( $idDocumento ,$arrayInsertDocumentos);
-        // $response = $this->Postventa_model->eliminarDoc( $idDocumento);
         echo json_encode($updates);
         // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
     }
