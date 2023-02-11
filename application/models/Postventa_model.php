@@ -190,7 +190,7 @@ class Postventa_model extends CI_Model
         }
         
         return $this->db->query("SELECT distinct(se.id_solicitud),se.valor_contrato ,se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, ar.nombre as area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,se.id_notaria,
-        se.fecha_firma,(CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END) ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a
+        se.fecha_firma,(CASE WHEN he.descripcion IS NULL THEN '-' ELSE he.descripcion END) ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, de2.estatusValidacion,de2.no_rechazos,presup.banderaPresupuesto,presup2.presupuestoAprobado
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
@@ -203,16 +203,26 @@ class Postventa_model extends CI_Model
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         LEFT JOIN documentos_escrituracion dc ON dc.idSolicitud = se.id_solicitud AND dc.tipo_documento in(CASE WHEN se.id_estatus in (3,4,6,8,9,10.11) THEN 18 WHEN se.id_estatus in(14,17,38) THEN 12 WHEN se.id_estatus in(18,21) THEN 7 WHEN se.id_estatus in(46,52) THEN 19 WHEN se.id_estatus in(47,50) THEN 14 WHEN se.id_estatus in(29,40,33,41) THEN 15 WHEN se.id_estatus in(39,44,42,45) THEN 13 ELSE 11 END) 
         LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
+
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) 
+            THEN 0 ELSE 1 END documentosCargados,  
+            CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion = 1 THEN 1 END) THEN 0 ELSE 1 END estatusValidacion,
+            COUNT(CASE WHEN estatus_validacion = 2 THEN 1 END) no_rechazos
+            FROM documentos_escrituracion 
+            WHERE documento_a_validar=1
+            GROUP BY idSolicitud) de2 ON de2.idSolicitud = se.id_solicitud 
+
         LEFT JOIN (SELECT TOP 1 h.id_solicitud, (CASE WHEN h.tipo_movimiento = 1 THEN mr.motivo ELSE h.descripcion END) AS descripcion FROM historial_escrituracion h LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(h.descripcion AS INT) GROUP BY h.id_solicitud, h.descripcion, mr.motivo, h.tipo_movimiento) he ON he.id_solicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 18 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.id_solicitud
-        
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) presup ON presup.idSolicitud = se.id_solicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END presupuestoAprobado FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) presup2 ON presup2.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1 WHERE cl.clasificacion in (1,2)
         GROUP BY cl.estatus_actual, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cs.estatus_siguiente
 
         $AddWhere $filtroTabla $WhereFechas
-        GROUP BY se.id_solicitud,se.valor_contrato , cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial,
+        GROUP BY se.id_solicitud,se.valor_contrato,de2.documentosCargados, de2.estatusValidacion,de2.no_rechazos,presup.banderaPresupuesto,presup2.presupuestoAprobado,cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial,
          c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso,
           cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad,
            cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, 
@@ -478,7 +488,8 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'IN (14,19)';
         }
 
-        $query = $this->db->query("SELECT de.idDocumento, 
+        $query = $this->db->query("SELECT de.idDocumento,
+        de.documento_a_validar, 
         de.movimiento, 
         de.expediente, 
         de.modificado, 
@@ -515,7 +526,7 @@ class Postventa_model extends CI_Model
      WHERE opc.id_documento $tipo_doc 
     AND de.idSolicitud = $idSolicitud
 
-    GROUP BY de.idDocumento,se.estatus_construccion, de.movimiento,de.modificado,de.status ,opc.id_documento ,de.idUsuario,opc.fecha_creacion,se.id_solicitud ,opc.descripcion, de.expediente, de.tipo_documento, de.idSolicitud,
+    GROUP BY de.idDocumento,de.documento_a_validar,se.estatus_construccion, de.movimiento,de.modificado,de.status ,opc.id_documento ,de.idUsuario,opc.fecha_creacion,se.id_solicitud ,opc.descripcion, de.expediente, de.tipo_documento, de.idSolicitud,
     CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), de.fecha_creacion, se.id_estatus,
     (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
     (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
@@ -524,6 +535,7 @@ class Postventa_model extends CI_Model
 
     UNION ALL
     SELECT pr.idPresupuesto idDocumento,
+    0 documento_a_validar,
     de.movimiento,
     CONCAT('Presupuesto ', oxc.nombre, ' - ', nota.nombre_notaria) expediente, 
     de.modificado,
