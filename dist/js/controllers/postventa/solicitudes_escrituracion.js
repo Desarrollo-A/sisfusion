@@ -348,7 +348,10 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-
+if(id_estatus == 19 || id_estatus == 22){
+    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+}
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
             data: data,
@@ -367,6 +370,15 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         var tr = $(`#trees${idSolicitud}`).closest('tr');
                         var row = escrituracionTable.row(tr);
                         createDocRow(row, tr, $(`#trees${idSolicitud}`));
+                        if((id_estatus == 19 || id_estatus == 22) && (action == 1 || action == 2)){
+                            var index = documentosObligatorios.findIndex(e => e.cargado == 0);
+                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                            if((index < 0 && action == 1) || (action == 2 && index >= 0 )){
+                                escrituracionTable.ajax.reload(null,false);
+                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                            }
+                        }
                     }else if(details == 2){
                         console.log('details =2, buildUploadCards')
                         let idNxS = $("#idNxS").val();
@@ -389,12 +401,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     }
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
-                    if(id_estatus == 19){
-                        console.log('estatus 19')
-                        var index = documentosObligatorios.findIndex(e => e.expediente == null);
-                        console.log('index')
-                        console.log(index)
-                    }
+                    
                   
 
 
@@ -1149,7 +1156,7 @@ function fillTable(beginDate, endDate, estatus) {
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
-                                        bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1) ? 1 : (d.id_notaria != 0 && d.documentosCargados == 1 && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0) ? 1 : 0) ;                                        
+                                        bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1) ? 1 : (d.id_notaria != 0 && d.documentosCargados == 1 && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) ? 1 : 0) ;                                        
                                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     }
                             break;
@@ -1965,7 +1972,8 @@ function buildTableDetail(data, permisos,proceso = 0) {
                 "expediente" : v.tipo_documento == 12 ? v.movimiento : v.expediente,
                 "obligario" : v.documento_a_validar == null ? 0 : 1,
                 "tipo_documento"  : v.tipo_documento,
-                "validado" : v.estatusValidacion
+                "validado" : v.estatusValidacion,
+                "cargado": v.expediente != null ? 1 : 0
             });
         }
         
