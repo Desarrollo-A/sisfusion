@@ -511,7 +511,7 @@ class Postventa_model extends CI_Model
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
         }elseif($status == 19 ||$status == 22 || $status == 24 || $status == 20 || $status == 25 || $status == 34){
-            $tipo_doc = "IN (1,3,4,5,6,7,8,9,11,17,18$docPersonalidadJuridica $docNotariaExterna)";
+            $tipo_doc = "IN (1,3,4,5,6,7,8,9,17,18$docPersonalidadJuridica $docNotariaExterna)";
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
         }elseif($status == 29 || $status == 35 || $status == 40){
