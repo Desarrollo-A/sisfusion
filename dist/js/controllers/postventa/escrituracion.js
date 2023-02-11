@@ -401,6 +401,7 @@ function clearInputs(){
     $('#telefono').val('');
     $('#cel').val('');
     $('#calleF').val('');
+    $('#valorC').val('');
 }
 function habilitarInputs(resul){
     if(resul){
