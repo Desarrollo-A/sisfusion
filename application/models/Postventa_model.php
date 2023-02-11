@@ -139,7 +139,7 @@ class Postventa_model extends CI_Model
 
         $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
         foreach ($opciones as $row) {
-            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,".$row['id_documento'].",$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL,".$row['obligatorio'].");");
+            $this->db->query("INSERT INTO documentos_escrituracion VALUES('creacion de rama',NULL,GETDATE(),1,$insert_id,$idUsuario,".$row['id_documento'].",$idUsuario,$idUsuario,GETDATE(),NULL,NULL,NULL,".$row['obligatorio'].",".$row['documento_a_validar'].");");
         }
         
         $y=0;
