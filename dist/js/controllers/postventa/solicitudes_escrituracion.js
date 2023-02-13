@@ -934,6 +934,8 @@ $(document).on('click', '.saveNotaria', function() {
     let select = tr.find('select').val();
     if (tr.find('select').val()) {
         saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+    }else{
+        alerts.showNotification("top", "right", "Debe seleccionar una notaria", "warning");
     }
 })
 
@@ -1688,6 +1690,7 @@ function getNotarias(datos=null) {
         }, function(data) {
             $('#nombrePresupuesto').val(data.nombre);
             $('#nombrePresupuesto2').val(data.nombre_a_escriturar);
+            $('#valor_escri').val(data.valor_escriturar);
             //$('#estatusPago').val(data.estatus_pago).trigger('change');
           //  $('select[name=estatusPago]').val(data.estatus_pago);
           $("#estatusPago").selectpicker();
@@ -1742,6 +1745,7 @@ function checkBudgetInfo(idSolicitud) {
     }, function (data) {
         $('#nombrePresupuesto3').val(data.nombre);
         $('#nombrePresupuesto4').val(data.nombre_escrituras);
+        $('#valor_escri4').val(data.valor_escriturar);
         $('#estatusPago2').val(data.nombrePago);
         $('#superficie2').val(data.superfice);
         $('#fContrato2').val(data.modificado);
@@ -1944,6 +1948,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24)){
 
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+            solicitudes += v.documento_a_validar == 1 ? `` : '' ;
         }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
         else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
             if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
@@ -2547,7 +2552,7 @@ function crearDetailsPresupuestos(data, permisos) {
         notarias += '<td><div class="d-flex justify-center">';
         notarias += `<button  class="btn-data btn-blueMaderas ${data.notarias[i] != undefined ? 'modalPresupuestos':'saveNotaria'}" 
         data-idNxS ="${data.notarias[i] ? data.notarias[i].idNotariaxSolicitud:null}" data-idSolicitud="${data.id_solicitud}" data-toggle="tooltip" 
-        data-placement="left" title="presupuestos">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
+        data-placement="left" title="${data.notarias[i] != undefined ? 'Subir presupuesto':'Guardar notaria'}">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
         </button>`;
         notarias += '</div></td></tr>';
     }

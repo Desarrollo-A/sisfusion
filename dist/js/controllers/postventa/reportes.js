@@ -87,12 +87,14 @@ function createDocRow(row, tr, thisVar){
     if ( row.child.isShown() ) {
         row.child.hide();
         tr.removeClass('shown');
+        console.log(row.data());
         $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
     }else{
         $.post("getFullReportContraloria", {
-            idEscritura: row.data().idSolicitud
+            idEscritura: row.data().id_solicitud
         }).done(function (data) {
-            row.data().reporte = JSON.parse(data);
+            console.log(data)
+            row.data().reporte =  JSON.parse(data);
             reportsTable.row(tr).data(row.data());
             row = reportsTable.row(tr);
             row.child(buildTableDetail(row.data().reporte)).show();
@@ -118,7 +120,7 @@ function buildTableDetail(data) {
         //i es el indice y v son los valores de cada fila
         solicitudes += '<tr>';
         solicitudes += '<td> ' + i + ' </td>';
-        solicitudes += '<td> ' + v.estatus + ' </td>';
+        solicitudes += '<td> ' + v.idStatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
         solicitudes += '<td> ' + v.fechados + ' </td>';
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
