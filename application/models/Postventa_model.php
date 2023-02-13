@@ -549,7 +549,7 @@ class Postventa_model extends CI_Model
     (CASE WHEN CONCAT(userV.nombre, ' ', userV.apellido_paterno, ' ', userV.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(userV.nombre, ' ', userV.apellido_paterno, ' ', userV.apellido_materno) END) validado_por,
     de.estatus_validacion ev,
     (CASE WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '') ELSE 'SIN  MOTIVOS DE RECHAZO' END) motivos_rechazo,
-    0 estatusPropuesta,
+    0 estatusPresupuesto,
     de.editado
 
     FROM documentos_escrituracion de
@@ -572,7 +572,7 @@ class Postventa_model extends CI_Model
     UNION ALL
     SELECT pr.idPresupuesto idDocumento,
     0 documento_a_validar,
-    de.movimiento,
+    pr.expediente as movimiento,
     CONCAT('Presupuesto ', oxc.nombre, ' - ', nota.nombre_notaria) expediente, 
     de.modificado,
     de.status , 
@@ -595,7 +595,7 @@ class Postventa_model extends CI_Model
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END) validado_por,
         de.estatus_validacion ev,
         (CASE WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '') ELSE 'SIN  MOTIVOS DE RECHAZO' END) as motivos_rechazo, 
-        pr.estatus estatusPropuesta,
+        pr.estatus estatusPresupuesto,
         null editado
 
         from Presupuestos pr
@@ -610,7 +610,7 @@ class Postventa_model extends CI_Model
         INNER JOIN notarias_x_usuario nxu ON nxu.idNotariaxSolicitud = pr.idNotariaxSolicitud
         INNER JOIN Notarias nota ON nota.idNotaria = nxu.id_notaria
         WHERE pr.idSolicitud = $idSolicitud AND pr.expediente != ''
-         GROUP BY pr.idPresupuesto ,de.modificado,se.estatus_construccion,de.fecha_creacion, de.movimiento,opc.id_documento,se.id_estatus,se.id_solicitud,opc.fecha_creacion,oxc.nombre,pr.expediente, pr.idSolicitud, opc.descripcion,de.status, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),de.idUsuario, pr.fecha_creacion,
+         GROUP BY pr.idPresupuesto ,de.modificado,se.estatus_construccion,de.fecha_creacion, pr.expediente,opc.id_documento,se.id_estatus,se.id_solicitud,opc.fecha_creacion,oxc.nombre,pr.expediente, pr.idSolicitud, opc.descripcion,de.status, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),de.idUsuario, pr.fecha_creacion,
         (CASE WHEN de.estatus_validacion IS NULL THEN 'Sin validar' WHEN de.estatus_validacion = 1 THEN 'Validado OK' WHEN de.estatus_validacion = 2 THEN 'Rechazado' END),
         (CASE WHEN de.estatus_validacion IS NULL THEN '#566573' WHEN de.estatus_validacion = 1 THEN '#239B56' WHEN de.estatus_validacion = 2 THEN '#C0392B' END) ,
         (CASE WHEN CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) = '' THEN 'Sin especificar' ELSE CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) END),
@@ -876,16 +876,16 @@ function checkBudgetInfo($idSolicitud){
 
     function getData_contraloria()
     {
-        return $this->db->query("SELECT se.idSolicitud, l.nombreLote,cond.nombre nombreCondominio, r.nombreResidencial,
+        return $this->db->query("SELECT se.id_solicitud, l.nombreLote,cond.nombre nombreCondominio, r.nombreResidencial,
             se.nombre, oxc.nombre estatus, cp.tiempo as dias, ce.fecha_creacion,
-            CASE WHEN (se.id_juridico IS null) THEN oxc2.nombre 
+            CASE WHEN (se.id_titulacion IS null) THEN oxc2.nombre 
                 ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as area
             FROM solicitudes_escrituracion se
-            INNER JOIN lotes l ON se.idLote = l.idLote 
+            INNER JOIN lotes l ON se.id_lote = l.idLote 
             INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
             INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
-            INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
-            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus AND oxc.id_catalogo = 59 
+            INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.id_estatus AND oxc.id_catalogo = 59 
             INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.idArea AND oxc2.id_catalogo = 1
             INNER JOIN control_procesos cp ON cp.estatus = se.estatus AND se.idArea = cp.idRol
             LEFT JOIN usuarios uj ON uj.id_usuario = se.id_juridico
@@ -1048,7 +1048,7 @@ function checkBudgetInfo($idSolicitud){
         (CASE 
         WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
         ELSE 'SIN  MOTIVOS DE RECHAZO'
-        END) motivos_rechazo, 0 estatusPropuesta, de.editado
+        END) motivos_rechazo, 0 estatusPresupuesto, de.editado
         FROM documentos_escrituracion de 
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
@@ -1075,7 +1075,7 @@ function checkBudgetInfo($idSolicitud){
             (CASE 
             WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
             ELSE 'SIN  MOTIVOS DE RECHAZO'
-            END) motivos_rechazo, pr.estatus estatusPropuesta, null editado
+            END) motivos_rechazo, pr.estatus estatusPresupuesto, null editado
     
             from Presupuestos pr
             INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
@@ -1109,7 +1109,7 @@ function checkBudgetInfo($idSolicitud){
         (CASE 
         WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
         ELSE 'SIN  MOTIVOS DE RECHAZO'
-        END) motivos_rechazo, 0 estatusPropuesta, de.editado
+        END) motivos_rechazo, 0 estatusPresupuesto, de.editado
         FROM documentos_escrituracion de 
         INNER JOIN solicitud_escrituracion se ON se.idSolicitud = de.idSolicitud
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
@@ -1136,7 +1136,7 @@ function checkBudgetInfo($idSolicitud){
             (CASE 
             WHEN de.estatus_validacion = 2 THEN STRING_AGG (mr.motivo, '')
             ELSE 'SIN  MOTIVOS DE RECHAZO'
-            END) motivos_rechazo, pr.estatus estatusPropuesta, null editado
+            END) motivos_rechazo, pr.estatus estatusPresupuesto, null editado
     
             from Presupuestos pr
             INNER JOIN usuarios u ON u.id_usuario = pr.creado_por
