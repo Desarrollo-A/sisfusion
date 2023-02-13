@@ -146,6 +146,7 @@
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="idDocumento">
                 <input type="text" class="hide" id="documentType">
+                <input type="text" class="hide" id="id_estatus">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">
@@ -801,9 +802,7 @@
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
-                    <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
-                    </select>
-                    <!-- <select class="selectpicker select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" data-style="btn" data-live-search="true" data-container="body" required></select> -->
+                    <select class="select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" data-style="btn" data-container="body" required></select>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
@@ -984,7 +983,7 @@
 
 <!-- inicio de modal -->
 
-<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
                 <div class="modal-dialog  modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -998,14 +997,14 @@
                                 
                             <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
                             </div>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
                         </div>
                     </div>
                 </div>
             </div>
 <!-- fin modal -->   
 <!-- fin modal -->   
-<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar">
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -1016,7 +1015,7 @@
                     
                     </div>
                 <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                       
                 </div>
                 </div>

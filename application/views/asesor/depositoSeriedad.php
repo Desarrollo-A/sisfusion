@@ -423,6 +423,7 @@ $('#condominio').change( function(){
     var getInfo2_7A = new Array(7);
     var getInfo5_2A = new Array(7);
     var return1a = new Array(7);
+    var tipo_comprobante ;
 
 
     var aut;
@@ -639,6 +640,7 @@ $('#condominio').change( function(){
         getInfo2A[5] = $(this).attr("data-idLote");
         getInfo2A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal1').modal('show');
     });
@@ -654,6 +656,7 @@ $('#condominio').change( function(){
         getInfo2_2A[5] = $(this).attr("data-idLote");
         getInfo2_2A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal2').modal('show');
     });
@@ -669,6 +672,7 @@ $('#condominio').change( function(){
         getInfo5A[5] = $(this).attr("data-idLote");
         getInfo5A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal3').modal('show');
     });
@@ -684,6 +688,7 @@ $('#condominio').change( function(){
         getInfo6A[5] = $(this).attr("data-idLote");
         getInfo6A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal4').modal('show');
     });
@@ -699,6 +704,7 @@ $('#condominio').change( function(){
         getInfo2_3A[5] = $(this).attr("data-idLote");
         getInfo2_3A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal5').modal('show');
     });
@@ -714,6 +720,7 @@ $('#condominio').change( function(){
         getInfo2_7A[5] = $(this).attr("data-idLote");
         getInfo2_7A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal6').modal('show');
     });
@@ -729,6 +736,7 @@ $('#condominio').change( function(){
         getInfo5_2A[5] = $(this).attr("data-idLote");
         getInfo5_2A[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal7').modal('show');
     });
@@ -744,6 +752,7 @@ $('#condominio').change( function(){
         return1a[5] = $(this).attr("data-idLote");
         return1a[6] = $(this).attr("data-fechavenc");
         nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
         $(".lote").html(nombreLote);
         $('#modal_return1').modal('show');
     });
@@ -889,6 +898,7 @@ $('#condominio').change( function(){
                     "data": function( d ){
                         var atributo_button ='';
                         var buttonst;
+                        var tipo_comprobanteD = d.tipo_comprobanteD;
                         if(d.vl == '1') {
                             buttonst = 'En proceso de Liberación';
                         } else {
@@ -896,48 +906,49 @@ $('#condominio').change( function(){
                                 if (d.id_prospecto == 0 )/*&& d.concepto =='APARTADO DESDE LA PAGINA DE CIUDAD' MADERAS*/
                                 {
                                     if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
-                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+'  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+'  data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                         d.comentario;
                                     } else {
-                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 85 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 20 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 63 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 73 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 82 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 92 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                        d.idMovimiento == 96 ?  '<center><a href="#" disabled  data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        buttonst = d.idMovimiento == 31 ?  '<center><a href="#" disabled  data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 85 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 20 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 63 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 73 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 82 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 92 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'"  data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                        d.idMovimiento == 96 ?  '<center><a href="#" disabled data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green disabled"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                         d.comentario;
                                     }
-                                } else {
-                                    buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                    d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                }
+                                else {
+                                    buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                    d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                     d.comentario;
                                 }
                             }                            
                             else 
                             {
-                                buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
-                                d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                buttonst = d.idMovimiento == 31 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 85 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 20 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 63 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6">  <i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 73 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_3"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                 d.comentario;
                             }
                         }
@@ -1036,6 +1047,10 @@ $('#condominio').change( function(){
         dataExp1.append("idLote", getInfo2A[5]);
         dataExp1.append("comentario", comentario);
         dataExp1.append("fechaVenc", getInfo2A[6]);
+        dataExp1.append('tipo_comprobante', tipo_comprobante);
+
+        let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
+
 
         if (validaComent == 0) {
             alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
@@ -1068,7 +1083,7 @@ $('#condominio').change( function(){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
                     } else if(response.message == 'ERROR'){
                         $('#save1').prop('disabled', false);
                         $('#modal1').modal('hide');
@@ -1129,7 +1144,9 @@ $('#condominio').change( function(){
         dataExp2.append("idLote", getInfo2_2A[5]);
         dataExp2.append("comentario", comentario);
         dataExp2.append("fechaVenc", getInfo2_2A[6]);
+        dataExp1.append('tipo_comprobante', tipo_comprobante);
 
+        let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
         if (validaComent == 0) {
             alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
         }
@@ -1161,7 +1178,7 @@ $('#condominio').change( function(){
                         $('#save2').prop('disabled', false);
                         $('#modal2').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
                     } else if(response.message == 'ERROR'){
                         $('#save2').prop('disabled', false);
                         $('#modal2').modal('hide');
@@ -1211,6 +1228,9 @@ $('#condominio').change( function(){
         dataExp3.append("idLote", getInfo5A[5]);
         dataExp3.append("comentario", comentario);
         dataExp3.append("fechaVenc", getInfo5A[6]);
+        dataExp1.append('tipo_comprobante', tipo_comprobante);
+
+        let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
 
 
         if (validaComent == 0) {
@@ -1242,7 +1262,7 @@ $('#condominio').change( function(){
                         $('#save3').prop('disabled', false);
                         $('#modal3').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL, COMPROBANTE DE DOMICILIO, RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                        alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
                     } else if(response.message == 'ERROR'){
                         $('#save3').prop('disabled', false);
                         $('#modal3').modal('hide');

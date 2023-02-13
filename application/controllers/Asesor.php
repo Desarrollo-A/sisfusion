@@ -10,6 +10,7 @@ class Asesor extends CI_Controller
         $this->load->model('Contraloria_model');
         $this->load->model('registrolote_modelo');
         $this->load->model('caja_model_outside');
+        $this->load->model('General_model');
         $this->load->library(array('session', 'form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
@@ -1099,6 +1100,7 @@ class Asesor extends CI_Controller
             $data[$i]['subdirector'] = $query[0]->subdirector;
             $data[$i]['regional'] = $query[0]->regional;
             $data[$i]['estatus'] = $query[0]->estatus;
+            $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
         }
 
 
@@ -2176,7 +2178,6 @@ class Asesor extends CI_Controller
 
     public function editar_ds()
     {
-
         setlocale(LC_MONETARY, 'en_US');
 
         $array1 = $this->input->post("email_cop[]");
@@ -2367,7 +2368,28 @@ class Asesor extends CI_Controller
         $id_referencia2 = $this->input->post('id_referencia2');
         $tipo_nc = $this->input->post('tipoNc_valor');
         $printPagare = $this->input->post('imprimePagare');
+        $tipo_comprobante = $this->input->post('tipo_comprobante');
 
+        //revisar si coloco que no quiere la carta, revisar si hay un registro en el arbol
+        //si es así hayq ue borrar la rama ya que no la estará utilizando
+        if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
+            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+
+            if(count($revisar_registro)>0){
+                $ubicacion = getFolderFile($revisar_registro[0]['tipo_doc']);
+                $filename = $revisar_registro[0]['expediente'];
+                //revisar si hay algun documento
+                $array_key = array("idDocumento" => $revisar_registro[0]['idDocumento']);
+                $tabla = 'historial_documento';
+                if($filename=='' || $filename==NULL){
+                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
+                }else{
+                    $eliminar_archivo = delete_img($ubicacion, $filename);
+                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
+                }
+            }
+        }
         /*****MARTHA DEBALE OPTION*******/
 //        $descuento_mdb = $this->input->post('descuento_mdb');
         /*************/
@@ -2442,6 +2464,7 @@ class Asesor extends CI_Controller
         $arreglo_cliente["modificado_por"] = $this->session->userdata('id_usuario');
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
+        $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
         //$arreglo_cliente['lugar_prospeccion'] = $cm;
 //        $arreglo_cliente["descuento_mdb"] = $descuento_mdb;
 
@@ -2571,7 +2594,6 @@ class Asesor extends CI_Controller
         //----------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         if ($this->input->post('tipo_vivienda')) {
             $arreglo_cliente["tipo_vivienda"] = $tipo_vivienda;
@@ -3066,7 +3088,6 @@ class Asesor extends CI_Controller
 
 
             }
-
             $html .= '
                     
                     
@@ -3342,6 +3363,37 @@ class Asesor extends CI_Controller
 
                 if ($this->Asesor_model->editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2)) {
 
+                    if($arreglo_cliente['tipo_comprobanteD'] == 1){
+                        //checar si ya se ha añadido el registro anteriormente
+                        $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+
+                        if(count($revisar_registro) == 0){
+                            //validar la opcion de domicilio empresa
+
+                            //se crea rama
+                            $data_insert = array(
+                                'movimiento'        =>'CARTA DOMICILIO CM',
+                                'expediente'        => NULL,
+                                'modificado'        => date('Y-m-d H:i:s'),
+                                'status'            => 1,
+                                'idCliente'         => $id_cliente,
+                                'idCondominio'      => $dcv->idCondominio,
+                                'idLote'            => $dcv->idLote,
+                                'idUser'            => NULL,
+                                'tipo_documento'    => 0,
+                                'id_autorizacion'   => 0,
+                                'tipo_doc'          => 29,
+                                'estatus_validacion'=> 0
+                            );
+
+                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                            //if ($dbTransaction) // SUCCESS TRANSACTION
+                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
+                            //else // ERROR TRANSACTION
+                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }
                     $mail->send();
                     ECHO "SUCCESS";
 
@@ -3380,7 +3432,8 @@ class Asesor extends CI_Controller
 
             }
 
-        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
+        }
+        else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
 
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
 
@@ -3388,6 +3441,41 @@ class Asesor extends CI_Controller
                 $updateDs = $this->Asesor_model->editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2);
 
                 if ($updateDs) {
+
+                    if($arreglo_cliente['tipo_comprobanteD'] == 1){
+                        //checar si ya se ha añadido el registro anteriormente
+                        $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+
+                        if(count($revisar_registro) == 0){
+                        //validar la opcion de domicilio empresa
+
+                            //se crea rama
+                            $data_insert = array(
+                                'movimiento'        =>'CARTA DOMICILIO CM',
+                                'expediente'        => NULL,
+                                'modificado'        => date('Y-m-d H:i:s'),
+                                'status'            => 1,
+                                'idCliente'         => $id_cliente,
+                                'idCondominio'      => $dcv->idCondominio,
+                                'idLote'            => $dcv->idLote,
+                                'idUser'            => NULL,
+                                'tipo_documento'    => 0,
+                                'id_autorizacion'   => 0,
+                                'tipo_doc'          => 29,
+                                'estatus_validacion'=> 0
+                            );
+                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                            //if ($dbTransaction) // SUCCESS TRANSACTION
+                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
+                            //else // ERROR TRANSACTION
+                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }
+
+
+
+
                     if (count($array17) > 0) {
                         for ($i = 0; $i < sizeof($array17); $i++) {
                             $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
@@ -3602,6 +3690,7 @@ class Asesor extends CI_Controller
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
+        $tipo_comprobante = $this->input->post('tipo_comprobante');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 2;
@@ -3620,17 +3709,14 @@ class Asesor extends CI_Controller
         if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)
             $documentsNumber = 3;
         else
-            $documentsNumber = 4;
-        
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+
+
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
-        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
 
-        if ((COUNT($documentsValidation) != $documentsNumber) && ($validacion)) {
-            $data['message'] = 'MISSING_DOCUMENTS';
-            echo json_encode($data);
-        }
-        else if(COUNT($documentsValidation) != $documentsNumber) {
+        if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         }
@@ -5649,5 +5735,13 @@ class Asesor extends CI_Controller
     public function getReporteAsesores(){
         $data['data'] = $this->Asesor_model->reporteAsesor()->result_array();
         echo json_encode($data);
+    }
+
+    function getFolderFile($documentType)
+    {
+        if ($documentType == 7) $folder = "static/documentos/cliente/corrida/";
+        else if ($documentType == 8) $folder = "static/documentos/cliente/contrato/";
+        else $folder = "static/documentos/cliente/expediente/";
+        return $folder;
     }
 }

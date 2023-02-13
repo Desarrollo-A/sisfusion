@@ -1470,7 +1470,7 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
-                        if (d.apartadoXReubicacion == 1){
+                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
                             return 'Apartado por reubicación';
                         }
                         else{

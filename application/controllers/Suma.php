@@ -319,7 +319,7 @@ class Suma extends CI_Controller
                         $id_com =  $datos[$i];
                         $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
                         $this->Suma_model->update_acepta_solicitante($id_com);
-                        $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
+                        $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A DTO. SUMA')");
                       }
                     }
                   } 

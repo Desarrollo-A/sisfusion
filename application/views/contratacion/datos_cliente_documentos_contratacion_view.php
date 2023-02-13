@@ -55,7 +55,7 @@
 								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
-							<input type="text" class="form-control" id= "txtexp" readonly>
+							<input type="text" class="form-control" id="txtexp" readonly>
 						</div>
 
 					</div>
@@ -92,7 +92,7 @@
 					</div>
 					<div class="modal-footer">
 						<br><br>
-						<button type="button" id="aceptoDelete" class="btn btn-primary"> Si, borrar </button>
+						<button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
 					</div>
 				</div>
@@ -230,7 +230,7 @@
 	</script>
 	<script>
 		var id_rol_current = <?php echo $this->session->userdata('id_rol')?>;
-		$(document).ready (function() {
+
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
 					log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -243,15 +243,16 @@
 
 
 		$(document).on('change', '.btn-file :file', function() {
+		    console.log('karma mi perro', $(this));
 			var input = $(this),
 				numFiles = input.get(0).files ? input.get(0).files.length : 1,
 				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
-			console.log('triggered');
+			console.log('fileselect', [numFiles, label]);
 		});
 
 
-
+        $(document).ready (function() {
 			$('#filtro3').change(function(){
 				var valorSeleccionado = $(this).val();
 				//build select condominios
@@ -481,8 +482,16 @@
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
 											} else if(data.tipo_doc == 8){
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-											} else {
-												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
+											}else if(data.tipo_doc == 26 || data.tipo_doc == 29 && id_rol_current!=6){
+                                                file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
+                                            }
+                                            else {
+
+                                                <?php if($this->session->userdata('id_rol') == 6){?>
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6) && (data.tipo_doc==26 || data.tipo_doc==29)){
+                                                            file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+                                                        }
+												<?php }elseif($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
 												// 
 												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1)){
 													file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
@@ -531,9 +540,18 @@
 												if(data.tipo_doc == 66){
 												file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>';
 												}else{
-													file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-												}
-												
+                                                    file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+                                                    if((data.tipo_doc==26 || data.tipo_doc==29) && id_rol_current==6 ){
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6) && (data.tipo_doc==26 || data.tipo_doc==29)){
+                                                            file+= '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                        }
+                                                    }else{
+                                                        file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+
+                                                    }
+
+                                                }
+
 											<?php }?>
 
 										}
@@ -697,10 +715,9 @@
 			});
 		});
 		
-		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2){?>
+		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 6){?>
 		var miArrayAddFile = new Array(8);
 		var miArrayDeleteFile = new Array(1);
-		$(document).ready (function() {
 			$(document).on("click", ".update", function(e){
 				e.preventDefault();
 				$('#txtexp').val('');
@@ -727,7 +744,6 @@
 				$(".lote").html(descdoc);
 				$('#addFile').modal('show');
 			});
-		});
 
 		$(document).on('click', '#sendFile', function(e) {
 			e.preventDefault();
@@ -771,6 +787,7 @@
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
 							alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
@@ -778,10 +795,12 @@
                         else if(response.message == 'OBSERVACION_CONTRATO'){
                             alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás subir documentación" +
                                 " hasta que el proceso de liberación haya concluido.", "danger");
+                            $("#expediente").val('');
                             $('#sendFile').prop('disabled', false);
                         }
 						else if(response.message == 'ERROR'){
 							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 						}
 					}

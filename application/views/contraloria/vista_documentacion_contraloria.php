@@ -4,7 +4,7 @@
 <div class="wrapper ">
 	<?php
 	//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12" || $this->session->userdata('id_rol')=="70"|| $this->session->userdata('id_rol') == "71")//contratacion
+	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12" || $this->session->userdata('id_rol')=="70"|| $this->session->userdata('id_rol') == "71"|| $this->session->userdata('id_rol') == "73")//contratacion
 		$this->load->view('template/sidebar', "");
 	else
 		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
