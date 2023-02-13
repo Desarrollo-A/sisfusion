@@ -1930,7 +1930,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
             if(v.tipo_documento == 12){
                 //(ESCRITURA) VALIDAR PRESUPUESTOS CARGADOS, SOLO SE PUEDE VALIDAR UNO
                 if(v.estatusPresupuesto == null || v.estatusPresupuesto == 0){
-                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up" style="color: aliceblue"></i></button>`;
                 }else{
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="4" class="btn-data btn-green approve" data-toggle="tooltip" data-placement="left" title="Documento NOK" disabled><i class="fas fa-thumbs-up"></i></button>`;
                 }
