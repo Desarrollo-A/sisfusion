@@ -9,7 +9,6 @@ $(document).on('click', '.details', function (e) {
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    console.log("Campo en el END"+ finalEndDate);
     let fDate = formatDate(finalBeginDate);
     let fEDate = formatDate(finalEndDate);
     buildTable(fDate, fEDate);
