@@ -134,7 +134,7 @@ class Postventa_model extends CI_Model
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
       
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por,valor_contrato) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario,'$valor_contrato')");
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por,valor_contrato,valor_escriturar) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario,'$valor_contrato',NULL)");
         $insert_id = $this->db->insert_id();
 
         $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
@@ -876,22 +876,18 @@ function checkBudgetInfo($idSolicitud){
 
     function getData_contraloria()
     {
-        return $this->db->query("SELECT se.id_solicitud, l.nombreLote,cond.nombre nombreCondominio, r.nombreResidencial,
-            se.nombre, oxc.nombre estatus, cp.tiempo as dias, ce.fecha_creacion,
-            CASE WHEN (se.id_titulacion IS null) THEN oxc2.nombre 
-                ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as area
-            FROM solicitudes_escrituracion se
-            INNER JOIN lotes l ON se.id_lote = l.idLote 
-            INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-            INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
-            INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
-            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = se.id_estatus AND oxc.id_catalogo = 59 
-            INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.idArea AND oxc2.id_catalogo = 1
-            INNER JOIN control_procesos cp ON cp.estatus = se.estatus AND se.idArea = cp.idRol
-            LEFT JOIN usuarios uj ON uj.id_usuario = se.id_juridico
-            LEFT JOIN (SELECT idEscrituracion, max(fecha_creacion) fecha_creacion, newStatus FROM control_estatus GROUP BY idEscrituracion, newStatus) ce 
-                ON ce.idEscrituracion = se.idSolicitud AND ce.newStatus= se.estatus
-            ORDER BY se.fecha_creacion ASC");
+        return $this->db->query("SELECT se.id_solicitud, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre, av.nombre as estatus, av.dias_vencimiento as dias, se.fecha_creacion, CASE WHEN (se.id_titulacion IS null) THEN ar.nombre ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as asignado, ar.nombre as area, se.id_solicitud as idEscrituracion
+        FROM solicitudes_escrituracion se
+        INNER JOIN lotes l ON se.id_lote = l.idLote 
+        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
+        INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
+        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus
+        INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
+        GROUP BY se.id_solicitud, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, av.nombre, av.dias_vencimiento, se.fecha_creacion, se.id_titulacion, uj.nombre, uj.apellido_paterno, uj.apellido_materno, ar.nombre, se.id_solicitud
+        ORDER BY se.fecha_creacion ASC");
     }
 
     function getData_titulacion()
@@ -958,25 +954,18 @@ function checkBudgetInfo($idSolicitud){
     // }
 
     function getFullReportContraloria($idSolicitud){
-        $query = $this->db->query("WITH cte AS(
-            SELECT MAX(fecha_creacion) fecha_creacion, comentarios,
-            CAST((CASE WHEN idStatus = 91 or idStatus = 92 THEN idStatus-89 WHEN idStatus = 0 THEN idStatus+1 WHEN idStatus = 90 THEN 15.1 ELSE idStatus END) AS INT) idStatus, idEscrituracion
-            FROM control_estatus 
-            WHERE idEscrituracion = $idSolicitud GROUP BY idStatus, idEscrituracion , comentarios
-        )
-		SELECT cte.*, isNULL(lag(MAX(ce.fecha_creacion)) OVER (ORDER BY cte.idStatus), cte.fecha_creacion) fechados,
-        l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, se.nombre, 
-        oxc.nombre estatus, oxc2.nombre area, cp.tiempo FROM cte
-        INNER JOIN control_estatus ce ON ce.idEscrituracion = cte.idEscrituracion AND ce.fecha_creacion = cte.fecha_creacion
-        INNER JOIN solicitud_escrituracion se ON se.idSolicitud = cte.idEscrituracion
-        INNER JOIN lotes l ON se.idLote = l.idLote
-        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
-        INNER JOIN clientes c ON c.id_cliente = se.idCliente AND c.status = 1
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cte.idStatus AND oxc.id_catalogo = 59 
-        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ce.idArea AND oxc2.id_catalogo = 1
-        INNER JOIN control_procesos cp ON cp.estatus=ce.idStatus AND cp.idRol = ce.idArea
-        GROUP BY cte.idStatus, cte.idEscrituracion, cte.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, se.nombre, oxc.nombre, oxc2.nombre, cp.tiempo, cte.comentarios");
+        $query = $this->db->query("SELECT MAX(he.fecha_creacion) fecha_creacion, he.descripcion as comentarios, he.numero_estatus idStatus, he.id_solicitud as idEscrituracion, isNULL(lag(MAX(he.fecha_creacion)) OVER (ORDER BY he.numero_estatus), he.fecha_creacion) fechados, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre as area, av.dias_vencimiento as tiempo
+        FROM historial_escrituracion he
+        INNER JOIN solicitudes_escrituracion se ON se.id_solicitud = he.id_solicitud
+        INNER JOIN lotes lo ON se.id_lote = lo.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+        INNER JOIN clientes cl ON cl.id_cliente = se.id_cliente AND cl.status = 1
+        INNER JOIN control_permisos cp ON cp.estatus_actual = he.numero_estatus AND cp.bandera_vista = 1
+        INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
+        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        WHERE he.id_solicitud = $idSolicitud
+        GROUP BY he.fecha_creacion, he.numero_estatus, he.id_solicitud, he.descripcion, av.fecha_creacion, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre, av.dias_vencimiento");
         return $query->result_array();
     }
 
@@ -1284,7 +1273,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencialF
+        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
         INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista = 1
         INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad AND cp.bandera_vista = 1
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1

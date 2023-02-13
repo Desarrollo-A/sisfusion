@@ -183,10 +183,16 @@
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pr-0 pr-0">
+                            <div class="col-md-8 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span>Valor a escriturar</label>
+                                    <input id="valor_escri" name="valor_escri" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0">
@@ -288,7 +294,7 @@
                                 <div id="div_notaria" style="display: none;">
                                     <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
                                         <div class="form-group text-left m-0">
-                                            <label class="control-label label-gral">Nombre de la Notaría</label>
+                                            <label class="control-label label-gral">Número de la Notaría</label>
                                             <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                                         </div>
                                     </div>  
@@ -372,6 +378,12 @@
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Valor a escriturar</label>
+                                    <input id="valor_escri4" name="valor_escri4" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -557,7 +569,7 @@
                             <div class="row">
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <label class="control-label label-gral">Número de la Notaría</label>
                                         <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
                                     </div>
                                 </div>
@@ -676,7 +688,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label label-gral">Nombre de la Notaría</label>
+                                <label class="control-label label-gral">Número de la Notaría</label>
                                 <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
                         </div>
