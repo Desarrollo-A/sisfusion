@@ -1141,7 +1141,7 @@ class Postventa extends CI_Controller
             "tipo_escritura" => $data['tipoE'],
            // "aportacion" => $data['aportaciones'],
            // "descuento" => $data['descuentos'],
-           // "motivo" => $data['motivo']
+            "valor_escriturar" => $data['valor_escri']
         );
         //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
@@ -1574,7 +1574,16 @@ class Postventa extends CI_Controller
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Valor de operación de contrato:</b><br>
+                                                ' .$data->valor_contrato. '
+                                            </td>
+                                             <td style="font-size: 1em;">
+                                                <b>Valor a escriturar:</b><br>
+                                                ' .$data->valor_escriturar. '
+                                            </td>
                                             </tr>
+                                               
                                         </table>
                                     </div>';
                                             if($data->cliente_anterior == 1){
@@ -1890,6 +1899,7 @@ class Postventa extends CI_Controller
     public function getFullReportContraloria(){
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
+        //var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
@@ -2678,7 +2688,7 @@ function saveNotaria(){
                 $columns = array(
                     [
                         "title" => 'ID',
-                        "data" => 'idSolicitud'
+                        "data" => 'id_solicitud'
                     ],
                     [
                         "title" => 'Lote',
@@ -2723,7 +2733,7 @@ function saveNotaria(){
                 $columns = array(
                     [
                         "title" => 'ID',
-                        "data" => 'idSolicitud'
+                        "data" => 'id_solicitud'
                     ],
                     [
                         "title" => 'Lote',
@@ -2768,7 +2778,7 @@ function saveNotaria(){
                 $columns = array(
                     [
                         "title" => 'ID',
-                        "data" => 'idSolicitud'
+                        "data" => 'id_solicitud'
                     ],
                     [
                         "title" => 'Lote',
