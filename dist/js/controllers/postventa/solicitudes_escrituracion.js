@@ -348,7 +348,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-        alert(action)
 if(id_estatus == 19 || id_estatus == 22){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
