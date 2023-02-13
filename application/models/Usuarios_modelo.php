@@ -78,6 +78,8 @@ class Usuarios_modelo extends CI_Model
                     $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%')";
                 else if ($this->session->userdata('id_usuario') == 10924 || $this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%') AND usuarios.id_usuario != " . $this->session->userdata('id_lider_2') . "";
+                else if($this->session->userdata('id_usuario') == 6831) //6831	YARETZI MARICRUZ ROSALES HERNANDEZ
+                    $id_sede = "(usuarios.id_sede LIKE '%8%' OR usuarios.id_sede LIKE '%10%')";
                 else
                     $id_sede = "(usuarios.id_sede LIKE('%" . $this->session->userdata('id_sede') . "%'))";
 
@@ -230,7 +232,7 @@ class Usuarios_modelo extends CI_Model
 
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
-                CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
+                CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
@@ -248,7 +250,7 @@ class Usuarios_modelo extends CI_Model
 
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
-                CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
+                CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
@@ -307,13 +309,8 @@ class Usuarios_modelo extends CI_Model
             case '3': // GERENTE
                 $sede = '';
                 $lider = "";
-                if ($headquarter == 11) {
+                if ($headquarter == 11)
                     $sede = " OR id_sede='3'";
-                }
-                if ($headquarter == 10) {
-                    $headquarter = 1;
-                    $lider = " AND id_usuario=607";
-                }
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                             id_rol = 2 AND (id_sede LIKE '%" . $headquarter . "%' $sede) $lider AND estatus = 1 ORDER BY nombre");
                 break;
