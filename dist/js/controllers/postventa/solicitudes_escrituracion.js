@@ -348,9 +348,14 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
+        alert(action)
 if(id_estatus == 19 || id_estatus == 22){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+}
+if(id_estatus == 20 || id_estatus == 25){
+    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
 }
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
@@ -379,6 +384,16 @@ if(id_estatus == 19 || id_estatus == 22){
                                 createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
                             }
                         }
+                        if((id_estatus == 20 || id_estatus == 25) && (action == 3 || action == 4)){
+                            var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
+                            var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
+                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                            if(((index2 < 0 && indexNull < 0) && action == 3) || (action == 4 && index2 >= 0 )){
+                                escrituracionTable.ajax.reload(null,false);
+                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                            }
+                        }
                     }else if(details == 2){
                         console.log('details =2, buildUploadCards')
                         let idNxS = $("#idNxS").val();
@@ -401,11 +416,6 @@ if(id_estatus == 19 || id_estatus == 22){
                     }
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
-                    
-                  
-
-
-
                 } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
                 else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
@@ -858,9 +868,12 @@ $(document).on('click', '.treePresupuesto', function () {
 $(document).on('click', '.approve', function(){
     let idDocumento = $(this).attr("data-idDocumento");
     let idSolicitud = $(this).attr("data-idSolicitud");
+    let idEstatusSolicitud = $(this).attr("data-estatus-solicitud");
 
     let data = new FormData();
     let details =  $(this).attr("data-details");
+    console.log('data presupuesto')
+    console.log(data);
     data.append("idSolicitud", idSolicitud);
     data.append("idDocumento", idDocumento);
 
@@ -881,6 +894,15 @@ $(document).on('click', '.approve', function(){
                     var tr = $(`#trees${idSolicitud}`).closest('tr');
                     var row = escrituracionTable.row(tr);
                     createDocRow(row, tr, $(`#trees${idSolicitud}`));
+                    if(idEstatusSolicitud == 19 || idEstatusSolicitud == 22){
+                        var index = documentosObligatorios.findIndex(e => e.cargado == 0);
+                        // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                        //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                        if(index < 0){
+                            escrituracionTable.ajax.reload(null,false);
+                           // createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                        }
+                    }
                 }
                 else{
                     escrituracionTable.ajax.reload(null,false);
@@ -1008,7 +1030,12 @@ function fillTable(beginDate, endDate, estatus) {
             {
                 "width": "2.5%",
                 data: function (d) {
-                    return d.ultimo_comentario;
+
+                    if(d.id_estatus == 27 || d.id_estatus == 28 || d.id_estatus == 30 || d.id_estatus == 31){
+                        return '<b>Fecha firma: '+d.fecha_firma.split('.')[0]+'</b>';
+                    }else{
+                        return d.ultimo_comentario;
+                    }
                  }
             },
             {
@@ -1152,6 +1179,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 19:
                             case 22:
+                                case 24:
                                     if (userType == 55) { 
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -1160,38 +1188,21 @@ function fillTable(beginDate, endDate, estatus) {
                                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     }
                             break;
-                            case 24:
-                                if (userType == 55) { 
-                                    //BOTONES DANI
-                                    //group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
-                                    bandera_request = d.documentosCargados == 1 ? 1 : 0;                                        
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
-                            break;
                             case 20:
                             case 25:
                                     if (userType == 57) { 
+
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
                                     }
                             break;
                             case 34:
-                                console.log(d);
                                 if (userType == 57) { 
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
 
-                            break;
-                            case 34:
-                                if (userType == 57) { 
-                                    //BOTONES DANI
-                                    bandera_request = 1;
-                                    group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-ban"></i></button>`;
-                                }
                             break;
                             case 23:
                                 if (userType == 57) { 
@@ -1845,6 +1856,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
             }
             break;
         case 3: //especial ver botones adicionales, ver archivos, rechazar solicitud y avanzar solicitud
+        //CASE 3 Y 4 PENDIENTE QUITAR O NO, ACTUALMENTE NO SE UTILIZAN
             if (expediente == null || expediente == '' || expediente == 'null') {
                 if (banderaBoton == 1) {
                     botones += BtnsAdicionales;
@@ -1875,10 +1887,9 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
 let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
     documentosObligatorios = [];
-    console.log('buildTableDetail')
-    console.log(permisos)
     var filtered = data.filter(function(value){ 
-        if(value.tipo_documento == 12 && value.estatusActual == 20 && value.estatusPropuesta != 1){
+        console.log(value.tipo_documento)
+        if(value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1){
         }else{
             return value;
         }
@@ -1895,8 +1906,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
     solicitudes += '<td>' + '<b>' + 'ACCIONES ' + '</b></td>';
     solicitudes += '</tr>';
     $.each(filtered, function (i, v) {
-       
-
         //i es el indice y v son los valores de cada fila
         let documento = v.tipo_documento == 12 ? v.expediente : v.descripcion;
         solicitudes += '<tr>';
@@ -1912,45 +1921,46 @@ function buildTableDetail(data, permisos,proceso = 0) {
         data-action = 2 (DELETE FILE)*/
 
         solicitudes += '<td><div class="d-flex justify-center">';
-        // PERMISO DE ESCRITURA TIENE PERMISOS (ESCRITURA) DOCUMENTOS: CONTRATO, PRESUPUESTOS, FORMAS DE PAGO
+        // PERMISO DE ESCRITURA TIENE PERMISOS (ESCRITURA) DOCUMENTOS: CONTRATO, PRESUPUESTOS, FORMAS DE PAGO, SOLO SE VALIDAN LOS PRESUPUESTOS LOS OTROS SOLO LECTURA
         if (permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24) && (v.tipo_documento == 7 || v.tipo_documento == 12 || v.tipo_documento == 18)){
             solicitudes += ``;
             if(v.tipo_documento == 12){
                 //(ESCRITURA) VALIDAR PRESUPUESTOS CARGADOS, SOLO SE PUEDE VALIDAR UNO
-                if(v.estatusPropuesta == null || v.estatusPropuesta == 0){
-                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
+                if(v.estatusPresupuesto == null || v.estatusPresupuesto == 0){
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
                 }else{
-                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-green approve" data-toggle="tooltip" data-placement="left" title="Documento NOK" disabled><i class="fas fa-thumbs-up"></i></button>`;
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="4" class="btn-data btn-green approve" data-toggle="tooltip" data-placement="left" title="Documento NOK" disabled><i class="fas fa-thumbs-up"></i></button>`;
                 }
             }
         }
+        //ACTIVIDAD APE0004 - POSTVENTA CARGA DOCUMENTO (CONTRATO Y OTROS) 
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 3 || v.estatus_solicitud == 4 || v.estatus_solicitud == 6 || v.estatus_solicitud == 8 || v.estatus_solicitud == 10) && (v.tipo_documento == 17 || v.tipo_documento == 18) ) {
-            console.log('ENTRA AQUI');
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="3" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        console.log(solicitudes)
-        }
+        } //PERMISO DE LECTURA - PENDIENTE (QUITAR CÓDIGO O NO)
         else if (permisos == 2 && v.estatus_solicitud == 5) {
             if(v.tipo_documento == 17 || v.tipo_documento == 18){
                 solicitudes += ``;
             }
-        }
+        }//ACTIDAD APE0011 - POSTVENTA INTEGRACIÓN DE EXPEDIENTE, CARGA Y ELIMINACIÓN DE ARCHIVOS
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24)){
 
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        }else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
+        }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
+        else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
             if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
                 solicitudes += ``;
             }else{
-                if (v.ev == 1) // MJ: VALIDADO OK
+                //EV: ESTATUS VALIDACIÓN DE CADA DOCUMENTO
+                if (v.ev == 1) // 1 VALIDADO, SE MUESTRA BOTON PARA NOK
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-warning upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento NOK"><i class="fas fa-thumbs-down"></i></button>`;
-                else if (v.ev == 2) // MJ: VALIDADO NOK
+                else if (v.ev == 2) //2 DOCUMENTO RECHAZADO, SE MUESTRA BOTON PARA VALIDAR
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-green upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
-                else if (v.expediente != null) { // MJ: SIN VALIDAR
+                else if (v.expediente != null) { //EXPEDIENTE SIN MOVIMIENTOS, SE MUESTRA BOTON PARA VALIDAR OK Y RECHACHAZAR
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar OK"><i class="fas fa-thumbs-up"></i></button>`;
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 }
             }
-        }
+        }//PENDIENTE SI BORRAR O NO
         else if (permisos == 1 && v.ev == null && v.estatus_solicitud == 13 && v.tipo_documento == 7){
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }else if (permisos == 2 && v.ev == null && v.estatus_solicitud == 22 && (v.tipo_documento == 16 || v.tipo_documento == 22)){            
@@ -1963,10 +1973,12 @@ function buildTableDetail(data, permisos,proceso = 0) {
             solicitudes += '';
         } 
         else{
+            //BOTON PARA VISUALIZAR CADA ARCHIVO
             let expe = v.tipo_documento == 12 ? v.movimiento : v.expediente;
             solicitudes += `<button id="preview" data-documentType="${v.tipo_documento}" data-doc="${expe}" class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
         }
         if(proceso == 1 && v.documento_a_validar == 1 ){
+            //SE LLENA ARRAY GLOBAL CON DATOS DE LOS ARCHIVOS QUE SON REQUERIDOS Y SE VALIDAN(COLUMNA DOCUMENTO_A_VALIDAR = 1) EN LA ACTIVIDAD APE0012 Y APE001
             documentosObligatorios.push({
                 "idDocumento" : v.idDocumento,
                 "expediente" : v.tipo_documento == 12 ? v.movimiento : v.expediente,
@@ -1976,13 +1988,8 @@ function buildTableDetail(data, permisos,proceso = 0) {
                 "cargado": v.expediente != null ? 1 : 0
             });
         }
-        
-
         solicitudes += '</div></td></tr>';
-
     });
-    console.log('documentos obligatorios')
-    console.log(documentosObligatorios);
     return solicitudes += '</table>';
 }
 
@@ -2662,7 +2669,6 @@ if(estatusAct4.includes(row.data().solicitudes[0].estatus_solicitud)){
             }
         }
         if(v==1){
-            console.log('v');
             escrituracionTable.ajax.reload(null,false);
             createDocRowOtros(rowOtros.row,rowOtros.tr,rowOtros.this);
         }else{
