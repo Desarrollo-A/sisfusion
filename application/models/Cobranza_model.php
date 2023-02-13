@@ -308,10 +308,13 @@ class Cobranza_model extends CI_Model {
             $filtroComisionista = "AND cl.id_subdirector = $comisionista";
         else if($tipoUsuario == 59) // SE BUSCA COMO DIRECTOR REGIONAL
             $filtroComisionista = "AND cl.id_regional = $comisionista";
-        else // SE BUSCA COMO DIRECTOR COMERCIAL
+        else if($tipoUsuario == 1)// SE BUSCA COMO DIRECTOR COMERCIAL
             $filtroComisionista = "";
+        else
+            $filtroComisionista = "AND (cl.id_asesor = $comisionista OR cl.id_coordinador = $comisionista OR cl.id_gerente = $comisionista 
+            OR cl.id_subdirector = $comisionista OR cl.id_regional = $comisionista)";
         
-        $query="SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
+        $query="SELECTT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
         FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(ISNULL(se.nombre, 'SIN ESPECIFICAR')) plaza,
         lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
         0 estatusComision, 0.00 porcentaje_decimal,
@@ -322,7 +325,13 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
-        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
+            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
+            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
+            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
+            WHEN cl.id_regional = $comisionista THEN 'Regional' 
+        END rol
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -350,7 +359,13 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
-        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
+            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
+            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
+            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
+            WHEN cl.id_regional = $comisionista THEN 'Regional' 
+        END rol
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -382,7 +397,13 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
-        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
+            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
+            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
+            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
+            WHEN cl.id_regional = $comisionista THEN 'Regional' 
+        END rol
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -414,7 +435,13 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
-        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
+            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
+            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
+            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
+            WHEN cl.id_regional = $comisionista THEN 'Regional' 
+        END rol
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial

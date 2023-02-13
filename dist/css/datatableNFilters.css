@@ -1260,7 +1260,7 @@
 }
 
 .boxContent .card {
-  border-radius: 0 10px 10px 10px;
+  border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
