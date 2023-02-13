@@ -802,7 +802,8 @@
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
-                    <select class="select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" data-style="btn" data-container="body" required></select>
+                    <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
