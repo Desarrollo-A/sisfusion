@@ -653,8 +653,7 @@ class Postventa extends CI_Controller
             // echo "<br>";
             // echo $usuarioJuridico->id_usuario;
             // echo "<br>";
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
-                $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
