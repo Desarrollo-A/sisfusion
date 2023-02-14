@@ -450,7 +450,7 @@ $datos = array();
                                             <div class="radio text-left">
                                                 <label style="font-size: 0.9em;" id="label2">
                                                     <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc === 1) {
+                                                        <?php if ($cliente[0]->tipo_nc == 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> EXTRANJERO
@@ -460,13 +460,13 @@ $datos = array();
                                     </div>
                                 </div>
                                 <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                                    <label class="col-sm-4 label-on-left">¿IMPRIME PAGARES?: <?php echo $cliente[0]->printPagare;?></label>
-                                    <div class="col-sm-8 checkbox-radios">
+                                    <label class="col-sm-5 label-on-left">¿IMPRIME PAGARES?(<small style="color: red;">*</small>):</label>
+                                    <div class="col-sm-7 checkbox-radios">
                                         <div class="col-md-3 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="  font-size: 0.9em;">
-                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare === 1) {
+                                                <label style="  font-size: 0.9em;" id="labelSi1">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare1" required="true" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> SÍ
@@ -476,9 +476,37 @@ $datos = array();
 
                                         <div class="col-md-6 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="font-size: 0.9em;">
-                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare === 0) {
+                                                <label style="font-size: 0.9em;" id="labelNo1">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare2" required="true" value="0" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 0) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>> NO
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-xs-12 col-sm-12 col-md-offset-6 col-md-6 col-lg-offset-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
+                                    <label class="col-sm-5 label-on-left">CARTA DOMICILIO CM (<small style="color: red;">*</small>):</label>
+                                    <div class="col-sm-7 checkbox-radios">
+                                        <div class="col-md-3 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="  font-size: 0.9em;" id="labelSi2">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" required="true" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_comprobanteD == 1) {
+                                                            echo "checked=true";
+                                                        }
+                                                        ?>>SÍ
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 checkbox-radios required">
+                                            <div class="radio text-left">
+                                                <label style="font-size: 0.9em;" id="labelNo2">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" required="true" value="2" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->tipo_comprobanteD == 2) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NO
@@ -2131,11 +2159,38 @@ $datos = array();
                     $('#label2').removeClass('hover_focus');
                 },1500)
             }
-            else {
-                console.log('Continue...');
-            }
+           else{
+               if(!$("input[name='imprimePagare']").is(':checked')) {
+                    alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                    $('#imprimePagare').focus();
+                    $('#labelSi1').addClass('hover_focus');
+                    $('#labelNo1').addClass('hover_focus');
+                    setTimeout(() => {
+                        $('#labelSi1').removeClass('hover_focus');
+                        $('#labelNo1').removeClass('hover_focus');
+                    }, 1500)
+               }
+               else{
+                   if(!$("input[name='tipo_comprobante']").is(':checked')) {
+                       alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                       $('#tipo_comprobante').focus();
+                       $('#labelSi2').addClass('hover_focus');
+                       $('#labelNo2').addClass('hover_focus');
+                       setTimeout(() => {
+                           $('#labelSi2').removeClass('hover_focus');
+                           $('#labelNo2').removeClass('hover_focus');
+                       }, 1500)
+                   }
+                   else{
+                       console.log('continuar...');
+                   }
+               }
+           }
+
+
 		}
 	}
+
 
     function checkResidencia(){
         let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
@@ -2143,10 +2198,11 @@ $datos = array();
         if(valor == 1){
             //si es de residencia extranjera se debe de preguntar si imprime pagares
             $('#pagarePart').removeClass('hide');
+            $('#domicilioCarta').removeClass('hide');
         }else{
             //se vuelve a quitar el apartado de pagares
             $('#pagarePart').addClass('hide');
-
+            $('#domicilioCarta').addClass('hide');
         }
     }
     function historialCampoHtml(data) {

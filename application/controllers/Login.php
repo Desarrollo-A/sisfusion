@@ -83,7 +83,8 @@ class Login extends CI_Controller
 		case '70': // EJECUTIVO CONTRALORÍA JR
 		case '71': // AUXILIAR DE ARCHIVO
 		case '72': // DIRECCIÓN BIOFÍSICA
-            redirect(base_url().'Administracion');
+		case '73': // PRACTICANTE CONTRALORÍA
+					redirect(base_url().'Administracion');
         break;
 
         case '12':
