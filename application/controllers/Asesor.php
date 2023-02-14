@@ -3717,6 +3717,7 @@ class Asesor extends CI_Controller
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
+
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         }

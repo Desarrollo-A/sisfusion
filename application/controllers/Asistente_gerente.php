@@ -226,17 +226,20 @@ class Asistente_gerente extends CI_Controller {
 		$arreglo2["idCondominio"]= $idCondominio;          	
 		$arreglo2["idCliente"]= $idCliente;
 
-        $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-        if(count($validacionCarta)<=0){
+        $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+        if($valida_rama[0]['tipo_comprobanteD']==1){
+            $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
+            if(count($validacionCarta)<=0){
                 $data['message'] = 'MISSING_CARTA_RAMA';
                 echo json_encode($data);
                 exit;
-        }else{
-            if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                    $data['message'] = 'MISSING_CARTA_UPLOAD';
-                    echo json_encode($data);
-                    exit;
+            }else{
+                if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                    if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                        $data['message'] = 'MISSING_CARTA_UPLOAD';
+                        echo json_encode($data);
+                        exit;
+                    }
                 }
             }
         }
@@ -485,20 +488,24 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo["fechaSolicitudValidacion"]=$modificado;
     $arreglo["status8Flag"] = 1;
 
-    $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-    if($validacionCarta->tipo_comprobanteD==1){
-        if(count($validacionCarta)<=0){
-            $data['message'] = 'MISSING_CARTA_RAMA';
-            echo json_encode($data);
-        }else{
-            if($validacionCarta->expediente=='' || $validacionCarta->expediente==NULL){
-                $data['message'] = 'MISSING_CARTA_UPLOAD';
-                echo json_encode($data);
-            }
-        }
-        //aqui debe de ir el exit
-    }
-      exit;
+      $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+      if($valida_rama[0]['tipo_comprobanteD']==1){
+          $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
+          if(count($validacionCarta)<=0){
+              $data['message'] = 'MISSING_CARTA_RAMA';
+              echo json_encode($data);
+              exit;
+          }else{
+              if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                  if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                      $data['message'] = 'MISSING_CARTA_UPLOAD';
+                      echo json_encode($data);
+                      exit;
+                  }
+              }
+          }
+      }
+
 
 
 
