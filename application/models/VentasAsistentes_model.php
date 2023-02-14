@@ -320,5 +320,8 @@ class VentasAsistentes_model extends CI_Model {
         WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
         return $query->result_array();
     }
- 
+    public function check_carta($idCliente){
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$idCliente);
+        return $query->result_array();
+    }
 }

@@ -6963,22 +6963,25 @@ for ($d=0; $d <count($dos) ; $d++) {
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
 
-      if(!$banderaSoloEstatus ){
+      if($banderaSoloEstatus ){
+        // var_dump('entrando a 1 ');
+
         $arr_update = array( 
-    
-          "estatus_certificacion" => $estatus_certificacion,
-                          );
 
+          "estatus_certificacion" => $estatus_certificacion,          
+        );
+        $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
+        $arr_update["fecha_modificacion"] = $fecha_modificacion ;     
       }else{
-
+        // var_dump('entrando a 2');
         if($estatus === '1'){
       //  if del estatus
-          $arr_update = array( 
-            "estatus"   => 1,
-            "monto"           =>  $monto,
-            "pago_individual" =>  $pago_individual,
-            "detalles"      =>  $comentario,
-            "estatus_certificacion" => $estatus_certificacion,
+                          $arr_update = array( 
+                            "estatus"   => 1,
+                            "monto"           =>  $monto,
+                            "pago_individual" =>  $pago_individual,
+                            "detalles"      =>  $comentario,
+                            "estatus_certificacion" => $estatus_certificacion,
                             );
   
                             if($banderaPagosActivos == 1 ){
@@ -6996,7 +6999,8 @@ for ($d=0; $d <count($dos) ; $d++) {
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
                               $arr_update["fecha_modificacion"] = $fecha_modificacion ;
-                    
+
+
                             }
                             else{
                     
