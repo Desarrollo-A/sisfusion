@@ -1144,7 +1144,7 @@ $('#condominio').change( function(){
         dataExp2.append("idLote", getInfo2_2A[5]);
         dataExp2.append("comentario", comentario);
         dataExp2.append("fechaVenc", getInfo2_2A[6]);
-        dataExp1.append('tipo_comprobante', tipo_comprobante);
+        dataExp2.append('tipo_comprobante', tipo_comprobante);
 
         let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
         if (validaComent == 0) {
@@ -1228,7 +1228,7 @@ $('#condominio').change( function(){
         dataExp3.append("idLote", getInfo5A[5]);
         dataExp3.append("comentario", comentario);
         dataExp3.append("fechaVenc", getInfo5A[6]);
-        dataExp1.append('tipo_comprobante', tipo_comprobante);
+        dataExp3.append('tipo_comprobante', tipo_comprobante);
 
         let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
 

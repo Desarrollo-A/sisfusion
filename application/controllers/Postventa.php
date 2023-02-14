@@ -672,6 +672,7 @@ class Postventa extends CI_Controller
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
+        $valor_contrato = $_POST['valorC'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
@@ -716,7 +717,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ncliente = $_POST['nombreComp'];
                 $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
-            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -1557,17 +1558,19 @@ class Postventa extends CI_Controller
                                                     ' . $data->modificado . '
                                                 </td>
                                                 <td style="font-size: 1em;">
+                                                <b>Motivo:</b><br>
+                                                ' . $data->motivo . '
+                                            </td>
+                                                <td style="font-size: 1em;">
                                                     <b>Clave catastral:</b><br>
                                                     ' . $data->clave_catastral . '
                                                 </td>
+                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus construcción:</b><br>
                                                     ' . $data->nombreConst . '
                                                 </td>
-                                                <td style="font-size: 1em;">
-                                                <b>Motivo:</b><br>
-                                                ' . $data->motivo . '
-                                            </td>
+                                               
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
@@ -2333,7 +2336,6 @@ function saveNotaria(){
 
 
 
-
     public function descargarInf(){
         $documentType = $this->input->post('documentType');
         $folder = $this->getFolderFile($documentType);
@@ -2381,6 +2383,11 @@ function saveNotaria(){
         $editado  =   $this->session->userdata('id_usuario');
         $modificado =  date("Y-m-d H:i:s");
         $opcionEditar  =   $this->input->post('opcionEditar');
+        $insertArrayActualizarEstatus = array(
+            'estatus'        => 0
+            );
+            
+        $respuestaAct = $this->Postventa_model->actualizarMotivosRechazo(  $tipo , $Iddocumento,$insertArrayActualizarEstatus);
         if($estatus_validacion ==2){
             $proceso  =   $this->input->post('proceso');
             $motivo  =   $this->input->post('motivo');
@@ -2388,7 +2395,7 @@ function saveNotaria(){
                 'id_motivo'      => $motivo,
                 'id_documento'   => $Iddocumento,
                 'tipo'           => $tipo, 
-                'estatus'        => 0,
+                'estatus'        => 1,
                 'tipo_proceso'   => $proceso,
                 'creado_por'     => $validado_por,
                 'fecha_creacion' => $modificado,
@@ -2490,10 +2497,10 @@ function saveNotaria(){
           }
           if($validacion){
 
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
-
-              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
+              $respuesta['rechazos']        = $this->Postventa_model->rechazosDeDocs($solicitud);
+              $respuesta['misDocumentos']   = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
+              $respuesta['losDocumentos']   = $this->Postventa_model->documentosNecesarios($opciones);
+              $respuesta['nuevosDocs']      = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
           }else{
               $respuesta = array();
           }

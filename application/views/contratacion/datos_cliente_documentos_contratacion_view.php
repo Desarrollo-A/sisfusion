@@ -482,7 +482,7 @@
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
 											} else if(data.tipo_doc == 8){
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-											}else if(data.tipo_doc == 26 || data.tipo_doc == 29 && id_rol_current!=6){
+                                            } else if(data.tipo_doc == ((data.pj==2) ? 29 : 26 ) && id_rol_current!=6){
                                                 file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
                                             }
                                             else {

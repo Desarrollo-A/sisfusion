@@ -40,7 +40,7 @@ class Postventa_model extends CI_Model
         if($num_cli->row()->num_cli < 1){
             return $num_cli;
         }else{
-            return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.ocupacion, 1 as num_cli,
+            return $this->db->query("SELECT c.id_cliente, c.nombre, c.apellido_paterno, c.apellido_materno, c.ocupacion, 1 as num_cli,
             oxc.nombre nacionalidad, oxc2.nombre estado_civil, oxc3.nombre regimen_matrimonial, c.correo, c.domicilio_particular, c.rfc, c.telefono1, c.telefono2, c.personalidad_juridica, oxc4.nombre as nombre_juridica
             FROM lotes l 
             INNER JOIN clientes c ON c.id_cliente = l.idCliente 
@@ -1397,6 +1397,7 @@ function checkBudgetInfo($idSolicitud){
         $cmd="SELECT de.idDocumento, de.movimiento, de.expediente, de.modificado, 
         de.status , de.idSolicitud ,de.idUsuario 
         ,de.tipo_documento,
+        CONCAT(usu.apellido_paterno,' ', usu.apellido_materno  ,' ', usu.nombre) AS cargadoX,
         does.descripcion as nombre, 
         does.id_documento as id_opcion,
         de.modificado as documento_modificado_por ,
@@ -1406,15 +1407,11 @@ function checkBudgetInfo($idSolicitud){
         se.id_estatus as estatus_solicitud , 
         de.estatus_validacion as validacion
         , se.id_solicitud, se.estatus_construccion 
-        FROM documentos_escrituracion de, solicitudes_escrituracion se , documentacion_escrituracion does 
-        where de.expediente IS NOT NULL 
-        AND de.tipo_documento = does.id_documento
-        AND se.id_solicitud = de.idSolicitud 
-        AND does.id_documento  $opciones 
-        AND de.idSolicitud = $solicitud";
- 
-
-
+        FROM documentos_escrituracion de  
+		INNER JOIN documentacion_escrituracion does on de.tipo_documento = does.id_documento AND does.id_documento $opciones 
+		INNER JOIN solicitudes_escrituracion se  on de.idSolicitud = se.id_solicitud 
+		LEFT JOIN usuarios usu on usu.id_usuario  = de.creado_por
+		where de.expediente is not null AND de.idSolicitud = $solicitud";
         $query = $this->db->query($cmd);
         return $query->result_array();
 
@@ -1443,7 +1440,18 @@ function checkBudgetInfo($idSolicitud){
         
         return $afftectedRows > 0 ? $this->db->insert_id() : FALSE ;
     }
-
+    public function actualizarMotivosRechazo($clave , $clave2, $data){
+        try {
+            $this->db->where('tipo', $clave);
+            $this->db->where('id_documento', $clave2);
+            $this->db->update('motivos_rechazo_x_documento', $data);
+            $afftectedRows = $this->db->affected_rows();
+            return $afftectedRows > 0 ? TRUE : FALSE ;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
 
     function  validarExisteDocumento ($tipoDocuemento, $solicitud )
     {
@@ -1485,5 +1493,16 @@ function checkBudgetInfo($idSolicitud){
 
     }
 
+    function rechazosDeDocs($solicitud){
+        $cmd = ("Select de.tipo_documento,mr.motivo, mrx.id_motivo  from documentos_escrituracion de
+        INNER JOIN motivos_rechazo_x_documento mrx on mrx.id_documento = de.idDocumento AND  mrx.estatus =1
+        INNER JOIN motivos_rechazo mr on mr.id_motivo = mrx.id_motivo
+        where idSolicitud = $solicitud");
+        $query      = $this->db->query($cmd);
+        $resultados = $query->result_array();
+        return $resultados;
+    } 
+
+ 
 
 }
