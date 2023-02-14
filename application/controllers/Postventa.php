@@ -1557,17 +1557,19 @@ class Postventa extends CI_Controller
                                                     ' . $data->modificado . '
                                                 </td>
                                                 <td style="font-size: 1em;">
+                                                <b>Motivo:</b><br>
+                                                ' . $data->motivo . '
+                                            </td>
+                                                <td style="font-size: 1em;">
                                                     <b>Clave catastral:</b><br>
                                                     ' . $data->clave_catastral . '
                                                 </td>
+                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus construcción:</b><br>
                                                     ' . $data->nombreConst . '
                                                 </td>
-                                                <td style="font-size: 1em;">
-                                                <b>Motivo:</b><br>
-                                                ' . $data->motivo . '
-                                            </td>
+                                               
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
