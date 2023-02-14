@@ -653,8 +653,7 @@ class Postventa extends CI_Controller
             // echo "<br>";
             // echo $usuarioJuridico->id_usuario;
             // echo "<br>";
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
-                $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -672,6 +671,7 @@ class Postventa extends CI_Controller
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
+        $valor_contrato = $_POST['valorC'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
@@ -716,7 +716,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ncliente = $_POST['nombreComp'];
                 $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
-            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario, $valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
