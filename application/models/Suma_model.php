@@ -334,7 +334,9 @@ class Suma_model extends CI_Model
         return $this->db->query("SELECT u.id_usuario id_asesor, 
         CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
         u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-        WHERE u.id_rol IN (7) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
+        WHERE u.id_rol IN (7) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' 
+		AND (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%')
+		order by nombre")->result();
     }
     
     public function validateWeek($week, $user){
