@@ -667,7 +667,7 @@ class Postventa extends CI_Controller
         $_POST['empresa'] = $data1[0]['empresa'];
         $result = $this->Postventa_model->InsertCli($_POST);
         $idLote = $_POST['idLote'];
-        $idCliente = $result->ult_reg;
+        $idCliente = $result;
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];

@@ -1251,12 +1251,9 @@ function checkBudgetInfo($idSolicitud){
                 1,
                 GetDate())");
 
-            if($result){
                 $ult_insert = $this->db->insert_id();
-                $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
-            }else{
-                $ult_insert = $result;
-            }   
+                $ult_insert =   $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
+              
               return  $ult_insert;
 
     }
