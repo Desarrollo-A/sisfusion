@@ -118,7 +118,7 @@
                                                         <!-- Apartado para el select de la persona jurididca -->
                                                         <div class="col-md-4 pl-0" id="per_jur">
                                                             <div class="form-group label-floating is-focused" id = "PerJur">
-                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona juridica</label>
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona jurídica</label>
                                                                 <select id="perj" name="perj" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                                 <!-- <input id="perJ" name="perJ" class="form-control input-gral" type="text"> -->
                                                             </div>
