@@ -124,7 +124,7 @@ class Postventa_model extends CI_Model
     // }
 
     // $row['id_pago_i']
-    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico,$valor_contrato)
+    function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico, $valor_contrato)
     {
         if(is_object($data)){
             $data = (array)$data;
