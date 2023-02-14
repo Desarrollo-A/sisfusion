@@ -211,6 +211,7 @@ function getClient(idLote) {
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);
+            console.log(data.ncliente);
             $('#ocupacion').val(data.ocupacion); //pendiente
             $('#origen').val(data.estado);
             //Se le da el valor del select corerespondientes al estado civil
@@ -232,7 +233,7 @@ function getClient(idLote) {
                 $('#personalidad').val(data.personalidad);
             }
                 $("#perj").selectpicker('refresh');
-            //$('#rconyugal').val(data.regimen_matrimonial);//pendiente
+            $('#rconyugal').val(data.regimen_matrimonial);//pendiente
             $('#correo').val(data.correo);
             // $('#direccionf').val(); //nosotros insertamos
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
@@ -259,17 +260,20 @@ function getClient(idLote) {
             document.getElementById('EdoCiv').children[1].children[0].title = '';
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
-            getOpcCat('18, 19', ['ecivil', 'rconyugal']);
             //Modificacion al campo de regimen conyugal
-            document.getElementById('rconyugal').title = '';
-            document.getElementById('RegCon').children[1].children[0].title = '';
-            document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
+              document.getElementById('rconyugal').title = '';
+              document.getElementById('RegCon').children[1].children[0].title = '';
+              document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
+
+            getOpcCat('18, 19', ['ecivil', 'rconyugal']);
+            
 
             document.getElementById('perj').title = '';
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
 
             $('#nombre2').val(data.ncliente);
+            console.log(data.ncliente);
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
             $('#correo').val(data.correo);
@@ -300,6 +304,7 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
+           // $("#rconyugal").selectpicker('refresh');
             $("#perj").selectpicker('refresh');
 
             $('#check').removeClass("d-none");
