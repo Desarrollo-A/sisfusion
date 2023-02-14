@@ -233,7 +233,7 @@ function getClient(idLote) {
                 $('#personalidad').val(data.personalidad);
             }
                 $("#perj").selectpicker('refresh');
-            $('#rconyugal').val(data.regimen_matrimonial);//pendiente
+           // $('#rconyugal').val(data.regimen_matrimonial);//pendiente
             $('#correo').val(data.correo);
             // $('#direccionf').val(); //nosotros insertamos
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
@@ -260,14 +260,15 @@ function getClient(idLote) {
             document.getElementById('EdoCiv').children[1].children[0].title = '';
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
-            //Modificacion al campo de regimen conyugal
-              document.getElementById('rconyugal').title = '';
-              document.getElementById('RegCon').children[1].children[0].title = '';
-              document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
+
 
             getOpcCat('18, 19', ['ecivil', 'rconyugal']);
             
-
+            //Modificacion al campo de regimen conyugal
+            document.getElementById('rconyugal').title = '';
+            document.getElementById('RegCon').children[1].children[0].title = '';
+            document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
+            
             document.getElementById('perj').title = '';
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
