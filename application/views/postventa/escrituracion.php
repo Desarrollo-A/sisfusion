@@ -107,7 +107,6 @@
                                                                 <form>
                                                                 <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
                                                                 <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
-                                                                <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                                 </form>
                                                             </div>
                                                         </div>
