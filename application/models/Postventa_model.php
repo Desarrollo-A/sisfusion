@@ -1253,7 +1253,7 @@ function checkBudgetInfo($idSolicitud){
 
             if($result){
                 $ult_insert = $this->db->insert_id();
-                $this->db->query("UPDATE lotes SET idCliente =$ult_insert,creado_por=".$user['id_usuario']." WHERE idLote = $idLote");
+                $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
             }else{
                 $ult_insert = $result;
             }   
