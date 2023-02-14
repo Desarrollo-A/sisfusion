@@ -1182,6 +1182,7 @@ function checkBudgetInfo($idSolicitud){
     }
 
     public function InsertCli($datos){
+        $ult_insert = 0;
         $user = $this->session->userdata;
         $id_usuario = $user['id_usuario'];
         $idGerente = ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? 'NULL' : $user['idGerente'];
@@ -1202,7 +1203,7 @@ function checkBudgetInfo($idSolicitud){
         $usuario = $user['usuario'];
         $idCondominio = $datos['idCondominio'];
         $usuario = $user['usuario'];
-        $this->db->query("INSERT INTO clientes (id_asesor
+    $result =  $this->db->query("INSERT INTO clientes (id_asesor
                 ,id_coordinador
                 ,id_gerente
                 ,id_sede
@@ -1249,9 +1250,15 @@ function checkBudgetInfo($idSolicitud){
                 GetDate(),
                 1,
                 GetDate())");
-        $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg")->row();
-        $this->db->query("UPDATE lotes SET idCliente = $ult_insert->ult_reg WHERE idLote = $idLote");
-        return  $ult_insert;
+
+              if($result){
+                $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg")->row();
+                $this->db->query("UPDATE lotes SET idCliente = ".$ult_insert->ult_reg." WHERE idLote = $idLote");
+              }else{
+                $ult_insert = $result;
+              }  
+              return  $ult_insert;
+
     }
 
 
