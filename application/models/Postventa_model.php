@@ -1251,12 +1251,12 @@ function checkBudgetInfo($idSolicitud){
                 1,
                 GetDate())");
 
-              if($result){
-                $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as ult_reg")->row();
-                $this->db->query("UPDATE lotes SET idCliente = ".$ult_insert->ult_reg." WHERE idLote = $idLote");
-              }else{
+            if($result){
+                $ult_insert = $this->db->insert_id();
+                $this->db->query("UPDATE lotes SET idCliente =$ult_insert,creado_por=".$user['id_usuario']." WHERE idLote = $idLote");
+            }else{
                 $ult_insert = $result;
-              }  
+            }   
               return  $ult_insert;
 
     }
