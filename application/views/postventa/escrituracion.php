@@ -105,7 +105,7 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="RegCon">
                                                                 <form>
-                                                                <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Régimen Conyugal</label>
                                                                 <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                                 </form>
                                                             </div>
