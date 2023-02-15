@@ -3305,23 +3305,62 @@ public function LiquidarLote(){
     public function savePrestamo()
     {
       $this->input->post("pago");
-      $pesos=str_replace(",", "", $this->input->post("monto"));
-      $dato = $this->Comisiones_model->getPrestamoxUser($this->input->post("usuarioid"),$this->input->post("tipo"))->result_array();
+      $file = $_FILES["evidencia"];
+      $monto = $this->input->post("monto");
+      $NumeroPagos = $this->input->post("numeroP");
+      $IdUsuario = $this->input->post("usuarioid");
+      $comentario = $this->input->post("comentario");
       $tipo = $this->input->post("tipo");
+      $tipo = $this->input->post("tipo");
+      $idUsu = intval($this->session->userdata('id_usuario')); 
+      $pesos = str_replace(",", "", $monto);
+      
+      $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
+     
+      if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+      $aleatorio = rand(100,1000);
+      $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+      $date = date('dmYHis');
+      $expediente = $date."_".$aleatorio."_".$namedoc;
+      $ruta = "static/documentos/evidencia_prestamo_auto/";
 
-      if(empty($dato)){
-        $pesos=str_replace("$", "", $this->input->post("monto"));
-        $comas =str_replace(",", "", $pesos);
-        $pago = $comas;
-        $pagoCorresp = $pago / $this->input->post("numeroP");
-        $pagoCorresReal = $pagoCorresp;
-        $dat =  $this->Comisiones_model->insertar_prestamos($this->input->post("usuarioid"),$pago,$this->input->post("numeroP"),$this->input->post("comentario"),$pagoCorresReal,$tipo);
-        echo json_encode($dat);
+      if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
+            if(empty($dato)){
+              $pesos=str_replace("$", "", $monto);
+              $comas =str_replace(",", "", $pesos);
+              $pago = $comas;
+              $pagoCorresp = $pago / $NumeroPagos;
+              $pagoCorresReal = $pagoCorresp;
+              $insertArray = array(
+                'id_usuario'      => $IdUsuario,
+                'monto'           => $pago,
+                'num_pagos'       => $NumeroPagos, 
+                'pago_individual' => $pagoCorresReal,
+                'comentario'      => $comentario,
+                'estatus'         => 1,
+                'pendiente'       => 0,
+                'creado_por'      => $idUsu ,
+                'fecha_creacion'  => date("Y-m-d H:i:s"),
+                'modificado_por'  => $idUsu ,
+                'fecha_modificacion'   => date("Y-m-d H:i:s"),
+                'tipo'            => $tipo,
+                'evidenciaDocs'    => "$expediente",
+                                );
+              $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
+              echo json_encode($respuesta);
+            }else{
+              $respuesta = 3;
+              echo json_encode($respuesta);
+            }
       }else{
-        $data = 3;
-        echo json_encode($data);
+        $respuesta = 4;
+        echo json_encode($respuesta);
       }
+     
+     
 
+      }
+    
     }
 
 
