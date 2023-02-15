@@ -103,11 +103,11 @@ function fillUsersTable() {
             {
                 data: function (d) {
                     if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                        return '<center><span class="label" style="    background: #A5D6A7;color: #1B5E20;">Activo</span><center>';
                     } else if (d.estatus == 3) {
-                        return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                        return '<center><span class="label" style="background: #ffa400;color: #905500;">Inactivo comisionando</span><center>';
                     } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                        return '<center><span class="label" style="background: #ffafb5;color: #7e000e;">Inactivo</span><center>';
                     }
                 }
             },
@@ -133,7 +133,11 @@ function fillUsersTable() {
             },
             {
                 data: function (d) {
-                    return d.puesto;
+                    var propiedadExtra = '';
+                    if(d.puesto == 'Asesor' && d.simbolico==1){
+                        propiedadExtra = '<br><label class="label" style="background: #AED6F1;color: #1B4F72;">SIMBÓLICO</label>';
+                    }
+                    return d.puesto + propiedadExtra;
                 }
             },
             {
@@ -302,6 +306,19 @@ $("#my_add_user_form").on('submit', function(e){
 function getLeadersList(){
     headquarter = $('#headquarter').val();
     type = $('#member_type').val();
+    if(rolId==4 || rolId==5 || rolId==6){
+        if(type==7){
+            console.log('Es un asesor');
+            $('#tipoMiembro_column').removeClass('col-sm-6');
+            $('#tipoMiembro_column').addClass('col-sm-3');
+            $('#simbolico_column').removeClass('hide');
+        }else{
+            $('#tipoMiembro_column').removeClass('col-sm-3');
+            $('#tipoMiembro_column').addClass('col-sm-6');
+            $('#simbolico_column').addClass('hide');
+        }
+    }
+
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
@@ -506,6 +523,7 @@ $('#'+id_user+'').prop('disabled', false);
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
+    $('.simbolico_column').html('');
     $('.col-estructura').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
@@ -516,6 +534,7 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
+
             
             let leader;
             if (v.id_rol == 9)
@@ -539,8 +558,29 @@ $(document).on('click', '.edit-user-information', function(e){
                     </div>
                 `);
             }
+
+            //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
+            //de si es simbólico o no
+            if(rolId == 4 || rolId == 5 || rolId==6){
+                $('#tipoMiembro_column').removeClass('col-sm-6');
+                $('#tipoMiembro_column').addClass('col-sm-3');
+                var row_add = $('.simbolico_column');
+                row_add.append(`
+                    <div class="col-sm-3">
+                        <div class="form-group label-floating select-is-empty div_membertype">
+                              <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
+                              <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
+                              data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                                    <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
+                                    <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
+                              </select>
+                        </div>
+                    </div>
+                `);
+            }
             
             $('#nueva_estructura').selectpicker('refresh');
+            $('#simbolicoType').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
@@ -618,6 +658,7 @@ function fillFields (v) {
     $("#email").val(v.correo);
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
+    $("#member_type").val(v.id_rol);
     $("#member_type").val(v.id_rol);
     let rol_asignado = v.id_rol;
 

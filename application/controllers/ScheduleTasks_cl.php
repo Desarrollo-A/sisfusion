@@ -71,6 +71,8 @@ public function sendRv5(){
   $mail->addAddress('karen.ponce@ciudadmaderas.com');
   $mail->addAddress('luz.angeles@ciudadmaderas.com');
   $mail->addAddress('irene.vallejo@ciudadmaderas.com');
+  $mail->addAddress('leydi.sanchez@ciudadmaderas.com');
+  $mail->addAddress('monserrat.cazares@ciudadmaderas.com');
   //$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
 
 
