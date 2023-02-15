@@ -32,7 +32,7 @@
                                 <div class="toolbar">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
                                         <div class="form-group label-floating is-empty" id="main_div">
-                                            <label class="control-label label-gral">Motivo de rechazo
+                                            <label class="control-label estiloEsc label-gral">Motivo de rechazo
                                                 (requerido)</label>
                                             <input id="rejectReason" name="rejectReason" type="text"
                                                    class="form-control input-gral" required autocomplete="off">
@@ -60,56 +60,47 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <ul class="nav nav-tabs nav-tabs-cm">
-                                    <li class="active">
-                                        <a href="#rechazo_documento" role="tab" id="reasonsForRejectionTable" data-toggle="tab">Rechazo por documento</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#rechazo_solicitud" role="tab" id="reasoForApplicationTable" data-toggle="tab">Rechazo por solicitud</a>
-                                    </li>
-                        </ul>
-                    <div class="card card no-shadow m-0">
+                    <div class="card">
+                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                            <i class="fas fa-file fa-2x"></i>
+                        </div>
                         <div class="card-content">
-                            <div class="nav-tabs-custom">
-                              <div class="tab-content p-2">      
-                                <h3 class="card-title center-align">Adminstrador - motivos de rechazo por documento</h3>
-                                <div class="row aligned-row">
-                                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty m-0 p-0">
-                                            <label class="control-label">Documentos</label>
-                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un documento" data-size="7">
-                                            </select>
+                            <div class="toolbar">
+                                <h3 class="card-title center-align">Adminstrador - motivos de rechazo por documento y solicitud</h3>
+                                <div class="container-fluid">
+                                    <div class="row aligned-row">
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
+                                                <label class="label-gral">Documentos</label>
+                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona un documento" data-size="7">
+                                                </select>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-2 d-flex align-end">
+                                            <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
                                         </div>
                                     </div>
+                              </div>
+                            </div>
 
-                                    <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-2">
-                                        <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                            </div>
-
-                                        </div>
+                            <br>
+                            <div class="material-datatables" id="box-reasonsForRejectionTable">
+                                <div class="form-group">
+                                    <div class="table-responsive">
+                                        <table class="table-striped table-hover"
+                                               id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>DOCUMENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                        </table>
                                     </div>
-                                    <br>
-                                    <div class="material-datatables" id="box-reasonsForRejectionTable">
-                                        <div class="form-group">
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover"
-                                                    id="reasonsForRejectionTable" name="reasonsForRejectionTable">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>DOCUMENTO</th>
-                                                        <th>MOTIVO</th>
-                                                        <th>ESTATUS</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -130,11 +121,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 
-<script>
+<script> 
     $(document).ready(function () {
-        getCatalogOptions(60);
+    $("#documentos").empty().selectpicker('refresh');
+    $.ajax({
+        url: url + 'Documentacion/getCatalogOptions',
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var len = response.length;
+            for (var i = 0; i < len; i++) {
+                $("#documentos").append($('<option>').val(response[i]['id_opcion']).attr('data-catalogo', response[i]['id_catalogo']).text(response[i]['nombre']));
+            }
+            $("#documentos").append($('<option>').val(0).attr('data-catalogo', 0).text('POR SOLICITUD'));
+            $("#documentos").selectpicker('refresh');
+        }
+    });
+
     });
     var url = "<?=base_url()?>";
 
@@ -203,7 +207,7 @@
                 cache: false,
                 data: {
                     "id_documento": id_documento,
-                    "tipo_proceso": 2
+                    "tipo_proceso": id_documento == 0 ? 3 : 2
                 }
             }
         });

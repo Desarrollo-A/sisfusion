@@ -32,7 +32,7 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
                                             <label class="control-label">Lote</label>
-                                            <select class="selectpicker select-gral m-0" id="lotes" name="lotes data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
+                                            <select class="selectpicker select-gral m-0" id="lotes" name="lotes" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" data-container="body"></select>
                                         </div>
                                     </div>
                                     <form id="formEscrituracion">
@@ -106,7 +106,6 @@
                                                             <div class="form-group label-floating is-focused" id="RegCon">
                                                                 <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
                                                                 <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
-                                                                <!--<input id="rconyugal" name="rconyugal" class="form-control input-gral" type="text" disabled>-->
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 pl-0">
@@ -118,15 +117,21 @@
                                                         <!-- Apartado para el select de la persona jurididca -->
                                                         <div class="col-md-4 pl-0" id="per_jur">
                                                             <div class="form-group label-floating is-focused" id = "PerJur">
-                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona juridica</label>
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Seleccionar persona jurídica</label>
                                                                 <select id="perj" name="perj" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                                 <!-- <input id="perJ" name="perJ" class="form-control input-gral" type="text"> -->
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-12 pl-0">
+                                                        <div class="col-md-8 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral">Domicilio Actual</label>
                                                                 <input id="direccion" name="direccion" class="form-control input-gral" type="text" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused">
+                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Valor de operación de contrato</label>
+                                                                <input id="valorC" name="valorC" class="form-control input-gral" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
@@ -201,6 +206,7 @@
                                                 <div class="col-md-5">
                                                     <a role="button" id="print" name="print">
                                                         <i class="material-icons">print</i>
+                                                        <input type="hidden" name="bandera_client" id="bandera_client">
                                                     </a>
                                                     <!-- <a role="button" id="email" name="email">
                                                         <i class="material-icons">email</i>

@@ -6,7 +6,6 @@ let titulosTablaGeneral = [];
 
 $(document).ready(function() { 
 
-    console.log('entrando al nuevo js');
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
         if (i !== 15) {
             const title = $(this).text();
@@ -889,8 +888,7 @@ function loadTable(tipoDescuento) {
             document.getElementById("descuento1").value = descuento;
             
             if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
-                console.log(mensualidadesFaltantesMostrar);
-                console.log('1');
+
             }else{
                 if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
                 {
@@ -903,8 +901,6 @@ function loadTable(tipoDescuento) {
                     }
            
                 }else{
-
-                    console.log('54');
                     mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
                 }
                // mensualidadesFaltantes
@@ -916,22 +912,17 @@ function loadTable(tipoDescuento) {
                 {
                     if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
                     {
-
                         mensualidadesFaltantes = 1;
                     }else{
-  
                     }
-
                 }else{
-
-
                         mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
                 }
                // mensualidadesFaltantes
             }
          
             document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
-            
+        
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
             console.log(Total_a_pagar);
             
@@ -1101,7 +1092,6 @@ function loadTable(tipoDescuento) {
             saldo_comisiones = $(this).attr("data-saldoCom");
 
             // alert(validar);
-            console.log('saldo_comisiones: ', saldo_comisiones);
 
             $("#miModal modal-body").html("");
             $("#miModal").modal();
@@ -1128,9 +1118,6 @@ function loadTable(tipoDescuento) {
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
 
 
-
-                    console.log('suma lote ' + comtotal);
-                    console.log('suma2 lote ' + sumaselected);
 
 
                     $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
@@ -1948,12 +1935,6 @@ function verificar() {
         let disponible = parseFloat(disponiblefinal);
         let monto = parseFloat(montofinal);
 
-        console.log('disponiblefinal: ' + disponiblefinal);
-        console.log('montofinal: ' + montofinal);
-        console.log('disponible: ' + disponible);
-        console.log('monto: ' + monto);
-       
-
         if (monto < 1 || isNaN(monto)) {
             alerts.showNotification("top", "right", "No hay saldo disponible para descontar.", "warning");
 
@@ -1978,7 +1959,6 @@ function verificar() {
                     let datos = data[index].id;
                     let montoLote = datos.split(',');
                     let abono_neo = montoLote[1];
-                   console.log('abono_neo: ' + abono_neo);
 
                     if (parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1) {
                         document.getElementById('msj2').innerHTML = "El monto ingresado se cubre con la comisión " + data[index].text;
@@ -2092,7 +2072,7 @@ $(document).on("click", ".uniAdd", function () {
     pago_mensual = Math.round(pago_mensual);
 
     cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
-    console.log('descuento entre pago_mensual '+ cantidad_de_pagos);
+
     
  
     document.getElementById("banderaLiquidado").value = banderaLiquidados;
@@ -2109,12 +2089,7 @@ $(document).on("click", ".uniAdd", function () {
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
 
     valorPendiente = pendiente;
-    console.log('total: = '+total );
 
-    console.log('descuento por math: = '+descuento );
-    console.log('pendiente por math: = '+pago_mensual );
-    console.log('total por math: = '+cantidad_de_pagos );
-    console.log(nombre );
     var titulo  = ' ';
     titulo += '  <h3 id="tituloModalUni" name="tituloModalUni">Editando descuento actual para '+ nombre  +'</h3>';
 
@@ -2177,8 +2152,7 @@ $(document).on("click", ".uniAdd", function () {
        mensualidadesFaltantes = total / pago_mensual ;
             mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
             if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
-                console.log(mensualidadesFaltantesMostrar);
-                console.log('1');
+
             }else{
                 if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
                 {
@@ -2189,7 +2163,7 @@ $(document).on("click", ".uniAdd", function () {
 
                     }           
                 }else{
-                    console.log('54');
+
                     mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
                 }
                // mensualidadesFaltantes
@@ -2220,26 +2194,19 @@ $(document).on("click", ".uniAdd", function () {
                 document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
             }
 
-            console.log(' mensualidadesFaltantes'  + mensualidadesFaltantes);
-            console.log(' pago_mensual'  + pago_mensual);
+
             ultimaMensualidad = document.getElementById("mensualidadesC").value
             Total_a_pagar = ultimaMensualidad * pago_mensual;
-            console.log('Total_a_pagar'  + Total_a_pagar);
 
             sobrante = Total_a_pagar - total;
-            console.log(' total'  +  total);
-            console.log('sobrante'  + sobrante);
 
             //para agregar llo que ya se pago
             descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
-            console.log('descuentoEscrito'  + descuentoEscrito);
+         
             NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
-            console.log('NuevasMensualidades'  + NuevasMensualidades);
-            console.log('sobrante'  + sobrante);
-            console.log('mensualidadesFaltantes'  + mensualidadesFaltantes);
-            console.log('banderaLiquidados'  + banderaLiquidados);
+
             if(banderaLiquidados){
-                console.log('bandera'  );
+
                 sobrante = document.getElementById("MontoDescontarCerti").value;
                 sobrante =  total - sobrante ;
                 NuevasMensualidades = sobrante  / mensualidadesFaltantes;
@@ -2273,7 +2240,7 @@ $(document).on("click", "#descuentoCertificaciones", function () {
  //  aqui mero 
 
 $("#certificaciones").change(function () {
-    console.log('1');
+
     pagos  = document.getElementById("numeroDeMensualidades").value ;
     selectCertificacion = document.getElementById("certificaciones").value;
     console.log(selectCertificacion);
@@ -2330,7 +2297,6 @@ function subirInfo(){
 
 
 $(document).on('input', '.MontoDescontarCerti', function(){
-    console.log('aqui empezamos a editar ');
     // total_pagos = document.getElementById("total_pagos").value ;
     // actualess = document.getElementById("actualess").value ;
     // totalmeses = document.getElementById("totalmeses").value ;
@@ -2340,43 +2306,34 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
     loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
     pagos  = document.getElementById("mensualidadesC").value ;
-    console.log("loQueSedebe" + loQueSedebe );
     banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
     if(banderaLiquidado){
         loQueSedebe = loQueSedebe - pagado;
-        console.log("Pagado" + pagado );
+
         NuevasMensualidades = loQueSedebe / pagos;
     }else{
         loQueSedebe = loQueSedebe - pagado;
-        console.log("Pagado" + pagado );
+
         NuevasMensualidades = loQueSedebe / pagos;   
     }
 
-    console.log("loQueSedebe + pagado" + loQueSedebe );
-    console.log("pagos"+pagos);
-    console.log("NuevasMensualidades" + NuevasMensualidades);
-    console.log("");
-    console.log("");
     document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
     
 });
 
 // $("#numeroPagos").change(function () {
     $(document).on('change', '#mensualidadesC', function() {
-         // console.log('mensaje de realizacioón');
-        // alert('refromazado');
-    //     console.log('3111111111111111111111111111111111');
+
         mensualidadesC = document.getElementById("mensualidadesC").value;
         loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
         pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
         pagos  = document.getElementById("mensualidadesC").value ;
-        console.log("loQueSedebe" + loQueSedebe );
+
         banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
         if(banderaLiquidado){
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
-            console.log("Pagado" + pagado );
-            console.log("Pagado" + pagado );
+  
         }else{
             loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
@@ -2388,7 +2345,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     // $("#mensualidadesC").change(function () {
         // console.log('mensaje de realizacioón');
         // alert('refromazado');
-    //     console.log('3111111111111111111111111111111111');
+   
     //     mensualidadesC = document.getElementById("mensualidadesC").value;
     //     pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
     //     loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
@@ -2417,14 +2374,13 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     let banderaPagosActivos = 0 ;
     // bandera pagos activos 
     // 1 fecha usuario < día 5  mismo mes  2: fecha usuario > día 5 y > mes actual  3: no se mueve los movimientos actuales,
-    console.log('tipo de descuento:');
+
     let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
     let escritoPorUsuario = document.getElementById("newMensualidades").value;
+
     if(banderaEditarEstatus == escritoPorUsuario ){
         banderaSoloEstatus = true ;
         }
-
-
     if(tipoDescuento == 3){
         estatus = 1;
     }else{
@@ -2432,52 +2388,52 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     }
     let fechaSeleccionada = '';
     fechaSeleccionada = document.getElementById("fechaIncial").value;
-    console.log('fechaSeleecionada');
-    console.log(fechaSeleccionada); 
-    console.log('fecha');    
-    console.log(fecha.getFullYear() );    
+
+    if(fechaSeleccionada == '' && banderaEditarEstatus == escritoPorUsuario){
+
+        banderaSoloEstatus = true ;
+ 
+    }
+
     year = fecha.getFullYear()
-    console.log(fecha.getMonth()  );
+
     month = (fecha.getMonth())
-    console.log(fecha.getDate() );
+
     day = fecha.getDate()
     // const msg = new day;
     const msg = new String(day)
-    console.log(msg.length);
+
     msg.length == 1  ? day = ('0' + day)  :  (day)
     const FechaEnArreglo = fechaSeleccionada.split("-");
     // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
     fechaComparar = (year + '-' + month + '-' + day);
     
     var f1 = new Date(year,month, day);
-    console.log(f1);
+
     var f2 = new Date(fechaSeleccionada);
-    console.log(f2);
-    console.log(parseInt(FechaEnArreglo[2]));
+
     mesNumerico = parseInt(FechaEnArreglo[1]);
     diaNumerico = parseInt(FechaEnArreglo[2]);
     mes2Numerico = parseInt(month+1);
-    console.log('diaNumerico');
-    console.log(diaNumerico);
-    console.log('mesNumerico');
-    console.log(mesNumerico);
-    console.log('mes2Numerico');
-    console.log(mes2Numerico);
+
+    // fecha f2 es para la fecha seleccionada 
+    // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
+    if(f2 > f1){
+        alert('fecha dada es meno que la fecha del sistema , ');
+    }
     if( ( f2 != '' ) &&   (f2 > f1 || f2 == f1)){
-        console.log('entrando en el if de las fechas');
-        if(diaNumerico <= 5  ){
+
+        if(diaNumerico <= 5 && mesNumerico == mes2Numerico ){
             banderaPagosActivos = 1;
                         // && mesNumerico == mes2Numerico  
-        }else if(diaNumerico >= 5 ){
+        }else if(diaNumerico >= 5 ||  mesNumerico >= mes2Numerico  ){
             banderaPagosActivos = 2 ;
         }else {
             banderaPagosActivos = 0;
         }
     }else if(f2 < f1){
         alerts.showNotification("top", "right", "Upss, La fecha seleccionada es menor que la fecha actual", "warning");
-    }else{
-        alerts.showNotification("top", "right", "Upss,ak parecer algo salio mal intentalo nuevamente", "warning");
     }
 
 
@@ -2486,20 +2442,14 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     monto           = document.getElementById("MontoDescontarCerti").value;
     pago_individual = document.getElementById("newMensualidades").value;
     estatus_certificacion  = document.getElementById("certificaciones").value;
-    console.log('valor de mensualidadesC'+ mensualidadesC);
-    console.log('valor de mensualidades')
-    console.log("estatus_certificacion"+ estatus_certificacion);
-    console.log("id_descuento"+id_descuento);
-    console.log("monto"+monto);
-    // alert('mesaje de guardar el estatu y la informació mad');
-    console.log("pago_individual"+pago_individual);
+
         $.ajax({
         url : 'descuentoUpdateCertificaciones',
         type : 'POST',
         dataType: "json",
         data: {
         "banderaSoloEstatus"    : banderaSoloEstatus, 
-        "fechaSeleccionada"     :fechaSeleccionada, 
+        "fechaSeleccionada"     : fechaSeleccionada, 
         "pagos_activos"         : pagos_activos,
         "estatus"               : estatus,
         "banderaPagosActivos"   : banderaPagosActivos,

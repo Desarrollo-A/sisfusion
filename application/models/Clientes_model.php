@@ -519,6 +519,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
                 $where = "pr.lugar_prospeccion IN (33)";
+            else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
+                $where = "pr.lugar_prospeccion IN (43)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }

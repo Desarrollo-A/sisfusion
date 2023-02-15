@@ -1237,13 +1237,10 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     }
 
-    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
-    {
+    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction) {
         $mail = $this->phpmailer_lib->load();
-       
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
-        $mail->addAddress('asistente.pv2@ciudadmaderas.com');
+        $mail->addAddress('supervisor.bd@ciudadmaderas.com');
         $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
         $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
         $mail->addAddress('irene.vallejo@ciudadmaderas.com');

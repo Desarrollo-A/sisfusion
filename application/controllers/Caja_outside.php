@@ -513,8 +513,38 @@ class Caja_outside extends CI_Controller
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
 
-        $apartadoXReubicacion = ( $datosView->concepto == 'REUBICACION') ? '1' : '0';
-        
+        if( $datosView->concepto == 'REUBICACIÓN'){
+            if(ISSET( $datosView->fechaApartadoReubicacion)){
+                if( $datosView->fechaApartadoReubicacion == null || $datosView->fechaApartadoReubicacion == '' ){
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'La fecha por reubicación no ha sido enviada'
+                    );
+                    
+                    if ($dataError != null) {
+                        echo json_encode($dataError);
+                    } else {
+                        echo json_encode(array());
+                    }
+                    exit;
+                }
+            }
+            else{
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'La fecha por reubicación no ha sido enviada'
+                    );
+                    
+                    if ($dataError != null) {
+                        echo json_encode($dataError);
+                    } else {
+                        echo json_encode(array());
+                    }
+                    exit;
+            }
+        }
 
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
@@ -556,7 +586,7 @@ class Caja_outside extends CI_Controller
             'fechaEnganche' => date('Y-m-d H:i:s'),
             'status' => 1,
             'idLote' => $data['lote'],
-            'fechaApartado' => date('Y-m-d H:i:s'),
+            'fechaApartado' => ( $datosView->concepto == 'REUBICACIÓN') ? $datosView->fechaApartadoReubicacion : date('Y-m-d H:i:s'),
             'fechaVencimiento' => date("Y-m-d H:i:s", strtotime($data['prospecto'][0]['fecha_vencimiento'])),
             'usuario' => $datosView->id_usuario,
             'modificado_por' => $datosView->id_usuario,
@@ -569,8 +599,8 @@ class Caja_outside extends CI_Controller
             'id_regional' => $data['lider'][0]['id_regional'],
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
-            'apartadoXReubicacion' => $apartadoXReubicacion,
-            'fechaApartadoReubicacion' => isset( $datosView->concepto ) ? $datosView->concepto : null,
+            'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
+            'fechaAlta' => date('Y-m-d H:i:s'),
             'id_cliente_reubicacion' => isset( $datosView->id_cliente_reubicacion ) ? $datosView->id_cliente_reubicacion : null
         );
         /*Inserta cliente*/

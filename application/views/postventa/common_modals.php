@@ -4,6 +4,8 @@
     .modal-backdrop{
         z-index:9;
     }
+ 
+
 </style>
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -17,29 +19,25 @@
 
             </div>
 
-        <div class="modal fade" id="comentariosModal" name="comentariosModal" tabindex="-1" role="dialog" arial-labelledby="myModalLabel" arian-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <div class="d-flex" style="background: #AED6F1; justify-content: space-around; align-items: center; padding: 0 17px">
-                                <div id="nameLote"></div>
-                                <div id="infoLote"></div>
-                            </div>
-                                <!-- <ul class="nav nav-tabs" role="tablist" style="background: #AED6F1;">
-                                        <div class="container">
-                                            <div class="row">
-                                                    
-                                            <div>
-                                        </div>
-                                </ul> -->
+        
+
+
+
+
+ 
+       <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container mt-5 mb-5">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <p id="titulo_comentarios"></p>
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="card card-plain">
-                                                    <div class="card-content">
-                                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <div class="card-content card card-plain">
+                                                    <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
                                                     </div>
                                                 </div>
                                             </div>
@@ -47,14 +45,13 @@
                                     </div>
                                 </div>
                             </div>
-                      </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cancelar</button>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
-
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
@@ -113,8 +110,8 @@
     <div class="modal-dialog modal-md boxContent">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <i onclick="RecargarTablePresupuestos()" data-dismiss="modal" class="fas fa-times fl-r"></i>
-                <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
+                <i onclick="RecargarTablePresupuestos()" data-toggle="tooltip" title="Cerrar" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">Carga de presupuestos</h4><br>
             </div>
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">
@@ -149,6 +146,7 @@
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="idDocumento">
                 <input type="text" class="hide" id="documentType">
+                <input type="text" class="hide" id="id_estatus">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">
@@ -185,10 +183,16 @@
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pr-0 pr-0">
+                            <div class="col-md-8 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span>Valor a escriturar</label>
+                                    <input id="valor_escri" name="valor_escri" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0">
@@ -290,7 +294,7 @@
                                 <div id="div_notaria" style="display: none;">
                                     <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
                                         <div class="form-group text-left m-0">
-                                            <label class="control-label label-gral">Nombre de la Notaría</label>
+                                            <label class="control-label label-gral">Número de la Notaría</label>
                                             <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
                                         </div>
                                     </div>  
@@ -374,6 +378,12 @@
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Valor a escriturar</label>
+                                    <input id="valor_escri4" name="valor_escri4" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -559,7 +569,7 @@
                             <div class="row">
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <label class="control-label label-gral">Número de la Notaría</label>
                                         <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
                                     </div>
                                 </div>
@@ -678,7 +688,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label label-gral">Nombre de la Notaría</label>
+                                <label class="control-label label-gral">Número de la Notaría</label>
                                 <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
                         </div>
@@ -804,8 +814,7 @@
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
-                    <!-- <label>Selecciona un estatus</label> -->
-                    <select class="form-control select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
+                    <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -902,7 +911,7 @@
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral btn-round">Fecha del contrato anterior</label>
+                                        <label class="control-label estiloEsc label-gral btn-round">Fecha del contrato anterior</label>
                                         <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
@@ -987,7 +996,7 @@
 
 <!-- inicio de modal -->
 
-<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
                 <div class="modal-dialog  modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1001,14 +1010,14 @@
                                 
                             <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
                             </div>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
                         </div>
                     </div>
                 </div>
             </div>
 <!-- fin modal -->   
 <!-- fin modal -->   
-<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar">
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -1019,7 +1028,7 @@
                     
                     </div>
                 <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                       
                 </div>
                 </div>

@@ -612,6 +612,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
+        $valor_contrato = $_POST['valorC'];
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
@@ -652,8 +653,7 @@ class Postventa extends CI_Controller
             // echo "<br>";
             // echo $usuarioJuridico->id_usuario;
             // echo "<br>";
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
-                $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -666,11 +666,12 @@ class Postventa extends CI_Controller
         $_POST['empresa'] = $data1[0]['empresa'];
         $result = $this->Postventa_model->InsertCli($_POST);
         $idLote = $_POST['idLote'];
-        $idCliente = $result->ult_reg;
+        $idCliente = $result;
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
+        $valor_contrato = $_POST['valorC'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
         $dataFiscal = array(
             "id_dpersonal" => $_POST['idPostventa'],
@@ -715,7 +716,7 @@ class Postventa extends CI_Controller
                 $resDecode->data[0]->ncliente = $_POST['nombreComp'];
                 $resDecode->data[0]->idEstatus = $_POST['estatus'];
             }
-            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario);
+            $informacion = $this->Postventa_model->setEscrituracion($personalidad,$idLote,$idCliente, $idPostventa, $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -729,14 +730,29 @@ class Postventa extends CI_Controller
         $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
         $estatus = $this->input->post("estatus");
         $tipo_tabla = $this->input->post("tipo_tabla");
-        $v = strtotime($this->input->post("endDate"));
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla)->result_array();
+
+
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla )->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
     }
+
+    // Traer los datos de la tabla reporte de solicitudes
+    public function getReportes()
+    {   
+        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+        $data['data'] = $this->Postventa_model->getReportes($beginDate, $endDate)->result_array();
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    // Finaliza la extraccion de datos
 
     // Funciones para el apartado de notaria
     public function getNotarias() {
@@ -785,7 +801,6 @@ class Postventa extends CI_Controller
 
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
-    
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
 
 
@@ -800,14 +815,14 @@ class Postventa extends CI_Controller
         $presupuestoType = null;
         $idPresupuesto = null;
         $idNxS = null;
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $idPresupuesto = $this->input->post('idPresupuesto');
             $idNxS = $this->input->post('idNxS');
         }
         $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
         $documentInfo = $documentName;
-        if($documentType == 13){
+        if($documentType == 12){
             $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
         }else{
             /*if($documentInfo->estatus == 22){
@@ -977,7 +992,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
 
-        if( $documentType == 13){
+        if( $documentType == 12){
             $presupuestoType = $this->input->post('presupuestoType');
             $updateDocumentData = array(
                 "expediente" => '',
@@ -1126,7 +1141,7 @@ class Postventa extends CI_Controller
             "tipo_escritura" => $data['tipoE'],
            // "aportacion" => $data['aportaciones'],
            // "descuento" => $data['descuentos'],
-           // "motivo" => $data['motivo']
+            "valor_escriturar" => $data['valor_escri']
         );
         //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         
@@ -1426,7 +1441,7 @@ class Postventa extends CI_Controller
         $mail->Subject(utf8_decode("Presupuesto escrituracion"));
         // $mail->message('');
 
-        $doc = $this->getFileNameByDoctype($idSolicitud, 13);
+        $doc = $this->getFileNameByDoctype($idSolicitud, 12);
         $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
         $response = $mail->send();
@@ -1542,24 +1557,35 @@ class Postventa extends CI_Controller
                                                     ' . $data->modificado . '
                                                 </td>
                                                 <td style="font-size: 1em;">
+                                                <b>Motivo:</b><br>
+                                                ' . $data->motivo . '
+                                            </td>
+                                                <td style="font-size: 1em;">
                                                     <b>Clave catastral:</b><br>
                                                     ' . $data->clave_catastral . '
                                                 </td>
+                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Estatus construcción:</b><br>
                                                     ' . $data->nombreConst . '
                                                 </td>
-                                                <td style="font-size: 1em;">
-                                                <b>Motivo:</b><br>
-                                                ' . $data->motivo . '
-                                            </td>
+                                               
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>¿Tenemos cliente anterior (traspaso, cesión o segunda venta)?:</b><br>
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Valor de operación de contrato:</b><br>
+                                                ' .$data->valor_contrato. '
+                                            </td>
+                                             <td style="font-size: 1em;">
+                                                <b>Valor a escriturar:</b><br>
+                                                ' .$data->valor_escriturar. '
+                                            </td>
                                             </tr>
+                                               
                                         </table>
                                     </div>';
                                             if($data->cliente_anterior == 1){
@@ -1863,170 +1889,6 @@ class Postventa extends CI_Controller
         }
     }
 
-    function getData(){
-        $data = $this->Postventa_model->getData_contraloria()->result();
-        switch ($this->session->userdata('id_rol')){
-            case '17': //CONTRALORIA 
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Dias de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ],
-                );
-            break;
-
-            case 55: //POSTVENTA
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio' 
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
-                );
-            break;
-
-            case 57: //TITULACION
-                $columns = array(
-                    [
-                        "title" => 'ID',
-                        "data" => 'idSolicitud'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Area',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
-                );
-            break;
-        }
-        $data = json_decode(json_encode($data), True);
-
-        for ($i = 0; $i < count($data); $i++) {
-            $a = 0;
-            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
-                $data[$i]['atrasado']  = 'EN TIEMPO';
-                $data[$i]['diferencia']  = 0;
-            }
-            else{
-                $endDate = date('m/d/Y h:i:s a', time());
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
-            }
-        }
-
-        $array = [
-            "columns" => $columns,
-            "data" => $data
-        ];
-        if ($data != null)
-            echo json_encode($array);
-        else
-            echo json_encode(array());
-    }
-
     public function getEstatusEscrituracion()
     {
         $data = $this->Postventa_model->getEstatusEscrituracion();
@@ -2039,6 +1901,7 @@ class Postventa extends CI_Controller
     public function getFullReportContraloria(){
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
+        //var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
@@ -2400,7 +2263,7 @@ function saveNotaria(){
               $validacion = false;
           }
           if($validacion){
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicitud($solicitud,$opciones);
+              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
               $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
               $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
           }else{
@@ -2471,41 +2334,6 @@ function saveNotaria(){
 	}
 
 
-    public function deleteFileActualizado()
-    {
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idSolicitud = $this->input->post('idSolicitud');
-        $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $updateDocumentData = array(
-                "expediente" => '',
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-        }else{
-            $updateDocumentData = array(
-                "expediente" => null,
-                "movimiento" => '',
-                "modificado" => date('Y-m-d H:i:s'),
-                "estatus_validacion" => null,
-                "idUsuario" => $this->session->userdata('id_usuario'),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "status" => 1
-            );
-            
-        }
-        
-        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
-        $folder = $this->getFolderFile($documentType);
-        $file = $folder . $filename;
-        if (file_exists($file))
-            unlink($file);
-
-        $response = $this->Postventa_model->eliminarDoc( $idDocumento);
-        echo json_encode($response);
-        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
-    }
 
     public function descargarInf(){
         $documentType = $this->input->post('documentType');
@@ -2554,6 +2382,11 @@ function saveNotaria(){
         $editado  =   $this->session->userdata('id_usuario');
         $modificado =  date("Y-m-d H:i:s");
         $opcionEditar  =   $this->input->post('opcionEditar');
+        $insertArrayActualizarEstatus = array(
+            'estatus'        => 0
+            );
+            
+        $respuestaAct = $this->Postventa_model->actualizarMotivosRechazo(  $tipo , $Iddocumento,$insertArrayActualizarEstatus);
         if($estatus_validacion ==2){
             $proceso  =   $this->input->post('proceso');
             $motivo  =   $this->input->post('motivo');
@@ -2561,7 +2394,7 @@ function saveNotaria(){
                 'id_motivo'      => $motivo,
                 'id_documento'   => $Iddocumento,
                 'tipo'           => $tipo, 
-                'estatus'        => 0,
+                'estatus'        => 1,
                 'tipo_proceso'   => $proceso,
                 'creado_por'     => $validado_por,
                 'fecha_creacion' => $modificado,
@@ -2630,38 +2463,43 @@ function saveNotaria(){
 
       public function getDocumentosPorSolicitudss()
       {
+        
           $solicitud      = $this->input->post('solicitud');
           $status        = $this->input->post('estatus');
           $notariaExterna = ''; 
           $validacion     = true;
+          $notariaExterna = $this->Postventa_model->existNotariaExterna($solicitud);
         // var_dump ($solicitud, $estatus);
+        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
+        $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
+
         if($status == 9){
-            $opciones = " (11,13,20 )";
-        }else if($status == 11){
-            $opciones = ' (7)';
-        }else if($status == 12){
-            $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
-        }else if($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
-            $opciones = ' (17,18)';
-        }else if($status == 20){
-            $opciones = ' (15)';
-        }else if($status == 23){
-            $opciones = ' (22)';
-        }else if($status == 24){
-            $opciones = ' (16)';
+            $opciones = "IN (11,13,20 $docNotariaExterna)";
+        }elseif($status == 18){
+            $opciones = 'IN (7)';
+        }elseif($status == 19 ||$status == 22 || $status == 24 || $status = 20){
+            $opciones = "IN (1,3,4,5,6,8,9,11,12,17,18 $docPersonalidadJuridica $docNotariaExterna)";
+        }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
+            $opciones = 'IN (17,18)';
+        }elseif($status == 29 || $status == 35 || $status == 40){
+            $opciones = 'IN (15)';
+        }elseif($status == 47 || $status == 50){
+            $opciones = 'IN (14)';
+        }elseif($status == 42 || $status == 52){
+            $opciones = 'IN (19)';
         }
-
-
+// 
+// 
           if($solicitud == '' || $status == '')
           {
               $validacion = false;
           }
           if($validacion){
 
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
-
-              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
+              $respuesta['rechazos']        = $this->Postventa_model->rechazosDeDocs($solicitud);
+              $respuesta['misDocumentos']   = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
+              $respuesta['losDocumentos']   = $this->Postventa_model->documentosNecesarios($opciones);
+              $respuesta['nuevosDocs']      = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
           }else{
               $respuesta = array();
           }
@@ -2789,30 +2627,13 @@ function saveNotaria(){
 	}
 
 
-    public function deleteFileActualizadoss()
+    public function deleteFileActualizado2()
     {
         $documentType = $this->input->post('documentType');
         $presupuestoType = null;
         $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        if( $documentType == 13){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $updateDocumentData = array(
-                "expediente" => '',
-                "modificado_por" => $this->session->userdata('id_usuario'),
-            );
-        }else{
-            $updateDocumentData = array(
-                "expediente" => null,
-                "movimiento" => '',
-                "modificado" => date('Y-m-d H:i:s'),
-                "estatus_validacion" => null,
-                "idUsuario" => $this->session->userdata('id_usuario'),
-                "modificado_por" => $this->session->userdata('id_usuario'),
-                "status" => 1
-            );
-            
-        }
+
         // var_dump($idDocumento , $documentType);
         $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
         $folder = $this->getFolderFile($documentType);
@@ -2828,7 +2649,6 @@ function saveNotaria(){
                 'status'        =>  0, 
             );
             $updates = $this->Postventa_model->actualizarDocs( $idDocumento ,$arrayInsertDocumentos);
-        // $response = $this->Postventa_model->eliminarDoc( $idDocumento);
         echo json_encode($updates);
         // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
     }
@@ -2858,8 +2678,178 @@ function saveNotaria(){
         echo json_encode ($motivosRechazo); 
 
     }
-  
+    public function existeNegado(){
+        $solicitud = $this->input->post("solicitud");
+        $RespuestaRechazo = $this->Postventa_model->existeNegado($solicitud);
+        
+        echo json_encode($RespuestaRechazo);
 
+    }
+
+
+    function getData(){
+        $data = $this->Postventa_model->getData_contraloria()->result();
+        switch ($this->session->userdata('id_rol')){
+            case '17': //CONTRALORIA 
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio'
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Área',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Dias de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ],
+                );
+            break;
+
+            case 55: //POSTVENTA
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio' 
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Área',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Días de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ]
+                );
+            break;
+
+            case 57: //TITULACION
+                $columns = array(
+                    [
+                        "title" => 'ID',
+                        "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Lote',
+                        "data" => 'nombreLote'
+                    ],
+                    [
+                        "title" => 'Condominio',
+                        "data" => 'nombreCondominio'
+                    ],
+                    [
+                        "title" => 'Residencial',
+                        "data" => 'nombreResidencial'
+                    ],
+                    [
+                        "title" => 'Cliente',
+                        "data" => 'nombre'
+                    ],
+                    [
+                        "title" => 'Estatus',
+                        "data" => 'estatus'
+                    ],
+                    [
+                        "title" => 'Area',
+                        "data" => 'area'
+                    ],
+                    [
+                        "title" => 'Vigencia',
+                        "data" => 'atrasado'
+                    ],
+                    [
+                        "title" => 'Días de atraso',
+                        "data" => 'diferencia'
+                    ],
+                    [
+                        "title" => 'Fecha del estatus',
+                        "data" => 'fecha_creacion'
+                    ]
+                );
+            break;
+        }
+        $data = json_decode(json_encode($data), True);
+
+        for ($i = 0; $i < count($data); $i++) {
+            $a = 0;
+            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
+                $data[$i]['atrasado']  = 'EN TIEMPO';
+                $data[$i]['diferencia']  = 0;
+            }
+            else{
+                $endDate = date('m/d/Y h:i:s a', time());
+                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
+                $data[$i]['atrasado'] = $result['atrasado'];
+                $data[$i]['diferencia'] = $result['diferencia'];
+            }
+        }
+
+        $array = [
+            "columns" => $columns,
+            "data" => $data
+        ];
+        if ($data != null)
+            echo json_encode($array);
+        else
+            echo json_encode(array());
+    }
 
 
       
