@@ -4862,7 +4862,7 @@ function TieneAbonos($id){
             
             }
              public function BorrarPrestamo($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
+                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,  modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
                     $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
 
                     if (! $respuesta ) {
@@ -4873,16 +4873,15 @@ function TieneAbonos($id){
                 }
             
 
-                function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago,$tipo){
-                    $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
+                function insertar_prestamos($insertDocumentNuevo){
+
+                    $this->db->insert('prestamos_aut', $insertDocumentNuevo);
+                    $afftectedRows = $this->db->affected_rows();
+                    
+                    return $afftectedRows > 0 ? 1 : FALSE ;
                 }
                 function getPrestamos(){
-                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, p.evidenciaDocs as evidencia ,
                 p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
                 (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
                 rpp.id_prestamo as id_prestamo2
@@ -4892,7 +4891,7 @@ function TieneAbonos($id){
                 LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
                 WHERE p.estatus in(1,2,3,0)
-                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
             }
                 function InsertPago($id_prestamo,$id_user,$pago,$usuario){
                     $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
