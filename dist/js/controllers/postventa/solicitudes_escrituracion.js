@@ -33,7 +33,6 @@ sp = { // MJ: SELECT PICKER
         var today = new Date();
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         var time = today.getHours() + ":" + today.getMinutes();
-        var dateTime = date+' '+time;
 
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -190,9 +189,7 @@ $(document).on("click", "#searchByDateRange", function () {
     
 });
 $(document).on('click', '#createDate', function () {
-    var data = escrituracionTable.row($(this).parents('tr')).data();
-    console.log(data)
-    
+    var data = escrituracionTable.row($(this).parents('tr')).data();    
     let idNotaria = $(this).attr('data-idNotaria');
     let signDate = getSignDate(idNotaria);
     $('#signDate').val(signDate);
@@ -202,7 +199,6 @@ $(document).on('click', '#createDate', function () {
 });
 $(document).on('click', '#newDate', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
-    console.log(data);
     // $('#id_solicitud3').val(data.idSolicitud);
     let idNotaria = $(this).attr('data-idNotaria');
     let signDate = getSignDate(idNotaria);
@@ -263,8 +259,6 @@ $(document).on("click", ".upload", function () {
     $("#id_estatus").val(id_estatus);
     $("#details").val($(this).data("details"));
     if (action == 1 || action == 2 || action == 4) {
-        console.log('action upload')
-        console.log(action)
         document.getElementById("mainLabelText").innerHTML = action == 1 ? "Seleccione el archivo que desees asociar." : action == 2 ? "¿Estás seguro de eliminar el archivo?" : "Seleccione los motivos de rechazo que asociarás al documento.";
         document.getElementById("secondaryLabelDetail").innerHTML = action == 1 ? "El documento que hayas elegido se almacenará de manera automática una vez que des clic en guardar." : action == 2 ? "El documento se eliminará de manera permanente una vez que des clic en Guardar." : "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en Guardar.";
         if (action == 1) { // ADD FILE
@@ -302,8 +296,6 @@ $(document).on("click", ".upload", function () {
 
 $(document).on("click", "#sendRequestButton", function (e) {
     var info = escrituracionTable.page.info();
-    console.log('datos')
-    console.log(info.page)
     e.preventDefault();
     let action = $("#action").val();
     let id_estatus =  $('#id_estatus').val();
@@ -331,8 +323,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
         let idSolicitud = $("#idSolicitud").val();
         let data = new FormData();
         let details = $("#details").val();
-        console.log('details')
-        console.log(details)
         data.append("idSolicitud", idSolicitud);
         data.append("idDocumento", $("#idDocumento").val());
         data.append("documentType", $("#documentType").val());
@@ -364,12 +354,10 @@ if(id_estatus == 20 || id_estatus == 25){
             processData: false,
             type: 'POST',
             success: function (response) {
-                console.log(response);
                 $("#sendRequestButton").prop("disabled", false);
                 if (response == 1) {
                     // getDocumentsInformation(idSolicitud);
                     alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
-                    console.log(details);
                     if(details == 1){
                         var tr = $(`#trees${idSolicitud}`).closest('tr');
                         var row = escrituracionTable.row(tr);
@@ -394,7 +382,6 @@ if(id_estatus == 20 || id_estatus == 25){
                             }
                         }
                     }else if(details == 2){
-                        console.log('details =2, buildUploadCards')
                         let idNxS = $("#idNxS").val();
                         buildUploadCards(idNxS);
                         // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
@@ -429,7 +416,6 @@ if(id_estatus == 20 || id_estatus == 25){
 });
 
 $(document).on("submit", "#formPresupuesto", function (e) {
-    console.log("click");
     e.preventDefault();
     let idSolicitud = $("#id_solicitud3").val();
     let data = new FormData($(this)[0]);
@@ -484,15 +470,6 @@ $(document).on('click', '#request', function () {
 
     let type = $(this).attr('data-type');
      $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
-     
-    //  if(data.id_estatus == 1){
-        
-    //     document.getElementById('notaria_siguiente').style.display = "show";
-        
-    //     // .innerHTML = '';
-    //      console.log('Si entra estatus 1');
-    // }
-   // $('#type').val(2);
     $("#approveModal").modal();
 });
 
@@ -557,7 +534,6 @@ $(document).on('click', '#reject', function () {
 $(document).on('click', '#presupuesto', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
-    console.log(area_actual);
 
     if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
@@ -634,7 +610,6 @@ $(document).on('click', '#asignarNotariaButton', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let informacion_lote = $(this).attr('data-lote');
     let solicitud = $(this).attr('data-solicitud');
-    console.log('solicitud: '+ solicitud);
     $("#tipoNotaria").selectpicker('refresh');
     document.getElementById('informacion_lote').innerHTML = 'Lote: '+informacion_lote;
     $('#id_solicitud').val(solicitud);
@@ -831,32 +806,21 @@ $(document).on('click', '.treePresupuesto', function () {
     var detailRows = [];
 
     var tr = $(this).closest('tr');
-    console.log('tr')
-    console.log(tr)
+
     var row = escrituracionTable.row(tr);
-    console.log('lllllllllllllllllllllllll');
-    console.log(row)
     var idx = $.inArray(tr.attr('id'), detailRows);
-    console.log('idx')
-    console.log(idx)
     //SI EL ROW DETAILS ESTA DESPLEGADO, ESCONDEERLO
     if (row.child.isShown()) {
-        console.log('PRIMER IF')
         tr.removeClass('details');
         row.child.hide();
-
         // Remove from the 'open' array
         detailRows.splice(idx, 1);
-        console.log(detailRows);
     } else {
         //DESPLEGAR EL ROW DETAILS
-        console.log('ELSE')
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
         // createDocRowPresupuesto(row, tr, $(this));
-        console.log('NNNNNNNNNNNNNNNNNNNNNNNN');
         createRowNotarias(row, tr, $(this), row.data().id_solicitud);
-
         // Add to the 'open' array
         if (idx === -1) {
             detailRows.push(tr.attr('id'));
@@ -871,8 +835,6 @@ $(document).on('click', '.approve', function(){
 
     let data = new FormData();
     let details =  $(this).attr("data-details");
-    console.log('data presupuesto')
-    console.log(data);
     data.append("idSolicitud", idSolicitud);
     data.append("idDocumento", idDocumento);
 
@@ -884,7 +846,6 @@ $(document).on('click', '.approve', function(){
         processData: false,
         type: 'POST',
         success: function (response) {
-            console.log(details);
             $("#sendRequestButton").prop("disabled", false);
             if (response == 1) {
                 // getDocumentsInformation(idSolicitud);
@@ -973,7 +934,7 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
-                "width": "0.5%",
+                "width": "0.2%",
                 data: function (d) {
                     return d.id_solicitud
                 }
@@ -1561,10 +1522,8 @@ function getMotivosRechazos(tipo_documento,estatus) {
         tipo_documento: tipo_documento,
         estatus: estatus
     }, function (data) {
-        console.log(data);
         var len = data.dataMotivos.length;
         var len2 = data.dataEstatus.length;
-        console.log(data.dataMotivos);
         for (var i = 0; i < len; i++) {
             var id = data.dataMotivos[i]['id_motivo'];
             var name = data.dataMotivos[i]['motivo'];
@@ -1626,8 +1585,6 @@ function getNotarias(datos=null) {
     $(".notaria-select").append($('<option disabled>').val("0").text("Seleccione una opción"));
 
     $.post('getNotarias', function (data) {
-        console.log(data.data)
-        console.log(data[0])
         data = data.data;
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -1641,20 +1598,11 @@ function getNotarias(datos=null) {
             // $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             $(".notaria-select").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
-       console.log('GET NOTARIAS')
-       console.log(datos)
         // $("#notaria").selectpicker('refresh');
         $(".notaria-select").selectpicker('refresh');
         if(datos != null){
-            console.log('ENTRA AL DATOS != NULL')
             let selects = $(`#notarias-${datos.id_solicitud}`).find('.selectpicker.notaria-select');
-       console.log('selects1',selects);
        selects.each( function( index, element ){
-           console.log('selects',element.id);
-        //    $(`#${element.id}`).val(datos.notarias[index] ? datos.notarias[index].id_notaria:null);
-        //    console.log('val',$(`#${element.id}`).val())
-        //    $(`#${element.id}`).selectpicker('refresh');
-
            $(`#${element.id}`).selectpicker('val', datos.notarias[index] ? datos.notarias[index].id_notaria:null);
            $(`#${element.id}`).trigger('change');
        });
@@ -1836,12 +1784,9 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
                     botones += BtnsAdicionales;
                 }
             } else {
-                console.log('expediente cargado');
                 if (banderaBoton == 2) {
-                    console.log('adicional 2');
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
                 } else {
-                    console.log('adicional 1');
                     botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action=${expediente == null || expediente == '' ? 1 : 2} class="btn-data ${expediente == null || expediente == '' ? "btn-sky" : "btn-gray"} upload" data-toggle="tooltip" data-placement="left" title=${expediente == null || expediente == '' ? 'Cargar' : 'Eliminar'}>${expediente == null || expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="fas fa-trash"></i>'}</button>`;
                     botones += BtnsAdicionales;
                 }
@@ -1893,7 +1838,6 @@ let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
     documentosObligatorios = [];
     var filtered = data.filter(function(value){ 
-        console.log(value.tipo_documento)
         if(value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1){
         }else{
             return value;
@@ -2002,10 +1946,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
 function getSignDate(idNotaria) {
     let date = new Date();
     let i = 0;
-    console.log(idNotaria);
     let dias = idNotaria == 1 ? 7 : idNotaria == 2 ? 7 : idNotaria == 3 ? 7 : idNotaria == 4 ? 7 : idNotaria == 5 ? 7 : idNotaria == 6 ? 7 : idNotaria == 10 ? 15 : idNotaria == 11 ? 15 : idNotaria == 12 ? 15 : 0;
-    console.log(dias);
-
     while (i < dias) {//dias habiles despues del dia de hoy
         date.setTime(date.getTime() + 24 * 60 * 60 * 1000); // añadimos 1 día
         if (date.getDay() != 6 && date.getDay() != 0)
@@ -2169,9 +2110,7 @@ function filterSelectOptions(documentType) {
     $("#rejectionReasons").selectpicker('refresh');
 }
 
-function getEstatusConstruccion(estatus_construccion) {
-    console.log(estatus_construccion)
-    
+function getEstatusConstruccion(estatus_construccion) {    
     $('#spiner-loader').removeClass('hide');
     $("#construccion").find("option").remove();
     if(estatus_construccion == null || estatus_construccion == 0){
@@ -2188,7 +2127,6 @@ function getEstatusConstruccion(estatus_construccion) {
             $("#construccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         if(estatus_construccion != null && estatus_construccion != 0){
-            console.log('essd')
             $(`#construccion`).val(estatus_construccion);
             //$(`#construccion`).selectpicker('val',estatus_construccion);
             $(`#construccion`).trigger('change');
@@ -2221,8 +2159,6 @@ function getEstatusPago() {
 
 function createDocRow(row, tr, thisVar){
     //ROWDETAILS INTEGRACIÓN DE EXPEDIENTE
-    console.log('createDocRow')
-    console.log(row)
     $.post("getDocumentsClient", {
         idEscritura: row.data().id_solicitud,
         idEstatus: row.data().id_estatus
@@ -2331,8 +2267,6 @@ function createDocRowPresupuesto(row, tr, thisVar){
 //MO: Se crea objeto para recargar la tabla y desplegar el row details
 let datosPresupuestos = new Object();
 function RecargarTablePresupuestos(){
-    console.log('funcion recargar');
-    console.log(datosPresupuestos);
     escrituracionTable.ajax.reload(null,false);
     createRowNotarias(datosPresupuestos.row, datosPresupuestos.tr, datosPresupuestos.thisVar, datosPresupuestos.idSolicitud)
 }
@@ -2345,8 +2279,6 @@ function createRowNotarias(row, tr, thisVar, idSolicitud){
         "thisVar" : thisVar,
         "idSolicitud" : idSolicitud
     }
-    console.log('row', row);
-    console.log('rowData', row.data());
 
     $.post("getNotariasXUsuario", {
         idSolicitud: idSolicitud
@@ -2378,7 +2310,6 @@ function buildTableDetailP(data, permisos) {
     solicitudes += '<td>' + '<b>' + 'FECHA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'ACCIONES ' + '</b></td>';
     solicitudes += '</tr>';
-    console.log(permisos);
     $.each(filtered, function (i, v) {
 
         //i es el indice y v son los valores de cada fila
@@ -2536,8 +2467,6 @@ function crearDetailsPresupuestos(data, permisos) {
     notarias += '<td>' + '<b>' + 'DESCRIPCION' + '</b></td>';
     notarias += '<td>' + '<b>' + 'CARGAR PRESUPUESTOS' + '</b></td>';
     notarias += '</tr>';
-    console.log('buildDAta',data);
-    console.log('permisos', permisos);
 
     for(let i = 0;i<3;i++){
         notarias += '<tr>';
@@ -2594,11 +2523,7 @@ function saveNotaria(idSolicitud, idNotaria, thisVar){
                 $('#spiner-loader').addClass('hide');
             } else {
                 const tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
-                
                 const row = escrituracionTable.row(tr);
-                console.log('tr', tr);
-                console.log('rowSave2', row.data());
-
                 createRowNotarias(row, tr, $(`#trees${idSolicitud}`), idSolicitud);
                 $('#spiner-loader').addClass('hide');
             }
@@ -2617,8 +2542,6 @@ function buildUploadCards(idNxS){
         type: 'POST',
         dataType:'json',
         success: function (response) {
-            console.log(response);
-            console.log(response[0].id_solicitud);
             let html = '';
           response.forEach(element =>{
 
@@ -2645,7 +2568,6 @@ function buildUploadCards(idNxS){
           $('#body_uploads').append(html);
           $('#spiner-loader').addClass('hide');
           $('[data-toggle="tooltip"]').tooltip();
-          console.log('TERMINA SUCCESS')
         }
     });
 }
@@ -2722,20 +2644,11 @@ $(document).on('click', '#bajarConMotivo', function () {
     Motivo  = document.getElementById("selectMotivo"+index).value ;
          // Dividiendo la cadena "proceso" usando el carácter espacio
          let motivos = Motivo.split('//');
-    console.log('Motivo0::::::'+ motivos[0] )
-    console.log('Motivo1::::::'+ motivos[1] )
-    console.log('proceso::::::')
-    console.log( document.getElementById("selectMotivo"+index).getAttribute('data-proceso'))
-      console.log('json::::::')
-      console.log(document.getElementById("selectMotivo"+index).getAttribute('data-proceso'))
     let estatusValidacion = ' ';
 
     let dataMostrar = ' ';
-
     if(estatus == 1 ){  
-        
-        console.log('ESTATUS::::::'+estatus);          
-    }else if(estatus == 2){
+            }else if(estatus == 2){
 
     }
 
@@ -2762,7 +2675,6 @@ $(document).on('click', '#bajarConMotivo', function () {
                 denegarTexto += '';
             
             }else if(estatus == 2){
-                console.log('ENTRA');
                 estatusVal = 'Estatus actual DENEGADO';
             
             }else{
@@ -2796,7 +2708,6 @@ opcIndex = $(this).attr("data-index");
 var typeDocument = ipOcion;
 
 
-console.log(typeDocument);
 var datos = []  ;
 var formData = new FormData();
 formData.append('tipoDocumento',typeDocument );
@@ -2810,10 +2721,8 @@ $.ajax({
     contentType: false,
     processData:false,
     success: function(data) { 
-         console.log(data)
          denegarTexto += '<br> <select class="form-control titulares"  id="selectMotivo'+opcIndex+'" name="selectMotivo'+opcIndex+'" data-size=".3" >';
         data.forEach(function(motivos,index ){
-            console.log(motivos.tipo_proceso);
                 denegarTexto += '   <option data-proceso="'+motivos.tipo_proceso+'"  value="'+motivos.id_motivo+'//'+motivos.tipo_proceso+'">'+motivos.motivo+'</option>';     
                 datos[index]=motivos;
          })
@@ -2847,7 +2756,6 @@ ipOcion = $(this).attr("data-idOpcion");
 opcionEditar = $(this).attr("data-editar");
 estatus = $(this).attr("data-editar");
 index = $(this).attr("data-index");
-console.log(  idDocumento, ipOcion ,opcionEditar, index)
 let estatusValidacion = ' ';
 
 let dataMostrar = ' ';
@@ -2873,7 +2781,6 @@ $.ajax({
             denegarTexto += '';
         
         }else if(estatus == 2){
-            console.log('ENTRA');
             estatusVal = 'Estatus actual DENEGADO';
         
         }else{
@@ -2906,14 +2813,12 @@ ipOcion = $(this).attr("data-idOpcion");
 opcionEditar = $(this).attr("data-editar");
 estatus = $(this).attr("data-editar");
 index = $(this).attr("data-index");
-console.log(  idDocumento, ipOcion ,opcionEditar, index)
 let estatusValidacion = ' ';
 
 let dataMostrar = ' ';
 
 if(estatus == 1 ){  
     
-    console.log('ESTATUS::::::'+estatus);          
 }else if(estatus == 2){
 
 }
@@ -2938,7 +2843,6 @@ $.ajax({
             denegarTexto += '';
         
         }else if(estatus == 2){
-            console.log('ENTRA');
             estatusVal = 'Estatus actual DENEGADO';
         
         }else{
@@ -2962,425 +2866,6 @@ $.ajax({
 
 
 
-// __---------------------------------------------
-// __---------------- DOCUMENTOS PARA TITULACIÓN -----------------------------
-// __---------------------------------------------
-
-
-
-$(document).on('click', '#revisarDocs', function () {
-    idStatus = $(this).attr("data-info");
-    solicitudes = $(this).attr("data-solicitud");
-    let solicitud = solicitudes ;
-    let estatus = idStatus;
-    let ruta = '';
-    var documentos  = '';
-    var rechazos = [];
-    var cuerpoModal = document.getElementById('documentos_revisar');
-    cuerpoModal.innerHTML = documentos;
-    $("#documentosRevisar").modal();
-     
-        $.ajax({
-            url : 'getDocumentosPorSolicitudss',
-            type : 'POST',
-            dataType: "json",
-            data: 
-            {
-                // "pagos_activos"     : pagos_activos,
-                "estatus" : estatus,
-                "solicitud" : solicitud
-            }, 
-            success: function(data) 
-            {
-
-                console.log(data);
-                InfoModal = '';
-                InfoModalF = '';
-                data.rechazos.forEach(function(rechazo,indexR){
-                    rechazos[indexR] = rechazo;
-                });
-                data.misDocumentos.forEach(function(Losmios,Numero ){
-
-                ruta =   folders(Losmios.id_opcion);    
-                    // ruta =    "CURP/";
-                InfoModal += '   <div class="row"  >';
-                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-                InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" >'+Numero+' </input>';
-                InfoModal += ' </div>';
-                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-                InfoModal += ' <input class="form-control" type="text" id="solicitudP" name="solicitudP">'+Losmios.idSolicitud+'  </input>';
-                InfoModal += ' </div>';
-                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-                InfoModal += ' <input class="form-control" type="text" id="SolicitudPs" name="SolicitudPs">'+Losmios.idSolicitud+'  </input>';
-                InfoModal += ' </div>';
-
-                
-            //     <div class="col-md-4">
-            //     <div class="form-group">
-            //         <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
-            //     </div>
-            // </div>
-
-                InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
-                InfoModal += '  </div>';
-                 
-                        if(Losmios.estatusValidacion == 1 ){
-                            estatusVal = 'Estatus actual VALIDADO';
-                        }else if(Losmios.estatusValidacion  == 2){
-                            estatusVal = 'Estatus actual DENEGADO';
-                        }else{
-                            estatusVal = ' CARGADO';
-                        }
-
-                    InfoModal += '  <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
-                    InfoModal += '      <p style="font-size: 1em: color: #E92017;"> DOCUMENTO '+Losmios.nombre+' </p>';
-                    InfoModal += '      <p id="estatusValidacion'+Numero+'" name="estatusValidacion'+Numero+'" style="font-size: 0.9em;"> Estatus actual '+estatusVal+' </p>';
-
-                    InfoModal += '      <hr style="color: #0056b2;" />';
-                    InfoModal += '  </div>';
-
-                    InfoModal += '  <div class="col-5 col-  sm-5 col-md-5 col-lg-5 ">';
-                    InfoModal += '  <div name="cambioBajar'+Numero+'" id="cambioBajar'+Numero+'" >';
-                    InfoModal += '   <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                                            
-                    // InfoModal += '   <a id="descargarDoc"  name="descargarDoc" data_expediente="'+Losmios.expediente+'" data-index="'+Numero+'"  data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                    // 'data-idCliente="" data-fecVen="" data-ubic="" data-code=""  ' +
-                    // 'class="btn-data btn-sky cancelReg" title="Visualizar">' +
-                    // '<i class="fas fa-download"></i></a>'; 
-                    InfoModal += '  </div>';
-                 
-                    InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2">';
-                    InfoModal += '<a  data-doc="'+Losmios.expediente+'" data-documentType="'+Losmios.id_opcion+'"   id="preview"  name="preview" data_expediente="'+Losmios.expediente+'"   data-index="'+Numero+'" data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                    'class="btn-data btn-orangeYellow cancelReg" title="Descargar"  data-idCliente="" data-fecVen="" data-ubic="" data-code="" >' +
-                    ' ' +
-                    '<i class="fas fa-search-plus"></i></a>'; 
-                     InfoModal += ' </div>';
-
-                    if(Losmios.validacion == 1 ){ // validacion para saber si este documento ya se valido anteriormente positivo
-                        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                        InfoModal += ' <p style="font-size: 1em: color: #E92017;"> REVISADO  </p>';
-                        InfoModal += ' </div>';
-                    }else if(Losmios.validacion == 2){ // validacion para saber si este documento ya se valido anteriormente negativo
-                        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                        InfoModal += ' <p style="font-size: 1em: color: #E92017;"> REVISADO </p>';
-                        InfoModal += ' </div>';
-                    }else { // si no se ha validado aqui entra
-                        
-                        if(Losmios.id_opcion == 12  || Losmios.id_opcion == 18  || Losmios.id_opcion == 17  ){
-                            // se valida documentos que no solo se deben  de mostrar,,,,
-
-                                bandera = true;
-                                InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                                InfoModal += ' <p style="font-size: 1em: color: #E92017;"> REVISADO </p>';
-                                InfoModal += ' </div>';
-
-                        }else{
-
-                            InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 " name="validarVISTA'+Numero+'" id="validarVISTA'+Numero+'">';
-                       
-                            InfoModal += '<button href="#" id="visualizarDoc" name="visualizarDoc" data-editar="1"  data-index="'+Numero+'" data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                            'class="btn-data btn-green cancelReg" title="Aceptar">' +
-                            '<i class="fas fa-thumbs-up"></i></button>'; 
-                             InfoModal += ' </div>';
-    
-                             InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 " name="denegarVISTA'+Numero+'" id="denegarVISTA'+Numero+'" >';
-                             InfoModal += '<button href="#" id="denegartxt" name="denegartxt"  data-editar="2" data-index="'+Numero+'" data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                           'data-idCliente="" data-fecVen="" data-ubic="" data-code=""  ' +
-                           'class="btn-data btn-warning  cancelReg" title="Rechazar">' +
-                           '<i class="fas fa-thumbs-down"></i></button>'; 
-                            InfoModal += ' </div>';
-                            InfoModal += ' <div class="col-6 col-sm-6 col-md-6 col-lg-6"  name="opcionesDeRechazo'+Numero+'" id="opcionesDeRechazo'+Numero+'" >';                    
-                            InfoModal += '      <div class="form-group label-floating select-is-empty"  name="opcionesDeRechazo'+Numero+'" id="opcionesDeRechazo'+Numero+'" >';      
-                    
-                            InfoModal += '      </div>';
-                            InfoModal += ' </div>';
-                            
-                            InfoModal += ' <div class="col-6 col-sm-6 col-md-6 col-lg-6" name="botonRechazo'+Numero+'" id="botonRechazo'+Numero+'">';                    
-                            InfoModal += '      <div class="form-group"  name="opcionesDeRechazo3'+Numero+'" id="opcionesDeRechazo3'+Numero+'" >';      
-                         
-                            InfoModal += '      </div>';
-                            InfoModal += ' </div>';
-                            // InfoModal += ' <div class="form-group label-floating select-is-empty">';
-                            // InfoModal += '       <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required>';
-                            // InfoModal += '       </select>';
-                            // InfoModal += '      </div>';
-                        }
-
-          
-                    }
-                        InfoModal += ' </div>';
-                        InfoModal += '  </div>';
-                        InfoModal += '  </div>';
-
-                         document.getElementById('documentos_revisar').innerHTML = InfoModal;        
-                }); 
-            },               
-            error : (a, b, c) => {
-                alerts.showNotification("top", "right", "Error pruebelo más tarde.", "error");
-            }
-
-        });
-
-});
-
-// function para abrir modal 
-// aqui se construye cuando se abren los modal de documentos 
-// aqui se consulta y se construye
-    
-    $(document).on('click', '#subirDocumentos', function () {
-
-    let personas ;
-        idStatus = $(this).attr("data-info");
-        persona = $(this).attr("data-persona");
-      personas = persona;
-        solicitudes = $(this).attr("data-solicitud");           
-    let solicitud = solicitudes ;
-    let estatus = idStatus;
-        console.log()
-
-    var documentos  = '';
-        documentos += '';
-    var cuerpoModal = document.getElementById('subir_documento');
-        cuerpoModal.innerHTML = documentos;
-    let banderaTengoDocumentos = false;
-    var mandarSolicitud = document.getElementById('mandarSolicitud');
-        mandarSolicitud.innerHTML = documentos;
-    var BotonMandar = '';
-        mandarSolicitud.innerHTML = BotonMandar;
-    var rechazos = [];
-    
-    $("#documentTreeAr").modal();
-        $.ajax({
-        url : 'getDocumentosPorSolicitudss',
-        type : 'POST',
-        dataType: "json",
-        data: 
-        {
-
-            // "pagos_activos"     : pagos_activos,
-            "estatus" : estatus,
-            "solicitud" : solicitud
-
-        }, 
-      success: function(data) {
-        // alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-        // document.getElementById('updateDescuento').disabled = false;
-        // $('#tabla-general').DataTable().ajax.reload(null, false );
-        
-
-        console.log(data);
-        banderaEliminar =   true
-        // inicio del row
-        const No_existen = []; 
-        var InfoModal = ' '; //inicio de div que contiene todo el modal]
-        InfoModal += '      <h5 id="mainLabelText"></h5>'; 
-        InfoModal += '   <div class="row"  >';
-        // fin del row1
-        // FUCNTIOPNM PARA ELIMINAR LOS DOCUMENTOS QUE YA TENGO
-        let IdSolicitudS ='';
-    
-
-        
-        if(data.length  != 0){
-        
-            data.rechazos.forEach(function(rechazo,indexR){
-                rechazos[indexR] = rechazo;
-            });
-
-
-            console.log('preguntar para eliminar del ');
-            data.nuevosDocs.forEach(function(Documentos,index){
-
-                IdSolicitudS = Documentos.idSolicitud;
-
-            })
-            data.losDocumentos.forEach(function(elemento,i){
-                // console.log(data.misDocumentos.length);
-                data.misDocumentos.forEach(function(elementos,e){
-                    if( elemento.id_documento == elementos.id_opcion   )
-                    {
-                            console.log('jdjdjdj')
-                            banderaEliminar = true;    
-                            // arr[index] = element + index;
-                            data.losDocumentos[i] = '' , i;                       
-                            banderaTengoDocumentos = true;
-                       
-                    } 
-                    })
-            })
-        }
-        // FIN DE FUNTION PARA ELIMINAR LOS DOCUEMTNOS QUE TENGO 
-        
-
-        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-        InfoModal += '  <input class="form-control" type="text"  id="indexGeneral" name="indexGeneral" > </input>';
-        InfoModal += ' </div>';
-        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-        InfoModal += ' <input class="form-control" type="text" id="solicitudP" name="solicitudP">'+IdSolicitudS+'  </input>';
-        InfoModal += ' </div>';
-        InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 "  style="display:none;">';
-        InfoModal += ' <input class="form-control" type="text" id="SolicitudPs" name="SolicitudPs">  </input>';
-        InfoModal += ' </div>';
-
-
-
-        if(banderaTengoDocumentos){
-            InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
-            InfoModal += '     <p style="font-size: 0.8em: color: #E92017;">Documentos faltantes por subir</p>';
-            InfoModal += '  <hr style="color: #0056b2;" />';
-            InfoModal += '  </div>';
-        } 
-        if(data.length  != 0){
-            data.losDocumentos.forEach(function(faltantes,inde ){
-                console.log('FALTANTES');
-                console.log(faltantes);
-                if(faltantes != '')
-                {
-                  
-                    InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
-                    InfoModal += '  </div>';
-
-                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 "> ' ;
-                    InfoModal += '      <p style="font-size: 0.8em: color: #E92017;"> DOCUMENT0 :'+faltantes.descripcion +' </p>';
-        
-                    // estatusVariable = ' <span class="label" style="background:#177DE9;" > '+estatusVal +'  </span>';
-                    InfoModal += '      <p style="font-size: 0.9em; style="background:#177DE9;">  </p>';
-                    InfoModal += '      <hr style="color: #0056b2;" />';
-                    InfoModal += '   <br> '
-                    InfoModal += '  </div>';
-
-                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
-                    InfoModal += '  <div class="row" name="cambioAlsubir'+inde+'" id="cambioAlsubir'+inde+'" >';
-                    InfoModal += '      <input hidden name="numeroDeRow" id="numeroDeRow">';
-                    InfoModal += '      <div class="file">';
-                    InfoModal += '           <input class="form-control input-gral" id="docSubir'+inde+'" name="docSubir'+inde+'"  type="file" >';
-                    InfoModal += '      </div>';
-                    InfoModal += '	<button id="guardarImagen" name="guardarImagen"  ' +
-                    'class="btn-data btn-green editReg" title="ACTUALIZAR" data-cambiada="1" data-index="'+inde+'" data-solicitud="'+solicitud+'" data-documento="'+faltantes.id_documento +'" data-nomLote="2" data-idCond="">'+
-                    '<i class="fas fa-upload"></i></button>';
-                    InfoModal += '  </div>';
-
-                    
-                    InfoModal += '  </div>';
-
-                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
-                    InfoModal += '  <div name="cambioAlsubir1'+inde+'" id="cambioAlsubir1'+inde+'" >';
-             
-                    InfoModal += '  </div>';                
-                    InfoModal += '	</div>';
-
-                }
-            });  
-            let estatusVal = 0;
-            let estatusVariable = '' ;
-            let bandera = 0 ;
-            let motivo = []; 
-            data.misDocumentos.forEach(function(Losmios,Numero ){
-                ruta =   folders(Losmios.id_opcion);
-                // console.log(Numero);
-                // console.log(Losmios.id_opcion)
-                // console.log(motivo[Numero]);
-                // console.log(motivo.length);
-                InfoModal += '  <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">';
-                InfoModal += '   <br> '
-                InfoModal += '  </div>';
-                 
-                    if(Losmios.validacion == 1 ){
-                        bandera = true;
-                        estatusVal = 'VALIDADO';
-                        
-                        estatusVariable = '<span class="label" style="background:#28B463;"> '+estatusVal +' </span>';
-                    }else if(Losmios.validacion == 2){
-                        bandera = false;
-                        estatusVal = 'DENEGADO';
-                        estatusVariable = '<span class="label" style="background:#E92017;" > '+estatusVal +' </span>';
-                    }else{
-                        bandera = false;
-                        estatusVal = 'CARGADO';
-                        estatusVariable = ' <span class="label" style="background:#177DE9;" > '+estatusVal +'  </span>';
-                    }
-
-                    if(Losmios.id_opcion == 12  || Losmios.id_opcion == 18 ){
-                    // se valida documentos que no solo se deben  de mostrar,,,,
-
-                        bandera = true;
-                    
-                    }
-                    let flag = true;
-                    let mensajeRechazo  
-                    rechazos.forEach(function(recha,indeRecha ){
-
-                        if(Losmios.tipo_documento  == recha.tipo_documento)
-                        {
-                            mensajeRechazo = ' <p class="fst-italic">Rechazo :'+recha.motivo +'.</p>'  
-                            flag = true
-                        }else{
-      
-                            if(flag ){
-                                flag = false
-                                mensajeRechazo = ' <p class="fst-italic">Sin motivo rechazo.</p>'
-                            }
-                        }
-                    });
-                  
-                    InfoModal += '  <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">';
-                    InfoModal += '      <div name="estatusActual'+Numero+'" id="estatusActual'+Numero+'" >';
-                    if(flag ){
-                        InfoModal += mensajeRechazo;
-                        }else{ InfoModal += mensajeRechazo;}
-                    InfoModal += '      <p style="font-size: 1em: "> DOCUMENTO '+Losmios.nombre +' </p>';
-                    InfoModal += '      '+ estatusVariable +' ';
-                    InfoModal += '      </div>';
-                    InfoModal += '      <hr style="color: #0056b2;" />';
-                    InfoModal += '  </div>';
-                    InfoModal += '      <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
-                   
-                    InfoModal += ' </div>';
-                    InfoModal += '  <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
-                    InfoModal += '  <div name="cambioBajar'+Numero+'" id="cambioBajar'+Numero+'" >';
-                    if(!bandera){
-                        InfoModal += '   <div class="col-6 col-sm-6 col-md-6 col-lg-6 ">';
-                        InfoModal += '   <a href="#" id="borrarDoc" name="borrarDoc" data-index="'+Numero+'"  data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                        'data-cambiada="0" class="btn-data btn-warning cancelReg" title="BORRAR">' +
-                        '<i class="fas fa-trash-alt"></i></a>'; 
-                    
-                        InfoModal += '  </div>';
-                    }
-                  
-
-                    InfoModal += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                    InfoModal += '<a  id="preview"  name="preview"  data-doc="'+Losmios.expediente+'" data-documentType="'+Losmios.id_opcion+'"    data-index="'+Numero+'" data-idDocumento="'+Losmios.idDocumento +'" data-idSolicitud="'+Losmios.idSolicitud +'" data-idOpcion="'+Losmios.id_opcion +'"' +
-                    'data-idCliente="" data-fecVen="" data-ubic="" data-code=""  ' +
-                    'class="btn-data btn-violetBoots cancelReg" title="Visualizar">' +
-                    '<i class="fas fa-scroll"></i></a>'; 
-                     InfoModal += ' </div>';  
-                    
-                     InfoModal += ' </div>';
-                    InfoModal += '  </div>';
-
-            }); 
-
-
-        }
-        if(data.length == 0 ){
-            InfoModal += '  <h5 id="mainLabelText"> ESTA ACTIVIDAD NO TIENE DOCUMETOS ES NECESARIO REVISARLO CON SOPORTE TI</h5>';
-        }
-
-        InfoModal += '  </div>';
-
-
-        var InformacionModal = document.getElementById('subir_documento');
-   
-        document.getElementById('subir_documento').innerHTML = InfoModal;
-
-        // $('#documentTree').modal('toggle');
-    },              
-    error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Error pruebelo más tarde.", "error");
-    }
-
-});
-});
 
     $(document).on("click", "#borrarDoc", function () {
         let banderaEliminar = true;
@@ -3392,10 +2877,6 @@ $(document).on('click', '#revisarDocs', function () {
         primerIndex     = $(this).attr("data-primer"); 
 
         let  validarCambioEnMismoModal = 0;
-        console.log('index:'+ inde);
-        console.log('solicitudId:'+ solicitudId);
-        console.log('seCambio:'+ seCambio);
-        console.log('index:'+ inde);
         if(seCambio == 1 ){
 
             cambioAlsubir = 'cambioAlsubir';
@@ -3405,10 +2886,7 @@ $(document).on('click', '#revisarDocs', function () {
             cambioAlsubir = 'cambioBajar';
 
         }
-        console.log(inde);
-        console.log(solicitudId);
         var formData = new FormData();
-        console.log(idOpcion);
         let validacionAjax = true;
         if( idOpcion == '' || idOpcion == undefined ){validacionAjax = false;}
         if( documento == '' || documento == undefined ){validacionAjax = false;}
@@ -3457,14 +2935,10 @@ $(document).on('click', '#revisarDocs', function () {
         iddocumento = $(this).attr("data-documento");
         solicitudId = $(this).attr("data-solicitud");
         seCambio    = $(this).attr("data-cambiada"); 
-        console.log(solicitudId);
-        console.log(indexData);
-        console.log(iddocumento);
         let  validarCambioEnMismoModal =  0;
         // pago_mensual = $(this).attr("data-mensual");
         // descuento = $(this).attr("data-descuento");
         if(seCambio == 1 ){
-            console.log('entrando igual al mismo 1 ;;;'+ seCambio)
             cambioAlsubir = 'cambioAlsubir';
             validarCambioEnMismoModal = "1";
         }else {
@@ -3490,7 +2964,6 @@ $(document).on('click', '#revisarDocs', function () {
             formData.append('iddocumento', iddocumento);
             formData.append('solicitudId', solicitudId);
             // formData.append('comentario', comentario);
-            console.log(formData);
         }
     
         if(validacionAjax){
@@ -3542,7 +3015,6 @@ $(document).on('click', '#revisarDocs', function () {
             idStatus = $(this).attr("data-estatus");
             solicitudes = $(this).attr("data-solicitud");
             type = $(this).attr("data-type"); 
-            console.log(solicitudes, idStatus)
             let solicitud = solicitudes ;
             let estatus = idStatus;
             let banderaUnRechazado = true;
@@ -3560,17 +3032,14 @@ $(document).on('click', '#revisarDocs', function () {
                     dataType: "json",
                     
                     success: function(data) {
-                            console.log(data);
                     if(data.length  != 0){
                         data.losDocumentos.forEach(function(elemento,i){
-                            // console.log(data.misDocumentos.length);
                             data.misDocumentos.forEach(function(elementos,e){
                                 if( elemento.id_documento == elementos.id_opcion )
                                 {
                                     if(elementos.estatusValidacion == 2){
                                         banderaUnRechazado = false;
                                         mensaje = 'existe un RECHAZO';
-                                        console.log();
                                     }  
                                     data.losDocumentos[i] = '' , i;                       
                                     docs.push(elementos)
@@ -3578,10 +3047,7 @@ $(document).on('click', '#revisarDocs', function () {
                                 })
                         })
                     }
-                    console.log(docs);
-                    if(docs.length == data.losDocumentos.length && banderaUnRechazado == true){
-                            console.log(docs);
-                        
+                    if(docs.length == data.losDocumentos.length && banderaUnRechazado == true){                        
                             var type  = 1;
                             var comentarios = 'dadaa'
                             var area_rechazo =  ''
@@ -3704,9 +3170,6 @@ $(document).on('click', '#revisarDocs', function () {
 
             // alert('aqui cancelamos el nodal y recargarmos');
             var SolicitudID = document.getElementById('solicitudP').value;
-            
-            console.log(SolicitudID);
-
             $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
             $('#documentTreeAr').modal('hide')
 
@@ -3715,112 +3178,11 @@ $(document).on('click', '#revisarDocs', function () {
         
         $(document).on('click', '#CancelarRevisarDocs', function () {
 
-            // alert('aqui cancelamos el nodal y recargarmos');
-            // var SolicitudID = document.getElementById('solicitudP').value;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: 'existeNegado',
-            //     data: 
-            //         solicitud :1,
-
-            //     } , 
-            //     dataType: "json",                               
-            //     success: function(data) {
-            //         console.log(data);
-            //         if(!data){
-
-            //         }else{
-            //             $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
-            //         }
-            //     },
-            //     error: function(){
-            //         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            //     }
-            // });
 
         });
         
         
 
 
-    function folders (documentType){
-            console.log(documentType)
-
-        switch (documentType) {
-
-            case '1':
-                folder = "static/documentos/postventa/escrituracion/INE/";
-            break;
-            case '2':
-                folder = "static/documentos/postventa/escrituracion/RFC/";
-            break;
-            case '3':
-                folder = "static/documentos/postventa/escrituracion/COMPROBANTE_DE_DOMICILIO/";
-            break;
-            case '4':
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_NACIMIENTO/";
-            break;
-            case '5':
-                folder = "static/documentos/postventa/escrituracion/ACTA_DE_MATRIMONIO/";
-            break;
-            case '6':
-                folder = "static/documentos/postventa/escrituracion/CURP/";
-            break;
-            case '7':
-                folder = "static/documentos/postventa/escrituracion/FORMAS_DE_PAGO/";
-            break;
-            case '8':
-                folder = "static/documentos/postventa/escrituracion/BOLETA_PREDIAL/";
-            break;
-            case '9':
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_MANTENIMIENTO/";
-            break;
-            case '10':
-                folder = "static/documentos/postventa/escrituracion/CONSTANCIA_AGUA/";
-            break;
-            case '11':
-                folder = "static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/";
-            break;
-            case '12':
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO/";
-            break;
-            case '13':
-                folder = "static/documentos/postventa/escrituracion/FACTURA/";
-            break;
-            case '14':
-                folder = "static/documentos/postventa/escrituracion/TESTIMONIO/";
-            break;
-            case '15':
-                folder = "static/documentos/postventa/escrituracion/PROYECTO_ESCRITURA/";
-            break;
-            case '16':
-                folder = "static/documentos/postventa/escrituracion/ACTA_CONSTITUTIVA/";
-            break;
-            case '17':
-                folder = "static/documentos/postventa/escrituracion/OTROS/";
-            break;
-            case '18':
-                folder = "static/documentos/postventa/escrituracion/CONTRATO/";
-            break;
-            case '19':
-                folder = "static/documentos/postventa/escrituracion/COPIA_CERTIFICADA/";
-            break;
-            case '20':
-                folder = "static/documentos/postventa/escrituracion/PRESUPUESTO_NOTARIA_EXTERNA/";
-            break;
-            case '21':
-                folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-            break;
-            default :
-            folder = ""
-            break; 
-        }
-        return folder;
-    } 
-
-    // 
-    // 
-// 
-// titulación
 
 
