@@ -1195,7 +1195,7 @@ function checkBudgetInfo($idSolicitud){
                 1,
                 GetDate())");
 
-                $ult_insert = $this->db->insert_id();
+           $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as id_cliente")->row()->id_cliente;
              $result =  $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
               
               return  $result;
