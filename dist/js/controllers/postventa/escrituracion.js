@@ -26,6 +26,7 @@ $(document).on('change', '#perj', function (){
     })
 
 $(document).on('click', '#print', function () {
+    
     print();
 })
 
@@ -129,7 +130,13 @@ function AltaCli(data) {
 
 function print() {
     let data = $('#lotes').val();
-    window.open("printChecklist/" + data, "_blank")
+    let bandera_client = $('#bandera_client').val();
+    console.log(bandera_client);
+    if(bandera_client == 'true'){
+        window.open("printChecklist/" + data, "_blank")
+    }else{
+        alerts.showNotification("top", "right", "No existe cliente para este lote.", "warning");
+        }
 }
 
 function email() {
@@ -206,7 +213,7 @@ function getClient(idLote) {
     }, function (data) {
 
         archivosCaptura(data.personalidad);
-
+        $('#bandera_client').val(data.bandera_exist_cli);
         if(data.bandera_exist_cli){
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
@@ -262,8 +269,8 @@ function getClient(idLote) {
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
 
-
             getOpcCat('18, 19', ['ecivil', 'rconyugal']);
+            
             
             //Modificacion al campo de regimen conyugal
             document.getElementById('rconyugal').title = '';
@@ -306,7 +313,7 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
-           // $("#rconyugal").selectpicker('refresh');
+            $("#rconyugal").selectpicker('refresh');
             $("#perj").selectpicker('refresh');
 
             $('#check').removeClass("d-none");
@@ -453,7 +460,7 @@ function habilitarInputs(resul){
 function getOpcCat(id_cat, element) {
     for (let index = 0; index < element.length; index++) {
         $("#"+element[index]).find("option").remove();
-        $("#"+element[index]).append($('<option disabled selected>').val(null).text("Seleccione una opción"));
+        $("#"+element[index]).append($('<option disabled selected>').val('').text("Seleccione una opción"));
     }
     $.post('getOpcCat', {id_cat: id_cat}, function (data) {
         var len = data.length;
