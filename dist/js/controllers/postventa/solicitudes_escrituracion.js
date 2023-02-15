@@ -1048,10 +1048,8 @@ function fillTable(beginDate, endDate, estatus) {
             {   
                 "width": "3%",
                 data: function (d) {
-                    var aditional;
-                    var group_buttons = '';     
+                    var group_buttons = '';    //variable para botones que se muestran en el datatable 
                     let btnsAdicionales = ''; //variable para botones que se envian a la funcion de permisos
-                    let exp;
                     let permiso;
                     let bandera_request=0;
                     let  bandera_reject = 0;
@@ -1141,7 +1139,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 12:
                             case 36:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = 1;
                                    //btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                                    permiso = 2;
@@ -1151,7 +1149,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 13:
                             case 37:
                             case 16:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = d.banderaPresupuesto == 1 ? 1 : 0;
                                     group_buttons += `<button id="treePresupuesto${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey treePresupuesto" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose presupuestos"><i class="fas fa-chevron-down"></i></button>`;
                                 }
@@ -1192,7 +1190,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 20:
                             case 25:
-                                    if (userType == 57) { 
+                                    if (userType == 57 && d.id_titulacion == idUser) { 
 
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
@@ -1200,21 +1198,21 @@ function fillTable(beginDate, endDate, estatus) {
                                     }
                             break;
                             case 34:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
 
                             break;
                             case 23:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     //BOTONES DANI
                                     bandera_request = 1;
                                     bandera_reject = 1;
                                 }
                             break;
                             case 26:
-                                if (userType == 57) {
+                                if (userType == 57 && d.id_titulacion == idUser) {
 
                                     group_buttons += d.fecha_firma != null ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
                                     bandera_request = d.fecha_firma != null ? 1 : 0;
@@ -1238,7 +1236,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 29:
                             case 40:
-                                if (userType == 57) {
+                                if (userType == 57 && d.id_titulacion == idUser) {
                                     //revisar si se muestran mas datos o solo avance
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     bandera_reject = 1;
@@ -1247,7 +1245,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 }
                             break;
                             case 30:
-                                if (userType == 57) {
+                                if (userType == 57 && d.id_titulacion == idUser) {
                                     //revisar si se muestran mas datos o solo avance
                                     group_buttons += `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
                                     bandera_request = 1;
@@ -1289,7 +1287,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 46:
                             case 52:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
@@ -1297,14 +1295,14 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 47:
                             case 50:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                 }
                             break;
                             case 37:
-                                if (userType == 57) { 
+                                if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = 1;
                                 }
                             break;

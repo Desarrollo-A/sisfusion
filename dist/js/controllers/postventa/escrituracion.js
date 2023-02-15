@@ -252,9 +252,10 @@ function getClient(idLote) {
             alerts.showNotification("top", "right", "No se han encontrado los datos del cliente.<br>Por favor ingresar la información requerida.", "warning");
             clearInputs();
             habilitarInputs(false);
-            document.getElementById('nombre2').addEventListener('change', NombreCompleto);
-            document.getElementById('ape1').addEventListener('change', NombreCompleto);
-            document.getElementById('ape2').addEventListener('change', NombreCompleto);            
+            $('#nombre').val(data.ncliente);
+            document.getElementById('nombre2').value = data.nom_cliente;
+            document.getElementById('ape1').value = data.app_cliente;
+            document.getElementById('ape2').value = data.apm_cliente;            
             //Limpiamos los valores del select corerespondientes al estado civil
             document.getElementById('ecivil').title = '';//pendiente
             document.getElementById('EdoCiv').children[1].children[0].title = '';
@@ -273,7 +274,7 @@ function getClient(idLote) {
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
 
-            $('#nombre2').val(data.ncliente);
+            //$('#nombre2').val(data.ncliente);
             console.log(data.ncliente);
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
