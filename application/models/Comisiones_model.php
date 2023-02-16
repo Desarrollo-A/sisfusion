@@ -2968,9 +2968,10 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
+                
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
         pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, 
@@ -3027,9 +3028,9 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, 
         pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, 
@@ -3118,9 +3119,9 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, 
         pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, 

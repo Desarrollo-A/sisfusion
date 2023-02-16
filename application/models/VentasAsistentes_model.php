@@ -120,8 +120,10 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             $filtroGerente = "";
-            if ($this->session->userdata('id_usuario') == 6831)
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
@@ -264,11 +266,11 @@ class VentasAsistentes_model extends CI_Model {
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
-            if ($this->session->userdata('id_usuario') == 6831)
+            $filtroGerente = "";
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
-            else
-                $filtroGerente = "";
-
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
