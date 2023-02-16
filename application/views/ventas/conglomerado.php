@@ -98,17 +98,17 @@
                                 </div>
                         </div>
                         <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
-                                    <div class="form-group">
+                            <div class="form-group">
                                     <label class="label">Fecha nueva*</label>  
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
-                                                    <div class="form-group d-flex"> 
+                                                    <div > 
                                                         <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial" value="01/01/2021" />
                                                     </div>
                                                 </div>
                                             </div>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                             <div class="row">

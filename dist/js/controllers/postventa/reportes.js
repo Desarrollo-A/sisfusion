@@ -1,4 +1,12 @@
-
+$('#reports-datatable thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
+            $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
 $(document).ready(function () {
     getData();
 })
@@ -43,12 +51,11 @@ function dynamicColumns(columnData) {
 }
 function buildTable (columns, data){
     reportsTable = $('#reports-datatable').DataTable({
-        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "100%",
-        scrollX: true,
+        dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        width: "auto",
         pagingType: "full_numbers",
         language: {
-            url: "../static/spanishLoader_v2.json",
+            url: "../static/spanishLoader.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -66,23 +73,12 @@ function buildTable (columns, data){
         {
             targets: 0,
             render: function (data, type, full, meta){
-                return `<div class="row"><button id="details" class="btn-unstyled details" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-chevron-down"></i></button><a>${data}</a></div>`;
+                return `<div><button id="details" class="btn-unstyled details w-50" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a class="w-50">${data}</a></div>`;
 
             }
         }],
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            console.log('atrasado',aData['atrasado']);
-        },
-        initComplete: function(settings, json) {
-            $('#reports-datatable thead tr:eq(0) th').each( function (i) {
-                var title = $(this).text();
-                $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
-                    if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
-                        $('#reports-datatable').DataTable().column(i).search(this.value).draw();
-                    }
-                });
-            });
         }
     });
 }
@@ -94,7 +90,7 @@ function createDocRow(row, tr, thisVar){
         $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
     }else{
         $.post("getFullReportContraloria", {
-            idEscritura: row.data().idSolicitud
+            idEscritura: row.data().id_solicitud
         }).done(function (data) {
             row.data().reporte = JSON.parse(data);
             reportsTable.row(tr).data(row.data());
@@ -115,19 +111,17 @@ function buildTableDetail(data) {
     solicitudes += '<td>' + '<b>' + 'AREA' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA INICIAL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA FINAL ESTATUS' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'COMENTARIOS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'DÍAS DE ATRASO ' + '</b></td>';
     solicitudes += '</tr>';
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
         solicitudes += '<tr>';
+        solicitudes += '<td> ' + i + ' </td>';
         solicitudes += '<td> ' + v.idStatus + ' </td>';
-        solicitudes += '<td> ' + v.estatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
         solicitudes += '<td> ' + v.fechados + ' </td>';
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
-        solicitudes += '<td> ' + v.comentarios + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });

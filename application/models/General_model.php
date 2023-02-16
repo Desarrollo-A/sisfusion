@@ -181,4 +181,20 @@ class General_model extends CI_Model
         return $this->db->query("SELECT * FROm sub_menu WHERE id_rol = $id_rol OR id_usuario = $id_usuario");
     }
 
+    public function deleteRecord($table, $data) // AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA LLAVE array('id' => $id)
+    {
+        if ($data != '' && $data != null) {
+            $this->db->trans_begin();
+            $this->db->delete($table, $data);
+            if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+                $this->db->trans_rollback();
+                return false;
+            } else { // Todas las consultas se hicieron correctamente.
+                $this->db->trans_commit();
+                return true;
+            }
+        } else
+            return false;
+    }
+
 }

@@ -438,7 +438,7 @@ $datos = array();
                                             <div class="radio text-right">
                                                 <label style="  font-size: 0.9em;" id="label1">
                                                     <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->tipo_nc == 0) {
+                                                        <?php if ($cliente[0]->tipo_nc === 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NACIONAL
@@ -460,13 +460,13 @@ $datos = array();
                                     </div>
                                 </div>
                                 <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                                    <label class="col-sm-4 label-on-left">¿IMPRIME PAGARES?: <?php echo $cliente[0]->printPagare;?></label>
-                                    <div class="col-sm-8 checkbox-radios">
+                                    <label class="col-sm-5 label-on-left">¿IMPRIME PAGARES?(<small style="color: red;">*</small>):</label>
+                                    <div class="col-sm-7 checkbox-radios">
                                         <div class="col-md-3 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="  font-size: 0.9em;">
-                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare === 1) {
+                                                <label style="  font-size: 0.9em;" id="labelSi1">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare1" required="true" value="1" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 1) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> SÍ
@@ -476,9 +476,9 @@ $datos = array();
 
                                         <div class="col-md-6 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="font-size: 0.9em;">
-                                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
-                                                        <?php if ($cliente[0]->printPagare === 0) {
+                                                <label style="font-size: 0.9em;" id="labelNo1">
+                                                    <input type="radio" name="imprimePagare" id="imprimePagare2" required="true" value="0" <?php echo $statsInput; ?>
+                                                        <?php if ($cliente[0]->printPagare == 0) {
                                                             echo "checked=true";
                                                         }
                                                         ?>> NO
@@ -488,24 +488,24 @@ $datos = array();
                                     </div>
                                 </div>
                                 <div class="col col-xs-12 col-sm-12 col-md-offset-6 col-md-6 col-lg-offset-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
-                                    <label class="col-sm-4 label-on-left">CARTA DOMICILIO CM:</label>
-                                    <div class="col-sm-8 checkbox-radios">
+                                    <label class="col-sm-5 label-on-left">CARTA DOMICILIO CM (<small style="color: red;">*</small>):</label>
+                                    <div class="col-sm-7 checkbox-radios">
                                         <div class="col-md-3 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="  font-size: 0.9em;">
-                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="1" <?php echo $statsInput; ?>
+                                                <label style="  font-size: 0.9em;" id="labelSi2">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" required="true" value="1" <?php echo $statsInput; ?>
                                                         <?php if ($cliente[0]->tipo_comprobanteD == 1) {
                                                             echo "checked=true";
                                                         }
-                                                        ?>>SI
+                                                        ?>>SÍ
                                                 </label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 checkbox-radios required">
                                             <div class="radio text-left">
-                                                <label style="font-size: 0.9em;">
-                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" value="2" <?php echo $statsInput; ?>
+                                                <label style="font-size: 0.9em;" id="labelNo2">
+                                                    <input type="radio" name="tipo_comprobante" id="tipo_comprobante" required="true" value="2" <?php echo $statsInput; ?>
                                                         <?php if ($cliente[0]->tipo_comprobanteD == 2) {
                                                             echo "checked=true";
                                                         }
@@ -2128,27 +2128,27 @@ $datos = array();
            console.log('LISTISIMO');
        }
    }
-	function validaTipoVivienda()
-	{
-		/*var tv = $('#tipo_vivienda').val();
-		console.log("El valor es: " + tv);
-		if ($('#tipo_vivienda').val()==0)
-		{
-		  	
-		  	console.log('No hay nada seleccionado');
-			alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
-		}else
-		{
-			console.log('Hay algo seleccionado en tipo_vivienda');
-		}
-		var isChecked = document.getElementById('tipo_vivienda').checked;
-		if(isChecked){
-		   alert('checkbox esta seleccionado');
-		}*/
-		if (!$("input[name='tipo_vivienda']").is(':checked')) {
-		   alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
-		}
-		else {
+    function validaTipoVivienda()
+    {
+        /*var tv = $('#tipo_vivienda').val();
+        console.log("El valor es: " + tv);
+        if ($('#tipo_vivienda').val()==0)
+        {
+
+              console.log('No hay nada seleccionado');
+            alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+        }else
+        {
+            console.log('Hay algo seleccionado en tipo_vivienda');
+        }
+        var isChecked = document.getElementById('tipo_vivienda').checked;
+        if(isChecked){
+           alert('checkbox esta seleccionado');
+        }*/
+        if (!$("input[name='tipo_vivienda']").is(':checked')) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+        }
+        else {
             if (!$("input[name='tipoNc_valor']").is(':checked')) {
                 alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
                 $('#tipoNc_valor').focus();
@@ -2159,12 +2159,39 @@ $datos = array();
                     $('#label2').removeClass('hover_focus');
                 },1500)
             }
-            else {
-                console.log('Continue...');
-            }
-		}
-	}
+            else{
 
+                /**/if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                    alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                    $('#imprimePagare').focus();
+                    $('#labelSi1').addClass('hover_focus');
+                    $('#labelNo1').addClass('hover_focus');
+                    setTimeout(() => {
+                        $('#labelSi1').removeClass('hover_focus');
+                        $('#labelNo1').removeClass('hover_focus');
+                    }, 1500)
+                }
+                else{
+                    if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                        alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                        $('#tipo_comprobante').focus();
+                        $('#labelSi2').addClass('hover_focus');
+                        $('#labelNo2').addClass('hover_focus');
+                        setTimeout(() => {
+                            $('#labelSi2').removeClass('hover_focus');
+                            $('#labelNo2').removeClass('hover_focus');
+                        }, 1500)
+                    }
+                    else{
+                        console.log('continuar...');
+                    }
+                }
+
+            }
+
+
+        }
+    }
     function checkResidencia(){
         let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
         console.log('valor', valor);
@@ -2172,10 +2199,15 @@ $datos = array();
             //si es de residencia extranjera se debe de preguntar si imprime pagares
             $('#pagarePart').removeClass('hide');
             $('#domicilioCarta').removeClass('hide');
+            document.getElementsByName("imprimePagare")[0].setAttribute('required', true);
+            document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
         }else{
             //se vuelve a quitar el apartado de pagares
             $('#pagarePart').addClass('hide');
             $('#domicilioCarta').addClass('hide');
+            document.getElementsByName("imprimePagare")[0].removeAttribute('required');
+            document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
+
         }
     }
     function historialCampoHtml(data) {

@@ -55,7 +55,7 @@
 								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
-							<input type="text" class="form-control" id= "txtexp" readonly>
+							<input type="text" class="form-control" id="txtexp" readonly>
 						</div>
 
 					</div>
@@ -92,7 +92,7 @@
 					</div>
 					<div class="modal-footer">
 						<br><br>
-						<button type="button" id="aceptoDelete" class="btn btn-primary"> Si, borrar </button>
+						<button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
 					</div>
 				</div>
@@ -230,7 +230,7 @@
 	</script>
 	<script>
 		var id_rol_current = <?php echo $this->session->userdata('id_rol')?>;
-		$(document).ready (function() {
+
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
 					log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -243,15 +243,16 @@
 
 
 		$(document).on('change', '.btn-file :file', function() {
+		    console.log('karma mi perro', $(this));
 			var input = $(this),
 				numFiles = input.get(0).files ? input.get(0).files.length : 1,
 				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
-			console.log('triggered');
+			console.log('fileselect', [numFiles, label]);
 		});
 
 
-
+        $(document).ready (function() {
 			$('#filtro3').change(function(){
 				var valorSeleccionado = $(this).val();
 				//build select condominios
@@ -481,7 +482,7 @@
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
 											} else if(data.tipo_doc == 8){
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-											}else if(data.tipo_doc == 26 || data.tipo_doc == 29 && id_rol_current!=6){
+                                            } else if(data.tipo_doc == ((data.pj==2) ? 29 : 26 ) && id_rol_current!=6){
                                                 file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
                                             }
                                             else {
@@ -717,7 +718,6 @@
 		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 6){?>
 		var miArrayAddFile = new Array(8);
 		var miArrayDeleteFile = new Array(1);
-		$(document).ready (function() {
 			$(document).on("click", ".update", function(e){
 				e.preventDefault();
 				$('#txtexp').val('');
@@ -744,7 +744,6 @@
 				$(".lote").html(descdoc);
 				$('#addFile').modal('show');
 			});
-		});
 
 		$(document).on('click', '#sendFile', function(e) {
 			e.preventDefault();
@@ -788,6 +787,7 @@
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
 							alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
@@ -795,10 +795,12 @@
                         else if(response.message == 'OBSERVACION_CONTRATO'){
                             alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás subir documentación" +
                                 " hasta que el proceso de liberación haya concluido.", "danger");
+                            $("#expediente").val('');
                             $('#sendFile').prop('disabled', false);
                         }
 						else if(response.message == 'ERROR'){
 							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 						}
 					}

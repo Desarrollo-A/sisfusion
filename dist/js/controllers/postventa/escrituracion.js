@@ -26,6 +26,7 @@ $(document).on('change', '#perj', function (){
     })
 
 $(document).on('click', '#print', function () {
+    
     print();
 })
 
@@ -129,7 +130,13 @@ function AltaCli(data) {
 
 function print() {
     let data = $('#lotes').val();
-    window.open("printChecklist/" + data, "_blank")
+    let bandera_client = $('#bandera_client').val();
+    console.log(bandera_client);
+    if(bandera_client == 'true'){
+        window.open("printChecklist/" + data, "_blank")
+    }else{
+        alerts.showNotification("top", "right", "No existe cliente para este lote.", "warning");
+        }
 }
 
 function email() {
@@ -206,11 +213,12 @@ function getClient(idLote) {
     }, function (data) {
 
         archivosCaptura(data.personalidad);
-
+        $('#bandera_client').val(data.bandera_exist_cli);
         if(data.bandera_exist_cli){
             habilitarInputs(true);
             $('#nombre').val(data.ncliente);
             $('#nombre2').val(data.ncliente);
+            console.log(data.ncliente);
             $('#ocupacion').val(data.ocupacion); //pendiente
             $('#origen').val(data.estado);
             //Se le da el valor del select corerespondientes al estado civil
@@ -232,7 +240,7 @@ function getClient(idLote) {
                 $('#personalidad').val(data.personalidad);
             }
                 $("#perj").selectpicker('refresh');
-            //$('#rconyugal').val(data.regimen_matrimonial);//pendiente
+           // $('#rconyugal').val(data.regimen_matrimonial);//pendiente
             $('#correo').val(data.correo);
             // $('#direccionf').val(); //nosotros insertamos
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
@@ -251,25 +259,30 @@ function getClient(idLote) {
             alerts.showNotification("top", "right", "No se han encontrado los datos del cliente.<br>Por favor ingresar la información requerida.", "warning");
             clearInputs();
             habilitarInputs(false);
-            document.getElementById('nombre2').addEventListener('change', NombreCompleto);
-            document.getElementById('ape1').addEventListener('change', NombreCompleto);
-            document.getElementById('ape2').addEventListener('change', NombreCompleto);            
+            $('#nombre').val(data.ncliente);
+            document.getElementById('nombre2').value = data.nom_cliente;
+            document.getElementById('ape1').value = data.app_cliente;
+            document.getElementById('ape2').value = data.apm_cliente;            
             //Limpiamos los valores del select corerespondientes al estado civil
             document.getElementById('ecivil').title = '';//pendiente
             document.getElementById('EdoCiv').children[1].children[0].title = '';
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
+
             getOpcCat('18, 19', ['ecivil', 'rconyugal']);
+            
+            
             //Modificacion al campo de regimen conyugal
             document.getElementById('rconyugal').title = '';
             document.getElementById('RegCon').children[1].children[0].title = '';
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
-
+            
             document.getElementById('perj').title = '';
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
 
-            $('#nombre2').val(data.ncliente);
+            //$('#nombre2').val(data.ncliente);
+            console.log(data.ncliente);
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
             $('#correo').val(data.correo);
@@ -300,6 +313,7 @@ function getClient(idLote) {
             $('#empresa').val(data.empresa);
             $('#personalidad').val('');*/
             //$("#estatusL").prop("checked", true);
+            $("#rconyugal").selectpicker('refresh');
             $("#perj").selectpicker('refresh');
 
             $('#check').removeClass("d-none");
@@ -401,6 +415,7 @@ function clearInputs(){
     $('#telefono').val('');
     $('#cel').val('');
     $('#calleF').val('');
+    $('#valorC').val('');
 }
 function habilitarInputs(resul){
     if(resul){
@@ -445,7 +460,7 @@ function habilitarInputs(resul){
 function getOpcCat(id_cat, element) {
     for (let index = 0; index < element.length; index++) {
         $("#"+element[index]).find("option").remove();
-        $("#"+element[index]).append($('<option disabled selected>').val(null).text("Seleccione una opción"));
+        $("#"+element[index]).append($('<option disabled selected>').val('').text("Seleccione una opción"));
     }
     $.post('getOpcCat', {id_cat: id_cat}, function (data) {
         var len = data.length;
