@@ -101,19 +101,19 @@
                                                                 <label class="control-label estiloEsc label-gral">Estado Civil</label>
                                                                 <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                             </div>
-                                                        </div>    
-                                                        <div class="col-md-4 pl-0">
-                                                            <div class="form-group label-floating is-focused" id="RegCon">
-                                                                <form>
-                                                                <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Régimen Conyugal</label>
-                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
-                                                                </form>
-                                                            </div>
-                                                        </div>
+                                                        </div> 
+                                   
+                                                        
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral">Correo Electrónico</label>
                                                                 <input id="correo" name="correo" class="form-control input-gral" type="mail" placeholder="UserExample@dominioExample.com" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-0">
+                                                            <div class="form-group label-floating is-focused" id="RegCon">
+                                                                <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
+                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <!-- Apartado para el select de la persona jurididca -->
@@ -208,6 +208,7 @@
                                                 <div class="col-md-5">
                                                     <a role="button" id="print" name="print">
                                                         <i class="material-icons">print</i>
+                                                        <input type="hidden" name="bandera_client" id="bandera_client">
                                                     </a>
                                                     <!-- <a role="button" id="email" name="email">
                                                         <i class="material-icons">email</i>

@@ -189,7 +189,7 @@ class Postventa_model extends CI_Model
             $AddWhere = " ";
         }
         
-        return $this->db->query("SELECT distinct(se.id_solicitud), se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,se.id_notaria, se.fecha_firma, he.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a
+        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,se.id_notaria, se.fecha_firma, he.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente 
@@ -211,7 +211,7 @@ class Postventa_model extends CI_Model
         LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1 WHERE cl.clasificacion in (1,2)
         GROUP BY cl.estatus_actual, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cs.estatus_siguiente
         $AddWhere $filtroTabla $WhereFechas
-        GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato ORDER BY se.id_solicitud DESC");
+        GROUP BY se.id_solicitud,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, he.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato ORDER BY se.id_solicitud DESC");
 
 
     }
@@ -1132,80 +1132,37 @@ function checkBudgetInfo($idSolicitud){
     }
 
     public function InsertCli($datos){
-        $ult_insert = 0;
         $user = $this->session->userdata;
-        $id_usuario = $user['id_usuario'];
-        $idGerente = ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? 'NULL' : $user['idGerente'];
-        $id_sede = $user['id_sede'];
-        $nombre2 = $datos['nombre2'];
-        $ape1 = $datos['ape1'];
-        $ape2 = $datos['ape2'];
-        $rfc = $datos['rfc'];
-        $correo = $datos['correo'];
-        $telefono = ( !empty($datos['telefono']) || $datos['telefono'] == '') ? 'NULL' : $datos['telefono'];
-        $cel = (!empty($datos['cel']) || $datos['cel'] == '') ? 'NULL' : $datos['cel'];
-        $ecivil = (!array_key_exists('ecivil', $datos) || !empty($datos['ecivil']) || $datos['ecivil'] == '') ? 'NULL' : $datos['ecivil'];
-        $rconyugal = (!array_key_exists('rconyugal', $datos) || !empty($datos['rconyugal']) || $datos['rconyugal'] == '') ? 'NULL' : $datos['rconyugal'];
-        $direccion = $datos['direccion'];
-        $origen = $datos['origen'];
-        $ocupacion = $datos['ocupacion'];
-        $idLote = $datos['idLote'];
-        $usuario = $user['usuario'];
-        $idCondominio = $datos['idCondominio'];
-        $usuario = $user['usuario'];
-    $result =  $this->db->query("INSERT INTO clientes (id_asesor
-                ,id_coordinador
-                ,id_gerente
-                ,id_sede
-                ,nombre
-                ,apellido_paterno
-                ,apellido_materno
-                ,rfc
-                ,correo
-                ,telefono1
-                ,telefono2
-                ,estado_civil
-                ,regimen_matrimonial
-                ,domicilio_particular
-                ,originario_de
-                ,ocupacion
-                ,status
-                ,idLote
-                ,usuario
-                ,idCondominio
-                ,fecha_creacion
-                ,creado_por
-                ,fecha_modificacion
-)
-        VALUES  ($id_usuario,
-                $id_usuario,
-                $idGerente,
-                $id_sede,
-                '$nombre2',
-                '$ape1',
-                '$ape2',
-                '$rfc',
-                '$correo',
-                $telefono,
-                $cel,
-                $ecivil,
-                $rconyugal,
-                '$direccion',
-                '$origen',
-                '$ocupacion',
-                1,
-                $idLote,
-                '$usuario',
-                $idCondominio,
-                GetDate(),
-                1,
-                GetDate())");
-
-                $ult_insert = $this->db->insert_id();
-                $ult_insert =   $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
-              
-              return  $ult_insert;
-
+        $id_usuario = $user['id_usuario'] ;
+        $dataCliente = array(
+            'id_asesor' => $id_usuario,
+            'id_coordinador' => $id_usuario,
+            'id_gerente' => ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? NULL : $user['idGerente'],
+            'id_sede' => $user['id_sede'],
+            'nombre' => $datos['nombre2'],
+            'apellido_paterno' => $datos['ape1'],
+            'apellido_materno' => $datos['ape2'],
+            'rfc' => $datos['rfc'],
+            'correo' => $datos['correo'],
+            'telefono1' => ( !empty($datos['telefono']) || $datos['telefono'] == '') ? NULL : $datos['telefono'],
+            'telefono2' => (!empty($datos['cel']) || $datos['cel'] == '') ? NULL : $datos['cel'],
+            'estado_civil' => (!array_key_exists('ecivil', $datos) || !empty($datos['ecivil']) || $datos['ecivil'] == '') ? NULL : $datos['ecivil'],
+            'regimen_matrimonial' => (!array_key_exists('rconyugal', $datos) || !empty($datos['rconyugal']) || $datos['rconyugal'] == '') ? NULL : $datos['rconyugal'],
+            'domicilio_particular' => $datos['direccion'],
+            'originario_de' => $datos['origen'],
+            'ocupacion' => $datos['ocupacion'],
+            'status' => 1,
+            'idLote' => $datos['idLote'],
+            'usuario' => $user['usuario'],
+            'idCondominio' => $datos['idCondominio'],
+            'fecha_creacion' => date('Y-m-d h:i:s'),
+            'creado_por' => 1,
+            'fecha_modificacion' => date('Y-m-d h:i:s')
+        );
+        $resultadoInsertarCliente = $this->db->insert('clientes', $dataCliente);
+        $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
+        $resultadoUpdateLote =  $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
+        return $resultadoUpdateLote;
     }
 
 

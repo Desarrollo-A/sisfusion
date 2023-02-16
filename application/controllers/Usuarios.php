@@ -234,7 +234,8 @@ class Usuarios extends CI_Controller
             $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        } else {
+        }
+        else {
 
             $sedeCH = 0;
             $sucursal = 0;
@@ -294,6 +295,12 @@ class Usuarios extends CI_Controller
                 $id_subdirector = $_POST['leader']; //$getLider[0]['id_subdirector'];
                 $id_regional = $getLider[0]['id_lider'];
             }*/
+            $simbolicoPropiedad = '';
+            if(isset($_POST["simbolicoType"])){
+                $simbolicoPropiedad = $_POST["simbolicoType"];
+            }else{
+                $simbolicoPropiedad = NULL;
+            }
 
             $data = array(
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
@@ -302,7 +309,6 @@ class Usuarios extends CI_Controller
                 "rfc" => strtoupper(trim($_POST['rfc'])),
                 "correo" => strtoupper(trim($_POST['email'])),
                 "telefono" => strtoupper(trim($_POST['phone_number'])),
-                "telefono" => $_POST['phone_number'],
                 "id_sede" => $_POST['headquarter'],
                 "id_rol" => $_POST['member_type'],
                 "id_lider" => $_POST['leader'],
@@ -312,8 +318,8 @@ class Usuarios extends CI_Controller
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
                 "sedech" => $sedeCH,
-                "sucursalch" => $sucursal
-
+                "sucursalch" => $sucursal,
+                "simbolico" => $simbolicoPropiedad
             );
         }
         switch ($_POST['member_type']) {
