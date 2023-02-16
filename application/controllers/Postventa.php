@@ -2843,12 +2843,10 @@ function saveNotaria(){
 
         $array = [
             "columns" => $columns,
-            "data" => $data
+            "data" => $data != null ? $data : []
         ];
-        if ($data != null)
             echo json_encode($array);
-        else
-            echo json_encode(array());
+
     }
 
 

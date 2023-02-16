@@ -11,8 +11,7 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
 
 $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
-    $(this).html(`<input class="${width}" placeholder="${title}"/>` );
+    $(this).html(`<input class="" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#carga-datatable').DataTable().column(i).search() !== this.value ) {
             $('#carga-datatable').DataTable().column(i).search(this.value).draw();
