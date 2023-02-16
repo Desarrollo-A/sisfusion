@@ -2,7 +2,16 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
 
+<style>
+    @media (max-width: 700px){
+       .head_escrituracion{
+            background-color: red;
+       }         
+    }
+</style>
+
 <body>
+
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar', ""); ?>
         <div class="content boxContent">
