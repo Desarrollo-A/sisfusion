@@ -1128,78 +1128,36 @@ function checkBudgetInfo($idSolicitud){
 
     public function InsertCli($datos){
         $user = $this->session->userdata;
-        $id_usuario = $user['id_usuario'];
-        $idGerente = ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? 'NULL' : $user['idGerente'];
-        $id_sede = $user['id_sede'];
-        $nombre2 = $datos['nombre2'];
-        $ape1 = $datos['ape1'];
-        $ape2 = $datos['ape2'];
-        $rfc = $datos['rfc'];
-        $correo = $datos['correo'];
-        $telefono = ( !empty($datos['telefono']) || $datos['telefono'] == '') ? 'NULL' : $datos['telefono'];
-        $cel = (!empty($datos['cel']) || $datos['cel'] == '') ? 'NULL' : $datos['cel'];
-        $ecivil = (!array_key_exists('ecivil', $datos) || !empty($datos['ecivil']) || $datos['ecivil'] == '') ? 'NULL' : $datos['ecivil'];
-        $rconyugal = (!array_key_exists('rconyugal', $datos) || !empty($datos['rconyugal']) || $datos['rconyugal'] == '') ? 'NULL' : $datos['rconyugal'];
-        $direccion = $datos['direccion'];
-        $origen = $datos['origen'];
-        $ocupacion = $datos['ocupacion'];
-        $idLote = $datos['idLote'];
-        $usuario = $user['usuario'];
-        $idCondominio = $datos['idCondominio'];
-        $usuario = $user['usuario'];
-     $this->db->query("INSERT INTO clientes (id_asesor
-                ,id_coordinador
-                ,id_gerente
-                ,id_sede
-                ,nombre
-                ,apellido_paterno
-                ,apellido_materno
-                ,rfc
-                ,correo
-                ,telefono1
-                ,telefono2
-                ,estado_civil
-                ,regimen_matrimonial
-                ,domicilio_particular
-                ,originario_de
-                ,ocupacion
-                ,status
-                ,idLote
-                ,usuario
-                ,idCondominio
-                ,fecha_creacion
-                ,creado_por
-                ,fecha_modificacion
-)
-        VALUES  ($id_usuario,
-                $id_usuario,
-                $idGerente,
-                $id_sede,
-                '$nombre2',
-                '$ape1',
-                '$ape2',
-                '$rfc',
-                '$correo',
-                $telefono,
-                $cel,
-                $ecivil,
-                $rconyugal,
-                '$direccion',
-                '$origen',
-                '$ocupacion',
-                1,
-                $idLote,
-                '$usuario',
-                $idCondominio,
-                GetDate(),
-                1,
-                GetDate())");
-
-           $ult_insert = $this->db->query("SELECT SCOPE_IDENTITY() as id_cliente")->row()->id_cliente;
-             $result =  $this->db->query("UPDATE lotes SET idCliente =$ult_insert,usuario=".$user['id_usuario']." WHERE idLote = $idLote");
-              
-              return  $result;
-
+        $id_usuario = $user['id_usuario'] ;
+        $dataCliente = array(
+            'id_asesor' => $id_usuario,
+            'id_coordinador' => $id_usuario,
+            'id_gerente' => ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? NULL : $user['idGerente'],
+            'id_sede' => $user['id_sede'],
+            'nombre' => $datos['nombre2'],
+            'apellido_paterno' => $datos['ape1'],
+            'apellido_materno' => $datos['ape2'],
+            'rfc' => $datos['rfc'],
+            'correo' => $datos['correo'],
+            'telefono1' => ( !empty($datos['telefono']) || $datos['telefono'] == '') ? NULL : $datos['telefono'],
+            'telefono2' => (!empty($datos['cel']) || $datos['cel'] == '') ? NULL : $datos['cel'],
+            'estado_civil' => (!array_key_exists('ecivil', $datos) || !empty($datos['ecivil']) || $datos['ecivil'] == '') ? NULL : $datos['ecivil'],
+            'regimen_matrimonial' => (!array_key_exists('rconyugal', $datos) || !empty($datos['rconyugal']) || $datos['rconyugal'] == '') ? NULL : $datos['rconyugal'],
+            'domicilio_particular' => $datos['direccion'],
+            'originario_de' => $datos['origen'],
+            'ocupacion' => $datos['ocupacion'],
+            'status' => 1,
+            'idLote' => $datos['idLote'],
+            'usuario' => $user['usuario'],
+            'idCondominio' => $datos['idCondominio'],
+            'fecha_creacion' => date('Y-m-d h:i:s'),
+            'creado_por' => 1,
+            'fecha_modificacion' => date('Y-m-d h:i:s')
+        );
+        $resultadoInsertarCliente = $this->db->insert('clientes', $dataCliente);
+        $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
+        $resultadoUpdateLote =  $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
+        return $resultadoUpdateLote;
     }
 
 
