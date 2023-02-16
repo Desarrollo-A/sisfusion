@@ -3,12 +3,13 @@
 <link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
 
 <style>
-    @media (max-width: 700px){
+    @media (max-width: 1920px){
        .head_escrituracion{
-            background-color: red;
+            width: 40px;
        }         
     }
 </style>
+
 
 <body>
 
