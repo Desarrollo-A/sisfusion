@@ -819,8 +819,12 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("UPDATE Presupuestos SET estatus = 1, modificado_por = $idUsuario  WHERE idPresupuesto = $idPresupuesto");
     }
 
-    function getData_contraloria()
-    {
+    function getData_contraloria($begin, $end)
+    {   
+        $WhereFechas = "";
+        if($begin != 0){
+            $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
+          }
         return $this->db->query("SELECT se.id_solicitud, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre, av.nombre as estatus, av.dias_vencimiento as dias, se.fecha_creacion, CASE WHEN (se.id_titulacion IS null) THEN ar.nombre ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as asignado, ar.nombre as area, se.id_solicitud as idEscrituracion
         FROM solicitudes_escrituracion se
         INNER JOIN lotes l ON se.id_lote = l.idLote 
@@ -831,6 +835,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
+        $WhereFechas
         GROUP BY se.id_solicitud, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, av.nombre, av.dias_vencimiento, se.fecha_creacion, se.id_titulacion, uj.nombre, uj.apellido_paterno, uj.apellido_materno, ar.nombre, se.id_solicitud
         ORDER BY se.fecha_creacion ASC");
     }
