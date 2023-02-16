@@ -4773,17 +4773,22 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                                         WHERE vc.estatus = 1 AND clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
                 break;
             case '5': // ASISTENTE SUBDIRECTOR
-				if ($this->session->userdata('id_usuario') == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
-				$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '8'))";
-				else if ($this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7097) // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
-                   {
-                       $where_sede = ' AND clientes.id_sede IN(4,9)';
-                       $where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."', '9')) OR id_usuario IN (7092, 690))";
-                   }
-				else if ($this->session->userdata('id_usuario') == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."') OR id_usuario = 666)";
+				$id_sede = $this->session->userdata('id_sede');
+				$id_usuario = $this->session->userdata('id_usuario');
+				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
+				else if ($id_usuario == 7096 || $id_usuario == 7097) { // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
+                    $where_sede = ' AND clientes.id_sede IN(4, 9)';
+                    $where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9')) OR id_usuario IN (7092, 690))";
+                }
+				else if ($id_usuario == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 666)";
+				else if ($id_usuario == 4888 || $id_usuario == 546) // MJ: ADRIANA PEREZ Y DIRCE
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11'))";
+				else if ($id_usuario == 6831) // MJ: YARETZI MARICRUZ ROSALES HERNANDEZ VE ITZEL ALVAREZ MATA
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 690)";
 				else
-					$where = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('3', '6'))" : "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('".$this->session->userdata('id_sede')."'))";
+					$where = ($id_sede == 3 || $id_sede == 6) ? "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('3', '6'))" : "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede'))";
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN $where
