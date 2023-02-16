@@ -230,7 +230,7 @@ function getClient(idLote) {
                 $('#perj').prop('disabled', false);
                 $('#personalidad').val(data.personalidad);
             }
-                $("#perj").selectpicker('refresh');
+            $("#perj").selectpicker('refresh');
             $('#correo').val(data.correo);
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
             $('#direccion').val(dir); 
@@ -266,6 +266,8 @@ function getClient(idLote) {
             document.getElementById('RegCon').children[1].children[0].title = '';
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
             $('#perj').prop('disabled', false);
+            document.getElementById('ecivil').disabled = data.estado_civil == null || data.estado_civil ? false : true;
+            document.getElementById('rconyugal').disabled = data.regimen_matrimonial == null || data.regimen_matrimonial ? false : true;
             document.getElementById('perj').title = '';
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
@@ -418,8 +420,6 @@ function habilitarInputs(resul){
     document.getElementById('nombre2').disabled = resul;
     document.getElementById('ocupacion').disabled = resul;
     document.getElementById('origen').disabled = resul;
-    document.getElementById('ecivil').disabled = resul;
-    document.getElementById('rconyugal').disabled = resul;
     document.getElementById('correo').disabled = resul;
     // document.getElementById('perj').disabled = resul;
     document.getElementById('direccion').disabled = resul;
