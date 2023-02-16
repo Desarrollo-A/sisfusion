@@ -1,6 +1,7 @@
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    $(this).html(`<input class="${width}" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
             $('#escrituracion-datatable').DataTable().column(i).search(this.value).draw();
@@ -10,7 +11,8 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
 
 $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    $(this).html(`<input class="${width}" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#carga-datatable').DataTable().column(i).search() !== this.value ) {
             $('#carga-datatable').DataTable().column(i).search(this.value).draw();
@@ -934,9 +936,9 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
-                "width": "0.2%",
+                "width": "2%",
                 data: function (d) {
-                    return d.id_solicitud
+                    return d.id_solicitud;
                 }
 
             },
