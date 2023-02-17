@@ -1162,7 +1162,7 @@ function checkBudgetInfo($idSolicitud){
         $resultadoInsertarCliente = $this->db->insert('clientes', $dataCliente);
         $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
         $resultadoUpdateLote =  $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
-        return $resultadoUpdateLote;
+        return $idCliente;
     }
 
 
