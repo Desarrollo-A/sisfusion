@@ -695,7 +695,7 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
+           // $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
             // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
