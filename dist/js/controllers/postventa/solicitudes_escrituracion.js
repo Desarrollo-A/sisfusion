@@ -1656,8 +1656,8 @@ function getNotarias(datos=null) {
            $('#superficie').val(data.superficie);
 
             $('#superficie').val(data.superficie);
-            var str = (data.modificado).split(" ")[0].split("-");
-            var strM = `${str[2]}-${str[1]}-${str[0]}`;
+            var str = data.modificado != null ? (data.modificado).split(" ")[0].split("-") : '';
+            var strM =  data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : '';
             $('#fContrato').val(strM);
             $('#catastral').val(data.clave_catastral);
             $('#construccionInfo').val(data.nombreConst);
