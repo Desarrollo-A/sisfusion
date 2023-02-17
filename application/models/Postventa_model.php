@@ -629,7 +629,7 @@ function checkBudgetInfo($idSolicitud){
         n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre
                 FROM solicitudes_escrituracion se 
                 INNER JOIN clientes c ON c.id_cliente = se.id_cliente
-                INNER JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
+                LEFT JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
                 INNER JOIN lotes l ON l.idLote = se.id_lote
                 INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
