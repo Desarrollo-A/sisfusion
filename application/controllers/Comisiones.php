@@ -3768,6 +3768,12 @@ public function LiquidarLote(){
 
     echo json_encode($res);
   }
+  public function getPrestamosXporUsuario(){
+    
+    $res["data"] = $this->Comisiones_model->getPrestamosXporUsuario()->result_array();
+
+    echo json_encode($res);
+  }
   public function getUsuariosRol($rol,$opc = '')
   {
     if($opc == ''){
@@ -7096,6 +7102,133 @@ for ($d=0; $d <count($dos) ; $d++) {
       }
       echo json_encode ($respuesta);
     } 
+    public function historial_prestamos()
+    {
+      $datos = array(); 
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+        $this->load->view("ventas/historial_prestamo_view", $datos);    
+    }
+
+    // public function newWorkTeam()
+    // {
+    //   $nombre           = $this->input->post("nombre");
+    //   $ap1              = $this->input->post("ap1");
+    //   $ap2              = $this->input->post("ap2");
+    //   $fechaNacimiento  = $this->input->post("fechaNacimiento");
+    //   $rol              = $this->input->post("rol");
+    //   $creadoPor        = intval($this->session->userdata('id_usuario')); 
+    //   $celular          = $this->input->post("numeroCelular");
+    //   $correo           = $this->input->post("correo");
+    //   $clave           = $this->input->post("clave");
+    //   $validacion = '';
+    //   $tabla = 'necesario';
+
+    //         if(empty($validacion)){
+
+    //           $insertArray = array(
+    //             'nombre'          =>  $nombre  ,
+    //             'ap1'             =>  $ap1,
+    //             'ap2'             => $ap2 , 
+    //             'fechaNacimiento' => $fechaNacimiento ,
+    //             'rol'             =>   $rol ,
+    //             'creadoPor'       =>  $creadoPor  ,
+    //             'celular'         =>  $celular  ,
+    //             'correo'          => $correo ,
+    //             'clave'           => $clave ,
+    //                             );
+    //           $respuesta =  $this->Comisiones_model->insertar_generico($tabla,$insertArray);
+    //           echo json_encode($respuesta);
+    //         }else{
+    //           $respuesta = 3;
+    //           echo json_encode($respuesta);
+    //         }
+    //   }
+      
+    // public function crearUsuario()
+    // {
+    //   $nombre           = $this->input->post("nombre");
+    //   $ap1              = $this->input->post("ap1");
+    //   $ap2              = $this->input->post("ap2");
+    //   $celular          = $this->input->post("celular");
+    //   $status           = $this->input->post("status");
+    //   $correo           = $this->input->post('correo'); 
+    //   $peso             = $this->input->post("peso");
+    //   $altura           = $this->input->post("altura");
+    //   $userName         = $this->input->post("userName");
+    //   $password         = $this->input->post("password");
+    //   $tabla = 'Usuario';
+
+    //         if(empty($validacion)){
+
+    //           $insertArray = array(
+    //             'nombre'          =>  $nombre  ,
+    //             'ap1'             =>  $ap1,
+    //             'ap2'             => $ap2 , 
+    //             'fechaNacimiento' => $celular ,
+    //             'rol'             =>   $status ,
+    //             'creadoPor'       =>  $correo  ,
+    //             'celular'         =>  $peso  ,
+    //             'correo'          => $altura ,
+    //             'clave'           => $userName ,
+    //             'password'        => $password ,
+                
+    //           );
+    //           $respuesta =  $this->Comisiones_model->insertar_generico($tabla,$insertArray);
+    //           echo json_encode($respuesta);
+    //         }else{
+    //           $respuesta = 3;
+    //           echo json_encode($respuesta);
+    //         }
+    //   }
+
+    //   public function updateColaborador()
+    //   {
+    //     $nombre           = $this->input->post("nombre");
+    //   $ap1              = $this->input->post("ap1");
+    //   $ap2              = $this->input->post("ap2");
+    //   $celular          = $this->input->post("celular");
+    //   $status           = $this->input->post("status");
+    //   $correo           = $this->input->post('correo'); 
+    //   $peso             = $this->input->post("peso");
+    //   $altura           = $this->input->post("altura");
+    //   $userName         = $this->input->post("userName");
+    //   $password         = $this->input->post("password");
+    //     $validacion = '';
+    //     // ejemplos
+
+    //     $tabla = 'usuario';
+    //     $claveEditar = = $this->input->post("clave");
+    //     $columnaComparar =  'idUsu';
+  
+    //           if(empty($validacion)){
+  
+    //             $insertArray = array(
+    //               'nombre'          =>  $nombre  ,
+    //               'ap1'             =>  $ap1,
+    //               'ap2'             => $ap2 , 
+    //               'fechaNacimiento' => $celular ,
+    //               'rol'             =>   $status ,
+    //               'creadoPor'       =>  $correo  ,
+    //               'celular'         =>  $peso  ,
+    //               'correo'          => $altura ,
+    //               'clave'           => $userName ,
+    //               'password'        => $password ,
+                  
+    //             );
+    //             $respuesta =  $this->Comisiones_model->update_generico($claveEditar ,$columnaComparar,$tabla,  $updateArray);
+    //             echo json_encode($respuesta);
+    //           }else{
+    //             $respuesta = 3;
+    //             echo json_encode($respuesta);
+    //           }
+    //     }      
+    
+    
 
 
 }
