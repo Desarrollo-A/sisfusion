@@ -246,6 +246,7 @@ $(document).on("click", ".upload", function () {
     let action = $(this).data("action");
     let documentName = $(this).data("name");
     let presupuestoType = $(this).attr("data-presupuestoType");
+    let documento_validar = $(this).attr("data-data-documento-validar");
     let idPresupuesto = $(this).attr("data-idPresupuesto");
     let idNxS = $(this).attr("data-idNxS");
     let id_estatus = $(this).attr("data-id-estatus");
@@ -254,6 +255,7 @@ $(document).on("click", ".upload", function () {
     $("#documentType").val(documentType);
     $("#docName").val(documentName);
     $("#action").val(action);
+    $('#documento_validar').val(documento_validar);
     $("#presupuestoType").val(presupuestoType);
     $("#idPresupuesto").val(idPresupuesto);
     $("#idNxS").val(idNxS);
@@ -300,6 +302,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let action = $("#action").val();
     let id_estatus =  $('#id_estatus').val();
+    let documento_validar =  $('#documento_validar').val();
     let sendRequestPermission = 0;
     if (action == 1) { // UPLOAD FILE
         let uploadedDocument = $("#uploadedDocument")[0].files[0];
@@ -339,11 +342,11 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-if(id_estatus == 19 || id_estatus == 22){
+if(id_estatus == 19 || id_estatus == 22 && documento_validar == 1){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
 }
-if(id_estatus == 20 || id_estatus == 25){
+if(id_estatus == 20 || id_estatus == 25 && documento_validar == 1){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
 }
@@ -1894,7 +1897,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         }//ACTIDAD APE0011 - POSTVENTA INTEGRACIÓN DE EXPEDIENTE, CARGA Y ELIMINACIÓN DE ARCHIVOS
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24)){
 
-            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documento-validar="${v.documento_a_validar}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
             solicitudes += v.documento_a_validar == 1 ? `` : '' ;
         }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
         else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
@@ -1938,6 +1941,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
                 "validado" : v.estatusValidacion,
                 "cargado": v.expediente != null ? 1 : 0
             });
+            console.log(documentosObligatorios)
         }
         solicitudes += '</div></td></tr>';
     });
