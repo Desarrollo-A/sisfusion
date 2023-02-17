@@ -134,7 +134,7 @@ class Postventa_model extends CI_Model
         $idEstatus = (isset($data['idEstatus']) || $data['idEstatus'] != '') && $data['idEstatus'] == 8 ? 1:2;
         $claveCat = (!isset($data['ClaveCat']) || $data['ClaveCat'] = '') ? 'NULL' : $data['ClaveCat'];
       
-        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por,valor_contrato,valor_escriturar) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,2,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario,'$valor_contrato',NULL)");
+        $this->db->query("INSERT INTO solicitudes_escrituracion (id_lote,id_cliente,id_actividad,id_estatus,estatus_pago,superficie,clave_catastral,estatus_construccion,id_notaria,id_valuador,tipo_escritura,id_postventa,personalidad_juridica,aportacion,descuento,id_titulacion,fecha_creacion,creado_por,fecha_modificacion,modificado_por,valor_contrato,valor_escriturar) VALUES($idLote, $idCliente,1,1,$idEstatus,0,'$claveCat',0,0,0,0,$idPostventa,$personalidad,0,0,$idJuridico,GETDATE(),$idUsuario,GETDATE(),$idUsuario,'$valor_contrato',NULL)");
         $insert_id = $this->db->insert_id();
 
         $opciones = $this->db->query("SELECT * FROM documentacion_escrituracion WHERE tipo_personalidad IN (0,$personalidad)")->result_array();
