@@ -137,7 +137,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
             LEFT JOIN opcs_x_cats plane ON plane.id_opcion= l.plan_enganche AND plane.id_catalogo = 39
             LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
             WHERE l.idStatusContratacion BETWEEN 9 AND 15 
-            AND cl.status = 1 
+            AND cl.status = 1 getPrestamos
             AND l.status = 1
             AND l.registro_comision in (0,8)
             AND tipo_venta IS NOT NULL AND tipo_venta IN (1, 2))
@@ -4887,13 +4887,29 @@ function TieneAbonos($id){
                 (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
                 rpp.id_prestamo as id_prestamo2
                 FROM prestamos_aut p 
-                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
+                INNER JOIN usuarios u ON u.id_usuario = p.id_usuario  
                 LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
                 LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-                WHERE p.estatus in(1,2,3,0)
+                WHERE p.estatus in(1,2,3,0) 
                 group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
             }
+            
+            function getPrestamosXporUsuario(){
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, p.evidenciaDocs as evidencia ,
+                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
+                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
+                rpp.id_prestamo as id_prestamo2
+                FROM prestamos_aut p 
+                INNER JOIN usuarios u ON u.id_usuario = p.id_usuario and u.id_usuario = ".$this->session->userdata('id_usuario')." 
+                LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
+                LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+                left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
+                WHERE p.estatus in(1,2,3,0) 
+                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
+            }
+
+
                 function InsertPago($id_prestamo,$id_user,$pago,$usuario){
                     $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
                     if (! $respuesta ) {
@@ -8254,11 +8270,11 @@ return $query->result();
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
+
         $whereUserClause = '';
         if ($anio != 0) {
             $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
-
         $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
         u .apellido_materno) AS nombre_completo, 
         oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario,
@@ -8947,4 +8963,33 @@ function descuentos_universidad($clave , $data){
         $query = $this->db->query($cmd);
         return $query->result();
     }
+
+   
+
+    // function InsertGenerico($insert, $table){
+        
+    //     try {
+    //         $this->db->insert($table, $insertDocumentNuevo);
+    //         $afftectedRows = $this->db->affected_rows();
+    //         return $afftectedRows > 0 ? 1 : FALSE ;
+    
+    //     }
+    //     catch(Exception $e) {
+    //         return $e->getMessage();
+    //     }
+
+    
+    // }
+
+    // public function actualizargenerico($clave ,$columan,$t,  $data){
+    //     try {
+    //         $this->db->where($columna, $clave);
+    //         $this->db->update($tabla, $data);
+    //         $afftectedRows = $this->db->affected_rows();
+    //         return $afftectedRows > 0 ? TRUE : FALSE ;
+    //     }
+    //     catch(Exception $e) {
+    //         return $e->getMessage();
+    //     }
+    // }
 }
