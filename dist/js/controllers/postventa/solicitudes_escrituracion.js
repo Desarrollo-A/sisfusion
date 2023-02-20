@@ -1,6 +1,7 @@
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    $(this).html(`<input class="${width}" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
             $('#escrituracion-datatable').DataTable().column(i).search(this.value).draw();
@@ -10,7 +11,7 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
 
 $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+    $(this).html(`<input class="" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#carga-datatable').DataTable().column(i).search() !== this.value ) {
             $('#carga-datatable').DataTable().column(i).search(this.value).draw();
@@ -245,6 +246,7 @@ $(document).on("click", ".upload", function () {
     let action = $(this).data("action");
     let documentName = $(this).data("name");
     let presupuestoType = $(this).attr("data-presupuestoType");
+    let documento_validar = $(this).attr("data-data-documento-validar");
     let idPresupuesto = $(this).attr("data-idPresupuesto");
     let idNxS = $(this).attr("data-idNxS");
     let id_estatus = $(this).attr("data-id-estatus");
@@ -253,6 +255,7 @@ $(document).on("click", ".upload", function () {
     $("#documentType").val(documentType);
     $("#docName").val(documentName);
     $("#action").val(action);
+    $('#documento_validar').val(documento_validar);
     $("#presupuestoType").val(presupuestoType);
     $("#idPresupuesto").val(idPresupuesto);
     $("#idNxS").val(idNxS);
@@ -299,6 +302,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let action = $("#action").val();
     let id_estatus =  $('#id_estatus').val();
+    let documento_validar =  $('#documento_validar').val();
     let sendRequestPermission = 0;
     if (action == 1) { // UPLOAD FILE
         let uploadedDocument = $("#uploadedDocument")[0].files[0];
@@ -338,11 +342,11 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-if(id_estatus == 19 || id_estatus == 22){
+if(id_estatus == 19 || id_estatus == 22 && documento_validar == 1){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
 }
-if(id_estatus == 20 || id_estatus == 25){
+if(id_estatus == 20 || id_estatus == 25 && documento_validar == 1){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
 }
@@ -934,9 +938,9 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
-                "width": "0.2%",
+                "width": "2%",
                 data: function (d) {
-                    return d.id_solicitud
+                    return d.id_solicitud;
                 }
 
             },
@@ -1655,8 +1659,8 @@ function getNotarias(datos=null) {
            $('#superficie').val(data.superficie);
 
             $('#superficie').val(data.superficie);
-            var str = (data.modificado).split(" ")[0].split("-");
-            var strM = `${str[2]}-${str[1]}-${str[0]}`;
+            var str = data.modificado != null ? (data.modificado).split(" ")[0].split("-") : '';
+            var strM =  data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : '';
             $('#fContrato').val(strM);
             $('#catastral').val(data.clave_catastral);
             $('#construccionInfo').val(data.nombreConst);
@@ -1893,7 +1897,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         }//ACTIDAD APE0011 - POSTVENTA INTEGRACIÓN DE EXPEDIENTE, CARGA Y ELIMINACIÓN DE ARCHIVOS
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24)){
 
-            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documento-validar="${v.documento_a_validar}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
             solicitudes += v.documento_a_validar == 1 ? `` : '' ;
         }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
         else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
@@ -1937,6 +1941,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
                 "validado" : v.estatusValidacion,
                 "cargado": v.expediente != null ? 1 : 0
             });
+            console.log(documentosObligatorios)
         }
         solicitudes += '</div></td></tr>';
     });

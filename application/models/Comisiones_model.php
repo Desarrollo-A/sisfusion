@@ -5763,7 +5763,7 @@ function getLotesDispersadoDates($fecha1, $fecha2){
     
 
     public  function get_lista_roles() {
-        return $this->db->query("SELECT id_opcion, nombre, id_catalogo FROM opcs_x_cats WHERE id_catalogo IN (1, 83) and id_opcion IN (3, 9, 7) ORDER BY id_opcion");
+        return $this->db->query("SELECT id_opcion, nombre, id_catalogo FROM opcs_x_cats WHERE id_catalogo IN (1) and id_opcion IN (3, 9, 7, 2) ORDER BY id_opcion");
     }
 
 
@@ -7789,11 +7789,7 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
 
 
     public  function usuarios_nuevas($id_rol, $id_catalogo) {
-        if ($id_catalogo == 83) // SE TOMAN AQUELLOS QUE SE ENCUENTREN BAJO LA NUEVA ESTRUCTURA
-            $where = "AND nueva_estructura = 1";
-        else
-            $where = "AND nueva_estructura = 0";
-        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol $where ORDER BY nombre");
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol ORDER BY nombre");
     }
 
     // public function inserta_penalizacion_28($id_comision, $comision_total, $pago_neo, $numero, $id_usuario, $lote_1, $id_rol, $idCliente){

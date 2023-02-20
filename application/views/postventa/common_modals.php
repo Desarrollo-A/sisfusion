@@ -147,6 +147,7 @@
                 <input type="text" class="hide" id="idDocumento">
                 <input type="text" class="hide" id="documentType">
                 <input type="text" class="hide" id="id_estatus">
+                <input type="text" class="hide" id="documento_validar">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">

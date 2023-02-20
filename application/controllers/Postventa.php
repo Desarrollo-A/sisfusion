@@ -695,7 +695,7 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
+           // $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
             // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
@@ -2688,7 +2688,9 @@ function saveNotaria(){
 
 
     function getData(){
-        $data = $this->Postventa_model->getData_contraloria()->result();
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Postventa_model->getData_contraloria($beginDate, $endDate)->result();
         switch ($this->session->userdata('id_rol')){
             case '17': //CONTRALORIA 
                 $columns = array(
@@ -2843,12 +2845,9 @@ function saveNotaria(){
 
         $array = [
             "columns" => $columns,
-            "data" => $data
+            "data" => $data != null ? $data : []
         ];
-        if ($data != null)
             echo json_encode($array);
-        else
-            echo json_encode(array());
     }
 
 
