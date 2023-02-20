@@ -7,7 +7,6 @@
     .modal-backdrop{
         z-index:9;
     }
- 
 
 </style>
 <body>
@@ -38,8 +37,8 @@
 
 					<form method="post" id="form_delete">
 						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
 					</form>
+					<div class="modal-footer"></div>
 				</div>
 			</div>
 		</div>
