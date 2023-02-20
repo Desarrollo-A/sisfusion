@@ -203,12 +203,14 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             $('#origen').val(data.estado);
             //SE LE MUESTRA EL VALOR DEL ESTADO CIVIL OBTENIDO DEL BACK, COMO YA EXISTE EN DB YA NO SE REGISTRA SOLO SE MUESTRA
             document.getElementById('ecivil').title=data.estado_civil;//pendiente
+            document.getElementById('rconyugal').setAttribute('disabled');
             document.getElementById('EdoCiv').children[1].children[0].title = data.estado_civil;
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = data.estado_civil;
             document.getElementById('ecivil').removeAttribute('required');
             //SE LE MUESTRA EL VALOR DEL REGIMEN MATRIMONIAL OBTENIDO DEL BACK, COMO YA EXISTE EN DB YA NO SE REGISTRA SOLO SE MUESTRA           
             document.getElementById('rconyugal').title=data.regimen_matrimonial;//pendiente
             document.getElementById('rconyugal').removeAttribute('required');
+            document.getElementById('rconyugal').setAttribute('disabled');
             document.getElementById('RegCon').children[1].children[0].title = data.regimen_matrimonial;
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = data.regimen_matrimonial;
             //VALIDACIÓN SI LA PERSONALIDAD JURÍDICA VIENE LLENA Y DIFERENTE DE NULL, 0 Y 4 BLOQUEAR EL SELECT PARA YA NO MODIFICARLO
