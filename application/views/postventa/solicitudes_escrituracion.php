@@ -7,13 +7,22 @@
        .head_escrituracion{
             width: 40px;
        }         
+    }@media (min-width: 1920px){
+       .head_escrituracion{
+            width: 100%;
+       }         
+    }@media (min-width: 2400px){
+       .head_escrituracion{
+            width: auto;
+       }         
     }
 </style>
 
 
 <body>
 
-    <div class="wrapper">
+    <div class="wrapper"> 
+
         <?php  $this->load->view('template/sidebar', ""); ?>
         <div class="content boxContent">
             <div class="container-fluid">
