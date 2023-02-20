@@ -413,7 +413,7 @@ class Postventa_model extends CI_Model
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud 
-		INNER JOIN documentacion_escrituracion oxc ON oxc.id_documento = $tipoDoc
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
 		WHERE de.idDocumento = $idDoc");
     }
 
