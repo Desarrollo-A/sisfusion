@@ -824,7 +824,7 @@ $(document).on('click', '.treePresupuesto', function () {
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
         // createDocRowPresupuesto(row, tr, $(this));
-        createRowNotarias(row, tr, $(this), row.data().id_solicitud);
+        createRowNotarias(row, tr, $(this), row.data().id_solicitud,row.data().id_estatus);
         // Add to the 'open' array
         if (idx === -1) {
             detailRows.push(tr.attr('id'));
@@ -2272,17 +2272,20 @@ function createDocRowPresupuesto(row, tr, thisVar){
 //MO: Se crea objeto para recargar la tabla y desplegar el row details
 let datosPresupuestos = new Object();
 function RecargarTablePresupuestos(){
-    escrituracionTable.ajax.reload(null,false);
-    createRowNotarias(datosPresupuestos.row, datosPresupuestos.tr, datosPresupuestos.thisVar, datosPresupuestos.idSolicitud)
+    if(datosPresupuestos.id_estatus != 38 && datosPresupuestos.id_estatus != 14 && datosPresupuestos.id_estatus != 17){
+        escrituracionTable.ajax.reload(null,false);
+        createRowNotarias(datosPresupuestos.row, datosPresupuestos.tr, datosPresupuestos.thisVar, datosPresupuestos.idSolicitud)
+    }
 }
 
-function createRowNotarias(row, tr, thisVar, idSolicitud){
+function createRowNotarias(row, tr, thisVar, idSolicitud,id_estatus = 0){
     //MO: Guardamos los parametros recibidos en una variable global para usarlos en la funcion que desplega el row details
     datosPresupuestos = {
         "row" : row,
         "tr" : tr,
         "thisVar" : thisVar,
-        "idSolicitud" : idSolicitud
+        "idSolicitud" : idSolicitud,
+        "id_estatus" : id_estatus
     }
 
     $.post("getNotariasXUsuario", {
