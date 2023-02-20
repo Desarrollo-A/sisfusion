@@ -285,14 +285,18 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                             anio: data[i].datos[j].anio,
                             datos: [{
                                 rol: data[i].columna,
-                                total: data[i].datos[j].total
+                                total: data[i].datos[j].total,
+                                activos: data[i].datos[j].activos,
+                                cancelados:  data[i].datos[j].cancelados
                             }]
                         });
                     }
                     else{
                         found.datos.push({
                             rol: data[i].columna,
-                            total: data[i].datos[j].total
+                            total: data[i].datos[j].total,
+                            activos: data[i].datos[j].activos,
+                            cancelados:  data[i].datos[j].cancelados
                         })
                     }
                 }
@@ -302,7 +306,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         for(let i=0; i < orderedArray.length; i++){
             let htmlRol = '';
             for(let j=0; j < orderedArray[i].datos.length; j++){
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}</div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activos}</b> activos</li><li><b>${orderedArray[i].datos[j].cancelados}</b> cancelados</li></ul></div>`;
             }
 
             html += `<div class="tl-item">
