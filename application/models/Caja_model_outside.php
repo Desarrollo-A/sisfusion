@@ -876,9 +876,8 @@
         ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
         ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
 		CASE
-		WHEN (registro_comision != 1) THEN 0
-        WHEN (cl.lugar_prospeccion IN(27, 28)) THEN 0
-		ELSE registro_comision
+		WHEN registro_comision IN (0, 8) THEN 0
+		ELSE 1
 		END AS registro_comision,
         cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, residencial.descripcion , cl.status, nombreLote,
         (SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS ncliente,

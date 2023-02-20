@@ -137,7 +137,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
             LEFT JOIN opcs_x_cats plane ON plane.id_opcion= l.plan_enganche AND plane.id_catalogo = 39
             LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
             WHERE l.idStatusContratacion BETWEEN 9 AND 15 
-            AND cl.status = 1 
+            AND cl.status = 1 getPrestamos
             AND l.status = 1
             AND l.registro_comision in (0,8)
             AND tipo_venta IS NOT NULL AND tipo_venta IN (1, 2))
@@ -2968,9 +2968,10 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
+                
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
         pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, 
@@ -3027,9 +3028,9 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, 
         pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, 
@@ -3118,9 +3119,9 @@ public function validateDispersionCommissions($id_lote){
         else { // CONTRALORÍA
             $filtro = "pci1.estatus IN (4)";
             if($condominio == 0)
-                $where = "AND co.idCondominio  = $condominio";
-            else
                 $where = "AND co.idResidencial  = $proyecto";
+            else
+                $where = "AND co.idCondominio  = $condominio";
         }
         return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote as lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, 
         pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, 
@@ -4862,7 +4863,7 @@ function TieneAbonos($id){
             
             }
              public function BorrarPrestamo($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
+                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,  modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
                     $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
 
                     if (! $respuesta ) {
@@ -4873,27 +4874,42 @@ function TieneAbonos($id){
                 }
             
 
-                function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago,$tipo){
-                    $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
-                    if (! $respuesta ) {
-                        return 0;
-                        } else {
-                        return 1;
-                        }
+                function insertar_prestamos($insertDocumentNuevo){
+
+                    $this->db->insert('prestamos_aut', $insertDocumentNuevo);
+                    $afftectedRows = $this->db->affected_rows();
+                    
+                    return $afftectedRows > 0 ? 1 : FALSE ;
                 }
                 function getPrestamos(){
-                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, p.evidenciaDocs as evidencia ,
                 p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
                 (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
                 rpp.id_prestamo as id_prestamo2
                 FROM prestamos_aut p 
-                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
+                INNER JOIN usuarios u ON u.id_usuario = p.id_usuario  
                 LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
                 LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
                 left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-                WHERE p.estatus in(1,2,3,0)
-                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+                WHERE p.estatus in(1,2,3,0) 
+                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
             }
+            
+            function getPrestamosXporUsuario(){
+                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, p.evidenciaDocs as evidencia ,
+                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
+                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
+                rpp.id_prestamo as id_prestamo2
+                FROM prestamos_aut p 
+                INNER JOIN usuarios u ON u.id_usuario = p.id_usuario and u.id_usuario = ".$this->session->userdata('id_usuario')." 
+                LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
+                LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+                left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
+                WHERE p.estatus in(1,2,3,0) 
+                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
+            }
+
+
                 function InsertPago($id_prestamo,$id_user,$pago,$usuario){
                     $respuesta = $this->db->query("INSERT INTO pagos_prestamos_ind(id_prestamo,id_usuario,pago,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por) VALUES(".$id_prestamo.",".$id_user." ,".$pago.",1,'ABONO A PRESTAMO', GETDATE(), GETDATE(), ".$usuario." )");
                     if (! $respuesta ) {
@@ -5747,7 +5763,7 @@ function getLotesDispersadoDates($fecha1, $fecha2){
     
 
     public  function get_lista_roles() {
-        return $this->db->query("SELECT id_opcion, nombre, id_catalogo FROM opcs_x_cats WHERE id_catalogo IN (1, 83) and id_opcion IN (3, 9, 7) ORDER BY id_opcion");
+        return $this->db->query("SELECT id_opcion, nombre, id_catalogo FROM opcs_x_cats WHERE id_catalogo IN (1) and id_opcion IN (3, 9, 7, 2) ORDER BY id_opcion");
     }
 
 
@@ -7773,11 +7789,7 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
 
 
     public  function usuarios_nuevas($id_rol, $id_catalogo) {
-        if ($id_catalogo == 83) // SE TOMAN AQUELLOS QUE SE ENCUENTREN BAJO LA NUEVA ESTRUCTURA
-            $where = "AND nueva_estructura = 1";
-        else
-            $where = "AND nueva_estructura = 0";
-        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol $where ORDER BY nombre");
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pago_comision_ind WHERE estatus in (1)) AND estatus in (1, 0, 3) AND id_rol = $id_rol ORDER BY nombre");
     }
 
     // public function inserta_penalizacion_28($id_comision, $comision_total, $pago_neo, $numero, $id_usuario, $lote_1, $id_rol, $idCliente){
@@ -8258,11 +8270,11 @@ return $query->result();
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
+
         $whereUserClause = '';
         if ($anio != 0) {
             $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
-
         $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
         u .apellido_materno) AS nombre_completo, 
         oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario,
@@ -8951,4 +8963,33 @@ function descuentos_universidad($clave , $data){
         $query = $this->db->query($cmd);
         return $query->result();
     }
+
+   
+
+    // function InsertGenerico($insert, $table){
+        
+    //     try {
+    //         $this->db->insert($table, $insertDocumentNuevo);
+    //         $afftectedRows = $this->db->affected_rows();
+    //         return $afftectedRows > 0 ? 1 : FALSE ;
+    
+    //     }
+    //     catch(Exception $e) {
+    //         return $e->getMessage();
+    //     }
+
+    
+    // }
+
+    // public function actualizargenerico($clave ,$columan,$t,  $data){
+    //     try {
+    //         $this->db->where($columna, $clave);
+    //         $this->db->update($tabla, $data);
+    //         $afftectedRows = $this->db->affected_rows();
+    //         return $afftectedRows > 0 ? TRUE : FALSE ;
+    //     }
+    //     catch(Exception $e) {
+    //         return $e->getMessage();
+    //     }
+    // }
 }

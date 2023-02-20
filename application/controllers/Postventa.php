@@ -653,8 +653,7 @@ class Postventa extends CI_Controller
             // echo "<br>";
             // echo $usuarioJuridico->id_usuario;
             // echo "<br>";
-            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,
-                $resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
+            $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
             echo json_encode(false);
@@ -667,7 +666,7 @@ class Postventa extends CI_Controller
         $_POST['empresa'] = $data1[0]['empresa'];
         $result = $this->Postventa_model->InsertCli($_POST);
         $idLote = $_POST['idLote'];
-        $idCliente = $result->ult_reg;
+        $idCliente = $result;
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
         $empresa = $_POST['empresa'];
@@ -696,7 +695,7 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
+           // $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
             // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
@@ -2689,7 +2688,9 @@ function saveNotaria(){
 
 
     function getData(){
-        $data = $this->Postventa_model->getData_contraloria()->result();
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Postventa_model->getData_contraloria($beginDate, $endDate)->result();
         switch ($this->session->userdata('id_rol')){
             case '17': //CONTRALORIA 
                 $columns = array(
@@ -2844,12 +2845,9 @@ function saveNotaria(){
 
         $array = [
             "columns" => $columns,
-            "data" => $data
+            "data" => $data != null ? $data : []
         ];
-        if ($data != null)
             echo json_encode($array);
-        else
-            echo json_encode(array());
     }
 
 
