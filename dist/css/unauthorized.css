@@ -1130,6 +1130,7 @@
 /* tooltip styles */
 .tooltip {
   width: fit-content;
+  position: fixed;
 }
 
 .tooltip .tooltip-inner {

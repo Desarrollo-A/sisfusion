@@ -5127,7 +5127,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		} else {
 			$where = "cl.status = 1 AND l.status = 1 AND cl.idLote = $idLote";
 		}
-		$query = $this->db->query("SELECT  'Prospecto' as expediente, 'PROSPECTO' as movimiento,
+		$query = $this->db->query("SELECT 'Prospecto' as expediente, 'PROSPECTO' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
 		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
@@ -5167,7 +5167,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 			$complemento= " AND  cl.id_cliente=$cliente";
 		}
 
-        $query = $this->db->query(" SELECT ec.evidencia as expediente, 'EVIDENCIA MKTD' as movimiento,
+        $query = $this->db->query("SELECT ec.evidencia as expediente, 'EVIDENCIA MKTD' as movimiento,
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS primerNom, 
         sedes.abreviacion as ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
         cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,

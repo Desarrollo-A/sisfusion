@@ -5,6 +5,7 @@ $(document).ready(function () {
     }
 
     $.post('getOpcionesParaReporteComisionistas', { seeAll:  seeAll}, function(data) {
+        $("#tipoUsuario").append($('<option>').val(0).text("TODOS LOS ROLES"));
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
@@ -203,7 +204,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     else if (d.registroComision == 7)
                         labelStatus = `<span class="label" style="background:#A9DFBF; color:#145A32">LIQUIDADA</span>`;
                     else if (d.registroComision == 1)
-                        labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">ACTIVA</span></span>`;
+                        labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">PROCESO DE DISPERSIÓN</span></span>`;
                     else 
                         labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DEFINIR ESTATUS</span>`;
                 }
@@ -235,7 +236,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     return '$' + formatMoney(d.abonoPagado);
                 }
             },
-            {data: 'lugar_prospeccion'}
+            {data: 'rol'}
         ],
         columnDefs: [{
             visible: false,

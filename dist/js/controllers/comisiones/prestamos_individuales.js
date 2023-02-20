@@ -336,16 +336,16 @@ $("#tabla_prestamos").ready( function(){
                 botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Historial"><i class="fas fa-folder-open"></i></button>`;    
                 }
 
-                if(d.id_prestamo2 == null && d.estatus == 1){
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-                }
+                // if(d.id_prestamo2 == null && d.estatus == 1){
+                // botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+                // }
 
              
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }
         }],
         ajax: {
-            url: url2 + "Comisiones/getPrestamos",
+            url: url2 + "Comisiones/getPrestamosXporUsuario",
             type: "POST",
             cache: false,
             data: function( d ){

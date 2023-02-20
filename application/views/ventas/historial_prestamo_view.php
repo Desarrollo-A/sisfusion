@@ -7,7 +7,6 @@
     .modal-backdrop{
         z-index:9;
     }
- 
 
 </style>
 <body>
@@ -38,8 +37,8 @@
 
 					<form method="post" id="form_delete">
 						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
 					</form>
+					<div class="modal-footer"></div>
 				</div>
 			</div>
 		</div>
@@ -150,11 +149,7 @@
                                                     <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
                                                 </div>
                                             </div>
-											<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                                <div class="form-group d-flex justify-center align-center">
-													<button ype="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Agregar</button>
-												</div>
-											</div>
+										
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +190,7 @@
 	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer');?>
 	<!--DATATABLE BUTTONS DATA EXPORT-->
-	<script src="<?= base_url() ?>dist/js/controllers/comisiones/panel_prestamos.js"></script>
+	<script src="<?= base_url() ?>dist/js/controllers/comisiones/prestamos_individuales.js"></script>
 
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
