@@ -391,7 +391,7 @@ class Postventa_model extends CI_Model
     function generateFilename($idSolicitud, $tipoDoc)
     {
         return $this->db->query("SELECT CONCAT(r.nombreResidencial, '_', SUBSTRING(cn.nombre, 1, 4), '_', l.idLote, 
-        '_', c.id_cliente,'_TDOC_', REPLACE(oxc.nombre, ' ', '_'), SUBSTRING(de.movimiento, 1, 4),
+        '_', c.id_cliente,'_TDOC_', REPLACE(oxc.descripcion, ' ', '_'), SUBSTRING(de.movimiento, 1, 4),
         '_', UPPER(REPLACE(REPLACE(CONVERT(varchar, GETDATE(),109), ' ', ''), ':', ''))) fileName, de.idDocumento, de.expediente, de.estatus_validacion 
 		FROM solicitudes_escrituracion se 
 		INNER JOIN lotes l ON se.id_lote =l.idLote
@@ -399,21 +399,21 @@ class Postventa_model extends CI_Model
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.id_solicitud AND de.tipo_documento = $tipoDoc
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = $tipoDoc AND oxc.id_catalogo = 60
+		INNER JOIN documentacion_escrituracion oxc ON oxc.id_documento = $tipoDoc 
 		WHERE se.id_solicitud = $idSolicitud");
     }
 
     function generateFilename2($idDoc)
     {
         return $this->db->query("SELECT CONCAT(r.nombreResidencial, '_', SUBSTRING(cn.nombre, 1, 4), '_', l.idLote, 
-        '_', c.id_cliente,'_TDOC_', REPLACE(oxc.nombre, ' ', '_'), SUBSTRING(de.movimiento, 1, 4),
+        '_', c.id_cliente,'_TDOC_', REPLACE(oxc.descripcion, ' ', '_'), SUBSTRING(de.movimiento, 1, 4),
         '_', UPPER(REPLACE(REPLACE(CONVERT(varchar, GETDATE(),109), ' ', ''), ':', ''))) fileName, de.idDocumento, de.expediente, de.tipo_documento FROM solicitud_escrituracion se 
 		INNER JOIN lotes l ON se.idLote =l.idLote
 		INNER JOIN clientes c ON c.idLote = l.idLote AND c.id_cliente = se.idCliente
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
         LEFT JOIN documentos_escrituracion de ON de.idSolicitud = se.idSolicitud 
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = de.tipo_documento AND oxc.id_catalogo = (CASE WHEN isNULL(se.personalidad,0) = 1 THEN 72 ELSE 60 END)
+		INNER JOIN documentacion_escrituracion oxc ON oxc.id_documento = $tipoDoc
 		WHERE de.idDocumento = $idDoc");
     }
 
