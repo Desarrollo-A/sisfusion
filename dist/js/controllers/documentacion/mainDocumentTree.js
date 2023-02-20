@@ -69,9 +69,6 @@ function getDocumentsInformation(idLote) {
     $.ajax({
         type: 'POST',
         url: `${general_base_url}registroCliente/expedientesWS/${idLote}`,
-        data: {
-            'idLote': idLote
-        },
         dataType: 'json',
         success: function (data) {
             if(data.length > 0){
@@ -79,10 +76,10 @@ function getDocumentsInformation(idLote) {
                     fillDocumentsList(v, i);
                     allDocuments.push(v);
                 });
-            }else{
+            }
+            else{
                 alerts.showNotification("top", "right", "No hay documentos que mostrar.", "warning");
             }
-            
             $('#spiner-loader').addClass('hide');
 
         }, error: function () {
@@ -93,12 +90,113 @@ function getDocumentsInformation(idLote) {
 }
 
 function fillDocumentsList(v, i) {
+    if (getFileExtension(v.expediente) == "NULL" || getFileExtension(v.expediente) == 'null' || getFileExtension(v.expediente) == "") {
+        if( id_rol_general == 6 ){
+            if( ( v.idMovimiento == 37 || v.idMovimiento == 7 || v.idMovimiento == 64 || v.idMovimiento == 66 || v.idMovimiento == 77 || v.idMovimiento == 41) && (id_rol_current==6) && (v.tipo_doc==26 || v.tipo_doc==29)){
+                botonDocumento = `<a class="list-group-item viewDocument border-none" data-file="${v.expediente}" data-type="${v.tipo_documento}" data-name="${v.expediente}" data-idSolicitud="${v.idSolicitud}" data-idDocumento="${v.idDocumento}" data-indice="${i}">
+                    <button type="button" title= "Adjuntar archivo" class="btn-data btn-warning upload" data-indice="${i}">
+                        <i class="fas fa-upload"></i>
+                    </button>
+                    <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="${v.movimiento}">${v.movimiento}</h4>
+                </a>`;
+            }
+        }
+        else if(id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3 || id_rol_general == 2 && ())
+        
+            
+        
+            <?php }elseif($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
+            // 
+            if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1)){
+                file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+            } else {
+                file = '<button id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
+            }
+            <?php } else {?> file = '<button id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
+        
+    }
+    else{
+        if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_general==7 || id_rol_general==9 || id_rol_general==3 || id_rol_general==2) && (ventaC == 1) ){
+            botonDocumento = `<a class="list-group-item viewDocument border-none" data-file="${v.expediente}" data-type="${v.tipo_documento}" data-name="${v.expediente}" data-idSolicitud="${v.idSolicitud}" data-idDocumento="${v.idDocumento}" data-indice="${i}">
+                <button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="${v.movimiento}" data-iddoc="${v.idDocumento}">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="${v.movimiento}">
+                    <i class="fas fa-trash"></i>${v.movimiento}
+                </h4>
+            </a>`;
+        }
+        else {
+            botonDocumento = `<a class="list-group-item viewDocument border-none" data-file="${v.expediente}" data-type="${v.tipo_documento}" data-name="${v.expediente}" data-idSolicitud="${v.idSolicitud}" data-idDocumento="${v.idDocumento}" data-indice="${i}">
+                <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="${v.movimiento}">
+                    <i class="fas fa-trash"></i>${v.movimiento}
+                </h4>
+            </a>`;
+        }
+    }
+    
+        else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
+            file = '<a class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+        }
+        else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
+            file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+        }
+        else if (getFileExtension(data.expediente) == "Autorizaciones") {
+            file = '<a href="#" class="btn-data btn-blueMaderas seeAuts" title= "Autorizaciones" data-idCliente="'+data.idCliente+'" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
+        }
+        else if (getFileExtension(data.expediente) == "Prospecto") {
+            file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-lp="'+data.lugar_prospeccion+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-check"></i></a>';
+        }
+        /*generar funcion para ver Evidencia MKTD*/
+        else
+        {
+            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
+            if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) ){
+
+                if(data.tipo_doc == 66){
+                file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fas-folder-open"></i></a>' +
+                    '';
+            }else{
+                file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>' +
+                    '';
+                }
+            } else {
+
+                if(data.tipo_doc == 66){
+                file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fas-folder-open"></i></a>';
+                }else{
+                    file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+                }
+                
+            }
+            <?php } else {?> 
+
+                if(data.tipo_doc == 66){
+                file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>';
+                }else{
+                    file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+                    if((data.tipo_doc==26 || data.tipo_doc==29) && id_rol_current==6 ){
+                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6) && (data.tipo_doc==26 || data.tipo_doc==29)){
+                            file+= '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                        }
+                    }else{
+                        file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+
+                    }
+
+                }
+
+            <?php }?>
+
+        }
         $("#documentsList").append('<a class="list-group-item viewDocument border-none" data-file="' + v.expediente + '" data-type="' + v.tipo_documento + '" data-name="' + v.expediente + '" data-idSolicitud="' + v.idSolicitud + '" data-idDocumento="' + v.idDocumento + '" data-indice="'+i+'">\n' +
-        '        <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="' + v.expediente + '">\n' + '<i class="fas fa-folder mr-1"></i>' + (v.expediente == null ? 'Sin documento': v.movimiento) + '</h4></a>');
+        '        <h4 class="list-group-item-heading m-0 w-100 overflow-text" data-toggle="tooltip" data-placement="top" title="' + v.movimiento + '">\n' + '<i class="fas fa-folder mr-1"></i>' + v.movimiento + '</h4></a>');
 
         $('[data-toggle="tooltip"]').tooltip();
         $(".boxDocumentEmpty").removeClass("hide");
 }
+
+
 
 function cleanElement(e) {
     let element = document.getElementById(e);
@@ -127,7 +225,7 @@ $(document).on("click", ".viewDocument", function () {
         $('#documentFile').attr('src', url);
     }
 
-    $('#documentName').append('<h4 class="m-0 overflow-text" data-toggle="tooltip" data-placement="top" title="'+name+'">' + name + '</h4>');
+    $('#documentName').append('<h4 class="m-0 overflow-text" data-toggle="tooltip" data-placement="top" title="'+name+'">' + expediente + '</h4>');
 
     
     let deletePermission = '';

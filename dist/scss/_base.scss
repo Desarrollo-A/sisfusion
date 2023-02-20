@@ -756,12 +756,12 @@ $tv                 : "(min-width: 1280px)";
 /* tooltip styles */
 .tooltip{
     width: fit-content;
+    position: fixed;
     .tooltip-inner {
         padding: 5px 10px;
         color: $white;
         background-color: $gray;
-    width: fit-content;
-
+        width: fit-content;
     }
 }
 .tooltip.top .tooltip-arrow {

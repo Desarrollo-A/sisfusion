@@ -150,7 +150,7 @@
     }
 
     public function getAllClientsByLote($lote){
-        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, fechaApartado FROM clientes WHERE idLote = $lote")->result_array();
+        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno, ' - ', CONVERT(varchar, fechaApartado, 23)) nombre, fechaApartado FROM clientes WHERE idLote =  $lote")->result_array();
         return $query;
     }
 

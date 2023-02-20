@@ -3405,34 +3405,29 @@
 	
 
 	public function insertarCliente(){
-
-    	 $arreglo=array();
-    	 $fechaApartado= date('Y-m-d H:i:s');
-		 $arreglo["primerNombre"]=$this->input->post('primerNombre');
-		 $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
-		 $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
-		 $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
-		 $arreglo["idAsesor"]=$this->input->post('filtro2');
-		 $arreglo["idLote"]=$this->input->post('filtro5');
-		 $arreglo["idCondominio"]=$this->input->post('filtro4');
-		 $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
-		 $arreglo["concepto"]=$this->input->post('concepto');
-		 $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
-		 $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
-		 $arreglo["noRecibo"]=$this->input->post('noRecibo');
-		 $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
-		 $arreglo["user"]=$this->session->userdata('username');
-		 $arreglo["idAsesor2"]=$this->input->post('filtro9');
-		 $arreglo["idAsesor3"]=$this->input->post('filtro11');
-	
-	
-		$arreglo["idGerente"]=$this->input->post('filtro1');
-		$arreglo["idGerente2"]=$this->input->post('filtro8');
-		$arreglo["idGerente3"]=$this->input->post('filtro10');
-	
-	
-	$fechaAccion = date("Y-m-d H:i:s");
-	$hoy_strtotime2 = strtotime($fechaAccion);
+      $arreglo=array();
+      $fechaApartado= date('Y-m-d H:i:s');
+      $arreglo["primerNombre"]=$this->input->post('primerNombre');
+      $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
+      $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
+      $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
+      $arreglo["idAsesor"]=$this->input->post('filtro2');
+      $arreglo["idLote"]=$this->input->post('filtro5');
+      $arreglo["idCondominio"]=$this->input->post('filtro4');
+      $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
+      $arreglo["concepto"]=$this->input->post('concepto');
+      $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
+      $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
+      $arreglo["noRecibo"]=$this->input->post('noRecibo');
+      $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
+      $arreglo["user"]=$this->session->userdata('username');
+      $arreglo["idAsesor2"]=$this->input->post('filtro9');
+      $arreglo["idAsesor3"]=$this->input->post('filtro11');
+      $arreglo["idGerente"]=$this->input->post('filtro1');
+      $arreglo["idGerente2"]=$this->input->post('filtro8');
+      $arreglo["idGerente3"]=$this->input->post('filtro10');
+      $fechaAccion = date("Y-m-d H:i:s");
+      $hoy_strtotime2 = strtotime($fechaAccion);
 	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 	  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 	
