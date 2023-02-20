@@ -205,8 +205,10 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             document.getElementById('ecivil').title=data.estado_civil;//pendiente
             document.getElementById('EdoCiv').children[1].children[0].title = data.estado_civil;
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = data.estado_civil;
+            document.getElementById('ecivil').removeAttribute('required');
             //SE LE MUESTRA EL VALOR DEL REGIMEN MATRIMONIAL OBTENIDO DEL BACK, COMO YA EXISTE EN DB YA NO SE REGISTRA SOLO SE MUESTRA           
             document.getElementById('rconyugal').title=data.regimen_matrimonial;//pendiente
+            document.getElementById('rconyugal').removeAttribute('required');
             document.getElementById('RegCon').children[1].children[0].title = data.regimen_matrimonial;
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = data.regimen_matrimonial;
             //VALIDACIÓN SI LA PERSONALIDAD JURÍDICA VIENE LLENA Y DIFERENTE DE NULL, 0 Y 4 BLOQUEAR EL SELECT PARA YA NO MODIFICARLO
@@ -219,7 +221,7 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
                     $('#perj').prop('disabled', false);
                     $('#personalidad').val(data.personalidad);
                 }
-            $("#perj").selectpicker('refresh');
+            $("#perj").selectpicker('refresh'); 
             $('#correo').val(data.correo);
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
             $('#direccion').val(dir); 
@@ -234,14 +236,15 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             $('#check').removeClass("d-none");
         }else{
             alerts.showNotification("top", "right", "No se han encontrado los datos del cliente.<br>Por favor ingresar la información requerida.", "warning");
-            clearInputs();
-            habilitarInputs(false);
+            clearInputs();//LIMPIAMOS LOS INTUP DEL FORMULARIO
+            habilitarInputs(false); // SE BLOEQUEAN LOS INPUT  
             $('#nombre').val(data.ncliente);
             document.getElementById('nombre2').value = data.nom_cliente;
             document.getElementById('ape1').value = data.app_cliente;
             document.getElementById('ape2').value = data.apm_cliente;            
             //Limpiamos los valores del select corerespondientes al estado civil
             document.getElementById('ecivil').title = '';//pendiente
+            document.getElementById('ecivil').setAttribute('required');
             document.getElementById('EdoCiv').children[1].children[0].title = '';
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
@@ -251,6 +254,7 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             
             //Modificacion al campo de regimen conyugal
             document.getElementById('rconyugal').title = '';
+            document.getElementById('rconyugal').setAttribute('required');
             document.getElementById('RegCon').children[1].children[0].title = '';
             document.getElementById('RegCon').children[1].children[0].children[0].innerText = '';
             $('#perj').prop('disabled', false);
