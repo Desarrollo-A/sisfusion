@@ -278,7 +278,8 @@ if(data.vl == '1') {
 cntActions = 'En proceso de Liberación';
 
 } else {
-    if(data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84)
+    if(data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84
+        || data.idStatusContratacion == 2 && data.idMovimiento == 101)
     {
 
         cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +

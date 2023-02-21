@@ -105,7 +105,7 @@ function fillUsersTable() {
                     if (d.estatus == 1) {
                         return '<center><span class="label" style="    background: #A5D6A7;color: #1B5E20;">Activo</span><center>';
                     } else if (d.estatus == 3) {
-                        return '<center><span class="label" style="background: #ffa400;color: #905500;">Inactivo comisionando</span><center>';
+                        return '<center><span class="label" style="background: #ffcc6f;color: #905500;">Inactivo comisionando</span><center>';
                     } else {
                         return '<center><span class="label" style="background: #ffafb5;color: #7e000e;">Inactivo</span><center>';
                     }
@@ -562,10 +562,11 @@ $(document).on('click', '.edit-user-information', function(e){
             //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
             //de si es simbólico o no
             if(rolId == 4 || rolId == 5 || rolId==6){
-                $('#tipoMiembro_column').removeClass('col-sm-6');
-                $('#tipoMiembro_column').addClass('col-sm-3');
-                var row_add = $('.simbolico_column');
-                row_add.append(`
+                if (v.id_rol == '7' ){
+                    $('#tipoMiembro_column').removeClass('col-sm-6');
+                    $('#tipoMiembro_column').addClass('col-sm-3');
+                    var row_add = $('.simbolico_column');
+                    row_add.append(`
                     <div class="col-sm-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                               <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
@@ -577,6 +578,10 @@ $(document).on('click', '.edit-user-information', function(e){
                         </div>
                     </div>
                 `);
+                }else{
+                    $('#tipoMiembro_column').removeClass('col-sm-3');
+                    $('#tipoMiembro_column').addClass('col-sm-6');
+                }
             }
             
             $('#nueva_estructura').selectpicker('refresh');
