@@ -898,7 +898,7 @@ class Asesor_model extends CI_Model
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
         WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
-        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
+        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99) AND 
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
 	}
@@ -1789,6 +1789,10 @@ class Asesor_model extends CI_Model
     }
     function revisarCartaVerif($id_cliente, $tipo_documento){
         $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$id_cliente." AND status=1 AND tipo_doc=".$tipo_documento);
+        return $query->result_array();
+    }
+    function getTipoVenta($idLote){
+        $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
         return $query->result_array();
     }
 }

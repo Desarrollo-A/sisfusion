@@ -100,6 +100,49 @@
         </div>
     </div>
 
+    <!-- modal  ENVIA A CONTRALORIA 2-->
+    <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <label>Comentario:</label>
+                    <textarea class="form-control" id="comentario" rows="3"></textarea>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="save1" class="btn btn-primary"> Registrar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal  ENVIA A postventa 3 despúes de un rechazo-->
+    <div class="modal fade" id="enviarNuevamenteEstatus3PV" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Enviar nuevamente a postventa (despúes de un rechazo de postventa) - <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <label>Comentario:</label>
+                    <textarea class="form-control" id="comentarioST3PV2" rows="3"></textarea>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardar_re3pv" class="btn btn-primary"> Registrar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -176,28 +219,6 @@
 
 
     <div class="content hide">
-
-        <!-- modal  ENVIA A CONTRALORIA 2-->
-        <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save1" class="btn btn-primary"> Registrar</button>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- modal -->
 
         <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
         <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
@@ -645,6 +666,8 @@ $('#condominio').change( function(){
         $('#modal1').modal('show');
     });
 
+
+
     $(document).on("click", ".getInfo2_2", function (e) {
     //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2_2", function(e){
         e.preventDefault();
@@ -889,6 +912,7 @@ $('#condominio').change( function(){
                         d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
                         d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
                         d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                        d.idMovimiento == 99 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Postventa estatus 3</span>":
                         d.comentario;
                         return comentario;
                     }
@@ -949,6 +973,7 @@ $('#condominio').change( function(){
                                 d.idMovimiento == 82 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2_7"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                 d.idMovimiento == 92 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="btn-data btn-green getInfo5_2"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
                                 d.idMovimiento == 96 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a></center>':
+                                d.idMovimiento == 99 ?  '<center><a href="#" '+atributo_button+' data-tiComp="'+tipo_comprobanteD+'" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green enviar_nuevamente_estatus3"><i class="fas fa-check" title= "Enviar a estatus 3"></i></a></center>':
                                 d.comentario;
                             }
                         }
@@ -1114,13 +1139,88 @@ $('#condominio').change( function(){
     });
 
 
+    $(document).on('click', '#guardar_re3pv', function(e) {
+    e.preventDefault();
+
+    var comentario = $("#comentarioST3PV2").val();
+
+    var validaComent = ($("#comentarioST3PV2").val().length == 0) ? 0 : 1;
+
+    var dataExp1 = new FormData();
+
+    dataExp1.append("idCliente", getInfo2A[0]);
+    dataExp1.append("nombreResidencial", getInfo2A[1]);
+    dataExp1.append("nombreCondominio", getInfo2A[2]);
+    dataExp1.append("idCondominio", getInfo2A[3]);
+    dataExp1.append("nombreLote", getInfo2A[4]);
+    dataExp1.append("idLote", getInfo2A[5]);
+    dataExp1.append("comentario", comentario);
+    dataExp1.append("fechaVenc", getInfo2A[6]);
+    dataExp1.append('tipo_comprobante', tipo_comprobante);
+
+    let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
 
 
+    if (validaComent == 0) {
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+    }
 
+    if (validaComent == 1) {
 
+        $('#guardar_re3pv').prop('disabled', true);
+        $.ajax({
+            url : '<?=base_url()?>index.php/Postventa/enviarLoteARevisionPostVenta3/',
+            data: dataExp1,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(data){
+                response = JSON.parse(data);
 
+                if(response.message == 'OK') {
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV  ').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                } else if(response.message == 'FALSE'){
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV  ').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                } else if(response.message == 'MISSING_DOCUMENTS'){
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV  ').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                } else if(response.message == 'ERROR'){
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV  ').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Error al envial la solicitud.", "danger");
+                } else if(response.message == 'MISSING_AUTORIZACION'){
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV  ').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.", "danger");
+                } else if(response.message == 'OBSERVACION_CONTRATO'){
+                    $('#guardar_re3pv').prop('disabled', false);
+                    $('#enviarNuevamenteEstatus3PV').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
+                }
+            },
+            error: function( data ){
+                $('#save1').prop('disabled', false);
+                $('#modal1').modal('hide');
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            }
+        });
 
+    }
 
+});
 
 
 
@@ -1211,7 +1311,7 @@ $('#condominio').change( function(){
 
 
 
-    $(document).on('click', '#save3', function(e) {
+$(document).on('click', '#save3', function(e) {
         e.preventDefault();
 
         var comentario = $("#comentario3").val();
@@ -1596,6 +1696,22 @@ $('#condominio').change( function(){
         }
     });
 
+    $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
+        //$("#tabla_deposito_seriedad tbody").on("click", ".getInfo2", function(e){
+        e.preventDefault();
+        console.log("in");
+        getInfo2A[0] = $(this).attr("data-idCliente");
+        getInfo2A[1] = $(this).attr("data-nombreResidencial");
+        getInfo2A[2] = $(this).attr("data-nombreCondominio");
+        getInfo2A[3] = $(this).attr("data-idCondominio");
+        getInfo2A[4] = $(this).attr("data-nombreLote");
+        getInfo2A[5] = $(this).attr("data-idLote");
+        getInfo2A[6] = $(this).attr("data-fechavenc");
+        nombreLote = $(this).data("nomlote");
+        tipo_comprobante = $(this).attr('data-ticomp');
+        $(".lote").html(nombreLote);
+        $('#enviarNuevamenteEstatus3PV').modal('show');
+    });
 
 
     jQuery(document).ready(function(){
