@@ -168,31 +168,9 @@ $("#tabla_prestamos").ready( function(){
                     document.getElementById("totalPendiente").textContent = '$' + to3;
                     document.getElementById("totalp").textContent = '$' + to1;
                     document.getElementById("totalAbonado").textContent = '$' + to2;
-                    
-               
-
                 }
             });
         }
-
-        // if(  i!=12){
-        //     var title2 = $(this).text();
-        //     titulos.push(title2);
-        //     $(this).html('<input type="text" class="textoshead" placeholder="'+title2+'"/>' );
-        //     $( 'input', this ).on('keyup change', function () {
-        //         if (tabla_nuevas.column(i).search() !== this.value ) {
-        //             tabla_nuevas.column(i).search(this.value).draw();
-        //             var total2 = 0;
-        //             var index2 = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
-        //             var data2 = tabla_nuevas.rows( index2 ).data();
-        //             $.each(data2, function(i, v){
-        //                 total2 += parseFloat(v.total_pagado);
-        //             });
-        //             var to12 = formatMoney(total2);
-        //             document.getElementById("totalAbonado").textContent = '$' + to12;
-        //         }
-        //     });
-        // }
         
     });
 
@@ -202,22 +180,17 @@ $("#tabla_prestamos").ready( function(){
         var total3  = 0;
         var total4  = 0;
         var resultado  = 0;
-        console.log(json);
-        
+
         $.each(json.data, function(i, v){
             total       +=  parseFloat(v.monto);
             resultado   +=  v.monto - v.total_pagado;
             total3      +=  v.monto - v.total_pagado ;
             total2      +=   (v.total_pagado );
-            
-            console.log(v.total_pagado);
-
         });
 
         var to = formatMoney(total);
         var to2 = formatMoney(total2);
         var to3 =  formatMoney(total3);
-       console.log(to2);
         document.getElementById("totalPendiente").textContent = '$' + to3;
         document.getElementById("totalp").textContent = '$' + to;
         document.getElementById("totalAbonado").textContent = '$' + to2;
