@@ -165,6 +165,7 @@ $("#tabla_prestamos").ready( function(){
                             abonado = v.total_pagado;
                         }
                         totalAbonado      +=    abonado;
+                        console.log(totalAbonado);
                     });
                     
                     var to1 = formatMoney(total);
@@ -188,6 +189,7 @@ $("#tabla_prestamos").ready( function(){
         var abonado  = 0;
 
         $.each(json.data, function(i, v){
+            console.log(v)
             total       +=  parseFloat(v.monto);
         
             total3      +=  v.monto - v.total_pagado ;
@@ -255,7 +257,7 @@ $("#tabla_prestamos").ready( function(){
             {
             "width": "13%",
             "data": function( d ){
-                return '<p class="m-0"><>'+d.nombre+'</b></p>';
+                return '<p class="m-0"><b>'+d.nombre+'</b></p>';
             }
         },
         {
