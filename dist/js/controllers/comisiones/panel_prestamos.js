@@ -160,12 +160,11 @@ $("#tabla_prestamos").ready( function(){
                         // totalAbonado += v.total_pagado ;
                         totalPendiente += v.monto - v.total_pagado ; 
                         if(v.total_pagado == null){
-                            abonado = 0;
+                            totalAbonado = 0;
                         }else{
-                            abonado = v.total_pagado;
+                            totalAbonado = v.total_pagado;
                         }
-                        totalAbonado      +=    abonado;
-                        console.log(totalAbonado);
+                       
                     });
                     
                     var to1 = formatMoney(total);
@@ -189,16 +188,15 @@ $("#tabla_prestamos").ready( function(){
         var abonado  = 0;
 
         $.each(json.data, function(i, v){
-            console.log(v)
+    
             total       +=  parseFloat(v.monto);
         
             total3      +=  v.monto - v.total_pagado ;
             if(v.total_pagado == null){
-                abonado = 0;
+                total2 = 0;
             }else{
-                abonado = v.total_pagado;
+                total2 = v.total_pagado;
             }
-            total2      +=    abonado;
         });
 
         var to = formatMoney(total);
