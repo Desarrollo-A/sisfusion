@@ -160,9 +160,9 @@ $("#tabla_prestamos").ready( function(){
                         // totalAbonado += v.total_pagado ;
                         totalPendiente += v.monto - v.total_pagado ; 
                         if(v.total_pagado == null){
-                            totalAbonado = 0;
+                            totalAbonado += 0;
                         }else{
-                            totalAbonado = v.total_pagado;
+                            totalAbonado += v.total_pagado;
                         }
                        
                     });
@@ -193,9 +193,9 @@ $("#tabla_prestamos").ready( function(){
         
             total3      +=  v.monto - v.total_pagado ;
             if(v.total_pagado == null){
-                total2 = 0;
+                total2 += 0;
             }else{
-                total2 = v.total_pagado;
+                total2 +=   parseFloat(v.total_pagado);
             }
         });
 
