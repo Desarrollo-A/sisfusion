@@ -115,7 +115,8 @@
             <div class="modal-dialog modal-lg" style="width:70% !important;height:70% !important;">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>4
+
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer"></div>
@@ -144,10 +145,22 @@
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
                                                     <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
+                                                </div>
+                                            </div>
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <div class="form-group d-flex justify-center align-center">
+                                                    <h4 class="title-tot center-align m-0">Abonado :</h4>
+                                                    <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p>
+                                                </div>
+                                            </div>
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <div class="form-group d-flex justify-center align-center">
+                                                    <h4 class="title-tot center-align m-0">Pendinte :</h4>
+                                                    <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p>
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
