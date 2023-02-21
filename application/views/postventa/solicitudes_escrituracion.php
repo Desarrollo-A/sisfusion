@@ -16,6 +16,12 @@
             width: auto;
        }         
     }
+   .dataTables_scrollHead {
+    overflow: hidden !important;
+    position: inherit !important;
+    border: 0px;
+    width: 100%;
+}
 </style>
 
 
@@ -77,7 +83,7 @@
                                                     <table class="table-striped table-hover" id="escrituracion-datatable" name="escrituracion-datatable">
                                                         <thead>
                                                             <tr>
-                                                                <th>ID SOLICITUD</th>
+                                                                <th>ID</th>
                                                                 <th>PROYECTO</th>
                                                                 <!-- <th>CONDOMINIO</th> -->
                                                                 <th>LOTE</th>
@@ -88,7 +94,7 @@
                                                                 <th>ÁREA</th>
                                                                 <th>ASIGNADA A</th>
                                                                 <th>COMENTARIOS</th>
-                                                                <th>OBSERVACIONES</th>
+                                                                <th>OBS.</th>
                                                                 <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
@@ -133,7 +139,7 @@
                                                                     name="carga-datatable">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>ID SOLICITUD</th>
+                                                                            <th>ID</th>
                                                                             <th>PROYECTO</th>
                                                                             <!-- <th>CONDOMINIO</th> -->
                                                                             <th>LOTE</th>
@@ -144,7 +150,7 @@
                                                                             <th>ÁREA</th>
                                                                             <th>ASIGNADA A</th>
                                                                             <th>COMENTARIOS</th>
-                                                                            <th>OBSERVACIONES</th>
+                                                                            <th>OBS</th>
                                                                             <th>ACCIONES</th>
                                                                         </tr>
                                                                     </thead>
