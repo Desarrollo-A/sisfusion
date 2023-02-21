@@ -328,7 +328,7 @@
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Aportaciones</label>
+                                    <label class="control-label estiloEsc label-gral">Aportaciones</label>
                                     <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
                                 </div>
                             </div>
@@ -925,19 +925,19 @@
                             </div>
                             <div >
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral"><b style="color:red;">*</b> Aportaciones</label>
                                         <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                      <div class="form-group label-floating is-focused">
+                                      <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral"><b style="color:red;">*</b> Descuentos</label>
                                         <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral"><b style="color:red;">*</b> Motivo</label>
                                         <textarea id="motivoI" name="motivo" class="form-control input-gral" required></textarea>
                                         <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
