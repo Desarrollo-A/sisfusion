@@ -1,5 +1,5 @@
 
-let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
+let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
