@@ -195,7 +195,7 @@ $("#tabla_prestamos").ready( function(){
             if(v.total_pagado == null){
                 total2 += 0;
             }else{
-                total2 +=   parseFloat(v.total_pagado);
+                total2 +=   v.total_pagado;
             }
         });
 
