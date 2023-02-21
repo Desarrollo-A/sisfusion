@@ -1,22 +1,25 @@
+
+let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
-    $(this).html(`<input class="${width}" placeholder="${title}"/>` );
+    $(this).html(`<input class="${width}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
             $('#escrituracion-datatable').DataTable().column(i).search(this.value).draw();
         }
     });
+    $('[data-toggle="tooltip"]').tooltip();
 });
-
 $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html(`<input class="" placeholder="${title}"/>` );
+    $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#carga-datatable').DataTable().column(i).search() !== this.value ) {
             $('#carga-datatable').DataTable().column(i).search(this.value).draw();
         }
     });
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 $('#notas-datatable thead tr:eq(0) th').each( function (i) {
@@ -1343,17 +1346,19 @@ function fillTableCarga(beginDate, endDate, estatus) {
     ordering: false,
     columns: [
         {
-            "width": "5%",
+            "width": "2%",
             data: function (d) {
                 return d.id_solicitud
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return d.nombreResidencial
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return d.nombreLote
             }
@@ -1364,43 +1369,50 @@ function fillTableCarga(beginDate, endDate, estatus) {
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return d.valor_contrato;
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return d.fecha_creacion;
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return `<center>${d.area}</center>`;
             }
         },
         {
-                
+            "width": "2.5%",
             data: function (d) {
                 return `<center>${d.asignada_a}</center>`;
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                 return d.ultimo_comentario
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
             }
         },
         {
+            "width": "2.5%",
             data: function (d) {
                 var aditional;
                 var group_buttons = '';     
@@ -2369,6 +2381,8 @@ function getTipoEscrituracion() {
     $('#spiner-loader').removeClass('hide');
     $("#tipoE").find("option").remove();
     $("#tipoE").append($('<option disabled selected>').val("").text("Seleccione una opción"));
+    document.getElementById('tipoE').title = 'Seleccione una opción';
+    
     $.post('getTipoEscrituracion', function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
