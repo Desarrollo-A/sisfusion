@@ -2,7 +2,7 @@
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    let width = i == 0 || i == 1 || i == 7 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
     $(this).html(`<input class="${width}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
@@ -973,6 +973,7 @@ function fillTable(beginDate, endDate, estatus) {
                 }
             },
             {
+                "width": "2.5%",
                 data: function (d) {
                     return d.fecha_creacion;
                 }
