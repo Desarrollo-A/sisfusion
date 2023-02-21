@@ -88,8 +88,8 @@
                                                                 <!-- <th>CONDOMINIO</th> -->
                                                                 <th>LOTE</th>
                                                                 <th>CLIENTE</th>
-                                                                <th>VAL DE OPE DE CTR</th>
-                                                                <th>FECHA DE CREACIÓN</th>
+                                                                <th>VAL DE OPE</th>
+                                                                <th>FECHA</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>ÁREA</th>
                                                                 <th>ASIGNADA A</th>
