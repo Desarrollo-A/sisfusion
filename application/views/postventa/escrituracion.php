@@ -99,7 +99,7 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="EdoCiv">
                                                                 <label class="control-label estiloEsc label-gral">Estado Civil</label>
-                                                                <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
+                                                                <select id="ecivil" name="ecivil" class="selectpicker select-gral m-0" title="" data-size="7" ></select>
                                                             </div>
                                                         </div> 
                                    
@@ -113,7 +113,7 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused" id="RegCon">
                                                                 <label class="control-label estiloEsc label-gral">Régimen Conyugal</label>
-                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7" required></select>
+                                                                <select id="rconyugal" name="rconyugal" class="selectpicker select-gral m-0" title="" data-size="7"></select>
                                                             </div>
                                                         </div>
                                                         <!-- Apartado para el select de la persona jurididca -->
