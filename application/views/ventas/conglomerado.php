@@ -730,23 +730,23 @@
                                             <h3 class="card-title center-align">Descuentos Universidad</h3>
                                             <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            Monto total recaudado<b>:</b> $
+                                            total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
                                             </h5>
                                         </div>
@@ -757,23 +757,23 @@
                                             <h3 class="card-title center-align">Descuentos Universidad</h3>
                                             <p class="card-title pl-1">(Listado de descuentos de usuarios inactivos)</p><br>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-baja">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            Monto total recaudado<b>:</b> $
+                                            total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-baja">
                                             </h5>
                                         </div>
@@ -786,23 +786,23 @@
                                         </div>
                                          
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            Monto total recaudado<b>:</b> $
+                                            total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-liquidado">
                                             </h5>
                                         </div>
@@ -815,23 +815,23 @@
                                         <div class="col-lg-12 text-center mt-1 p-0">
                                             <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-conglomerado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            Monto total recaudado<b>:</b> $
+                                            total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-conglomerado">
                                             </h5>
                                         </div>
