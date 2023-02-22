@@ -427,7 +427,7 @@ class Contraloria_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
 			else if ($id_usuario == 2815 || $id_usuario == 2826) { // MJ: 2815 BRENDA SANCHEZ || 2826 ANA LAURA GARCIA
 				$filtroSede = "";
-				$filtroExtra "AND (l.tipo_venta = 4 OR cl.id_asesor IN (2591, 2570, 2549))";
+				$filtroExtra = "AND (l.tipo_venta = 4 OR cl.id_asesor IN (2591, 2570, 2549))";
 			}
 			else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
