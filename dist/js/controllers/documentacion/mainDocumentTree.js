@@ -90,7 +90,7 @@ function getDocumentsInformation(idLote) {
 }
 
 function fillDocumentsList2(v, i) {
-    console.log("test");
+    console.log("test 22");
 }
 
 function fillDocumentsList(v, i) {
