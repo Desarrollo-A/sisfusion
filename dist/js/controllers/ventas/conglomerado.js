@@ -4,7 +4,7 @@ var tr;
 let tablaGeneral;
 let titulosTablaGeneral = [];
 
-$(document).ready(function() { 
+$(document).ready(function() {  
 
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
         if (i !== 15) {
@@ -2381,7 +2381,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
     let escritoPorUsuario = document.getElementById("newMensualidades").value;
     let fechaSeleccionada = '';
-
+    fechaSeleccionada = document.getElementById("fechaIncial").value;
 
     if(tipoDescuento == 3){
         estatus = 1;
@@ -2389,19 +2389,12 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
         estatus = '';
     }
     
-    fechaSeleccionada = document.getElementById("fechaIncial").value;
-
     if(fechaSeleccionada == '' && banderaEditarEstatus == escritoPorUsuario){
-
-        banderaSoloEstatus = true ;
-        
+        banderaSoloEstatus = true ;    
     }else{
-
         fechanoEscrita = true
         fechaSeleccionada == ''
-    
     }
-
     year = fecha.getFullYear()
     month = (fecha.getMonth())
     day = fecha.getDate()
@@ -2409,24 +2402,15 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     const FechaEnArreglo = fechaSeleccionada.split("-");
     // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
     fechaComparar = (year + '-' + month + '-' + day);
-    
     var f1 = new Date(year,month, day);
- 
     var f2 = new Date(fechaSeleccionada);
     console.log(FechaEnArreglo)
     MesSelecionado = parseInt(FechaEnArreglo[1]);
-
     DiaSeleccionado = parseInt(FechaEnArreglo[2]);
     MesSistemas = parseInt(month+1);
-
     // fecha f2 es para la fecha seleccionada 
     // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
-    if(f2 > f1){
-  
-    }
-    console.log(f2);
-    console.log(f1);
     if(  (f2 > f1 || f2 == f1)){
         // validamos que sea mayor la fecha seleccionada o que sean iguales
         validacion =true;
@@ -2444,6 +2428,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     }
 
     if(validacion ){
+
 
         mensualidadesC  = document.getElementById("mensualidadesC").value;
         id_descuento     = document.getElementById("idDescuento").value;
