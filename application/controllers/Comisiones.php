@@ -7009,11 +7009,9 @@ for ($d=0; $d <count($dos) ; $d++) {
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
 
-      if($banderaSoloEstatus ){
+      if($banderaSoloEstatus != 'false' ){
         // var_dump('entrando a 1 ');
-
         $arr_update = array( 
-
           "estatus_certificacion" => $estatus_certificacion,          
         );
         $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
@@ -7021,7 +7019,9 @@ for ($d=0; $d <count($dos) ; $d++) {
       }else{
         // var_dump('entrando a 2');
         if($estatus === '1'){
-      //  if del estatus
+
+          // uno es cuando viene de baja
+      //  if del estatus es el tipo de filtrado
                           $arr_update = array( 
                             "estatus"   => 1,
                             "monto"           =>  $monto,
@@ -7036,7 +7036,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               // $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
                             }
                             else if($banderaPagosActivos == 2){
                               $pagos_activos = 0;
@@ -7044,7 +7044,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
 
 
                             }
@@ -7053,6 +7053,8 @@ for ($d=0; $d <count($dos) ; $d++) {
                             }
         }else {
           // if del estatus
+              // aqui entra cuando no es baja
+      //  if del estatus es el tipo de filtrado
          
           $arr_update = array(    
             
@@ -7064,19 +7066,17 @@ for ($d=0; $d <count($dos) ; $d++) {
           );
           if($banderaPagosActivos == 1 ){
             $pagos_activos = 1;
-            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+            $fecha_modificacion = date("Y-m-d H:i:s");
             // $estatus = 5;  
-            $arr_update["estatus"] = $estatus ;
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
-            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             $estatus = 5;  
             $arr_update["estatus"] = $estatus ;
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
   
           }
           else{
@@ -7099,7 +7099,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         $respuesta =  array(
           "response_code" => 400, 
           "response_type" => 'error',
-          "message" => "Descuento no actualizado, intentalo más tarde");
+          "message" => "Descuento no actualizado, inténtalo más tarde ");
       }
       echo json_encode ($respuesta);
     } 
@@ -7115,122 +7115,6 @@ for ($d=0; $d <count($dos) ; $d++) {
       $this->load->view('template/header');
         $this->load->view("ventas/historial_prestamo_view", $datos);    
     }
-
-    // public function newWorkTeam()
-    // {
-    //   $nombre           = $this->input->post("nombre");
-    //   $ap1              = $this->input->post("ap1");
-    //   $ap2              = $this->input->post("ap2");
-    //   $fechaNacimiento  = $this->input->post("fechaNacimiento");
-    //   $rol              = $this->input->post("rol");
-    //   $creadoPor        = intval($this->session->userdata('id_usuario')); 
-    //   $celular          = $this->input->post("numeroCelular");
-    //   $correo           = $this->input->post("correo");
-    //   $clave           = $this->input->post("clave");
-    //   $validacion = '';
-    //   $tabla = 'necesario';
-
-    //         if(empty($validacion)){
-
-    //           $insertArray = array(
-    //             'nombre'          =>  $nombre  ,
-    //             'ap1'             =>  $ap1,
-    //             'ap2'             => $ap2 , 
-    //             'fechaNacimiento' => $fechaNacimiento ,
-    //             'rol'             =>   $rol ,
-    //             'creadoPor'       =>  $creadoPor  ,
-    //             'celular'         =>  $celular  ,
-    //             'correo'          => $correo ,
-    //             'clave'           => $clave ,
-    //                             );
-    //           $respuesta =  $this->Comisiones_model->insertar_generico($tabla,$insertArray);
-    //           echo json_encode($respuesta);
-    //         }else{
-    //           $respuesta = 3;
-    //           echo json_encode($respuesta);
-    //         }
-    //   }
-      
-    // public function crearUsuario()
-    // {
-    //   $nombre           = $this->input->post("nombre");
-    //   $ap1              = $this->input->post("ap1");
-    //   $ap2              = $this->input->post("ap2");
-    //   $celular          = $this->input->post("celular");
-    //   $status           = $this->input->post("status");
-    //   $correo           = $this->input->post('correo'); 
-    //   $peso             = $this->input->post("peso");
-    //   $altura           = $this->input->post("altura");
-    //   $userName         = $this->input->post("userName");
-    //   $password         = $this->input->post("password");
-    //   $tabla = 'Usuario';
-
-    //         if(empty($validacion)){
-
-    //           $insertArray = array(
-    //             'nombre'          =>  $nombre  ,
-    //             'ap1'             =>  $ap1,
-    //             'ap2'             => $ap2 , 
-    //             'fechaNacimiento' => $celular ,
-    //             'rol'             =>   $status ,
-    //             'creadoPor'       =>  $correo  ,
-    //             'celular'         =>  $peso  ,
-    //             'correo'          => $altura ,
-    //             'clave'           => $userName ,
-    //             'password'        => $password ,
-                
-    //           );
-    //           $respuesta =  $this->Comisiones_model->insertar_generico($tabla,$insertArray);
-    //           echo json_encode($respuesta);
-    //         }else{
-    //           $respuesta = 3;
-    //           echo json_encode($respuesta);
-    //         }
-    //   }
-
-    //   public function updateColaborador()
-    //   {
-    //     $nombre           = $this->input->post("nombre");
-    //   $ap1              = $this->input->post("ap1");
-    //   $ap2              = $this->input->post("ap2");
-    //   $celular          = $this->input->post("celular");
-    //   $status           = $this->input->post("status");
-    //   $correo           = $this->input->post('correo'); 
-    //   $peso             = $this->input->post("peso");
-    //   $altura           = $this->input->post("altura");
-    //   $userName         = $this->input->post("userName");
-    //   $password         = $this->input->post("password");
-    //     $validacion = '';
-    //     // ejemplos
-
-    //     $tabla = 'usuario';
-    //     $claveEditar = = $this->input->post("clave");
-    //     $columnaComparar =  'idUsu';
-  
-    //           if(empty($validacion)){
-  
-    //             $insertArray = array(
-    //               'nombre'          =>  $nombre  ,
-    //               'ap1'             =>  $ap1,
-    //               'ap2'             => $ap2 , 
-    //               'fechaNacimiento' => $celular ,
-    //               'rol'             =>   $status ,
-    //               'creadoPor'       =>  $correo  ,
-    //               'celular'         =>  $peso  ,
-    //               'correo'          => $altura ,
-    //               'clave'           => $userName ,
-    //               'password'        => $password ,
-                  
-    //             );
-    //             $respuesta =  $this->Comisiones_model->update_generico($claveEditar ,$columnaComparar,$tabla,  $updateArray);
-    //             echo json_encode($respuesta);
-    //           }else{
-    //             $respuesta = 3;
-    //             echo json_encode($respuesta);
-    //           }
-    //     }      
-    
-    
 
 
 }
