@@ -52,14 +52,14 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>ID LOTE</th>
-                                                    <th>ESTATUS CONTRATACION</th>
+                                                    <th>ESTATUS CONTRATACIÓN</th>
                                                     <th>ESTATUS LOTE</th>
                                                     <th>NOMBRE COMPLETO</th>
                                                     <th>FECHA APARTADO</th>
-                                                    <th>PERSONALIDAD JURIDICA</th>
+                                                    <th>PERSONALIDAD JURÍDICA</th>
                                                     <th>FECHA NACIMIENTO</th>
                                                     <th>EDAD</th>
-                                                    <th>OCUPACION</th>
+                                                    <th>OCUPACIÓN</th>
                                                 </tr>
                                                 </thead>
                                             </table>
