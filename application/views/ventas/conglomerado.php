@@ -739,7 +739,7 @@
 
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            total recaudado $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
                                             </h5>
                                         </div>
@@ -766,7 +766,7 @@
 
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            total recaudado $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
                                             </h5>
                                         </div>
@@ -795,7 +795,7 @@
 
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            total recaudado $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
                                             </h5>
                                         </div>
@@ -824,7 +824,7 @@
 
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                            total recaudado $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
                                             </h5>
                                         </div>
