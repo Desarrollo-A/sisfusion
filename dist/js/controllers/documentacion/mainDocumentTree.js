@@ -89,6 +89,10 @@ function getDocumentsInformation(idLote) {
     });
 }
 
+function fillDocumentsList2(v, i) {
+    console.log("test");
+}
+
 function fillDocumentsList(v, i) {
     if (getFileExtension(v.expediente) == "NULL" || getFileExtension(v.expediente) == 'null' || getFileExtension(v.expediente) == "") {
         if( id_rol_general == 6 ){
