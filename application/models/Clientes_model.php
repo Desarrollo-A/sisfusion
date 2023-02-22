@@ -4405,8 +4405,7 @@ function getStatusMktdPreventa(){
 
     public function getClientsByProyect($id_residencial){
         $query = $this->db->query("SELECT res.nombreResidencial AS proyecto, con.nombre_condominio, lot.nombreLote, sc.nombreStatus AS StatusContratacion, sl.nombre AS StatusLote,
-            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, cli.fechaApartado, oxc.nombre,
-            REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/') AS fecha_nacimiento,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, cli.fechaApartado, oxc.nombre, cli.fecha_nacimiento,
             CASE 
                 WHEN ISDATE(REPLACE(cli.fecha_nacimiento, '-', '/')) = 1 THEN
                 CASE WHEN YEAR(cli.fecha_nacimiento) <> 1900 THEN
