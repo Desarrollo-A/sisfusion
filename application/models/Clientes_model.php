@@ -4254,13 +4254,105 @@ function getStatusMktdPreventa(){
                 $condition_sedes");
                 break;
         }
-
-
-
-
-
         return $query->result_array();
+    }
 
+    public function getClientsByProyect($id_residencial){
+        $query = $this->db->query("SELECT res.nombreResidencial AS proyecto, con.nombre_condominio, lot.nombreLote, sc.nombreStatus AS StatusContratacion, sl.nombre AS StatusLote,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, cli.fechaApartado, oxc.nombre, cli.fecha_nacimiento,
+            CASE 
+                WHEN ISDATE(REPLACE(cli.fecha_nacimiento, '-', '/')) = 1 THEN
+                CASE WHEN YEAR(cli.fecha_nacimiento) <> 1900 THEN
+                    DATEDIFF(YEAR, CAST(REPLACE(cli.fecha_nacimiento, '-', '/') AS date), GETDATE())
+                END
+                WHEN cli.fecha_nacimiento = cli_fec_nac.fecha_nacimiento AND ISDATE(CONCAT(cli_fec_nac.mes_fecha_nac, '/', cli_fec_nac.dia_fecha_nac, '/',cli_fec_nac.año_fecha_nac)) = 1 THEN 
+                    DATEDIFF(YEAR, CAST(CONCAT(cli_fec_nac.mes_fecha_nac, '/', cli_fec_nac.dia_fecha_nac, '/', cli_fec_nac.año_fecha_nac) AS DATE), GETDATE())
+                WHEN LEN(cli.fecha_nacimiento) - LEN(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/'), '/', '')) = 2 AND 
+                    LEN (REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/')) = 10 AND 
+                    CHARINDEX('/', REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/')) < 5 THEN 
+                    DATEDIFF(YEAR, CONVERT(date, REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/'), 103), GETDATE())
+                ELSE
+                    NULL
+            END AS edad, cli.edadFirma, cli.ocupacion
+        FROM residenciales AS res
+        INNER JOIN condominios AS con
+        ON res.idResidencial = con.idResidencial
+        INNER JOIN lotes AS lot
+        ON con.idCondominio = lot.idCondominio
+        INNER JOIN statuscontratacion AS sc
+        ON lot.idStatusContratacion = SC.idStatusContratacion
+        INNER JOIN statuslote AS sl
+        ON lot.idStatusLote = SL.idStatusLote
+        LEFT JOIN clientes AS cli
+        ON lot.idCliente = cli.id_cliente
+        INNER JOIN opcs_x_cats AS oxc
+        ON cli.personalidad_juridica = oxc.id_opcion
+        LEFT JOIN (SELECT cli.id_cliente, cli.fecha_nacimiento, 
+                    meses.dia_fecha AS dia_fecha_nac, meses_render.num_mes AS mes_fecha_nac,
+                    REPLACE(REPLACE(
+                        SUBSTRING(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''), 'FE', 'DE'),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''), '//', '/'),
+                            meses.inicio + LEN(CASE CHARINDEX(meses_render.mes, TRIM(cli.fecha_nacimiento))
+                                                    WHEN 0 THEN SUBSTRING(meses_render.mes, 1, 3)
+                                                    ELSE meses_render.mes
+                                                END)+1,
+                            5)
+                        , '/_', ''), '/', ''
+                    )AS año_fecha_nac
+                    FROM (SELECT '01' AS ENERO, '02' AS FEBRERO, '03' AS MARZO, '04' AS ABRIL, '05' AS MAYO, '06' AS JUNIO, '07' AS JULIO, '08' AS AGOSTO,
+                            '09' AS SEPTIEMBRE, '10' AS OCTUBRE, '11' AS NOVIEMBRE, '12' AS DICIEMBRE) AS meses
+                    UNPIVOT
+                        (num_mes FOR mes IN 
+                            (ENERO,	FEBRERO,	MARZO,	ABRIL,	MAYO,	JUNIO,	JULIO,	AGOSTO,	SEPTIEMBRE,	OCTUBRE,	NOVIEMBRE,	DICIEMBRE)
+                        ) AS meses_render
+                    INNER JOIN clientes AS cli
+                    ON  REPLACE(RTRIM(cli.fecha_nacimiento), '.', '') LIKE '%'+meses_render.mes+'%' OR
+                        REPLACE(RTRIM(cli.fecha_nacimiento), '.', '') LIKE '%'+SUBSTRING(meses_render.mes,1,3)+'%'
+                    INNER JOIN (SELECT cli.id_cliente, cli.fecha_nacimiento, 
+                                    CASE
+                                        WHEN PATINDEX('%[^0-9]%',
+                                                TRIM(SUBSTRING(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento))END)-1),'(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''), 
+                                                    PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', '')), 
+                                                    LEN(cli.fecha_nacimiento) - PATINDEX('%[0-9]%',REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''))
+                                                ))) > 1 THEN 
+                                            SUBSTRING(TRIM(SUBSTRING(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento))END)-1),'(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''), 
+                                                        PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', '')), 
+                                                        LEN(cli.fecha_nacimiento) - PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''))
+                                                    )), 1,
+                                                    PATINDEX('%[^0-9]%',
+                                                        TRIM(SUBSTRING(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento))END)-1),'(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''), 
+                                                            PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', '')), 
+                                                            LEN(cli.fecha_nacimiento) - PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''))
+                                                        )))-1)
+                                        ELSE TRIM(SUBSTRING(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento))END)-1),'(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''), 
+                                                PATINDEX('%[0-9]%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', '')), 
+                                                LEN(cli.fecha_nacimiento) - PATINDEX('%[0-9]%',REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING(cli.fecha_nacimiento, 1, MIN(CASE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), TRIM(cli.fecha_nacimiento)) ELSE CHARINDEX(mes, TRIM(cli.fecha_nacimiento)) END)-1), '(1)',''), '1)', ''), '1.', ''),'1 Y 2)', ''), '1   ', ''))
+                                            ))
+                                    END AS dia_fecha,
+                                    MIN(CASE CHARINDEX(mes, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''))
+                                        WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''))
+                                        ELSE CHARINDEX(mes, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''))
+                                    END) AS inicio
+                                    FROM (SELECT '01' AS ENERO, '02' AS FEBRERO, '03' AS MARZO, '04' AS ABRIL, '05' AS MAYO, '06' AS JUNIO, '07' AS JULIO, '08' AS AGOSTO,
+                                            '09' AS SEPTIEMBRE, '10' AS OCTUBRE, '11' AS NOVIEMBRE, '12' AS DICIEMBRE) AS meses
+                                    UNPIVOT
+                                        (num_mes FOR mes IN 
+                                            (ENERO,	FEBRERO, MARZO,	ABRIL, MAYO, JUNIO, JULIO, AGOSTO,	SEPTIEMBRE, OCTUBRE, NOVIEMBRE,	DICIEMBRE)
+                                        ) AS meses_render
+                                    INNER JOIN clientes AS cli
+                                    ON  cli.fecha_nacimiento LIKE '%'+meses_render.mes+'%' OR
+                                        cli.fecha_nacimiento LIKE '%'+SUBSTRING(meses_render.mes,1,3)+'%'
+                                    WHERE cli.status = 1
+                                    GROUP BY cli.id_cliente, cli.fecha_nacimiento) AS meses
+                    ON cli.id_cliente = meses.id_cliente AND
+                    CASE CHARINDEX(mes, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''), 'FE', 'DE'),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''), '//', '/'))
+                        WHEN 0 THEN CHARINDEX(SUBSTRING(mes, 1, 3), REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''), 'FE', 'DE'),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''), '//', '/'))
+                        ELSE CHARINDEX(mes, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),'1. ',''),'1.',''), 'FE', 'DE'),' DEL ', '/'),' DE ', '/'),'-', '/'),' / ', '/'),'/ ', '/'),' /', '/'),' ', '/'),'.', '/'),'(1)', ''),'1) ', ''),'1)', ''), '1 Y 2)', ''),'1y2)', ''), '1/Y/2', ''), '//', '/'))
+                    END = meses.inicio
+                    WHERE cli.status = 1) AS cli_fec_nac
+        ON cli.id_cliente = cli_fec_nac.id_cliente
+        WHERE cli.status = 1 AND res.idResidencial =".$id_residencial."  AND oxc.id_catalogo = 10 AND oxc.estatus = 1
+        ORDER BY cli.id_cliente");
+        return $query->result_array();
     }
 
     public function getDragonsClientsList() {
