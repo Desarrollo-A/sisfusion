@@ -345,11 +345,11 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-if(id_estatus == 19 || id_estatus == 22 && documento_validar == 1){
+if(id_estatus == 19 || id_estatus == 22 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
 }
-if(id_estatus == 20 || id_estatus == 25 && documento_validar == 1){
+if(id_estatus == 20 || id_estatus == 25 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
 }
