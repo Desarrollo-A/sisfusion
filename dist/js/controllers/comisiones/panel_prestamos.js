@@ -69,7 +69,7 @@ $("#form_prestamos").on('submit', function(e){
     else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
-        data: formData,
+        data: formData, 
         method: 'POST',
         contentType: false,
         cache: false,
