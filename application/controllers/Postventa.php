@@ -3088,13 +3088,21 @@ function saveNotaria(){
         $comentario=$this->input->post('comentario');
         $modificado=date('Y-m-d H:i:s');
         $fechaVenc=$this->input->post('fechaVenc');
+        $movimientoLote = $this->input->post('movimientoLote');
 
 
+        if($movimientoLote == 1){
+            $idMovimiento = 103;
+            $idStatusContratacion = 2;
+        }else{
+            $idMovimiento = 101;
+            $idStatusContratacion = 2;
+        }
 
 
         $arreglo=array();
-        $arreglo["idStatusContratacion"]= 2;
-        $arreglo["idMovimiento"]=101;
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -3239,8 +3247,8 @@ function saveNotaria(){
 
 
         $arreglo2=array();
-        $arreglo2["idStatusContratacion"]= 2;
-        $arreglo2["idMovimiento"]=101;
+        $arreglo2["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
