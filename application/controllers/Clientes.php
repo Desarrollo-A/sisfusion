@@ -142,23 +142,6 @@ public function getRpClientes()
         $this->load->view("clientes/clubmaderas_report", $datos);
     }
 
-    public function consultaClientesProyecto(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view('clientes/consulta_clientes_proyecto_view', $datos);
-    }
-
-    public function getClientsByProyect($id_residencial)
-    {
-        $data = $this->Clientes_model->getClientsByProyect($id_residencial);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-
 /*---------------------------------------------------------------PREVENTA------------------------------------------------*/
  public function updateStatusPreventa(){
         $data = array(
@@ -3027,5 +3010,23 @@ public function getStatusMktdPreventa(){
         $this->load->view("clientes/prospectosDR",$datos);
     }
 
+    /**************************************************************************************
+    *                             NUEVA FUNCIÓN PARA EL MENÚ                              *
+    ***************************************************************************************/
+    public function consultaClientesProyecto(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view('clientes/consulta_clientes_proyecto_view', $datos);
+    }
+
+    public function getClientsByProyect($id_residencial)
+    {
+        $data = $this->Clientes_model->getClientsByProyect($id_residencial);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
 
