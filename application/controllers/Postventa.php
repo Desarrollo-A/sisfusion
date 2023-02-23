@@ -2012,7 +2012,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInformacion($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }

@@ -2419,7 +2419,7 @@ function getBudgetInformacion(idSolicitud){
     $.post('getBudgetInformacion',{
         idSolicitud:idSolicitud
     }, function(data) {
-        if(data.id_estatus != 5 && data.id_estatus != 2 && data.id_estatus != 4 && data.id_estatus != 3){
+        if(data.bandera_admin == 1 && data.bandera_comite == 1){
             $('#RequestInformacion').addClass('hide');
             $('#information_campos').addClass('hide');
             document.getElementById('construccionI').disabled = true;
