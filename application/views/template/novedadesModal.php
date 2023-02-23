@@ -96,7 +96,7 @@
 </style>
 <div class="modal fade" id="avisoNovedades" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
      data-backdrop="static" >
-    <div class="modal-dialog"  id="body_modal">
+    <div class="modal-dialog modal-lg"  id="body_modal">
         <div class="modal-content " style="
             /*background-image: url('<?=base_url()?>dist/img/58064.jpg');
             background-size: cover*/
@@ -121,30 +121,28 @@
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 hide">
                             <h2 class="center-block center-align" style="color:#333"></h2><br>
                         </div>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="text-align: center">
-                            <img src="<?=base_url()?>static/images/bell-cdm.gif" style="width: 28%"><br>
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align: center">
+                            <img src="<?=base_url()?>static/images/bell-cdm.gif" style="width: 10%"><br>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                            <p style="font-size: 1.5em;line-height: 25px;padding: 0px 15px">
-                                <b>Estimado usuario</b><br>
+                            <p style="font-size: 1.5em;line-height: 25px;padding: 0px 15px" >
+                                <b>Próximamente</b><br>
                                 <!--Aquí te indicamos la forma de hacerlo dependiendo del navegador en el que estés trabajando.<br>-->
                             </p>
                             <table width="100%" id="modal_table">
                                 <tr>
                                     <td>
-                                        <p style="padding: 5px;font-size: 1.2em">
+                                        <p style="padding: 0px 5px;font-size: 1.2em">
 <!--                                            Estamos realizando actualizaciones para ti, por favor, <b>no olvides</b>-->
 <!--                                            actualizar el caché del navegador con la siguiente conbinación de teclas <b>Ctrl + Shift + R</b>,-->
 <!--                                            esto con la finalidad de que puedas visualizar los cambios realizados, agradecemos tu comprensión, gracias.-->
 
-                                            En el área de T.I. creemos firmemente en la mejora continua, es por ello que a partir
-                                            del próximo <b>lunes 3 de octubre</b> se homologará la información de nuestros Proyectos,
-                                            Condominios y Lotes tomando como base las nomenclaturas que ya se manejan en el resto de
-                                            nuestros Sistemas, esto ayudará a seguir haciendo mejoras en las herramientas actuales y ofrecerte
-                                            un servicio más innovador y de la más alta calidad.
+                                            Conoce el <b>nuevo diseño</b> que se implementará en la página de apartados en línea.
+
                                             <br><br><br>
-                                            De antemano, agradecemos tu apoyo.<br>
+                                            <video src="<?php base_url()?>dist/img/WELCOMENP_VIDEO.mp4" width="100%" height="100%" controls></video>
+                                            <!--De antemano, agradecemos tu apoyo.<br>-->
                                             <div style="align-items: center;display:flex;justify-content: center">
                                                 <input type="checkbox" name="no_mostrar_session" id="no_mostrar_session" style="margin: -1px 0 0;line-height: normal;">
                                                 <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 1.2rem" class="m-0"><b> &nbsp;&nbsp;No volver a mostrar aviso durante la sesión</b></label>
@@ -163,7 +161,7 @@
                                 <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 0.5em"><b>No volver a mostrar aviso durante la sesión</b></label>
                             </div>
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align: center;">
-                                <button type="button" class="btn btn-blueMaderas btn-entiendo" data-dismiss="modal" style="color: black" onclick="validaCheckSession()">Entiendo</button>
+                                <button type="button" class="btn btn-blueMaderas btn-entiendo" data-dismiss="modal" style="color: black" onclick="validaCheckSession()">Acepto</button>
                             </div>
 
 
