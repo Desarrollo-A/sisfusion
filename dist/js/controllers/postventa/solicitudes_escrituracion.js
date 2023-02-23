@@ -348,13 +348,16 @@ $(document).on("click", "#sendRequestButton", function (e) {
 if(id_estatus == 19 || id_estatus == 22 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     console.log(indexidDocumentos)
-    documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+    if(indexidDocumentos < 0){
+        documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+    }
 }
 if(id_estatus == 20 || id_estatus == 25 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     console.log(indexidDocumentos)
-
-    documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+    if(indexidDocumentos < 0){
+        documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+    }
 }
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
