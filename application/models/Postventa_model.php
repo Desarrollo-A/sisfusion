@@ -1180,7 +1180,7 @@ function checkBudgetInfo($idSolicitud){
         );
         $resultadoInsertarCliente = $this->db->insert('clientes', $dataCliente);
         $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
-        $resultadoUpdateLote =  $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
+        $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
         return $idCliente;
     }
 
@@ -1315,7 +1315,7 @@ function checkBudgetInfo($idSolicitud){
     $rol = $this->session->userdata('id_rol');
     $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $idSolicitud")->row()->id_estatus;
     $estatus_siguiente = $estatus == 19 || $estatus == 22 ? 20 : 25;
-    //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1 WHERE idSolicitud = $idSolicitud AND tipo_documento=20;");
     $this->db->query("UPDATE solicitudes_escrituracion SET id_notaria= $insert_id WHERE id_solicitud = $idSolicitud;");
     return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
     VALUES($idSolicitud,".$estatus.",0,'Cambio de Notaria',GETDATE(),$idUsuario,GETDATE(),$idUsuario,$estatus_siguiente);");
