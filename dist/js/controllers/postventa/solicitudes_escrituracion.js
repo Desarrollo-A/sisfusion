@@ -1087,7 +1087,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 }
                             break;
                             case 7:
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {      
+                                if (userType == 57) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR
                                     bandera_request = 1;
