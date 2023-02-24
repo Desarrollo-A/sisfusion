@@ -58,14 +58,14 @@ class Postventa_model extends CI_Model
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
-        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0 AND (he.descripcion != '' AND he.descripcion != 'NULL'))
+        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0 )
 		UNION
         (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, Concat('Rechazo: ',mr.motivo) as descripcion, CONVERT(varchar, he.fecha_creacion ,13) as fecha_creacion, he.tipo_movimiento, '#B03A2E' AS color
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
 		JOIN motivos_rechazo mr ON mr.id_motivo=he.descripcion AND he.tipo_movimiento = 1
-        WHERE se.id_solicitud = $id_solicitud AND (he.descripcion != '' AND he.descripcion != 'NULL') AND he.numero_estatus NOT IN(28,31))
+        WHERE se.id_solicitud = $id_solicitud  AND he.numero_estatus NOT IN(28,31))
 		ORDER BY CONVERT(varchar, he.fecha_creacion ,13) DESC");
 
 
@@ -850,7 +850,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
-        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus
+        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus AND cp.bandera_vista in (1)
         INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
