@@ -20,7 +20,7 @@ $(document).ready(function () {
     getResidenciales_escrituracion();
 });
 
-$(document).on('change', "#residenciales_escrituracion", function() {
+$(document).on('change', "#residenciales_escrituracion", function(){
     $('#lotes_escrituracion').val();
     getCondominios_escrituracion($(this).val());
     $(".boxDocument").removeClass("hide");
