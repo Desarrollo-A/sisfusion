@@ -905,7 +905,7 @@
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifInformacion" style="display:none">
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
                                     </div>
@@ -917,7 +917,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
                                         <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
                                     </div>
