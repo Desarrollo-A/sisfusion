@@ -909,7 +909,7 @@ $(document).on('click', '.saveNotaria', function() {
     if (tr.find('select').val()) {
         saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
     }else{
-        alerts.showNotification("top", "right", "Debe seleccionar una notaria", "warning");
+        alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
     }
 })
 
@@ -1087,12 +1087,12 @@ function fillTable(beginDate, endDate, estatus) {
                                     group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                 }
                             break;
-                            case 7:
+                            case 7: 
                                 if (userType == 56) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR
+                                    group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>`;   
                                     bandera_request = 1;
-                                    bandera_reject = 1;
                                 }
                             break;
                             case 6:
@@ -1155,7 +1155,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 19:
                             case 22:
-                                case 24:
+                            case 24:
                                     if (userType == 55) { 
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -2492,8 +2492,8 @@ function crearDetailsPresupuestos(data, permisos) {
     let notarias = `<table id="notarias-${data.id_solicitud}" class="table subBoxDetail">`;
     notarias += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     notarias += '<td>' + '<b>' + '# ' + '</b></td>';
-    notarias += '<td>' + '<b>' + 'NOTARIA ' + '</b></td>';
-    notarias += '<td>' + '<b>' + 'DESCRIPCION' + '</b></td>';
+    notarias += '<td>' + '<b>' + 'NOTAÍA ' + '</b></td>';
+    notarias += '<td>' + '<b>' + 'DESCRIPCIÓN' + '</b></td>';
     notarias += '<td>' + '<b>' + 'CARGAR PRESUPUESTOS' + '</b></td>';
     notarias += '</tr>';
 
@@ -2503,7 +2503,7 @@ function crearDetailsPresupuestos(data, permisos) {
         notarias += `<td class="d-flex direction-row justify-center align-center"> 
         ${permisos == 1 ? 
                         `<select id="notaria-${i}-${data.id_solicitud}" name="notaria" class="selectpicker select-gral m-0 notaria-select" data-style="btn" data-show-subtext="true"
-                        data-live-search="true" data-container="body" title="Selecciona una notaria" data-size="7" required></select>`: 
+                        data-live-search="true" data-container="body" title="Selecciona una notaría" data-size="7" required></select>`: 
                         `${data.notarias[i] ? data.notarias[i].nombre_notaria:''}`
                     
                 } </td>`;
