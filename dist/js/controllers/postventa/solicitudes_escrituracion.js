@@ -2496,7 +2496,7 @@ function crearDetailsPresupuestos(data, permisos) {
     notarias += '<td>' + '<b>' + 'DESCRIPCIÓN' + '</b></td>';
     notarias += '<td>' + '<b>' + 'CARGAR PRESUPUESTOS' + '</b></td>';
     notarias += '</tr>';
-
+    let accion = userType == 55 ? 'Ver' : 'Subir';
     for(let i = 0;i<3;i++){
         notarias += '<tr>';
         notarias += '<td> ' + (i + 1) + ' </td>';
@@ -2512,7 +2512,7 @@ function crearDetailsPresupuestos(data, permisos) {
         notarias += '<td><div class="d-flex justify-center">';
         notarias += `<button  class="btn-data btn-blueMaderas ${data.notarias[i] != undefined ? 'modalPresupuestos':'saveNotaria'}" 
         data-idNxS ="${data.notarias[i] ? data.notarias[i].idNotariaxSolicitud:null}" data-idSolicitud="${data.id_solicitud}" data-toggle="tooltip" 
-        data-placement="left" title="${data.notarias[i] != undefined ? 'Subir presupuesto':'Guardar notaria'}">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
+        data-placement="left" title="${data.notarias[i] != undefined ? accion+'presupuesto':'Guardar notaria'}">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
         </button>`;
         notarias += '</div></td></tr>';
     }
