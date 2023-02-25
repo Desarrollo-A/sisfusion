@@ -44,17 +44,14 @@ sp2 = { // CHRIS: SELECT PICKER
     }
 }
 
-$('#reports-datatable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#reports-datatable').DataTable().column(i).search() !== this.value) {
-            $('#reports-datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+
+
+
+
 
 $(document).ready(function () {
+
+
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
@@ -168,6 +165,16 @@ function dynamicColumns(columnData) {
     return dynamicColumns;
     
 }
+
+    $('#reports-datatable thead tr:eq(0) th').each(function (i) {
+        var title = $(this).text();
+        $(this).html('<input class="textoshead"  placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($('#reports-datatable').DataTable().column(i).search() !== this.value) {
+                $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+            }
+        });
+    });
 
 function buildTable(columns, data) {
     reportsTable = $('#reports-datatable').DataTable({
