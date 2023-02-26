@@ -987,11 +987,15 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria)
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0)
     {
         $response = $this->db->query("UPDATE Presupuestos SET idNotariaxSolicitud = (SELECT idNotariaxSolicitud FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
         WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNotariaxSolicitud IS NULL
             GROUP BY tipo, idNotariaxSolicitud)");
+            if($borrarNotaria == 1){
+                $this->db->query("UPDATE solicitudes_escrituracion set id_notaria=0 WHERE id_solicitud=$idSolicitud");
+                $this->db->query("UPDATE documentos_escrituracion set documento_a_validar=0 WHERE id_solicitud=$idSolicitud AND tipo_documento=20");
+            }
     }
 
    
