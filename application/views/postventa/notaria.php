@@ -27,12 +27,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red">
-                    <h4 class="card-title">Agregar notaria</h4>
+                    <h4 class="card-title">Agregar notaría</h4>
                 </div>
                 <form method="post" id="form_notario">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="label">Nombre de notaria</label>    
+                            <label class="label">Nombre de notaía</label>    
                             <input class="form-control" id="notaria_nombre" type="text" name="notaria_nombre" required>
                         </div>
                         <div class="form-group">
