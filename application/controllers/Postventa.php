@@ -2101,7 +2101,7 @@ function saveNotaria(){
     );
     $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
     $notariaExterna = $this->Postventa_model->existNotariaExterna($idSolicitud);
-    if($notariaExterna->id_notria != 0){
+    if($notariaExterna->id_notaria != 0){ 
         $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria,1);
     }else{
         $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria);
