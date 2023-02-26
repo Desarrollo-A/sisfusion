@@ -376,7 +376,7 @@ class Postventa_model extends CI_Model
                 $next = 4;
             }
         }*/;
-        $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36 ? ",fecha_firma=NULL " : "";
+        $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36  || $actividades_x_estatus->estatus_siguiente == 34 ? ",fecha_firma=NULL " : "";
         
         $num_movimiento = $type == 3 ? 1 : 0;
 
@@ -697,6 +697,7 @@ function checkBudgetInfo($idSolicitud){
         $response = $this->db->query("INSERT INTO notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2, 1)");
         $insert_id = $this->db->insert_id();
         $response = $this->db->query("UPDATE solicitudes_escrituracion SET bandera_notaria = 1, id_notaria = $insert_id WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1 WHERE idSolicitud = $id_solicitud AND tipo_documento=20;");
         $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,12,0,'SE ASIGNÓ NOTARÍA EXTERNA',GETDATE(),$id_usuario,GETDATE(),$id_usuario,0)");
         
         // if ($response) {
