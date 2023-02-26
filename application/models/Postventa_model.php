@@ -987,7 +987,7 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0)
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria)
     {
         $response = $this->db->query("UPDATE Presupuestos SET idNotariaxSolicitud = (SELECT idNotariaxSolicitud FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
         WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNotariaxSolicitud IS NULL
