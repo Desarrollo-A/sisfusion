@@ -182,7 +182,7 @@ class Postventa_model extends CI_Model
         if($tipo_tabla == 1){
             $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (47,50)" : " WHERE se.id_estatus in (47,50)" ;
         }else{
-        $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50)" : " WHERE se.id_estatus not in (47,50)";
+        $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50,49)" : " WHERE se.id_estatus not in (47,50,49)";
         }
         if($begin != 0){
         $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
@@ -379,6 +379,12 @@ class Postventa_model extends CI_Model
         $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36  || $actividades_x_estatus->estatus_siguiente == 34 ? ",fecha_firma=NULL " : "";
         
         $num_movimiento = $type == 3 ? 1 : 0;
+
+        if($actividades_x_estatus->estatus_siguiente == 20  || $actividades_x_estatus->estatus_siguiente == 25){
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10) AND expediente IS NOT NULL");
+        } if($actividades_x_estatus->estatus_siguiente == 19  || $actividades_x_estatus->estatus_siguiente == 22 || $actividades_x_estatus->estatus_siguiente == 24){
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10)");
+        }
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo $fechaFirma  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
