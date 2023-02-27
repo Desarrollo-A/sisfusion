@@ -2121,8 +2121,8 @@ function saveNotaria(){
             echo json_encode(array());
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria){
-        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0){
+        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria);
     }
     public function getOpcCat(){
         $id_cat = $this->input->post("id_cat");
