@@ -1027,13 +1027,13 @@ function fillTable(beginDate, endDate, estatus) {
                     let btnsAdicionales = ''; //variable para botones que se envian a la funcion de permisos
                     let permiso;
                     let bandera_request=0;
-                    let  bandera_reject = 0;
+                    let bandera_reject = 0;
                     let banderaAdmin=0;
                     var datosEstatus = {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                     }; 
-                    let 
+                     
                     switch (d.id_estatus) {
     
                             case 1: 
