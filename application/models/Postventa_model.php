@@ -182,7 +182,7 @@ class Postventa_model extends CI_Model
         if($tipo_tabla == 1){
             $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (47,50)" : " WHERE se.id_estatus in (47,50)" ;
         }else{
-        $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50)" : " WHERE se.id_estatus not in (47,50)";
+        $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50,49)" : " WHERE se.id_estatus not in (47,50,49)";
         }
         if($begin != 0){
         $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
