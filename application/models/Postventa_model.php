@@ -58,14 +58,14 @@ class Postventa_model extends CI_Model
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
-        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0 AND (he.descripcion != '' AND he.descripcion != 'NULL'))
+        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0 )
 		UNION
         (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, Concat('Rechazo: ',mr.motivo) as descripcion, CONVERT(varchar, he.fecha_creacion ,13) as fecha_creacion, he.tipo_movimiento, '#B03A2E' AS color
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
 		JOIN motivos_rechazo mr ON mr.id_motivo=he.descripcion AND he.tipo_movimiento = 1
-        WHERE se.id_solicitud = $id_solicitud AND (he.descripcion != '' AND he.descripcion != 'NULL') AND he.numero_estatus NOT IN(28,31))
+        WHERE se.id_solicitud = $id_solicitud  AND he.numero_estatus NOT IN(28,31))
 		ORDER BY CONVERT(varchar, he.fecha_creacion ,13) DESC");
 
 
@@ -376,7 +376,7 @@ class Postventa_model extends CI_Model
                 $next = 4;
             }
         }*/;
-        $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36 ? ",fecha_firma=NULL " : "";
+        $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36  || $actividades_x_estatus->estatus_siguiente == 34 ? ",fecha_firma=NULL " : "";
         
         $num_movimiento = $type == 3 ? 1 : 0;
 
@@ -697,6 +697,7 @@ function checkBudgetInfo($idSolicitud){
         $response = $this->db->query("INSERT INTO notarias (nombre_notaria, nombre_notario, direccion, correo, telefono, sede, pertenece, estatus) VALUES('$nombre_notaria', '$nombre_notario', '$direccion', '$correo', '$telefono', 0, 2, 1)");
         $insert_id = $this->db->insert_id();
         $response = $this->db->query("UPDATE solicitudes_escrituracion SET bandera_notaria = 1, id_notaria = $insert_id WHERE id_solicitud = $id_solicitud");
+        $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1 WHERE idSolicitud = $id_solicitud AND tipo_documento=20;");
         $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,12,0,'SE ASIGNÓ NOTARÍA EXTERNA',GETDATE(),$id_usuario,GETDATE(),$id_usuario,0)");
         
         // if ($response) {
@@ -850,7 +851,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
-        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus
+        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus AND cp.bandera_vista in (1)
         INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
@@ -986,11 +987,15 @@ function checkBudgetInfo($idSolicitud){
         return $query->result_array();
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria)
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0)
     {
         $response = $this->db->query("UPDATE Presupuestos SET idNotariaxSolicitud = (SELECT idNotariaxSolicitud FROM notarias_x_usuario WHERE id_notaria = $idNotaria AND id_solicitud = $idSolicitud) 
         WHERE idPresupuesto IN (SELECT MIN(idPresupuesto) id FROM Presupuestos WHERE idSolicitud = $idSolicitud AND idNotariaxSolicitud IS NULL
             GROUP BY tipo, idNotariaxSolicitud)");
+            if($borrarNotaria == 1){
+                $this->db->query("UPDATE solicitudes_escrituracion set id_notaria=0 WHERE id_solicitud=$idSolicitud");
+                $this->db->query("UPDATE documentos_escrituracion set documento_a_validar=0 WHERE idSolicitud=$idSolicitud AND tipo_documento=20");
+            }
     }
 
    
@@ -1180,7 +1185,7 @@ function checkBudgetInfo($idSolicitud){
         );
         $resultadoInsertarCliente = $this->db->insert('clientes', $dataCliente);
         $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
-        $resultadoUpdateLote =  $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
+        $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
         return $idCliente;
     }
 
@@ -1315,7 +1320,7 @@ function checkBudgetInfo($idSolicitud){
     $rol = $this->session->userdata('id_rol');
     $estatus = $this->db->query("SELECT id_estatus FROM solicitudes_escrituracion WHERE id_solicitud = $idSolicitud")->row()->id_estatus;
     $estatus_siguiente = $estatus == 19 || $estatus == 22 ? 20 : 25;
-    //print_r("UPDATE solicitud_escrituracion SET idNotaria= $insert_id WHERE idSolicitud = $idSolicitud;");
+    $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1 WHERE idSolicitud = $idSolicitud AND tipo_documento=20;");
     $this->db->query("UPDATE solicitudes_escrituracion SET id_notaria= $insert_id WHERE id_solicitud = $idSolicitud;");
     return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
     VALUES($idSolicitud,".$estatus.",0,'Cambio de Notaria',GETDATE(),$idUsuario,GETDATE(),$idUsuario,$estatus_siguiente);");
@@ -1455,7 +1460,7 @@ function checkBudgetInfo($idSolicitud){
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
-		WHERE l.idStatusContratacion IN (3) AND l.idMovimiento IN (98, 100) AND cl.status = 1
+		WHERE l.idStatusContratacion IN (3) AND l.idMovimiento IN (98, 100, 102) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -1470,7 +1475,7 @@ function checkBudgetInfo($idSolicitud){
     public function validateSt3($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (3) AND idMovimiento IN (98,99,100))");
+        $this->db->where("(idStatusContratacion IN (3) AND idMovimiento IN (98,99,100,102))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;

@@ -2012,7 +2012,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInformacion($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
@@ -2093,13 +2093,19 @@ function saveNotaria(){
         return;
     }
 
+
     $arrayData = array(
         "id_solicitud" => $idSolicitud,
         "id_notaria" => $idNotaria,
         "estatus" => 1
     );
+    $notariaExterna = $this->Postventa_model->existNotariaExterna($idSolicitud);
+    if($notariaExterna->id_notaria != 0){ 
+         $this->updatePresupuestosNXU($idSolicitud, $idNotaria,1);
+    }else{
+        $this->updatePresupuestosNXU($idSolicitud, $idNotaria,0);
+    }
     $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
-    $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria);
     if ($data != null)
         echo json_encode($data);
     else
@@ -2115,8 +2121,8 @@ function saveNotaria(){
             echo json_encode(array());
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria){
-        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0){
+        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria);
     }
     public function getOpcCat(){
         $id_cat = $this->input->post("id_cat");
@@ -3088,13 +3094,21 @@ function saveNotaria(){
         $comentario=$this->input->post('comentario');
         $modificado=date('Y-m-d H:i:s');
         $fechaVenc=$this->input->post('fechaVenc');
+        $movimientoLote = $this->input->post('movimientoLote');
 
 
+        if($movimientoLote == 1){
+            $idMovimiento = 103;
+            $idStatusContratacion = 2;
+        }else{
+            $idMovimiento = 101;
+            $idStatusContratacion = 2;
+        }
 
 
         $arreglo=array();
-        $arreglo["idStatusContratacion"]= 2;
-        $arreglo["idMovimiento"]=101;
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -3239,8 +3253,8 @@ function saveNotaria(){
 
 
         $arreglo2=array();
-        $arreglo2["idStatusContratacion"]= 2;
-        $arreglo2["idMovimiento"]=101;
+        $arreglo2["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');

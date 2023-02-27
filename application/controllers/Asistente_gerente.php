@@ -227,7 +227,7 @@ class Asistente_gerente extends CI_Controller {
 		$arreglo2["idCliente"]= $idCliente;
 
         $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
-        if($valida_rama[0]['tipo_comprobanteD']==1){
+        if($valida_rama[0]['tipo_nc']==1){
             $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
             if(count($validacionCarta)<=0){
                 $data['message'] = 'MISSING_CARTA_RAMA';
