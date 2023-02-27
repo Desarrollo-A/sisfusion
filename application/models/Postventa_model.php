@@ -994,7 +994,7 @@ function checkBudgetInfo($idSolicitud){
             GROUP BY tipo, idNotariaxSolicitud)");
             if($borrarNotaria == 1){
                 $this->db->query("UPDATE solicitudes_escrituracion set id_notaria=0 WHERE id_solicitud=$idSolicitud");
-                $this->db->query("UPDATE documentos_escrituracion set documento_a_validar=0 WHERE id_solicitud=$idSolicitud AND tipo_documento=20");
+                $this->db->query("UPDATE documentos_escrituracion set documento_a_validar=0 WHERE idSolicitud=$idSolicitud AND tipo_documento=20");
             }
     }
 
