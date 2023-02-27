@@ -1028,10 +1028,12 @@ function fillTable(beginDate, endDate, estatus) {
                     let permiso;
                     let bandera_request=0;
                     let  bandera_reject = 0;
+                    let banderaAdmin=0;
                     var datosEstatus = {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                     }; 
+                    let 
                     switch (d.id_estatus) {
     
                             case 1: 
@@ -1077,6 +1079,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 11 && (d.bandera_admin == 0 || d.bandera_admin == null) && d.bandera_comite == 1) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
                                     // BOTON APROBAR
+                                    banderaAdmin=1;
                                     bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != 0) ? 1 : 0;
                                     group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
                                 }
@@ -1302,6 +1305,8 @@ function fillTable(beginDate, endDate, estatus) {
                     }
                     $('[data-toggle="tooltip"]').tooltip();
                     if(bandera_request == 1){
+                       d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
+                       d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'Recepción de estatus de construcción' : d.nombre_estatus_siguiente;
                         group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
