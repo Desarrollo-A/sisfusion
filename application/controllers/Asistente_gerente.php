@@ -226,19 +226,22 @@ class Asistente_gerente extends CI_Controller {
 		$arreglo2["idCondominio"]= $idCondominio;          	
 		$arreglo2["idCliente"]= $idCliente;
 
+
         $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
         if($valida_rama[0]['tipo_nc']==1){
             $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-            if(count($validacionCarta)<=0){
-                $data['message'] = 'MISSING_CARTA_RAMA';
-                echo json_encode($data);
-                exit;
-            }else{
-                if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                    if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                        $data['message'] = 'MISSING_CARTA_UPLOAD';
-                        echo json_encode($data);
-                        exit;
+            if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                if(count($validacionCarta)<=0){
+                    $data['message'] = 'MISSING_CARTA_RAMA';
+                    echo json_encode($data);
+                    exit;
+                }else{
+                    if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                        if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                            $data['message'] = 'MISSING_CARTA_UPLOAD';
+                            echo json_encode($data);
+                            exit;
+                        }
                     }
                 }
             }
@@ -260,7 +263,7 @@ class Asistente_gerente extends CI_Controller {
 
 }
 	
-public function editar_registro_loteRechazo_asistentes_proceceso8(){
+    public function editar_registro_loteRechazo_asistentes_proceceso8(){
   $idLote=$this->input->post('idLote');
   $idCondominio=$this->input->post('idCondominio');
   $nombreLote=$this->input->post('nombreLote');
@@ -363,13 +366,13 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
   foreach($array as $email)
   {
     if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-      if (trim($email) != ''){ 
-        $mail->addAddress($email);
+      if (trim($email) != ''){
+        $mail->addAddress('programador.analista8@ciudadmaderas.com');//$email
       }
     }
 
     if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-      $mail->addAddress('analista.comercial@ciudadmaderas.com');
+      $mail->addAddress('programador.analista8@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
     }
   }
 
@@ -489,22 +492,25 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
     $arreglo["status8Flag"] = 1;
 
       $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
-      if($valida_rama[0]['tipo_comprobanteD']==1){
+      if($valida_rama[0]['tipo_nc']==1){
           $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-          if(count($validacionCarta)<=0){
-              $data['message'] = 'MISSING_CARTA_RAMA';
-              echo json_encode($data);
-              exit;
-          }else{
-              if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                  if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                      $data['message'] = 'MISSING_CARTA_UPLOAD';
-                      echo json_encode($data);
-                      exit;
+          if($validacionCarta[0]['tipo_comprobanteD']==1) {
+              if(count($validacionCarta)<=0){
+                  $data['message'] = 'MISSING_CARTA_RAMA';
+                  echo json_encode($data);
+                  exit;
+              }else{
+                  if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                      if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                          $data['message'] = 'MISSING_CARTA_UPLOAD';
+                          echo json_encode($data);
+                          exit;
+                      }
                   }
               }
           }
       }
+
 
 
 
