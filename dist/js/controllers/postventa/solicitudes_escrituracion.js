@@ -1306,7 +1306,7 @@ function fillTable(beginDate, endDate, estatus) {
                     $('[data-toggle="tooltip"]').tooltip();
                     if(bandera_request == 1){
                        d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
-                       d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'Recepción de estatus de construcción' : d.nombre_estatus_siguiente;
+                       d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'Recepción de estatus de construcción - Postventa' : d.nombre_estatus_siguiente;
                         group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
