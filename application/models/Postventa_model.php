@@ -1203,28 +1203,45 @@ function checkBudgetInfo($idSolicitud){
         {
             $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%' AND se.id_estatus not in(49) "; 
         }
-        $cmd = ("SELECT distinct(se.id_solicitud), cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,se.bandera_comite,se.bandera_admin,
-        cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, 
-        se.aportacion, ae.id_actividad,se.id_titulacion ,CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  ) as nombre,
-        ae.clave, ae.nombre actividad, ar.id_opcion as id_area, ar.nombre as area,
-        (CASE WHEN se.id_estatus in (2) THEN CONCAT(cp.clave_actividad ,' - ', (STRING_AGG(cp.nombre_actividad, ' y ')))
-        ELSE CONCAT(cp.clave_actividad ,' - ', STRING_AGG(cp.nombre_actividad, ' ')) END) AS nombre_estatus
+        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
+        r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
+        se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area,
+        cp.area_actual, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente,
+        cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar,
+        se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento,
+        se.id_notaria, se.fecha_firma, a.descripcion actividad,
+        CONCAT(usuti.nombre, ' ', usuti.apellido_paterno, ' ', usuti.apellido_materno) nombre
+                FROM solicitudes_escrituracion se 
+                INNER JOIN lotes l ON se.id_lote = l.idLote 
+                INNER JOIN clientes c ON c.id_cliente = l.idCliente 
+                INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+                INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
+                INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista in (1)
+                INNER JOIN control_permisos cs ON se.id_estatus = cs.estatus_actual and cs.clasificacion in (1,2)
+                INNER JOIN usuarios usuti ON usuti.id_usuario=se.id_titulacion
+                INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad 
+                INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         
-        FROM solicitudes_escrituracion se 
-        INNER JOIN lotes l ON se.id_lote = l.idLote 
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente
-        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial
-        INNER JOIN control_permisos cp ON se.id_estatus = cp.estatus_actual AND cp.bandera_vista = 1
-        INNER JOIN actividades_escrituracion ae ON ae.clave = cp.clave_actividad AND cp.bandera_vista = 1
-        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
-        LEFT JOIN usuarios usuti on usuti.id_rol = 57 and usuti.estatus = 1 and usuti.id_usuario = se.id_titulacion
-        LEFT JOIN historial_escrituracion h ON h.id_solicitud = se.id_solicitud
-        $queryExtra
-        GROUP BY se.id_solicitud, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, 
-        c.nombre, n.pertenece,se.id_titulacion, se.id_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad,
-        cp.clave_actividad, ae.nombre, ar.id_opcion, ar.nombre,CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  ) , cp.estatus_siguiente, cp.area_siguiente, se.bandera_comite, se.bandera_admin");
+                LEFT JOIN Notarias n ON n.idNotaria = se.id_notaria
+                
+                LEFT JOIN (SELECT a.id_solicitud, a.fecha_creacion, (CASE WHEN a.tipo_movimiento = 1 THEN CONCAT(MAX(mr.motivo),' ',us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno,' - ',rol.nombre) ELSE CONCAT(MAX(a.descripcion),' ',us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' - ', rol.nombre) END) AS descripcion 
+                FROM historial_escrituracion a
+                INNER JOIN (SELECT id_solicitud, MAX(fecha_creacion) fecha_max FROM historial_escrituracion GROUP BY id_solicitud) b ON a.id_solicitud = b.id_solicitud AND a.fecha_creacion = b.fecha_max
+                INNER JOIN usuarios us ON us.id_usuario = a.creado_por 
+                INNER JOIN opcs_x_cats rol ON rol.id_opcion = us.id_rol AND rol.id_catalogo = 1 
+                LEFT JOIN motivos_rechazo mr ON mr.id_motivo = TRY_CAST(a.descripcion AS INT) 
+                GROUP BY a.id_solicitud, a.fecha_creacion, a.descripcion, mr.motivo, a.tipo_movimiento, rol.nombre, us.nombre, us.apellido_paterno, us.apellido_materno) a ON a.id_solicitud=se.id_solicitud
+        
+        
+                LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1 WHERE cl.clasificacion in (1,2)
+                GROUP BY cl.estatus_actual, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cs.estatus_siguiente
+                $queryExtra
+                GROUP BY se.id_solicitud,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, 
+                se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre,
+                cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso,
+                se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,
+                se.fecha_modificacion, a.descripcion,se.id_notaria,se.fecha_firma,usuti.nombre,usuti.apellido_paterno, usuti.apellido_materno,
+                se.valor_contrato ORDER BY se.id_solicitud DESC");
         
         $query = $this->db->query($cmd);
         return $query->result_array();       
