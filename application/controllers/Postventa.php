@@ -2733,7 +2733,7 @@ function saveNotaria(){
                         "data" => 'atrasado'
                     ],
                     [
-                        "title" => 'Dias de atraso',
+                        "title" => 'Días de atraso',
                         "data" => 'diferencia'
                     ],
                     [
