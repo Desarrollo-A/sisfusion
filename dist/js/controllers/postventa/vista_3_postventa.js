@@ -212,7 +212,7 @@ $("#tabla_estatus3").ready( function(){
 
                     var fechaVenc;
 
-                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84) {
+                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84 || d.idStatusContratacion == 3 && d.idMovimiento == 98) {
                         fechaVenc = d.fechaVenc;
                     } else if (d.idStatusContratacion == 2 && d.idMovimiento == 74 || d.idStatusContratacion == 2 && d.idMovimiento == 93) {
                         fechaVenc = 'Vencido';
