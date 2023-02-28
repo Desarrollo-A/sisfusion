@@ -1439,7 +1439,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 switch (d.id_estatus) {
                         case 47:
                         case 50: 
-                        if (userType == 57) { 
+                        if (userType == 57 && d.id_titulacion == idUser) { 
                             bandera_request = d.expediente != null ? 1 : 0;
                             permiso = 1;
                             group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
