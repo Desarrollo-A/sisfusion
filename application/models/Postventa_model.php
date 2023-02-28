@@ -1198,10 +1198,10 @@ function checkBudgetInfo($idSolicitud){
 
     public function SolicitudesEscrituracion($idUsu){
         if($idUsu == ''){
-            $queryExtra = '';
+            $queryExtra = ' WHERE se.id_estatus not in(49) ';
         }else 
         {
-            $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%'"; 
+            $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%' AND se.id_estatus not in(49) "; 
         }
         $cmd = ("SELECT distinct(se.id_solicitud), cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, se.id_estatus idEstatus,se.bandera_comite,se.bandera_admin,
         cond.nombre nombreCondominio, r.nombreResidencial, c.nombre as cliente, n.pertenece, se.id_notaria, se.descuento, 
