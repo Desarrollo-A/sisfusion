@@ -548,7 +548,7 @@ $(document).on('click', '#presupuesto', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
 
-    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.estatus == 36)){
+    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.id_estatus == 36)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
@@ -1439,7 +1439,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 switch (d.id_estatus) {
                         case 47:
                         case 50: 
-                        if (userType == 57) { 
+                        if (userType == 57 && d.id_titulacion == idUser) { 
                             bandera_request = d.expediente != null ? 1 : 0;
                             permiso = 1;
                             group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
@@ -1892,8 +1892,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
-        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></td>`;
-       //${v.editado == 1 ? `<br><span class="label" style="background:${v.colour}">EDITADO</span>`:``} Este frangmento va en la linea de arriba(a considerar)
+        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label" style="background:#C0952B">EDITADO</span>`:``} </td>`;
         /*data-action = 1 (UPLOAD FILE)
         data-action = 2 (DELETE FILE)*/
 
