@@ -548,7 +548,7 @@ $(document).on('click', '#presupuesto', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
 
-    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11)){
+    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.estatus == 36)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
