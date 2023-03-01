@@ -30,7 +30,6 @@
 application/cache/*
 application/config/*
 application/core/*
-application/helpers/*
 application/hooks/*
 application/libraries/*
 application/logs/*
