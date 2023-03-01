@@ -721,7 +721,6 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-end p-0">
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="observacionesSubmit" class="btn btn-primary btn-round btn-sm">Rechazar</button>
                         </div>
                     </div>
                    
