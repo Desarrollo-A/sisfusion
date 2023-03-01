@@ -1,10 +1,18 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+use application\helpers\email\Comentarios_Correos;
+
+  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		$this->load->model((array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model')));
-		$this->load->library(array('session','form_validation', 'get_menu', 'phpmailer_lib', 'formatter'));
-		$this->load->helper(array('url','form'));
+		$this->load->model('Contraloria_model');
+		$this->load->model('registrolote_modelo');
+		$this->load->model('Clientes_model');
+		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+		$this->load->model('General_model');
+		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->helper(array('url','form', 'email/comentarios_correos'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
@@ -1120,9 +1128,6 @@ public function get_sede(){
 	echo json_encode($this->Contraloria_model->get_tventa()->result_array());
   }
 
-
-
-
   public function editar_registro_loteRechazo_contraloria_proceceso5(){
 
 	$idLote=$this->input->post('idLote');
@@ -1134,7 +1139,6 @@ public function get_sede(){
 	$comentario=$this->input->post('comentario');
 	$perfil=$this->input->post('perfil');
 	$modificado=date("Y-m-d H:i:s");
-
 
 	$arreglo=array();
 	$arreglo["idStatusContratacion"]= 1;
@@ -1169,14 +1173,22 @@ public function get_sede(){
 	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	   $array = array_unique($correosClean);
 	}
-	
+
 	$infoLote = $this->Contraloria_model->getNameLote($idLote);
+	$data_mail[0] = json_decode(json_encode($infoLote), true);
+	$data_encabezados_tabla = array("comentario" => $comentario);
+	foreach ($infoLote as $key => $value) {
+		array_push($data_encabezados_tabla, $key);
+	}
+	crearPlantillaCorreo('programador.analista18@ciudadmaderas.com', null, $data_mail, $data_encabezados_tabla, Comentarios_Correos::EMAIL_RECHAZO_STATUS_5);
+	$data['message'] = 'OK';
+	echo json_encode($data);
 
- 
-  $mail = $this->phpmailer_lib->load();
+	
+	$mail = $this->phpmailer_lib->load();
 
-  
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+
+	$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
 
   
 	foreach($array as $email)
@@ -1194,73 +1206,73 @@ public function get_sede(){
 
 
 
-  $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
-  $mail->isHTML(true);
+	$mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
+	$mail->isHTML(true);
 
-  $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>AVISO DE BAJA </title>
-  <style media='all' type='text/css'>
-	  .encabezados{
-		  text-align: center;
-		  padding-top:  1.5%;
-		  padding-bottom: 1.5%;
-	  }
-	  .encabezados a{
-		  color: #234e7f;
-		  font-weight: bold;
-	  }
+//   $mailContent = utf8_decode( "<html><head>
+//   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+//   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+//   <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
+//   <title>AVISO DE BAJA </title>
+//   <style media='all' type='text/css'>
+// 	  .encabezados{
+// 		  text-align: center;
+// 		  padding-top:  1.5%;
+// 		  padding-bottom: 1.5%;
+// 	  }
+// 	  .encabezados a{
+// 		  color: #234e7f;
+// 		  font-weight: bold;
+// 	  }
 	  
-	  .fondo{
-		  background-color: #234e7f;
-		  color: #fff;
-	  }
+// 	  .fondo{
+// 		  background-color: #234e7f;
+// 		  color: #fff;
+// 	  }
 	  
-	  h4{
-		  text-align: center;
-	  }
-	  p{
-		  text-align: right;
-	  }
-	  strong{
-		  color: #234e7f;
-	  }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-			  <tr class='navbar navbar-inverse encabezados'><td>
-				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-			  </td></tr>
-		  </table>
-	  </td></tr>
-	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-		<tr class='active'>
-		  <th>Proyecto</th>
-		  <th>Condominio</th> 
-		  <th>Lote</th>   
-		  <th>Motivo de rechazo</th>   
-		  <th>Fecha/Hora</th>   
-		</tr> 
-		<tr>   
-               <td><center>".$infoLote->nombreResidencial."</center></td>
-               <td><center>".$infoLote->nombre."</center></td>
-               <td><center>".$infoLote->nombreLote."</center></td>
-               <td><center>".$comentario."</center></td>
-               <td><center>".date("Y-m-d H:i:s")."</center></td>
-		</tr>
-		</table></center>
+// 	  h4{
+// 		  text-align: center;
+// 	  }
+// 	  p{
+// 		  text-align: right;
+// 	  }
+// 	  strong{
+// 		  color: #234e7f;
+// 	  }
+//   </style>
+// </head>
+// <body>
+//   <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+// 	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
+// 		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+// 			  <tr class='navbar navbar-inverse encabezados'><td>
+// 				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
+// 			  </td></tr>
+// 		  </table>
+// 	  </td></tr>
+// 	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
+// 	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
+// 		<tr class='active'>
+// 		  <th>Proyecto</th>
+// 		  <th>Condominio</th> 
+// 		  <th>Lote</th>   
+// 		  <th>Motivo de rechazo</th>   
+// 		  <th>Fecha/Hora</th>
+// 		</tr> 
+// 		<tr>   
+//                <td><center>".$infoLote->nombreResidencial."</center></td>
+//                <td><center>".$infoLote->nombre."</center></td>
+//                <td><center>".$infoLote->nombreLote."</center></td>
+//                <td><center>".$comentario."</center></td>
+//                <td><center>".date("Y-m-d H:i:s")."</center></td>
+// 		</tr>
+// 		</table></center>
 	  
 	  
-	  </td></tr>
-  </table></body></html>");
+// 	  </td></tr>
+//   </table></body></html>");
 
-  $mail->Body = $mailContent;
+	$mail->Body = $mailContent;
 
 
 	$validate = $this->Contraloria_model->validateSt5($idLote);
