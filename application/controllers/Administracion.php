@@ -551,8 +551,8 @@ class Administracion extends CI_Controller{
          );
 
 		 #PROVICIONAL TESTING
-          $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
-          $correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
+          $correos_submit[0] = 'programador.analista18@ciudadmaderas.com';
+          //$correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
 
@@ -640,241 +640,88 @@ class Administracion extends CI_Controller{
 
     }
 
+	public function crearPlantillaCorreo($data_correo, $data_eviRec, $data_send)
+	{
+		$data_send = $this->Administracion_model->getInfoToMail(109361, 80655);
+		
+		$nombre = $this->session->userdata('nombre');
+		$apellido_paterno = $this->session->userdata('apellido_paterno');
+		$apellido_materno = $this->session->userdata('apellido_materno');
+
+		$nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
+		
+		$modificado=date('Y-m-d H:i:s');
+
+		$correos_submit = array( 'programador.analista18@ciudadmaderas.com');
+		if(!is_null($data_send)){
+			$data_mail[0] = array(
+				"proyecto" => $data_send->nombreResidencial,
+				"condominio" => $data_send->nombreCondominio,
+				"lote" => $data_send->nombreLote,
+				"cliente" => $data_send->nombreCliente,
+				"quien_rechaza" => $nombre_rechazador,
+				"fecha_apartado" => $data_send->fechaApartado,
+				"fecha_rechazo" => $modificado,
+			);
+			$data_mail[1] = array(
+				"proyecto" => $data_send->nombreResidencial,
+				"condominio" => $data_send->nombreCondominio,
+				"lote" => $data_send->nombreLote,
+				"cliente" => $data_send->nombreCliente,
+				"quien_rechaza" => $nombre_rechazador,
+				"fecha_apartado" => $data_send->fechaApartado,
+				"fecha_rechazo" => $modificado,
+			);
+		}else{
+			$data_mail = null;
+		}
+		$data_eviRec =array(
+			'comentario' => 'Esto es una prueba en envio de correo',
+			'id_cliente' => 109361,
+			'id_lote' => 80655
+		);
+
+		$data_encabezados_tabla = array('PROYECTO', 'CONDOMINIO', 'LOTE', 'CLIENTE', 'RECHAZADO', 'APARTADO', 'FECHA DE RECHAZO');
+
+		// $data_encabezados_etiquetas = array('ID_LOTE'=>'ID LOTE', 'NOMBRE_COMPLETO'=>'NOMBRE', 'FECHA_ACTUAL'=>'FECHA');
+
+		// $comentarioGeneral = 'Comentario: Esto es una prueba en envio de correo';
+
+		crearPlantillaCorreo($correos_submit, $data_eviRec, $data_mail, $data_encabezados_tabla, $data_eviRec['comentario']);
+	}
 
     public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        //$correoDir = $data_eviRec['correo_a_enviar'];
+		$data_encabezados_tabla = array();
+		foreach ($data_send as $key => $value) {
+			array_push($data_encabezados_tabla, $key);
+		}	
+		return crearPlantillaCorreo($data_correo, $data_eviRec, $data_send, $data_encabezados_tabla, $data_eviRec['comentario']);
 
-        $mail = $this->phpmailer_lib->load();
+        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        // //$correoDir = $data_eviRec['correo_a_enviar'];
 
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        foreach($data_correo as $item){
-                //print_r($item);
-                //echo '<br>';
-            $mail->addAddress($item);
-        }
+        // $mail = $this->phpmailer_lib->load();
 
-        $mail->addAddress($correo_new);
-         $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+        // $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        // foreach($data_correo as $item){
+        //         //print_r($item);
+        //         //echo '<br>';
+        //     $mail->addAddress($item);
+        // }
 
-        $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
-        $mail->isHTML(true);
+        // $mail->addAddress($correo_new);
+        //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
-//        $mailContent = "<html><head>
-//          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-//          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-//          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
-//          <style media='all' type='text/css'>
-//              .encabezados{
-//                  text-align: center;
-//                  padding-top:  1.5%;
-//                  padding-bottom: 1.5%;
-//              }
-//              .encabezados a{
-//                  color: #234e7f;
-//                  font-weight: bold;
-//              }
-//
-//              .fondo{
-//                  background-color: #234e7f;
-//                  color: #fff;
-//              }
-//
-//              h4{
-//                  text-align: center;
-//              }
-//              p{
-//                  text-align: right;
-//              }
-//              strong{
-//                  color: #234e7f;
-//              }
-//          </style>
-//        </head>
-//        <body>
-//          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-//          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-//              <tr colspan='3'>
-//                <td class='navbar navbar-inverse' align='center'>
-//                  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-//                      <tr class='navbar navbar-inverse encabezados'><td>
-//                          <p><a href='https://maderascrm.gphsis.com/' target='_blank'>CMR CIUDAD MADERAS</a></p>
-//                      </td></tr>
-//                  </table>
-//                </td>
-//              </tr>
-//              <tr>
-//                <td border=1 bgcolor='#FFFFFF' align='center'>
-//                <!--rechazo administración-->
-//                    <h3>¡Buenos días!</h3><br> <br>
-//
-//                    <p style='padding: 10px 90px;text-align: center;font-size: 1.5em'>
-//                    Hemos registrado un rechazo de administración.
-//                    </p><br><br>
-//
-//
-//                </td>
-//              </tr>
-//              <tr>
-//                <td border=1 bgcolor='#FFFFFF' align='center'>
-//                    <h3 style='font-size: 2em'>Comentario: <b>".$data_eviRec['comentario']."</b></h3>
-//                    <br><br>
-//                  <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-//                    <tr class='active' style='text-align: center'>
-//                      <th>Proyecto</th>
-//                      <th>Condominio</th>
-//                      <th>Lote</th>
-//                      <th>Cliente</th>
-//                      <th>Usuario</th>
-//                      <th>Fecha Apartado</th>
-//                      <th>Fecha Rechazo</th>
-//                    </tr>
-//                        <tr>";
-//                            foreach ($data_send as $index=>$item){
-//                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
-//                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
-//                            }
-//                        $mailContent .= "
-//                        </tr>
-//                    </table></center>
-//                    <br><br>
-//                </td>
-//              </tr>
-//          </table>
-//                </td>
-//              </tr>
-//          </table>
-//          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-//          </body></html>";
+        // $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
+        // $mail->isHTML(true);
 
-        $mailContent = '<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
-<body>
-<div bgcolor="#EFEEEA">
-    <center>
-        <table id="m_-4107947934748351806bodyTable" width="100%" height="100%" cellspacing="0" cellpadding="0"
-               border="0" bgcolor="#EFEEEA" align="center">
-            <tbody>
-            <tr>
-                <td id="m_-4107947934748351806bodyCell" style="padding-bottom:60px" valign="top" align="center">
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-                        <tbody>
-                        <tr>
-                            <td style="background-color:#00538b" valign="top" bgcolor="#00538b" align="center">
-                                <table style="max-width:640px;" width="100%" cellspacing="0" cellpadding="0" border="0"
-                                       align="center">
-                                    <tbody>
-                                    <tr>
-                                        <td style="padding:40px" valign="top" align="center"></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="background-color:#ffffff;padding-top:40px">&nbsp;</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td valign="top" align="center" style="background-color: #EFEEEA;">
-                                <table style="background-color:#ffffff;max-width:640px; margin-top: -60px" width="100%"
-                                       cellspacing="0" cellpadding="0" border="0" bgcolor="#000000" align="center">
-                                    <tbody>
-                                    <tr>
-                                        <td valign="top" bgcolor="#FFFFFF" align="center">
-                                            <img style="width:60%;padding-top: 40px;"
-                                                 src="https://maderascrm.gphsis.com/static/images/Logo_CM&TP_1.png">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding-right:40px;padding-left:40px;padding-top:20px;" valign="top" align="left">
-                                            <p>Estimado usuario:</p>
-                                            <p>Hemos registrado un un rechazo de administración</p>
-                                            <p><b>Comentario:</b>'.$data_eviRec['comentario'].' <br>
-                                            <i></i>
-                                            </p>
-                                            <table id=\'reporyt\' cellpadding=\'0\' cellspacing=\'0\' border=\'1\' width =\'100%\' style class=\'darkheader\'>
-                                                <tr class=\'active\' style=\'text-align: center\'>
-                                                  <th>Proyecto</th>   
-                                                  <th>Condominio</th>   
-                                                  <th>Lote</th>   
-                                                  <th>Cliente</th>   
-                                                  <th>Usuario</th>   
-                                                  <th>Fecha Apartado</th>   
-                                                  <th>Fecha Rechazo</th>   
-                                                </tr>
-                                                    <tr>';
-                                                            foreach ($data_send as $index=>$item){
-                                                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
-                                                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
-                                                            }
-
-                                            $mailContent .= '
-                                                            </tr>   
-                                                        </table>
-                                            <br><br>
-                                            <p>Saludos, Ciudad Maderas.</p>
-                                            <p style="font-size:10px;">Este correo fue generado de manera automática, te pedimos no respondas este correo, para cualquier duda o aclaración envía un correo a soporte@ciudadmaderas.com</p>
-                                            <p style="font-size:10px;">Al ingresar tus datos aceptas la política de privacidad, términos y condiciones las cuales pueden ser consultadas en nuestro sitio www.ciudadmaderas.com/legal</p>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style="border-top:2px solid #efeeea;color:#6a655f;font-family:\'Helvetica Neue, Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding-top:40px;padding-bottom:40px;text-align:center"
-                                            valign="top" align="center">
-                                            <p style="color:#6a655f;font-family:\'Helvetica Neue,Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding:0 20px;margin:0;text-align:center">
-                                                Departamento de TI</p>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </center>
-    <div class="yj6qo"></div>
-    <div class="adL">
-    </div>
-</div>
-<div class="adL">
-</div>
-</div></div>
-<div id=":nx" class="ii gt" style="display:none">
-    <div id=":ny" class="a3s aiL undefined"></div>
-</div>
-<div class="hi"></div>
-</div></div>
-<div class="ajx"></div>
-</div>
-</body>
-</html>';
-
-        $mail->Body = utf8_decode($mailContent);
-        if ($mail->send()) {
-            return 1;
-        } else {
-            return $mail->ErrorInfo;
-        }
+        // $mail->Body = utf8_decode($mailContent);
+        // if ($mail->send()) {
+        //     return 1;
+        // } else {
+        //     return $mail->ErrorInfo;
+        // }
     }
 
     public function status11Validado(){
