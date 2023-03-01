@@ -1755,7 +1755,7 @@ class Postventa extends CI_Controller
         echo json_encode( array( "data" => $response));
     }
 
-    public function getBudgetNotaria()
+    public function getinfoNotariaExt()
     {
         $idSolicitud = $_GET['idSolicitud'];
 
@@ -1775,48 +1775,6 @@ class Postventa extends CI_Controller
         echo json_encode($data);
     else
         echo json_encode(array());
-    }
-
-    public function rechazarNotaria()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
-
-        if($estatus == 5){
-            $informacion = $this->Postventa_model->rechazarNotaria5($idSolicitud);
-            return $informacion;
-
-            return $this->Postventa_model->rechazarNotaria5($idSolicitud, $rol);
-        } else if($estatus == 11){
-            $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
-            return $informacion;
-
-            return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
-        }
-
-        
-    }
-
-    //OBSERVACIONES
-    public function observacionesPostventa()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        // $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-        // return $informacion;
-
-        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
-    }
-
-    public function observacionesProyectos()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
     }
 
     public function mailObservaciones()
@@ -2133,13 +2091,6 @@ function saveNotaria(){
             echo json_encode(array());
     }
 
-
-
-
-
-
-
-  
     public function solicitudes_usuario(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
@@ -2168,40 +2119,6 @@ function saveNotaria(){
         echo json_encode($data);
 
     }
-
-    public function validarDocumento(){
-      
-        $estatus_validacion       = $this->input->post('estatus_validacion');
-        $Iddocumento       = $this->input->post('Iddocumentos');
-        $tipo       = $this->input->post('idOpcion');
-        $validado_por  =   $this->session->userdata('id_usuario');
-        $editado  =   $this->session->userdata('id_usuario');
-        $modificado =  date("Y-m-d H:i:s");
-        $opcionEditar  =   $this->input->post('opcionEditar');
-        
-
-        $insertArray = array(
-            'estatus_validacion'      =>   $opcionEditar ,
-            'validado_por'          => $validado_por,
-            'editado'             => 1, 
-            'modificado_por'     => $validado_por  ,
-            'modificado'             => $modificado, 
-        );
-        $updates = $this->Postventa_model->actualizarDocs( $Iddocumento ,$insertArray);
-        if($updates){
-            $respuesta =  array(
-              "response_code" => 200, 
-              "response_type" => 'success',
-              "message" => "Validado correctamente");
-          }else{
-            $respuesta =  array(
-              "response_code" => 400, 
-              "response_type" => 'error',
-              "message" => "Validado Incorrecto");
-          }  
-          echo json_encode ($respuesta);
-    }
-
     
     public function descuentoUpdateTi(){
 
@@ -2376,60 +2293,6 @@ function saveNotaria(){
 
     }
       
-
-
-
-    public function validarDocumentoss(){
-        $motivo = 0;
-        $estatus_validacion       = $this->input->post('estatus_validacion');
-        $Iddocumento       = $this->input->post('Iddocumentos');
-        $tipo       = $this->input->post('idOpcion');
-        $validado_por  =   $this->session->userdata('id_usuario');
-        $editado  =   $this->session->userdata('id_usuario');
-        $modificado =  date("Y-m-d H:i:s");
-        $opcionEditar  =   $this->input->post('opcionEditar');
-        $insertArrayActualizarEstatus = array(
-            'estatus'        => 0
-            );
-            
-        $respuestaAct = $this->Postventa_model->actualizarMotivosRechazo(  $tipo , $Iddocumento,$insertArrayActualizarEstatus);
-        if($estatus_validacion ==2){
-            $proceso  =   $this->input->post('proceso');
-            $motivo  =   $this->input->post('motivo');
-            $insertArray = array(
-                'id_motivo'      => $motivo,
-                'id_documento'   => $Iddocumento,
-                'tipo'           => $tipo, 
-                'estatus'        => 1,
-                'tipo_proceso'   => $proceso,
-                'creado_por'     => $validado_por,
-                'fecha_creacion' => $modificado,
-            );
-            $respuestaAct = $this->Postventa_model->insertMotivoPorDoc( $insertArray);
-            
-        }
-        $insertArray = array(
-            'estatus_validacion'      =>   $opcionEditar ,
-            'validado_por'          => $validado_por,
-            'editado'             => 1, 
-            'modificado_por'     => $validado_por  ,
-            'modificado'             => $modificado, 
-        );
-        $updates = $this->Postventa_model->actualizarDocs( $Iddocumento ,$insertArray);
-        if($updates ){
-            $respuesta =  array(
-              "response_code" => 200, 
-              "response_type" => 'success',
-              "message" => "Validado correctamente");
-          }else{
-            $respuesta =  array(
-              "response_code" => 400, 
-              "response_type" => 'error',
-              "message" => "Validado Incorrecto");
-          }  
-          echo json_encode ($respuesta);
-    }
-
     
     public function descuentoUpdateTis(){
 
@@ -2466,231 +2329,6 @@ function saveNotaria(){
         }
         echo json_encode ($respuesta);
       } 
-
-      public function getDocumentosPorSolicitudss()
-      {
-        
-          $solicitud      = $this->input->post('solicitud');
-          $status        = $this->input->post('estatus');
-          $notariaExterna = ''; 
-          $validacion     = true;
-          $notariaExterna = $this->Postventa_model->existNotariaExterna($solicitud);
-        // var_dump ($solicitud, $estatus);
-        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
-        $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
-
-        if($status == 9){
-            $opciones = "IN (11,13,20 $docNotariaExterna)";
-        }elseif($status == 18){
-            $opciones = 'IN (7)';
-        }elseif($status == 19 ||$status == 22 || $status == 24 || $status = 20){
-            $opciones = "IN (1,3,4,5,6,8,9,11,12,17,18 $docPersonalidadJuridica $docNotariaExterna)";
-        }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
-            $opciones = 'IN (17,18)';
-        }elseif($status == 29 || $status == 35 || $status == 40){
-            $opciones = 'IN (15)';
-        }elseif($status == 47 || $status == 50){
-            $opciones = 'IN (14)';
-        }elseif($status == 42 || $status == 52){
-            $opciones = 'IN (19)';
-        }
-// 
-// 
-          if($solicitud == '' || $status == '')
-          {
-              $validacion = false;
-          }
-          if($validacion){
-
-              $respuesta['rechazos']        = $this->Postventa_model->rechazosDeDocs($solicitud);
-              $respuesta['misDocumentos']   = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos']   = $this->Postventa_model->documentosNecesarios($opciones);
-              $respuesta['nuevosDocs']      = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
-          }else{
-              $respuesta = array();
-          }
-   
-          
-          echo json_encode($respuesta);
-      }
-
-      public function UParchivosFromss(){
-		$tamanoOfAuts = (1);
-    	$indexx = ($_POST['indexx']);
-        $solicitud = ($_POST['solicitudId']);   
-        $tipoDocuemento = ($_POST['iddocumento']);
-        $estatus_validacion = 0;
-        // $lote = ($_POST['lote']);
-             // CONSULTAR SI EXISTE UN DOCUMENTO
-             if($this->Postventa_model->validarExisteDocumento($tipoDocuemento ,$solicitud))
-             {   
-                // NO EXISTE DOCUMENTO AGREGAMOS NORMAL
-                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
-                    $aleatorio = rand(100,1000);
-                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
-                    // $proyecto = str_replace(' ', '',$nombreResidencial);
-                    // $condominio = str_replace(' ', '',$nombreCondominio);
-                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-                    // $condom = substr($condominioQuitaN, 0, 3);
-                    // $cond= strtoupper($condom);
-                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-                    $date = date('dmYHis');
-                     $expediente = $date."_".$aleatorio."_".$expediente;
-
-                    $ruta = $this->getFolderFile($tipoDocuemento);
-                    $info =  $this->session->userdata('id_usuario');
-                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $arrayInsertDocumentos = array(
-                            'movimiento'    => 'creacion de documento escrituracion',
-                            'expediente'    =>  $expediente,
-                            'modificado'    => date("Y-m-d H:i:s"),
-                            'status'       => 1, 
-                            'idSolicitud'   => $solicitud ,
-                            'idUsuario'     => $info ,
-                            'tipo_documento' => $tipoDocuemento,
-
-                            'fecha_creacion' => date("Y-m-d H:i:s"),
-                            // 'estatus_validacion' => $estatus_validacion, 
-                        );
-    
-                        $ultimoInsert =   $this->Postventa_model->insertDocumentNuevo($arrayInsertDocumentos);
-                       
-     
-                    }else{
-                        $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-                    }
-             }else{
-                $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-             }
-            
-            } else {
-                // ELIMINAMOS DOCUMENTO ACUTALIZANDO DATOS
-
-                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
-                    $aleatorio = rand(100,1000);
-                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
-                    // $proyecto = str_replace(' ', '',$nombreResidencial);
-                    // $condominio = str_replace(' ', '',$nombreCondominio);
-                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-                    // $condom = substr($condominioQuitaN, 0, 3);
-                    // $cond= strtoupper($condom);
-                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-                    $date = date('dmYHis');
-                    $expediente = $date."_".$aleatorio."_".$expediente;
-                    $ruta = $this->getFolderFile($tipoDocuemento);
-                    $info =  $this->session->userdata('id_usuario');
-                    $documento = $this->Postventa_model->validarExisteDocumentos($tipoDocuemento ,$solicitud);
-                    $clave = $documento->idDocumento; 
-                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $arrayInsertDocumentos = array(
-                            'movimiento'    => 'creacion de documento escrituracion',
-                            'expediente'    =>  $expediente,
-                            'modificado'    =>  date("Y-m-d H:i:s"),
-                            'status'        =>  1,
-                            // 'estatus_validacion' => $estatus_validacion, 
-                        );
-                        $updates = $this->Postventa_model->actualizarDocs( $clave ,$arrayInsertDocumentos);
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $ultimoInsert = $clave ;
-                    
-                    }else{
-                        $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-                    }
-
-                
-             }
-
-
-		
-			}
-
-    $respuesta = array(
-      'code'    => $response,
-      'mensaje' => $mensaje,
-      'respuesta' => $response,
-      'ultimoInsert' =>  $ultimoInsert,
-
-      // donde 1 es succes y 2 es error
-    );
-    echo json_encode ($respuesta);
-	}
-
-
-    public function deleteFileActualizado2()
-    {
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idSolicitud = $this->input->post('idSolicitud');
-        $idDocumento = $this->input->post('idDocumento');
-
-        // var_dump($idDocumento , $documentType);
-        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
-        $folder = $this->getFolderFile($documentType);
-        $file = $folder . $filename;
-        if (file_exists($file))
-            unlink($file);  
-            // AQUI SE VA A AACTUALIZAR
-            $arrayInsertDocumentos = array(
-                'expediente'    => null,
-                'estatus_validacion' => null, 
-                'movimiento'    => 'creacion de documento escrituracion',
-                'modificado'    =>  date("Y-m-d H:i:s"),
-                'status'        =>  0, 
-            );
-            $updates = $this->Postventa_model->actualizarDocs( $idDocumento ,$arrayInsertDocumentos);
-        echo json_encode($updates);
-        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
-    }
-
-    public function descargarDocsss()
-    {
-        $this->load->helper('download');
-        $name = $this->input->post('name');
-        $documentType = $this->input->post('documentType');
-        var_dump( $documentType,  $name);
-        $folders = $this->getFolderFile($documentType);
-        $Ruta = $folders.$name;
-        var_dump(  $Ruta );
-        force_download($Ruta, NULL);     
-    }
-
-    public function motivosRechazos(){
-        $tipoDocuemento = $this->input->post("tipoDocumento");
-        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
-        echo json_encode ($motivosRechazo); 
-    }
-  
-    public function cambiarEstatusDocsSiguienteMotivo(){
-
-        $tipoDocuemento = $this->input->post("tipoDocumento");
-        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
-        echo json_encode ($motivosRechazo); 
-
-    }
-    public function existeNegado(){
-        $solicitud = $this->input->post("solicitud");
-        $RespuestaRechazo = $this->Postventa_model->existeNegado($solicitud);
-        
-        echo json_encode($RespuestaRechazo);
-
-    }
 
 
     function getData(){
