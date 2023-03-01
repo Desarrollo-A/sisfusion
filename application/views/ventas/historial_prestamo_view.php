@@ -18,7 +18,7 @@
 		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
 		?>
-
+	
 		<!-- Modals -->
 		<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
 			<div class="modal-dialog modal-sm">

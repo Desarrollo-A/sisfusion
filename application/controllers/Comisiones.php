@@ -2687,7 +2687,7 @@ public function getDatosHistorialPagoRP($id_usuario){
     echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto,$condominio){
+public function getDatosHistorialPago($proyecto = null,$condominio = null ) {
 
     // ini_set('max_execution_time', 99999);
     // set_time_limit(999999);
@@ -3321,7 +3321,7 @@ public function LiquidarLote(){
       $aleatorio = rand(100,1000);
       $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
       $date = date('dmYHis');
-      $expediente = $date."_".$aleatorio."_".$namedoc;
+      $expediente = $date."_".$aleatorio."_prestamo";
       $ruta = "static/documentos/evidencia_prestamo_auto/";
 
       if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
