@@ -5374,7 +5374,49 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
         return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
+
+      function insertar_codigo_postal($codigo_postal){ 
+
+        $id_user = $this->session->userdata('id_usuario');
+        $estatus_cp= $this->consulta_codigo_postal($id_user)->result_array();
+        $estatus_np= $estatus_cp[0]["estatus"];
+        $estatus_dato= $estatus_cp[0]["codigo_postal"];
+        if($estatus_cp == []){
+            return $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por)
+            values ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
+        }else{
+            echo "Dato ya registrado";
+        }
+        if($estatus_np == 0){
+
+            $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+
+            return $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por)
+            values ($id_user,'update',$estatus_dato, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
+
+        }else{
+            echo "Dato actualizado";
+        }
+        if($estatus_np != 0 && $estatus_cp != []){
+
+           return $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+
+        }else{
+            echo "Consulta actualizado";
+        }   
+      }
     
+      function consulta_codigo_postal($id_user){
+
+        return $this->db->query("SELECT estatus, codigo_postal FROM cp_usuarios WHERE id_usuario = $id_user");
+
+      }
+
+      function pagos_codigo_postal($id_user){
+
+        return $this->db->query("SELECT * FROM pago_comision_ind WHERE estatus = 4 AND id_usuario = $id_user");
+
+      }
 
 
 
