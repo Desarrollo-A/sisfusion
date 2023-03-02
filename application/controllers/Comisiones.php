@@ -367,7 +367,7 @@ public function getPuestosDescuentos(){
     
     
     // ------------------------------------------------------****************----------------------------------------
-  
+  z
 
   // ------------------------------------------------------HISTORIAL GENERAL CONTRALORIA----------------------------------------
   public function historial_comisiones()
@@ -7030,7 +7030,7 @@ for ($d=0; $d <count($dos) ; $d++) {
           "estatus_certificacion" => $estatus_certificacion,          
         );
         $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
-        $arr_update["fecha_modificacion"] = $fecha_modificacion ;     
+        $arr_update["fecha_modificacion"] =  date("Y-m-d H:i:s") ;     
       }else{
         // var_dump('entrando a 2');
         if($estatus === '1'){
