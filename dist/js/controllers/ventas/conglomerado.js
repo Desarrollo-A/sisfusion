@@ -2071,9 +2071,10 @@ $(document).on("click", ".uniAdd", function () {
     valorCertificacion = $(this).attr("data-idCertificacion");
     if(valorCertificacion == null || valorCertificacion == undefined  )
     {
-        document.getElementById("certificaciones").value = valorCertificacion;
-    }else{
         document.getElementById("certificaciones").value = 0;
+    }else{
+        document.getElementById("certificaciones").value = valorCertificacion;
+
     }
 
     if (descuento == total){
