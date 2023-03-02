@@ -47,7 +47,7 @@
                     <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label class="label">Certificaciones*</label>       
-                                    <select class="form-control certificaciones" name="certificaciones" id="certificaciones">
+                                    <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
                                         <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
                                             <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
                                         <?php } } ?>
@@ -103,7 +103,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
                                                     <div > 
-                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial" value="01/01/2021" />
+                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,7 +255,7 @@
                             <center>
                                 <button  name="updateDescuento" id="updateDescuento" class="btn btn-primary updateDescuento">GUARDAR</button>
                                 <button class="btn btn-danger" type="button" data-dismiss="modal" data-toggle="modal">
-                                    CANCELAR
+                                    eee
                                 </button>
                             </center>
                         </div>
