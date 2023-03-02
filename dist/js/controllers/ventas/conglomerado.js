@@ -367,7 +367,7 @@ function loadTable(tipoDescuento) {
                 {
                     "data": function (d) {
                         if(d.certificacion ==  null || d.certificacion == ''){
-                            return '<p style="font-size: 1em; color:gray"><b> No definido</b></p>';
+                            return '<p style="font-size: 1em; color:gray"><b> SIN DEFINIR</b></p>';
 
                         }else{
                             
@@ -691,11 +691,24 @@ function loadTable(tipoDescuento) {
                 {
                         // Acciones
                         "data": function (d) {
+                            let valor = ''; 
                             if(d.aply == null || d.aply <= 1){
                                 total = d.pagado_caja;
                             } else {
                                 total = d.aply;
                             }
+                   
+                            if(d.idCertificacion == null )
+                            {
+                                console.log(d.idCertificacion);
+                                // document.getElementById("certificaciones").value = '0';
+                                valor = 0
+                            }else{
+                                 console.log(d.idCertificacion);
+                                // document.getElementById("certificaciones").value = d.idCertificacion;
+                                valor = d.idCertificacion
+                            }
+
                             let pendientes = parseFloat(d.monto - d.aply);
                             if(pendientes < 0 ){
                                actividad =  (pendientes * -1);
@@ -724,7 +737,7 @@ function loadTable(tipoDescuento) {
                                             data-descuento="${d.monto}"
                                             data-mensual="${d.pago_individual}"
                                             data-pendiente="${pendientes}"
-                                            data-idCertificacion="${idCertificacion}"
+                                            data-idCertificacion="${valor}"
                                             data-total="${total}"
                                             class="btn-data btn-acidGreen uniAdd"
                                             title="Editar suficiente">
@@ -783,7 +796,7 @@ function loadTable(tipoDescuento) {
                                             data-mensual="${d.pago_individual}"
                                             data-pendiente="${pendientes}"
                                             data-total="${total}"
-                                            data-idCertificacion="${idCertificacion}"
+                                            data-idCertificacion="${valor}"
                                             class="btn-data btn-acidGreen uniAdd"
                                             title="Editar suficiente">
                                             <i class="fas fa-money-check-alt"></i>
@@ -845,13 +858,13 @@ function loadTable(tipoDescuento) {
                                     if (BOTON == 0) {
                                         return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button><button href="#" value="' + d.id_usuario + '" data-value="' + d.aply + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos">' + '<i class="fas fa-money"></i></button>'+
                                         '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button> '+
-                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd"      data-idCertificacion="'+d.idCertificacion+'"  title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
+                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd"      data-idCertificacion="'+valor+'"  title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
                                         
                                         ' </div>';
                                     } else {
                                         return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  ' +
                                         'data-saldoCom="'+d.abono_nuevo+'" data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
-                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd" data-idCertificacion="'+d.idCertificacion+'" title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
+                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd" data-idCertificacion="'+valor+'" title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
                                         '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
                                         
                                     }
@@ -2069,14 +2082,17 @@ $(document).on("click", ".uniAdd", function () {
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
     valorCertificacion = $(this).attr("data-idCertificacion");
-    if(valorCertificacion == null || valorCertificacion == undefined  )
-    {
-        document.getElementById("certificaciones").value = 0;
-    }else{
-        document.getElementById("certificaciones").value = valorCertificacion;
+    console.log(valorCertificacion);
 
-    }
-
+    // if(valorCertificacion == null )
+    // {
+    //     console.log(valorCertificacion);
+    //     document.getElementById("certificaciones").value = '0';
+    // }else{
+    //      console.log(valorCertificacion);
+      
+    // }
+    document.getElementById("certificaciones").value = valorCertificacion;
     if (descuento == total){
         banderaLiquidados = true;
 
