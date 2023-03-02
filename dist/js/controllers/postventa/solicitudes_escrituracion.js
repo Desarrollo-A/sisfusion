@@ -1170,7 +1170,8 @@ function fillTable(beginDate, endDate, estatus) {
                             case 20:
                             case 25:
                                     if (userType == 57 && d.id_titulacion == idUser) { 
-
+                                        
+                                        group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                         bandera_reject = 1;
@@ -1178,6 +1179,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 34:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
+                                    group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
@@ -2076,8 +2078,8 @@ $(document).on("submit", "#newNotario", function (e) {
 //MOSTRAR INFORMACION DE LA NOTARIA
 $(document).on('click', '#notaria', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
-    getBudgetNotaria(data.idSolicitud);
-    $('#idSolicitud').val(data.idSolicitud);
+    getinfoNotariaExt(data.id_solicitud);
+    $('#idSolicitud').val(data.id_solicitud);
     $("#gestionNotaria").modal();
 });
 $(document).on('click', '#newNotary', function () {
@@ -2090,8 +2092,8 @@ $(document).on('click', '#newNotary', function () {
     $('#telefono').val('');
     $("#altaNotario").modal();
 });
-function getBudgetNotaria(idSolicitud){
-    $.get('getBudgetNotaria',{
+function getinfoNotariaExt(idSolicitud){
+    $.get('getinfoNotariaExt',{
         idSolicitud:idSolicitud
     }, function(data) {
         $('#nombreNotaria').val(data.nombre_notaria);
@@ -2729,393 +2731,7 @@ $(document).on('click', '#bajarConMotivo', function () {
 
     });
 });
-
-$(document).on('click', '#denegartxt', function () {
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-opcIndex = $(this).attr("data-index");
-
-var typeDocument = ipOcion;
-
-
-var datos = []  ;
-var formData = new FormData();
-formData.append('tipoDocumento',typeDocument );
-let denegarTexto = '';
-
-$.ajax({
-    type: 'POST',
-    url: 'motivosRechazos',
-    data: formData,
-    dataType: "json",
-    contentType: false,
-    processData:false,
-    success: function(data) { 
-         denegarTexto += '<br> <select class="form-control titulares"  id="selectMotivo'+opcIndex+'" name="selectMotivo'+opcIndex+'" data-size=".3" >';
-        data.forEach(function(motivos,index ){
-                denegarTexto += '   <option data-proceso="'+motivos.tipo_proceso+'"  value="'+motivos.id_motivo+'//'+motivos.tipo_proceso+'">'+motivos.motivo+'</option>';     
-                datos[index]=motivos;
-         })
-        denegarTexto += '      </select>';
-
-         
-        let BOTON =  '<button id="bajarConMotivo" name="bajarConMotivo" ' +
-        'class="btn-data btn-warning cancelReg "   title="DENEGAR" '+
-        'data-idDocumento="'+idDocumento+'" data-idOpcion="'+ipOcion+'" data-editar="'+opcionEditar+'" '+
-        ' data-index="'+opcIndex+'" > ' +
-        '<i class="fas fa-folder-minus"></i></button>';
-        
-        document.getElementById('opcionesDeRechazo3'+opcIndex).innerHTML = BOTON;
-        document.getElementById('opcionesDeRechazo'+opcIndex).innerHTML = denegarTexto;
-        // opcionesDeRechazo 
-    },
-    error: function()
-    {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-    
-});
-
-});
-// esta funcion es para denegar docuemdocumento 
-$(document).on('click', '#validarDoc', function () {
-idStatus = 1;
-let estatus_validacion = 0;
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-index = $(this).attr("data-index");
-let estatusValidacion = ' ';
-
-let dataMostrar = ' ';
-
-
-$.ajax({
-    url : 'validarDocumento',
-    type : 'POST',
-    dataType: "json",
-    data: 
-    {
-        "estatus_validacion" : estatus,
-        "Iddocumentos" : idDocumento,
-        'idOpcion' : ipOcion, 
-        'opcionEditar': opcionEditar, 
-    }, 
-    success: function(data) {
-        document.getElementById('estatusValidacion'+index).innerHTML = estatusValidacion;
-
-        if(estatus == 1 ){  
-        
-            estatusVal = 'Estatus actual VALIDADO';
-            denegarTexto += '';
-        
-        }else if(estatus == 2){
-            estatusVal = 'Estatus actual DENEGADO';
-        
-        }else{
-            estatusVal = 'Estatus  CARGADO';
-        }
-
-        var estatusmensaje = document.getElementById('estatusValidacion'+index);
-     
-        estatusValidacion += estatusVal;
-        estatusmensaje.innerHTML = estatusValidacion;
-        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-    },              
-    error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
-    }
-
-});
-
-})
-
-
-
-// esta funcion es para validar documento 
-$(document).on('click', '#visualizarDoc', function () {
-idStatus = 1;
-denegarTexto =''; 
-let estatus_validacion = 0;
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-index = $(this).attr("data-index");
-let estatusValidacion = ' ';
-
-let dataMostrar = ' ';
-
-if(estatus == 1 ){  
-    
-}else if(estatus == 2){
-
-}
-
-$.ajax({
-    url : 'validarDocumento',
-    type : 'POST',
-    dataType: "json",
-    data: 
-    {
-        "estatus_validacion" : estatus,
-        "Iddocumentos" : idDocumento,
-        'idOpcion' : ipOcion, 
-        'opcionEditar': opcionEditar, 
-    }, 
-    success: function(data) {
-        document.getElementById('estatusValidacion'+index).innerHTML = estatusValidacion;
-
-        if(estatus == 1 ){  
-        
-            estatusVal = 'Estatus actual VALIDADO';
-            denegarTexto += '';
-        
-        }else if(estatus == 2){
-            estatusVal = 'Estatus actual DENEGADO';
-        
-        }else{
-            estatusVal = 'Estatus  CARGADO';
-        }
-
-        var estatusmensaje = document.getElementById('estatusValidacion'+index);
-        document.getElementById('denegarVISTA'+index).innerHTML = dataMostrar;
-        document.getElementById('validarVISTA'+index).innerHTML = dataMostrar;
-        estatusValidacion += estatusVal;
-        estatusmensaje.innerHTML = estatusValidacion;
-        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-
-    },              
-    error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
-    }
-
-});
-});
-
-
-
-
-    $(document).on("click", "#borrarDoc", function () {
-        let banderaEliminar = true;
-        documento       = $(this).attr("data-idDocumento");
-        solicitudId     = $(this).attr("data-idSolicitud");
-        idOpcion        = $(this).attr("data-idOpcion");
-        inde            = $(this).attr("data-index"); 
-        seCambio        = $(this).attr("data-cambiada"); 
-        primerIndex     = $(this).attr("data-primer"); 
-
-        let  validarCambioEnMismoModal = 0;
-        if(seCambio == 1 ){
-
-            cambioAlsubir = 'cambioAlsubir';
-            validarCambioEnMismoModal = "1";
-        }else {
-            validarCambioEnMismoModal = "0";
-            cambioAlsubir = 'cambioBajar';
-
-        }
-        var formData = new FormData();
-        let validacionAjax = true;
-        if( idOpcion == '' || idOpcion == undefined ){validacionAjax = false;}
-        if( documento == '' || documento == undefined ){validacionAjax = false;}
-        if( solicitudId == '' || solicitudId == undefined ){validacionAjax = false;}
-         
-        if(validacionAjax){
-            formData.append('documentType', idOpcion);
-            formData.append('idSolicitud',solicitudId );
-            formData.append('idDocumento', documento);
-            $.ajax({
-                type: 'POST',
-                url: 'deleteFileActualizado2',
-                data: formData, 
-                dataType: "json",
-                contentType: false,
-                processData:false,
-                success: function(data) {
-                    var InfoModall2 = ' ';
-                    document.getElementById(cambioAlsubir+inde).innerHTML = InfoModall2;
-                  if(data == 1){
-                    alerts.showNotification("top", "right", "Documento eliminado .", "success");
-                    var InfoModall = ' ';
-                    InfoModall += '  <div name="cambioAlsubir'+inde+'" id="cambioAlsubir'+inde+'" >';
-                    InfoModall += '      <input hidden name="numeroDeRow" id="numeroDeRow">';
-                    InfoModall += '      <div class="file">';
-                    InfoModall += '           <input class="form-control input-gral" data-cambiada='+validarCambioEnMismoModal+'  data-primer"'+primerIndex+'" id="docSubir'+inde+'" name="docSubir'+inde+'"  type="file"';
-                    InfoModall += '           accept=".jpg, .jpeg, .png ,pdf">';
-                    InfoModall += '      </div>';
-                    InfoModall += '	<button id="guardarImagen" name="guardarImagen"  ' +
-                                    'class="btn-data btn-green editReg" title="ACTUALIZAR" data-cambiada="1" data-index="'+inde+'" data-solicitud="'+solicitudId+'" data-documento="'+idOpcion +'" data-nomLote="2" data-idCond="">'+
-                                    '<i class="fas fa-upload"></i></button>';  
-                    InfoModall += '  </div>';
-                         document.getElementById(cambioAlsubir+inde).innerHTML = InfoModall;
-                  }
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        }
-    });
-    
-    $(document).on("click", "#guardarImagen", function () {
-      
-        indexData   = $(this).attr("data-index");
-        iddocumento = $(this).attr("data-documento");
-        solicitudId = $(this).attr("data-solicitud");
-        seCambio    = $(this).attr("data-cambiada"); 
-        let  validarCambioEnMismoModal =  0;
-        // pago_mensual = $(this).attr("data-mensual");
-        // descuento = $(this).attr("data-descuento");
-        if(seCambio == 1 ){
-            cambioAlsubir = 'cambioAlsubir';
-            validarCambioEnMismoModal = "1";
-        }else {
-            
-            cambioAlsubir = 'cambioBajar';
-            validarCambioEnMismoModal = "0";
-        }
-         let validacionAjax = true;
-        if( indexData == ''){validacionAjax = false;}
-        if( iddocumento == ''){validacionAjax = false;}
-        if( solicitudId == ''){validacionAjax = false;}
-
-        var archivos = $("#docSubir"+indexData)[0].files;
-        if (archivos.length > 0) {
-            //Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
-            var foto = archivos[0]; 
-            // var lector = new FileReader();
-            var formData = new FormData();
-            
-            //Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
-            formData.append('docSubir'+indexData, foto);
-            formData.append('indexx',indexData );
-            formData.append('iddocumento', iddocumento);
-            formData.append('solicitudId', solicitudId);
-            // formData.append('comentario', comentario);
-        }
-    
-        if(validacionAjax){
-            $.ajax({
-                type: 'POST',
-                url: 'UParchivosFromss',
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData:false,
-                success: function(data) {
-                    alerts.showNotification("top", "right", "Documento se ha cargado .", "success");
-                 
-                    var infoBotonesWhenSubio = ' ';
-                    infoBotonesWhenSubio += '';
-                    document.getElementById('cambioAlsubir'+indexData).innerHTML = infoBotonesWhenSubio;
-                    infoBotonesWhenSubio += '';
-                    // document.getElementById('cambioAlsubir1'+indexData).innerHTML = infoBotonesWhenSubio;
-                    
-                    PasarNuevaIno = '';
-                    PasarNuevaIno1 = '';
-                    
-                PasarNuevaIno += '   <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
-                PasarNuevaIno += '<button data-idLote="1" data-cambiada='+validarCambioEnMismoModal+' data-nomLote="2" data-idCond="" id="borrarDoc" name="borrarDoc"' +
-                ' data-idDocumento="'+data.ultimoInsert +'"  data-index="'+indexData+'" data-primer="'+indexData+'" data data-idSolicitud="'+solicitudId +'" data-idOpcion="'+iddocumento +'"  ' +
-                'class="btn-data btn-warning cancelReg" title="BORRAR">' +
-                '<i class="fas fa-trash-alt"></i></button>'; 
-                PasarNuevaIno += '  </div>';
-
-                PasarNuevaIno += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                PasarNuevaIno += '<a  id="visualizarDoc" name="visualizarDoc" ' +
-                ' data-idDocumento="'+data.ultimoInsert +'" data-cambiada='+validarCambioEnMismoModal+' data-primer="'+indexData+'" data-idSolicitud="'+solicitudId +'" data-idOpcion="'+iddocumento+'"' +
-                'class="btn-data btn-violetBoots cancelReg" title="Visualizar">' +
-                '<i class="fas fa-scroll"></i></a>'; 
-                
-                PasarNuevaIno += '  </div>';
-                document.getElementById('cambioAlsubir'+indexData).innerHTML = PasarNuevaIno;
-            
-
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        }
-        });
-            
-        $(document).on("click", "#cambiarEstatus", function () {
-            idStatus = $(this).attr("data-estatus");
-            solicitudes = $(this).attr("data-solicitud");
-            type = $(this).attr("data-type"); 
-            let solicitud = solicitudes ;
-            let estatus = idStatus;
-            let banderaUnRechazado = true;
-            let mensaje = 'existe un RECHAZO';
-            let code  = 200;
-            var docs = []
-                $.ajax({
-                    type: 'POST',
-                    url: 'getDocumentosPorSolicitudss',
-                    data: 
-                    {
-                        "estatus" : estatus,
-                        "solicitud" : solicitud
-                    } , 
-                    dataType: "json",
-                    
-                    success: function(data) {
-                    if(data.length  != 0){
-                        data.losDocumentos.forEach(function(elemento,i){
-                            data.misDocumentos.forEach(function(elementos,e){
-                                if( elemento.id_documento == elementos.id_opcion )
-                                {
-                                    if(elementos.estatusValidacion == 2){
-                                        banderaUnRechazado = false;
-                                        mensaje = 'existe un RECHAZO';
-                                    }  
-                                    data.losDocumentos[i] = '' , i;                       
-                                    docs.push(elementos)
-                                } 
-                                })
-                        })
-                    }
-                    if(docs.length == data.losDocumentos.length && banderaUnRechazado == true){                        
-                            var type  = 1;
-                            var comentarios = 'dadaa'
-                            var area_rechazo =  ''
-                            $.ajax({
-                                type: 'POST',
-                                url: 'changeStatus',
-                                data: 
-                                {
-                                    // "pagos_activos"     : pagos_activos,
-                                    "id_solicitud" : solicitud,
-                                    "type" : type,
-                                    "comentarios" : comentarios,
-                                    "area_rechazo" : area_rechazo,
-                                } , 
-                                dataType: "json",                               
-                                success: function(data) {
-                    
-                                },
-                                error: function(){
-                                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                                }
-                            });
-                            alerts.showNotification("top", "right", "Docuemntos enviados correctamente,Enviados.", "success");      
-                            
-
-                    }else{
-                        alerts.showNotification("top", "right", "Oops,Es posible que falte un documento, o se encuentre rechazado.", "warning");
-                    }
-                    },
-                    error: function(){
-                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                    }
-
-                });
-        })
-        
+ 
         $(document).on("click", "#preview", function () {
             var itself = $(this);
             var folder;
@@ -3195,23 +2811,8 @@ $.ajax({
                 width: 985,
                 height: 660
             });
-        });
+        });  
 
-
-        $(document).on('click', '#botonCancelarDoc', function () {
-
-            // alert('aqui cancelamos el nodal y recargarmos');
-            var SolicitudID = document.getElementById('solicitudP').value;
-            $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
-            $('#documentTreeAr').modal('hide')
-
-        });
-
-        
-        $(document).on('click', '#CancelarRevisarDocs', function () {
-
-
-        });
         
         
 
