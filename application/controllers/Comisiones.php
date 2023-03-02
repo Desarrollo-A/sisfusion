@@ -218,8 +218,22 @@ public function getPuestosDescuentos(){
      }
      echo json_encode( array( "data" => $dat));
     }
-  
-    
+
+    public function insertar_codigo_postal(){
+      $dato_solicitudcp = $this->input->post('dato_solicitudcp');
+      $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);      
+    }
+
+    public function consulta_codigo_postal(){
+      $resolt = $this->Comisiones_model->consulta_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+      echo json_encode($resolt);
+    }
+
+    public function pagos_codigo_postal(){
+      $respuesta = $this->Comisiones_model->pagos_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+      echo json_encode($respuesta);
+    }
+      
     function aprobar_comision(){
       $id_pago= $_POST['id_pago'];
       $id_comision = $_POST['id_comision'];
@@ -619,6 +633,7 @@ function update_estatus(){
   // ------------------------------------------------------SOLICITUDES ASESOR ----------------------------------------
   public function comisiones_colaborador()
   {
+    $id_user = $this->session->userdata('id_usuario');
     $datos = array();
     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
@@ -627,7 +642,7 @@ function update_estatus(){
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
 
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
-
+    $datos["cp_datos"] = $this->Comisiones_model->consulta_codigo_postal($id_user)->result_array();
 
     switch($this->session->userdata('id_rol')){
       case '1':
