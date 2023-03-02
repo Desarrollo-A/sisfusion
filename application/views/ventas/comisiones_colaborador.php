@@ -80,6 +80,26 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" data-backdrop="static" id="solicitud_cp" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Verifica o captura tu codigo postal</h5>
+                    </div>
+                    <form id="codigoForm">
+                    <div class="modal-body">
+                        <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="1"
+                        max="999999" placeholder="Captura tu codigo postal" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="codigopostalCancel" class="btn btn-secondary" data-dismiss="modal" style="display:none" >Close</button>
+                        <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -447,6 +467,16 @@
                                                         </a>
                                                     </p>
                                                 <?php } ?>
+                                                
+                                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
+                                                    <p class="card-title pl-2">
+                                                        <a onclick="codigo_consulta()" style="cursor: pointer;">
+                                                            <u>Clic para consultar codigo postal</u>
+                                                        </a>
+                                                    </p>
+                                                <?php } ?>
+
+
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -688,6 +718,7 @@
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
         id_usuario = <?= $this->session->userdata('id_usuario') ?>;
+        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
 
         $("#file-upload-extranjero").on('change', function() {
             $('#archivo-extranjero').val('');
@@ -759,6 +790,94 @@
                 height: 660
             });
         });
+
+        var input = document.getElementById('dato_solicitudcp');
+        input.addEventListener('input',function(){
+        if (this.value.length > 5) 
+        this.value = this.value.slice(0,5); 
+        })
+
+        // Apartado para la validacion del codigo postal       
+        $(document).ready(function () {
+            $.ajax({
+                url: url2 + 'Comisiones/consulta_codigo_postal',
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'GET',
+                success: function (response) {        
+                    const data = JSON.parse(response);
+                    if(data.length == 0 && forma_pago == 3){
+                        $("#solicitud_cp").modal();  
+                    }else if(data[0]['estatus'] == 0 && forma_pago == 3){
+                        var b = document.getElementById("dato_solicitudcp");
+                        b.setAttribute("value", data[0]['codigo_postal']);
+                        $("#solicitud_cp").modal();
+                    }else if(data[0]['estatus'] != 0 && data.length != 0 && forma_pago == 3){
+                        var b = document.getElementById("dato_solicitudcp");
+                        b.setAttribute("value", data[0]['codigo_postal']);
+                    }
+                }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                 }
+            });
+        });
+
+        $(document).ready(function(){
+            $.ajax({
+                url: url2 + 'Comisiones/pagos_codigo_postal',
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'GET',
+                success: function (response) {
+                    const data1 = JSON.parse(response);
+                    if(data1.length == 0){
+                        // $("#solicitud_cp").modal();
+                    }else if(data1.length != 0){
+                        document.getElementById("dato_solicitudcp").disabled = true;  
+                        document.getElementById("codigopostalSubmit").disabled = true;
+                        document.getElementById('codigopostalCancel').style.display = 'inline';
+                    }
+                }
+            });
+        });
+
+
+        $(document).on("submit", "#codigoForm", function (e) {  
+            e.preventDefault();   
+            let dato_solicitudcp = $('#dato_solicitudcp').val();
+
+            if(dato_solicitudcp == ''){
+                alerts.showNotification("top", "right", "Llenar la informacion solicitada.", "warning");
+                return false;
+            }
+            let data = new FormData($(this)[0]);
+            $.ajax({
+                url: url2 + 'Comisiones/insertar_codigo_postal',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (response) {
+                alerts.showNotification("top","right","Se capturo tu codigo postal: "+dato_solicitudcp+"","success");
+                $("#solicitud_cp").modal("hide");
+        }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+            });
+
+        });
+
+
+
+        function codigo_consulta(){
+            $("#solicitud_cp").modal();
+        }
+
+
+        // Termina apartado para la validacion del codigo postal
 
         $(document).ready(function () {
             $.post(url + "Contratacion/lista_proyecto", function (data) {
