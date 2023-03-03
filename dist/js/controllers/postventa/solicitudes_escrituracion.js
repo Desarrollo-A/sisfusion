@@ -102,7 +102,7 @@ $(document).ready(function () {
     });
 
     getRejectionReasons(2); // MJ: SE MANDAN TRAER LOS MOTIVOS DE RECHAZO PARA EL ÁRBOL DE DOCUMENTOS DE ESCRUTURACIÓN
-
+    tablaSolicitudesPausadas(); // SE EJECUTA FUNCIÓN QUE LLENA TABLA DE SOLICITUDES PAUSADAS
 });
 
 //eventos jquery
@@ -1480,6 +1480,145 @@ function fillTableCarga(beginDate, endDate, estatus) {
 });
 };
 // Termina el llenado para la tabla de carga testimonio
+
+/**-----------TABLA DE SOLICITUDES PAUSADAS-------------- */
+function tablaSolicitudesPausadas() {
+    escrituracionTableTest = $('#pausadas_tabla').DataTable({
+    dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: "100%",
+    scrollX: true,
+    pagingType: "full_numbers",
+    language: {
+        url: "../static/spanishLoader_v2.json",
+        paginate: {
+            previous: "<i class='fa fa-angle-left'>",
+            next: "<i class='fa fa-angle-right'>"
+        }
+    },
+    destroy: true,
+    ordering: false,
+    columns: [
+        {
+            "width": "2%",
+            data: function (d) {
+                return d.id_solicitud
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.nombreResidencial
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.nombreLote
+            }
+        },
+        {
+            data: function (d) {
+                return d.cliente;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.valor_contrato;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.fecha_creacion;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center>${d.area}</center>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center>${d.asignada_a}</center>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
+                return d.ultimo_comentario
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                var aditional;
+                var group_buttons = '';     
+                let formBoton = '';
+                let permiso;
+                let btnsAdicionales = '';
+                let bandera_request=0;
+                var datosEstatus = {
+                    area_sig: d.area_sig,
+                    nombre_estatus_siguiente: d.nombre_estatus_siguiente,
+                }; 
+                switch (d.id_estatus) {
+                        case 47:
+                        case 50: 
+                        if (userType == 57 && d.id_titulacion == idUser) { 
+                            bandera_request = d.expediente != null ? 1 : 0;
+                            permiso = 1;
+                            group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                $('[data-toggle="tooltip"]').tooltip();
+                if(bandera_request == 1){
+                    group_buttons += `<button id="request" data-num-table="2" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                }
+                group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
+                return '<div class="d-flex justify-center">' + group_buttons + '<div>';
+            }
+        },
+    ],
+    columnDefs: [{
+        "searchable": true,
+        "orderable": false,
+        "targets": 0
+    }
+    ],
+    ajax: {
+        url: 'getSolicitudes',
+        type: "POST",
+        cache: false,
+        data: {
+            "beginDate": 0,
+            "endDate": 0,
+            "estatus": 0,
+            "tipo_tabla": 2
+        }
+    }
+
+});
+};
+/**--------------FIN DE SOLICITUDES PAUSADAS------------- */
 
 function email(idSolicitud, action, notaria = null, valuador= null) {
     $('#spiner-loader').removeClass('hide');
