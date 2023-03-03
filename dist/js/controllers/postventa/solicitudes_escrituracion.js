@@ -32,7 +32,7 @@ $('#notas-datatable thead tr:eq(0) th').each( function (i) {
     });
 });
  
-sp = { // MJ: SELECT PICKER
+sp = { 
     initFormExtendedDatetimepickers: function () {
         var today = new Date();
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -56,7 +56,7 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
-sp2 = { // CHRIS: SELECT PICKER
+sp2 = { 
     initFormExtendedDatetimepickers: function () {
         $('.datepicker2').datetimepicker({
             format: 'DD/MM/YYYY LT',
@@ -1171,7 +1171,7 @@ function fillTable(beginDate, endDate, estatus) {
                             case 25:
                                     if (userType == 57 && d.id_titulacion == idUser) { 
                                         
-                                        group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
+                                   //     group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                         bandera_reject = 1;
@@ -1179,7 +1179,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 34:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
-                                    group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
+                                    //group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
