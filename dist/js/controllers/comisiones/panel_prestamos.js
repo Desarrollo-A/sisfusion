@@ -162,7 +162,7 @@ $("#tabla_prestamos").ready( function(){
                         if(v.total_pagado == null){
                             totalAbonado += 0;
                         }else{
-                            totalAbonado += (v.total_pagado);
+                            totalAbonado += parseFloat(v.total_pagado);
                         }
                        
                     });
