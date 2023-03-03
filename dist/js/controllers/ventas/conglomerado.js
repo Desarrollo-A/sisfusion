@@ -700,11 +700,10 @@ function loadTable(tipoDescuento) {
                    
                             if(d.idCertificacion == null )
                             {
-                                console.log(d.idCertificacion);
                                 // document.getElementById("certificaciones").value = '0';
                                 valor = 0
                             }else{
-                                 console.log(d.idCertificacion);
+                               
                                 // document.getElementById("certificaciones").value = d.idCertificacion;
                                 valor = d.idCertificacion
                             }
@@ -942,7 +941,7 @@ function loadTable(tipoDescuento) {
             document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
         
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
-            console.log(Total_a_pagar);
+
             
             sobrante = Total_a_pagar - total;
             //para agregar llo que ya se pago
@@ -1459,7 +1458,7 @@ $('#actualizar-descuento-form')
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    console.log(data);
+                   
                     $('#actualizar-descuento-modal').modal('hide');
                     alerts.showNotification("top", "right", "Descuento actualizado con exito.", "success");
                     $('#tabla-general').DataTable().ajax.reload(null, false);
@@ -1559,7 +1558,7 @@ $("#form_interes").submit(function (e) {
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-        console.log(data);
+   
         // data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: url + "Comisiones/topar_descuentos",
@@ -1914,7 +1913,7 @@ $("#idloteorigen").change(function () {
                     $("#montodisponible").selectpicker('refresh');
                 }, 'json');
             }
-            console.log(suma);
+         
         } else {
             var comision = $(this).val();
             datos = comision[0].split(',');
@@ -1969,7 +1968,7 @@ function verificar() {
                 $('#btn_abonar').prop('disabled', false);
                 document.getElementById('btn_abonar').disabled = false;
 
-                // console.log('OK');
+               
                 let cuantos = $('#idloteorigen').val().length;
                 let cadena = '';
                 var data = $('#idloteorigen').select2('data')
@@ -1988,7 +1987,6 @@ function verificar() {
                         break;
                     }
 
-                // console.log(data[index].text);
                 if(cuantos == 1){
                     let datosLote = data[index].text.split('-   $');
                     let nameLote = datosLote[0]
@@ -2082,7 +2080,7 @@ $(document).on("click", ".uniAdd", function () {
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
     valorCertificacion = $(this).attr("data-idCertificacion");
-    console.log(valorCertificacion);
+
 
     // if(valorCertificacion == null )
     // {
@@ -2129,8 +2127,9 @@ $(document).on("click", ".uniAdd", function () {
 
     var informacion_adicional = ' '; //inicio de div que contiene todo el modal
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+ 
     informacion_adicional += '        <div class="form-group">';
-    informacion_adicional += '            <label class="label">Monto Descuento *</label>';
+    informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
     informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
     informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
     informacion_adicional += '               required />';
@@ -2276,7 +2275,7 @@ $("#certificaciones").change(function () {
 
     pagos  = document.getElementById("numeroDeMensualidades").value ;
     selectCertificacion = document.getElementById("certificaciones").value;
-    console.log(selectCertificacion);
+
     var comentarioDescrip = document.getElementById('textDescripcion');
     comentarioDescrip.innerHTML = '';
     if(selectCertificacion == 1){
@@ -2435,7 +2434,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
     var f2 = new Date(fechaSeleccionada);
-    console.log(FechaEnArreglo)
+  
     MesSelecionado = parseInt(FechaEnArreglo[1]);
     DiaSeleccionado = parseInt(FechaEnArreglo[2]);
     MesSistemas = parseInt(month+1);
