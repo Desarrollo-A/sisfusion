@@ -69,7 +69,7 @@ $("#form_prestamos").on('submit', function(e){
     else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
-        data: formData, 
+        data: formData,
         method: 'POST',
         contentType: false,
         cache: false,
@@ -142,69 +142,29 @@ $("#tabla_prestamos").ready( function(){
             $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
                 if (tabla_nuevas.column(i).search() !== this.value ) {
-                    
                     tabla_nuevas.column(i).search(this.value).draw();
-                    // prestamos activos
+
                     var total = 0;
-                    var totalAbonado = 0;
-                    var totalPendiente = 0;
-                    
                     var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
                     var data = tabla_nuevas.rows( index ).data();
-                    //abonado
-
-                    // pendiente 
-
                     $.each(data, function(i, v){
                         total += parseFloat(v.monto);
-                        // totalAbonado += v.total_pagado ;
-                        totalPendiente += v.monto - v.total_pagado ; 
-                        if(v.total_pagado == null){
-                            totalAbonado += 0;
-                        }else{
-                            totalAbonado += parseFloat(v.total_pagado);
-                        }
-                       
                     });
-                    
                     var to1 = formatMoney(total);
-                    var to2 = formatMoney(totalAbonado);
-                    var to3 =  formatMoney(totalPendiente);
-                    
-                    document.getElementById("totalPendiente").textContent = '$' + to3;
                     document.getElementById("totalp").textContent = '$' + to1;
-                    document.getElementById("totalAbonado").textContent = '$' + to2;
+
                 }
             });
         }
-        
     });
 
     $('#tabla_prestamos').on('xhr.dt', function ( e, settings, json, xhr ) {
-        var total   = 0;
-        var total2  = 0;
-        var total3  = 0;
-        var total4  = 0;
-        var abonado  = 0;
-
+        var total = 0;
         $.each(json.data, function(i, v){
-    
-            total       +=  parseFloat(v.monto);
-        
-            total3      +=  v.monto - v.total_pagado ;
-            if(v.total_pagado == null){
-                total2 += 0;
-            }else{
-                total2 +=   parseFloat(v.total_pagado);
-            }
+            total += parseFloat(v.monto);
         });
-
         var to = formatMoney(total);
-        var to2 = formatMoney(total2);
-        var to3 =  formatMoney(total3);
-        document.getElementById("totalPendiente").textContent = '$' + to3;
         document.getElementById("totalp").textContent = '$' + to;
-        document.getElementById("totalAbonado").textContent = '$' + to2;
     });
 
 
@@ -376,16 +336,16 @@ $("#tabla_prestamos").ready( function(){
                 botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Historial"><i class="fas fa-folder-open"></i></button>`;    
                 }
 
-                if(d.id_prestamo2 == null && d.estatus == 1){
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-                }
+                // if(d.id_prestamo2 == null && d.estatus == 1){
+                // botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+                // }
 
              
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }
         }],
         ajax: {
-            url: url2 + "Comisiones/getPrestamos",
+            url: url2 + "Comisiones/getPrestamosXporUsuario",
             type: "POST",
             cache: false,
             data: function( d ){

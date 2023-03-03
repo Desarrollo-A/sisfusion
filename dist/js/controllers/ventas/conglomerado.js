@@ -4,7 +4,7 @@ var tr;
 let tablaGeneral;
 let titulosTablaGeneral = [];
 
-$(document).ready(function() { 
+$(document).ready(function() {  
 
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
         if (i !== 15) {
@@ -17,6 +17,8 @@ $(document).ready(function() {
                     tablaGeneral.column(i).search(this.value).draw();
 
                     let totalDescuento = 0;
+                    let totalAbonado = 0;
+                    let totalPendiente = 0;
                     const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
                     const data = tablaGeneral.rows(index).data();
 
@@ -2372,107 +2374,103 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     let pagos_activos ;
     let banderaSoloEstatus = false ; 
     let banderaPagosActivos = 0 ;
-    // bandera pagos activos 
+    // bandera pagos activos
+    let fechanoEscrita = false; 
     // 1 fecha usuario < día 5  mismo mes  2: fecha usuario > día 5 y > mes actual  3: no se mueve los movimientos actuales,
-
+    let validacion = true;
     let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
     let escritoPorUsuario = document.getElementById("newMensualidades").value;
+    let fechaSeleccionada = '';
+    fechaSeleccionada = document.getElementById("fechaIncial").value;
 
-    if(banderaEditarEstatus == escritoPorUsuario ){
-        banderaSoloEstatus = true ;
-        }
     if(tipoDescuento == 3){
         estatus = 1;
     }else{
         estatus = '';
     }
-    let fechaSeleccionada = '';
-    fechaSeleccionada = document.getElementById("fechaIncial").value;
-
+    
     if(fechaSeleccionada == '' && banderaEditarEstatus == escritoPorUsuario){
-
-        banderaSoloEstatus = true ;
- 
+        banderaSoloEstatus = true ;    
+    }else{
+        fechanoEscrita = true
+        fechaSeleccionada == ''
     }
-
     year = fecha.getFullYear()
-
     month = (fecha.getMonth())
-
     day = fecha.getDate()
     // const msg = new day;
-    const msg = new String(day)
-
-    msg.length == 1  ? day = ('0' + day)  :  (day)
     const FechaEnArreglo = fechaSeleccionada.split("-");
     // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
     fechaComparar = (year + '-' + month + '-' + day);
-    
     var f1 = new Date(year,month, day);
-
     var f2 = new Date(fechaSeleccionada);
-
-    mesNumerico = parseInt(FechaEnArreglo[1]);
-    diaNumerico = parseInt(FechaEnArreglo[2]);
-    mes2Numerico = parseInt(month+1);
-
+    console.log(FechaEnArreglo)
+    MesSelecionado = parseInt(FechaEnArreglo[1]);
+    DiaSeleccionado = parseInt(FechaEnArreglo[2]);
+    MesSistemas = parseInt(month+1);
     // fecha f2 es para la fecha seleccionada 
     // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
-    if(f2 > f1){
-        alert('fecha dada es meno que la fecha del sistema , ');
-    }
-    if( ( f2 != '' ) &&   (f2 > f1 || f2 == f1)){
-
-        if(diaNumerico <= 5 && mesNumerico == mes2Numerico ){
+    if(  (f2 > f1 || f2 == f1)){
+        // validamos que sea mayor la fecha seleccionada o que sean iguales
+        validacion =true;
+        if(DiaSeleccionado <= 5 && MesSelecionado == MesSistemas ){
             banderaPagosActivos = 1;
-                        // && mesNumerico == mes2Numerico  
-        }else if(diaNumerico >= 5 ||  mesNumerico >= mes2Numerico  ){
+                        // && MesSelecionado == MesSistemas  
+        }else if(DiaSeleccionado > 5 ||  MesSelecionado >= MesSistemas  ){
             banderaPagosActivos = 2 ;
         }else {
             banderaPagosActivos = 0;
         }
     }else if(f2 < f1){
         alerts.showNotification("top", "right", "Upss, La fecha seleccionada es menor que la fecha actual", "warning");
+        validacion =false;
     }
 
+    if(validacion ){
 
-    mensualidadesC  = document.getElementById("mensualidadesC").value;
-    id_descuento     = document.getElementById("idDescuento").value;
-    monto           = document.getElementById("MontoDescontarCerti").value;
-    pago_individual = document.getElementById("newMensualidades").value;
-    estatus_certificacion  = document.getElementById("certificaciones").value;
 
-        $.ajax({
-        url : 'descuentoUpdateCertificaciones',
-        type : 'POST',
-        dataType: "json",
-        data: {
-        "banderaSoloEstatus"    : banderaSoloEstatus, 
-        "fechaSeleccionada"     : fechaSeleccionada, 
-        "pagos_activos"         : pagos_activos,
-        "estatus"               : estatus,
-        "banderaPagosActivos"   : banderaPagosActivos,
-        "estatus_certificacion" : estatus_certificacion,
-        "id_descuento"          : id_descuento,
-        "monto"                 : monto,
-        "pago_individual"       : pago_individual,
-          }, 
+        mensualidadesC  = document.getElementById("mensualidadesC").value;
+        id_descuento     = document.getElementById("idDescuento").value;
+        monto           = document.getElementById("MontoDescontarCerti").value;
+        pago_individual = document.getElementById("newMensualidades").value;
+        estatus_certificacion  = document.getElementById("certificaciones").value;
+    
+            $.ajax({
+            url : 'descuentoUpdateCertificaciones',
+            type : 'POST',
+            dataType: "json",
+            data: {
+            "banderaSoloEstatus"    : banderaSoloEstatus, 
+            "fechaSeleccionada"     : fechaSeleccionada, 
+            "pagos_activos"         : pagos_activos,
+            "estatus"               : estatus,
+            "banderaPagosActivos"   : banderaPagosActivos,
+            "estatus_certificacion" : estatus_certificacion,
+            "id_descuento"          : id_descuento,
+            "monto"                 : monto,
+            "pago_individual"       : pago_individual,
+              }, 
+    
+              success: function(data) {
+               
+                alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                document.getElementById('updateDescuento').disabled = false;
+                $('#tabla-general').DataTable().ajax.reload(null, false );
+                
+                // toastr[response.response_type](response.message);
+                $('#modalUni').modal('toggle');
+            },              
+            error : (a, b, c) => {
+                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            }
+    
+        });
+    }else{
+    
+    }
 
-          success: function(data) {
-           
-            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-            document.getElementById('updateDescuento').disabled = false;
-            $('#tabla-general').DataTable().ajax.reload(null, false );
-            
-            // toastr[response.response_type](response.message);
-            $('#modalUni').modal('toggle');
-        },              
-        error : (a, b, c) => {
-            alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
-        }
-
-    });
+  
 });
 
 

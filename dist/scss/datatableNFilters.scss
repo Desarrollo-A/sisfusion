@@ -45,7 +45,7 @@
         }
     }
     .card{
-        border-radius: 0 10px 10px 10px;
+        border-radius: 10px;
         .card-header{
             @media #{$smartphone}{
                 display: none;

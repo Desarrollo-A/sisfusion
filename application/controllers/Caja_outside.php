@@ -1,9 +1,7 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Caja_outside extends CI_Controller
-{
-    public function __construct()
-    {
+class Caja_outside extends CI_Controller {
+    public function __construct() {
         parent::__construct();
         $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
@@ -14,8 +12,9 @@ class Caja_outside extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12') {
-            redirect(base_url() . 'login');
+        if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12')
+        {
+            redirect(base_url().'login');
         }
         $this->load->view('template/header');
         $this->load->view('caja/inicio_caja_view');
@@ -23,11 +22,10 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getResidencialDisponible()
-    {
+    public function getResidencialDisponible() {
         $datos["residenciales"] = $this->caja_model_outside->getResidencialDis();
         $datos["asesor"] = $this->caja_model_outside->allAsesor();
-        if ($datos != null) {
+        if($datos != null) {
             echo json_encode($datos);
         } else {
             echo json_encode(array());
@@ -35,25 +33,22 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getResidencialDisponible2()
-    {
+    public function getResidencialDisponible2() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $recidenciales = $this->caja_model_outside->getResidencialDis2($proyecto->id_rol);
-        if ($recidenciales != null) {
+        if($recidenciales != null) {
             echo json_encode($recidenciales);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getCondominioDisponible()
-    {
+    public function getCondominioDisponible() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis($proyecto->idResidencial);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
@@ -61,69 +56,58 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getCondominioDisponible2()
-    {
+    public function getCondominioDisponible2() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis2($proyecto->idResidencial, $proyecto->id_rol);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getLoteDisponible()
-    {
+    public function getLoteDisponible() {
         $condominio = json_decode(file_get_contents("php://input"));
         $lotes = $this->caja_model_outside->getLotesDis($condominio->idCondominio);
-        for ($i = 0; $i < count($lotes); $i++) {
+        for($i = 0; $i < count($lotes); $i++) {
             $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
         }
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
-
 
 ////////////////
-    public function getLoteDisponible2()
-    {
+    public function getLoteDisponible2() {
         $condominio = json_decode(file_get_contents("php://input"));
         $lotes = $this->caja_model_outside->getLotesDis2($condominio->idCondominio, $condominio->id_rol);
-        for ($i = 0; $i < count($lotes); $i++) {
+        for($i = 0; $i < count($lotes); $i++) {
             $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
         }
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
 
-///////////////
-
-
-    public function getResidencial()
-    {
+    public function getResidencial() {
         $residenciales = $this->caja_model_outside->getResidencial();
-        if ($residenciales != null) {
+        if($residenciales != null) {
             echo json_encode($residenciales);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getCondominio()
-    {
+    public function getCondominio() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominio($proyecto->idResidencial);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
@@ -179,42 +163,31 @@ class Caja_outside extends CI_Controller
         else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
     }
 
-    public function getLotee()
-    {
+    public function getLotee() {
         $condominio = json_decode(file_get_contents("php://input"));
 
         $lotes = $this->caja_model_outside->getLotes($condominio->idCondominio);
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getdbanco()
-    {
-        $datos["banco"] = $this->caja_model_outside->table_datosBancarios();
-        echo json_encode($datos);
-
-    }
-
-    public function getEtapa()
-    {
-        $datos["etapa"] = $this->caja_model_outside->table_etapa();
+    public function getdbanco(){
+        $datos["banco"]= $this->caja_model_outside->table_datosBancarios();
         echo json_encode($datos);
     }
 
+    public function getEtapa(){
+        $datos["etapa"]= $this->caja_model_outside->table_etapa();
+        echo json_encode($datos);
+    }
 
-    function caja_modules()
-    {
-
-        $data = json_decode(file_get_contents('php://input'));
-
+    function caja_modules() {
+        $data = json_decode( file_get_contents('php://input') );
         $datos = array();
-
-        if ($data->accion == 0) {
-
+        if ($data->accion == 0){
             foreach ($data->lotes as $value) {
 
                 $datos["nombreLote"] = $value->nombreLote;
@@ -252,7 +225,7 @@ class Caja_outside extends CI_Controller
 
                 $insert = $this->caja_model_outside->loadLotes($datos);
 
-                if ($insert == TRUE) {
+                if($insert == TRUE) {
                     $response['message'] = 'SUCCESS';
                     echo json_encode($response);
                 } else {
@@ -264,25 +237,19 @@ class Caja_outside extends CI_Controller
             }
 
         }
-        else if ($data->accion == 1) {
-
-            foreach ($data->lotes as $value) {
-
+        else if ($data->accion == 1){
+            foreach($data->lotes as $value) {
                 $datos["idCondominio"] = $data->idCondominio;
-
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
-
                 $update = $this->caja_model_outside->uploadPrecio($datos);
-
-                if ($update == TRUE) {
+                if($update == TRUE) {
                     $response['message'] = 'SUCCESS';
                     echo json_encode($response);
                 } else {
                     $response['message'] = 'ERROR';
                     echo json_encode($response);
                 }
-
             }
 
 
@@ -391,7 +358,6 @@ class Caja_outside extends CI_Controller
     {
 
         $data = json_decode(file_get_contents("php://input"));
-
         $dato = array();
         $dato["nombreResidencial"] = $data->nProyecto;
         $dato["descripcion"] = $data->descripcion;
@@ -458,6 +424,7 @@ class Caja_outside extends CI_Controller
     public function addClient()
     {
         $dataPost = file_get_contents("php://input");
+        //$response['resultado'] = FALSE;
         $datosView = json_decode($dataPost);
 
         /************testing datas *************/
@@ -486,6 +453,7 @@ class Caja_outside extends CI_Controller
             exit;
         }
         $data['prospecto'] = $this->caja_model_outside->consultByProspect($id_prospecto);
+        /*update validacion 26-11-2020*/
         if (count($data['prospecto']) <= 0) {
             $dataError['ERROR'] = array(
                 'titulo' => 'ERROR',
@@ -607,7 +575,7 @@ class Caja_outside extends CI_Controller
         $last_id = '';
         $currentUSer = $this->session->userdata('usuario');
         if ($idClienteInsert = $this->caja_model_outside->insertClient($dataInsertCliente)) {
-            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado
+            $last_id = $idClienteInsert[0]["lastId"];
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
@@ -1156,45 +1124,29 @@ class Caja_outside extends CI_Controller
         $res3 = array(); // ERROR AL INSERTAR EL CLIENTE
 
         foreach ($data->lotes as $value) {
-
             $arreglo = array();
-
-
             $arreglo["idLote"] = $value->idLote;
             $arreglo["idCondominio"] = $value->idCondominio;
-
-
             $arreglo["engancheCliente"] = $value->pago;
             $arreglo["noRecibo"] = $data->pago->recibo;
             $arreglo["concepto"] = $data->concepto;
             $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
             $arreglo["usuario"] = $data->id_usuario;
-
-
             if ($data->personalidad_juridica == 1) {
-
                 $arreglo["nombre"] = $data->propietarios[0]->nombre;
                 $arreglo["rfc"] = $data->propietarios[0]->rfc;
-
             } else if ($data->personalidad_juridica == 2) {
-
                 $arreglo["nombre"] = $data->propietarios[0]->nombre;
                 $arreglo["apellido_paterno"] = $data->propietarios[0]->apellido_paterno;
                 $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
-
             }
-
 
             $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
             $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
             $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
-
-
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
-
-
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
@@ -1205,8 +1157,6 @@ class Caja_outside extends CI_Controller
                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                 $sig_fecha_feriado2 == "25-12") {
-
-
                 $fecha = $fechaAccion;
 
                 $i = 0;
@@ -1228,10 +1178,7 @@ class Caja_outside extends CI_Controller
                     }
                     $fecha = $sig_fecha;
                 }
-
-
                 $arreglo["fechaVencimiento"] = $fecha;
-
             } else {
 
                 $fecha = $fechaAccion;

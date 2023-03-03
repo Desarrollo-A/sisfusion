@@ -161,7 +161,7 @@ scrollX: true,
     "data": function( d ){
         var lblStats;
 
-        if(d.idMovimiento==4 || d.idMovimiento==74 || d.idMovimiento==93)
+        if(d.idMovimiento==4 || d.idMovimiento==74 || d.idMovimiento==93 || d.idMovimiento==103)
         {
             lblStats ='<span class="label label-danger">Correción</span>';
         }
@@ -278,7 +278,8 @@ if(data.vl == '1') {
 cntActions = 'En proceso de Liberación';
 
 } else {
-    if(data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84)
+    if(data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84
+        || data.idStatusContratacion == 2 && data.idMovimiento == 101 || data.idStatusContratacion == 2 && data.idMovimiento == 103)
     {
 
         cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +

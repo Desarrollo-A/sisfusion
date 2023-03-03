@@ -1087,8 +1087,49 @@ function checkBudgetInfo($idSolicitud){
         $query      = $this->db->query($cmd);
         $resultados = $query->result_array();
         return $resultados;
-    } 
+    }
 
- 
+    function getStatus3VP(){
+        $query = $this->db->query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,s.nombre  as sede,
+        l.tipo_venta, l.observacionContratoUrgente as vl,
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+        concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+        concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+		cond.idCondominio,
+		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
+		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
+		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
+		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
+        FROM lotes l
+        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+	
+		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
+		WHERE l.idStatusContratacion IN (3) AND l.idMovimiento IN (98, 100, 102) AND cl.status = 1
+        GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.tipo_venta, l.observacionContratoUrgente,
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+        concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+		cond.idCondominio, s.nombre;");
+        return $query->result_array();
+    }
+
+    public function validateSt3($idLote){
+        $this->db->where("idLote",$idLote);
+        $this->db->where_in('idStatusLote', 3);
+        $this->db->where("(idStatusContratacion IN (3) AND idMovimiento IN (98,99,100,102))");
+        $query = $this->db->get('lotes');
+        $valida = (empty($query->result())) ? 0 : 1;
+        return $valida;
+    }
 
 }

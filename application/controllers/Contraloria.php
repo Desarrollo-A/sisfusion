@@ -1136,9 +1136,19 @@ public function get_sede(){
 	$modificado=date("Y-m-d H:i:s");
 
 
+	$valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+	if($valida_tl[0]['tipo_venta'] == 1){
+	    $idStaC = 3;
+        $idMov = 102;
+    }else{
+        $idStaC = 1;
+        $idMov = 20;
+    }
+
 	$arreglo=array();
-	$arreglo["idStatusContratacion"]= 1;
-	$arreglo["idMovimiento"]=20; 
+	$arreglo["idStatusContratacion"]= $idStaC;
+	$arreglo["idMovimiento"]=$idMov;
 	$arreglo["comentario"]=$comentario;
 	$arreglo["usuario"]=$this->session->userdata('id_usuario');
 	$arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -1147,8 +1157,8 @@ public function get_sede(){
 
 
 	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=1;
-	$arreglo2["idMovimiento"]=20;
+	$arreglo2["idStatusContratacion"]=$idStaC;
+	$arreglo2["idMovimiento"]=$idMov;
 	$arreglo2["nombreLote"]=$nombreLote;
 	$arreglo2["comentario"]=$comentario;
 	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -1163,11 +1173,12 @@ public function get_sede(){
 	$lp = $this->Contraloria_model->get_lp($idLote);
 
 	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
+	   $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
+        //$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');//
+        $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
+        $array = array_unique($correosClean);
 	}
 	
 	$infoLote = $this->Contraloria_model->getNameLote($idLote);

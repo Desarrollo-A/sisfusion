@@ -3764,7 +3764,14 @@ public function LiquidarLote(){
   }
   public function getPrestamos()
   {
+    
    $res["data"] = $this->Comisiones_model->getPrestamos()->result_array();
+
+    echo json_encode($res);
+  }
+  public function getPrestamosXporUsuario(){
+    
+    $res["data"] = $this->Comisiones_model->getPrestamosXporUsuario()->result_array();
 
     echo json_encode($res);
   }
@@ -7002,11 +7009,9 @@ for ($d=0; $d <count($dos) ; $d++) {
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
 
-      if($banderaSoloEstatus ){
+      if($banderaSoloEstatus != 'false' ){
         // var_dump('entrando a 1 ');
-
         $arr_update = array( 
-
           "estatus_certificacion" => $estatus_certificacion,          
         );
         $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
@@ -7014,7 +7019,9 @@ for ($d=0; $d <count($dos) ; $d++) {
       }else{
         // var_dump('entrando a 2');
         if($estatus === '1'){
-      //  if del estatus
+
+          // uno es cuando viene de baja
+      //  if del estatus es el tipo de filtrado
                           $arr_update = array( 
                             "estatus"   => 1,
                             "monto"           =>  $monto,
@@ -7029,7 +7036,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               // $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
                             }
                             else if($banderaPagosActivos == 2){
                               $pagos_activos = 0;
@@ -7037,7 +7044,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
 
 
                             }
@@ -7046,6 +7053,8 @@ for ($d=0; $d <count($dos) ; $d++) {
                             }
         }else {
           // if del estatus
+              // aqui entra cuando no es baja
+      //  if del estatus es el tipo de filtrado
          
           $arr_update = array(    
             
@@ -7057,19 +7066,17 @@ for ($d=0; $d <count($dos) ; $d++) {
           );
           if($banderaPagosActivos == 1 ){
             $pagos_activos = 1;
-            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+            $fecha_modificacion = date("Y-m-d H:i:s");
             // $estatus = 5;  
-            $arr_update["estatus"] = $estatus ;
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
-            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             $estatus = 5;  
             $arr_update["estatus"] = $estatus ;
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
+            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
   
           }
           else{
@@ -7092,10 +7099,22 @@ for ($d=0; $d <count($dos) ; $d++) {
         $respuesta =  array(
           "response_code" => 400, 
           "response_type" => 'error',
-          "message" => "Descuento no actualizado, intentalo más tarde");
+          "message" => "Descuento no actualizado, inténtalo más tarde ");
       }
       echo json_encode ($respuesta);
     } 
+    public function historial_prestamos()
+    {
+
+      $datos = array(); 
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+        $this->load->view("ventas/historial_prestamo_view", $datos);    
+    }
 
 
 }

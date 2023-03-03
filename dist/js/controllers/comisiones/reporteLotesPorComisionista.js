@@ -5,6 +5,7 @@ $(document).ready(function () {
     }
 
     $.post('getOpcionesParaReporteComisionistas', { seeAll:  seeAll}, function(data) {
+        $("#tipoUsuario").append($('<option>').val(0).text("TODOS LOS ROLES"));
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
@@ -203,7 +204,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     else if (d.registroComision == 7)
                         labelStatus = `<span class="label" style="background:#A9DFBF; color:#145A32">LIQUIDADA</span>`;
                     else if (d.registroComision == 1)
-                        labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">ACTIVA</span></span>`;
+                        labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">PROCESO DE DISPERSIÓN</span></span>`;
                     else 
                         labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DEFINIR ESTATUS</span>`;
                 }
@@ -235,7 +236,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     return '$' + formatMoney(d.abonoPagado);
                 }
             },
-            {data: 'lugar_prospeccion'}
+            {data: 'rol'}
         ],
         columnDefs: [{
             visible: false,
@@ -285,14 +286,18 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                             anio: data[i].datos[j].anio,
                             datos: [{
                                 rol: data[i].columna,
-                                total: data[i].datos[j].total
+                                total: data[i].datos[j].total,
+                                activos: data[i].datos[j].activos,
+                                cancelados:  data[i].datos[j].cancelados
                             }]
                         });
                     }
                     else{
                         found.datos.push({
                             rol: data[i].columna,
-                            total: data[i].datos[j].total
+                            total: data[i].datos[j].total,
+                            activos: data[i].datos[j].activos,
+                            cancelados:  data[i].datos[j].cancelados
                         })
                     }
                 }
@@ -302,7 +307,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         for(let i=0; i < orderedArray.length; i++){
             let htmlRol = '';
             for(let j=0; j < orderedArray[i].datos.length; j++){
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}</div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activos}</b> activos</li><li><b>${orderedArray[i].datos[j].cancelados}</b> cancelados</li></ul></div>`;
             }
 
             html += `<div class="tl-item">
