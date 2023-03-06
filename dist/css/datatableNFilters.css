@@ -1538,35 +1538,38 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #143860;
+  background-color: #143860!important;
 }
 
 table thead tr th {
   padding: 0px !important;
+  color: white;
+  font-weight: 300;
+  text-align: center;
 }
 
 table thead tr th input {
   margin: 4px;
-  border: 1px solid transparent;
+  border: 1px solid transparent!important;
   border-radius: 5px;
   color: #ffffff;
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #143860;
+  background-color: #143860!important;
   text-transform: uppercase;
 }
 
 table thead tr th input:active {
-  border: 1px solid #ffffff;
+  border: 1px solid #ffffff!important;
 }
 
 table thead tr th input:focus {
-  border: 1px solid #ffffff;
+  border: 1px solid #ffffff!important;
 }
 
 table thead tr th input::placeholder {
-  color: #ffffff;
+  color: #ffffff!important;
 }
 
 table .toggle-subTable {
