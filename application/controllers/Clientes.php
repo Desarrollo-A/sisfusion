@@ -2978,6 +2978,20 @@ public function getStatusMktdPreventa(){
         $this->load->view("clientes/prospectosDR",$datos);
     }
 
+<<<<<<< HEAD
+=======
+    public function dragonsClientsList() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("marketing/dragonsClientsList", $datos);
+    }
+
+    public function getDragonsClientsList() {
+        $result['data'] = $this->Clientes_model->getDragonsClientsList();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
+    }
+
+>>>>>>> aureaac
     /**************************************************************************************
     *                             NUEVA FUNCIÓN PARA EL MENÚ                              *
     ***************************************************************************************/
