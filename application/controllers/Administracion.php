@@ -694,14 +694,13 @@ class Administracion extends CI_Controller{
 		crearPlantillaCorreo($correos_submit, $data_eviRec, $data_mail, $data_encabezados_tabla, $data_eviRec['comentario']);
 	}
 
-    public function notifyRejEv($data_correo, $data_eviRec, $data_send)
-    {
+    public function notifyRejEv($data_correo, $data_eviRec, $data_send){
 		$data_encabezados_tabla = array();
 		foreach ($data_send as $key => $value) {
 			array_push($data_encabezados_tabla, $key);
 		}	
 		return crearPlantillaCorreo($data_correo, $data_eviRec, $data_send, $data_encabezados_tabla, $data_eviRec['comentario']);
-
+	}
         // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         // //$correoDir = $data_eviRec['correo_a_enviar'];
 
