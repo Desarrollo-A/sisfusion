@@ -399,7 +399,7 @@ public function getPaquetes(){
   Tipo lote
   1.-Habitacional
   2.-Comercial
-  3.-Ambos
+  3.-AmbosPlanes
   */  
   $ArrPAquetes = array();
   $TipoLote = $this->input->post("tipoLote");
@@ -412,7 +412,7 @@ public function getPaquetes(){
     $query_tipo_lote = '';
   }
 
- $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin;
+ $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
 
  $data = array();
  if(count($row) == 0){
