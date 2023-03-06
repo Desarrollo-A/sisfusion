@@ -1134,6 +1134,7 @@
 /* tooltip styles */
 .tooltip {
   width: fit-content;
+  position: fixed;
 }
 
 .tooltip .tooltip-inner {
@@ -1264,7 +1265,7 @@
 }
 
 .boxContent .card {
-  border-radius: 0 10px 10px 10px;
+  border-radius: 10px;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
@@ -1358,6 +1359,7 @@
 .boxContent .card .card-content .toolbar .input-gral:disabled {
   cursor: not-allowed;
   border: none;
+  opacity: 0.6;
 }
 
 .boxContent .card .card-content .toolbar .label-gral {
@@ -1511,6 +1513,7 @@
 
 table.dataTable > thead > tr > th {
   padding: 0 !important;
+  text-align: center;
 }
 
 .table-striped {
