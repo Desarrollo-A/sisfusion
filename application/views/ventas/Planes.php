@@ -3,6 +3,11 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
 <body>
+	<style>
+		.select2-container {
+			width: 100%!important;
+		}
+	</style>
 	<div class="wrapper">
 		<?php
 		$datos = array();
@@ -244,10 +249,10 @@
 												<div class="row">
 													<div class="boxInfoGral">
 														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
-														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p></button>
+														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
-														<div class="container-fluid" id="boxMainForm">
+														<div class="container-fluid dataTables_scrollBody" id="boxMainForm">
 															<div class="row">
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
 																	<div class="form-group">

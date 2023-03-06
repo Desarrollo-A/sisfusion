@@ -319,7 +319,7 @@ class VentasAsistentes_model extends CI_Model {
 	public function validaCartaCM($idCliente){
         $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
         INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
-        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND tipo_doc=29 AND movimiento='CARTA DOMICILIO CM';");
         return $query->result_array();
     }
     public function check_carta($idCliente){

@@ -2794,50 +2794,13 @@ legend {
                     (empty($value2['estatus'])) ? $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 0 : $value2['estatus'];
                 }
             }
-
-
-
-            //print_r(json_encode($arrayTocxp));
-
         }
-
-
-
-
-
-
-
-
-        /* echo 'Arreglo: <br>';
-         print_r($arreglo);
-         echo '<br><br> id_lote: '.$idLote.' <br><br>';
-         echo 'id_corrida: '.$id_corrida.' <br><br>';
-         echo '<br><br>allDescuentos: <br>';
-         print_r($objDatos->allDescuentos);
-         echo '<br><br>descuento cxl: <br>';
-         print_r($arrayTocxp);
-         echo '<br><br>';
-
-         if(count($objDatos->allDescuentos) > 0){
-             echo 'Se va actualizar All descuentos';
-         }else{
-             echo 'No hay nada xd';
-         }
-
-
-         exit;*/
-
-
-
-
 
         $response = $this->Corrida_model->updateCF($id_corrida, $arreglo);
         $respuesta = $this->Corrida_model->update_cxl($arrayTocxp, $id_corrida);
         //$response = 1;
         if($response == 1 && $respuesta==1) {
             $this->Corrida_model->updatePreciosAll($objDatos->allDescuentos, $idLote, $id_corrida);
-
-
                 $response_msg['message'] = 'OK';
                 $response_msg['id_corrida'] = $id_corrida;
                 echo json_encode($response_msg);
@@ -2847,24 +2810,8 @@ legend {
             echo json_encode($response_msg);
         }
 
-
-
-
-
-        /*MAKE NEXT STEPS*/
-        /*$response = $this->Corrida_model->insertCf($arreglo);
-
-        if($response) {
-            $this->Corrida_model->insertPreciosAll($objDatos->allDescuentos, $idLote, $response[0]['id_corrida']);
-            $response['message'] = 'OK';
-            echo json_encode($response);
-        }else {
-            $response['message'] = 'ERROR';
-            echo json_encode($response);
-        }*/
-
     }
-    /*mariachoise*/
+
     public function getPaquetesByCondominio()
     {
         $time = time();
@@ -2876,10 +2823,6 @@ legend {
         else if($object->id_condominio == '' || $object->id_condominio == null || $object->id_condominio == 'undefined')
             echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Some parameter does not have a specified value.", "message" => "Verify that all parameters contain a specified value."));
         else {
-//            print_r($object->id_condominio);
-//            echo '<br>';
-//            print_r($object->id_corrida);
-//            exit;
             $data = $this->Corrida_model->getPaquetesByCondominio($object->id_condominio, $object->id_corrida)->result_array();
             if (count($data) > 0){
                 $array_descuentos = $data;
@@ -2920,29 +2863,14 @@ legend {
 
         if($paquetes_data!=''){
             for( $i = 0; $i < count($paquetes_data); $i++ ){
-                //echo 'id_paquete: <br>';
-                //print_r($paquetes_data[$i]->id_paquete);
-                //echo '<br>';
                 $paquete_info = $this->Corrida_model->getPaqById($paquetes_data[$i]->id_paquete);
                 $paquete_view[$i] = array(
                     'id_paquete' => $paquete_info->id_paquete,
                     'descripcion' => $paquete_info->descripcion,
-                    /*'fecha_inicio' => $paquete_info->fecha_inicio,
-                    'fecha_fin' => $paquete_info->fecha_fin,
-                    'estatus' => $paquete_info->fecha_fin,
-                    'sede' => $paquete_info->fecha_fin,*/
                 );
-                //print_r($paquete_view);
-                //echo '<br><br>';
-
 
                 for( $c = 0; $c < count($paquetes_data[$i]->descuentos); $c++ ){
-
-                    //echo 'Descuento:<br>';
-                    //print_r($paquetes_data[$i]->descuentos[$c]->id_descuento);
                     $data_descuento = $this->Corrida_model->getDescById($paquetes_data[$i]->descuentos[$c]->id_descuento);
-                    //print_r($data_descuento);
-                    //echo '<br>';
                     $paquete_view[$i]['response'][$c]['id_descuento'] = $data_descuento->id_descuento;
                     $paquete_view[$i]['response'][$c]['id_tdescuento'] = $data_descuento->id_tdescuento;
                     $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
@@ -2953,7 +2881,6 @@ legend {
                     $paquete_view[$i]['response'][$c]['apply'] = $data_descuento->apply;
                     $paquete_view[$i]['response'][$c]['leyenda'] = $data_descuento->leyenda;
                     $paquete_view[$i]['response'][$c]['prioridad'] = $data_descuento->prioridad;
-                    //$paquete_view[$i]['response'][$c]['estatus'] = str_replace('"', '', $paquetes_data[$i]->descuentos[$c]->estatus);
                     $paquete_view[$i]['response'][$c]['estatus'] = $paquetes_data[$i]->descuentos[$c]->estatus;
                     $paquete_view[$i]['response'][$c]['id_paquete'] = $paquetes_data[$i]->id_paquete;
                     $paquete_view[$i]['response'][$c]['msi_descuento'] = (int) $data_descuento->msi_descuento;
@@ -2964,30 +2891,6 @@ legend {
         }
 
         print_r(json_encode($paquete_view));
-
-
-        //print_r(json_decode(str_replace("'", '"', $data_back->detalle_paquete)));
-
-
-
-        /*$idLote = $objDatos->lote;
-        $paquetes = $this->Corrida_model->getPaquetes($idLote);
-        print_r($paquetes);
-        exit;
-        $response = $this->Corrida_model->getDescuentos();
-
-
-        for( $i = 0; $i < count($paquetes); $i++ ){
-            $array = array();
-            for( $c = 0; $c < count( $response ); $c++ ){
-                if( $paquetes[$i]['id_paquete'] == $response[$c]['id_paquete'] ){
-                    $array[] = $response[$c];
-                }
-            }
-            $paquetes[$i]['response'] = $array;
-        }
-
-        echo json_encode($paquetes);*/
     }
     function getDescsByCondominio(){
         $objDatos = json_decode(file_get_contents("php://input"));
@@ -2995,20 +2898,9 @@ legend {
         $id_pxc = $objDatos->id_pxc;
         $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
 
-
-
-
-
         $object_descuentos = json_decode($data_descuentos->id_paquete);
         $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
         $tipo_superficie = $object_descuentos->tipo_superficie;
-        /*print_r($tipo_superficie->tipo);
-        exit;*/
-
-        #logica anterior
-        #$array_descuentos = explode(',', $data_descuentos->id_paquete, 999);
-        #$data_descuentos->paquetes_array = $array_descuentos;
-
 
         //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
         for($i=0; $i<count($array_descuentos); $i++){
@@ -3019,7 +2911,6 @@ legend {
                 'aplicable_a' => $tipo_superficie->tipo,
                 'sup1'        => $tipo_superficie->sup1,
                 'sup2'        => $tipo_superficie->sup2,
-                //'estatus' => $paquete_info->estatus,
             );
 
             $data_desc_paq = $this->Corrida_model->getRelDescByIdPq($paquete_info->id_paquete);
@@ -3092,14 +2983,6 @@ legend {
             $dir_expediente = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/';
             $exp_cf = $expediente->expediente;
             $req = delete_img($dir_expediente, $exp_cf);
-            /*print_r($expediente);
-            echo '<br>';
-            print_r($expediente->expediente);
-            echo '<br>';
-
-
-            print_r($dir_expediente);
-            exit;*/
             $data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
             $response['message'] = ($data == 1) ? 'OK' : 'ERROR';
 
@@ -3160,11 +3043,8 @@ legend {
         }
         else
         {
-            /*redirect(base_url().'yola');*/
             redirect(base_url().'login');
         }
-
-//		$this->load->view("moratorioII"); //avance
     }
 
     public function moratorios()
@@ -3191,12 +3071,6 @@ legend {
     }
     public function insertPagoCapitalCorrida()
     {
-
-        #idLote: id_lote,  plan_pc: plan, anio:anio, precio_m2: precio_m2_final, total: precioFinalc,
-        #porcentajeEng:porcentaje_engCliente, engancheCantidad: cantidad_enganche, diasPagoEng:dias_pagar_enganche,
-        #apartado: apartado, mesesDiferir:meses_diferir, fecha_limite: fechaEngc, mplan_1: finalMesesp1, mplan_2: finalMesesp2,
-        #mplan_3:finalMesesp3, pp_1:msi_1p, pp_2:msi_2p, pp_3:msi_3p, primer_mensualidad:primer_mensualidad, corrida_dump:$scope.alphaNumeric
-
         $objDatos = json_decode(file_get_contents("php://input"));
         $idLote = (int)$objDatos->idLote;
         $arreglo = array();
@@ -3220,15 +3094,7 @@ legend {
         $arreglo["fecha_creacion"] = date('Y-m-d H:i:s');
         $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
         $arreglo["creado_por"] = $this->session->userdata('id_usuario');
-
-
-        /*print_r(json_encode($arreglo['corrida_dump']));
-        exit;*/
-
-
-        //$response = $this->Corrida_model->insertPC($arreglo);#inserta el pago a capital
         $data_response = $this->General_model->addRecord('pagos_capital', $arreglo);
-
 
         if($data_response) {
             $response['message'] = 'OK';
@@ -3259,9 +3125,6 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this->Corrida_model->getInfoPCyID($id_corrida);
-
-//        print_r($data_corrida);
-//        exit;
         $this->load->view("corrida/editarPC", $data_corrida);
     }
 
@@ -3274,15 +3137,6 @@ legend {
         $data['fecha_modificacion'] = date('Y-m-d H:i:s');
         $table = 'pagos_capital';
         $key = 'id_pc';
-//        print_r($table);
-//        echo '<br>';
-//        print_r($data);
-//        echo '<br>';
-//        print_r($key);
-//        echo '<br>';
-//        print_r($id_pc);
-//        exit;
-
         $data_response = $this->General_model->updateRecord($table, $data, $key, $id_pc); // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
 
 
@@ -3368,31 +3222,12 @@ legend {
         $sheet->setCellValue('F4', 'LOTE');
         $sheet->setCellValue('G4', 'CLIENTE');
         $sheet->setCellValue('H4', 'SALDO INSOLUTO');
-
-/*
- *         $data = array(
-            'proyecto' => $proyecto,
-            'condominio' => $condominio,
-            'lote' => $lote,
-            'cliente' => $cliente,
-            'plazo' => $plazo,
-            'msi' => $msi,
-            'im' => $im,
-            'fecha_pago' => $fecha_pago,
-            'saldo_insoluto' => $saldo_insoluto,
-            'data_corrida' => $data_corrida
-
-        );*/
-        #set values
         $sheet->setCellValue('D5', $data_corrida['proyecto']);
         $sheet->setCellValue('E5', $data_corrida['condominio']);
         $sheet->setCellValue('F5', $data_corrida['nombreLote']);
         $sheet->setCellValue('G5', $data_corrida['cliente']);
         $sheet->getStyle('H5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
         $sheet->setCellValue('H5', $data_corrida['saldo_insoluto']);
-//        $sheet->setCellValue('I5', 666);
-//        $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-
 
         $sheet->getStyle("D4:I4")->getFont()->setSize(10);
         $sheet->getStyle('D4:I4')->getFont()->getColor()->setARGB('4472C4');
@@ -3539,26 +3374,6 @@ legend {
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         $nombre_archivo = 'moratorios.xlsx';
 
 
@@ -3573,13 +3388,6 @@ legend {
         header('Cache-Control: max-age=0');
 
         $writer->save("php://output");// download file
-//        $writer->save($dir_2);
-//        $data_response = array(
-//            'message' => 'Corrida generada en excel correctamente',
-//            'status' => 1,
-//            'corrida_generada' => $nombre_archivo
-//        );
-//        return $data_response;
     }
     public function excel_moratorios(){
         $objDatos = json_decode(file_get_contents("php://input"));
@@ -3612,33 +3420,7 @@ legend {
             'ioa'=> $ioa,
             'data_corrida' => $data_corrida
         );
-//        echo __DIR__;
-//        exit;
-
-//        print_r($proyecto);
-//        echo '<br>';
-//        print_r($condominio);
-//        echo '<br>';
-//        print_r($lote);
-//        echo '<br>';
-//        print_r($cliente);
-//        echo '<br>';
-//        print_r($plazo);
-//        echo '<br>';
-//        print_r($msi);
-//        echo '<br>';
-//        print_r($im);
-//        echo '<br>';
-//        print_r($fecha_pago);
-//        echo '<br>';
-//        print_r($saldo_insoluto);
-//        echo '<br>';
-//        print_r($data_corrida);
-//        echo '<br>';
-
         $responde = $this->generateExcelMR($data);
-
-
     }
 
     function getGerenteByID(){
