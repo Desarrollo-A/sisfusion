@@ -406,7 +406,7 @@
                                                 <?php
                                                 if($this->session->userdata('forma_pago') == 3){
                                                 ?>
-                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del 
+                                                <p style="color:#0a548b; margin-left: 1rem"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del 
                                                 <?php
                                                  
                                                 $sede = $this->session->userdata('id_sede');
@@ -423,42 +423,8 @@
                                                 }else if($this->session->userdata('forma_pago') == 4){
                                                     ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
-                                                <?php
-                                                }
-                                                ?>
-
-                                                <?php if (($this->session->userdata('forma_pago') == 2 ||
-                                                    $this->session->userdata('forma_pago') == 3 ||
-                                                    $this->session->userdata('forma_pago') == 4 ||
-                                                    $this->session->userdata('forma_pago') == 5) &&
-                                                    ($this->session->userdata('id_rol') == 3 ||
-                                                    $this->session->userdata('id_rol') == 7 ||
-                                                    $this->session->userdata('id_rol') == 9)) { ?>
-
-                                                    <p class="card-title m-1">
-                                                        Para consultar más detalles sobre el uso y funcionalidad del apartado
-                                                        de comisiones podrás visualizarlo en el siguiente tutorial
-
-                                                        <?php if ($this->session->userdata('forma_pago') == 2) { ?>
-                                                            <a href="https://youtu.be/YuZNsPk8-gY"
-                                                               target="_blank"><u>clic aquí</u></a>
-                                                        <?php } ?>
-                                                        <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                            <a href="https://youtu.be/LmmIdipDSEA"
-                                                               target="_blank"><u>clic aquí</u></a>
-                                                        <?php } ?>
-                                                        <?php if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                            <a href="https://youtu.be/oRoJev_AZgs"
-                                                               target="_blank"><u>clic aquí</u></a>
-                                                        <?php } ?>
-                                                        <?php if ($this->session->userdata('forma_pago') == 5) { ?>
-                                                            <a href="https://youtu.be/4t0MNA8HxZ4"
-                                                               target="_blank"><u>clic aquí</u></a>
-                                                        <?php } ?>
-                                                    </p>
-
-                                                <?php } ?>
-
+                                                <?php }?>
+                                    
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                     <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
                                                         sin establecimiento permanente en México.
@@ -469,11 +435,11 @@
                                                 <?php } ?>
                                                 
                                                 <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                    <p class="card-title pl-2">
+                                                    <!-- <p class="card-title pl-2">
                                                         <a onclick="codigo_consulta()" style="cursor: pointer;">
                                                             <u>Clic para consultar codigo postal</u>
                                                         </a>
-                                                    </p>
+                                                    </p> -->
                                                 <?php } ?>
 
 
@@ -1090,7 +1056,47 @@
                             }
                         }
                     },
-                }],
+                },
+                <?php if ($this->session->userdata('forma_pago') == 3) { ?> 
+                {
+                    text: '<i class="fa fa-archive" aria-hidden="true"></i>',
+                    className: 'btn btn-azure',
+                    titleAttr: 'Clic para consultar codigo postal',
+                    action: function (e,dt,button,confing){
+                        $('#solicitud_cp').modal('show');
+                    }
+                },
+                <?php } ?>
+
+                <?php if (($this->session->userdata('forma_pago') == 2 ||
+                    $this->session->userdata('forma_pago') == 3 ||
+                    $this->session->userdata('forma_pago') == 4 ||
+                    $this->session->userdata('forma_pago') == 5) &&
+                    ($this->session->userdata('id_rol') == 3 ||
+                    $this->session->userdata('id_rol') == 7 ||
+                    $this->session->userdata('id_rol') == 9)) { ?>
+                        {
+                            text: '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+                            className: 'btn buttons-youtube',
+                            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+                            action: function ( e, dt, button, config ) {
+                                <?php if ($this->session->userdata('forma_pago') == 2) { ?>
+                                    window.open('https://youtu.be/YuZNsPk8-gY', '_blank');
+                                <?php } ?>
+                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
+                                    window.open('https://youtu.be/LmmIdipDSEA', '_blank');
+                                <?php } ?>
+                                <?php if ($this->session->userdata('forma_pago') == 4) { ?>
+                                    window.open('https://youtu.be/oRoJev_AZgs', '_blank');
+                                <?php } ?>
+                                <?php if ($this->session->userdata('forma_pago') == 5) { ?>
+                                    window.open('https://youtu.be/4t0MNA8HxZ4', '_blank');
+                                <?php } ?>
+                            } 
+                        } 
+                <?php }?>
+                        
+                ],           
                 pagingType: "full_numbers",
                 fixedHeader: true,
                 language: {

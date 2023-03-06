@@ -624,6 +624,29 @@
   color: #ffffff;
 }
 
+.buttons-youtube {
+  box-shadow: none;
+  padding: 7px 25px;
+  color: #FF0000;
+  background-color: #ffffff !important;
+  border: 1px solid #FF0000;
+  border-radius: 27px;
+  margin: 0;
+}
+
+.buttons-youtube i {
+  color: #FF0000;
+}
+
+.buttons-youtube:hover {
+  background-color: #FF0000 !important;
+  border: 1px solid #FF0000;
+}
+
+.buttons-youtube:hover i {
+  color: #ffffff;
+}
+
 /***/
 .buttons-general-dt {
   box-shadow: none;
