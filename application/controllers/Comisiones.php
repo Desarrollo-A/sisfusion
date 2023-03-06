@@ -7084,7 +7084,7 @@ for ($d=0; $d <count($dos) ; $d++) {
             $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             // $estatus = 5;  
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion 
+            $arr_update["fecha_modificacion"] = $fecha_modificacion ;
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
