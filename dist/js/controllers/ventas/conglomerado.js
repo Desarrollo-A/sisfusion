@@ -2128,7 +2128,7 @@ $(document).on("click", ".uniAdd", function () {
     var informacion_adicional = ' '; //inicio de div que contiene todo el modal
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
  
-    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
     informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
     informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
@@ -2137,7 +2137,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '       </div>';
 
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
-    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '          <label class="label">Pagos repartidos*</label> ';
     informacion_adicional += '         <select class="form-control mensualidadesC" name="mensualidadesC" id="mensualidadesC" required>';
     informacion_adicional += '          <option value="" disabled="true" selected="selected">- Selecciona opción';
@@ -2157,7 +2157,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '      </div>';
 
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
-    informacion_adicional += '        <div class="form-group">';
+    informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
     informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
     informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="19000" step=".01"';

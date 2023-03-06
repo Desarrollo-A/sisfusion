@@ -694,42 +694,23 @@ class Administracion extends CI_Controller{
 		crearPlantillaCorreo($correos_submit, $data_eviRec, $data_mail, $data_encabezados_tabla, $data_eviRec['comentario']);
 	}
 
-    public function notifyRejEv($data_correo, $data_eviRec, $data_send){
-		$data_encabezados_tabla = array();
-		foreach ($data_send as $key => $value) {
-			array_push($data_encabezados_tabla, $key);
-		}	
-		return crearPlantillaCorreo($data_correo, $data_eviRec, $data_send, $data_encabezados_tabla, $data_eviRec['comentario']);
-	}
-        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        // //$correoDir = $data_eviRec['correo_a_enviar'];
+	public function notifyRejEv($data_correo, $data_eviRec, $data_send)
+    {
+        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        //$correoDir = $data_eviRec['correo_a_enviar'];
 
-        // $mail = $this->phpmailer_lib->load();
+        $mail = $this->phpmailer_lib->load();
 
-        // $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        // foreach($data_correo as $item){
-        //         //print_r($item);
-        //         //echo '<br>';
-        //     $mail->addAddress($item);
-        // }
+        $mail->setfrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        foreach($data_correo as $item){
+                //print_r($item);
+                //echo '<br>';
+            $mail->addAddress($item);
+        }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        // $mail->addAddress($correo_new);
-        //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+        $mail->addAddress($correo_new);
+         $mail->addcc('erick_eternal@live.com.mx'); #copia oculta
 
-        // $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
-        // $mail->isHTML(true);
-
-        // $mail->Body = utf8_decode($mailContent);
-        // if ($mail->send()) {
-        //     return 1;
-        // } else {
-        //     return $mail->ErrorInfo;
-        // }
-=======
-=======
->>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);
         $mailContent = '<html>
@@ -858,24 +839,6 @@ class Administracion extends CI_Controller{
         } else {
             return $mail->ErrorInfo;
         }
-<<<<<<< HEAD
->>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
-=======
-=======
-        // $mail->addAddress($correo_new);
-        //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
-
-        // $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
-        // $mail->isHTML(true);
-
-        // $mail->Body = utf8_decode($mailContent);
-        // if ($mail->send()) {
-        //     return 1;
-        // } else {
-        //     return $mail->ErrorInfo;
-        // }
->>>>>>> aureaac
->>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
     }
 
     public function status11Validado(){

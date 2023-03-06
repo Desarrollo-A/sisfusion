@@ -244,6 +244,7 @@
 												<div class="row">
 													<div class="boxInfoGral">
 														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p></button>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
 														<div class="container-fluid" id="boxMainForm">
@@ -306,7 +307,6 @@
 																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
-																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
 																</div>
 															</div>
 														</div>
