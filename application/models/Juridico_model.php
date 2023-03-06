@@ -72,7 +72,7 @@ class Juridico_model extends CI_Model {
 			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+			concat(gerente.nombre,' ', gerente.apellido_patxrno, ' ', gerente.apellido_materno) as gerente,
 	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.idLote=l.idLote
