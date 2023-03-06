@@ -707,7 +707,7 @@ $('#proyecto').change( function(){
        });
 
 $(document).on('change','#proyecto, #condominio, #estatus', function() {
-	ix_proyecto = $("#proyecto").val();
+    ix_proyecto = ($("#proyecto").val().length<=0) ? 0 : $("#proyecto").val();
    	ix_condominio = $("#condominio").val();
    	ix_estatus = $("#estatus").val();
 
@@ -915,7 +915,12 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
 		},
 		{
 			"width": "14%",
-			data: 'nombreLote'
+			"data": function(d){
+                if (d.casa == 1)
+                    return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+				else
+					return (d.nombreLote).toUpperCase();
+			}
 		},
 		{
 			"width": "10%",
@@ -1102,10 +1107,10 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
 		{
 			"width": "12%",
 			"data": function(d){
-				
-			    libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label label-warning";">Lib. Contraloría</span> <center><p><p>' : '';
-				valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
-				'<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <p><p> <span class="label label-warning";">'+d.tipo_venta+'</span> <center>';
+			    libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
+
+                valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
+				`<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
 
 				return valTV + libContraloria;
 			}

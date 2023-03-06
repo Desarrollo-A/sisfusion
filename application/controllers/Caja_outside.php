@@ -1,9 +1,7 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Caja_outside extends CI_Controller
-{
-    public function __construct()
-    {
+class Caja_outside extends CI_Controller {
+    public function __construct() {
         parent::__construct();
         $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
@@ -14,8 +12,9 @@ class Caja_outside extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12') {
-            redirect(base_url() . 'login');
+        if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12')
+        {
+            redirect(base_url().'login');
         }
         $this->load->view('template/header');
         $this->load->view('caja/inicio_caja_view');
@@ -23,11 +22,10 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getResidencialDisponible()
-    {
+    public function getResidencialDisponible() {
         $datos["residenciales"] = $this->caja_model_outside->getResidencialDis();
         $datos["asesor"] = $this->caja_model_outside->allAsesor();
-        if ($datos != null) {
+        if($datos != null) {
             echo json_encode($datos);
         } else {
             echo json_encode(array());
@@ -35,25 +33,22 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getResidencialDisponible2()
-    {
+    public function getResidencialDisponible2() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $recidenciales = $this->caja_model_outside->getResidencialDis2($proyecto->id_rol);
-        if ($recidenciales != null) {
+        if($recidenciales != null) {
             echo json_encode($recidenciales);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getCondominioDisponible()
-    {
+    public function getCondominioDisponible() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis($proyecto->idResidencial);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
@@ -61,112 +56,138 @@ class Caja_outside extends CI_Controller
     }
 
 
-    public function getCondominioDisponible2()
-    {
+    public function getCondominioDisponible2() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominioDis2($proyecto->idResidencial, $proyecto->id_rol);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getLoteDisponible()
-    {
+    public function getLoteDisponible() {
         $condominio = json_decode(file_get_contents("php://input"));
         $lotes = $this->caja_model_outside->getLotesDis($condominio->idCondominio);
-        for ($i = 0; $i < count($lotes); $i++) {
+        for($i = 0; $i < count($lotes); $i++) {
             $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
         }
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
-
 
 ////////////////
-    public function getLoteDisponible2()
-    {
+    public function getLoteDisponible2() {
         $condominio = json_decode(file_get_contents("php://input"));
         $lotes = $this->caja_model_outside->getLotesDis2($condominio->idCondominio, $condominio->id_rol);
-        for ($i = 0; $i < count($lotes); $i++) {
+        for($i = 0; $i < count($lotes); $i++) {
             $lotes[$i]['casasDetail'] = json_decode(str_replace("'", '"', $lotes[$i]['casasDetail']));
         }
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
 
-///////////////
-
-
-    public function getResidencial()
-    {
+    public function getResidencial() {
         $residenciales = $this->caja_model_outside->getResidencial();
-        if ($residenciales != null) {
+        if($residenciales != null) {
             echo json_encode($residenciales);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getCondominio()
-    {
+    public function getCondominio() {
         $proyecto = json_decode(file_get_contents("php://input"));
 
         $condominio = $this->caja_model_outside->getCondominio($proyecto->idResidencial);
-        if ($condominio != null) {
+        if($condominio != null) {
             echo json_encode($condominio);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getLotee()
+    public function getAllCondominios()
     {
+        $proyecto =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($proyecto)){
+            $idResidencial = $proyecto["idResidencial"];
+            if($idResidencial != null || $idResidencial != ""){
+                $condominios = $this->caja_model_outside->getCondominio($idResidencial);
+                if ($condominios != null || !empty($condominios))
+                    echo json_encode($condominios);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Proyecto"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getAllLotes(){
+        $proyecto =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($proyecto)){
+            $idCondominio = $proyecto["idCondominio"];
+            if( $idCondominio != null || $idCondominio != "" ){
+                $lotes = $this->caja_model_outside->getAllLotes($idCondominio);
+                if ($lotes != null || !empty($lotes))
+                    echo json_encode($lotes);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Condominio"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getAllClientsByLote(){
+        $data =  (array) (json_decode(file_get_contents("php://input")));
+        if(!empty($data)){
+            $idLote = $data["idLote"];
+            if( $idLote != null || $idLote != "" ){
+                $clientes = $this->caja_model_outside->getAllClientsByLote($idLote);
+                if ($clientes != null || !empty($clientes))
+                    echo json_encode($clientes);
+                else
+                    echo(json_encode(array("status" => 403, "mensaje" => "No se han encontrado registros"), JSON_UNESCAPED_UNICODE));
+            }
+            else echo(json_encode(array("status" => 403, "mensaje" => "No se ha enviado un ID de Lote"), JSON_UNESCAPED_UNICODE));
+        }
+        else echo(json_encode(array("status" => 403, "mensaje" => "No existe parámetro"), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getLotee() {
         $condominio = json_decode(file_get_contents("php://input"));
 
         $lotes = $this->caja_model_outside->getLotes($condominio->idCondominio);
-        if ($lotes != null) {
+        if($lotes != null) {
             echo json_encode($lotes);
         } else {
             echo json_encode(array());
         }
     }
 
-
-    public function getdbanco()
-    {
-        $datos["banco"] = $this->caja_model_outside->table_datosBancarios();
-        echo json_encode($datos);
-
-    }
-
-    public function getEtapa()
-    {
-        $datos["etapa"] = $this->caja_model_outside->table_etapa();
+    public function getdbanco(){
+        $datos["banco"]= $this->caja_model_outside->table_datosBancarios();
         echo json_encode($datos);
     }
 
+    public function getEtapa(){
+        $datos["etapa"]= $this->caja_model_outside->table_etapa();
+        echo json_encode($datos);
+    }
 
-    function caja_modules()
-    {
-
-        $data = json_decode(file_get_contents('php://input'));
-
+    function caja_modules() {
+        $data = json_decode( file_get_contents('php://input') );
         $datos = array();
-
-        if ($data->accion == 0) {
-
+        if ($data->accion == 0){
             foreach ($data->lotes as $value) {
 
                 $datos["nombreLote"] = $value->nombreLote;
@@ -204,7 +225,7 @@ class Caja_outside extends CI_Controller
 
                 $insert = $this->caja_model_outside->loadLotes($datos);
 
-                if ($insert == TRUE) {
+                if($insert == TRUE) {
                     $response['message'] = 'SUCCESS';
                     echo json_encode($response);
                 } else {
@@ -216,25 +237,19 @@ class Caja_outside extends CI_Controller
             }
 
         }
-        else if ($data->accion == 1) {
-
-            foreach ($data->lotes as $value) {
-
+        else if ($data->accion == 1){
+            foreach($data->lotes as $value) {
                 $datos["idCondominio"] = $data->idCondominio;
-
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
-
                 $update = $this->caja_model_outside->uploadPrecio($datos);
-
-                if ($update == TRUE) {
+                if($update == TRUE) {
                     $response['message'] = 'SUCCESS';
                     echo json_encode($response);
                 } else {
                     $response['message'] = 'ERROR';
                     echo json_encode($response);
                 }
-
             }
 
 
@@ -343,7 +358,6 @@ class Caja_outside extends CI_Controller
     {
 
         $data = json_decode(file_get_contents("php://input"));
-
         $dato = array();
         $dato["nombreResidencial"] = $data->nProyecto;
         $dato["descripcion"] = $data->descripcion;
@@ -439,6 +453,7 @@ class Caja_outside extends CI_Controller
             exit;
         }
         $data['prospecto'] = $this->caja_model_outside->consultByProspect($id_prospecto);
+        /*update validacion 26-11-2020*/
         if (count($data['prospecto']) <= 0) {
             $dataError['ERROR'] = array(
                 'titulo' => 'ERROR',
@@ -466,10 +481,43 @@ class Caja_outside extends CI_Controller
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
         $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
 
+        if( $datosView->concepto == 'REUBICACIÓN'){
+            if(ISSET( $datosView->fechaApartadoReubicacion)){
+                if( $datosView->fechaApartadoReubicacion == null || $datosView->fechaApartadoReubicacion == '' ){
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'La fecha por reubicación no ha sido enviada'
+                    );
+                    
+                    if ($dataError != null) {
+                        echo json_encode($dataError);
+                    } else {
+                        echo json_encode(array());
+                    }
+                    exit;
+                }
+            }
+            else{
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'La fecha por reubicación no ha sido enviada'
+                    );
+                    
+                    if ($dataError != null) {
+                        echo json_encode($dataError);
+                    } else {
+                        echo json_encode(array());
+                    }
+                    exit;
+            }
+        }
+
         $dataInsertCliente = array(
-            'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
+            'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
-            'id_gerente' => $datosView->id_gerente,/*$data['prospecto'][0]['id_gerente']*/
+            'id_gerente' => $datosView->id_gerente,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -506,7 +554,7 @@ class Caja_outside extends CI_Controller
             'fechaEnganche' => date('Y-m-d H:i:s'),
             'status' => 1,
             'idLote' => $data['lote'],
-            'fechaApartado' => date('Y-m-d H:i:s'),
+            'fechaApartado' => ( $datosView->concepto == 'REUBICACIÓN') ? $datosView->fechaApartadoReubicacion : date('Y-m-d H:i:s'),
             'fechaVencimiento' => date("Y-m-d H:i:s", strtotime($data['prospecto'][0]['fecha_vencimiento'])),
             'usuario' => $datosView->id_usuario,
             'modificado_por' => $datosView->id_usuario,
@@ -517,15 +565,17 @@ class Caja_outside extends CI_Controller
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
-            // 'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida,
-            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0
+            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
+            'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
+            'fechaAlta' => date('Y-m-d H:i:s'),
+            'id_cliente_reubicacion' => isset( $datosView->id_cliente_reubicacion ) ? $datosView->id_cliente_reubicacion : null
         );
         /*Inserta cliente*/
         $last_id = '';
         $currentUSer = $this->session->userdata('usuario');
         if ($idClienteInsert = $this->caja_model_outside->insertClient($dataInsertCliente)) {
-            $last_id = $idClienteInsert[0]["lastId"];//ultimo id guardado
+            $last_id = $idClienteInsert[0]["lastId"];
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
@@ -684,6 +734,7 @@ class Caja_outside extends CI_Controller
             $cd = json_decode(str_replace("'", '"', $casasDetail[0]['casasDetail']));
             $info = $this->caja_model_outside->getDatosLote($id_lote);
             if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
+                $tipo_casa = 2;
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                 foreach ($cd->tipo_casa as $value) {
@@ -703,7 +754,9 @@ class Caja_outside extends CI_Controller
                     'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
                     'nombreLote' => $nl
                 );
-            } else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
+            }
+            else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
+                $tipo_casa = 1;
                 $nl = $datosView->lotes[0]->nombre;
                 $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                 foreach ($cd->tipo_casa as $value) {
@@ -723,92 +776,9 @@ class Caja_outside extends CI_Controller
                     'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
                     'nombreLote' => $nl
                 );
-            } /*if ($datosView->lotes[0]->tipo_lote == 'STELLA') {
-                $nl = $datosView->lotes[0]->nombre;
-                if (
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-011' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-021' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-030' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-031' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-032' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-045' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-046' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-047' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-054' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-064' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-079' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-080' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-090' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-033' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-048' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-049' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-067' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-089' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-091' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-098' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-100'
-                ) {
-                    $total = $info->total;
-                    $t = ($total + 2029185.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                } else {
-                    $total = $info->total;
-                    $t = ($total + 2104340.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                }
-            } else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
-                $nl = $datosView->lotes[0]->nombre;
-                if (
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-011' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-021' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-030' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-031' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-032' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-045' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-046' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-047' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-054' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-064' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-079' || $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-080' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LAMAY-090' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-010' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-033' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-048' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-049' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-067' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-089' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-091' ||
-                    $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-098' || $datosView->lotes[0]->nombre2 == 'CCMP-LIRIO-100'
-                ) {
-                    $total = $info->total;
-                    $t = ($total + 1037340.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                } else {
-                    $total = $info->total;
-                    $t = ($total + 1075760.00);
-                    $e = ($t * 0.1);
-                    $s = ($t - $e);
-                    $m2 = ($t / $info->sup);
-                    $dataUpdateLote2 = array(
-                        'total' => $t,
-                        'enganche' => $e,
-                        'saldo' => $s,
-                        'nombreLote' => $nl,
-                        'precio' => $m2
-                    );
-                    $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
-                }
-            }*/ else if ($datosView->lotes[0]->tipo_lote == 'TERRENO') {
+            }
+            else if ($datosView->lotes[0]->tipo_lote == 'TERRENO') {
+                $tipo_casa = 0;
                 $t = (($info->precio + 500) * $info->sup);
                 $e = ($t * 0.1);
                 $s = ($t - $e);
@@ -821,6 +791,11 @@ class Caja_outside extends CI_Controller
                 );
             }
             $dataUpdateLote = array_merge($dataUpdateLote, $dataUpdateLote2);
+
+            $updateData = array(
+                "tipo_casa" => $tipo_casa
+            );
+            $result = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $last_id);//se actualiza el cliente
         }
         $validateLote = $this->caja_model_outside->validate($id_lote);
         ($validateLote == 1) ? TRUE : FALSE;
@@ -1149,45 +1124,29 @@ class Caja_outside extends CI_Controller
         $res3 = array(); // ERROR AL INSERTAR EL CLIENTE
 
         foreach ($data->lotes as $value) {
-
             $arreglo = array();
-
-
             $arreglo["idLote"] = $value->idLote;
             $arreglo["idCondominio"] = $value->idCondominio;
-
-
             $arreglo["engancheCliente"] = $value->pago;
             $arreglo["noRecibo"] = $data->pago->recibo;
             $arreglo["concepto"] = $data->concepto;
             $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
             $arreglo["usuario"] = $data->id_usuario;
-
-
             if ($data->personalidad_juridica == 1) {
-
                 $arreglo["nombre"] = $data->propietarios[0]->nombre;
                 $arreglo["rfc"] = $data->propietarios[0]->rfc;
-
             } else if ($data->personalidad_juridica == 2) {
-
                 $arreglo["nombre"] = $data->propietarios[0]->nombre;
                 $arreglo["apellido_paterno"] = $data->propietarios[0]->apellido_paterno;
                 $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
-
             }
-
 
             $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
             $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
             $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
-
-
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
-
-
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
@@ -1198,8 +1157,6 @@ class Caja_outside extends CI_Controller
                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                 $sig_fecha_feriado2 == "25-12") {
-
-
                 $fecha = $fechaAccion;
 
                 $i = 0;
@@ -1221,10 +1178,7 @@ class Caja_outside extends CI_Controller
                     }
                     $fecha = $sig_fecha;
                 }
-
-
                 $arreglo["fechaVencimiento"] = $fecha;
-
             } else {
 
                 $fecha = $fechaAccion;
@@ -1898,7 +1852,6 @@ class Caja_outside extends CI_Controller
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        // $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
                         $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
@@ -2253,8 +2206,7 @@ class Caja_outside extends CI_Controller
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-            "id_regional" => $dataLider[0]['id_regional'],
-            "id_regional_2" => $dataLider[0]['id_regional_2']
+            "id_regional" => $dataLider[0]['id_regional']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();
@@ -2640,4 +2592,5 @@ class Caja_outside extends CI_Controller
     public function getTipoLote() {
         echo json_encode($this->caja_model_outside->getTipoLote());
     }
+    
 }

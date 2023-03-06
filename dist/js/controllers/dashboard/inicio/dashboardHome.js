@@ -728,7 +728,7 @@ async function prospectsTable(){
     $('.table-dinamic').empty();
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
+    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -785,7 +785,7 @@ function getRolDR(idUser){
     });
 }
 
-function createAccordionsPR(option, render, rol){
+function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
@@ -804,19 +804,14 @@ function createAccordionsPR(option, render, rol){
                     <div class="toolbar">
                         <div class="row">
                             <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3"></div>
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6 pb-3">
-                                    <div class="container-fluid p-0">
-                                        <div class="row">
-                                            <div class="col-md-12 p-r">
-                                                <div class="form-group d-flex">
-                                                    <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
-                                                    <input type="text" class="form-control datepicker endDates" id="endDate3"  />
-                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
-                                                        <span class="material-icons">search</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                                <div class="w-30">
+                                    <div class="form-group d-flex">
+                                        <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
+                                        <input type="text" class="form-control datepicker endDates" id="endDate3"  />
+                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
+                                            <span class="material-icons">search</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -829,7 +824,7 @@ function createAccordionsPR(option, render, rol){
                                             <thead>
                                                 <tr>
                                                     <th>ESTADO</th>
-                                                      <th>ETAPA</th>
+                                                    <th>ETAPA</th>
                                                     <th>TIPO</th>
                                                     <th>PROSPECTO</th>
                                                     <th>ASESOR</th>
@@ -850,6 +845,7 @@ function createAccordionsPR(option, render, rol){
                 </div>`;
     $(".table-dinamic").append(html);
 }
+
 function multirol(){
     //validar que tipo de usuario es el que está actualmente sesionado
     let items_activos = [];
@@ -1238,9 +1234,9 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        "ordering": false,
-        "buttons": [
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        ordering: false,
+        buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -1248,7 +1244,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 titleAttr: 'Listado general de prospectos',
                 title:"Listado general de prospectos",
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7,8,9],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -1273,7 +1269,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                                     return 'GERENTE';
                                     break;
                                 case 7:
-                                    return 'LUGAR PROSPECCION';
+                                    return 'LUGAR PROSPECCIÓN';
                                     break;
                                 case 8:
                                     return 'TELÉFONO';
@@ -1291,7 +1287,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
             }
         ],
         autoWidth: true,
-        "lengthMenu": [
+        lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
@@ -1306,38 +1302,35 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
         destroy: true,
         columns: [
             { data: function (d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
-                    } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Sin vigencia</span><center>';
-                    }
-                }
-            },
+                if (d.estatus == 1)
+                    return '<center><span class="label" style="background: #A9DFBF; color: #145A32">Vigente</span><center>';
+                else
+                    return '<center><span class="label" style="background: #E6B0AA; color: #641E16">Sin vigencia</span><center>';
+            } },
             { data: function (d) {
-                    if(d.estatus_particular == 1) { // DESCARTADO
-                        b = '<center><span class="label" style="background:#E74C3C">Descartado</span><center>';
-                    } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
-                        b = '<center><span class="label" style="background:#B7950B">Interesado sin cita</span><center>';
-                    } else if (d.estatus_particular == 3){ // CON CITA
-                        b = '<center><span class="label" style="background:#27AE60">Con cita</span><center>';
-                    } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
-                        b = '<center><span class="label" style="background:#5D6D7E">Sin especificar</span><center>';
-                    } else if (d.estatus_particular == 5){ // PAUSADO
-                        b = '<center><span class="label" style="background:#2E86C1">Pausado</span><center>';
-                    } else if (d.estatus_particular == 6){ // PREVENTA
-                        b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
-                    }
-                    return b;
-                }
-            },
+                if(d.estatus_particular == 1) // DESCARTADO
+                    estatus_particular = 'Descartado';
+                else if(d.estatus_particular == 2) // INTERESADO SIN CITA
+                    estatus_particular = 'Interesado sin cita';
+                else if (d.estatus_particular == 3) // CON CITA
+                    estatus_particular = 'Con cita';
+                else if (d.estatus_particular == 0 || d.estatus_particular == 4) // SIN ESPECIFICAR
+                    estatus_particular = 'Sin especificar';
+                else if (d.estatus_particular == 5) // PAUSADO
+                    estatus_particular = 'Pausado';
+                else if (d.estatus_particular == 6) // PREVENTA
+                    estatus_particular = 'Preventa';
+                else if (d.estatus_particular == 3) // CLIENTE
+                    estatus_particular = 'Cliente';
+                return `<center><span class="label" style="background: #D2B4DE; color: #4A235A">${estatus_particular}</span><center>`;
+            } },
             {   data: function (d) {
-                    if (d.tipo == 0){
-                        return '<center><span class="label label-danger" style="background: #B7950B">Prospecto</span></center>';
-                    } else {
-                        return '<center><span class="label label-danger" style="background: #75DF8F">Cliente</span></center>';
-                    }
+                if (d.tipo == 0){
+                    return '<center><span class="label" style="background: #F9E79F; color: #7D6608">Prospecto</span></center>';
+                } else {
+                    return '<center><span class="label" style="background: #A3E4D7; color: #0E6251">Cliente</span></center>';
                 }
-            },
+            } },
             { data: function (d) {
                     return d.nombre;
                 }
@@ -1376,11 +1369,11 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 }
             }
         ],
-        "ajax": {
-            "url": url,
-            "dataSrc": "",
+        ajax: {
+            url: url,
+            dataSrc: "",
             cache: false,
-            "type": "POST",
+            type: "POST",
             data: {
                 "typeTransaction": typeTransaction,
                 "beginDate": beginDate,

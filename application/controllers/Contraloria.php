@@ -1140,9 +1140,23 @@ public function get_sede(){
 	$perfil=$this->input->post('perfil');
 	$modificado=date("Y-m-d H:i:s");
 
+<<<<<<< HEAD
+=======
+
+	$valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+	if($valida_tl[0]['tipo_venta'] == 1){
+	    $idStaC = 3;
+        $idMov = 102;
+    }else{
+        $idStaC = 1;
+        $idMov = 20;
+    }
+
+>>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
 	$arreglo=array();
-	$arreglo["idStatusContratacion"]= 1;
-	$arreglo["idMovimiento"]=20; 
+	$arreglo["idStatusContratacion"]= $idStaC;
+	$arreglo["idMovimiento"]=$idMov;
 	$arreglo["comentario"]=$comentario;
 	$arreglo["usuario"]=$this->session->userdata('id_usuario');
 	$arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -1151,8 +1165,8 @@ public function get_sede(){
 
 
 	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=1;
-	$arreglo2["idMovimiento"]=20;
+	$arreglo2["idStatusContratacion"]=$idStaC;
+	$arreglo2["idMovimiento"]=$idMov;
 	$arreglo2["nombreLote"]=$nombreLote;
 	$arreglo2["comentario"]=$comentario;
 	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -1167,11 +1181,12 @@ public function get_sede(){
 	$lp = $this->Contraloria_model->get_lp($idLote);
 
 	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
+	   $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
 	   $array = array_unique($correosClean);
 	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
+        //$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');//
+        $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
+        $array = array_unique($correosClean);
 	}
 
 	$infoLote = $this->Contraloria_model->getNameLote($idLote);
@@ -1381,7 +1396,8 @@ public function get_sede(){
 			  $arreglo["fechaVenc"] = $fecha;
 		  }
 
-	  } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+	  }
+	  elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
 		  $fechaAccion = date("Y-m-d H:i:s");
 		  $hoy_strtotime2 = strtotime($fechaAccion);
@@ -1498,18 +1514,27 @@ public function get_sede(){
 			
 			$arreglo["asig_jur"] = $assigned_user;
 		}
-	  
+
+
 	  $validate = $this->Contraloria_model->validateSt6($idLote);
 
 	  if ($validate == 1) {
-		  if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-			  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
-			  $data['message'] = 'OK';
-			  echo json_encode($data);
-		  } else {
-			  $data['message'] = 'ERROR';
-			  echo json_encode($data);
-		  }
+	      //se valida si existe una corrida en el árbol de documentos
+	      $corrida = $this->Contraloria_model->validaCorrida($idLote);
+	      if(empty($corrida->expediente)){
+              $data['message'] = 'MISSING_CORRIDA';
+              echo json_encode($data);
+          }else{
+              if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
+                  $data['message'] = 'OK';
+                  echo json_encode($data);
+              } else {
+                  $data['message'] = 'ERROR';
+                  echo json_encode($data);
+              }
+          }
+
 	  } else {
 		  $data['message'] = 'FALSE';
 		  echo json_encode($data);
@@ -1656,7 +1681,8 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
   $mail->Body = $mailContent;
 
 
-	$validate = $this->Contraloria_model->validateSt6($idLote);
+
+    $validate = $this->Contraloria_model->validateSt6($idLote);
 
 	if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
@@ -1849,9 +1875,11 @@ $i = 0;
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;     
 
-		$validate = $this->Contraloria_model->validateSt6($idLote);
 
-		if($validate == 1){
+    $validate = $this->Contraloria_model->validateSt6($idLote);
+
+
+    if($validate == 1){
 			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 					$data['message'] = 'OK';
 					echo json_encode($data);
@@ -2088,13 +2116,17 @@ $i = 0;
 
   public function editar_registro_loteRevision_contraloria6_AJuridico7(){
 
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
+      $idLote = $this->input->post('idLote');
+      $idCondominio = $this->input->post('idCondominio');
+      $nombreLote = $this->input->post('nombreLote');
+      $idCliente = $this->input->post('idCliente');
+      $comentario = $this->input->post('comentario');
+      $modificado = date('Y-m-d H:i:s');
+      $fechaVenc = $this->input->post('fechaVenc');
+      $charactersNoPermit = array('$', ',');
+      $totalNeto = $this->input->post('totalNeto');
+      $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+
 
 
     $arreglo=array();
@@ -2104,7 +2136,7 @@ $i = 0;
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["totalNeto"] = $totalNeto;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=6;
@@ -2119,10 +2151,11 @@ $i = 0;
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;     
 
-
 	$validate = $this->Contraloria_model->validateSt6($idLote);
 
-	if($validate == 1){
+
+
+      if($validate == 1){
 		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 				$data['message'] = 'OK';
 				echo json_encode($data);
@@ -3102,7 +3135,9 @@ public function return1(){
     $comentario=$this->input->post('comentario');
     $modificado=date('Y-m-d H:i:s');
     $fechaVenc=$this->input->post('fechaVenc');
-
+    $charactersNoPermit = array('$', ',');
+    $totalNeto = $this->input->post('totalNeto');
+    $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
 
 
     $arreglo=array();
@@ -3112,7 +3147,7 @@ public function return1(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");
-
+    $arreglo["totalNeto"] = $totalNeto;
 	
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=6;
@@ -3125,7 +3160,7 @@ public function return1(){
     $arreglo2["fechaVenc"]= $modificado;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
+    $arreglo2["idCliente"]= $idCliente;
 
 		$validate = $this->Contraloria_model->validateSt6($idLote);
 
@@ -3150,9 +3185,7 @@ public function return1(){
 
 	$idLote=$this->input->post('idLote');
 	$ubicacion=$this->input->post('ubicacion');
-
 	$validate = $this->Contraloria_model->update_sede($idLote, $ubicacion);
-
 		if ($validate == TRUE){
 				$data['message'] = 'OK';
 				echo json_encode($data);

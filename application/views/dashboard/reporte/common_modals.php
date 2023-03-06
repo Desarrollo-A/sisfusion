@@ -208,6 +208,7 @@
                         <th>Días desde apartado</th>
                         <th>Estatus contratación</th>
                         <th>Estatus lote</th>
+                        <th>Apartado</th>
                     </tr>
                 </thead>
             </table>
@@ -254,6 +255,7 @@
                         <th>Estatus lote</th>
                         <th>Fecha liberación</th>
                         <th>Motivo</th>
+                        <th>Apartado</th>
                     </tr>
                 </thead>
             </table>

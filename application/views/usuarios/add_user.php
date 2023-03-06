@@ -1,22 +1,28 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
-    .boxContent .bootstrap-select button {
-        background-color: transparent!important;
-    }
-</style>
 <body>
     <div class="wrapper">
-        <?php
-        /*-------------------------------------------------------*/
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
-        ?>
-
+        <?php $this->load->view('template/sidebar', ""); ?>
+        <style>
+            .boxContent .bootstrap-select button {
+                background-color: transparent!important;
+            }
+            .form-group{
+                margin: 0px;
+            }
+            .btn-group{
+                margin: 0px;
+            }
+            label.control-label{
+                margin: 0;
+            }
+            #showPass {
+                cursor: pointer;
+                position: absolute;
+                top: 35px;
+                right: 30px;
+            }
+        </style>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -30,85 +36,62 @@
                                     <h3 class="card-title center-align">Agrega un miembro a nuestro equipo de trabajo</h3>
                                     <div class="toolbar">
                                         <form name="my_add_user_form" id="my_add_user_form">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">Nombre (requerido)</label>
-                                                    <input id="name" name="name" type="text" class="form-control input-gral" required>
-                                                </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Nombre</label>
+                                                <input id="name" name="name" type="text" class="form-control input-gral" required>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">Apellido paterno (requerido)</label>
-                                                    <input id="last_name" name="last_name" type="text" class="form-control input-gral" required>
-                                                </div>
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Apellido paterno</label>
+                                                <input id="last_name" name="last_name" type="text" class="form-control input-gral" required>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">Apellido materno</label>
-                                                    <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral">
-                                                </div>
+                                                <label class="control-label label-gral">Apellido materno</label>
+                                                <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral">
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">RFC (requerido)</label>
-                                                    <input id="rfc" name="rfc" type="text" class="form-control input-gral" required maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                                                </div>
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Correo electrónico</label>
+                                                <input id="email" name="email" type="email" class="form-control input-gral" required>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Forma de pago</label>
+                                                <select id="payment_method" name="payment_method" class="form-control payment_method input-gral pl-0" required>
+											        <option value="0" disabled selected>Seleccione una opción</option>
+                                                </select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label label-gral">Forma de pago (requerido)</label>
-                                                    <select id="payment_method" name="payment_method" class="form-control payment_method input-gral" required></select>
-                                                </div>
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Teléfono celular</label>
+                                                <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" required maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">Correo electrónico (requerido)</label>
-                                                    <input id="email" name="email" type="email" class="form-control input-gral" required>
-                                                </div>
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Sede</label>
+                                                <select id="headquarter" name="headquarter" class="form-control headquarter input-gral pl-0" required onchange="cleadFieldsHeadquarterChange()">
+											        <option value="0" disabled selected>Seleccione una opción</option>
+                                                </select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating is-empty">
-                                                    <label class="control-label label-gral">Teléfono celular (requerido)</label>
-                                                    <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" required maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                                                </div>
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Tipo de miembro</label>
+                                                <select id="member_type" name="member_type" class="form-control member_type input-gral pl-0" required onchange="getLeadersList()">
+											        <option value="0" disabled selected>Seleccione una opción</option>
+                                                </select>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label label-gral">Sede (requerido)</label>
-                                                    <select id="headquarter" name="headquarter" class="form-control headquarter input-gral" required onchange="cleadFieldsHeadquarterChange()"></select>
-                                                </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Lider</label>
+                                                <select id="leader" name="leader" class="form-control input-gral" required></select>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label label-gral">Tipo de miembro (requerido)</label>
-                                                    <select id="member_type" name="member_type" class="form-control member_type input-gral" required onchange="getLeadersList()"></select>
-                                                </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+                                                <label class="control-label label-gral"><span class="isRequired">*</span>Nombre de usuario</label>
+                                                <input id="username" name="username" type="text" class="form-control input-gral" autocomplete="off" required>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label label-gral">Lider (requerido)</label>
-                                                    <select id="leader" name="leader" class="form-control input-gral" required></select>
-                                                </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
+                                                <label class="control-label"><span class="isRequired">*</span>Contraseña</label>
+                                                <input type="password" id="contrasena" name="contrasena" class="form-control input-gral" required="" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
+                                                <span id="showPass" onclick="showPassword()">
+                                                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                                    <i class="fa fa-eye" aria-hidden="true" style="display:none;"></i>
+                                                </span>
                                             </div>
-                                            <div class="container-fluid">
-                                                <div class="row aligned-row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-                                                        <div class="form-group label-floating select-is-empty">
-                                                            <label class="control-label label-gral">Nombre de usuario (requerido)</label>
-                                                            <input id="username" name="username" type="text" class="form-control input-gral" autocomplete="off" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-                                                        <div class="form-group label-floating select-is-empty p-0">
-                                                            <label class="control-label label-gral">Contraseña (requerido)</label>
-                                                            <input id="contrasena" name="contrasena" type="password" class="form-control input-gral" required="" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1 d-flex align-center">
-                                                        <input class="m-0 mr-2" type="checkbox" onclick="showPassword()"> Mostrar contraseña
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-2 pl-0">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 mb-1 d-flex justify-end">
+                                                <div class="w-20">
                                                     <button type="submit" class="btn-data-gral btn-s-blue btn-block" id="buscarBtn">Guardar</button>
                                                 </div>
                                             </div>

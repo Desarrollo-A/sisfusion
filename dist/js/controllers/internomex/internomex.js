@@ -15,6 +15,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
+
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -187,11 +188,23 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
+                    let tipo_pago = d.tipo_pago;
+                    let bkgd = '';
+                    if(tipo_pago=='Pago lote'){
+                        bkgd = 'background:#D7BDE2; color:#512E5F';
+                    }else if(tipo_pago=='Pago suma'){
+                        bkgd = 'background:#9ae3ff; color:#004887';
+                    }
+                    return '<span class="label" style="'+bkgd+'">'+tipo_pago+'</span>';
+                }
+            },
+            {
+                data: function (d) {
                     return d.comentario;
                 }
             },
             {
-               
+                "visible": false,
                 data: function (d) {
                     if (id_rol_global == 31) {
                         return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
@@ -314,16 +327,21 @@ $(document).on('click', '.find-results', function () {
     let fechaInicio = formatDate( $(".beginDate").val());
     let fechaFin = formatDate( $(".endDate").val());
     fillTableLotificacion(fechaInicio, fechaFin);
+    $('#tipo_pago_selector').addClass('hide');
 });
 
 $(document).on('click', '.generate', function () {
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
+    $('#tipo_pago_selector').removeClass('hide');
 });
 
 $(document).on('click', '#downloadFile', function () {
+    let tipo_pago = $('#tipo_accion').val();
+    console.log('tipo_pago:', tipo_pago);
+
     $.ajax({
-        url: 'getPaymentsListByCommissionAgent',
+        url: 'getPaymentsListByCommissionAgent/'+tipo_pago,
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
@@ -403,6 +421,7 @@ function readFileAsync(selectedFile) {
 }
 
 $(document).on('click', '#cargaCoincidencias', function () {
+    let tipo_pago = $('#tipo_accion').val();
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
     if (file == '')
@@ -413,7 +432,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
         if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
             processFile(fileElm.files[0]).then(jsonInfo => {
                 $.ajax({
-                    url: 'insertInformation',
+                    url: 'insertInformation/'+tipo_pago,
                     type: 'post',
                     dataType:'json',
                     data: {'data': generateJWT(jsonInfo)},
@@ -423,7 +442,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
                         console.log(XMLHttpRequest.status);
-                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalode nuevo 009.', "danger");
+                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
                         if (XMLHttpRequest.status == 301){
                             alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
                         }
@@ -477,3 +496,21 @@ function base64url(source) {
     
     return encodedSource;
   }
+
+function validaTipoPago(tipo_pago){
+    let one = $('#one');
+    let two = $('#two');
+    let cargarLabel = $('#cargarLabel');
+    if(tipo_pago>0){
+        one.removeAttr('disabled');
+        one.attr('name', 'radio');
+        two.removeAttr('disabled');
+        two.attr('name', 'radio');
+        cargarLabel.removeAttr('style');
+        cargarLabel.removeAttr('disabled');
+        $(".row-load").removeClass("hide");
+        $(".box-table").addClass("hide");
+    }
+
+    // name="radio"
+}

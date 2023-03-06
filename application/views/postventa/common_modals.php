@@ -1,6 +1,12 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<style>
+    .modal-backdrop{
+        z-index:9;
+    }
+ 
 
+</style>
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,22 +14,56 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title">Ingrese su comentario</h4>
-                <b id="actividad_siguiente"></b>
+                <h4 class="modal-title card-title"><b>Avance de estatus</b></h4>
+                <p id="actividad_siguiente"></p>
 
             </div>
+
+        
+
+
+
+
+ 
+       <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container mt-5 mb-5">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <p id="titulo_comentarios"></p>
+                                <div class="tab-content">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                    <div class="card-content card card-plain">
+                                                    <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" type="text" name="observaciones" id="observaciones" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" max="255" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <b id="text-observations" class="text-danger"></b>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="estatus_siguiente" id="estatus_siguiente">
-                    <input type="hidden" name="tipo" id="tipo">
-
+                    <input type="hidden" name="type" id="type">
+                    <input type="hidden" name="status" id="status">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-simple btn-border">Enviar</button>
-                    <button type="button" class="btn btn-danger btn-simple btn-border" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -37,7 +77,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Ingrese su comentario</h4>
+                <h4 class="modal-title card-title"><b>Rechazo de estatus</b></h4>
             </div>
             <form id="rejectForm" name="rejectForm" method="post">
                 <div class="modal-body">
@@ -46,17 +86,17 @@
                         <div class="col-lg-12 form-group p-0 m-0" id="rechazo">
                                 <label class="label-gral">Área de rechazo</label>
                                 <select class="selectpicker select-gral m-0" name="area_rechazo" id="area_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
-                                <b id="area_selected"></b>
-                            </div>
+                                
+                                </div>  
                             <div class="col-lg-12 form-group p-0 m-0">
-                                <label class="label-gral">Seleccione el motivo de rechazo.</label>
+                                <label class="label-gral">Seleccione el motivo de rechazo <b id="area_selected"></b></label>
                                 <select class="selectpicker select-gral m-0" name="motivos_rechazo" id="motivos_rechazo" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select>
                                 <input type="hidden" name="id_solicitud2" id="id_solicitud2">
                                 <input type="hidden" name="estatus" id="estatus">
                             </div>
                             <div class="col-lg-12 form-group p-0 d-flex justify-end">
+                                <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Aceptar</button>
                             </div>
                         </div>
                     </div>
@@ -65,6 +105,23 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="loadPresupuestos" data-keyboard="false" data-backdrop="static" style="z-index: 99;">
+    <div class="modal-dialog modal-md boxContent">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <i onclick="RecargarTablePresupuestos()" data-toggle="tooltip" title="Cerrar" data-dismiss="modal" class="fas fa-times fl-r"></i>
+                <h4 class="modal-title card-title fw-500 ">Carga de presupuestos</h4><br>
+            </div>
+            <div class="modal-body text-center toolbar m-0 p-0">
+                <input type="text" class="hide" id="idNxS">
+                <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="uploadModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -89,6 +146,8 @@
                 <input type="text" class="hide" id="idSolicitud">
                 <input type="text" class="hide" id="idDocumento">
                 <input type="text" class="hide" id="documentType">
+                <input type="text" class="hide" id="id_estatus">
+                <input type="text" class="hide" id="documento_validar">
                 <input type="text" class="hide" id="docName">
                 <input type="text" class="hide" id="action">
                 <input type="text" class="hide" id="details">
@@ -105,6 +164,10 @@
     </div>
 </div>
 
+
+
+
+
 <div class="modal fade" id="presupuestoModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
         <div class="modal-content card">
@@ -117,30 +180,38 @@
                         <div class="row">
                             <div class="col-md-12 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Nombre Completo</label>
+                                    <label class="control-label label-gral m-0">Nombre Completo</label>
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-12 pr-0 pr-0">
+                            <div class="col-md-8 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Nombre a quien escritura *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span>Valor a escriturar</label>
+                                    <input id="valor_escri" name="valor_escri" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Tipo de escrituración *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Tipo de escrituración</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="Tipo de escrituracion" data-size="7" id="tipoE" name="tipoE"
+                                             data-size="7" id="tipoE" name="tipoE"
                                             data-live-search="true" required>
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus de pago *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Estatus de pago</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus de pago" data-size="7" id="estatusPago" name="estatusPago"
+                                             data-size="7" id="estatusPago" name="estatusPago"
                                             data-live-search="true" required>
                                             <option value ="default" selected disabled>Seleccione una opción</option>
                                     </select>
@@ -149,7 +220,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Superficie *</label>
-                                    <input id="superficie" name="superficie" class="form-control input-gral" value="" type="number" required>
+                                    <input id="superficie" name="superficie" class="form-control input-gral" value="" min="0" step="any" type="number" required>
                                 </div>
                             </div>    
                             <div class="col-md-4 pr-0">
@@ -159,21 +230,23 @@
                                     id="fContrato" name="fContrato" disabled/>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Clave catastral *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Clave catastral</label>
                                     <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus construcción *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> Estatus construcción</label>
                                     <input id="construccionInfo" name="construccionInfo" value="" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Tenemos cliente anterior? *</label>
+                                    <label class="control-label label-gral m-0"><span class="isRequired">*</span> ¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="cliente" name="cliente"
                                             data-live-search="true" required>
@@ -183,101 +256,96 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- estos input solo se muestran si es si el select anterior -->
-                            <div id="ifClient" style="display:none">
-                                <div class="col-md-12 pr-0 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" >
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral"></label>
-                                        <input type="text" class="form-control datepicker"
-                                        id="fechaCA" name="fechaCA" placeholder="Fecha del contrato anterior"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text">
-                                    </div>
+                        </div>
+                        
+                        <!-- estos input solo se muestran si es si el select anterior -->
+                        <div class="row ifClient">
+                            <div class="col-md-12 pr-0 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Nombre del titular anterior</label>
+                                    <input id="nombreT" name="nombreT" class="form-control input-gral" type="text" >
                                 </div>
                             </div>
-                            <!--INFORMACIÓN DE NOTARÍA-->
-                            <div >
-                                <div class="col-md-3 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Aportaciones</label>
-                                        <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 pr-0">
-                                      <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Descuentos</label>
-                                        <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
-                                      </div>
-                                </div>
-                                <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Motivo</label>
-                                        <textarea id="motivo" name="motivo" class="form-control input-gral" placeholder="Motivo"></textarea>
-                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
-                                    </div>
-                                </div>
-                            </div>
-                            <!----------------------------->
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">¿Se va a trabajar con Notaría externa? *</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                            title="¿Se va a trabajar con Notaría externa?" data-size="7" id="not" name="not"
-                                            data-live-search="true" required>
-                                        <option value="yes">Sí</option>
-                                        <option value="nou" selected>No</option>
-                                    </select>
+                                    <label class="control-label label-gral m-0">Fecha de contrato anterior</label>
+                                    <input type="text" class="form-control datepicker" id="fechaCA" name="fechaCA" style="background-color: #eaeaea; background-image:none; border-radius: 27px; text-align: center; color: #929292">
                                 </div>
                             </div>
-                            <!--INPUT QUE SOLO SE MOSTRARAN SI SE VA A TRABAJAR CON UNA NOTARÍA EXTERNA-->
-                            <div id="ifNotaria" style="display:none">
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Correo</label>
-                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Teléfono</label>
-                                        <input type="text" id="telefono" name="telefono" class="form-control input-gral">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 pr-0">
+                            <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <p>*Estos campos son obligatorios.</p>
+                                    <label class="control-label label-gral m-0">RFC / Datos personales</label>
+                                    <input id="rfcDatos" name="rfcDatos" class="form-control input-gral" type="text">
                                 </div>
                             </div>
                         </div>
+                        <!--INFORMACIÓN DE NOTARÍA-->
+                         <!----------------------------->
+                         <div class="col-md-12 pr-0" >
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Tipo de Notaría</label>
+                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="1">Interna</option>
+                                        <option value="2">Externa</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="div_notaria" style="display: none;">
+                                    <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Número de la Notaría</label>
+                                            <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-6 pr-0 pr-0" id="divnombre_notario">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Nombre del notario</label>
+                                            <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pr-0 pr-0" id="divdireccion">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Dirección</label>
+                                            <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pr-0 pr-0" id="divcorreo">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Correo</label>
+                                            <input type="email" id="correo" name="correo" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pr-0 pr-0" id="divtelefono">
+                                        <div class="form-group text-left m-0">
+                                            <label class="control-label label-gral">Teléfono</label>
+                                            <input type="number" id="telefono" name="telefono" class="form-control input-gral">
+                                        </div>
+                                    </div>
+                                </div>
+                        <!----------------------------->
+                        <div class="row">
+                            <div class="col-md-6 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label estiloEsc label-gral">Aportaciones</label>
+                                    <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Descuentos</label>
+                                    <input id="descuentos" name="descuentos" required class="form-control input-gral" type="text">
+                                    </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Motivo</label>
+                                    <textarea id="motivo" name="motivo" class="text-modal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                       
                         <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
                                 <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
@@ -313,6 +381,12 @@
                                     <input id="nombrePresupuesto4" name="nombrePresupuesto4" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
+                            <div class="col-md-12 pr-0 pr-0">
+                                <div class="form-group label-floating is-focused">
+                                    <label class="control-label label-gral">Valor a escriturar</label>
+                                    <input id="valor_escri4" name="valor_escri4" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
                             <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Estatus de pago</label>
@@ -322,7 +396,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Superficie</label>
-                                    <input id="superficie2" name="superficie2" class="form-control input-gral" value="" type="number" disabled>
+                                    <input id="superficie2" name="superficie2" class="form-control input-gral" step="any" value="" type="number" disabled>
                                 </div>
                             </div>    
                             <div class="col-md-4 pr-0">
@@ -474,7 +548,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="text" class="hide" id="idSolicitud">
+                <input type="text" class="hide" id="idSolicitudFecha">
                 <input type="text" class="hide" id="type">
             </div>
             <div class="modal-footer">
@@ -484,7 +558,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -497,7 +570,7 @@
                             <div class="row">
                                 <div class="col-md-4 pr-0 pr-0">
                                     <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <label class="control-label label-gral">Número de la Notaría</label>
                                         <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral" required>
                                     </div>
                                 </div>
@@ -535,6 +608,76 @@
         </div>
     </div>
 </div>
+<!--<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Asignación de notaría</b></h4>
+                <i id="informacion_lote"></i>
+
+            </div>
+            <div class="modal-body text-center">
+               <form id="asignarNotaria" name="asignarNotaria" method="post">
+               <input type="hidden" class="hide" id="id_solicitud" name="id_solicitud">
+               <input type="hidden" class="hide" id="tipo_notaria" name="tipo_notaria">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+                           <div class="col-md-12 pr-0" >
+                                    <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral">Tipo de Notaría</label>
+                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="1">Interna</option>
+                                        <option value="2">Externa</option>
+                                        </select>
+                                    </div>
+                                </div>
+ 
+                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre de la Notaría</label>
+                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
+                                    </div>
+                                </div>  
+                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notario">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Nombre del notario</label>
+                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 pr-0 pr-0" id="divdireccion">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Dirección</label>
+                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-0 pr-0" id="divcorreo">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Correo</label>
+                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-0 pr-0" id="divtelefono">
+                                    <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Teléfono</label>
+                                        <input type="number" id="telefono" name="telefono" class="form-control input-gral">
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>-->
 
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -546,7 +689,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label label-gral">Nombre de la Notaría</label>
+                                <label class="control-label label-gral">Número de la Notaría</label>
                                 <input type="text" id="nombreNotaria" name="nombreNotaria" class="form-control input-gral" value="" style="text-align:center" disabled>
                             </div>
                         </div>
@@ -578,7 +721,6 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-end p-0">
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="observacionesSubmit" class="btn btn-primary btn-round btn-sm">Rechazar</button>
                         </div>
                     </div>
                    
@@ -589,7 +731,7 @@
 </div>
 
 <div class="modal fade" id="viewObservaciones" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="text-center m-0">Envío de Observaciones</h5>
@@ -599,30 +741,93 @@
                 <input type="text" class="hide" id="action" name="action">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="pertenece" class="selectpicker" data-style="btn btn-primary btn-round" title="¿Para quién es la observación?" data-size="7" data-live-search="true">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <select id="pertenece" name="pertenece" class="selectpicker select-gral m-0 pb-1" data-style="btn" data-show-subtext="true" data-live-search="true" title="¿Para quién es la observación?" data-size="7" required>
                                 <option value="Postventa">Postventa</option>
                                 <option value="Proyectos">Proyectos</option>
                             </select>
                         </div>      
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <select id="observacionesS" name="observacionesS" class="selectpicker" data-style="btn btn-primary btn-round" title="Observaciones" data-size="7" data-live-search="true" required>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <select id="observacionesS" name="observacionesS" class="selectpicker select-gral m-0 pb-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Observaciones" data-size="7" required>
                                 <option value="Corrección Documentos">Corrección documentos</option>
-                                <option value="Documentación Correcta">Documentación correcta</option>  
+                                <option value="Documentación Correcta">Documentación correcta</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Enviar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>            
 
-<div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
+
+<!--<div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Estatus de construcción</b></h4>
+                <i id="actividad_siguiente"></i>
+
+            </div>
+
+            
+            <form id="approveForm" name="approveForm" method="post">
+                <div class="modal-body">
+                <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Selecciona un estatus</label>
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
+                                         required>
+                                    </select>
+                                </div>
+                            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>--->
+
+
+<div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Asignar estatus de Construcción</b></h4>
+                <p id="informacion_lote_construccion"></p>
+            </div>
+            <form id="formEstatusLote" name="formEstatusLote" method="post">
+                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
+                <div class="modal-body">
+                    <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
         <div class="modal-content card">
             <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
@@ -633,11 +838,11 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
                                             title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                            data-live-search="true" required>
+                                         required>
                                     </select>
-                                </div>
+                                </div>ASAS
                             </div>
                         </div>
                         <div class="row">
@@ -651,31 +856,46 @@
             </form>
         </div>
     </div>
-</div>
+</div> -->
 
-<div class="modal fade" id="informacionModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog boxContent">
-        <div class="modal-content card">
+ 
+<div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Información de cliente</b></h4>
+                <p id="actividad_siguiente"></p>
+            </div>
+
             <form class="card-content" id="formInformacion" name="formInformacion" method="POST">
-                <input type="hidden" name="idSolicitud" id="idSolicitud">
-                <div class="modal-body text-center toolbar m-0 p-0">
-                    <h3 id="mainLabelText"></h3>
-                    <h4 id="secondaryLabelDetail">Información</h4>
-                    <div class="container-fluid">
+            <input type="hidden" name="idSolicitud" id="idSolicitud">
+            
+            <div class="modal-body">
+
+                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">¿Lote liquidado?</label>
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Lote liquidado?</label>
                                     <input id="liquidado" name="liquidado" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">¿Tenemos cliente anterior?</label>
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> Estatus construcción</label>
+                                    <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Tenemos cliente anterior?</label>
                                     <select class="selectpicker" data-style="btn btn-primary btn-round"
                                             title="¿Tenemos cliente anterior?" data-size="7" id="clienteI" name="clienteI"
-                                            data-live-search="true" disabled>
-                                            <option value ="default" selected disabled>Seleccione una opción</option>
+                                            data-live-search="true" >
+                                            <option value ="default" selected >Seleccione una opción</option>
                                             <option value="uno">Sí</option>
                                             <option value="dos">No</option>
                                     </select>
@@ -684,50 +904,68 @@
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifInformacion" style="display:none">
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
-                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" disabled>
+                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group label-floating is-focused">
-                                        <label class="control-label label-gral">Fecha del contrato anterior</label>
-                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" disabled>
+                                        <label class="control-label estiloEsc label-gral btn-round">Fecha del contrato anterior</label>
+                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" disabled>
+                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Aportaciones a la fecha (solo capital) *</label>
-                                    <input id="aportaciones" name="aportaciones" class="form-control input-gral" type="number" required>
+                            <div >
+                                <div class="col-md-6 pr-0">
+                                    <div class="form-group estiloEsc is-focused">
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Aportaciones</label>
+                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-0">
+                                      <div class="form-group estiloEsc is-focused">
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Descuentos</label>
+                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
+                                      </div>
+                                </div>
+                                <div class="col-md-12 pr-0">
+                                    <div class="form-group estiloEsc is-focused">
+                                        <label class="control-label label-gral"><b style="color:red;">*</b> Motivo</label>
+                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" required></textarea>
+                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Descuentos *</label>
-                                    <textarea class="text-modal scroll-styles form-control input-gral" type="text" name="descuentos" id="descuentos" autofocus="true" require></textarea>
-                                </div>
-                            </div>
+
                             <div class="col-sm-12 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <p>*Estos campos son obligatorios</p>
+                                <div class="form-group text-left m-0" id="information_campos">
+                                    <p><b style="color:red;">*</b> Estos campos son obligatorios</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                     </div>
+            </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" id="RequestInformacion" class="btn btn-success btn-simple">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        </div>
+
+
+                        <!-- <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
                                 <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="RequestInformacion" class="btn btn-primary mt-2">Guardar</button>
                             </div>                
-                        </div>
-                    </div>
-                </div>
+                        </div> -->
+                   
             </form>
         </div>
     </div>
@@ -748,3 +986,59 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+<!-- inicio de modal -->
+
+<div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
+                <div class="modal-dialog  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                        </div>
+                        <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+
+                        </div>
+                        <div class="modal-footer">
+                            <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
+                                
+                            <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!-- fin modal -->   
+<!-- fin modal -->   
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                <div class="modal-header">
+                <h3 class="text-center">Validacion de documentos</h3>
+                    
+                </div>
+                    <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
+                    
+                    </div>
+                <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                      
+                </div>
+                </div>
+            </div>
+            </div>     
+          
+<!-- fin modal -->
+
+
+
+
+
+

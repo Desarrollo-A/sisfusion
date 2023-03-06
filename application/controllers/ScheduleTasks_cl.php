@@ -57,9 +57,7 @@ public function sendRv5(){
 
   
   $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-  $mail->addAddress('lucero.velazquez@ciudadmaderas.com');
-  $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+  $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
   $mail->addAddress('rigel.silva@prohabitacion.com');
   $mail->addAddress('rafael.bautista@ciudadmaderas.com');
   $mail->addAddress('vicky.paulin@ciudadmaderas.com');
@@ -72,6 +70,9 @@ public function sendRv5(){
   $mail->addAddress('grisell.malagon@ciudadmaderas.com');
   $mail->addAddress('karen.ponce@ciudadmaderas.com');
   $mail->addAddress('luz.angeles@ciudadmaderas.com');
+  $mail->addAddress('irene.vallejo@ciudadmaderas.com');
+  $mail->addAddress('leydi.sanchez@ciudadmaderas.com');
+  $mail->addAddress('monserrat.cazares@ciudadmaderas.com');
   //$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
 
 
@@ -1236,15 +1237,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     }
 
-    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
-    {
+    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction) {
         $mail = $this->phpmailer_lib->load();
-       
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        //$mail->addAddress('coord.desarrollo2@ciudadmaderas.com');
-        $mail->addAddress('asistente.pv2@ciudadmaderas.com');
+        $mail->addAddress('supervisor.bd@ciudadmaderas.com');
         $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
-        $mail->addAddress('subdirector.contraloria@ciudadmaderas.com');
+        $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
+        $mail->addAddress('irene.vallejo@ciudadmaderas.com');
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mailContent = "<html><head>
@@ -1463,12 +1462,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       $mail->addAddress('jorge.mugica@ciudadmaderas.com');
       $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
       $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
-      $mail->addAddress('valeria.palacios@ciduadmaderas.com');
+      $mail->addAddress('valeria.palacios@ciudadmaderas.com');
       $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
       $mail->addAddress('monserrat.cazares@ciudadmaderas.com');
       $mail->addAddress('leydi.sanchez@ciudadmaderas.com');
       $mail->addAddress('nohemi.castillo@ciudadmaderas.com');
       $mail->addAddress('lorena.serrato@ciudadmaderas.com');
+      $mail->addCC('yaretzi.rosales@ciudadmaderas.com');
       $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
       $mail->isHTML(true);
       $mailContent ="<html><head>

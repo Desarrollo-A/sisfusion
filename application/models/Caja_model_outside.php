@@ -144,6 +144,16 @@
         }
     }
 
+    public function getAllLotes($condominio){
+        $query = $this->db->query("SELECT idLote, nombreLote, idStatusLote FROM lotes WHERE idCondominio = $condominio AND status = 1")->result_array();
+        return $query;
+    }
+
+    public function getAllClientsByLote($lote){
+        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno, ' - ', CONVERT(varchar, fechaApartado, 23)) nombre, fechaApartado FROM clientes WHERE idLote =  $lote")->result_array();
+        return $query;
+    }
+
 
     public function table_datosBancarios()
     {
@@ -266,29 +276,31 @@
                         }
                     }
                 }
-                $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                fechaVenc = null, modificado = null, status8Flag = 0, 
-                ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
-                totalValidado = 0, validacionEnganche = 'NULL', 
-                fechaSolicitudValidacion = null, 
-                fechaRL = null, 
-                registro_comision = 8,
-                tipo_venta = $tv, 
-                observacionContratoUrgente = null,
-                firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
-                observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
-                fechaLiberacion = '".date("Y-m-d H:i:s")."', 
-                userLiberacion = '".$this->session->userdata('username')."',
-                precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
-                enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
-                WHERE idLote IN (".$row['idLote'].") and status = 1 ");
+                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
+                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                    fechaVenc = null, modificado = null, status8Flag = 0, 
+                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
+                    totalValidado = 0, validacionEnganche = 'NULL', 
+                    fechaSolicitudValidacion = null, 
+                    fechaRL = null, 
+                    registro_comision = 8,
+                    tipo_venta = $tv, 
+                    observacionContratoUrgente = null,
+                    firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
+                    observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
+                    fechaLiberacion = '".date("Y-m-d H:i:s")."', 
+                    userLiberacion = '".$this->session->userdata('username')."',
+                    precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
+                    enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
+                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
+                    WHERE idLote IN (".$row['idLote'].") and status = 1 ");
                 } else if ($datos['activeLE'] == 1){
                     $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
                     idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0,
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null,
                     fechaRL = null, 
@@ -864,9 +876,8 @@
         ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
         ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
 		CASE
-		WHEN (registro_comision != 1) THEN 0
-        WHEN (cl.lugar_prospeccion IN(27, 28)) THEN 0
-		ELSE registro_comision
+		WHEN registro_comision IN (0, 8) THEN 0
+		ELSE 1
 		END AS registro_comision,
         cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, residencial.descripcion , cl.status, nombreLote,
         (SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS ncliente,
@@ -1158,6 +1169,7 @@
                 $info = $this->getDatosLote($array_casas[$c][0]);
 
                 if ($array_casas[$c][1] == 'STELLA') {
+                    $tipo_casa = 2;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Stella') {
@@ -1175,7 +1187,9 @@
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
                     $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
-                } else if ($array_casas[$c][1] == 'AURA') {
+                }
+                else if ($array_casas[$c][1] == 'AURA') {
+                    $tipo_casa = 1;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Aura') {
@@ -1263,7 +1277,7 @@
  
              }*/ else if ($array_casas[$c][1] == 'TERRENO') {
 
-
+                    $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);
                     $e = ($t * 0.1);
                     $s = ($t - $e);
@@ -1276,6 +1290,7 @@
 
                 }
                 $this->addClientToLote($array_casas[$c][0], $update_pcasas);
+                $this->db->query("UPDATE clientes SET tipo_casa=".$tipo_casa." WHERE id_cliente=".$cliente_id);
             }
 
         }

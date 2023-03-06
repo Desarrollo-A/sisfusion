@@ -1,5 +1,24 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<style>
+    table thead tr th {
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 0.8em;
+        text-align: center;
+    }
+    tfoot tr{
+         background: #143860;
+     }
+    table tfoot tr th{
+        padding: 0px !important;
+        color:#fff;
+        font-weight: lighter;
+        font-size: 1.3em;
+        text-align: center;
+    }
+</style>
 <body>
 	<div class="wrapper">
 		<?php
@@ -9,7 +28,7 @@
 			case "6": // ASISTENTE GERENTE
 			case "5": // ASISTENTE SUBIDIRECCIÓN
 			case "13": // CONTRALORÍA
-			case "17": // SUBDIRECTOR CONTRALORÍA
+			case "17": // SUBDI<RECTOR CONTRALORÍA
 			case "32": // CONTRALORÍA CORPORATIVA
 			case "2": // SUBDIRECTOR
 			case "3": // GERENTE
@@ -32,7 +51,7 @@
 			case "47": // DIRECCIÓN FINANZAS
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
-			case "54": // MKTD POPEA 
+			case "54": // MKTD POPEA
 				$this->load->view('template/sidebar', "");
 			break;
 			default:
@@ -61,7 +80,7 @@
 								<li role="presentation"><a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab"
 									onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a>
 								</li>
-								<?php 
+								<?php
 								$id_rol = $this->session->userdata('id_rol');
 								if($id_rol == 11){
 								echo '<li role="presentation"><a href="#tab_asignacion" aria-controls="tab_asignacion" role="tab" data-toggle="tab"
@@ -179,8 +198,8 @@
 												<div class="card-content">
 													<div class="form-group">
 														<label for="des">Desarrollo</label>
-														<select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker" 
-														data-style="btn btn-second" data-show-subtext="true" 
+														<select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker"
+														data-style="btn btn-second" data-show-subtext="true"
 														data-live-search="true"  title="" data-size="7" required>
 														<option disabled selected>Selecciona un desarrollo</option></select>
 													</div>
@@ -234,7 +253,7 @@
 									<div class="row">
 										<div class="col-md-4 form-group">
 											<div class="form-group">
-												<label class="m-0" for="proyecto">Proyecto</label>
+												<label class="m-0" for="proyecto">Proyecto*</label>
 												<select id="proyecto" name="proyecto"
 														class="selectpicker select-gral"
 														data-style="btn" data-show-subtext="true"
@@ -335,7 +354,7 @@
 				$("#proyecto").selectpicker('refresh');
 			}, 'json');
 
-			$.post(url + "Contratacion/lista_estatus", function(data) {
+			$.post(general_base_url + "Contratacion/lista_estatus", function(data) {
 				var len = data.length;
 				for( var i = 0; i<len; i++){
 					var id = data[i]['idStatusLote'];
@@ -345,7 +364,7 @@
 				$("#estatus").selectpicker('refresh');
 			}, 'json');
 
-			$.post(url + "Administracion/get_des_lote", function(data) {
+			$.post(general_base_url + "Administracion/get_des_lote", function(data) {
 				var len = data.length;
 				for( var i = 0; i<len; i++){
 					var id = data[i]['id_opcion'];
@@ -360,7 +379,7 @@
 			index_proyecto = $(this).val();
 			$("#condominio").html("");
 			$(document).ready(function(){
-				$.post(url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
+				$.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
 					var len = data.length;
 					$("#condominio").append($('<option disabled selected>- SELECCIONA CONDOMINIO -</option>'));
 					for( var i = 0; i<len; i++){
@@ -376,7 +395,7 @@
 		let titulos = [];
 
 		$(document).on('change','#proyecto, #condominio, #estatus', function() {
-			ix_proyecto = $("#proyecto").val();
+			ix_proyecto = ($("#proyecto").val().length<=0) ? 0 : $("#proyecto").val();
 			ix_condominio = $("#condominio").val();
 			ix_estatus = $("#estatus").val();
 
@@ -390,7 +409,8 @@
 					url: general_base_url + 'Contratacion/get_inventario/'+ix_estatus+"/"+ix_condominio+"/"+ix_proyecto,
 					dataSrc: ""
 				},
-				buttons: [{
+				buttons: [
+				    {
 					extend: 'excelHtml5',
 					text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 					className: 'btn buttons-excel',
@@ -519,7 +539,7 @@
 									case 18:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
-									case 19:	
+									case 19:
 										if(rol == 11){
 											return 'ESTATUS CONTRATACIÓN';
 										}
@@ -554,12 +574,7 @@
 				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 				format: {
 					header:  function (d, columnIdx) {
-						if(columnIdx == 0){
 							return ' '+d +' ';
-							}
-						
-									return ' '+titulos[columnIdx-1] +' ';
-							
 						}
 					}
 				}
@@ -568,7 +583,7 @@
 				columnDefs: [
 							{ targets: [19,20, 21], visible: coordinador = rol == 11 ? true : false },
        					 	{ targets: '_all', visible: true }
-						],	
+						],
 				pagingType: "full_numbers",
 				language: {
 					url: "<?=base_url()?>/static/spanishLoader_v2.json",
@@ -587,42 +602,40 @@
 				"ordering": true,
 				"fixedColumns": true,
 				"columns":
-				[{
-					"width": "10%",
+				[
+				    {
 					data: 'nombreResidencial'
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						return '<p>'+(d.nombreCondominio).toUpperCase()+'</p>';
 					}
 				},
 				{
-					"width": "14%",
 					"data": function(d){
-						return '<p>'+(d.nombreLote).toUpperCase()+'</p>';
+						if (d.casa == 1)
+							return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+						else
+							return (d.nombreLote).toUpperCase();
 					}
 				},
 				{
-					"width": "14%",
 					"data": function(d){
 						return '<p>'+ d.idLote +'</p>';
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						return '<p>'+d.superficie+'<b> m<sup>2</sup></b></p>';
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
-						
-				var preciot;				
-						
+
+				var preciot;
+
 				if(d.nombreResidencial == 'CCMP'){
-					
+
 					if(d.idStatusLote != 3){
 						var stella;
 						var aura;
@@ -630,15 +643,15 @@
 
 						if (d.nombreLote == 'CCMP-LAMAY-011' || d.nombreLote == 'CCMP-LAMAY-021' || d.nombreLote == 'CCMP-LAMAY-030' ||
 							d.nombreLote == 'CCMP-LAMAY-031' || d.nombreLote == 'CCMP-LAMAY-032' || d.nombreLote == 'CCMP-LAMAY-045' ||
-							d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' || 
+							d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' ||
 							d.nombreLote == 'CCMP-LAMAY-064' || d.nombreLote == 'CCMP-LAMAY-079' || d.nombreLote == 'CCMP-LAMAY-080' ||
 							d.nombreLote == 'CCMP-LAMAY-090' || d.nombreLote == 'CCMP-LIRIO-010' ||
-							
+
 							d.nombreLote == 'CCMP-LIRIO-010' ||
 							d.nombreLote == 'CCMP-LIRIO-033' || d.nombreLote == 'CCMP-LIRIO-048' || d.nombreLote == 'CCMP-LIRIO-049' ||
 							d.nombreLote == 'CCMP-LIRIO-067' || d.nombreLote == 'CCMP-LIRIO-089' || d.nombreLote == 'CCMP-LIRIO-091' ||
 							d.nombreLote == 'CCMP-LIRIO-098' || d.nombreLote == 'CCMP-LIRIO-100') {
-								
+
 								stella = ( parseInt(d.total) + parseInt(2029185) );
 								aura = ( parseInt(d.total) + parseInt(1037340) );
 								terreno = parseInt(d.total);
@@ -649,7 +662,7 @@
 
 
 						} else {
-							
+
 								stella = ( parseInt(d.total) + parseInt(2104340) );
 								aura = ( parseInt(d.total) + parseInt(1075760) );
 								terreno = parseInt(d.total);
@@ -660,23 +673,22 @@
 
 						}
 					} else if(d.idStatusLote == 3 || d.idStatusLote == 2){
-					
+
 					preciot = '<p>$ '+formatMoney(d.total)+'</p>';
 
 					}
-					
+
 				} else {
-				
+
 					preciot = '<p>$ '+formatMoney(d.total)+'</p>';
 
 				}
 
 				return preciot;
-								
+
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
 						if (d.totalNeto2 == null || d.totalNeto2 == '' || d.totalNeto2 == undefined) {
 							return '$0.00';
@@ -686,30 +698,29 @@
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
-						
-						
-				var preciom2;				
-						
+
+
+				var preciom2;
+
 				if(d.nombreResidencial == 'CCMP'){
-					
+
 					if(d.idStatusLote != 3){
 						var stella;
 						var aura;
 						var terreno;
-						
+
 						if (d.nombreLote == 'CCMP-LAMAY-011' || d.nombreLote == 'CCMP-LAMAY-021' || d.nombreLote == 'CCMP-LAMAY-030' ||
 							d.nombreLote == 'CCMP-LAMAY-031' || d.nombreLote == 'CCMP-LAMAY-032' || d.nombreLote == 'CCMP-LAMAY-045' ||
-							d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' || 
+							d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' ||
 							d.nombreLote == 'CCMP-LAMAY-064' || d.nombreLote == 'CCMP-LAMAY-079' || d.nombreLote == 'CCMP-LAMAY-080' ||
 							d.nombreLote == 'CCMP-LAMAY-090' || d.nombreLote == 'CCMP-LIRIO-010' ||
-							
+
 							d.nombreLote == 'CCMP-LIRIO-010' ||
 							d.nombreLote == 'CCMP-LIRIO-033' || d.nombreLote == 'CCMP-LIRIO-048' || d.nombreLote == 'CCMP-LIRIO-049' ||
 							d.nombreLote == 'CCMP-LIRIO-067' || d.nombreLote == 'CCMP-LIRIO-089' || d.nombreLote == 'CCMP-LIRIO-091' ||
 							d.nombreLote == 'CCMP-LIRIO-098' || d.nombreLote == 'CCMP-LIRIO-100') {
-								
+
 								stella = ( (parseInt(d.total) + parseInt(2029185)) / d.superficie);
 								aura = ( (parseInt(d.total) + parseInt(1037340)) / d.superficie );
 								terreno = (parseInt(d.total) / d.superficie);
@@ -720,7 +731,7 @@
 
 
 						} else {
-							
+
 								stella = ( (parseInt(d.total) + parseInt(2104340)) / d.superficie );
 								aura = ( (parseInt(d.total) + parseInt(1075760)) / d.superficie );
 								terreno = (parseInt(d.total) / d.superficie);
@@ -731,28 +742,26 @@
 
 						}
 					} else if(d.idStatusLote == 3 || d.idStatusLote == 2) {
-					
+
 					preciom2 = '<p>$ '+formatMoney(d.precio)+'</p>';
 
 					}
-					
+
 				} else {
-				
+
 					preciom2 = '<p>$ '+formatMoney(d.precio)+'</p>';
 
 				}
 
 				return preciom2;
-						
-						
+
+
 					}
 				},
 				{
-					"width": "10%",
 					data: 'referencia'
 				},
 				{
-					"width": "5%",
 					data: 'msni'
 				},
 				{
@@ -785,39 +794,16 @@
 						return gerente;
 					}
 				},
-				// {
-				// 	data: function(d){
-				// 		var subdirector;
-				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				// 			subdirector = d.subdirector2 == '  ' ? 'SIN ESPECIFICAR' : d.subdirector2;
-				// 		else
-				// 			subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
-				// 		return subdirector;
-				// 	}
-				// },
-				// {
-				// 	data: function(d){
-				// 		var regional;
-				// 		if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-				// 			regional = d.regional2 == '  ' ? 'SIN ESPECIFICAR' : d.regional2;
-				// 		else
-				// 			regional = d.regional == '  ' ? 'SIN ESPECIFICAR' : d.regional;
-				// 		return regional;
-				// 	}
-				// },
 				{
-					"width": "12%",
 					"data": function(d){
-						valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
-						'<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <p><p> <span class="label label-warning";">'+d.tipo_venta+'</span> <center>';
-
+						valTV = (d.tipo_venta == null) ? `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
+						`<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
 						return valTV;
 					}
 				},
 				{
-					"width": "10%",
 					"data": function(d){
-						
+
 						if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10){
 							if(d.fecha_modst == null || d.fecha_modst == 'null') {
 								return 'Sin registro';
@@ -834,7 +820,6 @@
 					}
 				},
 				{
-					"width": "16%",
 					"data": function(d){
 						if(d.comentario=='NULL'||d.comentario=='null'||d.comentario==null){
 							return ' - ';
@@ -846,11 +831,9 @@
 					}
 				},
 				{
-					"width": "10%",
 					data: 'lugar_prospeccion'
 				},
 				{
-					"width": "8%",
 					"data": function( d ){
 						if(d.fecha_validacion  == ' ' || d.fecha_validacion  == null || d.fecha_validacion  == ''   ){
 							return '<p> SIN ESPECIFICAR </p>';
@@ -860,43 +843,41 @@
 					}
 				},
 				{
-					"width": "8%",
 					"data": function( d ){
 						return '<p>$ '+formatMoney(d.cantidad_enganche)+'</p>';
 					}
 				},
+                    {
+                        "visible": (rol==11) ? true : false,
+                        "data": function( d ){
+                            if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.idStatusContratacion+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "visible": (rol==11) ? true : false,
+                        "data": function( d ){
+                            if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCliente+'</p>';
+                            }
+                        }
+                    },
+                    {
+                        "visible": (rol==11) ? true : false,
+                        "data": function( d ){
+                            if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
+                                return '<p> SIN ESPECIFICAR </p>';
+                            }else{
+                                return '<p>'+d.nombreCopropietario+'</p>';
+                            }
+                        }
+                    },
 				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.idStatusContratacion  == ' ' || d.idStatusContratacion  == null || d.idStatusContratacion  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.idStatusContratacion+'</p>';
-						}
-					}
-				},
-				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.nombreCliente  == "  " || d.nombreCliente  == null || d.nombreCliente  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.nombreCliente+'</p>';
-						}
-					}
-				},
-				{
-					"width": "8%",
-					"data": function( d ){
-						if(d.nombreCopropietario  == ' ' || d.nombreCopropietario  == null || d.nombreCopropietario  == ''   ){
-							return '<p> SIN ESPECIFICAR </p>';
-						}else{
-							return '<p>'+d.nombreCopropietario+'</p>';
-						}
-					}
-				},
-				{
-					"width": "8%",
 					"data": function( d ){
 						return '<center><button class="btn-data  btn-details-grey to-comment ver_historial" value="' + d.idLote +'" data-nomLote="'+d.nombreLote+'" data-tipo-venta="'+d.tipo_venta+'"><i class="fas fa-history"></i></button></center>';
 					}
@@ -934,8 +915,8 @@
 			});
 			$("#seeInformationModal").modal();
 			var urlTableFred = '';
-			$.getJSON(url+"Contratacion/obtener_liberacion/"+idLote).done( function( data ){
-				urlTableFred = url+"Contratacion/obtener_liberacion/"+idLote;
+			$.getJSON(general_base_url+"Contratacion/obtener_liberacion/"+idLote).done( function( data ){
+				urlTableFred = general_base_url+"Contratacion/obtener_liberacion/"+idLote;
 				fillFreedom(urlTableFred);
 
 
@@ -943,17 +924,17 @@
 
 
 			var urlTableHist = '';
-			$.getJSON(url+"Contratacion/historialProcesoLoteOp/"+idLote).done( function( data ){
+			$.getJSON(general_base_url+"Contratacion/historialProcesoLoteOp/"+idLote).done( function( data ){
 				$('#nomLoteHistorial').html($itself.attr('data-nomLote'));
-					urlTableHist = url+"Contratacion/historialProcesoLoteOp/"+idLote;
+					urlTableHist = general_base_url+"Contratacion/historialProcesoLoteOp/"+idLote;
 					fillHistory(urlTableHist);
 			});
-			
+
 			var urlTableCSA = '';
-			$.getJSON(url+"Contratacion/getCoSallingAdvisers/"+idLote).done( function( data ){
-				urlTableCSA = url+"Contratacion/getCoSallingAdvisers/"+idLote;
+			$.getJSON(general_base_url+"Contratacion/getCoSallingAdvisers/"+idLote).done( function( data ){
+				urlTableCSA = general_base_url+"Contratacion/getCoSallingAdvisers/"+idLote;
 				fillCoSellingAdvisers(urlTableCSA);
-			});	
+			});
 
 			fill_data_asignacion();
 		});
@@ -1085,7 +1066,7 @@
 						},
 				});
 			}
-			
+
 			function fillCoSellingAdvisers(urlTableCSA)
 		{
 			tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
@@ -1134,7 +1115,7 @@
 		}
 
 		function fill_data_asignacion(){
-			$.getJSON(url+"Administracion/get_data_asignacion/"+idLote).done( function( data ){
+			$.getJSON(general_base_url+"Administracion/get_data_asignacion/"+idLote).done( function( data ){
 				(data.id_estado == 1) ? $("#check_edo").prop('checked', true) : $("#check_edo").prop('checked', false);
 				$('#sel_desarrollo').val(data.id_desarrollo_n);
 				$("#sel_desarrollo").selectpicker('refresh');

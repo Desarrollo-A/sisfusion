@@ -26,12 +26,12 @@ class Reporte_model extends CI_Model {
             FROM    cte   
             WHERE   DateValue + 1 <= '$endDateDos'
         )";
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $generalFilters = ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $generalFilters = " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $generalFilters = ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $generalFilters = " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -288,7 +288,7 @@ class Reporte_model extends CI_Model {
             } else
                 $filtro .= "";
         }
-        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB Y LIC. GASTÓN
+        else if ($id_rol == 1 || $id_rol == 4 || $id_rol == 18 || $id_rol == 33 || $id_rol == 58 || $id_rol == 63 || $id_rol == 69 || $id_rol == 72) { // CONSULTA DIRECTOR, ASISTENTE DE DIRECCIÓN, FAB, LIC. GASTÓN Y CONNIE
             $comodin2 = 'LEFT';
             if ($render == 1) { // PRIMERA CARGA
                 $filtro .= "";
@@ -308,13 +308,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -342,13 +342,13 @@ class Reporte_model extends CI_Model {
             ISNULL( CAST( (apartadas.totalAT * 100) /  NULLIF(ISNULL(contratadas.totalConT, 0) + ISNULL(apartadas.totalAT, 0), 0) AS decimal(16,2)), 0) porcentajeTotalAp,
             ISNULL( CAST( (cancontratadas.totalCanC * 100) /  NULLIF(ISNULL(contratadas.totalConT, 0) + ISNULL(apartadas.totalAT, 0), 0) AS decimal(16,2)), 0) porcentajeTotalCanC,
             ISNULL( CAST( (canapartadas.totalCanA * 100) /  NULLIF(ISNULL(contratadas.totalConT, 0) + ISNULL(apartadas.totalAT, 0), 0) AS decimal(16,2)), 0) porcentajeTotalCanA,
-            ISNULL (apartadas.nombreUsuario, contratadas.nombreUsuario) nombreUsuario, general.userID
+            ISNULL(ISNULL(ISNULL (apartadas.nombreUsuario, contratadas.nombreUsuario), canapartadas.nombreUsuario), cancontratadas.nombreUsuario) nombreUsuario, general.userID
             FROM (
 				-- SUMA TOTALES
 				SELECT SUM(tmpTotal.total) sumaTotal, COUNT(*) totalVentas, '1' opt, $comodin userID, tmpTotal.id_rol
 				FROM (
 					SELECT u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, 
-					cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+					cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,          
 					SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END) total
 					FROM clientes cl
 					INNER JOIN lotes lo ON lo.idLote = cl.idLote
@@ -453,7 +453,7 @@ class Reporte_model extends CI_Model {
                 ) tmpCA GROUP BY $comodin, tmpCA.nombreUsuario, tmpCA.id_rol
             ) canapartadas ON canapartadas.userID = general.userID
             GROUP BY contratadas.sumaConT, apartadas.sumaAT, cancontratadas.sumaCanC, canapartadas.sumaCanA, contratadas.totalConT, apartadas.totalAT, cancontratadas.totalCanC, canapartadas.totalCanA,
-            apartadas.nombreUsuario, contratadas.nombreUsuario, general.userID
+            apartadas.nombreUsuario, contratadas.nombreUsuario, general.userID, canapartadas.nombreUsuario, cancontratadas.nombreUsuario
             ORDER BY apartadas.nombreUsuario
         ");
         return $query;
@@ -469,13 +469,13 @@ class Reporte_model extends CI_Model {
         $comodin2 = 'LEFT';
         $filtroExt = '';
         $filtroSt = '';
-
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtro .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtro .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -615,14 +615,14 @@ class Reporte_model extends CI_Model {
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
-
         /* Filtros de búsqueda */
         $filtro=" AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000'";
         /* $typeSale "1": CON ENGANCHE | $typeSale "2": SIN ENGANCHE | $typeSale "3": AMBAS */
+        $enganche = $this->getValorEnganche(); // REGRESA CASE CON EL VALOR DEL ENGANCHE
         if( $typeSale == "1" )
-            $filtro .= ' AND totalValidado != 0.00 AND totalValidado IS NOT NULL';
+            $filtro .= " AND $enganche >= 10000";
         elseif( $typeSale == "2" )
-            $filtroExt .= ' AND ISNULL(totalValidado, 0.00) <= 0.00';
+            $filtroExt .= " AND $enganche < 10000";
         
         /* $typeLote "0": Lotes habitacionales | "1": lotes comerciales | "3": AMBAS */
         if( $typeLote != "3" )
@@ -669,13 +669,14 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote,
             FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
-			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
             INNER JOIN statusContratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
             INNER JOIN statusLote st ON st.idStatusLote = lo.idStatusLote
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             $joinHist
             $filtroSt
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
@@ -694,7 +695,8 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
-            CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado
+            CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, 
+            cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, cl.fechaApartado
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             // $statusLote = ($type == 4 || $type == 44) ? "AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)" : "";
@@ -716,11 +718,12 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, st.nombreStatus, 'Cancelado' estatusLote, CONVERT(VARCHAR, hl.modificado, 103) fechaLiberacion, oxc.nombre motivoLiberacion,
             FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
-			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroSede
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
             LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
             LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
@@ -745,7 +748,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus,
             cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional,
-            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado
+            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, cl.fechaApartado
             ORDER BY st.nombreStatus");
         }
         return $query;       
@@ -861,8 +864,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
             INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
@@ -882,8 +884,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
             INNER JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
             INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
@@ -901,8 +902,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado 
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
@@ -919,8 +919,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
             INNER JOIN sedes se ON se.id_sede = cl.id_sede  
-            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
-            WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0 GROUP BY idLote, idCliente) 
+            INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) 
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
@@ -1012,4 +1011,33 @@ class Reporte_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM statuscontratacion WHERE idStatusContratacion NOT IN (8,11)");
         return $query;
     }
+
+    public function getValorEnganche() {
+        $enganche = "CASE 
+                        WHEN (lo.totalValidado IS NULL OR lo.totalValidado = 0.00) 
+                            THEN
+                                (CASE
+                                    WHEN (lo.totalNeto IS NULL OR lo.totalNeto = 0.00)
+                                    THEN (
+                                        CASE
+                                            WHEN ds.cantidad IS NULL OR ds.cantidad = ''
+                                            THEN 0
+                                            ELSE
+                                                (CASE ISNUMERIC(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', ''))
+                                                    WHEN 1 THEN CAST(REPLACE(REPLACE(REPLACE(ds.cantidad, '$', ''), ',', ''), ' ', '')  AS decimal(16,2))
+                                                    ELSE 0
+                                                    END
+                                                )
+                                        END
+                                    )
+                                    ELSE
+                                    lo.totalNeto
+                                    END
+                                )
+                        ELSE
+                            lo.totalValidado 
+                        END";
+        return $enganche;
+    }
+
 }

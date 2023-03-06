@@ -1134,6 +1134,7 @@
 /* tooltip styles */
 .tooltip {
   width: fit-content;
+  position: fixed;
 }
 
 .tooltip .tooltip-inner {
@@ -1320,9 +1321,13 @@
 }
 
 .footer {
-  margin-top: -83px;
+  margin-top: -110px;
   border: none !important;
   color: #ffffff;
+}
+
+.footer .container-fluid span a {
+  color: #333333;
 }
 
 .footer .container-fluid a {

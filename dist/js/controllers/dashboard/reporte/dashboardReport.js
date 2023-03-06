@@ -13,7 +13,8 @@ function asDirector(userType){
     // 58: Asistente de dirección general
     // 69: Dirección general
     //  2: Subidrector
-    if ( userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' ){
+    //  72: Dirección biofísica
+    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -1052,6 +1053,7 @@ function accordionToRemove(rol){
         case 58: // Asistente dirección general
         case 63: // Control interno
         case 69: // Dirección general
+        case 72: // Dirección biofísica
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
@@ -1307,7 +1309,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13, 14, 15],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1358,6 +1360,9 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 15:
                                         return 'Estatus lote';
+                                        break;
+                                    case 16:
+                                        return 'Apartado';
                                         break;
                                 }
                             }
@@ -1462,6 +1467,16 @@ function fillTableReport(dataObject) {
                     data: function (d) {
                         return d.estatusLote;
                     }
+                },
+                {
+                    data: function (d) {
+                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
+                            return 'Apartado por reubicación';
+                        }
+                        else{
+                            return 'Estandar';
+                        }
+                    }
                 }
             ],
             columnDefs: [{
@@ -1515,7 +1530,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1684,6 +1699,16 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.motivoLiberacion;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.apartadoXReubicacion == 1){
+                            return 'Apartado por reubicación';
+                        }
+                        else{
+                            return 'Estandar';
+                        }
                     }
                 }
             ],

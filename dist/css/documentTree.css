@@ -1134,6 +1134,7 @@
 /* tooltip styles */
 .tooltip {
   width: fit-content;
+  position: fixed;
 }
 
 .tooltip .tooltip-inner {
@@ -1307,7 +1308,6 @@
 .cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar {
   width: 5px;
   background-color: transparent;
-  border-right: 2px solid #c1c1c1;
 }
 
 .cardDocument .realBox .scrollDocumentTree::-webkit-scrollbar-thumb {

@@ -21,6 +21,7 @@
         case '12':
         case '40': // COBRANZA
         case '53': // COBRANZA
+        case '70': // COBRANZA
             // code...
             $datos = array();
             $datos = $datos4;
@@ -292,104 +293,88 @@
             destroy: true,
             columns: [
                 {
-                    "width": "3%",
                     "className": 'details-control',
                     "orderable": false,
                     "data" : null,
                     "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
                 },
 
-
                 {
-                    "width": "5%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.id_cliente + '</p>';
                     }
                 },
                 {
-                    "width": "7%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreResidencial + '</p>';
                     }
                 },
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreCondominio + '</p>';
                     }
                 },
 
                 {
-                    "width": "12%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombreLote + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.nombre + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">'+ d.apellido_paterno + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.apellido_materno + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.noRecibo + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.referencia + '</p>';
                     }
                 },
 
                 {
-                    "width": "8%",
                     "data": function (d) {
                         return '<p class="m-0">' + myFunctions.validateEmptyField(d.tipo) + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.fechaApartado + '</p>';
                     }
                 },
 
                 {
-                    "width": "8%",
                     "data": function (d) {
                         return '<p class="m-0">$ ' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
                     }
                 },
 
                 {
-                    "width": "10%",
                     "data": function (d) {
                         return '<p class="m-0">' + d.fechaEnganche + '</p>';
                     }
                 },
                 {
-                    "width": "8%",
                     "data": function (d) {
                         return '<center><button class="btn-data btn-deepGray cop" title= "Ventas compartidas" data-idcliente="' + d.id_cliente + '"><i class="material-icons">people</i></button></center>';
                     }

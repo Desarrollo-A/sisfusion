@@ -158,7 +158,7 @@
                                                         <th>CLIENTE</th>
                                                         <th>ESTATUS ACTUAL</th>
                                                         <?php
-                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54) { // ANALISTA DE COMISIONES Y SUBDIRECCIÓN CONUSLTA (POPEA)
+                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIRECCIÓN CONUSLTA (POPEA)
                                                         ?>
                                                         <th>ACCIONES</th>
                                                     <?php 
@@ -337,7 +337,7 @@
                     }
                 }
                 <?php
-                if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
+                if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
                  ?>
                     , 
                     { 
@@ -349,7 +349,7 @@
                                 cntActions = 'En proceso de Liberación';
                             } 
                             else {
-                                if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17)) {
+                                if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                                     cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                     'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
                                     'class="btn-data btn-orangeYellow editReg2" title="Registrar estatus">' +
@@ -604,7 +604,12 @@
                             $('#editReg').modal('hide');
                             $('#Jtabla').DataTable().ajax.reload();
                             alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                        } else if(response.message == 'FALSE'){
+                        }else if(response.message == 'MISSING_CARTA_UPLOAD'){
+                            $('#save1').prop('disabled', false);
+                            $('#editReg').modal('hide');
+                            $('#Jtabla').DataTable().ajax.reload();
+                            alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+                        }else if(response.message == 'FALSE'){
                             $('#save1').prop('disabled', false);
                             $('#editReg').modal('hide');
                             $('#Jtabla').DataTable().ajax.reload();

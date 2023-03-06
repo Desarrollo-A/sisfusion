@@ -96,20 +96,34 @@ class VentasAsistentes_model extends CI_Model {
 
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17)// MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        else if ($this->session->userdata('id_rol') == 54) // MJ: SUBDIRECTOR CONSULTA (POPEA)
+        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)// MJ: ES CONTRALORÍA CORPORATIVA
+        {
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815){
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            }
+            else{
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
+            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
+
+        }
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
         else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+                $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             $filtroGerente = "";
-            if ($this->session->userdata('id_usuario') == 6831)
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
@@ -231,22 +245,32 @@ class VentasAsistentes_model extends CI_Model {
 	
 
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 17) // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        else if ($this->session->userdata('id_rol') == 54)  // MJ: SUBDIRECTOR CONSULTA (POPEA)
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {// MJ: ES CONTRALORÍA CORPORATIVA
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815){
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            }
+            else{
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 ".$filtroUsuarioBR;
+        }
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63)  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
         else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+                $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
-            if ($this->session->userdata('id_usuario') == 6831)
+            $filtroGerente = "";
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
-            else
-                $filtroGerente = "";
-
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
@@ -258,7 +282,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
         cond.idCondominio, l.observacionContratoUrgente AS vl
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientesd cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -291,5 +315,15 @@ class VentasAsistentes_model extends CI_Model {
         FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
 		return $query->row();
 	}
- 
+
+	public function validaCartaCM($idCliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
+        INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
+        return $query->result_array();
+    }
+    public function check_carta($idCliente){
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$idCliente);
+        return $query->result_array();
+    }
 }

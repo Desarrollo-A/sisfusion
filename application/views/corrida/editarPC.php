@@ -5387,14 +5387,17 @@
                                             // console.log('full', full);
                                             // console.log('meta', meta);
                                             // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            let numberString;
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '';
+                                            return inputCapital + numberPay + numberString;
                                         }
 
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
@@ -5688,6 +5691,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
+                                        let numberString;
 
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
@@ -5703,11 +5707,13 @@
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+                                            return inputCapital + numberPay+numberString;
                                         } else {
+                                            numberString = '';
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            return inputCapital + numberPay+numberString;
                                         }
 
                                         // console.log($scope.alphaNumeric[posicionPago-1]['disp']	+	" "	+	$scope.alphaNumeric[posicionPago-1]['pagoCapital']);
@@ -5924,10 +5930,13 @@
                                             // console.log('full', full);
                                             // console.log('meta', meta);
                                             // var inputCapital = "$" + ($scope.alphaNumeric[full['pago'] - 1]['pagoCapital'].toLocaleString('es-MX', {style: 'currency', currency: 'MXN'}));
+                                            let numberString;
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
@@ -6416,7 +6425,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-
+                                        let numberString;
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
 
@@ -6431,7 +6440,8 @@
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
@@ -6730,7 +6740,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-
+                                        let numberString;
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
 
@@ -6745,7 +6755,9 @@
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
@@ -7226,7 +7238,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-
+                                        let numberString;
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
 
@@ -7241,7 +7253,9 @@
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
@@ -8541,7 +8555,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-
+                                        let numberString;
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
 
@@ -8557,8 +8571,9 @@
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
                                             // let numberString = '<input type="hidden" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
 
-                                            return inputCapital + numberPay;
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
@@ -9279,7 +9294,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-
+                                        let numberString;
                                         if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
                                         {
 
@@ -9294,7 +9309,9 @@
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" ' +
                                                 'onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control" value="'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';
-                                            return inputCapital + numberPay;
+                                            numberString = '<label class="hidden" >'+$scope.alphaNumeric[full['pago'] - 1]['pagoCapital']+'</label>';
+
+                                            return inputCapital + numberPay + numberString;
                                         } else {
                                             var inputCapital = '<input name="capVal' + full["pago"] + '" type="number" id="idModel' + full["pago"] + '" ng-model="myModeloAlv" onchange="pagoCapChange(' + full["pago"] + ')" placeholder="Ingresa un Pago a Capital " class="form-control">';
                                             var numberPay = '<input name="numberPay' + full["pago"] + '" type="hidden" id="payNum' + full["pago"] + '" value="' + full["pago"] + '">';

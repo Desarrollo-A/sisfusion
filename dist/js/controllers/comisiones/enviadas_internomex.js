@@ -198,19 +198,19 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
             { data: "lote" },
             { data: "referencia" },
             {
-                "data": function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+                data: function( d ){
+                    return '$' + formatMoney(d.precio_lote);
                 }
             },
             { data: "empresa" },
             {
-                "data": function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+                data: function( d ){
+                    return '$' + formatMoney(d.comision_total);
                 }
             },
             {
-                "data": function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
+                data: function( d ){
+                    return '$' + formatMoney(d.pago_neodata);
                 }
             },
             {
@@ -219,15 +219,15 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
                         return '<p style="color: red;"><b>NA</b></p>';
                     else {
                         if(d.forma_pago == 3)
-                            return '<p style="color: red;"><b>$'+formatMoney(d.dcto)+'</b></p>';
+                            return '$' + formatMoney(d.dcto);
                         else
-                            return '<p class="m-0">$'+formatMoney(d.dcto)+'</p>';
+                            return '$' + formatMoney(d.dcto);
                     }
                 }
             },
             {
                 data: function( d ){
-                    return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
+                    return '<b>$'+formatMoney(d.impuesto)+'</b>';
                 }
             },
             {

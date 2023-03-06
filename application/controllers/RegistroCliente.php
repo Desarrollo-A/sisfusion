@@ -3405,34 +3405,29 @@
 	
 
 	public function insertarCliente(){
-
-    	 $arreglo=array();
-    	 $fechaApartado= date('Y-m-d H:i:s');
-		 $arreglo["primerNombre"]=$this->input->post('primerNombre');
-		 $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
-		 $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
-		 $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
-		 $arreglo["idAsesor"]=$this->input->post('filtro2');
-		 $arreglo["idLote"]=$this->input->post('filtro5');
-		 $arreglo["idCondominio"]=$this->input->post('filtro4');
-		 $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
-		 $arreglo["concepto"]=$this->input->post('concepto');
-		 $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
-		 $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
-		 $arreglo["noRecibo"]=$this->input->post('noRecibo');
-		 $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
-		 $arreglo["user"]=$this->session->userdata('username');
-		 $arreglo["idAsesor2"]=$this->input->post('filtro9');
-		 $arreglo["idAsesor3"]=$this->input->post('filtro11');
-	
-	
-		$arreglo["idGerente"]=$this->input->post('filtro1');
-		$arreglo["idGerente2"]=$this->input->post('filtro8');
-		$arreglo["idGerente3"]=$this->input->post('filtro10');
-	
-	
-	$fechaAccion = date("Y-m-d H:i:s");
-	$hoy_strtotime2 = strtotime($fechaAccion);
+      $arreglo=array();
+      $fechaApartado= date('Y-m-d H:i:s');
+      $arreglo["primerNombre"]=$this->input->post('primerNombre');
+      $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
+      $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
+      $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
+      $arreglo["idAsesor"]=$this->input->post('filtro2');
+      $arreglo["idLote"]=$this->input->post('filtro5');
+      $arreglo["idCondominio"]=$this->input->post('filtro4');
+      $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
+      $arreglo["concepto"]=$this->input->post('concepto');
+      $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
+      $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
+      $arreglo["noRecibo"]=$this->input->post('noRecibo');
+      $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
+      $arreglo["user"]=$this->session->userdata('username');
+      $arreglo["idAsesor2"]=$this->input->post('filtro9');
+      $arreglo["idAsesor3"]=$this->input->post('filtro11');
+      $arreglo["idGerente"]=$this->input->post('filtro1');
+      $arreglo["idGerente2"]=$this->input->post('filtro8');
+      $arreglo["idGerente3"]=$this->input->post('filtro10');
+      $fechaAccion = date("Y-m-d H:i:s");
+      $hoy_strtotime2 = strtotime($fechaAccion);
 	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 	  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 	
@@ -8207,56 +8202,66 @@
 		$idDocumento=$this->input->post('idDocumento');
 
 
-		$proyecto = str_replace(' ', '',$nombreResidencial);
-		$condominio = str_replace(' ', '',$nombreCondominio);
-		$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-		$condom = substr($condominioQuitaN, 0, 3);
-		$cond= strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-		$date= date('dmYHis');
-		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
-		$nombArchivo= $composicion;
-		$expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
+        $data = $this->Asesor_model->revisaOU($idLote);
+        if(count($data)>=1){
+            $data['message'] = 'OBSERVACION_CONTRATO';
+            echo json_encode($data);
+            exit;
+        }
+        else{
+            $proyecto = str_replace(' ', '',$nombreResidencial);
+            $condominio = str_replace(' ', '',$nombreCondominio);
+            $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
+            $condom = substr($condominioQuitaN, 0, 3);
+            $cond= strtoupper($condom);
+            $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+            $date= date('dmYHis');
+            $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
-		$fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
+            $nombArchivo= $composicion;
+            $expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
 
-
-		if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
-
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
-			$validaMove = $move == FALSE ? 0 : 1;
-
-			if ($validaMove == 1) {
-
-				$arreglo=array();
-				$arreglo["expediente"] = $expediente.'.'.$fileExt;
+            $fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
 
 
-                $arreglo2=array();
-				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
-				$arreglo2["modificado"]= date('Y-m-d H:i:s');
-				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
-				$this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
-				$this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+            if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
 
-				$response['message'] = 'OK';
-				echo json_encode($response);
+                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
+                $validaMove = $move == FALSE ? 0 : 1;
 
-			} else if ($validaMove == 0){
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			} else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
+                if ($validaMove == 1) {
 
-		} else {
+                    $arreglo=array();
+                    $arreglo["expediente"] = $expediente.'.'.$fileExt;
 
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
 
-		}
+                    $arreglo2=array();
+                    $arreglo2["expediente"]= $expediente.'.'.$fileExt;
+                    $arreglo2["modificado"]= date('Y-m-d H:i:s');
+                    $arreglo2["idUser"]= $this->session->userdata('id_usuario');
+                    $this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
+                    $this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+
+                    $response['message'] = 'OK';
+                    echo json_encode($response);
+
+                } else if ($validaMove == 0){
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
+
+            } else {
+
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+
+            }
+        }
+
 	}
 
 	public function deleteFile(){

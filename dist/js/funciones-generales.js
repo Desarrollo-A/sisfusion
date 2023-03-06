@@ -62,6 +62,13 @@ $().ready(function() {
 				let seconds = (fecha_cruda.getSeconds()<10) ? '0'+fecha_cruda.getSeconds() : fecha_cruda.getSeconds();
 
 				return year+'-'+month+'-'+day+' '+hour+':'+minutes+':'+seconds;
+			},
+			revisaObservacionUrgente(parametro){
+				if(parametro==1){
+					return 'disabled';
+				}else{
+					return '';
+				}
 			}
 
 		}

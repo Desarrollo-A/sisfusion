@@ -20,6 +20,7 @@ class Administracion extends CI_Controller{
 		$this->validateSession();
 	}
 
+
 	public function index()
 	{
 		if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '11' && $this->session->userdata('id_rol') != '34' 
@@ -41,7 +42,9 @@ class Administracion extends CI_Controller{
 			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
 			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '69'
+			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '70' &&
+            $this->session->userdata('id_rol') != '71' && $this->session->userdata('id_rol') != '72' &&
+            $this->session->userdata('id_rol') != '73'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -711,6 +714,7 @@ class Administracion extends CI_Controller{
         //     $mail->addAddress($item);
         // }
 
+<<<<<<< HEAD
         // $mail->addAddress($correo_new);
         //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
@@ -723,6 +727,136 @@ class Administracion extends CI_Controller{
         // } else {
         //     return $mail->ErrorInfo;
         // }
+=======
+        $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
+        $mail->isHTML(true);
+        $mailContent = '<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div bgcolor="#EFEEEA">
+    <center>
+        <table id="m_-4107947934748351806bodyTable" width="100%" height="100%" cellspacing="0" cellpadding="0"
+               border="0" bgcolor="#EFEEEA" align="center">
+            <tbody>
+            <tr>
+                <td id="m_-4107947934748351806bodyCell" style="padding-bottom:60px" valign="top" align="center">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tbody>
+                        <tr>
+                            <td style="background-color:#00538b" valign="top" bgcolor="#00538b" align="center">
+                                <table style="max-width:640px;" width="100%" cellspacing="0" cellpadding="0" border="0"
+                                       align="center">
+                                    <tbody>
+                                    <tr>
+                                        <td style="padding:40px" valign="top" align="center"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#ffffff;padding-top:40px">&nbsp;</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" align="center" style="background-color: #EFEEEA;">
+                                <table style="background-color:#ffffff;max-width:640px; margin-top: -60px" width="100%"
+                                       cellspacing="0" cellpadding="0" border="0" bgcolor="#000000" align="center">
+                                    <tbody>
+                                    <tr>
+                                        <td valign="top" bgcolor="#FFFFFF" align="center">
+                                            <img style="width:60%;padding-top: 40px;"
+                                                 src="https://maderascrm.gphsis.com/static/images/Logo_CM&TP_1.png">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right:40px;padding-left:40px;padding-top:20px;" valign="top" align="left">
+                                            <p>Estimado usuario:</p>
+                                            <p>Hemos registrado un un rechazo de administración</p>
+                                            <p><b>Comentario:</b>'.$data_eviRec['comentario'].' <br>
+                                            <i></i>
+                                            </p>
+                                            <table id=\'reporyt\' cellpadding=\'0\' cellspacing=\'0\' border=\'1\' width =\'100%\' style class=\'darkheader\'>
+                                                <tr class=\'active\' style=\'text-align: center\'>
+                                                  <th>Proyecto</th>   
+                                                  <th>Condominio</th>   
+                                                  <th>Lote</th>   
+                                                  <th>Cliente</th>   
+                                                  <th>Usuario</th>   
+                                                  <th>Fecha Apartado</th>   
+                                                  <th>Fecha Rechazo</th>   
+                                                </tr>
+                                                    <tr>';
+                                                            foreach ($data_send as $index=>$item){
+                                                                $mailContent .= '    <td><center>' . $item['proyecto'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['condominio'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['lote'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['cliente'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['quien_rechaza'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['fecha_apartado'] . '</center></td>';
+                                                                $mailContent .= '    <td><center>' . $item['fecha_rechazo'] . '</center></td>';
+                                                            }
+
+                                            $mailContent .= '
+                                                            </tr>   
+                                                        </table>
+                                            <br><br>
+                                            <p>Saludos, Ciudad Maderas.</p> 
+                                            <p style="font-size:10px;">Este correo fue generado de manera automática, te pedimos no respondas este correo, para cualquier duda o aclaración envía un correo a soporte@ciudadmaderas.com</p>
+                                            <p style="font-size:10px;">Al ingresar tus datos aceptas la política de privacidad, términos y condiciones las cuales pueden ser consultadas en nuestro sitio www.ciudadmaderas.com/legal</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-top:2px solid #efeeea;color:#6a655f;font-family:\'Helvetica Neue, Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding-top:40px;padding-bottom:40px;text-align:center"
+                                            valign="top" align="center">
+                                            <p style="color:#6a655f;font-family:\'Helvetica Neue,Helvetica,Arial,Verdana,sans-serif\';font-size:12px;font-weight:400;line-height:24px;padding:0 20px;margin:0;text-align:center">
+                                                Departamento de TI</p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </center>
+    <div class="yj6qo"></div>
+    <div class="adL">
+    </div>
+</div>
+<div class="adL">
+</div>
+</div></div>
+<div id=":nx" class="ii gt" style="display:none">
+    <div id=":ny" class="a3s aiL undefined"></div>
+</div>
+<div class="hi"></div>
+</div></div>
+<div class="ajx"></div>
+</div>
+</body>
+</html>';
+
+
+        print_r($mailContent);
+        exit;
+
+        $mail->Body = utf8_decode($mailContent);
+        if ($mail->send()) {
+            return 1;
+        } else {
+            return $mail->ErrorInfo;
+        }
+>>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
     }
 
     public function status11Validado(){
@@ -756,6 +890,55 @@ class Administracion extends CI_Controller{
             echo json_encode(array());
         }
 	}
+    function testMail(){
+        $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
+        $comentarioGeneral = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+         nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+         dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia 
+         deserunt mollit anim id est laborum.';
+        $data_eviRec =array(
+            666,
+            999,
+            'Comentario prueba'
+        );
+        $data_encabezados_etiquetas = array(
+            'ID CLIENTE', 'ID LOTE', 'Comentario'
+        );
+        $data_encabezados_tabla = array(
+            'PROYECTO', 'CONDOMINIO', 'LOTE', 'CLIENTE', 'USUARIO', 'FECHA APARTADO', 'FECHA RECHAZO'
+        );
+        $data_mail[0] = array(
+            'CIUDAD MADERAS JUPITER',
+            'MARS',
+            'CMJ-MARS-01',
+            'ERIK ALAN',
+            'GOBIERNO DE QUERÉTARO',
+            '2023-01-01',
+            '2023-01-18',
+        );
+        $data_mail[1] = array(
+            'CIUDAD MADERAS JUPITER',
+            'MARS',
+            'CMJ-MARS-02',
+            'ERIK ALAN',
+            'GOBIERNO DE QUERÉTARO',
+            '2023-01-02',
+            '2023-01-19',
+        );
+        $data_mail[2] = array(
+            'CIUDAD MADERAS JUPITER',
+            'MARS',
+            'CMJ-MARS-03',
+            'ERIK ALAN',
+            'GOBIERNO DE QUERÉTARO',
+            '2023-01-03',
+            '2023-01-20',
+        );
+
+        crearPlantillaCorreo($correos_submit, $data_eviRec, $data_mail,
+            $data_encabezados_etiquetas, $data_encabezados_tabla, $comentarioGeneral);
+    }
 }
 
 

@@ -519,6 +519,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
                 $where = "pr.lugar_prospeccion IN (33)";
+            else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
+                $where = "pr.lugar_prospeccion IN (43)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }
@@ -1360,24 +1362,12 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-    function getCoordsByGrs($id_gerente)
-    {
-        $this->db->select("*");
-        $this->db->where('id_rol', 9);
-        $this->db->where('estatus', 1);
-        $this->db->where('id_lider', $id_gerente);
-        $query = $this->db->get('usuarios');
-        return $query->result();
+    function getCoordsByGrs($id_gerente) {
+        return $this->db->query("SELECT * FROM usuarios WHERE (id_rol = 9 AND id_lider = $id_gerente) OR (id_usuario = $id_gerente) ORDER BY nombre, apellido_paterno, apellido_materno")->result();
     }
 
-    function getAsesorByCoords($id_coords)
-    {
+    function getAsesorByCoords($id_coords) {
         $query = $this->db->query("SELECT * FROM usuarios WHERE id_rol = 7 AND id_lider = $id_coords ORDER BY nombre, apellido_paterno, apellido_materno");
-        //$this->db->select("*");
-        //$this->db->where('id_rol', 7);
-        //$this->db->where('estatus', 1);
-        //$this->db->where('id_lider', $id_coords);
-        //$query = $this->db->get('usuarios');
         return $query->result();
     }
 
@@ -1561,43 +1551,6 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-
-
-    /*public function getProspectsListByAsesor($id_asesor)
-    {
-        switch ($this->session->userdata('id_rol')) {
-            case '18': // SUBDIRECTOR
-            case '19': // SUBDIRECTOR
-            case '20': // SUBDIRECTOR
-            default:
-            	$query = $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
-                                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.lugar_prospeccion, oxc.nombre nombre_lp, c.estatus_particular
-                                        FROM prospectos c 
-                                        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                                        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                                        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
-            break;
-            case '28': // SUBDIRECTOR
-            	$query = $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
-                                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.lugar_prospeccion, oxc.nombre nombre_lp, c.estatus_particular, c.otro_lugar
-                                        FROM prospectos c 
-                                        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                                        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                                        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.lugar_prospeccion = 6 AND c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
-            break;
-        }
-        return $query->result();
-    }*/
     public function getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where)
     {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
@@ -1610,17 +1563,17 @@ function getStatusMktdPreventa(){
             case '19': // SUBDIRECTOR
             case '20': // SUBDIRECTOR
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
-                                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.lugar_prospeccion, oxc.nombre nombre_lp, c.estatus_particular, c.tipo, c.telefono, c.telefono_2
-                                        FROM prospectos c 
-                                        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                                        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                                        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                        WHERE c.estatus_vigencia = 1 AND (c.id_asesor = ".$id_asesor.") AND c.tipo IN(0,1) ".$filter. "ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECTR c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
+                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
+                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
+                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
+                c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.lugar_prospeccion, oxc.nombre nombre_lp, c.estatus_particular, c.tipo, c.telefono, c.telefono_2
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                WHERE (c.id_asesor = $id_asesor) $filter ORDER BY c.fecha_creacion DESC");
             break;
             case '28': // SUBDIRECTOR
                 $query = $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.vigencia,
@@ -3910,6 +3863,7 @@ function getStatusMktdPreventa(){
             case '13': // CONTRALORÍA
             case '17': // CONTRALORÍA
             case '63': // CONTROL INTERNO
+            case '70': // EJECUTIVO CONTRALORIA JR
                 $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
                 CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
                 ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, oxc2.nombre lp, l.totalNeto2,
@@ -4303,6 +4257,21 @@ function getStatusMktdPreventa(){
         return $query->result_array();
     }
 
+    public function getDragonsClientsList() {
+        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
+        c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+        cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
+        FROM clientes cl 
+        INNER JOIN lotes l ON cl.idLote = l.idLote 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
+        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
+    }
+
     public function getClientsByProyect($id_residencial){
         $query = $this->db->query("SELECT res.nombreResidencial AS proyecto, con.nombre_condominio, lot.nombreLote, sc.nombreStatus AS StatusContratacion, sl.nombre AS StatusLote,
             CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, cli.fechaApartado, oxc.nombre, cli.fecha_nacimiento,
@@ -4400,20 +4369,4 @@ function getStatusMktdPreventa(){
         ORDER BY cli.id_cliente");
         return $query->result_array();
     }
-
-    public function getDragonsClientsList() {
-        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
-        c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-        cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
-        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
-        FROM clientes cl 
-        INNER JOIN lotes l ON cl.idLote = l.idLote 
-        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
-        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
-        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
-        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
-    }
-
 }

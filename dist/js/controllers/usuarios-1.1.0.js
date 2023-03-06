@@ -103,11 +103,11 @@ function fillUsersTable() {
             {
                 data: function (d) {
                     if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                        return '<center><span class="label" style="    background: #A5D6A7;color: #1B5E20;">Activo</span><center>';
                     } else if (d.estatus == 3) {
-                        return '<center><span class="label label-danger" style="background:#FF7C00">Inactivo comisionando</span><center>';
+                        return '<center><span class="label" style="background: #ffcc6f;color: #905500;">Inactivo comisionando</span><center>';
                     } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Inactivo</span><center>';
+                        return '<center><span class="label" style="background: #ffafb5;color: #7e000e;">Inactivo</span><center>';
                     }
                 }
             },
@@ -133,7 +133,11 @@ function fillUsersTable() {
             },
             {
                 data: function (d) {
-                    return d.puesto;
+                    var propiedadExtra = '';
+                    if(d.puesto == 'Asesor' && d.simbolico==1){
+                        propiedadExtra = '<br><label class="label" style="background: #AED6F1;color: #1B4F72;">SIMBÓLICO</label>';
+                    }
+                    return d.puesto + propiedadExtra;
                 }
             },
             {
@@ -161,19 +165,12 @@ function fillUsersTable() {
                                 //TODO SOPORTE  
                                 return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                             '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                           /* return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"> <i class="fas fa-lock"></i></button>'+
-                              //  '<button class="btn-data btn-violetBoots buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"  id="buscar"><i class="fas fa-user-cog"></i></button>'+
-                                '</div>';*/
                         }
                     }
                     else {
                         if (userId == 1297 || userId == 1) {
                             return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
-                              //'<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button></div>';
-                        
                             } else {
-                          //aqui mero vamos a poner el 
                                 if (userId != 1297 || userId != 1  ) { 
                                     let bt = ``;
                                     bt =  '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
@@ -188,9 +185,6 @@ function fillUsersTable() {
                                         }
 
                                     }
-                                    //  '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
-                                  //  '<button class="btn-data btn-violetBoots btn-round btn-fab-mini btn-fab buscar-pass-user" title="Contraseña y usuario" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"   id="buscar" ><i class="fas fa-user-cog"></i></button>'+
-                                 
                                   bt += '</div>';
                                   return bt;
                                 }
@@ -312,6 +306,19 @@ $("#my_add_user_form").on('submit', function(e){
 function getLeadersList(){
     headquarter = $('#headquarter').val();
     type = $('#member_type').val();
+    if(rolId==4 || rolId==5 || rolId==6){
+        if(type==7){
+            console.log('Es un asesor');
+            $('#tipoMiembro_column').removeClass('col-sm-6');
+            $('#tipoMiembro_column').addClass('col-sm-3');
+            $('#simbolico_column').removeClass('hide');
+        }else{
+            $('#tipoMiembro_column').removeClass('col-sm-3');
+            $('#tipoMiembro_column').addClass('col-sm-6');
+            $('#simbolico_column').addClass('hide');
+        }
+    }
+
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
@@ -431,10 +438,6 @@ $("#BajaUserForm").on('submit', function(e){
                    leader = v.subdirector_id
                 else
                    leader = v.id_lider;
-               // getLeadersListForEdit(v.id_sede, v.id_rol, leader);
-               // $("#editUserModal").modal();
-               // fillFields(v);
-               // validateEmptyFields(v);
             });
         });
         $("#modalData").modal();
@@ -520,15 +523,19 @@ $('#'+id_user+'').prop('disabled', false);
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
+    $('.simbolico_column').html('');
+    $('.col-estructura').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
             const ventas = [7,1,2,3,9];
-const isLargeNumber = (element) => element == v.id_rol;
-if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
-    $('#btn_acept').addClass('hide');
-}else{
-    $('#btn_acept').removeClass('hide');
-}
+            const isLargeNumber = (element) => element == v.id_rol;
+            if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
+                $('#btn_acept').addClass('hide');
+            }else{
+                $('#btn_acept').removeClass('hide');
+            }
+
+            
             let leader;
             if (v.id_rol == 9)
                 leader = v.gerente_id
@@ -537,8 +544,48 @@ if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
             else
                 leader = v.id_lider;
 
+            if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
+                var row = $('.col-estructura');
+                row.append(`
+                    <div class="col-sm-6">
+                        <div class="form-group label-floating select-is-empty div_nuevaEstructura">
+                            <label class="control-label"><small class="isRequired">*</small>Nueva estructura</label>
+                            <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
+                                <option value="0" ${ (v.nueva_estructura == 0 || v.nueva_estructura != null ) ? 'checked' : ''}>No</option>
+                                <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''}>Sí</option>
+                            </select>
+                        </div>
+                    </div>
+                `);
+            }
 
-
+            //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
+            //de si es simbólico o no
+            if(rolId == 4 || rolId == 5 || rolId==6){
+                if (v.id_rol == '7' ){
+                    $('#tipoMiembro_column').removeClass('col-sm-6');
+                    $('#tipoMiembro_column').addClass('col-sm-3');
+                    var row_add = $('.simbolico_column');
+                    row_add.append(`
+                    <div class="col-sm-3">
+                        <div class="form-group label-floating select-is-empty div_membertype">
+                              <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
+                              <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
+                              data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                                    <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
+                                    <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
+                              </select>
+                        </div>
+                    </div>
+                `);
+                }else{
+                    $('#tipoMiembro_column').removeClass('col-sm-3');
+                    $('#tipoMiembro_column').addClass('col-sm-6');
+                }
+            }
+            
+            $('#nueva_estructura').selectpicker('refresh');
+            $('#simbolicoType').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
@@ -546,6 +593,7 @@ if(ventas.findIndex(isLargeNumber) >= 0 && id_rol_global == 8){
         });
     });
 });
+
 $(document).on('change', '#sedech', function() {
     let id_sede = $('#sedech').val();
     $("#sucursal").empty();
@@ -616,23 +664,13 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
+    $("#member_type").val(v.id_rol);
+    let rol_asignado = v.id_rol;
 
     if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607))
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
-    else if (v.id_rol = 7 && v.nueva_estructura == 1)
-        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
-    else if (v.id_rol = 7 && v.nueva_estructura == 0)
-        $("#member_type option[value=7]").text("ASESOR");
-    else if (v.id_rol = 9 && v.nueva_estructura == 1)
-        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
-    else if (v.id_rol = 9 && v.nueva_estructura == 0)
-        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
-    else if (v.id_rol = 3 && v.nueva_estructura == 1)
-        $("#member_type option[value=3]").text("EMBAJADOR");
-    else if (v.id_rol = 3 && v.nueva_estructura == 0)
-        $("#member_type option[value=3]").text("GERENTE");
         
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);
@@ -644,32 +682,38 @@ function fillFields (v) {
     $('#member_type').selectpicker('refresh');
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
+    $('#nueva_estructura').val(v.nueva_estructura).selectpicker('refresh');
 
-    $('#payment_method').selectpicker('refresh');
-    $('#headquarter').selectpicker('refresh');
-    $('#member_type').selectpicker('refresh');
-
-    if(v.id_rol == 7 || v.id_rol== 3 || v.id_rol == 9){
-        $('#ch'). show();
+    if(rol_asignado == 7 || rol_asignado== 3 || rol_asignado == 9 ){
+        $('#ch').show();
         document.getElementById("sedech").removeAttribute("required");
         $("#sedech").empty();
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
-                if(v.sedech == null){
-                    getSedesCH();
-                }else{
-                    getSedesCH(v.sedech,v.sucursalch);
-                }
-                $('#sedech').selectpicker('refresh');
-            }
-            else{
-                $('#ch'). hide();
-                document.getElementById("sedech").removeAttribute("required");
-                $("#sedech").empty();
-                document.getElementById("sucursal").removeAttribute("required");
-                $("#sucursal").empty();
-            }
-            $("#rol_actual").val(v.id_rol);
+        if(v.sedech == null) {
+            getSedesCH();
+        } else {
+            getSedesCH(v.sedech,v.sucursalch);
+        }
+        $('#sedech').selectpicker('refresh');
+        if (v.nueva_estructura == 1) {
+            $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+            $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+            $("#member_type option[value=3]").text("EMBAJADOR");
+        } else {
+            $("#member_type option[value=7]").text("ASESOR");
+            $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+            $("#member_type option[value=3]").text("GERENTE");
+        }
+    } else {
+        $('#ch'). hide();
+        document.getElementById("sedech").removeAttribute("required");
+        $("#sedech").empty();
+        document.getElementById("sucursal").removeAttribute("required");
+        $("#sucursal").empty();
+    }
+    
+    $("#rol_actual").val(v.id_rol);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
 }
@@ -806,3 +850,17 @@ function fillChangelogUsers(v) {
         '    </div>\n' +
         '</li>');
 }
+
+$(document).on('change', '#nueva_estructura', function() {
+    if ($(this).val() == 1) {
+        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
+        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
+        $("#member_type option[value=3]").text("EMBAJADOR");
+    } else {
+        $("#member_type option[value=7]").text("ASESOR");
+        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
+        $("#member_type option[value=3]").text("GERENTE");
+    }
+    $("#member_type").val('').selectpicker("refresh");
+    $("#leader").val('').selectpicker("refresh");
+});

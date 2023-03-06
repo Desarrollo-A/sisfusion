@@ -141,12 +141,12 @@ class Suma_model extends CI_Model
     }
 
     function update_acepta_solicitante($idsol) {
-        $query = $this->db->query("UPDATE pagos_suma SET estatus = 2 WHERE id_pago_suma IN (".$idsol.")");
+        $query = $this->db->query("UPDATE pagos_suma SET estatus = 2, fecha_envio = GETDATE() WHERE id_pago_suma IN (".$idsol.")");
 
         return true;
     }  
 
-    function insertar_factura( $id_comision, $datos_factura,$usuarioid){
+    function insertar_factura( $id_comision, $datos_factura, $usuarioid, $week){
         $VALOR_TEXT = $datos_factura['textoxml'];
         $data = array(
             "fecha_factura"  => $datos_factura['fecha'],
@@ -163,7 +163,8 @@ class Suma_model extends CI_Model
             "forma_pago" => $datos_factura['formaPago'],
             "cfdi" => $datos_factura['usocfdi'],
             "unidad" => $datos_factura['claveUnidad'],
-            "claveProd" => $datos_factura['claveProdServ']
+            "claveProd" => $datos_factura['claveProdServ'],
+            "semana" => $week
         );
         
         return $this->db->insert("facturas_suma", $data);
@@ -333,6 +334,12 @@ class Suma_model extends CI_Model
         return $this->db->query("SELECT u.id_usuario id_asesor, 
         CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
         u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-        WHERE u.id_rol IN (7) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
+        WHERE u.id_rol IN (7) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' 
+		AND (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%')
+		order by nombre")->result();
+    }
+    
+    public function validateWeek($week, $user){
+        return $this->db->query("SELECT * FROM facturas_suma WHERE id_usuario = $user AND semana = '".$week."'");
     }
 }
