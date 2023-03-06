@@ -15092,17 +15092,7 @@
 		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view',$datos);
 	}
-	// public function getHistProcData()
-	// {
-	// 	$datos=array();
-	// 	$datos= $this->registrolote_modelo->report();
-	// 	if($datos != null) {
-	// 		echo json_encode($datos);
-	// 	} else {
-	// 		echo json_encode(array());
-	// 	}
-	// 	exit;
-	// }
+	
 	public function getHistProcData(){
 		if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
@@ -15804,14 +15794,6 @@
 	}
 	public function getReportData()
 	{
-		// $datos["historial_lotes"] = $this->registrolote_modelo->reportContratados();
-		// if($datos["historial_lotes"] != null) {
-		// 	echo json_encode($datos["historial_lotes"]);
-		// }
-		// else
-		// {
-		// 	echo json_encode(array());
-		// }
 		if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
