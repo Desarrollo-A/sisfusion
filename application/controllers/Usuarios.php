@@ -270,12 +270,13 @@ class Usuarios extends CI_Controller
 
                 $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal, $datosCH);
             }
+            $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
             /* $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
             $id_lider = 0;
             $id_gerente = 0;
             $id_subdirector = 0;
             $id_regional = 0;
-            $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
+            
             if ($_POST['member_type'] == 7) {
                 //Asesor
                 $id_lider = $_POST['leader'];

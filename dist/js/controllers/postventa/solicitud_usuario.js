@@ -269,7 +269,7 @@ $(document).on('click', '#repartir', function () {
     var Descripcion = document.getElementById('textDescripcion');
     Descripcion.innerHTML = ' ';
     var titulo  = ' ';
-    titulo += '  <h5 id="tituloModalUni" name="tituloModalUni">Reasignacion solicitud : '+ solicitud  +'</h5>';
+    titulo += '  <h5 id="tituloModalUni" name="tituloModalUni">Reasignación solicitud : '+ solicitud  +'</h5>';
     var anterior = document.getElementById('anteriorTitu');
     anterior.innerHTML = ' '  ;
     anterior.innerHTML =   nombreTitular  ;
