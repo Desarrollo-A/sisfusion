@@ -2979,6 +2979,10 @@ public function getStatusMktdPreventa(){
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
     public function dragonsClientsList() {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
@@ -2990,8 +2994,12 @@ public function getStatusMktdPreventa(){
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
+=======
+>>>>>>> aureaac
+>>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
     /**************************************************************************************
     *                             NUEVA FUNCIÓN PARA EL MENÚ                              *
     ***************************************************************************************/

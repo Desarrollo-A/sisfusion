@@ -715,6 +715,7 @@ class Administracion extends CI_Controller{
         // }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         // $mail->addAddress($correo_new);
         //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
 
@@ -728,6 +729,8 @@ class Administracion extends CI_Controller{
         //     return $mail->ErrorInfo;
         // }
 =======
+=======
+>>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);
         $mailContent = '<html>
@@ -856,7 +859,24 @@ class Administracion extends CI_Controller{
         } else {
             return $mail->ErrorInfo;
         }
+<<<<<<< HEAD
 >>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
+=======
+=======
+        // $mail->addAddress($correo_new);
+        //  $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+
+        // $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
+        // $mail->isHTML(true);
+
+        // $mail->Body = utf8_decode($mailContent);
+        // if ($mail->send()) {
+        //     return 1;
+        // } else {
+        //     return $mail->ErrorInfo;
+        // }
+>>>>>>> aureaac
+>>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
     }
 
     public function status11Validado(){
