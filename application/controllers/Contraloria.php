@@ -1140,12 +1140,6 @@ public function get_sede(){
 	$perfil=$this->input->post('perfil');
 	$modificado=date("Y-m-d H:i:s");
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
-
 	$valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
 
 	if($valida_tl[0]['tipo_venta'] == 1){
@@ -1156,12 +1150,6 @@ public function get_sede(){
         $idMov = 20;
     }
 
-<<<<<<< HEAD
->>>>>>> 94056ad11c9d39aaf8864c91e64b468c0dde9a31
-=======
-=======
->>>>>>> aureaac
->>>>>>> 63f2cffa5f65c462f13beb399f757b5123d1a6d2
 	$arreglo=array();
 	$arreglo["idStatusContratacion"]= $idStaC;
 	$arreglo["idMovimiento"]=$idMov;
