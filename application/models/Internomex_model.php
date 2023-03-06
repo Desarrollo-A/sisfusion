@@ -202,7 +202,7 @@ class Internomex_model extends CI_Model {
 
     }
 
-    public function verifyData($id_usuario) {
+        public function verifyData($id_usuario) {
         $month = date("m");
         $year = date("Y");
 		$query = $this->db-> query("SELECT id_usuario FROM pagos_internomex 

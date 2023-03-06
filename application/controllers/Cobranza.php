@@ -239,7 +239,7 @@ class Cobranza extends CI_Controller
         $ventasActivasPorRol = $this->Cobranza_model->getVentasActivasPorRol($comisionista)->result_array();
         if (count($ventasActivasPorRol) > 0) {
             for($i = 0; $i < count($ventasActivasPorRol); $i ++) {
-                $ventasActivasPorRol[$i]['datos'] = $this->Cobranza_model->getVentasActivasPorRolPorAnio($comisionista, $ventasActivasPorRol[$i]['columna'])->result_array();
+                $ventasActivasPorRol[$i]['datos'] = $this->Cobranza_model->getVentasPorRolPorAnio($comisionista, $ventasActivasPorRol[$i]['columna'])->result_array();
             }
             echo json_encode($ventasActivasPorRol);
         }

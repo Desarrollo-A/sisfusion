@@ -45,7 +45,7 @@
         }
     }
     .card{
-        border-radius: 0 10px 10px 10px;
+        border-radius: 10px;
         .card-header{
             @media #{$smartphone}{
                 display: none;
@@ -387,6 +387,16 @@ table{
 }
     .dt-buttons{
         text-align: left;
+    }
+        .paginate_button i {
+        font-size: 18px;
+    }
+    .pagination>li>a:hover, .pagination>li>span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+        background-color: transparent!important;
+        color: $goldMaderas!important;
+    }
+    .paginate_button .active a {
+        box-shadow: none !important;
     }
     .dataTables_filter label {
         display: flex;

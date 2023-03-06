@@ -209,7 +209,7 @@
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>TOTAL ABONADO</th>
                                                         <th>TOTAL PAGADO</th>
-                                                        <th>LUGAR PROSPECCIÓN</th>
+                                                        <th>ROL</th>
                                                     </tr>
                                                 </thead>
                                             </table>

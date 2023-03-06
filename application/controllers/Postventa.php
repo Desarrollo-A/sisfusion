@@ -7,8 +7,8 @@ class Postventa extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter'));
+        $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter', 'phpmailer_lib'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -695,7 +695,7 @@ class Postventa extends CI_Controller
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
+           // $personalidad = (!isset($personalidad) || $personalidad == '') ? 'NULL' : $personalidad;
             $idLote = (!isset($idLote) || $idLote == '') ? 'NULL' : $idLote;
             // echo "idLote:".$idLote."\n";
             $idCliente = (!isset($idCliente) || $idCliente == '') ? 'NULL' : $idCliente;
@@ -1755,7 +1755,7 @@ class Postventa extends CI_Controller
         echo json_encode( array( "data" => $response));
     }
 
-    public function getBudgetNotaria()
+    public function getinfoNotariaExt()
     {
         $idSolicitud = $_GET['idSolicitud'];
 
@@ -1775,48 +1775,6 @@ class Postventa extends CI_Controller
         echo json_encode($data);
     else
         echo json_encode(array());
-    }
-
-    public function rechazarNotaria()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        $estatus = $this->db->query("SELECT estatus FROM solicitud_escrituracion WHERE idSolicitud = $idSolicitud")->row()->estatus;
-
-        if($estatus == 5){
-            $informacion = $this->Postventa_model->rechazarNotaria5($idSolicitud);
-            return $informacion;
-
-            return $this->Postventa_model->rechazarNotaria5($idSolicitud, $rol);
-        } else if($estatus == 11){
-            $informacion = $this->Postventa_model->rechazarNotaria($idSolicitud);
-            return $informacion;
-
-            return $this->Postventa_model->rechazarNotaria($idSolicitud, $rol);
-        }
-
-        
-    }
-
-    //OBSERVACIONES
-    public function observacionesPostventa()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        // $informacion = $this->Postventa_model->updateObservacionesPostventa($idSolicitud);
-        // return $informacion;
-
-        return $this->Postventa_model->updateObservacionesPostventa($idSolicitud, $rol);
-    }
-
-    public function observacionesProyectos()
-    {
-        $idSolicitud = $_POST['idSolicitud'];
-        $rol = $this->session->userdata('id_rol');
-
-        return $this->Postventa_model->updateObservacionesProyectos($idSolicitud, $rol);
     }
 
     public function mailObservaciones()
@@ -2012,7 +1970,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInformacion($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
@@ -2093,13 +2051,19 @@ function saveNotaria(){
         return;
     }
 
+
     $arrayData = array(
         "id_solicitud" => $idSolicitud,
         "id_notaria" => $idNotaria,
         "estatus" => 1
     );
+    $notariaExterna = $this->Postventa_model->existNotariaExterna($idSolicitud);
+    if($notariaExterna->id_notaria != 0){ 
+         $this->updatePresupuestosNXU($idSolicitud, $idNotaria,1);
+    }else{
+        $this->updatePresupuestosNXU($idSolicitud, $idNotaria,0);
+    }
     $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
-    $data2 = $this->updatePresupuestosNXU($idSolicitud, $idNotaria);
     if ($data != null)
         echo json_encode($data);
     else
@@ -2115,8 +2079,8 @@ function saveNotaria(){
             echo json_encode(array());
     }
 
-    function updatePresupuestosNXU($idSolicitud, $idNotaria){
-        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria);
+    function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0){
+        $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria);
     }
     public function getOpcCat(){
         $id_cat = $this->input->post("id_cat");
@@ -2127,13 +2091,6 @@ function saveNotaria(){
             echo json_encode(array());
     }
 
-
-
-
-
-
-
-  
     public function solicitudes_usuario(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
@@ -2162,40 +2119,6 @@ function saveNotaria(){
         echo json_encode($data);
 
     }
-
-    public function validarDocumento(){
-      
-        $estatus_validacion       = $this->input->post('estatus_validacion');
-        $Iddocumento       = $this->input->post('Iddocumentos');
-        $tipo       = $this->input->post('idOpcion');
-        $validado_por  =   $this->session->userdata('id_usuario');
-        $editado  =   $this->session->userdata('id_usuario');
-        $modificado =  date("Y-m-d H:i:s");
-        $opcionEditar  =   $this->input->post('opcionEditar');
-        
-
-        $insertArray = array(
-            'estatus_validacion'      =>   $opcionEditar ,
-            'validado_por'          => $validado_por,
-            'editado'             => 1, 
-            'modificado_por'     => $validado_por  ,
-            'modificado'             => $modificado, 
-        );
-        $updates = $this->Postventa_model->actualizarDocs( $Iddocumento ,$insertArray);
-        if($updates){
-            $respuesta =  array(
-              "response_code" => 200, 
-              "response_type" => 'success',
-              "message" => "Validado correctamente");
-          }else{
-            $respuesta =  array(
-              "response_code" => 400, 
-              "response_type" => 'error',
-              "message" => "Validado Incorrecto");
-          }  
-          echo json_encode ($respuesta);
-    }
-
     
     public function descuentoUpdateTi(){
 
@@ -2370,60 +2293,6 @@ function saveNotaria(){
 
     }
       
-
-
-
-    public function validarDocumentoss(){
-        $motivo = 0;
-        $estatus_validacion       = $this->input->post('estatus_validacion');
-        $Iddocumento       = $this->input->post('Iddocumentos');
-        $tipo       = $this->input->post('idOpcion');
-        $validado_por  =   $this->session->userdata('id_usuario');
-        $editado  =   $this->session->userdata('id_usuario');
-        $modificado =  date("Y-m-d H:i:s");
-        $opcionEditar  =   $this->input->post('opcionEditar');
-        $insertArrayActualizarEstatus = array(
-            'estatus'        => 0
-            );
-            
-        $respuestaAct = $this->Postventa_model->actualizarMotivosRechazo(  $tipo , $Iddocumento,$insertArrayActualizarEstatus);
-        if($estatus_validacion ==2){
-            $proceso  =   $this->input->post('proceso');
-            $motivo  =   $this->input->post('motivo');
-            $insertArray = array(
-                'id_motivo'      => $motivo,
-                'id_documento'   => $Iddocumento,
-                'tipo'           => $tipo, 
-                'estatus'        => 1,
-                'tipo_proceso'   => $proceso,
-                'creado_por'     => $validado_por,
-                'fecha_creacion' => $modificado,
-            );
-            $respuestaAct = $this->Postventa_model->insertMotivoPorDoc( $insertArray);
-            
-        }
-        $insertArray = array(
-            'estatus_validacion'      =>   $opcionEditar ,
-            'validado_por'          => $validado_por,
-            'editado'             => 1, 
-            'modificado_por'     => $validado_por  ,
-            'modificado'             => $modificado, 
-        );
-        $updates = $this->Postventa_model->actualizarDocs( $Iddocumento ,$insertArray);
-        if($updates ){
-            $respuesta =  array(
-              "response_code" => 200, 
-              "response_type" => 'success',
-              "message" => "Validado correctamente");
-          }else{
-            $respuesta =  array(
-              "response_code" => 400, 
-              "response_type" => 'error',
-              "message" => "Validado Incorrecto");
-          }  
-          echo json_encode ($respuesta);
-    }
-
     
     public function descuentoUpdateTis(){
 
@@ -2460,231 +2329,6 @@ function saveNotaria(){
         }
         echo json_encode ($respuesta);
       } 
-
-      public function getDocumentosPorSolicitudss()
-      {
-        
-          $solicitud      = $this->input->post('solicitud');
-          $status        = $this->input->post('estatus');
-          $notariaExterna = ''; 
-          $validacion     = true;
-          $notariaExterna = $this->Postventa_model->existNotariaExterna($solicitud);
-        // var_dump ($solicitud, $estatus);
-        $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
-        $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
-
-        if($status == 9){
-            $opciones = "IN (11,13,20 $docNotariaExterna)";
-        }elseif($status == 18){
-            $opciones = 'IN (7)';
-        }elseif($status == 19 ||$status == 22 || $status == 24 || $status = 20){
-            $opciones = "IN (1,3,4,5,6,8,9,11,12,17,18 $docPersonalidadJuridica $docNotariaExterna)";
-        }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
-            $opciones = 'IN (17,18)';
-        }elseif($status == 29 || $status == 35 || $status == 40){
-            $opciones = 'IN (15)';
-        }elseif($status == 47 || $status == 50){
-            $opciones = 'IN (14)';
-        }elseif($status == 42 || $status == 52){
-            $opciones = 'IN (19)';
-        }
-// 
-// 
-          if($solicitud == '' || $status == '')
-          {
-              $validacion = false;
-          }
-          if($validacion){
-
-              $respuesta['rechazos']        = $this->Postventa_model->rechazosDeDocs($solicitud);
-              $respuesta['misDocumentos']   = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos']   = $this->Postventa_model->documentosNecesarios($opciones);
-              $respuesta['nuevosDocs']      = $this->Postventa_model->getDocumentsClient($solicitud, $status, $notariaExterna);
-          }else{
-              $respuesta = array();
-          }
-   
-          
-          echo json_encode($respuesta);
-      }
-
-      public function UParchivosFromss(){
-		$tamanoOfAuts = (1);
-    	$indexx = ($_POST['indexx']);
-        $solicitud = ($_POST['solicitudId']);   
-        $tipoDocuemento = ($_POST['iddocumento']);
-        $estatus_validacion = 0;
-        // $lote = ($_POST['lote']);
-             // CONSULTAR SI EXISTE UN DOCUMENTO
-             if($this->Postventa_model->validarExisteDocumento($tipoDocuemento ,$solicitud))
-             {   
-                // NO EXISTE DOCUMENTO AGREGAMOS NORMAL
-                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
-                    $aleatorio = rand(100,1000);
-                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
-                    // $proyecto = str_replace(' ', '',$nombreResidencial);
-                    // $condominio = str_replace(' ', '',$nombreCondominio);
-                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-                    // $condom = substr($condominioQuitaN, 0, 3);
-                    // $cond= strtoupper($condom);
-                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-                    $date = date('dmYHis');
-                     $expediente = $date."_".$aleatorio."_".$expediente;
-
-                    $ruta = $this->getFolderFile($tipoDocuemento);
-                    $info =  $this->session->userdata('id_usuario');
-                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $arrayInsertDocumentos = array(
-                            'movimiento'    => 'creacion de documento escrituracion',
-                            'expediente'    =>  $expediente,
-                            'modificado'    => date("Y-m-d H:i:s"),
-                            'status'       => 1, 
-                            'idSolicitud'   => $solicitud ,
-                            'idUsuario'     => $info ,
-                            'tipo_documento' => $tipoDocuemento,
-
-                            'fecha_creacion' => date("Y-m-d H:i:s"),
-                            // 'estatus_validacion' => $estatus_validacion, 
-                        );
-    
-                        $ultimoInsert =   $this->Postventa_model->insertDocumentNuevo($arrayInsertDocumentos);
-                       
-     
-                    }else{
-                        $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-                    }
-             }else{
-                $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-             }
-            
-            } else {
-                // ELIMINAMOS DOCUMENTO ACUTALIZANDO DATOS
-
-                if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
-                    $aleatorio = rand(100,1000);
-                    $expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
-                    // $proyecto = str_replace(' ', '',$nombreResidencial);
-                    // $condominio = str_replace(' ', '',$nombreCondominio);
-                    // $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-                    // $condom = substr($condominioQuitaN, 0, 3);
-                    // $cond= strtoupper($condom);
-                    // $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-                    $date = date('dmYHis');
-                    $expediente = $date."_".$aleatorio."_".$expediente;
-                    $ruta = $this->getFolderFile($tipoDocuemento);
-                    $info =  $this->session->userdata('id_usuario');
-                    $documento = $this->Postventa_model->validarExisteDocumentos($tipoDocuemento ,$solicitud);
-                    $clave = $documento->idDocumento; 
-                    if (move_uploaded_file($_FILES["docSubir$indexx"]["tmp_name"], $ruta.$expediente)) {
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $arrayInsertDocumentos = array(
-                            'movimiento'    => 'creacion de documento escrituracion',
-                            'expediente'    =>  $expediente,
-                            'modificado'    =>  date("Y-m-d H:i:s"),
-                            'status'        =>  1,
-                            // 'estatus_validacion' => $estatus_validacion, 
-                        );
-                        $updates = $this->Postventa_model->actualizarDocs( $clave ,$arrayInsertDocumentos);
-                        $response   = 1 ;
-                        $code       = 'success';
-                        $mensaje    = 'La acción se ha realizado correctamente.';
-                        $ultimoInsert = $clave ;
-                    
-                    }else{
-                        $response   = 2 ;
-                        $code       = 'warning';
-                        $mensaje    = 'No se ha ejecutado la acción correctamente';
-                        $ultimoInsert = 0;
-                    }
-
-                
-             }
-
-
-		
-			}
-
-    $respuesta = array(
-      'code'    => $response,
-      'mensaje' => $mensaje,
-      'respuesta' => $response,
-      'ultimoInsert' =>  $ultimoInsert,
-
-      // donde 1 es succes y 2 es error
-    );
-    echo json_encode ($respuesta);
-	}
-
-
-    public function deleteFileActualizado2()
-    {
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idSolicitud = $this->input->post('idSolicitud');
-        $idDocumento = $this->input->post('idDocumento');
-
-        // var_dump($idDocumento , $documentType);
-        $filename = $this->Postventa_model->getFilename($idDocumento, $documentType)->row()->expediente;
-        $folder = $this->getFolderFile($documentType);
-        $file = $folder . $filename;
-        if (file_exists($file))
-            unlink($file);  
-            // AQUI SE VA A AACTUALIZAR
-            $arrayInsertDocumentos = array(
-                'expediente'    => null,
-                'estatus_validacion' => null, 
-                'movimiento'    => 'creacion de documento escrituracion',
-                'modificado'    =>  date("Y-m-d H:i:s"),
-                'status'        =>  0, 
-            );
-            $updates = $this->Postventa_model->actualizarDocs( $idDocumento ,$arrayInsertDocumentos);
-        echo json_encode($updates);
-        // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
-    }
-
-    public function descargarDocsss()
-    {
-        $this->load->helper('download');
-        $name = $this->input->post('name');
-        $documentType = $this->input->post('documentType');
-        var_dump( $documentType,  $name);
-        $folders = $this->getFolderFile($documentType);
-        $Ruta = $folders.$name;
-        var_dump(  $Ruta );
-        force_download($Ruta, NULL);     
-    }
-
-    public function motivosRechazos(){
-        $tipoDocuemento = $this->input->post("tipoDocumento");
-        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
-        echo json_encode ($motivosRechazo); 
-    }
-  
-    public function cambiarEstatusDocsSiguienteMotivo(){
-
-        $tipoDocuemento = $this->input->post("tipoDocumento");
-        $motivosRechazo = $this->Postventa_model->motivosRechazo($tipoDocuemento);
-        echo json_encode ($motivosRechazo); 
-
-    }
-    public function existeNegado(){
-        $solicitud = $this->input->post("solicitud");
-        $RespuestaRechazo = $this->Postventa_model->existeNegado($solicitud);
-        
-        echo json_encode($RespuestaRechazo);
-
-    }
 
 
     function getData(){
@@ -2727,7 +2371,7 @@ function saveNotaria(){
                         "data" => 'atrasado'
                     ],
                     [
-                        "title" => 'Dias de atraso',
+                        "title" => 'Días de atraso',
                         "data" => 'diferencia'
                     ],
                     [
@@ -2850,8 +2494,435 @@ function saveNotaria(){
             echo json_encode($array);
     }
 
+    function estatus3(){
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view("postventa/status3revision",$datos);
+    }
 
-      
+     function getStatus3VP(){
+         $data = $this->Postventa_model->getStatus3VP();
+         if($data != null) {
+             echo json_encode($data);
+         } else {
+             echo json_encode(array());
+         }
+     }
+
+    public function rechazarStatus(){
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idStatusContratacion=$this->input->post('idStatusContratacion');
+        $idMovimiento=$this->input->post('idMovimiento');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $perfil=$this->input->post('perfil');
+        $modificado=date("Y-m-d H:i:s");
+
+
+        $arreglo=array();
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+        $arreglo["fechaVenc"]= $modificado;
+
+
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]=$idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $modificado;
+        $arreglo2["idLote"]= $idLote;
+        $arreglo2["idCondominio"]= $idCondominio;
+        $arreglo2["idCliente"]= $idCliente;
+
+        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
+        $lp = $this->Contraloria_model->get_lp($idLote);
+
+        if(empty($lp)){
+            $correosClean = explode(',', $datos[0]["correos"]);
+            $array = array_unique($correosClean);
+        } else {
+            $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
+            $array = array_unique($correosClean);
+        }
+
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
+
+
+        $mail = $this->phpmailer_lib->load();
+
+
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+
+
+        foreach($array as $email)
+        {
+            if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+                if (trim($email) != ''){
+                    $mail->addAddress('programador.analista8@ciudadmaderas.com');//$email
+                }
+            }
+
+            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+                $mail->addAddress('programador.analista8@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
+            }
+        }
+
+
+
+        $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)');
+        $mail->isHTML(true);
+
+        $mailContent = utf8_decode( "<html><head>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
+  <title>RECHAZO DE STATUS 3 POST VENTA </title>
+  <style media='all' type='text/css'>
+	  .encabezados{
+		  text-align: center;
+		  padding-top:  1.5%;
+		  padding-bottom: 1.5%;
+	  }
+	  .encabezados a{
+		  color: #234e7f;
+		  font-weight: bold;
+	  }
+	  
+	  .fondo{
+		  background-color: #234e7f;
+		  color: #fff;
+	  }
+	  
+	  h4{
+		  text-align: center;
+	  }
+	  p{
+		  text-align: right;
+	  }
+	  strong{
+		  color: #234e7f;
+	  }
+  </style>
+</head>
+<body>
+  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
+		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+			  <tr class='navbar navbar-inverse encabezados'><td>
+				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
+			  </td></tr>
+		  </table>
+	  </td></tr>
+	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
+	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
+		<tr class='active'>
+		  <th>Proyecto</th>
+		  <th>Condominio</th> 
+		  <th>Lote</th>   
+		  <th>Motivo de rechazo</th>   
+		  <th>Fecha/Hora</th>   
+		</tr> 
+		<tr>   
+               <td><center>".$infoLote->nombreResidencial."</center></td>
+               <td><center>".$infoLote->nombre."</center></td>
+               <td><center>".$infoLote->nombreLote."</center></td>
+               <td><center>".$comentario."</center></td>
+               <td><center>".date("Y-m-d H:i:s")."</center></td>
+		</tr>
+		</table></center>
+	  
+	  
+	  </td></tr>
+  </table></body></html>");
+
+        $mail->Body = $mailContent;
+
+
+        $validate = $this->Postventa_model->validateSt3($idLote);
+
+
+        if($validate == 1){
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                $mail->send();
+                $data['message'] = 'OK';
+                echo json_encode($data);
+            }else{
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+        }else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+    }
+
+    public function enviarLoteARevisionPostVenta3()
+    {
+
+
+        $idLote = $this->input->post('idLote');
+        $idCondominio = $this->input->post('idCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $modificado = date('Y-m-d H:i:s');
+        $fechaVenc = $this->input->post('fechaVenc');
+
+        $arreglo = array();
+        $arreglo["idStatusContratacion"] = 3;
+        $arreglo["idMovimiento"] = 100;
+        $arreglo["comentario"] = $comentario;
+        $arreglo["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo["perfil"] = $this->session->userdata('id_rol');
+        $arreglo["modificado"] = date("Y-m-d H:i:s");
+
+
+        $arreglo2 = array();
+        $arreglo2["idStatusContratacion"] = 3;
+        $arreglo2["idMovimiento"] = 100;
+        $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
+        $arreglo2["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo2["perfil"] = $this->session->userdata('id_rol');
+        $arreglo2["modificado"] = date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"] = $fechaVenc;
+        $arreglo2["idLote"] = $idLote;
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+
+
+        $validate = $this->Postventa_model->validateSt3($idLote);
+
+        if ($validate == 1) {
+
+            if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                $data['message'] = 'OK';
+                echo json_encode($data);
+
+            } else {
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+
+        } else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+
+
+    }
+    public function editar_registro_lote_contraloria_proceceso3(){
+
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+        $movimientoLote = $this->input->post('movimientoLote');
+
+
+        if($movimientoLote == 1){
+            $idMovimiento = 103;
+            $idStatusContratacion = 2;
+        }else{
+            $idMovimiento = 101;
+            $idStatusContratacion = 2;
+        }
+
+
+        $arreglo=array();
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+
+
+
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+
+        }
+        elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+
+                $fecha = $fechaAccion;
+
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+        }
+
+
+
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;
+        $arreglo2["idCondominio"]= $idCondominio;
+        $arreglo2["idCliente"]= $idCliente;
+
+
+        $validate = $this->Postventa_model->validateSt3($idLote);
+
+        if($validate == 1){
+
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                $data['message'] = 'OK';
+                echo json_encode($data);
+
+            }else{
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+
+        }else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+
+    }
 }
 
 

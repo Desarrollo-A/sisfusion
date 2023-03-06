@@ -75,7 +75,6 @@
         .scrollDocumentTree::-webkit-scrollbar{
             width: 5px;
             background-color: transparent;
-            border-right: 2px solid $platinumScroll;
         }
         .scrollDocumentTree::-webkit-scrollbar-thumb{
             background-color: $platinumScroll;

@@ -314,8 +314,7 @@ class Documentacion extends CI_Controller
             echo json_encode(array());
     }
 
-    function getLotesList_escrituracion()
-    {
+    function getLotesList_escrituracion(){
         $idCondominio = $this->input->post("idCondominio");
         $data = $this->Documentacion_model->getLotesList_escrituracion($idCondominio)->result_array();
         if ($data != null)
@@ -323,6 +322,7 @@ class Documentacion extends CI_Controller
         else
             echo json_encode(array());
     }
+    
     public function getCatalogOptions(){
         
             echo json_encode($this->Documentacion_model->getCatalogOptions()->result_array());

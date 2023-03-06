@@ -16,6 +16,12 @@
             width: auto;
        }         
     }
+   .dataTables_scrollHead {
+    overflow: hidden !important;
+    position: inherit !important;
+    border: 0px;
+    width: 100%;
+}
 </style>
 
 
@@ -35,6 +41,9 @@
 
                             <li>
                                 <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
+                            </li>
+                            <li>
+                                <a href="#pausadas" role="tab" id="pausadas_tabla" data-toggle="tab">Solicitudes pausadas</a>
                             </li>
                         </ul>
                         <div class="card card no-shadow m-0" >
@@ -77,18 +86,18 @@
                                                     <table class="table-striped table-hover" id="escrituracion-datatable" name="escrituracion-datatable">
                                                         <thead>
                                                             <tr>
-                                                                <th>ID SOLICITUD</th>
+                                                                <th>ID</th>
                                                                 <th>PROYECTO</th>
                                                                 <!-- <th>CONDOMINIO</th> -->
                                                                 <th>LOTE</th>
                                                                 <th>CLIENTE</th>
-                                                                <th>VAL DE OPE DE CTR</th>
-                                                                <th>FECHA DE CREACIÓN</th>
+                                                                <th>VAL DE OPE</th>
+                                                                <th>FECHA</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>ÁREA</th>
                                                                 <th>ASIGNADA A</th>
                                                                 <th>COMENTARIOS</th>
-                                                                <th>OBSERVACIONES</th>
+                                                                <th>OBS.</th>
                                                                 <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
@@ -133,7 +142,7 @@
                                                                     name="carga-datatable">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>ID SOLICITUD</th>
+                                                                            <th>ID</th>
                                                                             <th>PROYECTO</th>
                                                                             <!-- <th>CONDOMINIO</th> -->
                                                                             <th>LOTE</th>
@@ -144,7 +153,7 @@
                                                                             <th>ÁREA</th>
                                                                             <th>ASIGNADA A</th>
                                                                             <th>COMENTARIOS</th>
-                                                                            <th>OBSERVACIONES</th>
+                                                                            <th>OBS</th>
                                                                             <th>ACCIONES</th>
                                                                         </tr>
                                                                     </thead>
@@ -152,6 +161,57 @@
                                                         </div>
                                                 </div>
                                             </div>
+
+                                            <!----TABLA SOLICITUDES PAUSADAS---->
+                                            <div class="tab-pane" id="pausadas">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Solicitudes pausadas</h3>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                        <div class="form-group label-floating select-is-empty"></div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-md-12 p-r">
+                                                                    <div class="form-group d-flex">
+                                                                      
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                            <table class="table-striped table-hover" id="pausadas_tabla"
+                                                                    name="pausadas_tabla">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ID</th>
+                                                                            <th>PROYECTO</th>
+                                                                            <th>LOTE</th>
+                                                                            <th>CLIENTE</th>
+                                                                            <th>VAL DE OPE DE CTR</th>
+                                                                            <th>FECHA DE CREACIÓN</th>
+                                                                            <th>ESTATUS</th>
+                                                                            <th>ÁREA</th>
+                                                                            <th>ASIGNADA A</th>
+                                                                            <th>COMENTARIOS</th>
+                                                                            <th>OBS</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                            </table>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <!----FIN SOLICITUDES PAUSADAS---->
                                             <?php include 'common_modals.php' ?>
                                         </div>
                                     </div>
