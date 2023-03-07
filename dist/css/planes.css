@@ -1408,10 +1408,20 @@
   margin-left: 5px;
 }
 
+.cargarPlan .tab-content .boxInfoGral .btnAction {
+  height: 40px;
+  border: none;
+  border-radius: 27px;
+  color: #103f75;
+  background-color: #1341761a;
+  margin-left: 5px;
+  padding: 0 10px;
+}
+
 .cargarPlan .tab-content .leyendItems {
   position: absolute;
   top: -25px;
-  right: 65px;
+  right: 165px;
   font-size: 18px;
 }
 
