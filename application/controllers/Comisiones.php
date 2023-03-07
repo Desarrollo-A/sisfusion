@@ -870,7 +870,7 @@ function update_estatus(){
     $this->load->model("Comisiones_model");
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-   
+    
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
         $id_user_Vl = $this->session->userdata('id_usuario');
@@ -7084,7 +7084,7 @@ for ($d=0; $d <count($dos) ; $d++) {
             $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             // $estatus = 5;  
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion 
+            $arr_update["fecha_modificacion"] = $fecha_modificacion; 
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
