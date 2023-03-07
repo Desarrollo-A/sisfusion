@@ -4,7 +4,9 @@ $('#filtro33').change(function(ruta){
 
     residencial = $('#filtro33').val();
     param = $('#param').val();
+    condominio = '';
     $("#filtro44").empty().selectpicker('refresh');
+    getAssimilatedCommissions(residencial, condominio);
     $.ajax({
         url: general_base_url+'Contratacion/lista_proyecto_dos/',
         type: 'post',
