@@ -186,6 +186,7 @@
                                                                 <th>TIPO VENTA</th>
                                                                 <th>USUARIO</th>
                                                                 <th>PUESTO</th>
+                                                                <th>CODIGO POSTAL</th>
                                                                 <th>FEC. ENVÍO</th>
                                                                 <th>MÁS</th>
                                                             </tr>
@@ -464,7 +465,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'ASIMILADOS_CONTRALORÍA_SISTEMA_COMISIONES',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -502,9 +503,11 @@
                                 }else if(columnIdx == 16){
                                     return 'PUESTO';
                                 }else if(columnIdx == 17){
+                                    return 'CODIGO POSTAL';
+                                }else if(columnIdx == 18){
                                     return 'FECH. ENVÍO';
                                 }
-                                else if(columnIdx != 18 && columnIdx !=0){
+                                else if(columnIdx != 19 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }
@@ -625,6 +628,12 @@
                     "width": "6%",
                     "data": function( d ){
                         return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                    }
+                },
+                {
+                    "width": "7%",
+                    "data": function( d ){
+                        return '<p class="m-0"><b>'+d.codigo_postal+'</b></i></p>';
                     }
                 },
                 {

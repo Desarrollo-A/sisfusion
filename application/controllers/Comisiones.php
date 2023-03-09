@@ -218,8 +218,22 @@ public function getPuestosDescuentos(){
      }
      echo json_encode( array( "data" => $dat));
     }
-  
-    
+
+    public function insertar_codigo_postal(){
+      $dato_solicitudcp = $this->input->post('dato_solicitudcp');
+      $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);      
+    }
+
+    public function consulta_codigo_postal(){
+      $resolt = $this->Comisiones_model->consulta_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+      echo json_encode($resolt);
+    }
+
+    public function pagos_codigo_postal(){
+      $respuesta = $this->Comisiones_model->pagos_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+      echo json_encode($respuesta);
+    }
+      
     function aprobar_comision(){
       $id_pago= $_POST['id_pago'];
       $id_comision = $_POST['id_comision'];
@@ -353,7 +367,7 @@ public function getPuestosDescuentos(){
     
     
     // ------------------------------------------------------****************----------------------------------------
-  
+   
 
   // ------------------------------------------------------HISTORIAL GENERAL CONTRALORIA----------------------------------------
   public function historial_comisiones()
@@ -619,6 +633,7 @@ function update_estatus(){
   // ------------------------------------------------------SOLICITUDES ASESOR ----------------------------------------
   public function comisiones_colaborador()
   {
+    $id_user = $this->session->userdata('id_usuario');
     $datos = array();
     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
@@ -627,7 +642,7 @@ function update_estatus(){
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
 
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
-
+    $datos["cp_datos"] = $this->Comisiones_model->consulta_codigo_postal($id_user)->result_array();
 
     switch($this->session->userdata('id_rol')){
       case '1':
@@ -855,7 +870,7 @@ function update_estatus(){
     $this->load->model("Comisiones_model");
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-   
+    
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
         $id_user_Vl = $this->session->userdata('id_usuario');
@@ -2687,7 +2702,7 @@ public function getDatosHistorialPagoRP($id_usuario){
     echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto,$condominio){
+public function getDatosHistorialPago($proyecto = null,$condominio = null ) {
 
     // ini_set('max_execution_time', 99999);
     // set_time_limit(999999);
@@ -3321,7 +3336,7 @@ public function LiquidarLote(){
       $aleatorio = rand(100,1000);
       $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
       $date = date('dmYHis');
-      $expediente = $date."_".$aleatorio."_".$namedoc;
+      $expediente = $date."_".$aleatorio."_prestamo";
       $ruta = "static/documentos/evidencia_prestamo_auto/";
 
       if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
@@ -7008,14 +7023,14 @@ for ($d=0; $d <count($dos) ; $d++) {
       $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
-
+      $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
       if($banderaSoloEstatus != 'false' ){
         // var_dump('entrando a 1 ');
         $arr_update = array( 
           "estatus_certificacion" => $estatus_certificacion,          
         );
-        $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
-        $arr_update["fecha_modificacion"] = $fecha_modificacion ;     
+      
+    
       }else{
         // var_dump('entrando a 2');
         if($estatus === '1'){
@@ -7036,7 +7051,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               // $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
+                              $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
                             }
                             else if($banderaPagosActivos == 2){
                               $pagos_activos = 0;
@@ -7044,7 +7059,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                               $estatus = 5;  
                               $arr_update["estatus"] = $estatus ;
                               $arr_update["pagos_activos"] = $pagos_activos ;
-                              $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
+                              $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
 
 
                             }
@@ -7054,7 +7069,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         }else {
           // if del estatus
               // aqui entra cuando no es baja
-      //  if del estatus es el tipo de filtrado
+          //  if del estatus es el tipo de filtrado
          
           $arr_update = array(    
             
@@ -7066,17 +7081,17 @@ for ($d=0; $d <count($dos) ; $d++) {
           );
           if($banderaPagosActivos == 1 ){
             $pagos_activos = 1;
-            $fecha_modificacion = date("Y-m-d H:i:s");
+            $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             // $estatus = 5;  
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s");
+            $arr_update["fecha_modificacion"] = $fecha_modificacion; 
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
             $estatus = 5;  
             $arr_update["estatus"] = $estatus ;
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = date("Y-m-d H:i:s") ;
+            $arr_update["fecha_modificacion"] = $fecha_modificacion  ;
   
           }
           else{
@@ -7103,6 +7118,8 @@ for ($d=0; $d <count($dos) ; $d++) {
       }
       echo json_encode ($respuesta);
     } 
+
+
     public function historial_prestamos()
     {
 

@@ -13,12 +13,6 @@ class Restore extends CI_Controller {
     public function return_status_uno()
     {
         $idCliente = $this->input->post('idCliente');
-
-//        $data_back = array(
-//            'data' =>false
-//        );
-//        print_r(json_encode($data_back));
-//        exit;
 		$data= $this->Restore_model->return_status_uno($idCliente);
         $data_back = array(
             'data' =>$data
