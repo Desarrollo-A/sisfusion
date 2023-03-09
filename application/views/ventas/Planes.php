@@ -1185,7 +1185,7 @@ $("#table_planes").ready(function() {
 		function ClearAll2(){
 			document.getElementById('showPackage').innerHTML = '';
 			$('#index').val(0);	
-			setInitialValues();
+			//setInitialValues();
 			//noCreatedCards();
 			$(".leyendItems").addClass('d-none');
 			$("#btn_save").addClass('d-none');
@@ -1205,9 +1205,10 @@ $("#table_planes").ready(function() {
 /**--------------------------FUNCIONES PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
 function ConsultarPlanes(){
 	$('#spiner-loader').removeClass('hide');
-	ClearAll2();
+	
 	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
 		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
+		ClearAll2();
 		$.post('getPaquetes',params, function(data) {
 			let countPlanes = data.length;
 			if(countPlanes >1){

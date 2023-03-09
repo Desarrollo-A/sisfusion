@@ -2684,6 +2684,37 @@ function saveNotaria(){
         }
 
     }
+
+    //Función para pausar solicitudes
+    public function pausarSolicitud()
+    {   
+        $idSolicitud = $this->input->post("id_solicitud");
+        $comentarioPausa = $this->input->post("comentarioPausa");
+        $idusuario = $this->session->userdata('id_usuario');
+
+        $respuesta =  $this->Postventa_model->pausarSolicitud($idSolicitud, $comentarioPausa,$idusuario);
+        if ($respuesta) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
+
+    public function borrarSolicitud(){
+        $idSolicitud = $this->input->post("id_solicitud");
+        $comentarioPausa = $this->input->post("comentarioPausa");
+        $banderaCliente = $this->input->post("banderaCliente");
+        $idusuario = $this->session->userdata('id_usuario');
+        $idCliente = $this->session->userdata('idCliente');
+        $idLote = $this->session->userdata('idLote');
+
+        $respuesta =  $this->Postventa_model->borrarSolicitud($idSolicitud, $comentarioPausa,$banderaCliente,$idusuario);
+        if ($respuesta) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
 }
 
 
