@@ -21,6 +21,16 @@ $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
+$('#pausadas_tabla thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#pausadas_tabla').DataTable().column(i).search() !== this.value ) {
+            $('#pausadas_tabla').DataTable().column(i).search(this.value).draw();
+        }
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
 
 $('#notas-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -102,7 +112,6 @@ $(document).ready(function () {
     });
 
     getRejectionReasons(2); // MJ: SE MANDAN TRAER LOS MOTIVOS DE RECHAZO PARA EL ÁRBOL DE DOCUMENTOS DE ESCRUTURACIÓN
-    tablaSolicitudesPausadas(); // SE EJECUTA FUNCIÓN QUE LLENA TABLA DE SOLICITUDES PAUSADAS
 });
 
 //eventos jquery
@@ -466,9 +475,10 @@ $(document).on("submit", "#formPresupuesto", function (e) {
     });
 });
 
+/**---------------------PAUSAR SOLICITUD---------------------- */
 $(document).on('click', '#request', function () {
     let num_table = $(this).attr('data-num-table');
-   var data = num_table == 1 ?  escrituracionTable.row($(this).parents('tr')).data() :  escrituracionTableTest.row($(this).parents('tr')).data();
+   var data = num_table == 1 ?  escrituracionTable.row($(this).parents('tr')).data() : (num_table == 2 ? escrituracionTableTest.row($(this).parents('tr')).data() : escrituracionPausadas.row($(this).parents('tr')).data() );
     //var data = escrituracionTable.row($(this).parents('tr')).data();
     document.getElementById('actividad_siguiente').innerHTML = '';
     // document.getElementById('notariaVo').innerHTML = '';
@@ -484,6 +494,55 @@ $(document).on('click', '#request', function () {
     let type = $(this).attr('data-type');
      $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
     $("#approveModal").modal();
+});
+/**---------------------------------------------------------- */
+
+$(document).on('click', '#pausarSolicitud', function () {
+   var data = escrituracionTable.row($(this).parents('tr')).data();
+   document.getElementById('labelmodal').innerHTML = 'Pausar solicitud';
+   $('#comentarioPausa').attr('placeholder','Motivo de la pausa');
+    $('#id_solicitud').val(data.id_solicitud);
+    $('#accion').val(1);
+    $("#modalPausar").modal();
+});
+$(document).on('click', '#borrarSolicitud', function () {
+   var data = escrituracionTable.row($(this).parents('tr')).data();
+   document.getElementById('labelmodal').innerHTML = 'Borrar solicitud';
+   //document.getElementById('comentarioPausa')[0].placeholder = 'Descripción del por que se elimna la solicitud';
+   $('#comentarioPausa').attr('placeholder','Descripción del por que se elimina la solicitud');
+    $('#id_solicitud').val(data.id_solicitud);
+    $('#baderaCliente').val($(this).attr('data-banderaEscrituracion'));
+    $('#idCliente').val($(this).attr('data-banderaEscrituracion'));
+    $('#idLote').val($(this).attr('data-banderaEscrituracion'));
+    $('#accion').val(2);
+    $("#modalPausar").modal();
+});
+$(document).on("submit", "#formPausar", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#id_solicitud").val();
+    let data = new FormData($(this)[0]);
+    let accion =  $('#accion').val();
+    data.append("idSolicitud", idSolicitud);
+    $('#spiner-loader').removeClass('hide');
+    $.ajax({
+        url: accion == 1 ? "pausarSolicitud" : "borrarSolicitud",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            if (response == 1) {
+                $("#modalPausar").modal("hide");
+                $('#spiner-loader').addClass('hide');
+                   escrituracionTable.ajax.reload(null,false);
+                   escrituracionPausadas.ajax.reload(null,false);
+            }
+        }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+        }
+    });
 });
 
 $(document).on('click', '.comentariosModel', function (e) {
@@ -1037,6 +1096,7 @@ function fillTable(beginDate, endDate, estatus) {
                     switch (d.id_estatus) {
     
                             case 1: 
+                                group_buttons +=`<button id="borrarSolicitud" data-idLote="${d.id_lote}" data-idCliente="${d.id_cliente}" data-banderaEscrituracion="${d.banderaEscrituracion}" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Borrar solicitud"><i class="fa fa-trash"></i></button>`;
                                 bandera_request = userType == 55 ? 1 : 0;
                             break;
                             case 2:
@@ -1163,6 +1223,7 @@ function fillTable(beginDate, endDate, estatus) {
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                        group_buttons += `<button id="pausarSolicitud" data-idSolicitud=${d.id_solicitud} class="btn-data btn-orangeYellow" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Pausar solicitud"><i class="fas fa-pause"></i></button>`;
                                         bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1) ? 1 : (d.id_notaria != 0 && d.documentosCargados == 1 && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) ? 1 : 0) ;                                        
                                         bandera_reject = 1;
                                     }
@@ -1482,8 +1543,9 @@ function fillTableCarga(beginDate, endDate, estatus) {
 // Termina el llenado para la tabla de carga testimonio
 
 /**-----------TABLA DE SOLICITUDES PAUSADAS-------------- */
+
 function tablaSolicitudesPausadas() {
-    escrituracionTableTest = $('#pausadas_tabla').DataTable({
+    escrituracionPausadas = $('#pausadas_tabla').DataTable({
     dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: "100%",
     scrollX: true,
@@ -1554,7 +1616,6 @@ function tablaSolicitudesPausadas() {
         {
             "width": "2.5%",
             data: function (d) {
-                //return d.tipo == 1 || d.tipo == 3 ? d.comentarios : d.tipo == 2 || d.tipo == 4? d.motivos_rechazo : d.tipo == 5 ? '':'';
                 return d.ultimo_comentario
             }
         },
@@ -1567,23 +1628,16 @@ function tablaSolicitudesPausadas() {
         {
             "width": "2.5%",
             data: function (d) {
-                var aditional;
                 var group_buttons = '';     
-                let formBoton = '';
-                let permiso;
-                let btnsAdicionales = '';
                 let bandera_request=0;
                 var datosEstatus = {
                     area_sig: d.area_sig,
                     nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                 }; 
                 switch (d.id_estatus) {
-                        case 47:
-                        case 50: 
-                        if (userType == 57 && d.id_titulacion == idUser) { 
-                            bandera_request = d.expediente != null ? 1 : 0;
-                            permiso = 1;
-                            group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
+                        case 54: 
+                        if (userType == 55 ) { 
+                            bandera_request = 1;
                         }
                         break;
                     default:
@@ -1591,7 +1645,7 @@ function tablaSolicitudesPausadas() {
                 }
                 $('[data-toggle="tooltip"]').tooltip();
                 if(bandera_request == 1){
-                    group_buttons += `<button id="request" data-num-table="2" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                    group_buttons += `<button id="request" data-num-table="3" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                 }
                 group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
                 return '<div class="d-flex justify-center">' + group_buttons + '<div>';
@@ -1611,7 +1665,7 @@ function tablaSolicitudesPausadas() {
         data: {
             "beginDate": 0,
             "endDate": 0,
-            "estatus": 0,
+            "estatus": 2,
             "tipo_tabla": 2
         }
     }
@@ -1670,6 +1724,9 @@ function setInitialValues() {
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
     fillTable(0, 0, $('#estatusE').val());
     fillTableCarga(0, 0, $('#estatusE').val());
+    tablaSolicitudesPausadas(); // SE EJECUTA FUNCIÓN QUE LLENA TABLA DE SOLICITUDES PAUSADAS
+
+
 }
 
 function getMotivosRechazos(tipo_documento,estatus) {
@@ -2153,6 +2210,7 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
            
         escrituracionTable.ajax.reload( null , false );
         escrituracionTableTest.ajax.reload(null,false);
+        escrituracionPausadas.ajax.reload(null,false);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }

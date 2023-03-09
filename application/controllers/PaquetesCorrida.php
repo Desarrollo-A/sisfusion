@@ -402,7 +402,7 @@ public function getPaquetes(){
   3.-AmbosPlanes
   */  
   $ArrPAquetes = array();
-  $TipoLote = $this->input->post("tipoLote");
+  $TipoLote = $this->input->post("tipolote");
   if($TipoLote == 1){ //Habitacional
     $query_tipo_lote = 'and c.tipo_lote = 0 ';
   }else if($TipoLote == 2){ // Comercial

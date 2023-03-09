@@ -43,7 +43,7 @@
                                 <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
                             </li>
                             <li>
-                                <a href="#pausadas" role="tab" id="pausadas_tabla" data-toggle="tab">Solicitudes pausadas</a>
+                                <a href="#pausadas" role="tab" id="tabla_pausadas" data-toggle="tab">Solicitudes pausadas</a>
                             </li>
                         </ul>
                         <div class="card card no-shadow m-0" >
