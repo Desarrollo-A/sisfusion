@@ -7,6 +7,37 @@
  
 
 </style>
+
+<!-------->
+<div class="modal fade" id="modalPausar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b id="labelmodal">Pausar solicitud</b></h4>
+
+            </div>
+            
+            <form id="formPausar" name="formPausar" method="post">
+                <div class="modal-body">
+                    <textarea class="text-modal scroll-styles" max="255" type="text" name="comentarioPausa" id="comentarioPausa" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Motivo de la pausa"></textarea>
+                    <b id="text-observations" class="text-danger"></b>
+                    <input type="hidden" name="id_solicitud" id="id_solicitud">
+                    <input type="hidden" name="accion" id="accion">
+                    <input type="hidden" name="banderaCliente" id="banderaCliente">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="botonPausar" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--------> 
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
