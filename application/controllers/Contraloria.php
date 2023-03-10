@@ -12,7 +12,7 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url','form', 'email/comentarios_correos'));
+		// $this->load->helper(array('url','form', 'email/comentarios_correos'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
