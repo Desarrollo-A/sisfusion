@@ -11,7 +11,7 @@ class Contraloria extends CI_Controller {
 		$this->load->model('Clientes_model');
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
-		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->library(array('session','form_validation', 'get_menu','Formatter'));
 		$this->load->helper(array('url','form', 'email/comentarios_correos'));
 		$this->load->database('default');
 		$this->validateSession();
@@ -3464,21 +3464,12 @@ public function return1(){
 			case '2807': //Mariela Sánchez Sánchez
 			case '2826': //Ana Laura García Tovar
 			case '2767': //Irene Vallejo
-				$this->load->view('template/header');
-	 			$this->load->view("contraloria/vista_lotes_precio_enganche",$datos);
-				break;
 			case '2754': //Gabriela Hernández Tovar
-				$this->load->view('template/header');
-	 			$this->load->view("contraloria/vista_lotes_enganche_sede",$datos);
-				break;
 			case '2749': //Ariadna Martínez
-				$this->load->view('template/header');
-	 			$this->load->view("contraloria/vista_lotes_sede",$datos);
-				break;
 			case '1297': //María de Jesús
 			case '826': //Victor Hugo
 				$this->load->view('template/header');
-				$this->load->view("contraloria/vista_lotes_apartados",$datos);
+				$this->load->view("contraloria/vista_lotes_precio_enganche",$datos);
 				break;
 			default:
 				echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -3543,17 +3534,24 @@ public function return1(){
 
 	public function updateLotePrecioEnganche(){
 		$idLote = $_POST['idLote'];
-
-		$data = $this->Contraloria_model->get_datos_lotes($idLote);
 		$data = array(
-			"totalNeto2" => $this->formatter->removeNumberFormat($_POST['preciodesc']),
-			"totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']));
+			"usuario" => $this->session->userdata('id_usuario')
+		);
+		//echo $_POST['preciodesc'];
+		//echo "<br>";
+		//echo $_POST['enganches'];
 
-		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-		echo json_encode($response);
+		empty($_POST['preciodesc']) ? '' : (($_POST['registroComision'] == 0 || $_POST['registroComision'] == 8) ? $data['totalNeto2'] = $this->formatter->removeNumberFormat($_POST['preciodesc']) : '');
+		empty($_POST['enganches']) ? '' : $data['totalNeto'] = $this->formatter->removeNumberFormat($_POST['enganches']);
+		empty($_POST['ubicacion_sede']) ? : $data['ubicacion'] = $_POST['ubicacion_sede'];
+
+		//var_dump($data);
+
+		//$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		//echo json_encode($response);
 	}
 
-	public function updateLoteEngancheSede(){
+	/*public function updateLoteEngancheSede(){
 		$idLote = $_POST['idLote'];
 
 		$data = $this->Contraloria_model->get_datos_lotes($idLote);
@@ -3574,7 +3572,7 @@ public function return1(){
 
 		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
 		echo json_encode($response);
-	}
+	}*/
 
 	public function reporte_diario(){
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           

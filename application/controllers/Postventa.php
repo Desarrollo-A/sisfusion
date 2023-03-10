@@ -1706,14 +1706,15 @@ class Postventa extends CI_Controller
     //INFORMACIÓN ADMIN
     public function newInformacion()
     {
+        $replace = ["$", ","];
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
-             "aportacion" => $data['aportaciones'],
-            "descuento" => $data['descuentos'],
+             "aportacion" => str_replace($replace,"",$data['aportaciones']),
+            "descuento" => str_replace($replace,"",$data['descuentos']),
             "motivo" => $data['motivo']
         );
         ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",strtotime($data['fechaCAI']));
