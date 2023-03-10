@@ -3326,7 +3326,6 @@ public function LiquidarLote(){
       $IdUsuario = $this->input->post("usuarioid");
       $comentario = $this->input->post("comentario");
       $tipo = $this->input->post("tipo");
-      $tipo = $this->input->post("tipo");
       $idUsu = intval($this->session->userdata('id_usuario')); 
       $pesos = str_replace(",", "", $monto);
       
