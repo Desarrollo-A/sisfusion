@@ -1,4 +1,13 @@
 
+function formatMoney( n ) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? "." : d,
+    t = t == undefined ? "," : t,
+    s = n < 0 ? "-" : "",
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -1875,8 +1884,8 @@ function getNotarias(datos=null) {
        //   $('select[name=estatusPago]').val(data.estatus_pago);
        //   $('select[name=estatusPago]').change();
            // $("#estatusPago").selectpicker('refresh');
-           $('#aportaciones').val(data.aportacion);
-           $('#descuentos').val(data.descuento);
+           $('#aportaciones').val('$'+formatMoney(data.aportacion));
+           $('#descuentos').val('$'+formatMoney(data.descuento));
            $('#motivo').val(data.motivo);
            $('#superficie').val(data.superficie);
 
@@ -2641,8 +2650,8 @@ function getBudgetInformacion(idSolicitud){
         let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
         $('#fechaCAI').val(fechaAnterior);
         $('#rfcDatosI').val(data.RFC);
-        $('#aportacionesI').val(data.aportacion);
-        $('#descuentosI').val(data.descuento);
+        $('#aportacionesI').val('$'+formatMoney(data.aportacion));
+        $('#descuentosI').val('$'+formatMoney(data.descuento));
         $('#motivoI').val(data.motivo);
         
         $('#spiner-loader').addClass('hide');

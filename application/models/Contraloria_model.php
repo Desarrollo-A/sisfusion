@@ -858,7 +858,8 @@ class Contraloria_model extends CI_Model {
 									CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
 									CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
 									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
-									sl.nombre as lote, sc.nombreStatus as contratacion
+									sl.nombre as lote, sc.nombreStatus as contratacion,
+									(CASE WHEN hl.idLote IS NULL THEN 0 ELSE 1 END) validacion_estatus_9,lot.registro_comision
 								FROM clientes cli
 									INNER JOIN lotes lot ON lot.idLote = cli.idLote
 									LEFT JOIN sedes s ON s.id_sede = lot.ubicacion
@@ -869,6 +870,10 @@ class Contraloria_model extends CI_Model {
 									LEFT JOIN usuarios asesor ON cli.id_asesor = asesor.id_usuario
 									LEFT JOIN usuarios coordinador ON cli.id_coordinador = coordinador.id_usuario
 									LEFT JOIN usuarios gerente ON cli.id_gerente = gerente.id_usuario
+									LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado 
+												FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl 
+												ON hl.idLote = lot.idLote AND hl.idCliente = cli.id_cliente
+									
 								WHERE cli.status = 1 AND cli.idLote = ".$lote."");
 	}
 
