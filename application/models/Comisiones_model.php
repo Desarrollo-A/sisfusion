@@ -4643,7 +4643,7 @@ function getBonosPorUserContra($estado){
         $filtro = "and u.id_rol in(18, 19, 20, 25, 26, 27, 28, 30, 36)  ";
     return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
     CASE WHEN u.nueva_estructura = 2 THEN opcx2.nombre ELSE opcx.nombre END as id_rol, p.id_bono,
-    p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,
+    p.id_usuario,p.monto,p.num_pagos,b.abono pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,
     (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto, u.rfc
     FROM bonos p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
     INNER JOIN pagos_bonos_ind b on b.id_bono = p.id_bono 
@@ -7948,7 +7948,7 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
                     $filtro="and d.estado in(2,6)";
         
                 }
-                return  $respuesta = $this->db->query("select sum( (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) ) as impuesto1
+                return  $respuesta = $this->db->query("select sum( (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)* d.abono) ELSE d.abono END) ) as impuesto1
                 FROM bonos p 
                LEFT JOIN pagos_bonos_ind d ON d.id_bono=p.id_bono
                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
