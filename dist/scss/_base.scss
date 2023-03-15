@@ -427,7 +427,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-green{
     color: $green;
     border: none;
-    background-color: $greenOpacity;
+    background-color: #28b46218;
 }
 .btn-green:hover{
     background-color: $green;
@@ -435,7 +435,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-green-excel{
     color: $greenExcel;
-    border: 1px solid $greenExcel;
+    border: none;
+    background: #209E6318;
 }
 .btn-green-excel:hover{
     background-color: $greenExcel;
@@ -444,7 +445,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-gray{
     color: $gray;  
     border: none;
-    background-color: $grayOpacity;
+    background-color: #33333318;
 }
 .btn-gray:hover{
     background-color: $gray;
@@ -453,7 +454,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-violetDeep{
     color: $violet;
     border: none;
-    background-color: $violetOpacity;
+    background-color: #70249718;
 }
 .btn-violetDeep:hover{
     background-color: $violet;
@@ -462,7 +463,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-deepGray{
     color: $deepGray;
     border: none;
-    background-color: $deepGray;
+    background-color: #92929218;
 }
 .btn-deepGray:hover{
     color: $deepGray;
@@ -471,7 +472,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-blueMaderas{
     color: $blueMaderas;
     border: none;
-    background-color: $blueMaderasOpacity;
+    background-color: #0a538b18;
 }
 .btn-blueMaderas:hover{
     background-color: $blueMaderas;
@@ -479,7 +480,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetChin{
     color:$violetChin;
-    border: 1px solid $violetChin;
+    border: none;
+    background-color: #8E6C8818;
 }
 .btn-violetChin:hover {
     background-color: $violetChin;
@@ -488,7 +490,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-violetBoots{
     color:$violetBoots;
     border: none;
-    background-color: $violetBootsOpacity;
+    background-color: #563D7C18;
 }
 .btn-violetBoots:hover {
     background-color: $violetBoots;
@@ -497,7 +499,8 @@ $tv                 : "(min-width: 1280px)";
 
 .btn-orangeYellow{
     color: $orangeYellow;
-    border: 1px solid $orangeYellow;
+    border: none;
+    background-color: #ff980018;
 }
 .btn-orangeYellow:hover {
     background-color: $orangeYellow;
@@ -506,16 +509,16 @@ $tv                 : "(min-width: 1280px)";
 .btn-sky{
     color: $sky;
     border: none;
-    background-color: $skyOpacity;
+    background-color: #00bcd418;
 }
 .btn-sky:hover {
     background-color: $sky;
     color: $white !important;
 }
 .btn-warning{
-    color: $red;
+    color:$red;
     border: none;
-    background: $redOpacity;
+    background-color: #c0131318;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
@@ -523,7 +526,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-acidGreen{
     color:$acidGreen;
-    border: 1px solid $acidGreen;
+    border: none;
+    background-color: #AFB42B18;
 }
 .btn-acidGreen:hover {
     background-color: $acidGreen;
@@ -532,7 +536,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-details-grey{
     color:$grey9;
     border:none;
-    background-color: $grey9Opacity;
+    background-color: #99999918;
 }
 .btn-details-grey:hover{
     background:$grey9;

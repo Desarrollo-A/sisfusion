@@ -159,7 +159,7 @@ $("#tabla_estatus3").ready( function(){
                 "data": function( d ){
                     var lblStats = d.idMovimiento;
 
-                    if(d.idMovimiento==100)
+                    if(d.idMovimiento==100 || d.idMovimiento==102)
                     {
                         lblStats ='<span class="label label-danger">Correción</span>';
                     }
@@ -212,7 +212,7 @@ $("#tabla_estatus3").ready( function(){
 
                     var fechaVenc;
 
-                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84) {
+                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84 || d.idStatusContratacion == 3 && d.idMovimiento == 98) {
                         fechaVenc = d.fechaVenc;
                     } else if (d.idStatusContratacion == 2 && d.idMovimiento == 74 || d.idStatusContratacion == 2 && d.idMovimiento == 93) {
                         fechaVenc = 'Vencido';
@@ -266,12 +266,14 @@ $("#tabla_estatus3").ready( function(){
                         cntActions = 'En proceso de Liberación';
 
                     } else {
-                        if(data.idStatusContratacion == 3 && data.idMovimiento == 98 || data.idStatusContratacion == 3 && data.idMovimiento == 100)
+                        if(data.idStatusContratacion == 3 && data.idMovimiento == 98 || data.idStatusContratacion == 3
+                            && data.idMovimiento == 100 || data.idStatusContratacion == 3 && data.idMovimiento == 102)
                         {
+                            let correccion_mov = (data.idMovimiento == 102) ? 1 : 0;
 
                             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
-                                'data-tipo-venta="'+data.tipo_venta+'" class="stat5Rev btn-data btn-green" title="Registrar estatus">' +
+                                'data-tipo-venta="'+data.tipo_venta+'" class="stat5Rev btn-data btn-green" title="Registrar estatus" data-correccion="'+correccion_mov+'">' +
                                 '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
 
 
@@ -439,6 +441,7 @@ $(document).on('click', '.stat5Rev', function () {
     $('#idClienteenvARevCE').val($(this).attr('data-idCliente'));
     $('#fechaVencenvARevCE').val($(this).attr('data-fecVen'));
     $('#nomLoteFakeenvARevCE').val($(this).attr('data-nomLote'));
+    $('#movimientoLote').val($(this).attr('data-correccion'));
     $('#tvLbl').removeClass('hide');
 
     if (tipoVenta == 1) {
@@ -472,6 +475,7 @@ function preguntaenvARevCE() {
     var ubicacion = $("#ubicacion").val();
     var comentario = $("#comentarioenvARevCE").val();
     var tipo_venta = $('#tipo_ventaenvARevCE').val();
+    var movimientoLote = $('#movimientoLote').val();
 
 
     var parametros = {
@@ -482,7 +486,8 @@ function preguntaenvARevCE() {
         "fechaVenc": fechaVenc,
         "ubicacion" : ubicacion,
         "comentario": comentario,
-        "tipo_venta": tipo_venta
+        "tipo_venta": tipo_venta,
+        "movimientoLote": movimientoLote
     };
 
 

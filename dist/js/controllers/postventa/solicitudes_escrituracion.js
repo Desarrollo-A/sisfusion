@@ -1,4 +1,13 @@
 
+function formatMoney( n ) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? "." : d,
+    t = t == undefined ? "," : t,
+    s = n < 0 ? "-" : "",
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -21,6 +30,16 @@ $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
+$('#pausadas_tabla thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#pausadas_tabla').DataTable().column(i).search() !== this.value ) {
+            $('#pausadas_tabla').DataTable().column(i).search(this.value).draw();
+        }
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
 
 $('#notas-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -32,7 +51,7 @@ $('#notas-datatable thead tr:eq(0) th').each( function (i) {
     });
 });
  
-sp = { // MJ: SELECT PICKER
+sp = { 
     initFormExtendedDatetimepickers: function () {
         var today = new Date();
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -56,7 +75,7 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
-sp2 = { // CHRIS: SELECT PICKER
+sp2 = { 
     initFormExtendedDatetimepickers: function () {
         $('.datepicker2').datetimepicker({
             format: 'DD/MM/YYYY LT',
@@ -102,7 +121,6 @@ $(document).ready(function () {
     });
 
     getRejectionReasons(2); // MJ: SE MANDAN TRAER LOS MOTIVOS DE RECHAZO PARA EL ÁRBOL DE DOCUMENTOS DE ESCRUTURACIÓN
-
 });
 
 //eventos jquery
@@ -345,13 +363,19 @@ $(document).on("click", "#sendRequestButton", function (e) {
         $('#uploadFileButton').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-if(id_estatus == 19 || id_estatus == 22 && documento_validar == 1){
+if(id_estatus == 19 || id_estatus == 22 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
-    documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+    console.log(indexidDocumentos)
+    if(indexidDocumentos >= 0){
+        documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+    }
 }
-if(id_estatus == 20 || id_estatus == 25 && documento_validar == 1){
+if(id_estatus == 20 || id_estatus == 25 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
-    documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+    console.log(indexidDocumentos)
+    if(indexidDocumentos >= 0){
+        documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+    }
 }
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
@@ -460,9 +484,10 @@ $(document).on("submit", "#formPresupuesto", function (e) {
     });
 });
 
+/**---------------------PAUSAR SOLICITUD---------------------- */
 $(document).on('click', '#request', function () {
     let num_table = $(this).attr('data-num-table');
-   var data = num_table == 1 ?  escrituracionTable.row($(this).parents('tr')).data() :  escrituracionTableTest.row($(this).parents('tr')).data();
+   var data = num_table == 1 ?  escrituracionTable.row($(this).parents('tr')).data() : (num_table == 2 ? escrituracionTableTest.row($(this).parents('tr')).data() : escrituracionPausadas.row($(this).parents('tr')).data() );
     //var data = escrituracionTable.row($(this).parents('tr')).data();
     document.getElementById('actividad_siguiente').innerHTML = '';
     // document.getElementById('notariaVo').innerHTML = '';
@@ -478,6 +503,55 @@ $(document).on('click', '#request', function () {
     let type = $(this).attr('data-type');
      $('#type').val(data.id_estatus == 1 ? 2 :(data.id_estatus == 12 ? 4 : 1));
     $("#approveModal").modal();
+});
+/**---------------------------------------------------------- */
+
+$(document).on('click', '#pausarSolicitud', function () {
+   var data = escrituracionTable.row($(this).parents('tr')).data();
+   document.getElementById('labelmodal').innerHTML = 'Pausar solicitud';
+   $('#comentarioPausa').attr('placeholder','Motivo de la pausa');
+    $('#id_solicitud').val(data.id_solicitud);
+    $('#accion').val(1);
+    $("#modalPausar").modal();
+});
+$(document).on('click', '#borrarSolicitud', function () {
+   var data = escrituracionTable.row($(this).parents('tr')).data();
+   document.getElementById('labelmodal').innerHTML = 'Borrar solicitud';
+   //document.getElementById('comentarioPausa')[0].placeholder = 'Descripción del por que se elimna la solicitud';
+   $('#comentarioPausa').attr('placeholder','Descripción del por que se elimina la solicitud');
+    $('#id_solicitud').val(data.id_solicitud);
+    $('#baderaCliente').val($(this).attr('data-banderaEscrituracion'));
+    $('#idCliente').val($(this).attr('data-banderaEscrituracion'));
+    $('#idLote').val($(this).attr('data-banderaEscrituracion'));
+    $('#accion').val(2);
+    $("#modalPausar").modal();
+});
+$(document).on("submit", "#formPausar", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#id_solicitud").val();
+    let data = new FormData($(this)[0]);
+    let accion =  $('#accion').val();
+    data.append("idSolicitud", idSolicitud);
+    $('#spiner-loader').removeClass('hide');
+    $.ajax({
+        url: accion == 1 ? "pausarSolicitud" : "borrarSolicitud",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            if (response == 1) {
+                $("#modalPausar").modal("hide");
+                $('#spiner-loader').addClass('hide');
+                   escrituracionTable.ajax.reload(null,false);
+                   escrituracionPausadas.ajax.reload(null,false);
+            }
+        }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+        }
+    });
 });
 
 $(document).on('click', '.comentariosModel', function (e) {
@@ -542,7 +616,7 @@ $(document).on('click', '#presupuesto', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
 
-    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11)){
+    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.id_estatus == 36)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
@@ -903,7 +977,7 @@ $(document).on('click', '.saveNotaria', function() {
     if (tr.find('select').val()) {
         saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
     }else{
-        alerts.showNotification("top", "right", "Debe seleccionar una notaria", "warning");
+        alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
     }
 })
 
@@ -1021,14 +1095,17 @@ function fillTable(beginDate, endDate, estatus) {
                     let btnsAdicionales = ''; //variable para botones que se envian a la funcion de permisos
                     let permiso;
                     let bandera_request=0;
-                    let  bandera_reject = 0;
+                    let bandera_reject = 0;
+                    let banderaAdmin=0;
                     var datosEstatus = {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
                     }; 
+                     
                     switch (d.id_estatus) {
     
                             case 1: 
+                                group_buttons +=`<button id="borrarSolicitud" data-idLote="${d.id_lote}" data-idCliente="${d.id_cliente}" data-banderaEscrituracion="${d.banderaEscrituracion}" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Borrar solicitud"><i class="fa fa-trash"></i></button>`;
                                 bandera_request = userType == 55 ? 1 : 0;
                             break;
                             case 2:
@@ -1064,12 +1141,14 @@ function fillTable(beginDate, endDate, estatus) {
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR  
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     bandera_reject = 1;
                                     bandera_request = d.contrato == 1 ? 1 : 0;
                                 }
                                 if (userType == 11 && (d.bandera_admin == 0 || d.bandera_admin == null) && d.bandera_comite == 1) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
                                     // BOTON APROBAR
+                                    banderaAdmin=1;
                                     bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != 0) ? 1 : 0;
                                     group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
                                 }
@@ -1080,12 +1159,12 @@ function fillTable(beginDate, endDate, estatus) {
                                     group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                 }
                             break;
-                            case 7:
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {      
+                            case 7: 
+                                if (userType == 56) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR
+                                    group_buttons += `<button id="estatusL" data-estatus-construccion="${d.estatus_construccion}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Estatus del lote"><i class="fa fa-pencil-square-o"></i></button>`;   
                                     bandera_request = 1;
-                                    bandera_reject = 1;
                                 }
                             break;
                             case 6:
@@ -1094,12 +1173,12 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
-                                    bandera_reject = 1;
                                     bandera_request = d.contrato == 1 ? 1 : 0;
                                 }
                             break;
                             case 9:
                             case 11:
+                            case 36:
                                 if (userType == 55) { 
                                     bandera_request = (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? 1 : 0;
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
@@ -1148,11 +1227,12 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 19:
                             case 22:
-                                case 24:
+                            case 24:
                                     if (userType == 55) { 
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
+                                        group_buttons += `<button id="pausarSolicitud" data-idSolicitud=${d.id_solicitud} class="btn-data btn-orangeYellow" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Pausar solicitud"><i class="fas fa-pause"></i></button>`;
                                         bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1) ? 1 : (d.id_notaria != 0 && d.documentosCargados == 1 && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) ? 1 : 0) ;                                        
                                         bandera_reject = 1;
                                     }
@@ -1160,7 +1240,8 @@ function fillTable(beginDate, endDate, estatus) {
                             case 20:
                             case 25:
                                     if (userType == 57 && d.id_titulacion == idUser) { 
-
+                                        
+                                   //     group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                         bandera_reject = 1;
@@ -1168,6 +1249,7 @@ function fillTable(beginDate, endDate, estatus) {
                             break;
                             case 34:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
+                                    //group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
@@ -1177,7 +1259,6 @@ function fillTable(beginDate, endDate, estatus) {
                                 if (userType == 57 && d.id_titulacion == idUser) { 
                                     //BOTONES DANI
                                     bandera_request = 1;
-                                    bandera_reject = 1;
                                 }
                             break;
                             case 26:
@@ -1296,6 +1377,8 @@ function fillTable(beginDate, endDate, estatus) {
                     }
                     $('[data-toggle="tooltip"]').tooltip();
                     if(bandera_request == 1){
+                       d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
+                       d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'APE0004 - RECEPCIÓN DE ESTATUS DE CONSTRUCCIÓN - POSTVENTA' : d.nombre_estatus_siguiente;
                         group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
@@ -1428,7 +1511,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
                 switch (d.id_estatus) {
                         case 47:
                         case 50: 
-                        if (userType == 57) { 
+                        if (userType == 57 && d.id_titulacion == idUser) { 
                             bandera_request = d.expediente != null ? 1 : 0;
                             permiso = 1;
                             group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
@@ -1467,6 +1550,138 @@ function fillTableCarga(beginDate, endDate, estatus) {
 });
 };
 // Termina el llenado para la tabla de carga testimonio
+
+/**-----------TABLA DE SOLICITUDES PAUSADAS-------------- */
+
+function tablaSolicitudesPausadas() {
+    escrituracionPausadas = $('#pausadas_tabla').DataTable({
+    dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: "100%",
+    scrollX: true,
+    pagingType: "full_numbers",
+    language: {
+        url: "../static/spanishLoader_v2.json",
+        paginate: {
+            previous: "<i class='fa fa-angle-left'>",
+            next: "<i class='fa fa-angle-right'>"
+        }
+    },
+    destroy: true,
+    ordering: false,
+    columns: [
+        {
+            "width": "2%",
+            data: function (d) {
+                return d.id_solicitud
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.nombreResidencial
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.nombreLote
+            }
+        },
+        {
+            data: function (d) {
+                return d.cliente;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.valor_contrato;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.fecha_creacion;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center>${d.area}</center>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return `<center>${d.asignada_a}</center>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return d.ultimo_comentario
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
+            }
+        },
+        {
+            "width": "2.5%",
+            data: function (d) {
+                var group_buttons = '';     
+                let bandera_request=0;
+                var datosEstatus = {
+                    area_sig: d.area_sig,
+                    nombre_estatus_siguiente: d.nombre_estatus_siguiente,
+                }; 
+                switch (d.id_estatus) {
+                        case 54: 
+                        if (userType == 55 ) { 
+                            bandera_request = 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                $('[data-toggle="tooltip"]').tooltip();
+                if(bandera_request == 1){
+                    group_buttons += `<button id="request" data-num-table="3" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                }
+                group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Historial de Comentarios"><i class="fa fa-history"></i></button>`;
+                return '<div class="d-flex justify-center">' + group_buttons + '<div>';
+            }
+        },
+    ],
+    columnDefs: [{
+        "searchable": true,
+        "orderable": false,
+        "targets": 0
+    }
+    ],
+    ajax: {
+        url: 'getSolicitudes',
+        type: "POST",
+        cache: false,
+        data: {
+            "beginDate": 0,
+            "endDate": 0,
+            "estatus": 2,
+            "tipo_tabla": 2
+        }
+    }
+
+});
+};
+/**--------------FIN DE SOLICITUDES PAUSADAS------------- */
 
 function email(idSolicitud, action, notaria = null, valuador= null) {
     $('#spiner-loader').removeClass('hide');
@@ -1518,6 +1733,9 @@ function setInitialValues() {
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
     fillTable(0, 0, $('#estatusE').val());
     fillTableCarga(0, 0, $('#estatusE').val());
+    tablaSolicitudesPausadas(); // SE EJECUTA FUNCIÓN QUE LLENA TABLA DE SOLICITUDES PAUSADAS
+
+
 }
 
 function getMotivosRechazos(tipo_documento,estatus) {
@@ -1666,8 +1884,8 @@ function getNotarias(datos=null) {
        //   $('select[name=estatusPago]').val(data.estatus_pago);
        //   $('select[name=estatusPago]').change();
            // $("#estatusPago").selectpicker('refresh');
-           $('#aportaciones').val(data.aportacion);
-           $('#descuentos').val(data.descuento);
+           $('#aportaciones').val('$'+formatMoney(data.aportacion));
+           $('#descuentos').val('$'+formatMoney(data.descuento));
            $('#motivo').val(data.motivo);
            $('#superficie').val(data.superficie);
 
@@ -1855,7 +2073,7 @@ let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
     documentosObligatorios = [];
     var filtered = data.filter(function(value){ 
-        if(value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1){
+        if((value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1) || (value.tipo_documento == 12 && (value.estatus_solicitud == 48 || value.estatus_solicitud == 51 || value.estatus_solicitud == 53))){
         }else{
             return value;
         }
@@ -1881,8 +2099,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
-        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></td>`;
-       //${v.editado == 1 ? `<br><span class="label" style="background:${v.colour}">EDITADO</span>`:``} Este frangmento va en la linea de arriba(a considerar)
+        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label" style="background:#C0952B">EDITADO</span>`:``} </td>`;
         /*data-action = 1 (UPLOAD FILE)
         data-action = 2 (DELETE FILE)*/
 
@@ -1911,7 +2128,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24)){
 
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documento-validar="${v.documento_a_validar}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-            solicitudes += v.documento_a_validar == 1 ? `` : '' ;
         }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
         else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25)) {
             if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
@@ -1930,7 +2146,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         }//PENDIENTE SI BORRAR O NO
         else if (permisos == 1 && v.ev == null && v.estatus_solicitud == 13 && v.tipo_documento == 7){
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        }else if (permisos == 2 && v.ev == null && v.estatus_solicitud == 22 && (v.tipo_documento == 16 || v.tipo_documento == 22)){            
+        }else if (permisos == 2 && v.ev == null && v.estatus_solicitud == 23  && (v.tipo_documento == 14 || v.tipo_documento == 19)){            
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="3" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;   
         }else if (permisos == 1 && v.ev == null && v.estatus_solicitud == 23 && (v.tipo_documento == 16 || v.tipo_documento == 22)){            
             solicitudes += ``;
@@ -2003,6 +2219,7 @@ function changeStatus(id_solicitud, action, comentarios, type, notaria,area_rech
            
         escrituracionTable.ajax.reload( null , false );
         escrituracionTableTest.ajax.reload(null,false);
+        escrituracionPausadas.ajax.reload(null,false);
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -2067,8 +2284,8 @@ $(document).on("submit", "#newNotario", function (e) {
 //MOSTRAR INFORMACION DE LA NOTARIA
 $(document).on('click', '#notaria', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
-    getBudgetNotaria(data.idSolicitud);
-    $('#idSolicitud').val(data.idSolicitud);
+    getinfoNotariaExt(data.id_solicitud);
+    $('#idSolicitud').val(data.id_solicitud);
     $("#gestionNotaria").modal();
 });
 $(document).on('click', '#newNotary', function () {
@@ -2081,8 +2298,8 @@ $(document).on('click', '#newNotary', function () {
     $('#telefono').val('');
     $("#altaNotario").modal();
 });
-function getBudgetNotaria(idSolicitud){
-    $.get('getBudgetNotaria',{
+function getinfoNotariaExt(idSolicitud){
+    $.get('getinfoNotariaExt',{
         idSolicitud:idSolicitud
     }, function(data) {
         $('#nombreNotaria').val(data.nombre_notaria);
@@ -2413,7 +2630,7 @@ function getBudgetInformacion(idSolicitud){
     $.post('getBudgetInformacion',{
         idSolicitud:idSolicitud
     }, function(data) {
-        if(data.id_estatus != 5 && data.id_estatus != 2 && data.id_estatus != 4){
+        if(data.bandera_admin == 1 && data.bandera_comite == 1){
             $('#RequestInformacion').addClass('hide');
             $('#information_campos').addClass('hide');
             document.getElementById('construccionI').disabled = true;
@@ -2433,8 +2650,8 @@ function getBudgetInformacion(idSolicitud){
         let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
         $('#fechaCAI').val(fechaAnterior);
         $('#rfcDatosI').val(data.RFC);
-        $('#aportacionesI').val(data.aportacion);
-        $('#descuentosI').val(data.descuento);
+        $('#aportacionesI').val('$'+formatMoney(data.aportacion));
+        $('#descuentosI').val('$'+formatMoney(data.descuento));
         $('#motivoI').val(data.motivo);
         
         $('#spiner-loader').addClass('hide');
@@ -2486,18 +2703,18 @@ function crearDetailsPresupuestos(data, permisos) {
     let notarias = `<table id="notarias-${data.id_solicitud}" class="table subBoxDetail">`;
     notarias += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     notarias += '<td>' + '<b>' + '# ' + '</b></td>';
-    notarias += '<td>' + '<b>' + 'NOTARIA ' + '</b></td>';
-    notarias += '<td>' + '<b>' + 'DESCRIPCION' + '</b></td>';
+    notarias += '<td>' + '<b>' + 'NOTAÍA ' + '</b></td>';
+    notarias += '<td>' + '<b>' + 'DESCRIPCIÓN' + '</b></td>';
     notarias += '<td>' + '<b>' + 'CARGAR PRESUPUESTOS' + '</b></td>';
     notarias += '</tr>';
-
+    let accion = userType == 55 ? 'Ver' : 'Subir';
     for(let i = 0;i<3;i++){
         notarias += '<tr>';
         notarias += '<td> ' + (i + 1) + ' </td>';
         notarias += `<td class="d-flex direction-row justify-center align-center"> 
         ${permisos == 1 ? 
                         `<select id="notaria-${i}-${data.id_solicitud}" name="notaria" class="selectpicker select-gral m-0 notaria-select" data-style="btn" data-show-subtext="true"
-                        data-live-search="true" data-container="body" title="Selecciona una notaria" data-size="7" required></select>`: 
+                        data-live-search="true" data-container="body" title="Selecciona una notaría" data-size="7" required></select>`: 
                         `${data.notarias[i] ? data.notarias[i].nombre_notaria:''}`
                     
                 } </td>`;
@@ -2506,7 +2723,7 @@ function crearDetailsPresupuestos(data, permisos) {
         notarias += '<td><div class="d-flex justify-center">';
         notarias += `<button  class="btn-data btn-blueMaderas ${data.notarias[i] != undefined ? 'modalPresupuestos':'saveNotaria'}" 
         data-idNxS ="${data.notarias[i] ? data.notarias[i].idNotariaxSolicitud:null}" data-idSolicitud="${data.id_solicitud}" data-toggle="tooltip" 
-        data-placement="left" title="${data.notarias[i] != undefined ? 'Subir presupuesto':'Guardar notaria'}">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
+        data-placement="left" title="${data.notarias[i] != undefined ? accion+' presupuesto':'Guardar notaria'}">${data.notarias[i] != undefined ? '<i class="fas fa-box-open"></i>':'<i class="far fa-save"></i>'}
         </button>`;
         notarias += '</div></td></tr>';
     }
@@ -2720,393 +2937,7 @@ $(document).on('click', '#bajarConMotivo', function () {
 
     });
 });
-
-$(document).on('click', '#denegartxt', function () {
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-opcIndex = $(this).attr("data-index");
-
-var typeDocument = ipOcion;
-
-
-var datos = []  ;
-var formData = new FormData();
-formData.append('tipoDocumento',typeDocument );
-let denegarTexto = '';
-
-$.ajax({
-    type: 'POST',
-    url: 'motivosRechazos',
-    data: formData,
-    dataType: "json",
-    contentType: false,
-    processData:false,
-    success: function(data) { 
-         denegarTexto += '<br> <select class="form-control titulares"  id="selectMotivo'+opcIndex+'" name="selectMotivo'+opcIndex+'" data-size=".3" >';
-        data.forEach(function(motivos,index ){
-                denegarTexto += '   <option data-proceso="'+motivos.tipo_proceso+'"  value="'+motivos.id_motivo+'//'+motivos.tipo_proceso+'">'+motivos.motivo+'</option>';     
-                datos[index]=motivos;
-         })
-        denegarTexto += '      </select>';
-
-         
-        let BOTON =  '<button id="bajarConMotivo" name="bajarConMotivo" ' +
-        'class="btn-data btn-warning cancelReg "   title="DENEGAR" '+
-        'data-idDocumento="'+idDocumento+'" data-idOpcion="'+ipOcion+'" data-editar="'+opcionEditar+'" '+
-        ' data-index="'+opcIndex+'" > ' +
-        '<i class="fas fa-folder-minus"></i></button>';
-        
-        document.getElementById('opcionesDeRechazo3'+opcIndex).innerHTML = BOTON;
-        document.getElementById('opcionesDeRechazo'+opcIndex).innerHTML = denegarTexto;
-        // opcionesDeRechazo 
-    },
-    error: function()
-    {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-    
-});
-
-});
-// esta funcion es para denegar docuemdocumento 
-$(document).on('click', '#validarDoc', function () {
-idStatus = 1;
-let estatus_validacion = 0;
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-index = $(this).attr("data-index");
-let estatusValidacion = ' ';
-
-let dataMostrar = ' ';
-
-
-$.ajax({
-    url : 'validarDocumento',
-    type : 'POST',
-    dataType: "json",
-    data: 
-    {
-        "estatus_validacion" : estatus,
-        "Iddocumentos" : idDocumento,
-        'idOpcion' : ipOcion, 
-        'opcionEditar': opcionEditar, 
-    }, 
-    success: function(data) {
-        document.getElementById('estatusValidacion'+index).innerHTML = estatusValidacion;
-
-        if(estatus == 1 ){  
-        
-            estatusVal = 'Estatus actual VALIDADO';
-            denegarTexto += '';
-        
-        }else if(estatus == 2){
-            estatusVal = 'Estatus actual DENEGADO';
-        
-        }else{
-            estatusVal = 'Estatus  CARGADO';
-        }
-
-        var estatusmensaje = document.getElementById('estatusValidacion'+index);
-     
-        estatusValidacion += estatusVal;
-        estatusmensaje.innerHTML = estatusValidacion;
-        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-    },              
-    error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
-    }
-
-});
-
-})
-
-
-
-// esta funcion es para validar documento 
-$(document).on('click', '#visualizarDoc', function () {
-idStatus = 1;
-denegarTexto =''; 
-let estatus_validacion = 0;
-idDocumento = $(this).attr("data-idDocumento");
-ipOcion = $(this).attr("data-idOpcion");
-opcionEditar = $(this).attr("data-editar");
-estatus = $(this).attr("data-editar");
-index = $(this).attr("data-index");
-let estatusValidacion = ' ';
-
-let dataMostrar = ' ';
-
-if(estatus == 1 ){  
-    
-}else if(estatus == 2){
-
-}
-
-$.ajax({
-    url : 'validarDocumento',
-    type : 'POST',
-    dataType: "json",
-    data: 
-    {
-        "estatus_validacion" : estatus,
-        "Iddocumentos" : idDocumento,
-        'idOpcion' : ipOcion, 
-        'opcionEditar': opcionEditar, 
-    }, 
-    success: function(data) {
-        document.getElementById('estatusValidacion'+index).innerHTML = estatusValidacion;
-
-        if(estatus == 1 ){  
-        
-            estatusVal = 'Estatus actual VALIDADO';
-            denegarTexto += '';
-        
-        }else if(estatus == 2){
-            estatusVal = 'Estatus actual DENEGADO';
-        
-        }else{
-            estatusVal = 'Estatus  CARGADO';
-        }
-
-        var estatusmensaje = document.getElementById('estatusValidacion'+index);
-        document.getElementById('denegarVISTA'+index).innerHTML = dataMostrar;
-        document.getElementById('validarVISTA'+index).innerHTML = dataMostrar;
-        estatusValidacion += estatusVal;
-        estatusmensaje.innerHTML = estatusValidacion;
-        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-
-    },              
-    error : (a, b, c) => {
-        alerts.showNotification("top", "right", "Error pruebelo más tarde .", "error");
-    }
-
-});
-});
-
-
-
-
-    $(document).on("click", "#borrarDoc", function () {
-        let banderaEliminar = true;
-        documento       = $(this).attr("data-idDocumento");
-        solicitudId     = $(this).attr("data-idSolicitud");
-        idOpcion        = $(this).attr("data-idOpcion");
-        inde            = $(this).attr("data-index"); 
-        seCambio        = $(this).attr("data-cambiada"); 
-        primerIndex     = $(this).attr("data-primer"); 
-
-        let  validarCambioEnMismoModal = 0;
-        if(seCambio == 1 ){
-
-            cambioAlsubir = 'cambioAlsubir';
-            validarCambioEnMismoModal = "1";
-        }else {
-            validarCambioEnMismoModal = "0";
-            cambioAlsubir = 'cambioBajar';
-
-        }
-        var formData = new FormData();
-        let validacionAjax = true;
-        if( idOpcion == '' || idOpcion == undefined ){validacionAjax = false;}
-        if( documento == '' || documento == undefined ){validacionAjax = false;}
-        if( solicitudId == '' || solicitudId == undefined ){validacionAjax = false;}
-         
-        if(validacionAjax){
-            formData.append('documentType', idOpcion);
-            formData.append('idSolicitud',solicitudId );
-            formData.append('idDocumento', documento);
-            $.ajax({
-                type: 'POST',
-                url: 'deleteFileActualizado2',
-                data: formData, 
-                dataType: "json",
-                contentType: false,
-                processData:false,
-                success: function(data) {
-                    var InfoModall2 = ' ';
-                    document.getElementById(cambioAlsubir+inde).innerHTML = InfoModall2;
-                  if(data == 1){
-                    alerts.showNotification("top", "right", "Documento eliminado .", "success");
-                    var InfoModall = ' ';
-                    InfoModall += '  <div name="cambioAlsubir'+inde+'" id="cambioAlsubir'+inde+'" >';
-                    InfoModall += '      <input hidden name="numeroDeRow" id="numeroDeRow">';
-                    InfoModall += '      <div class="file">';
-                    InfoModall += '           <input class="form-control input-gral" data-cambiada='+validarCambioEnMismoModal+'  data-primer"'+primerIndex+'" id="docSubir'+inde+'" name="docSubir'+inde+'"  type="file"';
-                    InfoModall += '           accept=".jpg, .jpeg, .png ,pdf">';
-                    InfoModall += '      </div>';
-                    InfoModall += '	<button id="guardarImagen" name="guardarImagen"  ' +
-                                    'class="btn-data btn-green editReg" title="ACTUALIZAR" data-cambiada="1" data-index="'+inde+'" data-solicitud="'+solicitudId+'" data-documento="'+idOpcion +'" data-nomLote="2" data-idCond="">'+
-                                    '<i class="fas fa-upload"></i></button>';  
-                    InfoModall += '  </div>';
-                         document.getElementById(cambioAlsubir+inde).innerHTML = InfoModall;
-                  }
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        }
-    });
-    
-    $(document).on("click", "#guardarImagen", function () {
-      
-        indexData   = $(this).attr("data-index");
-        iddocumento = $(this).attr("data-documento");
-        solicitudId = $(this).attr("data-solicitud");
-        seCambio    = $(this).attr("data-cambiada"); 
-        let  validarCambioEnMismoModal =  0;
-        // pago_mensual = $(this).attr("data-mensual");
-        // descuento = $(this).attr("data-descuento");
-        if(seCambio == 1 ){
-            cambioAlsubir = 'cambioAlsubir';
-            validarCambioEnMismoModal = "1";
-        }else {
-            
-            cambioAlsubir = 'cambioBajar';
-            validarCambioEnMismoModal = "0";
-        }
-         let validacionAjax = true;
-        if( indexData == ''){validacionAjax = false;}
-        if( iddocumento == ''){validacionAjax = false;}
-        if( solicitudId == ''){validacionAjax = false;}
-
-        var archivos = $("#docSubir"+indexData)[0].files;
-        if (archivos.length > 0) {
-            //Sólo queremos la primera imagen, ya que el usuario pudo seleccionar más
-            var foto = archivos[0]; 
-            // var lector = new FileReader();
-            var formData = new FormData();
-            
-            //Ojo: En este caso 'foto' será el nombre con el que recibiremos el archivo en el servidor
-            formData.append('docSubir'+indexData, foto);
-            formData.append('indexx',indexData );
-            formData.append('iddocumento', iddocumento);
-            formData.append('solicitudId', solicitudId);
-            // formData.append('comentario', comentario);
-        }
-    
-        if(validacionAjax){
-            $.ajax({
-                type: 'POST',
-                url: 'UParchivosFromss',
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData:false,
-                success: function(data) {
-                    alerts.showNotification("top", "right", "Documento se ha cargado .", "success");
-                 
-                    var infoBotonesWhenSubio = ' ';
-                    infoBotonesWhenSubio += '';
-                    document.getElementById('cambioAlsubir'+indexData).innerHTML = infoBotonesWhenSubio;
-                    infoBotonesWhenSubio += '';
-                    // document.getElementById('cambioAlsubir1'+indexData).innerHTML = infoBotonesWhenSubio;
-                    
-                    PasarNuevaIno = '';
-                    PasarNuevaIno1 = '';
-                    
-                PasarNuevaIno += '   <div class="col-3 col-sm-3 col-md-3 col-lg-3 ">';
-                PasarNuevaIno += '<button data-idLote="1" data-cambiada='+validarCambioEnMismoModal+' data-nomLote="2" data-idCond="" id="borrarDoc" name="borrarDoc"' +
-                ' data-idDocumento="'+data.ultimoInsert +'"  data-index="'+indexData+'" data-primer="'+indexData+'" data data-idSolicitud="'+solicitudId +'" data-idOpcion="'+iddocumento +'"  ' +
-                'class="btn-data btn-warning cancelReg" title="BORRAR">' +
-                '<i class="fas fa-trash-alt"></i></button>'; 
-                PasarNuevaIno += '  </div>';
-
-                PasarNuevaIno += ' <div class="col-2 col-sm-2 col-md-2 col-lg-2 ">';
-                PasarNuevaIno += '<a  id="visualizarDoc" name="visualizarDoc" ' +
-                ' data-idDocumento="'+data.ultimoInsert +'" data-cambiada='+validarCambioEnMismoModal+' data-primer="'+indexData+'" data-idSolicitud="'+solicitudId +'" data-idOpcion="'+iddocumento+'"' +
-                'class="btn-data btn-violetBoots cancelReg" title="Visualizar">' +
-                '<i class="fas fa-scroll"></i></a>'; 
-                
-                PasarNuevaIno += '  </div>';
-                document.getElementById('cambioAlsubir'+indexData).innerHTML = PasarNuevaIno;
-            
-
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
-        }
-        });
-            
-        $(document).on("click", "#cambiarEstatus", function () {
-            idStatus = $(this).attr("data-estatus");
-            solicitudes = $(this).attr("data-solicitud");
-            type = $(this).attr("data-type"); 
-            let solicitud = solicitudes ;
-            let estatus = idStatus;
-            let banderaUnRechazado = true;
-            let mensaje = 'existe un RECHAZO';
-            let code  = 200;
-            var docs = []
-                $.ajax({
-                    type: 'POST',
-                    url: 'getDocumentosPorSolicitudss',
-                    data: 
-                    {
-                        "estatus" : estatus,
-                        "solicitud" : solicitud
-                    } , 
-                    dataType: "json",
-                    
-                    success: function(data) {
-                    if(data.length  != 0){
-                        data.losDocumentos.forEach(function(elemento,i){
-                            data.misDocumentos.forEach(function(elementos,e){
-                                if( elemento.id_documento == elementos.id_opcion )
-                                {
-                                    if(elementos.estatusValidacion == 2){
-                                        banderaUnRechazado = false;
-                                        mensaje = 'existe un RECHAZO';
-                                    }  
-                                    data.losDocumentos[i] = '' , i;                       
-                                    docs.push(elementos)
-                                } 
-                                })
-                        })
-                    }
-                    if(docs.length == data.losDocumentos.length && banderaUnRechazado == true){                        
-                            var type  = 1;
-                            var comentarios = 'dadaa'
-                            var area_rechazo =  ''
-                            $.ajax({
-                                type: 'POST',
-                                url: 'changeStatus',
-                                data: 
-                                {
-                                    // "pagos_activos"     : pagos_activos,
-                                    "id_solicitud" : solicitud,
-                                    "type" : type,
-                                    "comentarios" : comentarios,
-                                    "area_rechazo" : area_rechazo,
-                                } , 
-                                dataType: "json",                               
-                                success: function(data) {
-                    
-                                },
-                                error: function(){
-                                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                                }
-                            });
-                            alerts.showNotification("top", "right", "Docuemntos enviados correctamente,Enviados.", "success");      
-                            
-
-                    }else{
-                        alerts.showNotification("top", "right", "Oops,Es posible que falte un documento, o se encuentre rechazado.", "warning");
-                    }
-                    },
-                    error: function(){
-                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                    }
-
-                });
-        })
-        
+ 
         $(document).on("click", "#preview", function () {
             var itself = $(this);
             var folder;
@@ -3186,23 +3017,8 @@ $.ajax({
                 width: 985,
                 height: 660
             });
-        });
+        });  
 
-
-        $(document).on('click', '#botonCancelarDoc', function () {
-
-            // alert('aqui cancelamos el nodal y recargarmos');
-            var SolicitudID = document.getElementById('solicitudP').value;
-            $('#escrituracion-datatable').DataTable().ajax.reload(null, false );
-            $('#documentTreeAr').modal('hide')
-
-        });
-
-        
-        $(document).on('click', '#CancelarRevisarDocs', function () {
-
-
-        });
         
         
 

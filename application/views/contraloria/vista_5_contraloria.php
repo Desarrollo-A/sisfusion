@@ -33,7 +33,7 @@ $datos = array();
                              id="tipo-venta-options-div" hidden>
 							<label id="tvLbl">Tipo de venta</label>
 							<select required="required" name="tipo_venta" id="tipo_ventaenvARevCE"
-									class="selectpicker" data-style="btn" title="SELECCIONA TIPO VENTA" data-size="7">
+									class="selectpicker select-gral" data-style="btn" title="SELECCIONA TIPO VENTA" data-size="7">
 							</select>			
 						</div>
 
@@ -45,7 +45,7 @@ $datos = array();
 						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
 							<label id="tvLbl">Ubicación</label>
 							<select required="required" name="ubicacion" id="ubicacion"
-									class="selectpicker" data-style="btn" title="SELECCIONA UBICACIÓN" data-size="7">
+									class="selectpicker select-gral" data-style="btn" title="SELECCIONA UBICACIÓN" data-size="7">
 							</select>
 						</div>
 

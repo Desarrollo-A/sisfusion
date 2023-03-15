@@ -777,12 +777,12 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	{
 		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
 			if (trim($email) != ''){ 
-				$mail->addAddress($email);
+				$mail->addAddress('programador.analista8@ciudadmaderas.com');//$email
 			}
 		}
 
 		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
+			$mail->addAddress('programador.analista8@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
 		}
 	}
 

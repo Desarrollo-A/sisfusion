@@ -30,7 +30,7 @@ class PaquetesCorrida_model extends CI_Model
         group by id_tdescuento,inicio,fin,id_condicion,eng_top,apply,porcentaje 
         order by porcentaje");
     }
-
+ 
     public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario,$inicio,$fin){
         $this->db->query("UPDATE  l 
         set l.id_descuento = '$cadena_lotes',usuario='$usuario'
@@ -180,7 +180,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
         }
     }
-    
+     
     public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
         return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
         SELECT DISTINCT(id_descuento) descuentos

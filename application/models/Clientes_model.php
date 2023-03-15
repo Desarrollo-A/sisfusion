@@ -4257,6 +4257,21 @@ function getStatusMktdPreventa(){
         return $query->result_array();
     }
 
+    public function getDragonsClientsList() {
+        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
+        c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+        cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
+        FROM clientes cl 
+        INNER JOIN lotes l ON cl.idLote = l.idLote 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
+        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
+    }
+
     public function getClientsByProyect($id_residencial){
         $query = $this->db->query("SELECT res.nombreResidencial AS proyecto, con.nombre_condominio, lot.nombreLote, sc.nombreStatus AS StatusContratacion, sl.nombre AS StatusLote,
             CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, cli.fechaApartado, oxc.nombre, cli.fecha_nacimiento,
@@ -4354,20 +4369,4 @@ function getStatusMktdPreventa(){
         ORDER BY cli.id_cliente");
         return $query->result_array();
     }
-
-    public function getDragonsClientsList() {
-        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion nombreProyecto,
-        c.nombre nombreCondominio, l.nombreLote, CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-        cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion fechaCreacionProspecto,
-        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
-        FROM clientes cl 
-        INNER JOIN lotes l ON cl.idLote = l.idLote 
-        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
-        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
-        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
-        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
-    }
-
 }

@@ -555,8 +555,8 @@ class Administracion extends CI_Controller{
          );
 
 		 #PROVICIONAL TESTING
-          $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
-          $correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
+          $correos_submit[0] = 'programador.analista18@ciudadmaderas.com';
+          //$correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
 
@@ -608,7 +608,6 @@ class Administracion extends CI_Controller{
 		}
 	}
 	
-	
 	public function get_data_asignacion($idLote){
         $data = $this->Administracion_model->get_data_asignacion($idLote);
         echo json_encode($data);
@@ -644,15 +643,64 @@ class Administracion extends CI_Controller{
 
     }
 
+	public function crearPlantillaCorreo($data_correo, $data_eviRec, $data_send)
+	{
+		$data_send = $this->Administracion_model->getInfoToMail(109361, 80655);
+		
+		$nombre = $this->session->userdata('nombre');
+		$apellido_paterno = $this->session->userdata('apellido_paterno');
+		$apellido_materno = $this->session->userdata('apellido_materno');
 
-    public function notifyRejEv($data_correo, $data_eviRec, $data_send)
+		$nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
+		
+		$modificado=date('Y-m-d H:i:s');
+
+		$correos_submit = array( 'programador.analista18@ciudadmaderas.com');
+		if(!is_null($data_send)){
+			$data_mail[0] = array(
+				"proyecto" => $data_send->nombreResidencial,
+				"condominio" => $data_send->nombreCondominio,
+				"lote" => $data_send->nombreLote,
+				"cliente" => $data_send->nombreCliente,
+				"quien_rechaza" => $nombre_rechazador,
+				"fecha_apartado" => $data_send->fechaApartado,
+				"fecha_rechazo" => $modificado,
+			);
+			$data_mail[1] = array(
+				"proyecto" => $data_send->nombreResidencial,
+				"condominio" => $data_send->nombreCondominio,
+				"lote" => $data_send->nombreLote,
+				"cliente" => $data_send->nombreCliente,
+				"quien_rechaza" => $nombre_rechazador,
+				"fecha_apartado" => $data_send->fechaApartado,
+				"fecha_rechazo" => $modificado,
+			);
+		}else{
+			$data_mail = null;
+		}
+		$data_eviRec =array(
+			'comentario' => 'Esto es una prueba en envio de correo',
+			'id_cliente' => 109361,
+			'id_lote' => 80655
+		);
+
+		$data_encabezados_tabla = array('PROYECTO', 'CONDOMINIO', 'LOTE', 'CLIENTE', 'RECHAZADO', 'APARTADO', 'FECHA DE RECHAZO');
+
+		// $data_encabezados_etiquetas = array('ID_LOTE'=>'ID LOTE', 'NOMBRE_COMPLETO'=>'NOMBRE', 'FECHA_ACTUAL'=>'FECHA');
+
+		// $comentarioGeneral = 'Comentario: Esto es una prueba en envio de correo';
+
+		crearPlantillaCorreo($correos_submit, $data_eviRec, $data_mail, $data_encabezados_tabla, $data_eviRec['comentario']);
+	}
+
+	public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
         $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         //$correoDir = $data_eviRec['correo_a_enviar'];
 
         $mail = $this->phpmailer_lib->load();
 
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->setfrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
         foreach($data_correo as $item){
                 //print_r($item);
                 //echo '<br>';
@@ -660,7 +708,7 @@ class Administracion extends CI_Controller{
         }
 
         $mail->addAddress($correo_new);
-         $mail->addCC('erick_eternal@live.com.mx'); #copia oculta
+         $mail->addcc('erick_eternal@live.com.mx'); #copia oculta
 
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);

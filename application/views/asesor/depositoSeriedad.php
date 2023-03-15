@@ -296,8 +296,8 @@
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save5" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save5" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
@@ -317,8 +317,8 @@
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save6" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save6" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -1311,7 +1311,7 @@ $('#condominio').change( function(){
 
 
 
-$(document).on('click', '#save3', function(e) {
+    $(document).on('click', '#save3', function(e) {
         e.preventDefault();
 
         var comentario = $("#comentario3").val();

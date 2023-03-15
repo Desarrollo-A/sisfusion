@@ -69,7 +69,7 @@ $("#form_prestamos").on('submit', function(e){
     else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
-        data: formData,
+        data: formData, 
         method: 'POST',
         contentType: false,
         cache: false,
@@ -365,7 +365,7 @@ $("#tabla_prestamos").ready( function(){
             }
         },
         {
-            "width": "6%",
+            "width": "6%", 
             "orderable": false,
             "data": function( d ){
                 var botonesModal = ''; 
@@ -373,7 +373,7 @@ $("#tabla_prestamos").ready( function(){
                 botonesModal +=  `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
 
                 if(d.evidencia != null ){
-                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Historial"><i class="fas fa-folder-open"></i></button>`;    
+                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;    
                 }
 
                 if(d.id_prestamo2 == null && d.estatus == 1){

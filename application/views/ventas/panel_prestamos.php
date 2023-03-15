@@ -88,14 +88,14 @@
 								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
 								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
 							</div>
-							<div class="form-group input-group">
+							<!-- <div class="form-group input-group">
 								<label class="input-group-btn">
                                     <span class="btn btn-outline btn-file">Seleccionar archivo&hellip;
-                                        <input type="file" name="evidencia" id="evidencia" style="visibility: hidden" accept="image/x-png,image/gif,image/jpeg, image/jpg">
+                                        <input type="file" name="evidencia" id="evidencia" style="visibility: hidden" >
                                     </span>
 								</label>
 									<input type="text" class="form-control" readonly>
-							</div>
+							</div> -->
 
 							<div class="form-group">
 								<center>

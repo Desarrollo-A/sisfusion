@@ -7,6 +7,37 @@
  
 
 </style>
+
+<!-------->
+<div class="modal fade" id="modalPausar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b id="labelmodal">Pausar solicitud</b></h4>
+
+            </div>
+            
+            <form id="formPausar" name="formPausar" method="post">
+                <div class="modal-body">
+                    <textarea class="text-modal scroll-styles" max="255" type="text" name="comentarioPausa" id="comentarioPausa" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Motivo de la pausa"></textarea>
+                    <b id="text-observations" class="text-danger"></b>
+                    <input type="hidden" name="id_solicitud" id="id_solicitud">
+                    <input type="hidden" name="accion" id="accion">
+                    <input type="hidden" name="banderaCliente" id="banderaCliente">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="botonPausar" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--------> 
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -721,7 +752,6 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-end p-0">
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="observacionesSubmit" class="btn btn-primary btn-round btn-sm">Rechazar</button>
                         </div>
                     </div>
                    
@@ -905,7 +935,7 @@
                             <!-- estos input solo se muestran si es si el select anterior -->
                             <div id="ifInformacion" style="display:none">
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">Nombre del titular anterior</label>
                                         <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
                                     </div>
@@ -917,7 +947,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
+                                    <div class="form-group estiloEsc is-focused">
                                         <label class="control-label label-gral">RFC / Datos personales</label>
                                         <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
                                     </div>

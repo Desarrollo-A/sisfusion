@@ -462,14 +462,21 @@
 												// EVALÚA CON EL ROL Y ESTATUS
 												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
 												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1) ){
-													// SI TIENE PERMISOS, DA BOTÓN DELETE
-													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo jajaja" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
 												} else {
-													// SINO TIENE PERMISOS DA BOTÓN CONSULTA
-													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo pppp" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 												}
-												// SINO ES ROL 7, 9, 3 O 2 DA BOTÓN CONSULTA
-												<?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
+												<?php } else {?>
+                                                        file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo jijijij" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+                                                        <?php
+                                                                if($this->session->userdata('id_rol') == 6){?>
+                                                            file += '  <button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                        <?php
+                                                                }
+                                                        ?>
+
+
+                                                <?php } ?>
 											}
 										}
 										// NO ES ODF, ES EXEL. HABILITA OPCIÓN PARA DESCARGA
@@ -482,15 +489,16 @@
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
 											} else if(data.tipo_doc == 8){  // MUESTRA ICONO DISABLED PARA CONTRATO CUANDO NO ESTÉ LLENO
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-                                            } else if(data.tipo_doc == ((data.pj==2) ? 29 : 26 ) && id_rol_current!=6){  // MUESTRA ICONO DISABLED PARA CARTA DOMICILIO CM CUANDO NO ESTÉ LLENO
+
+                                            } else if(data.tipo_doc == 29  && id_rol_current!=6){
                                                 file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
                                             }
                                             else {
 
 												// AVALUA SI ES ASISTENET DE GERENCIA
                                                 <?php if($this->session->userdata('id_rol') == 6){?>
-													// EVALÚA QUE EL EXPEDIENTE ESTÉ EN ESTATUS 8 PARA HABILITAR BOTÓN DE CARGA PARA LA RAMA CARTA DOMICILIO CM
-                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6) && (data.tipo_doc==26 || data.tipo_doc==29)){
+
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6 && data.tipo_doc==29)){
                                                             file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
                                                         }
 												// EVALÚA ROL
@@ -549,8 +557,8 @@
 												file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>';
 												}else{
                                                     file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-                                                    if((data.tipo_doc==26 || data.tipo_doc==29) && id_rol_current==6 ){
-                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6) && (data.tipo_doc==26 || data.tipo_doc==29)){
+                                                    if(data.tipo_doc==29 && id_rol_current==6 ){
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6 &&  data.tipo_doc==29)){
                                                             file+= '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
                                                         }
                                                     }else{

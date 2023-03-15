@@ -624,6 +624,29 @@
   color: #ffffff;
 }
 
+.buttons-youtube {
+  box-shadow: none;
+  padding: 7px 25px;
+  color: #FF0000;
+  background-color: #ffffff !important;
+  border: 1px solid #FF0000;
+  border-radius: 27px;
+  margin: 0;
+}
+
+.buttons-youtube i {
+  color: #FF0000;
+}
+
+.buttons-youtube:hover {
+  background-color: #FF0000 !important;
+  border: 1px solid #FF0000;
+}
+
+.buttons-youtube:hover i {
+  color: #ffffff;
+}
+
 /***/
 .buttons-general-dt {
   box-shadow: none;
@@ -766,7 +789,8 @@
 
 .btn-green-excel {
   color: #209E63;
-  border: 1px solid #209E63;
+  border: none;
+  background: #209E6318;
 }
 
 .btn-green-excel:hover {
@@ -799,7 +823,7 @@
 .btn-deepGray {
   color: #929292;
   border: none;
-  background-color: #929292;
+  background-color: #92929218;
 }
 
 .btn-deepGray:hover {
@@ -820,7 +844,8 @@
 
 .btn-violetChin {
   color: #8E6C88;
-  border: 1px solid #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
 }
 
 .btn-violetChin:hover {
@@ -841,7 +866,8 @@
 
 .btn-orangeYellow {
   color: #ff9800;
-  border: 1px solid #ff9800;
+  border: none;
+  background-color: #ff980018;
 }
 
 .btn-orangeYellow:hover {
@@ -863,7 +889,7 @@
 .btn-warning {
   color: #c01313;
   border: none;
-  background: #c0131318;
+  background-color: #c0131318;
 }
 
 .btn-warning:hover, .btn-warning:focus {
@@ -873,7 +899,8 @@
 
 .btn-acidGreen {
   color: #AFB42B;
-  border: 1px solid #AFB42B;
+  border: none;
+  background-color: #AFB42B18;
 }
 
 .btn-acidGreen:hover {
@@ -884,7 +911,7 @@
 .btn-details-grey {
   color: #999999;
   border: none;
-  background-color: #99999913;
+  background-color: #99999918;
 }
 
 .btn-details-grey:hover {
@@ -1664,6 +1691,19 @@ table .boxSBtns {
 
 .dt-buttons {
   text-align: left;
+}
+
+.paginate_button i {
+  font-size: 18px;
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+  background-color: transparent !important;
+  color: #96843D !important;
+}
+
+.paginate_button .active a {
+  box-shadow: none !important;
 }
 
 .dataTables_filter label {

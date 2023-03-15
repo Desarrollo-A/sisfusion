@@ -44,17 +44,14 @@ sp2 = { // CHRIS: SELECT PICKER
     }
 }
 
-$('#reports-datatable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    $(this).html('<input class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#reports-datatable').DataTable().column(i).search() !== this.value) {
-            $('#reports-datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+
+
+
+
 
 $(document).ready(function () {
+
+
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
@@ -169,11 +166,48 @@ function dynamicColumns(columnData) {
     
 }
 
+ 
+
 function buildTable(columns, data) {
     reportsTable = $('#reports-datatable').DataTable({
-        dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: "auto",
         pagingType: "full_numbers",
+        buttons: [{ 
+            extend: 'excelHtml5',
+          text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+          className: 'btn buttons-excel',
+          titleAttr: 'Descargar archivo de Excel',
+          exportOptions: {
+            columns: [0,1,2,3,4,5,6,7,8,9],
+            format: {
+                header:  function (d, columnIdx) {
+                    if(columnIdx == 0){
+                        return ' ID SOLICITUD ';
+                    }else if(columnIdx == 1){
+                        return 'LOTE';
+                    }else if(columnIdx == 2){
+                        return 'CONDOMINIO';
+                    }else if(columnIdx == 3){
+                        return 'RESIDENCIAL';
+                    }else if(columnIdx == 4){
+                        return 'CLIENTE';
+                    }else if(columnIdx == 5){
+                        return 'ESTATUS';
+                    }else if(columnIdx == 6){
+                        return 'ÁREA';
+                    }else if(columnIdx == 7){
+                        return 'VIGENCIA';
+                    }else if(columnIdx == 8){
+                        return 'DÍAS DE ATRASO';
+                    }else if(columnIdx == 9){
+                        return 'FECHA ESTATUS';
+                    }
+                }
+            }
+          },
+
+        }],
         language: {
             url: "../static/spanishLoader.json",
             paginate: {
@@ -181,6 +215,7 @@ function buildTable(columns, data) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        
         destroy: true,
         ordering: false,
         columns: columns,
@@ -199,6 +234,17 @@ function buildTable(columns, data) {
         }],
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             console.log('atrasado', aData['atrasado']);
+        },
+        initComplete: function(settings, json) {
+            $('#reports-datatable thead tr:eq(0) th').each( function (i) {
+                var title = $(this).text();
+                $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function () {
+                    if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
+                        $('#reports-datatable').DataTable().column(i).search(this.value).draw();
+                    }
+                });
+            });
         }
     });
 }

@@ -2252,7 +2252,7 @@ class Statistics_model extends CI_Model {
         CONCAT( u.nombre, ' ', u.apellido_paterno, ' ',  u.apellido_materno) nombre_completo $monthSelectClause
         FROM pago_comision_ind pci 
         INNER JOIN comisiones c on c.id_comision = pci.id_comision
-        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
+        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17,70) 
         WHERE YEAR(pci.fecha_abono) = $anio $monthCreacionWhereClause
         AND pci.estatus NOT IN (0) 
         GROUP BY u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno $monthGroupByClause

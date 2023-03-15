@@ -76,21 +76,7 @@ class Contratacion extends CI_Controller
         }else{
 		    print_r(json_encode(array()));
         }
-//		print_r($data);
 		exit;
-        $a = 'null';
-        if ($estatus != $a && $condominio != $a && $proyecto != $a)
-            echo json_encode($this->Contratacion_model->get_datos_inventario($estatus, $condominio)->result_array());
-        if ($proyecto != $a && $condominio == $a && $estatus != $a)
-            echo json_encode($this->Contratacion_model->get_datos_inventario_pe($proyecto, $estatus)->result_array());
-        if ($proyecto == $a && $condominio == $a && $estatus != $a)
-            echo json_encode($this->Contratacion_model->get_datos_inventario_e($estatus)->result_array());
-        if ($proyecto != $a && $condominio == $a && $estatus == $a)
-            echo json_encode($this->Contratacion_model->get_datos_inventario_p($proyecto)->result_array());
-        if ($proyecto != $a && $condominio != $a && $estatus == $a)
-            echo json_encode($this->Contratacion_model->get_datos_inventario_pc($proyecto, $condominio)->result_array());
-        if ($proyecto == $a && $condominio == $a && $estatus == $a)
-            echo json_encode($this->Contratacion_model->get_todo_inventario()->result_array());
     }
 
     public function obtener_liberacion($idLote)
@@ -99,7 +85,7 @@ class Contratacion extends CI_Controller
         echo json_encode($this->Contratacion_model->get_datos_historial($idLote)->result_array());
     }
 
-        public function historialProcesoLoteOp($idLote)
+    public function historialProcesoLoteOp($idLote)
     {
         $response= $this->registrolote_modelo->historialProcesoFin($idLote);
        // echo json_encode($response);

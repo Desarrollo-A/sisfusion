@@ -2375,7 +2375,7 @@ class Asesor extends CI_Controller
         //si es así hayq ue borrar la rama ya que no la estará utilizando
         if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-            $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+            $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
 
             if(count($revisar_registro)>0){
                 $ubicacion = getFolderFile($revisar_registro[0]['tipo_doc']);
@@ -2681,8 +2681,7 @@ class Asesor extends CI_Controller
             $pdf->Image('static/images/ar4c.png', 120, 15, 300, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
             $pdf->setPageMark();
 
-
-            $html = '<!DOCTYPE html>
+        $html = '<!DOCTYPE html>
             <html lang="en">
             <head>
             <link rel="shortcut icon" href="' . base_url() . 'static/images/arbol_cm.png" />
@@ -3367,7 +3366,7 @@ class Asesor extends CI_Controller
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
 
                         if(count($revisar_registro) == 0){
                             //validar la opcion de domicilio empresa
@@ -3416,7 +3415,37 @@ class Asesor extends CI_Controller
                 /**********/
 
                 if ($this->Asesor_model->editaRegistroClienteDS_2($id_cliente, $arreglo_cliente, $arreglo_ds)) {
+                    if($arreglo_cliente['tipo_comprobanteD'] == 1){
+                        //checar si ya se ha añadido el registro anteriormente
+                        $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
 
+                        if(count($revisar_registro) == 0){
+                            //validar la opcion de domicilio empresa
+
+                            //se crea rama
+                            $data_insert = array(
+                                'movimiento'        =>'CARTA DOMICILIO CM',
+                                'expediente'        => NULL,
+                                'modificado'        => date('Y-m-d H:i:s'),
+                                'status'            => 1,
+                                'idCliente'         => $id_cliente,
+                                'idCondominio'      => $dcv->idCondominio,
+                                'idLote'            => $dcv->idLote,
+                                'idUser'            => NULL,
+                                'tipo_documento'    => 0,
+                                'id_autorizacion'   => 0,
+                                'tipo_doc'          => 29,
+                                'estatus_validacion'=> 0
+                            );
+
+                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                            //if ($dbTransaction) // SUCCESS TRANSACTION
+                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
+                            //else // ERROR TRANSACTION
+                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }
                     $arreglo_referencia2["id_cliente"] = $id_cliente;
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
@@ -3446,7 +3475,7 @@ class Asesor extends CI_Controller
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
 
                         if(count($revisar_registro) == 0){
                         //validar la opcion de domicilio empresa
@@ -4497,9 +4526,20 @@ class Asesor extends CI_Controller
         $modificado = date('Y-m-d H:i:s');
         $fechaVenc = $this->input->post('fechaVenc');
 
+
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+        if($valida_tventa[0]['tipo_venta'] == 1 ){
+            $statusContratacion = 3;
+            $idMovimiento = 98;
+        }else{
+            $statusContratacion = 2;
+            $idMovimiento = 74;
+        }
+
+
         $arreglo = array();
-        $arreglo["idStatusContratacion"] = 2;
-        $arreglo["idMovimiento"] = 74;
+        $arreglo["idStatusContratacion"] = $statusContratacion;
+        $arreglo["idMovimiento"] = $idMovimiento;
         $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
@@ -4507,8 +4547,8 @@ class Asesor extends CI_Controller
 
 
         $arreglo2 = array();
-        $arreglo2["idStatusContratacion"] = 2;
-        $arreglo2["idMovimiento"] = 74;
+        $arreglo2["idStatusContratacion"] = $statusContratacion;
+        $arreglo2["idMovimiento"] = $idMovimiento;
         $arreglo2["nombreLote"] = $nombreLote;
         $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
@@ -4521,7 +4561,6 @@ class Asesor extends CI_Controller
 
 
         $validate = $this->Asesor_model->validateSt2($idLote);
-
         if ($validate == 1) {
 
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
