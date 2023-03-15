@@ -1,6 +1,5 @@
 <?php
 
-use application\helpers\email\Comentarios_Correos;
 
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
@@ -12,7 +11,7 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu','Formatter'));
-		$this->load->helper(array('url','form', 'email/comentarios_correos'));
+		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
