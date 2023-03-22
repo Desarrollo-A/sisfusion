@@ -72,7 +72,7 @@ class Juridico_model extends CI_Model {
 			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-			concat(gerente.nombre,' ', gerente.apellido_patxrno, ' ', gerente.apellido_materno) as gerente,
+			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.idLote=l.idLote
@@ -84,7 +84,7 @@ class Juridico_model extends CI_Model {
 			LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 			LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
-			WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1 $filtroSede $filtroAsignacion
+			WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112) AND cl.status = 1 $filtroSede $filtroAsignacion
 			GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 			l.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
@@ -101,7 +101,7 @@ class Juridico_model extends CI_Model {
     public function validateSt7($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-		$this->db->where("(idStatusContratacion IN (6, 7) AND idMovimiento IN (36, 6, 23, 76, 83, 95, 97))");	
+		$this->db->where("(idStatusContratacion IN (6, 7) AND idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112))");
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
