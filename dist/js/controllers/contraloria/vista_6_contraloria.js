@@ -204,7 +204,7 @@ $("#tabla_ingresar_6").ready(function(){
                     if (d.idStatusContratacion == 5 && d.idMovimiento == 22 || d.idStatusContratacion == 5 && d.idMovimiento == 75 ||
                         d.idStatusContratacion == 5 && d.idMovimiento == 94)
                         fechaVenc = 'Vencido';
-                    else if (d.idStatusContratacion == 5 && d.idMovimiento == 35 || d.idStatusContratacion == 2 && d.idMovimiento == 62)
+                    else if (d.idStatusContratacion == 5 && d.idMovimiento == 35 || d.idStatusContratacion == 2 && d.idMovimiento == 62 || d.idStatusContratacion == 5 && d.idMovimiento == 106)
                         fechaVenc = d.fechaVenc;
 
                     return '<p class="m-0">'+fechaVenc+'</p>';
@@ -246,6 +246,30 @@ $("#tabla_ingresar_6").ready(function(){
                                 'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                             
+                        }
+                        else if(data.idStatusContratacion == 5 && data.idMovimiento == 106 && getFileExtension(data.expediente) == 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) == 'xlxs') {
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
+                                '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions += '<center><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
+                                '<i class="fas fa-thumbs-down"></i></button>';
+                        }
+                        else if(data.idStatusContratacion == 5 && data.idMovimiento == 106 && getFileExtension(data.expediente) != 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) != 'xlxs') {
+                            cntActions = '<button data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="btn-data btn-blueMaderas noCorrida" title="Información"><i class="fas fa-exclamation"></i></button>';
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="regCorrElab btn-data btn-green" title="Registrar estatus">' +
+                                '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="rechazoCorrida btn-data btn-warning" title="Rechazar estatus">' +
+                                '<i class="fas fa-thumbs-down"></i></button>';
+
                         }
                         else if(data.idStatusContratacion == 5 && data.idMovimiento == 22 && data.perfil == 15) {
                             cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +

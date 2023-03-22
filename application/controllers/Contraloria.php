@@ -1,6 +1,6 @@
 <?php
 
-use application\helpers\email\Comentarios_Correos;
+use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
@@ -12,7 +12,8 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu'));
-		// $this->load->helper(array('url','form', 'email/comentarios_correos'));
+        $this->load->library('Phpmailer_lib');
+        $this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
@@ -565,7 +566,8 @@ class Contraloria extends CI_Controller {
 
 			}
 
-		} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+		}
+		elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
 
 			$fechaAccion = date("Y-m-d H:i:s");
 			$hoy_strtotime2 = strtotime($fechaAccion);
@@ -1127,120 +1129,118 @@ public function get_sede(){
   public function get_tventa(){
 	echo json_encode($this->Contraloria_model->get_tventa()->result_array());
   }
+    public function editar_registro_loteRechazo_contraloria_proceceso5(){
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idStatusContratacion=$this->input->post('idStatusContratacion');
+        $idMovimiento=$this->input->post('idMovimiento');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $perfil=$this->input->post('perfil');
+        $modificado=date("Y-m-d H:i:s");
 
-  public function editar_registro_loteRechazo_contraloria_proceceso5(){
+        $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
 
-	$idLote=$this->input->post('idLote');
-	$idCondominio=$this->input->post('idCondominio');
-	$nombreLote=$this->input->post('nombreLote');
-	$idStatusContratacion=$this->input->post('idStatusContratacion');
-	$idMovimiento=$this->input->post('idMovimiento');
-	$idCliente=$this->input->post('idCliente');
-	$comentario=$this->input->post('comentario');
-	$perfil=$this->input->post('perfil');
-	$modificado=date("Y-m-d H:i:s");
+        if($valida_tl[0]['tipo_venta'] == 1){
+            $idStaC = 3;
+            $idMov = 102;
+        }else{
+            $idStaC = 1;
+            $idMov = 20;
+        }
 
-	$valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+        $arreglo=array();
+        $arreglo["idStatusContratacion"]= $idStaC;
+        $arreglo["idMovimiento"]=$idMov;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+        $arreglo["fechaVenc"]= $modificado;
 
-	if($valida_tl[0]['tipo_venta'] == 1){
-	    $idStaC = 3;
-        $idMov = 102;
-    }else{
-        $idStaC = 1;
-        $idMov = 20;
+
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]=$idStaC;
+        $arreglo2["idMovimiento"]=$idMov;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $modificado;
+        $arreglo2["idLote"]= $idLote;
+        $arreglo2["idCondominio"]= $idCondominio;
+        $arreglo2["idCliente"]= $idCliente;
+
+        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
+        $lp = $this->Contraloria_model->get_lp($idLote);
+
+        if(empty($lp)){
+            $correosClean = explode(',', $datos[0]["correos"]);
+            $array = array_unique($correosClean);
+        } else {
+            $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd');
+            $array = array_unique($correosClean);
+        }
+
+        /*************************************************************************************
+        Armado de parámetros a mandar a plantilla para creación de correo electrónico
+         ************************************************************************************/
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
+        $data_mail[0] = json_decode(json_encode($infoLote), true);
+        $data_mail[0] += ["motivoRechazo" => $comentario];
+        $data_mail[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+
+        $data_eviRec = null;
+
+        $correos_submit = array('programador.analista8@ciudadmaderas.com');
+
+//        foreach($array as $email)
+//        {
+//            if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+//                if (trim($email) != ''){
+//                    array_push($correos_submit, $email);
+//                }
+//            }
+//
+//            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+//                array_push($correos_submit, 'analista.comercial@ciudadmaderas.com');
+//            }
+//        }
+
+        $elementos_correo = array("setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+            "Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_5);
+
+        $comentarioGeneral = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_5.'<br><br>'.$comentario;
+        $data_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5;
+
+        //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+        $plantilla_correo = new plantilla_dinamica_correo;
+        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_submit, $elementos_correo, $data_mail, $data_encabezados_tabla, $data_eviRec, $comentarioGeneral);
+        /****************************************************************************************************/
+
+        $validate = $this->Contraloria_model->validateSt5($idLote);
+
+        if ($envio_correo) {
+            $data['message_email'] = 'OK';
+        } else {
+            $data['message_email'] = $envio_correo;
+        }
+
+        if($validate == 1){
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                $data['message'] = 'OK';
+                echo json_encode($data);
+            }else{
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+        }else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
     }
-
-	$arreglo=array();
-	$arreglo["idStatusContratacion"]= $idStaC;
-	$arreglo["idMovimiento"]=$idMov;
-	$arreglo["comentario"]=$comentario;
-	$arreglo["usuario"]=$this->session->userdata('id_usuario');
-	$arreglo["perfil"]=$this->session->userdata('id_rol');
-	$arreglo["modificado"]=date("Y-m-d H:i:s");
-	$arreglo["fechaVenc"]= $modificado;
-
-
-	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=$idStaC;
-	$arreglo2["idMovimiento"]=$idMov;
-	$arreglo2["nombreLote"]=$nombreLote;
-	$arreglo2["comentario"]=$comentario;
-	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-	$arreglo2["perfil"]=$this->session->userdata('id_rol');
-	$arreglo2["modificado"]=date("Y-m-d H:i:s");
-	$arreglo2["fechaVenc"]= $modificado;
-	$arreglo2["idLote"]= $idLote;  
-	$arreglo2["idCondominio"]= $idCondominio;         
-	$arreglo2["idCliente"]= $idCliente;    
-
-	$datos= $this->Contraloria_model->getCorreoSt($idCliente);
-	$lp = $this->Contraloria_model->get_lp($idLote);
-
-	if(empty($lp)){
-	   $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
-	   $array = array_unique($correosClean);
-	} else {
-        //$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');//
-        $correosClean = explode(',', 'programador.analista8@ciudadmaderas.com');//$datos[0]["correos"]
-        $array = array_unique($correosClean);
-	}
-
-	$infoLote = $this->Contraloria_model->getNameLote($idLote);
-	$data_mail[0] = json_decode(json_encode($infoLote), true);
-	$data_encabezados_tabla = array("comentario" => $comentario);
-	foreach ($infoLote as $key => $value) {
-		array_push($data_encabezados_tabla, $key);
-	}
-	crearPlantillaCorreo('programador.analista18@ciudadmaderas.com', null, $data_mail, $data_encabezados_tabla, Comentarios_Correos::EMAIL_RECHAZO_STATUS_5);
-	$data['message'] = 'OK';
-	echo json_encode($data);
-
-	
-	$mail = $this->phpmailer_lib->load();
-
-
-	$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-  
-	foreach($array as $email)
-	{
-		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-			if (trim($email) != ''){ 
-				$mail->addAddress($email);
-			}
-		}
-
-		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
-		}
-	}
-
-
-
-	$mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
-	$mail->isHTML(true);
-	$mail->Body = $mailContent;
-
-
-	$validate = $this->Contraloria_model->validateSt5($idLote);
-
-
-	if($validate == 1){
-			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-					$mail->send();
-					$data['message'] = 'OK';
-					echo json_encode($data);
-				}else{
-					$data['message'] = 'ERROR';
-					echo json_encode($data);
-			}
-		}else {
-			$data['message'] = 'FALSE';
-			echo json_encode($data);
-	}
-
-
-  }
 
 
   public function editar_registro_lote_contraloria_proceceso6()
@@ -1485,10 +1485,24 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
     $perfil=$this->input->post('perfil');
     $modificado=date("Y-m-d H:i:s");
 
+    $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+    if($valida_tventa[0]['tipo_venta'] == 1 ){
+        if($valida_tventa[0]['idStatusContratacion'] == 5 || $valida_tventa[0]['idMovimiento']==106){
+            $statusContratacion = 2;
+            $idMovimiento = 107;
+        }else{
+            $statusContratacion = 1;
+            $idMovimiento = 104;
+        }
+    }else{
+        $statusContratacion = 1;
+        $idMovimiento = 63;
+    }
+
 
     $arreglo=array();
-    $arreglo["idStatusContratacion"]= 1;
-    $arreglo["idMovimiento"]=63; 
+    $arreglo["idStatusContratacion"]= $statusContratacion;
+    $arreglo["idMovimiento"]=$idMovimiento;
     $arreglo["comentario"]=$comentario;
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -1497,8 +1511,8 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
 
 
     $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=1;
-    $arreglo2["idMovimiento"]=63;
+    $arreglo2["idStatusContratacion"]=$statusContratacion;
+    $arreglo2["idMovimiento"]=$idMovimiento;
     $arreglo2["nombreLote"]=$nombreLote;
     $arreglo2["comentario"]=$comentario;
     $arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -1508,6 +1522,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;    
+
 
 
 	$datos= $this->Contraloria_model->getCorreoSt($idCliente);
@@ -1534,12 +1549,12 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
 	{
 		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
 			if (trim($email) != ''){ 
-				$mail->addAddress($email);
+				$mail->addAddress('programador.analista8@ciudadmaderas.com');//$email
 			}
 		}
 
 		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
+			$mail->addAddress('programador.analista8@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
 		}
 	}
 
