@@ -523,7 +523,7 @@ tabla_6 = $("#Jtabla").DataTable({
         var fechaVenc;
 
         if (d.idStatusContratacion == 6 && d.idMovimiento == 23 || d.idStatusContratacion == 6 && d.idMovimiento == 95 || 
-            d.idStatusContratacion == 6 && d.idMovimiento == 97) {
+            d.idStatusContratacion == 6 && d.idMovimiento == 97 || d.idStatusContratacion == 6 && d.idMovimiento == 112) {
             fechaVenc = d.fechaVenc2;
         } else if (d.idStatusContratacion == 6 && d.idMovimiento == 36 || d.idStatusContratacion == 6 && d.idMovimiento == 6 ||
                      d.idStatusContratacion == 7 && d.idMovimiento == 83) {
@@ -654,7 +654,31 @@ if(data.vl == '1') {
                     '<span class="material-icons">select_all</span></button></li><br>';
 
 
-                } else {
+                } else if (data.idStatusContratacion == 6 && data.idMovimiento == 112 ) {
+
+
+                     cntActions = '<li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                         'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc2+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+                         'class="btn btn-warning btn-round btn-fab btn-fab-mini editLoteTo8" title="Registrar estatus (Ventas)">' +
+                         '<span class="material-icons">thumb_up</span></button></li><br>';
+
+
+                     cntActions += '<li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                         'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc2+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+                         'class="btn btn-secondary btn-round btn-fab btn-fab-mini return1" title="Rechazar estatus (Contraloría)">' +
+                         '<span class="material-icons">thumb_down</span></button></li><br>';
+
+                     cntActions += '<li><button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                         'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc2+'" data-ubic="'+data.ubicacion+'" data-code="'+data.cbbtton+'" ' +
+                         'class="btn btn-info btn-round btn-fab btn-fab-mini return2" title="Rechazar estatus (Asesor)">' +
+                         '<span class="material-icons">thumb_down</span></button></li><br>';
+
+
+                     cntActions += '<li><button href="#" title= "Código de barras" data-lote="'+data.cbbtton+'" class="btn btn-primary btn-round btn-fab btn-fab-mini barcode" title="Ver código">' +
+                         '<span class="material-icons">select_all</span></button></li><br>';
+
+
+                 } else {
                     cntActions = 'N/A';
                 }
                 

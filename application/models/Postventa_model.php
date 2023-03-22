@@ -1114,7 +1114,7 @@ function checkBudgetInfo($idSolicitud){
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
-		WHERE l.idStatusContratacion IN (3) AND l.idMovimiento IN (98, 100, 102) AND cl.status = 1
+		WHERE l.idStatusContratacion IN (2, 3) AND l.idMovimiento IN (98, 100, 102, 105, 107, 110) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -1129,7 +1129,7 @@ function checkBudgetInfo($idSolicitud){
     public function validateSt3($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (3) AND idMovimiento IN (98,99,100,102))");
+        $this->db->where("(idStatusContratacion IN (2,3) AND idMovimiento IN (98,99,100,102,105,107, 110))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
