@@ -10,7 +10,7 @@
             $datos = $datos3;
             $this->load->view('template/sidebar', $datos);
         /*--------------------------------------------------------*/
-        ?>
+        ?> 
         <!--Contenido de la página-->
         <div class="modal fade" id="modal_aprobar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
