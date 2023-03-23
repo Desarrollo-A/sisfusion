@@ -25,6 +25,8 @@
                     <textarea class="text-modal scroll-styles" max="255" type="text" name="comentarioPausa" id="comentarioPausa" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Motivo de la pausa"></textarea>
                     <b id="text-observations" class="text-danger"></b>
                     <input type="hidden" name="id_solicitud" id="id_solicitud">
+                    <input type="hidden" name="idCliente" id="idCliente">
+                    <input type="hidden" name="idLote" id="idLote">
                     <input type="hidden" name="accion" id="accion">
                     <input type="hidden" name="banderaCliente" id="banderaCliente">
 

@@ -17,19 +17,19 @@
  
  <div class="modal fade" id="modal_nuevas"  nombre="modal_nuevas" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header" id="header_modal" name="header_modal">
-                        <h3 id="tituloModal" name="tituloModal"> Editando descuento actual </h3>
+                        <h3 id="tituloModal" name="tituloModal">  </h3>
                     </div>
                     <div class="modal-body" >
                     <div class="col-xs-12 col-sm-12 col-md-12"> 
-                                <div class="form-group">
                                
-                                    <label class="label text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
-                                    Persona que obtuvo una calificación favorable y con ello la certificación
-                                    </label>        
-                                </div>
+                    <h6 class="text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion"></h6>  
+
+                    <h5 class=" anteriorTitu" >Anterior responsable de la tarea:    </h5>  
+                    <h6 class="text-gray anteriorTitu" id="anteriorTitu"  name="anteriorTitu">    </h6>  
+
                     </div>
                     <div class="col-md-4" style="display:none;">
                                     <div class="form-group">
@@ -42,46 +42,22 @@
                                     </div>
                     </div>
                     <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                         <label class="label">Nuevo  responsable de la tarea: </label>       
-                            <select class="form-control titulares" name="titulares" id="titulares">
+                         <h5 class="">Nuevo  responsable de la tarea: </h5>       
+                            <select class="form-control titulares select-gral" name="titulares" id="titulares" required>
+                            <option value="" selected disabled>--Seleccionar--</option>
                                 <?php if(isset($titulaciones)){ foreach($titulaciones as $titulares){ ?>
                                     <option value="<?= $titulares['id_usuario'] ?>"><?= $titulares['nombre'] ?> </option>
                                 <?php } } ?>
                             </select>
                     </div>
-                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                         <label class="label anteriorTitu" >Anterior responsable de la tarea:    </label>  
-                         <label class="text-gray anteriorTitu" id="anteriorTitu"  name="anteriorTitu">    </label>       
-                         
-                    </div>
+
                     </div>
                     <div class="modal-footer">
-                            <div class="row">
-                                
-                                <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">
-                                                
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12" >
-                                </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button name="updateTitu" style="display:block;" id="updateTitu"
-                                                    class="btn btn-primary updateTitu">Cambiar</button>
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button class="btn btn-danger" type="button" data-dismiss="modal"
-                                                    data-toggle="modal">
-                                                    CANCELAR
-                                                </button>
-                                            </center>
-                                        </div>
-                                    </div>
-                            </div>  
+
+                            <div class="col-lg-12 form-group p-0 d-flex justify-end">
+                                <button type="submit" id="updateTitu" class="btn btn-success btn-simple updateTitu">Aceptar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            </div>
                     </div>
                 </div>
             </div>
