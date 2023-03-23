@@ -857,7 +857,7 @@ class Contraloria_model extends CI_Model {
 									CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) as asesor,
 									CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
 									CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
-									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
+									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche,FORMAT(ISNULL(lot.totalNeto, 0), 'C') as engancheContra, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
 									sl.nombre as lote, sc.nombreStatus as contratacion,
 									(CASE WHEN hl.idLote IS NULL THEN 0 ELSE 1 END) validacion_estatus_9,lot.registro_comision
 								FROM clientes cli

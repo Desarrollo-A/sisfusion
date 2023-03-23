@@ -692,7 +692,10 @@ class Postventa extends CI_Controller
             break;
             case 21:
                 $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-            break;  
+            break;
+            case 22:
+                $folder = "static/documentos/postventa/escrituracion/FORMAS_PAGO_FECHA/";
+            break;    
         }
         return $folder;
 
@@ -1882,7 +1885,7 @@ function saveNotaria(){
 
     }
     
-    public function descuentoUpdateTi(){
+    public function reasignacionSolicitudEsc(){
 
         $id_solicitud       = $this->input->post('id_solicitud');
         $id_titulacion       = $this->input->post('id_titulacion');
@@ -2702,15 +2705,42 @@ function saveNotaria(){
     }
 
     public function borrarSolicitud(){
+        $fecha = date("Y-m-d H:i:s");
         $idSolicitud = $this->input->post("id_solicitud");
         $comentarioPausa = $this->input->post("comentarioPausa");
         $banderaCliente = $this->input->post("banderaCliente");
         $idusuario = $this->session->userdata('id_usuario');
-        $idCliente = $this->session->userdata('idCliente');
-        $idLote = $this->session->userdata('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $idLote = $this->input->post('idLote');
 
-        $respuesta =  $this->Postventa_model->borrarSolicitud($idSolicitud, $comentarioPausa,$banderaCliente,$idusuario);
-        if ($respuesta) {
+        if($banderaCliente == 1){
+            //EL CLIENTE SE CREO EN EL PROCESO DE ESCRITURACIÓN Y YA NO PROCEDE, SE DA DE BAJA, EN SILICITUDES SE ACTUALIZA LOTE Y CLIENTE A 0
+            //ACTUALIZAR idCliente,usuario,status EN LA TABLA LOTES
+            $updateLote = array("idCliente" => 0, "usuario" => $idusuario);
+            $updateResponse = $this->General_model->updateRecord("lotes", $updateLote, "idLote", $idLote);
+            //ACTUALIZAR idLote,modificado_por EN LA TABLA CLIENTES
+            $updateCliente = array("idLote" => 0, "status" => 0, "modificado_por" => $idusuario);
+            $updateResponse = $this->General_model->updateRecord("clientes", $updateCliente, "id_cliente", $idCliente);
+        }
+        $updateDataSolicitud = array("id_estatus" => 0,"id_lote" => 0, "id_cliente" => 0, "modificado_por" => $idusuario);
+        $updateResponse = $this->General_model->updateRecord("solicitudes_escrituracion", $updateDataSolicitud, "id_solicitud", $idSolicitud);
+        $comentarioAdicional = '. Datos Eliminados idLote: '.$idLote.', idCliente: '.$idCliente;
+        
+        $insertData[0] = array(
+            "id_solicitud" => $idSolicitud,
+            "numero_estatus" => 1,
+            "tipo_movimiento" => 0,
+            "descripcion" => $comentarioPausa.$comentarioAdicional,
+            "fecha_creacion" => $fecha,
+            "creado_por" => $idusuario,
+            "fecha_modificacion" => $fecha,
+            "modificado_por" => $idusuario,
+            "estatus_siguiente" => 0
+        );
+        $updateResponse = $this->General_model->insertBatch("historial_escrituracion", $insertData);
+
+
+        if ($updateResponse) {
             echo json_encode(1);
         } else {
             echo json_encode(0);
