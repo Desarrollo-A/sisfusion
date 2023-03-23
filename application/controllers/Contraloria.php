@@ -1,5 +1,5 @@
 <?php
-
+use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
@@ -11,7 +11,8 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu','Formatter'));
-		$this->load->helper(array('url','form'));
+        $this->load->library('phpmailer_lib');
+        $this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
@@ -69,7 +70,6 @@ class Contraloria extends CI_Controller {
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_historial_pagos_contraloria",$datos);
 	}
 	public function estatus_2_0_contraloria(){
 	/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
