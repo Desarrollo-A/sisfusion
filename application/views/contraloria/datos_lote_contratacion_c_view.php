@@ -65,30 +65,32 @@
                                     <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria"
                                            class="table-striped table-hover" style="text-align:center;">
                                         <thead>
-                                        <tr>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>SUP</th>
-                                            <th>M2</th>
-                                            <th>PRECIO LISTA</th>
-                                            <th>TOTAL CON DESCUENTOS</th>
-                                            <th>REFERENCIA</th>
-                                            <th>MSNI</th>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>ESTATUS</th>
-                                            <th>FECHA.AP</th>
-                                            <th>COMENTARIO</th>
-                                            <th>LUGAR PROSPECCIÓN</th>
-                                            <th>FECHA APERTURA</th>
-                                            <th>FECHA VAL. ENGANCHE</th>
-											<th>CANTIDAD ENGANCHE PAGADO</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>SUP</th>
+                                                <th>M2</th>
+                                                <th>PRECIO LISTA</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>REFERENCIA</th>
+                                                <th>MSNI</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>ESTATUS</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>APARTADO REUBICACION</th>
+                                                <th>FECHA ALTA</th>
+                                                <th>COMENTARIO</th>
+                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>FECHA APERTURA</th>
+                                                <th>FECHA VAL. ENGANCHE</th>
+                                                <th>CANTIDAD ENGANCHE PAGADO</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
@@ -610,6 +612,8 @@
                                             <th style="font-size: .9em;">DIRECTOR REGIONAL</th>
                                             <th style="font-size: .9em;">ESTATUS</th>
                                             <th style="font-size: .9em;">FECHA.AP</th>
+                                            <th style="font-size: .9em;">APARTADO REUBICACION</th>
+                                            <th style="font-size: .9em;">FECHA ALTA</th>
                                             <th style="font-size: .9em;">COMENTARIO</th>
                                             <th style="font-size: .9em;">LUGAR PROSPECCIÓN</th>
                                             <th style="font-size: .9em;">FECHA APERTURA</th>
@@ -694,7 +698,7 @@ $('#proyecto').change( function(){
 });
 
        $('#tabla_inventario_contraloria thead tr:eq(0) th').each( function (i) {
-           if(i!=17){
+           if(i != 24){
                var title = $(this).text();
                $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
                $( 'input', this ).on('keyup change', function () {
@@ -727,7 +731,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     titleAttr: 'Inventario Lotes',
                     title:"Inventario Lotes",
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -776,21 +780,27 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                         return 'ESTATUS';
                                         break;
                                     case 15:
-                                        return 'FECHA AP';
+                                        return 'FECHA APARTADO';
                                         break;
                                     case 16:
-                                        return 'COMENTARIO';
+                                        return 'APARTADO REUBICACIÓN';
                                         break;
                                     case 17:
-                                        return 'LUGAR PROSPECCIÓN';
+                                        return 'FECHA ALTA';
                                         break;
                                     case 18:
-                                        return 'FECHA APERTURA';
+                                        return 'COMENTARIO';
                                         break;
                                     case 19:
+                                        return 'LUGAR PROSPECCIÓN';
+                                        break;
+                                    case 20:
+                                        return 'FECHA APERTURA';
+                                        break;
+                                    case 21:
 										return 'FECHA VALIDACION ENGANCHE';
 										break;
-									case 20:
+									case 22:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
                                 }
@@ -807,7 +817,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                     orientation: 'landscape',
                     pageSize: 'LEGAL',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -856,21 +866,27 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
                                         return 'ESTATUS';
                                         break;
                                     case 15:
-                                        return 'FECHA AP';
+                                        return 'FECHA APARTADO';
                                         break;
                                     case 16:
-                                        return 'COMENTARIO';
+                                        return 'APARTADO REUBICACIÓN';
                                         break;
                                     case 17:
-                                        return 'LUGAR PROSPECCIÓN';
-                                        break;
+                                        return 'FECHA ALTA';
+                                        break;    
                                     case 18:
-                                        return 'FECHA APERTURA';
+                                        return 'COMENTARIO';
                                         break;
                                     case 19:
+                                        return 'LUGAR PROSPECCIÓN';
+                                        break;
+                                    case 20:
+                                        return 'FECHA APERTURA';
+                                        break;
+                                    case 21:
 										return 'FECHA VALIDACION ENGANCHE';
 										break;
-									case 20:
+									case 22:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
                                 }
@@ -894,7 +910,7 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
 		bInfo: true,
 		searching: true,
 		paging: true,
-		ordering: true,
+		ordering: false,
 		fixedColumns: true,
 		columnDefs: [{
                 defaultContent: "",
@@ -1127,6 +1143,29 @@ $(document).on('change','#proyecto, #condominio, #estatus', function() {
 				}
 			}
 		},
+        {
+            "width": "10%",
+            "data": function(d){
+
+                if(d.apartadoXReubicacion == 1){
+                    // apartadoX = (d.apartadoXReubicacion == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
+                    // return apartadoX
+                    return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">REHUBICACIÓN</span> <center>`
+
+                }else{
+                   return `<center><span class="label" style="background:#D7BDE2; color:#512E5F;">NO APLICA</span> <center>`
+                }
+
+
+				
+			}         
+        },
+        {
+            "width": "10%",
+            "data": function(d){
+				return '<p>'+d.fechaAlta+'</p>';
+			}
+        },
 		{
 			"width": "16%",
 			"data": function(d){
