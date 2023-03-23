@@ -539,7 +539,7 @@ c                                    </span>
 								else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
 
 									if(data.tipo_doc == 7){
-										if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94){
+										if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94 || data.idMovimiento==106){
 											file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" ' +
                                                 'data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" ' +
                                                 'data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" ' +
