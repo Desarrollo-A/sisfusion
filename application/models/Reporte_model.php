@@ -112,7 +112,7 @@ class Reporte_model extends CI_Model {
 
     public function getChartQueries( $generalFilters, $generalFiltersExt, $filtroSt, $id_rol, $beginDate, $endDate, $filtroEsp) {
         $ventasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'vc' tipo, '$id_rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT( SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END), 'C') total,
+        LEFT JOIN (SELECT FORMAT( SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END), 'C') total,
         COUNT(*)
         cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
@@ -127,7 +127,7 @@ class Reporte_model extends CI_Model {
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
         $ventasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad, 0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'va' tipo, '$id_rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END), 'C') total, 
+        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END), 'C') total, 
         COUNT(*)
         cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
@@ -141,7 +141,7 @@ class Reporte_model extends CI_Model {
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
         $canceladasContratadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'cc' tipo, '$id_rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END), 'C') total, 
+        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END), 'C') total, 
         COUNT(*)
         cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
@@ -157,7 +157,7 @@ class Reporte_model extends CI_Model {
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
 
         $canceladasApartadas = "SELECT ISNULL(total, 0) total, ISNULL(cantidad ,0) cantidad, MONTH(DateValue) mes, YEAR(DateValue) año, 'ca' tipo, '$id_rol' rol FROM cte
-        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END), 'C') total, 
+        LEFT JOIN (SELECT FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END), 'C') total, 
         COUNT(*)
         cantidad, MONTH(cl.fechaApartado) mes, YEAR(cl.fechaApartado) año
         FROM clientes cl
@@ -349,7 +349,7 @@ class Reporte_model extends CI_Model {
 				FROM (
 					SELECT u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, 
 					cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,          
-					SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END) total
+					SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END) total
 					FROM clientes cl
 					INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -368,7 +368,7 @@ class Reporte_model extends CI_Model {
                 FROM(
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END) total,
+                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END) total,
                     CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado 
                     FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11)  AND ( lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00 )
@@ -389,7 +389,7 @@ class Reporte_model extends CI_Model {
                 FROM (
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END)total
+                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END)total
                     FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND ( lo.totalNeto2 IS NOT NULL OR lo.totalNeto2 != 0.00 )
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -511,7 +511,7 @@ class Reporte_model extends CI_Model {
                 SELECT ss.nombre sede, ss.id_sede, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, 
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 ISNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, ISNULL(cl.total_cl ,lo.total) totalLista,
-                SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END)total
+                SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END)total
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND ( lo.totalNeto2 IS NOT NULL OR lo.totalNeto2 != 0.00 )
                 $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
@@ -536,7 +536,7 @@ class Reporte_model extends CI_Model {
                 SELECT  ss.nombre sede, ss.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, lo.idLote, lo.nombreLote, 
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) totalLista,
-                SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup)) ELSE lo.totalNeto2 END) total
+                SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN (CASE WHEN ISNUMERIC(ds.costom2f) = 1 THEN 0 ELSE ISNULL(ds.costom2f * lo.sup, lo.precio * lo.sup) END) ELSE lo.totalNeto2 END) total
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11) AND ( lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00 )
                 $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
@@ -612,6 +612,8 @@ class Reporte_model extends CI_Model {
     }
 
     public function getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatusContratacion, $id_rol, $id_usuario, $render, $type, $sede, $leader, $leadersList) {
+        $filtroExt = '';
+        $filtroSt = '';
         // PARA ASESOR, COORDINADOR, GERENTE, SUBDIRECTOR, REGIONAL Y DIRECCIÓN COMERCIAL
         $id_lider = $this->session->userdata('id_lider'); // PARA ASISTENTES
         $comodin2 = 'LEFT';
@@ -696,7 +698,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, 
-            cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, cl.fechaApartado
+            cl.fechaApartado, cl.fechaAlta, cl.apartadoXReubicacion, cl.fechaApartado
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             // $statusLote = ($type == 4 || $type == 44) ? "AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)" : "";
@@ -748,7 +750,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), st.nombreStatus,
             cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional,
-            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado, cl.fechaApartadoReubicacion, cl.apartadoXReubicacion, cl.fechaApartado
+            CONVERT(VARCHAR, hl.modificado, 103), oxc.nombre, lo.total, lo.totalNeto2, lo.casa, cl.fechaApartado, cl.fechaAlta, cl.apartadoXReubicacion, cl.fechaApartado
             ORDER BY st.nombreStatus");
         }
         return $query;       

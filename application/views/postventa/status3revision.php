@@ -48,6 +48,70 @@
         </div>
     </div>
 
+    <div class="modal fade " id="backToStatus6" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Registro estatus 6 - <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label>Comentario:</label>
+                            <input type="text" class="form-control" name="comentario" id="comentarioDirSt6">
+                            <br>
+                        </div>
+
+                        <input type="hidden" name="idLote" id="idLoteDirSt6" >
+                        <input type="hidden" name="idCliente" id="idClienteDirSt6" >
+                        <input type="hidden" name="idCondominio" id="idCondominioDirSt6" >
+                        <input type="hidden" name="fechaVenc" id="fechaVencDirSt6" >
+                        <input type="hidden" name="nombreLote" id="nombreLoteDirSt6"  >
+                        <input type="hidden" name="movimientoLote" id="movimientoLoteDirSt6"  >
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarAStatus6CE" onClick="enviarAStatus6CE()" class="btn btn-primary">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade " id="backToStatus7" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Registro estatus 7 - <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label>Comentario:</label>
+                            <input type="text" class="form-control" name="comentario" id="comentarioDirSt7">
+                            <br>
+                        </div>
+
+                        <input type="hidden" name="idLote" id="idLoteDirSt7" >
+                        <input type="hidden" name="idCliente" id="idClienteDirSt7" >
+                        <input type="hidden" name="idCondominio" id="idCondominioDirSt7" >
+                        <input type="hidden" name="fechaVenc" id="fechaVencDirSt7" >
+                        <input type="hidden" name="nombreLote" id="nombreLoteDirSt7"  >
+                        <input type="hidden" name="movimientoLote" id="movimientoLoteDirSt7"  >
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarAStatus7CE" onClick="enviarAStatus7CE()" class="btn btn-primary">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- modal para rechazar estatus-->
     <div class="modal fade" id="rechazarStatus" data-backdrop="static" data-keyboard="false">

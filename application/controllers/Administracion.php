@@ -608,7 +608,6 @@ class Administracion extends CI_Controller{
 		}
 	}
 	
-	
 	public function get_data_asignacion($idLote){
         $data = $this->Administracion_model->get_data_asignacion($idLote);
         echo json_encode($data);

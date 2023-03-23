@@ -321,19 +321,26 @@ public function getDataDispersionPago($val = '') {
 
         $this->db->query("SET LANGUAGE Español;");
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, 
+            cond.nombre as nombreCondominio, l.nombreLote,  
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente,
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
-            convert(nvarchar, pc.fecha_modificacion, 6) date_final,  convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
-            convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
+            convert(nvarchar, pc.fecha_modificacion, 6) date_final,  
+            convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
+             pc.fecha_sistema as  fecha_sistema, 
+            convert(nvarchar, cl.fechaApartado, 6) fechaApartado, 
+            se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
             CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
             CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
             CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, 
-            (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
+            (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE 
+            CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
             CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
-            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion, (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion
+            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
+            cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion, 
+            (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion
             FROM lotes l
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -4636,7 +4643,7 @@ function getBonosPorUserContra($estado){
         $filtro = "and u.id_rol in(18, 19, 20, 25, 26, 27, 28, 30, 36)  ";
     return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
     CASE WHEN u.nueva_estructura = 2 THEN opcx2.nombre ELSE opcx.nombre END as id_rol, p.id_bono,
-    p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,
+    p.id_usuario,p.monto,p.num_pagos,b.abono pago,p.estatus,p.comentario,b.fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,
     (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto, u.rfc
     FROM bonos p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
     INNER JOIN pagos_bonos_ind b on b.id_bono = p.id_bono 
@@ -7941,7 +7948,7 @@ public function getBonoXUser($user,$comentario,$estatus,$f1,$f2){
                     $filtro="and d.estado in(2,6)";
         
                 }
-                return  $respuesta = $this->db->query("select sum( (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) ) as impuesto1
+                return  $respuesta = $this->db->query("select sum( (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)* d.abono) ELSE d.abono END) ) as impuesto1
                 FROM bonos p 
                LEFT JOIN pagos_bonos_ind d ON d.id_bono=p.id_bono
                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
