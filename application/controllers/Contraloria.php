@@ -121,7 +121,7 @@ class Contraloria extends CI_Controller {
 	 	$this->load->view("contraloria/vista_10_contraloria",$datos);
 	}
 	public function envio_RL_contraloria(){
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
@@ -1141,7 +1141,7 @@ public function get_sede(){
         $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
 
         if($valida_tl[0]['tipo_venta'] == 1){
-            $idStaC = 3;
+            $idStaC = 1;
             $idMov = 102;
         }else{
             $idStaC = 1;
@@ -1486,7 +1486,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
     $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
     if($valida_tventa[0]['tipo_venta'] == 1 ){
         if($valida_tventa[0]['idStatusContratacion'] == 5 || $valida_tventa[0]['idMovimiento']==106){
-            $statusContratacion = 2;
+            $statusContratacion = 1;
             $idMovimiento = 107;
         }else{
             $statusContratacion = 1;

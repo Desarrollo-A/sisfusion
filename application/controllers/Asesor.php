@@ -3731,7 +3731,16 @@ class Asesor extends CI_Controller
             }elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
                 $statusContratacion = 2;
                 $idMovimiento = 110;
-            }else{
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102){ #rechazo del status 5
+                $statusContratacion = 2;
+                $idMovimiento = 113;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107){ #rechazo del status 6
+                $statusContratacion = 2;
+                $idMovimiento = 114;
+            }
+            else{
                 $statusContratacion = 3;
                 $idMovimiento = 98;
             }

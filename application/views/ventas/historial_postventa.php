@@ -5,7 +5,10 @@
 <div class="wrapper ">
     <?php
 
-    if ($this->session->userdata('id_rol') == "33" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "82" || $this->session->userdata('id_rol') == "83") {
+    if ($this->session->userdata('id_rol') == "33"||$this->session->userdata('id_rol') == "17"||$this->session->userdata('id_rol') == "55" ||$this->session->userdata('id_rol') == "74"||
+    $this->session->userdata('id_rol')=="75" || $this->session->userdata('id_rol')=="76" || $this->session->userdata('id_rol')=="77"  || $this->session->userdata('id_rol')=="78"
+        || $this->session->userdata('id_rol')=="79" || $this->session->userdata('id_rol')=="80" || $this->session->userdata('id_rol')=="81" || $this->session->userdata('id_rol')=="82"
+        || $this->session->userdata('id_rol')=="83") {
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
