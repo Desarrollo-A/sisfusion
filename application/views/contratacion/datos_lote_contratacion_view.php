@@ -52,6 +52,8 @@
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
 			case "54": // MKTD POPEA
+			case '82': // AGENTE DE ASIGNACIÓN 
+			case '83': // AGENTE DE CALIDAD 	
 				$this->load->view('template/sidebar', "");
 			break;
 			default:
