@@ -42,7 +42,7 @@ class Administracion extends CI_Controller{
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
 			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
 			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
-			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83'
+			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83' && $this->session->userdata('id_rol') != '84'
         ) {
 			redirect(base_url() . 'login');
 		}
