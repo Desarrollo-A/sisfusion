@@ -3503,7 +3503,7 @@ public function return1(){
 
 
 	public function get_lote_historial($lote){
-		echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array());
+		echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array(),JSON_NUMERIC_CHECK);
 	}
 
 	public function get_lote_apartado(){
@@ -3512,7 +3512,7 @@ public function return1(){
 		$data = $this->Contraloria_model->get_datos_lotes($idLote)->row();
 
 		if($data != null)
-			echo json_encode($data);
+			echo json_encode($data,JSON_NUMERIC_CHECK);
 		else
 			echo json_encode(array());
 	}
@@ -3558,10 +3558,10 @@ public function return1(){
 		empty($_POST['enganches']) ? '' : $data['totalNeto'] = $this->formatter->removeNumberFormat($_POST['enganches']);
 		empty($_POST['ubicacion_sede']) ? : $data['ubicacion'] = $_POST['ubicacion_sede'];
 
-		//var_dump($data);
+		var_dump($data);
 
-		//$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-		//echo json_encode($response);
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
 	}
 
 	/*public function updateLoteEngancheSede(){

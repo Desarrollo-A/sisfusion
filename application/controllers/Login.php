@@ -84,6 +84,16 @@ class Login extends CI_Controller
 		case '71': // AUXILIAR DE ARCHIVO
 		case '72': // DIRECCIÓN BIOFÍSICA
 		case '73': // PRACTICANTE CONTRALORÍA
+		case '74': // EJECUTIVO DE POSTVENTA
+		case '75': // SUPERVISOR POSTVENTA
+		case '76': // ASISTENTE SUBDIRECCIÓN POSTVENTA
+		case '77': // AUXILIAR POSTVENTA
+		case '78': // BASE DE DATOS POSTVENTA
+		case '79': // COORDINADOR DE POSTVENTA
+		case '80': // COORDINADOR DE CALL CENTER POSTVENTA
+		case '81': // SUBDIRECCIÓN POSTVENTA 
+		case '82': // AGENTE DE ASIGNACIÓN 
+		case '83': // AGENTE DE CALIDAD 
 					redirect(base_url().'Administracion');
         break;
 

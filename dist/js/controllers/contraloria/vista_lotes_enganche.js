@@ -54,12 +54,13 @@ function llenarSelectPrincipal(){
 
 $('#tabla_historial thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
+    $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead" data-toggle="tooltip" data-placement="top"  placeholder="'+title+'"/>' );
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_historial').DataTable().column(i).search() !== this.value ) {
             $('#tabla_historial').DataTable().column(i).search(this.value).draw();
         }
     });
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).ready(function(){
@@ -162,17 +163,22 @@ $('#lote').change( function() {
                 {data: 'gerente'},
                 {data: 'saldo'},
                 {data: 'enganche'},
+                {data: 'engancheContra'},
                 {data: 'nombre_ubicacion'},
                 {data: 'lote'},
                 {data: 'contratacion'},
                 {
                     "data": function(d){
-                        opciones = `<center><button id="modificar" data-bandera9=${d.validacion_estatus_9} data-registroComision=${d.registro_comision} data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
+                        $('[data-toggle="tooltip"]').tooltip();
+                        opciones = `<center><button id="modificar" data-toggle="tooltip" data-placement="top" data-bandera9=${d.validacion_estatus_9} data-registroComision=${d.registro_comision} data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
                         return opciones;
+
                     }
                 }
             ]
     });
+    $('[data-toggle="tooltip"]').tooltip();
+
 });
 
 $(document).on('click', '#modificar', function () {
@@ -182,27 +188,29 @@ $(document).on('click', '#modificar', function () {
     selectobject=document.getElementById("modificacion").getElementsByTagName("option");
    //console.log( selectobject.findIndex((element) => element.innerHTML == 'Precio'))
     //selectobject[3].disabled=true;
+    let engancheContra = data.engancheContra;
+    let ubicacionContra = data.ubicacion;
     getLoteApartado(data.idLote);
     $('#idLote').val(data.idLote);
     $('#bandera9').val(bandera9);
     $('#registroComision').val(banderaComision);
+    engancheContra == null || engancheContra == '$0.00' ? $("#modificacion option[value='Enganche']").prop("disabled",true) : '';
+    ubicacionContra == null || ubicacionContra == 0 ? $("#modificacion option[value='Ubicacion']").prop("disabled",true) : '';
     if(bandera9 == 1 && (banderaComision  == 8 || banderaComision == 0)){
-        console.log('si entro 1')
         //TIENE ESTATUS 9 REGISTRADO Y RECESIÓN O NUEVA COMISIÓN => SI SE PUEDE ACTUALIZAR PRECIO
                  $("#modificacion option[value='Precio']").prop("disabled",false);
                  $('#modificacion').selectpicker('refresh');
-        }else if(bandera9 == 1 && (banderaComision  != 8 && banderaComision != 0)){
+    }else if(bandera9 == 1 && (banderaComision  != 8 && banderaComision != 0)){
         //TIENE ESTATUS 9 REGISTRADO Y COMISIÓN ACTIVA => NO SE PUEDE MODIFICAR PRECIO LOTE
-        console.log('si entro 2')
             $("#modificacion option[value='Precio']").prop("disabled",true);
             $('#modificacion').selectpicker('refresh');
             $('#preciodesc').prop("disabled",true);
 
     }else if(bandera9 != 1 && (banderaComision  == 8 || banderaComision == 0 )){
-        console.log('si entro 3')
-        //NO SE TIENE ESTATUS 9 REGISTRADO Y LA COMISIÓN ES NUEVA O TIENE UNA RECESIÓN => SI SE PUEDE MODIFICAR EL PRECIO DEL LOTE
-        $("#modificacion option[value='Precio']").prop("disabled",false);
-        $('#modificacion').selectpicker('refresh');
+        //NO SE TIENE ESTATUS 9 REGISTRADO Y LA COMISIÓN ES NUEVA O TIENE UNA RECESIÓN => NO SE PUEDE MODIFICAR EL PRECIO DEL LOTE 
+        $("#modificacion option[value='Precio']").prop("disabled",true);
+            $('#modificacion').selectpicker('refresh');
+            $('#preciodesc').prop("disabled",true);
     }else{
 
     }
@@ -214,7 +222,7 @@ function getLoteApartado(idLote){
         idLote:idLote
     }, function(data) {
         $('#preciodesc').val(data.saldo);
-        $('#enganches').val(data.enganche);
+        $('#enganches').val(data.engancheContra);
     }, 'json');   
 }
 
@@ -292,6 +300,7 @@ $(document).ready(function(){
         }
         $("#ubicacion_sede").selectpicker('refresh');
     }, 'json');
+
 });
 
 function llenarSelectUbicacion() {

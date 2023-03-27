@@ -500,16 +500,14 @@
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
 											} else if(data.tipo_doc == 8){  // MUESTRA ICONO DISABLED PARA CONTRATO CUANDO NO ESTÉ LLENO
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-
-                                            } else if(data.tipo_doc == 29  && id_rol_current!=6){
+                                            } else if(data.tipo_doc == 29  && (id_rol_current != 6 && id_rol_current != 5)){
                                                 file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
                                             }
                                             else {
 
 												// AVALUA SI ES ASISTENET DE GERENCIA
                                                 <?php if($this->session->userdata('id_rol') == 6){?>
-
-                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6 && data.tipo_doc==29)){
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && ((id_rol_current == 6 || id_rol_current == 5) && data.tipo_doc==29)){
                                                             file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
                                                         }
 												// EVALÚA ROL
@@ -568,8 +566,8 @@
 												file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>';
 												}else{
                                                     file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-                                                    if(data.tipo_doc==29 && id_rol_current==6 ){
-                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && (id_rol_current==6 &&  data.tipo_doc==29)){
+                                                    if(data.tipo_doc==29 && (id_rol_current == 6 || id_rol_current == 5)){
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && ((id_rol_current == 6 || id_rol_current == 5) &&  data.tipo_doc==29)){
                                                             file+= '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
                                                         }
                                                     }else{
@@ -742,7 +740,7 @@
 			});
 		});
 		
-		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 6){?>
+		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 5){?>
 		var miArrayAddFile = new Array(8);
 		var miArrayDeleteFile = new Array(1);
 			$(document).on("click", ".update", function(e){

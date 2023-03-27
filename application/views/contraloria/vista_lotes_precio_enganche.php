@@ -1,5 +1,5 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <body class="">
     <div class="wrapper ">
         <?php
@@ -29,7 +29,7 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                        <select id="modificacion" class="selectpicker" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" multiple required>
+                                        <select id="modificacion" class="selectpicker select-gral m-0" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" multiple required>
                                             <option disabled selected value="">Seleccione una opción</option>
                                         </select>
                                     </div>
@@ -105,7 +105,8 @@
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
                                                     <th>TOTAL</th>
-                                                    <th>ENGANCHE</th>
+                                                    <th>ENGANCHE ADMINISTRACIÓN</th>
+                                                    <th>ENGANCHE CONTRALORÍA</th>
                                                     <th>UBICACIÓN</th>
                                                     <th>ESTATUS LOTE</th>
                                                     <th>ESTATUS CONTRATACIÓN</th>
@@ -192,9 +193,10 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
     </div>
+
 </div>
+<?php $this->load->view('template/footer_legend');?>
 
 </div><!--main-panel close-->
 </body>
@@ -206,9 +208,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
 <script>
     var url = "<?=base_url()?>";
     var url2 = "<?=base_url()?>index.php";
     var urlimg = "<?=base_url()?>img/";
 </script>
+<!-- MODAL WIZARD -->
+<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
+<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/vista_lotes_enganche.js"></script>

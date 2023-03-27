@@ -1,7 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Administracion extends CI_Controller{
 
- /*primer commit*/
 	public function __construct()
 	{
 		parent::__construct();
@@ -41,10 +40,9 @@ class Administracion extends CI_Controller{
             $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
 			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
-			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '70' &&
-            $this->session->userdata('id_rol') != '71' && $this->session->userdata('id_rol') != '72' &&
-            $this->session->userdata('id_rol') != '73'
+			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
+			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
+			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -112,12 +110,9 @@ class Administracion extends CI_Controller{
 		  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 		  $time = date('H:i:s', $hoy_strtotime2);
 		  
-
-
-
           if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
               $dataPer[$i]['fechaVenc2'] = 'N/A';
-          }else{
+          }else {
               if ($time > $horaInicio and $time < $horaFin) {
                   if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                       $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
