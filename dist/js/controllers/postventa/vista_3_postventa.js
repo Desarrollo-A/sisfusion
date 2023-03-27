@@ -159,7 +159,7 @@ $("#tabla_estatus3").ready( function(){
                 "data": function( d ){
                     var lblStats = d.idMovimiento;
 
-                    if(d.idMovimiento==100 || d.idMovimiento==102 || d.idMovimiento==104 || d.idMovimiento==105 || d.idMovimiento==107 || d.idMovimiento==110)
+                    if(d.idMovimiento==100 || d.idMovimiento==102 || d.idMovimiento==104 || d.idMovimiento==105 || d.idMovimiento==107 || d.idMovimiento==110 || d.idMovimiento==113 || d.idMovimiento==114)
                     {
                         lblStats ='<span class="label label-danger">Correción</span>';
                     }
@@ -213,7 +213,7 @@ $("#tabla_estatus3").ready( function(){
                     var fechaVenc;
 
                     if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84 || d.idStatusContratacion == 3 && d.idMovimiento == 98 || d.idStatusContratacion == 2 && d.idMovimiento == 105 || d.idStatusContratacion == 2 && d.idMovimiento == 107
-                        || d.idStatusContratacion == 2 && d.idMovimiento == 110) {
+                        || d.idStatusContratacion == 2 && d.idMovimiento == 110 || d.idStatusContratacion == 2 && d.idMovimiento == 113 || d.idStatusContratacion == 2 && d.idMovimiento == 114) {
                         fechaVenc = d.fechaVenc;
                     } else if (d.idStatusContratacion == 2 && d.idMovimiento == 74 || d.idStatusContratacion == 2 && d.idMovimiento == 93) {
                         fechaVenc = 'Vencido';
@@ -268,7 +268,7 @@ $("#tabla_estatus3").ready( function(){
 
                     } else {
                         if(data.idStatusContratacion == 3 && data.idMovimiento == 98 || data.idStatusContratacion == 3
-                            && data.idMovimiento == 100 || data.idStatusContratacion == 3 && data.idMovimiento == 102)
+                            && data.idMovimiento == 100 || data.idStatusContratacion == 3 && data.idMovimiento == 102 || data.idStatusContratacion == 2 && data.idMovimiento == 113 || data.idStatusContratacion == 2 && data.idMovimiento == 114)
                         {
                             let correccion_mov = (data.idMovimiento == 102) ? 1 : 0;
 
