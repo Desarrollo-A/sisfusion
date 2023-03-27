@@ -26,7 +26,9 @@
 			case '40': // COBRANZA
 			case '53': // analista comisisones
 			case '58': // ANALISTA DE DATOS
-			case '65': // CONTABILIDAD (EXTERNO)	
+			case '65': // CONTABILIDAD (EXTERNO)
+			case '82': // AGENTE DE ASIGNACIÓN 
+			case '83': // AGENTE DE CALIDAD 	
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;
