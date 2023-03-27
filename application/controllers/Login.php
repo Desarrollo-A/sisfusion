@@ -94,6 +94,7 @@ class Login extends CI_Controller
 		case '81': // SUBDIRECCIÓN POSTVENTA 
 		case '82': // AGENTE DE ASIGNACIÓN 
 		case '83': // AGENTE DE CALIDAD 
+		case '84': // CONSULTA BBVA
 					redirect(base_url().'Administracion');
         break;
 
