@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>-->
-
+ 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -186,7 +186,7 @@
                                                                 <th>TIPO VENTA</th>
                                                                 <th>USUARIO</th>
                                                                 <th>PUESTO</th>
-                                                                <th>CODIGO POSTAL</th>
+                                                                <th>CÓDIGO POSTAL</th>
                                                                 <th>FEC. ENVÍO</th>
                                                                 <th>MÁS</th>
                                                             </tr>
