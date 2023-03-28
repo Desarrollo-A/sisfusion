@@ -828,7 +828,7 @@
                 processData: false,
                 type: 'POST',
                 success: function (response) {
-                alerts.showNotification("top","right","Se capturo tu codigo postal: "+dato_solicitudcp+"","success");
+                alerts.showNotification("top","right","Se capturó tu código postal: "+dato_solicitudcp+"","success");
                 $("#solicitud_cp").modal("hide");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -1062,7 +1062,7 @@
                 {
                     text: '<i class="fa fa-archive" aria-hidden="true"></i>',
                     className: 'btn btn-azure',
-                    titleAttr: 'Clic para consultar codigo postal',
+                    titleAttr: 'Clic para consultar código postal',
                     action: function (e,dt,button,confing){
                         $('#solicitud_cp').modal('show');
                     }

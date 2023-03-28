@@ -725,14 +725,30 @@ function update_estatus(){
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+    $consulta_comisiones = // $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-   
-      if( $consulta_comisiones->num_rows() > 0 ){
+    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;
 
+     // if( $consulta_comisiones->num_rows() > 0 ){
+      if($id_user_Vl){
         $validar_sede = $this->session->userdata('id_sede');
         date_default_timezone_set('America/Mexico_City');       
         $fecha_actual = strtotime(date("d-m-Y H:i:00"));
+
+
+        echo $fecha_actual;
+        echo "<br>";
+        echo  $obtenerFechaSql;
+        echo "<br>";
+        echo "strtotime ".strtotime($obtenerFechaSql);
+        echo "<br>";
+        echo date("d-m-Y H:i:00");
+        echo "<br>";
+        echo "strtotime ".strtotime(date("d-m-Y H:i:00"));
+        echo "<br>";
+
+
+
           //fecha inicio
           $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
           $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
@@ -792,9 +808,9 @@ function update_estatus(){
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
       
-          $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
-          $ins_b = $this->Comisiones_model->insert_phc($data);
-          $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
+          //$up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
+          //$ins_b = $this->Comisiones_model->insert_phc($data);
+          //$this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
           if ($formaPagoUsuario == 5) {
             $this->PagoInvoice_model->insertMany($pagoInvoice);
           }

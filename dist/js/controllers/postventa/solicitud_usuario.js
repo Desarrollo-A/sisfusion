@@ -194,8 +194,8 @@ function fillTable(id) {
                                              class="btn-data btn-green" 
                                              data-toggle="tooltip" 
                                              data-placement="top" 
-                                             title="Aprobar">
-                                             <i class="fa fa-share"></i></button>
+                                             title="Reasignar">
+                                             <i class="fas fa-user-friends"></i></button>
                                               <center>`;
                 }
             }
@@ -267,66 +267,68 @@ $(document).on('click', '#repartir', function () {
 
     console.log(solicitud);
     var Descripcion = document.getElementById('textDescripcion');
-    Descripcion.innerHTML = ' ';
-    var titulo  = ' ';
-    titulo += '  <h5 id="tituloModalUni" name="tituloModalUni">Reasignación solicitud : '+ solicitud  +'</h5>';
+    Descripcion.innerHTML = '';
+    var titulo  = '';
+    titulo += ` <h4 class="modal-title card-title" id="tituloModalUni" name="tituloModalUni">Reasignación de la solicitud :  ${solicitud}  </h4>`;
     var anterior = document.getElementById('anteriorTitu');
-    anterior.innerHTML = ' '  ;
+    anterior.innerHTML = ''  ;
     anterior.innerHTML =   nombreTitular  ;
 
     var Descripcion = document.getElementById('textDescripcion');
     var comentarioDescrip = document.getElementById('textDescripcion');
-    var texto = ' ';
-    comentarioDescrip.innerHTML = ' ID :'+idTitular +'   Nombre: '+ nombreTitular   ;
+    comentarioDescrip.innerHTML = 'ID USUARIO :'+idTitular +' <br>NOMBRE USUARIO: '+ nombreTitular   ;
 
     var myCommentsLote = document.getElementById('tituloModal');
-    myCommentsLote.innerHTML = ' ';
+    myCommentsLote.innerHTML = '';
     myCommentsLote.innerHTML = titulo;
-    // var Header_modal = document.getElementById('header_modal');
-    // Header_modal.innerHTML = titulo;
 
 
 });
 
     $(document).on("click", ".updateTitu", function () {
         titulares  = document.getElementById("titulares").value;
-        idTitular  =   document.getElementById("id_actual").value ;
-        solicitud  = document.getElementById("solicitud").value ;
-        var validacion = false;
-        if(titulares == idTitular){
-            validacion = false;
-            console.log('son iguales');
+        if(titulares != ''){
+            idTitular  =   document.getElementById("id_actual").value ;
+            solicitud  = document.getElementById("solicitud").value ;
+            var validacion = false;
+            if(titulares == idTitular){
+                validacion = false;
+                console.log('son iguales');
+            }else{
+                validacion = true;
+                console.log('son diferentes');
+            }
+            if(validacion){
+                $.ajax({
+                    url : 'reasignacionSolicitudEsc',
+                    type : 'POST',
+                    dataType: "json",
+                    data: {
+                    // "pagos_activos"     : pagos_activos,
+                    "id_solicitud" : solicitud,
+                    "titulares" : titulares, //nuevo 
+                    "idTitular": idTitular,         //viejo  
+                      }, 
+                      success: function(data) {
+               
+                        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                       
+                        $('#table-user').DataTable().ajax.reload(null, false );
+                        
+                        // toastr[response.response_type](response.message);
+                        $('#modal_nuevas').modal('toggle');
+                    },              
+                    error : (a, b, c) => {
+                        alerts.showNotification("top", "right", "Error al actualizar No actualizado .", "error");
+                    }
+                    });
+            }else{
+                alerts.showNotification("top", "right", "No puedes asignar a la misma persona la actividad .", "error");
+            }
         }else{
-            validacion = true;
-            console.log('son diferentes');
+            alerts.showNotification("top", "right", "Debe seleccionar un usuario .", "warning");
         }
-        if(validacion){
-            $.ajax({
-                url : 'descuentoUpdateTi',
-                type : 'POST',
-                dataType: "json",
-                data: {
-                // "pagos_activos"     : pagos_activos,
-                "id_solicitud" : solicitud,
-                "titulares" : titulares, //nuevo 
-                "idTitular": idTitular,         //viejo  
-                  }, 
-                  success: function(data) {
-           
-                    alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-                   
-                    $('#table-user').DataTable().ajax.reload(null, false );
-                    
-                    // toastr[response.response_type](response.message);
-                    $('#modal_nuevas').modal('toggle');
-                },              
-                error : (a, b, c) => {
-                    alerts.showNotification("top", "right", "Error al actualizar No actualizado .", "error");
-                }
-                });
-        }else{
-            alerts.showNotification("top", "right", "No puedes asignar a la misma persona la actividad .", "error");
-        }
+
     });
 
     $(document).on("click", ".aportaciones", function () {

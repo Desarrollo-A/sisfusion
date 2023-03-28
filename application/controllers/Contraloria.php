@@ -1,5 +1,5 @@
 <?php
-
+use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
@@ -11,7 +11,8 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu','Formatter'));
-		$this->load->helper(array('url','form'));
+        $this->load->library('phpmailer_lib');
+        $this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
@@ -69,7 +70,6 @@ class Contraloria extends CI_Controller {
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_historial_pagos_contraloria",$datos);
 	}
 	public function estatus_2_0_contraloria(){
 	/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
@@ -121,7 +121,7 @@ class Contraloria extends CI_Controller {
 	 	$this->load->view("contraloria/vista_10_contraloria",$datos);
 	}
 	public function envio_RL_contraloria(){
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
@@ -1141,7 +1141,7 @@ public function get_sede(){
         $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
 
         if($valida_tl[0]['tipo_venta'] == 1){
-            $idStaC = 3;
+            $idStaC = 1;
             $idMov = 102;
         }else{
             $idStaC = 1;
@@ -1486,7 +1486,7 @@ public function editar_registro_loteRechazo_contraloria_proceceso6(){
     $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
     if($valida_tventa[0]['tipo_venta'] == 1 ){
         if($valida_tventa[0]['idStatusContratacion'] == 5 || $valida_tventa[0]['idMovimiento']==106){
-            $statusContratacion = 2;
+            $statusContratacion = 1;
             $idMovimiento = 107;
         }else{
             $statusContratacion = 1;
@@ -3503,7 +3503,7 @@ public function return1(){
 
 
 	public function get_lote_historial($lote){
-		echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array());
+		echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array(),JSON_NUMERIC_CHECK);
 	}
 
 	public function get_lote_apartado(){
@@ -3512,7 +3512,7 @@ public function return1(){
 		$data = $this->Contraloria_model->get_datos_lotes($idLote)->row();
 
 		if($data != null)
-			echo json_encode($data);
+			echo json_encode($data,JSON_NUMERIC_CHECK);
 		else
 			echo json_encode(array());
 	}
@@ -3558,10 +3558,10 @@ public function return1(){
 		empty($_POST['enganches']) ? '' : $data['totalNeto'] = $this->formatter->removeNumberFormat($_POST['enganches']);
 		empty($_POST['ubicacion_sede']) ? : $data['ubicacion'] = $_POST['ubicacion_sede'];
 
-		//var_dump($data);
+		var_dump($data);
 
-		//$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-		//echo json_encode($response);
+		$response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+		echo json_encode($response);
 	}
 
 	/*public function updateLoteEngancheSede(){

@@ -25,8 +25,19 @@
 			case '50': // GENERALISTA MKTD
 			case '40': // COBRANZA
 			case '53': // analista comisisones
+            case '55': // POSTVENTA
 			case '58': // ANALISTA DE DATOS
-			case '65': // CONTABILIDAD (EXTERNO)	
+			case '65': // CONTABILIDAD (EXTERNO)
+            case '74': //  Ejecutivo Postventa(EXTERNO)
+            case '75': //  Supervisor Postventa(EXTERNO)
+            case '76': //  Asistente subdirección Postventa(EXTERNO)
+            case '77': //  Auxiliar Postventa(EXTERNO)
+            case '78': //  Base de Datos Postventa(EXTERNO)
+            case '79': //  Coordinador de Postventa(EXTERNO)
+            case '80': //  Coordinador de Call Center Postventa(EXTERNO)
+            case '81': //  Subdirección Postventa(EXTERNO)
+            case '82': //  Agente de asignación(EXTERNO)
+            case '83': //  Agente de calidad(EXTERNO)
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;
