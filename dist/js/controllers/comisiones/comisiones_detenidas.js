@@ -119,7 +119,14 @@ $('#comisiones-detenidas-table').ready(function () {
                 'width': '15%',
                 'orderable': false,
                 'data': function (d) {
-                    return '<p class="m-0"><b>'+d.motivo+'</b></p>';
+                        let motivo ;
+                        if(d.motivo == 1 || d.motivo == 2 || d.motivo == 3){
+                            motivo = d.motivoOpc;
+                        }else  {
+                            motivo = d.motivo;
+                        }
+
+                    return '<p class="m-0"><b>'+motivo+'</b></p>';
                 }
             },
             {
@@ -168,6 +175,7 @@ $('#comisiones-detenidas-table').ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             row.child(`
+            
                 <div class="container subBoxDetail">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12"

@@ -8245,12 +8245,14 @@ return $query->result();
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario
+        ,oxc.nombre as motivoOpc
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
@@ -8333,18 +8335,26 @@ return $query->result();
         if ($anio != 0) {
             $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
-        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
+        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, 
+		CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
         u .apellido_materno) AS nombre_completo, 
-        oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario,
-        rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
+        oxc.nombre as puesto, pa.id_usuario, 
+		pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
+		convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, 
+		pa.comentario,
+		lo.nombreLote, 
+        rpp.id_relacion_pp,
+		oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
         FROM prestamos_aut pa
         JOIN usuarios u ON u.id_usuario = pa.id_usuario
         JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-        JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i  
+        JOIN comisiones co ON  pci.id_comision = co.id_comision
+		JOIN lotes lo ON lo.idCliente = co.idCliente 
+		JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
         JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
         JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente, pa1.id_usuario
-            FROM prestamos_aut pa1
+			FROM prestamos_aut pa1
             JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
             JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
             GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
@@ -8352,6 +8362,7 @@ return $query->result();
         WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio
         GROUP BY pci.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, 
         u .apellido_materno, 
+		lo.nombreLote,
         oxc.nombre, pa.id_usuario, pa.monto, pci.abono_neodata, pa.pago_individual,pci.fecha_pago_intmex, pa.comentario,
         rpp.id_relacion_pp,oxc2.nombre, oxc2.id_opcion, pend.pendiente
         ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
@@ -9026,7 +9037,14 @@ function descuentos_universidad($clave , $data){
     }
 
    
+    public function getMotivosControversia()
+    {
+        $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 88";
+        $query = $this->db->query($cmd);
+        return $query->result_array();   
+    }
 
+   
     // function InsertGenerico($insert, $table){
         
     //     try {

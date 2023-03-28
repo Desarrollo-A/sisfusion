@@ -719,7 +719,7 @@ $('#filtro55').change(function(ruta){
 let titulos = [];
 function onKeyUp(event) {
     var keycode = event.keyCode;
-    if(keycode == '13'){
+    if(keycode != '13'){
         $('.find_doc').click();
     }
 }
