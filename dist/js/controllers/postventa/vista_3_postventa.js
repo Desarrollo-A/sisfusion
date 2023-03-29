@@ -159,7 +159,7 @@ $("#tabla_estatus3").ready( function(){
                 "data": function( d ){
                     var lblStats = d.idMovimiento;
 
-                    if(d.idMovimiento==100 || d.idMovimiento==102)
+                    if(d.idMovimiento==100 || d.idMovimiento==102 || d.idMovimiento==104 || d.idMovimiento==105 || d.idMovimiento==107 || d.idMovimiento==110 || d.idMovimiento==113 || d.idMovimiento==114)
                     {
                         lblStats ='<span class="label label-danger">Correción</span>';
                     }
@@ -212,7 +212,8 @@ $("#tabla_estatus3").ready( function(){
 
                     var fechaVenc;
 
-                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84 || d.idStatusContratacion == 3 && d.idMovimiento == 98) {
+                    if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84 || d.idStatusContratacion == 3 && d.idMovimiento == 98 || d.idStatusContratacion == 2 && d.idMovimiento == 105 || d.idStatusContratacion == 2 && d.idMovimiento == 107
+                        || d.idStatusContratacion == 2 && d.idMovimiento == 110 || d.idStatusContratacion == 2 && d.idMovimiento == 113 || d.idStatusContratacion == 2 && d.idMovimiento == 114) {
                         fechaVenc = d.fechaVenc;
                     } else if (d.idStatusContratacion == 2 && d.idMovimiento == 74 || d.idStatusContratacion == 2 && d.idMovimiento == 93) {
                         fechaVenc = 'Vencido';
@@ -267,7 +268,7 @@ $("#tabla_estatus3").ready( function(){
 
                     } else {
                         if(data.idStatusContratacion == 3 && data.idMovimiento == 98 || data.idStatusContratacion == 3
-                            && data.idMovimiento == 100 || data.idStatusContratacion == 3 && data.idMovimiento == 102)
+                            && data.idMovimiento == 100 || data.idStatusContratacion == 3 && data.idMovimiento == 102 || data.idStatusContratacion == 2 && data.idMovimiento == 113 || data.idStatusContratacion == 2 && data.idMovimiento == 114)
                         {
                             let correccion_mov = (data.idMovimiento == 102) ? 1 : 0;
 
@@ -293,6 +294,34 @@ $("#tabla_estatus3").ready( function(){
                             cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="edit2 btn-data btn-warning" >' +
+                                '<i class="fas fa-thumbs-down"></i></button>';
+                        }
+                        else if(data.idStatusContratacion == 2 && data.idMovimiento == 105 || data.idStatusContratacion == 2 && data.idMovimiento == 107)
+                        {
+
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'data-tipo-venta="'+data.tipo_venta+'" class="avanzarStatus6 btn-data btn-green" title="Registrar estatus" >' +
+                                '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
+
+
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="rechazarStatusRechazo6 btn-data btn-warning" title="Rechazar estatus">' +
+                                '<i class="fas fa-thumbs-down"></i></button>';
+                        }
+                        else if(data.idStatusContratacion == 2 && data.idMovimiento == 110)
+                        {
+
+                            cntActions = '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'data-tipo-venta="'+data.tipo_venta+'" class="avanzarStatus7 btn-data btn-green" title="Registrar estatus" >' +
+                                '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
+
+
+                            cntActions += '<button href="#" data-idLote="'+data.idLote+'" data-nomLote="'+data.nombreLote+'" data-idCond="'+data.idCondominio+'"' +
+                                'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
+                                'class="rechazarStatusRechazo7 btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
                         else
@@ -466,6 +495,73 @@ $(document).on('click', '.stat5Rev', function () {
 
 });
 
+$(document).on('click', '.avanzarStatus6', function () {
+    var idLote = $(this).attr("data-idLote");
+    var nomLote = $(this).attr("data-nomLote");
+    const tipoVenta = $(this).attr('data-tipo-venta');
+
+    $('#nombreLoteDirSt6').val($(this).attr('data-nomLote'));
+    $('#idLoteDirSt6').val($(this).attr('data-idLote'));
+    $('#idCondominioDirSt6').val($(this).attr('data-idCond'));
+    $('#idClienteDirSt6').val($(this).attr('data-idCliente'));
+    $('#fechaVencDirSt6').val($(this).attr('data-fecVen'));
+    $('#tvLbl').removeClass('hide');
+
+    if (tipoVenta == 1) {
+        $('#tipo-venta-options-div').attr('hidden', true);
+        $('#tipo-venta-particular-div').attr('hidden', false);
+        $('#tipo_ventaenvARevCE').val(tipoVenta);
+    } else {
+        $('#tipo-venta-options-div').attr('hidden', false);
+        $('#tipo-venta-particular-div').attr('hidden', true);
+    }
+
+    $('#enviarenvARevCE').removeAttr('onClick', 'preguntaenvARevCE2()');
+    $('#enviarenvARevCE').attr('onClick', 'preguntaenvARevCE()');
+    $("#comentarioenvARevCE").val('');
+    $('#enviarenvARevCE').disabled = false;
+
+    nombreLote = $(this).data("nomlote");
+
+    $(".lote").html(nombreLote);
+
+    $('#backToStatus6').modal();
+
+});
+$(document).on('click', '.avanzarStatus7', function () {
+    var idLote = $(this).attr("data-idLote");
+    var nomLote = $(this).attr("data-nomLote");
+    const tipoVenta = $(this).attr('data-tipo-venta');
+
+    $('#nombreLoteDirSt7').val($(this).attr('data-nomLote'));
+    $('#idLoteDirSt7').val($(this).attr('data-idLote'));
+    $('#idCondominioDirSt7').val($(this).attr('data-idCond'));
+    $('#idClienteDirSt7').val($(this).attr('data-idCliente'));
+    $('#fechaVencDirSt7').val($(this).attr('data-fecVen'));
+    $('#tvLbl').removeClass('hide');
+
+    if (tipoVenta == 1) {
+        $('#tipo-venta-options-div').attr('hidden', true);
+        $('#tipo-venta-particular-div').attr('hidden', false);
+        $('#tipo_ventaenvARevCE').val(tipoVenta);
+    } else {
+        $('#tipo-venta-options-div').attr('hidden', false);
+        $('#tipo-venta-particular-div').attr('hidden', true);
+    }
+
+    $('#enviarAStatus7CE').removeAttr('onClick', 'enviarAStatus7CE()');
+    $('#enviarAStatus7CE').attr('onClick', 'enviarAStatus7CE()');
+    $("#comentarioDirSt7").val('');
+    $('#enviarAStatus7CE').disabled = false;
+
+    nombreLote = $(this).data("nomlote");
+
+    $(".lote").html(nombreLote);
+
+    $('#backToStatus7').modal();
+
+});
+
 function preguntaenvARevCE() {
     var idLote = $("#idLoteenvARevCE").val();
     var idCondominio = $("#idCondominioenvARevCE").val();
@@ -538,6 +634,148 @@ function preguntaenvARevCE() {
     }
 
 }
+function enviarAStatus6CE() {
+    /*esta funcion envia directo a status 6 despues de un rechazo*/
+    var idLote = $("#idLoteDirSt6").val();
+    var idCondominio = $("#idCondominioDirSt6").val();
+    var nombreLote = $("#nombreLoteDirSt6").val();
+    var idCliente = $("#idClienteDirSt6").val();
+    var fechaVenc = $("#fechaVencDirSt6").val();
+    var ubicacion = $("#ubicacion").val();
+    var comentario = $("#comentarioDirSt6").val();
+    var tipo_venta = $('#tipo_ventaDirSt6').val();
+
+
+    var parametros = {
+        "idLote": idLote,
+        "idCondominio": idCondominio,
+        "nombreLote": nombreLote,
+        "idCliente": idCliente,
+        "fechaVenc": fechaVenc,
+        "ubicacion" : ubicacion,
+        "comentario": comentario,
+        "tipo_venta": tipo_venta,
+    };
+
+
+
+    if (comentario.length <= 0) {
+
+        alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
+
+    } else if (comentario.length > 0) {
+
+        var botonEnviar = document.getElementById('enviarAStatus6CE');
+        botonEnviar.disabled = true;
+        $.ajax({
+            data: parametros,
+            url: 'enviaDirectoStatus6/',
+            type: 'POST',
+            success: function(data){
+                response = JSON.parse(data);
+
+                if(response.message == 'OK') {
+                    botonEnviar.disabled = false;
+                    $('#backToStatus6').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                } else if(response.message == 'FALSE'){
+                    botonEnviar.disabled = false;
+                    $('#backToStatus6').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                } else if(response.message == 'ERROR'){
+                    botonEnviar.disabled = false;
+                    $('#backToStatus6').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                }
+            },
+            error: function( data ){
+                botonEnviar.disabled = false;
+                $('#backToStatus6').modal('hide');
+                $('#tabla_estatus3').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            }
+
+
+        });
+
+
+    }
+
+}
+function enviarAStatus7CE() {
+    /*esta funcion envia directo a status 6 despues de un rechazo*/
+    var idLote = $("#idLoteDirSt7").val();
+    var idCondominio = $("#idCondominioDirSt7").val();
+    var nombreLote = $("#nombreLoteDirSt7").val();
+    var idCliente = $("#idClienteDirSt7").val();
+    var fechaVenc = $("#fechaVencDirSt7").val();
+    var ubicacion = $("#ubicacion").val();
+    var comentario = $("#comentarioDirSt7").val();
+    var tipo_venta = $('#tipo_ventaDirSt7').val();
+
+
+    var parametros = {
+        "idLote": idLote,
+        "idCondominio": idCondominio,
+        "nombreLote": nombreLote,
+        "idCliente": idCliente,
+        "fechaVenc": fechaVenc,
+        "ubicacion" : ubicacion,
+        "comentario": comentario,
+        "tipo_venta": tipo_venta,
+    };
+
+
+
+    if (comentario.length <= 0) {
+
+        alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
+
+    } else if (comentario.length > 0) {
+
+        var botonEnviar = document.getElementById('enviarAStatus7CE');
+        botonEnviar.disabled = true;
+        $.ajax({
+            data: parametros,
+            url: 'enviaDirectoStatus7/',
+            type: 'POST',
+            success: function(data){
+                response = JSON.parse(data);
+
+                if(response.message == 'OK') {
+                    botonEnviar.disabled = false;
+                    $('#backToStatus7').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                } else if(response.message == 'FALSE'){
+                    botonEnviar.disabled = false;
+                    $('#backToStatus7').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                } else if(response.message == 'ERROR'){
+                    botonEnviar.disabled = false;
+                    $('#backToStatus7').modal('hide');
+                    $('#tabla_estatus3').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                }
+            },
+            error: function( data ){
+                botonEnviar.disabled = false;
+                $('#backToStatus7').modal('hide');
+                $('#tabla_estatus3').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            }
+
+
+        });
+
+
+    }
+
+}
 
 
 
@@ -549,6 +787,31 @@ $(document).on('click', '.rechazarStatus', function (e) {
     $('#idCondominiorechCor').val($(this).attr('data-idCliente'));
     $('#idStatusContratacion').val(3);
     $('#idMovimiento').val(99);
+    $(".lote").html(nombreLote);
+    $('#rechazarStatus').modal();
+    e.preventDefault();
+});
+
+
+$(document).on('click', '.rechazarStatusRechazo6', function (e) {
+    idLote = $(this).data("idlote");
+    nombreLote = $(this).data("nomlote");
+    $('#idClienterechCor').val($(this).attr('data-idCond'));
+    $('#idCondominiorechCor').val($(this).attr('data-idCliente'));
+    $('#idStatusContratacion').val(2);
+    $('#idMovimiento').val(108);
+    $(".lote").html(nombreLote);
+    $('#rechazarStatus').modal();
+    e.preventDefault();
+});
+
+$(document).on('click', '.rechazarStatusRechazo7', function (e) {
+    idLote = $(this).data("idlote");
+    nombreLote = $(this).data("nomlote");
+    $('#idClienterechCor').val($(this).attr('data-idCond'));
+    $('#idCondominiorechCor').val($(this).attr('data-idCliente'));
+    $('#idStatusContratacion').val(1);
+    $('#idMovimiento').val(111);
     $(".lote").html(nombreLote);
     $('#rechazarStatus').modal();
     e.preventDefault();

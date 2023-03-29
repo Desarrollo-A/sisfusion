@@ -48,11 +48,22 @@
 			case "50": // GENERALISTA MKTD
 			case "40": // COBRANZA
 			case "53": // Analista comisiones
+            case "55": // POSTVENTA
 			case "47": // DIRECCIÓN FINANZAS
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
 			case "54": // MKTD POPEA
-				$this->load->view('template/sidebar', "");
+            case '74': //  Ejecutivo Postventa(EXTERNO)
+            case '75': //  Supervisor Postventa(EXTERNO)
+            case '76': //  Asistente subdirección Postventa(EXTERNO)
+            case '77': //  Auxiliar Postventa(EXTERNO)
+            case '78': //  Base de Datos Postventa(EXTERNO)
+            case '79': //  Coordinador de Postventa(EXTERNO)
+            case '80': //  Coordinador de Call Center Postventa(EXTERNO)
+            case '81': //  Subdirección Postventa(EXTERNO)
+            case '82': //  Agente de asignación(EXTERNO)
+            case '83': //  Agente de calidad(EXTERNO)
+            $this->load->view('template/sidebar', "");
 			break;
 			default:
 				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
