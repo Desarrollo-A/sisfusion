@@ -310,9 +310,6 @@ class Cobranza_model extends CI_Model {
             $filtroComisionista = "AND cl.id_regional = $comisionista";
         else if($tipoUsuario == 1)// SE BUSCA COMO DIRECTOR COMERCIAL
             $filtroComisionista = "";
-        else
-            $filtroComisionista = "AND (cl.id_asesor = $comisionista OR cl.id_coordinador = $comisionista OR cl.id_gerente = $comisionista 
-            OR cl.id_subdirector = $comisionista OR cl.id_regional = $comisionista)";
         
         $query="SELECTT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
         FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(ISNULL(se.nombre, 'SIN ESPECIFICAR')) plaza,
