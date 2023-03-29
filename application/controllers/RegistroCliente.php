@@ -8520,7 +8520,7 @@
 		$nombreLote=$this->input->post('nombreLote');
 		$idLote=$this->input->post('idLote');
 		$idCondominio=$this->input->post('idCondominio');
-		$expediente= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
+		$expediente_crudo= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
 
@@ -8540,22 +8540,28 @@
 		$arreglo=array();
 		$arreglo["expediente"] = $expediente;
 
-		$fileExt = strtolower(substr($expediente, strrpos($expediente, '.') + 1));
+		$fileExt = strtolower(substr($expediente_crudo, strrpos($expediente_crudo, '.') + 1));
+
+		if($tipodoc == 8){
+            $contrato_tipo = 'contrato';
+        }else if($tipodoc == 30){
+            $contrato_tipo = 'contratoFirmado';
+        }
 
 
 		if ($fileExt == 'pdf'){
 
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/contrato/".$expediente);
+			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$contrato_tipo."/".$expediente.'.'.$fileExt);
 			$validaMove = $move == FALSE ? 0 : 1;
 
 			if ($validaMove == 1) {
 
 				$arreglo=array();
-				$arreglo["expediente"] = $expediente;
+				$arreglo["expediente"] = $expediente.'.'.$fileExt;
 
 
 				$arreglo2=array();
-				$arreglo2["expediente"]= $expediente;
+				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
 				$arreglo2["modificado"]= date('Y-m-d H:i:s');
 				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
 
@@ -8584,14 +8590,24 @@
 	public function deleteContrato(){
 
 		$idDocumento=$this->input->post('idDocumento');
+		$tipo_documento = $this->input->post('tipo_doc');
 
 		$data=array();
 		$data["expediente"]= NULL;
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=$this->session->userdata('id_usuario');
 
+		$carpeta = '';
+		if($tipo_documento == 8){
+            $carpeta = 'contrato';
+        }elseif($tipo_documento == 30){
+            $carpeta = 'contratoFirmado';
+        }else{
+            $carpeta = '';
+        }
+
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/contrato/".$nombreExp->expediente;
+		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 		if(file_exists($file)){
 			unlink($file);
@@ -8612,7 +8628,8 @@
 		}
 
 	}
-	
+
+
     public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);
