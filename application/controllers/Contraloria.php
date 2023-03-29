@@ -2991,7 +2991,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                             "tipo_doc" => 30,
                             "estatus_validacion" =>0
                         );
-                        $this->General_model->addRecordDos('historial_documento', $insertToData);
+                        $this->General_model->addRecord('historial_documento', $insertToData);
 
 						$data['message'] = 'OK';
 						echo json_encode($data);
