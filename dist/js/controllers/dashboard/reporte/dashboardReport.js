@@ -1353,15 +1353,24 @@ function fillTableReport(dataObject) {
                                         return 'Fecha de apartado';
                                         break;
                                     case 13:
-                                        return 'Días desde apartado';
+                                        return 'Fecha último estatus';
                                         break;
                                     case 14:
-                                        return 'Estatus contratación';
+                                        return 'Días último estatus';
                                         break;
                                     case 15:
-                                        return 'Estatus lote';
+                                        return 'Estatus contratación';
                                         break;
                                     case 16:
+                                        return 'Fecha estatus 9';
+                                        break;
+                                    case 17:
+                                        return 'Días estatus 9';
+                                        break;
+                                    case 18:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 19:
                                         return 'Apartado';
                                         break;
                                 }
@@ -1455,12 +1464,31 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
-                        return d.diasApartado;
+                        return d.fechaUltimoStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasUltimoStatus;
                     }
                 },
                 {
                     data: function (d) {
                         return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if(d.fechaStatus9 == null){
+                            return 'No aplica';
+                        }
+                        else
+                            return d.fechaStatus9;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasStatus9;
                     }
                 },
                 {
