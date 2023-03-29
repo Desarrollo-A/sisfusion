@@ -428,8 +428,10 @@ $("#tabla_dispersar_comisiones").ready( function(){
         }
     });
     $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
+            alert('KADJKASD JA DIDF KOAHFIANF A ');
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
+
             const statusLote = $(this).attr("data-statusLote");
 
             $('#id-lote-detenido').val(idLote);
