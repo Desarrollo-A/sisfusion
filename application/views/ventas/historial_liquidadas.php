@@ -68,9 +68,13 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>ID</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>CLIENTE</th>
+                                                        <th>TIPO DE VENTA</th>
                                                         <th>MODALIDAD</th>
+                                                        <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
                                                         <th>TOTAL</th>
                                                         <th>PORCENTAJE</th>
