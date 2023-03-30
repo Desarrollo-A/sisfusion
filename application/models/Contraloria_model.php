@@ -734,7 +734,7 @@ class Contraloria_model extends CI_Model {
 	public function val_ub($idLote){
 		$this->db->select('ubicacion');
         $this->db->where("idLote",$idLote);
-		$this->db->where_in('ubicacion', array('1', '2', '4', '5'));
+		$this->db->where_in('ubicacion', array('1', '2', '4', '5', '3'));
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : $query->result_array();
 		return $valida;

@@ -5,7 +5,7 @@
 <div class="wrapper ">
     <?php
 
-    if ($this->session->userdata('id_rol') == "33"||$this->session->userdata('id_rol') == "17") {
+    if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81'))) {
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;

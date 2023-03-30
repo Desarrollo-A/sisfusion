@@ -658,12 +658,12 @@ if(data.vl == '1') {
                     cntActions = 'N/A';
                 }
                 
-                if(user == 2762 || user == 6096 || user == 6864 || user == 10937 || user == 10938){
+                if(user == 2762 || user == 6096 || user == 6864 || user == 10937 || user == 10938 || user == 12136){
                 cntActions += '<li><button href="#" title= "Cambio de sede" data-nomLote="'+data.nombreLote+'" data-lote="'+data.idLote+'" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button></li><br>';
 
                 }
                 
-                if((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864 || user == 10937 || user == 10938)){
+                if((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864 || user == 10937 || user == 10938 || user == 12136)){
                     cntActions += '<li><button href="#" title= "Reasignacion" data-nomLote="'+data.nombreLote+'" data-usuario="'+data.juridico+'" data-lote="'+data.idLote+'" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>';
                 }   
                 var color = (data.idMovimiento == 36) ? '#58D68D' :

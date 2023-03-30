@@ -52,6 +52,14 @@
 			case "58": // ANALISTA DE DATOS
 			case "61": // ASESOR CONSULTA
 			case "54": // MKTD POPEA
+			case '74': // EJECUTIVO POSTVENTA
+			case '75': // SUPERVISOR POSTVENTA
+			case '76': // ASISTENTE SUBDIRECCIÓN POSTVENTA
+			case '77': // AUXILIAR POSTVENTA
+			case '78': // BASE DE DATOS POSTVENTA
+			case '79': // COORDINADOR DE POSTVENTA
+			case '80': // COORDINADOR DE CALL CENTER POSTVENTA
+			case '81': // SUBDIRECCIÓN POSTVENTA					
 				$this->load->view('template/sidebar', "");
 			break;
 			default:

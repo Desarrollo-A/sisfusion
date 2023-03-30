@@ -1440,10 +1440,21 @@ public function get_sede(){
 			if ($id_asig == 6856)
 				$assigned_user = 2800;
 			else if ($id_asig == 2800)
-				$assigned_user = 11129;
-			else if ($id_asig == 11129)
+				$assigned_user = 12047;
+			else if ($id_asig == 12047)
 				$assigned_user = 6856;
 			
+			$arreglo["asig_jur"] = $assigned_user;
+		}  else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
+			$id_sede_jur = 3;
+			$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+        	$id_asig = $data_asig->contador;
+			
+			if ($id_asig == 11097)
+				$assigned_user = 2825;
+			else if ($id_asig == 2825)
+				$assigned_user = 11097;
+
 			$arreglo["asig_jur"] = $assigned_user;
 		}
 
@@ -1458,7 +1469,7 @@ public function get_sede(){
               echo json_encode($data);
           }else{
               if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-                  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
+                  ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5 || $assigned_location == 3) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
                   $data['message'] = 'OK';
                   echo json_encode($data);
               } else {

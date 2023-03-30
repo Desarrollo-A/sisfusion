@@ -236,7 +236,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     return '$' + formatMoney(d.abonoPagado);
                 }
             },
-            {data: 'rol'}
+            {data: 'lugar_prospeccion'}
         ],
         columnDefs: [{
             visible: false,
