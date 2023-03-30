@@ -469,7 +469,13 @@
 												file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 											}else if(data.tipo_doc == 66){ // EVIDENCIA MKTD
 												file = '<a class="verEVMKTD btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
-											} else {
+											} else if(data.tipo_doc == 30){
+                                                file = '<center><a class="pdfLinkContratoFirmado btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
+                                                if(id_rol_general ==73 || id_rol_general==70 || id_rol_general==17){
+                                                    file += '  | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-tipoId="'+data.tipo_doc+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+                                                }
+                                            }
+											else {
 												// EVALÚA CON EL ROL Y ESTATUS
 												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
 												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1) ){
@@ -673,6 +679,17 @@
 
 			});
 		});
+
+        $(document).on('click', '.pdfLinkContratoFirmado', function () {
+            var $itself = $(this);
+            Shadowbox.open({
+                content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/contratoFirmado/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+                player:     "html",
+                title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+                width:      985,
+                height:     660
+            });
+        });
 
 
 		/*evidencia MKTD PDF*/
