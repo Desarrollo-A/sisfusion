@@ -24,7 +24,7 @@ $("#tabla_ingresar_9").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES LIQUIDADAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
                 format: {
                     header: function (d, columnIdx) {
                         if (columnIdx != 0) {
@@ -61,13 +61,25 @@ $("#tabla_ingresar_9").ready(function () {
             }
         },
         {
+            "width": "8%",
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreResidencial+'</p>';
+            }
+        },
+        {
+            "width": "8%",
+            "data": function( d ){
+                return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
+            }
+        },
+        
+        {
             "width": "15%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreLote+'</p>';
             }
         }, 
-
-
+      
         {
         "width": "12%",
         "data": function( d ){
@@ -75,8 +87,23 @@ $("#tabla_ingresar_9").ready(function () {
         }
     }, 
 
-
-          
+    {
+        "width": "7%",
+        "data": function( d ){
+            var lblType;
+            if(d.tipo_venta==1) {
+                lblType ='<span class="label label-danger">Particular</span>';
+            }else if(d.tipo_venta==2) {
+                lblType ='<span class="label label-success">normal</span>';
+            }
+            else if(d.tipo_venta==7) {
+                lblType ='<span class="label label-warning">especial</span>';
+            }else{
+                lblType ='<span class="label label-danger">SIN TIPO DE VENTA</span>';
+            }
+            return lblType;
+        }
+    },           
     {
         "width": "8%",
         "data": function( d ){
@@ -88,7 +115,18 @@ $("#tabla_ingresar_9").ready(function () {
             }
             return lblStats;
         }
-    }, 
+    },   {
+        "width": "7%",
+        "data": function( d ){
+            var lblStats;
+            if(d.idStatusContratacion==15) {
+                lblStats ='<span class="label label-success" style="background:#9E9CD5;">Contratado</span>';
+            }else {
+                lblStats ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
+            }
+            return lblStats;
+        }
+    },
 
     {
         "width": "8%",

@@ -276,11 +276,11 @@ $("#tabla_dispersar_comisiones").ready( function(){
                 var lblStatss;
                 if(d.fecha_modificacion == null ) {
                  
-                    lblStatss ='<span class="label label-gray" style="color:gray;">No definida</span>';
+                    lblStatss ='<span class="label label-gray" style="background:#AFAFB0;" >No definida</span>';
                     // lblStatss ='<span class="label label-info">'+d.fecha_modificacion+'</span>';
                 }else {
 
-                    lblStatss ='<span class="label label-info">'+d.date_final+'</span>';
+                    lblStatss ='<span class="label label-info"  style="background:#11DFC6;">'+d.date_final+'</span>';
                 }
 
                 return lblStatss;

@@ -17,6 +17,7 @@ public function getActiveCommissions($val = '') {
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
             convert(nvarchar, pc.fecha_modificacion, 6) date_final,
+            convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
@@ -327,8 +328,7 @@ public function getDataDispersionPago($val = '') {
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente,
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
             convert(nvarchar, pc.fecha_modificacion, 6) date_final,  
-            convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
-             pc.fecha_sistema as  fecha_sistema, 
+            convert(nvarchar, pc.fecha_neodata, 6) date_neodata,           
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, 
             se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
@@ -2760,9 +2760,9 @@ public function getSettledCommissions($val = '') {
     ini_set('memory_limit', -1);
     // set_time_limit(300);
      
-    $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  
+    $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
     CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
-    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,            
+    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,          
     CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
     CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
     CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
