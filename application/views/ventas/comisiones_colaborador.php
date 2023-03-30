@@ -90,7 +90,7 @@
                     <form id="codigoForm">
                     <div class="modal-body">
                         <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="1"
-                        max="999999" placeholder="Captura tu Código Postal" required>
+                        min="10000" max="99999" placeholder="Captura tu Código Postal" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="codigopostalCancel" class="btn btn-secondary" data-dismiss="modal" style="display:none" >Close</button>
@@ -828,7 +828,7 @@
                 processData: false,
                 type: 'POST',
                 success: function (response) {
-                alerts.showNotification("top","right","Se capturó tu código postal: "+dato_solicitudcp+"","success");
+                alerts.showNotification("top","right","Se capturo tu codigo postal: "+dato_solicitudcp+"","success");
                 $("#solicitud_cp").modal("hide");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -1062,7 +1062,7 @@
                 {
                     text: '<i class="fa fa-archive" aria-hidden="true"></i>',
                     className: 'btn btn-azure',
-                    titleAttr: 'Clic para consultar código postal',
+                    titleAttr: 'Clic para consultar codigo postal',
                     action: function (e,dt,button,confing){
                         $('#solicitud_cp').modal('show');
                     }
