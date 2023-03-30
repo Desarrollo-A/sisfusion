@@ -193,17 +193,15 @@
 	<script>
 		function validateEmptyFields(){
 			var miArray = [];
-			console.log("entró a la function "+ $("#tamanocer").val());
+			
 			for (i = 0; i < $("#tamanocer").val(); i++) {
 				if ($("#comentario_"+i).val() == "") {
 					$("#comentario_"+i).focus();
-					console.log("no tiene nada ---- "+ $("#comentario_"+i).val());
 					toastr.error("Asegúrate de haber llenado todos los campos mínimos requeridos");
 					miArray.push(0);
 					return false;
 				}
 				else {
-					console.log("lo que sea" + $("#comentario_"+i).val());
 					miArray.push(1);
 				}
 			}
@@ -535,7 +533,6 @@
 			$('#comentario_0').val('');
 			/**********/
 
-			console.log('diste click en abrir modal alv pa añadir una autorización');
 			$('#idCliente').val($itself.attr('data-idCliente'));
 			$('#idLote').val($itself.attr('data-idLote'));
 			$('#nombreCondominio').val($itself.attr('data-nombreCondominio'));
@@ -596,7 +593,6 @@
 		}
 
 		function eliminaAutorizacion(contenedor){
-			console.log(contenedor);
 			$('#cnt-'+contenedor).remove();
 			contador = contador - 1;
 			$('#tamanocer').val(contador);

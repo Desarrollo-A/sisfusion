@@ -1,9 +1,8 @@
 <?php
-
-use application\helpers\email\Comentarios_Correos;
-
-  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Contraloria_model');
@@ -12,7 +11,7 @@ class Contraloria extends CI_Controller {
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url','form', 'email/comentarios_correos'));
+		$this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->load->library('phpmailer_lib');
 		$this->load->library('formatter');
@@ -83,9 +82,9 @@ class Contraloria extends CI_Controller {
 	 	$this->load->view("contraloria/vista_2_0_contraloria",$datos);
 	}
 	public function estatus_2_contraloria(){
-				/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-				$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-				/*-------------------------------------------------------------------------------*/
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_2_contraloria",$datos);
 	}
@@ -386,8 +385,7 @@ class Contraloria extends CI_Controller {
 
 	public function sendMailRecepExp()
 	{
-
-
+		//phpmailer_lib
 		$idLote=$this->input->post('idLote');
 		$nombreLote=$this->input->post('nombreLote');
 
@@ -401,88 +399,30 @@ class Contraloria extends CI_Controller {
 		$correosClean = implode(', ', $listCheckVacio);
 		$array=explode(",",$correosClean);
 
+		/*************************************************************************************
+		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		 ************************************************************************************/
+		$datos_correo[0] = json_decode(json_encode($datos), true);
+		$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
 
-		$mail = $this->phpmailer_lib->load();
+		$datos_etiquetas = null;
 		
+		$correos_entregar = array();
+		// foreach($array as $email)
+		// {
+		// 	array_push($correos_entregar, $email);
+		// }
+		array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
 
-		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+		$elementos_correo = array(	"setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+									"Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_SEND_MAIL_RECEP_EXP);
 
-		foreach($array as $email)
-		{
-			$mail->addAddress($email);
+		$comentario_general = Elementos_Correos_Contraloria::EMAIL_SEND_MAIL_RECEP_EXP.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+		$datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_SEND_MAIL_RECEP_EXP;
 
-		}
-
-		$mail->Subject = utf8_decode('EXPEDIENTE INGRESADO-CIUDAD MADERAS');
-		$mail->isHTML(true);
-
-
-		$mailContent = utf8_decode("<html><head>
-    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-    <title>AVISO DE BAJA </title>
-    <style media='all' type='text/css'>
-        .encabezados{
-            text-align: center;
-            padding-top:  1.5%;
-            padding-bottom: 1.5%;
-        }
-        .encabezados a{
-            color: #234e7f;
-            font-weight: bold;
-        }
-        
-        .fondo{
-            background-color: #234e7f;
-            color: #fff;
-        }
-        
-        h4{
-            text-align: center;
-        }
-        p{
-            text-align: right;
-        }
-        strong{
-            color: #234e7f;
-        }
-    </style>
-</head>
-			<body>
-    <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-        <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-            <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                <tr class='navbar navbar-inverse encabezados'><td>
-                    <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                </td></tr>
-            </table>
-        </td></tr>
-        <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-        <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-          <tr class='active'>
-            <th>Proyecto</th>
-            <th>Condominio</th> 
-            <th>Lote</th>   
-            <th>Fecha/Hora</th>   
-          </tr> 
-          <tr>   
-
-                <td><center>" . $datos["nombreResidencial"] . "</center></td>
-                <td><center>" . $datos["nombreCondominio"] . "</center></td>
-                <td><center>" . $datos["nombreLote"] . "</center></td>
-                <td><center>" . date("Y-m-d H:i:s") . "</center></td>
-          </tr>
-          </table></center>
-        
-        
-        </td></tr>
-    </table></body></html>");
-
-
-
-		$mail->Body = $mailContent;
-
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		$plantilla_correo = new plantilla_dinamica_correo;
+		/********************************************************************************************/
 
 		$arreglo=array();
 		$arreglo["idStatusContratacion"]=2;
@@ -648,10 +588,14 @@ class Contraloria extends CI_Controller {
 		$arreglo2["idCliente"]= $datos["idCliente"];
 		$arreglo2["comentario"]= "Ok recepción de expediente";
 
-	
 		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote,$arreglo) && $this->registrolote_modelo->insertHistorialLotes($arreglo2)){
-			$mail->send();
-			echo 1;
+			$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+																	$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+			if($envio_correo){
+				echo 1;
+			}else{
+				echo $envio_correo;
+			}
 		}
 		else
 		{
@@ -677,87 +621,29 @@ class Contraloria extends CI_Controller {
 		$correosClean = implode(', ', $listCheckVacio);
 		$array=explode(",",$correosClean);
 
+		/*************************************************************************************
+		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		 ************************************************************************************/
+		$datos_correo[0] = json_decode(json_encode($datos), true);
+		$datos_correo[0] += ["motivoRechazo" => $motivoRechazo];
+		$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
 
-		$mail = $this->phpmailer_lib->load();
-	
+		$datos_etiquetas = null;
+		
+		$correos_entregar = array('programador.analista18@ciudadmaderas.com');
+		// foreach($array as $email)
+		// {
+		// 	array_push($correos_entregar, $email);
+		// }
+		// <title>AVISO DE BAJA </title>
+		$elementos_correo = array("setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+								"Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_SEND_MAIL_RECHAZO_ESTATUS_2_0);
 
-		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+		$comentario_general = Elementos_Correos_Contraloria::EMAIL_SEND_MAIL_RECHAZO_ESTATUS_2_0.'<br><br>'. (!isset($motivoRechazo) ? '' : $motivoRechazo);
+		$datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_SEND_MAIL_RECHAZO_ESTATUS_2_0;
 
-		foreach($array as $email)
-		{
-			$mail->addAddress($email);
-
-		}
-
-
-		$mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (2. Integración de Expediente)');
-		$mail->isHTML(true);
-
-		$mailContent = utf8_decode( "<html><head>
-		  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-		  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-		  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-		  <title>AVISO DE BAJA </title>
-		  <style media='all' type='text/css'>
-		      .encabezados{
-		          text-align: center;
-		          padding-top:  1.5%;
-		          padding-bottom: 1.5%;
-		      }
-		      .encabezados a{
-		          color: #234e7f;
-		          font-weight: bold;
-		      }
-		      
-		      .fondo{
-		          background-color: #234e7f;
-		          color: #fff;
-		      }
-		      
-		      h4{
-		          text-align: center;
-		      }
-		      p{
-		          text-align: right;
-		      }
-		      strong{
-		          color: #234e7f;
-		      }
-		  </style>
-		</head>
-		<body>
-		  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-		      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-		          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-		              <tr class='navbar navbar-inverse encabezados'><td>
-		                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-		              </td></tr>
-		          </table>
-		      </td></tr>
-		      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-		      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-		        <tr class='active'>
-		          <th>Proyecto</th>
-		          <th>Condominio</th> 
-		          <th>Lote</th>   
-		          <th>Motivo de rechazo</th>   
-		          <th>Fecha/Hora</th>   
-		        </tr> 
-		        <tr>   
-		               <td><center>".$datos["nombreResidencial"]."</center></td>
-		               <td><center>".$datos["nombreCondominio"]."</center></td>
-		               <td><center>".$datos["nombreLote"]."</center></td>
-		               <td><center>".$motivoRechazo."</center></td>
-		               <td><center>".date("Y-m-d H:i:s")."</center></td>
-		        </tr>
-		        </table></center>
-		      
-		      
-		      </td></tr>
-		  </table></body></html>");
-
-		$mail->Body = $mailContent;
-
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		$plantilla_correo = new plantilla_dinamica_correo;
 
 		$arreglo=array();
 		$arreglo["idStatusContratacion"]=2;
@@ -782,18 +668,14 @@ class Contraloria extends CI_Controller {
 		$arreglo2["idCondominio"]= $datos["idCondominio"];
 		$arreglo2["idCliente"]= $datos["idCliente"];
 
-
-		/*print_r($idLote);
-		echo '<br><br>';
-		print_r($arreglo);
-		echo '<br><br>';
-		print_r($arreglo2);
-		echo '<br><br>';
-		exit;*/
-		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote,$arreglo)
-			&& $this->registrolote_modelo->insertHistorialLotes($arreglo2)){
-			$mail->send();
-			echo 1;
+		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote,$arreglo) && $this->registrolote_modelo->insertHistorialLotes($arreglo2)){
+			$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+																	$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+			if($envio_correo){
+				echo 1;
+			}else{
+				echo $envio_correo;
+			}
 		}
 		else
 		{
@@ -801,8 +683,6 @@ class Contraloria extends CI_Controller {
 		}
 
 	}
-
-
 
 	/*reportes*/
 	public function integracionExpediente()
@@ -902,6 +782,7 @@ class Contraloria extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view("contraloria/rechazoJuridico",$datos);
 	}
+
 	public function getRevision7(){
 		$data=array();
 		$data = $this->registrolote_modelo->getRevision7();
@@ -966,125 +847,111 @@ class Contraloria extends CI_Controller {
 		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
 		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
 		 $sig_fecha_feriado2 == "25-12") {
-		$fecha = $fechaAccion;
+			$fecha = $fechaAccion;
 
-		$i = 0;
-		while($i <= 2) {
-		$hoy_strtotime = strtotime($fecha);
-		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-		$sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-		
-		
-		if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
+			$i = 0;
+			while($i <= 2) {
+				$hoy_strtotime = strtotime($fecha);
+				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+				$sig_fecha_dia = date('D', $sig_strtotime);
+				$sig_fecha_feriado = date('d-m', $sig_strtotime);
+				
+				
+				if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+				$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+				$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+				$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+				$sig_fecha_feriado == "25-12") {}
+				else {
 					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		   $arreglo["fechaVenc"]= $fecha;
-		   }else{
+					$i++;
+				} 
+				$fecha = $sig_fecha;
+			}
+			$arreglo["fechaVenc"]= $fecha;
+		}else{
+			$fecha = $fechaAccion;
 
-		$fecha = $fechaAccion;
+			$i = 0;
+			while($i <= 1) {
+				$hoy_strtotime = strtotime($fecha);
+				$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+				$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+				$sig_fecha_dia = date('D', $sig_strtotime);
+				$sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-		$i = 0;
-		while($i <= 1) {
-		$hoy_strtotime = strtotime($fecha);
-		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-		$sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-		if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
+				if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+				$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+				$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+				$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+				$sig_fecha_feriado == "25-12") {}
+				else {
 					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		   $arreglo["fechaVenc"]= $fecha;
-		   }
-
-		} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-
-		$fechaAccion = date("Y-m-d H:i:s");
-		$hoy_strtotime2 = strtotime($fechaAccion);
-		$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-		$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-		if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-		 $sig_fecha_feriado2 == "25-12") {
-
-		$fecha = $fechaAccion;
-		
-
-		$i = 0;
-		while($i <= 2) {
-		$hoy_strtotime = strtotime($fecha);
-		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-		$sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-		
-		if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		   $arreglo["fechaVenc"]= $fecha;
-		   }else{
-
-		$fecha = $fechaAccion;
-
-		$i = 0;
-		while($i <= 2) {
-		$hoy_strtotime = strtotime($fecha);
-		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-		$sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-		
-		if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		 $arreglo["fechaVenc"]= $fecha;
-		   }
+					$i++;
+				} 
+				$fecha = $sig_fecha;
+			}
+			$arreglo["fechaVenc"]= $fecha;
 		}
-		
-		
-		
+
+		}elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+			$fechaAccion = date("Y-m-d H:i:s");
+			$hoy_strtotime2 = strtotime($fechaAccion);
+			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+			if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+			$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+			$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+			$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+			$sig_fecha_feriado2 == "25-12") {
+				$fecha = $fechaAccion;
+				$i = 0;
+				while($i <= 2) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+					
+					if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else {
+						$fecha= $sig_fecha;
+						$i++;
+					} 
+					$fecha = $sig_fecha;
+				}
+				$arreglo["fechaVenc"]= $fecha;
+			}else{
+				$fecha = $fechaAccion;
+				$i = 0;
+				while($i <= 2) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+					
+					if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else {
+						$fecha= $sig_fecha;
+						$i++;
+					}
+					$fecha = $sig_fecha;
+				}
+				$arreglo["fechaVenc"]= $fecha;
+			}
+		}
 		$arreglo2=array();
 		$arreglo2["idStatusContratacion"]= 5;
 		$arreglo2["idMovimiento"]=35;
@@ -1097,8 +964,6 @@ class Contraloria extends CI_Controller {
 		$arreglo2["idLote"]= $idLote;  
 		$arreglo2["idCondominio"]= $idCondominio;          
 		$arreglo2["idCliente"]= $idCliente;          
-		
-
 		$validate = $this->Contraloria_model->validateSt5($idLote);
 
 		if($validate == 1){
@@ -1106,183 +971,116 @@ class Contraloria extends CI_Controller {
 		   if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 			   $data['message'] = 'OK';
 			   echo json_encode($data);
-	
 			}else{
 				$data['message'] = 'ERROR';
 				echo json_encode($data);
 			}
-	
 		}else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
-	  }
-	
-}
-		
-		
-		
-		
-public function get_sede(){
-	echo json_encode($this->Contraloria_model->get_sede()->result_array());
-  }
-
-  public function get_tventa(){
-	echo json_encode($this->Contraloria_model->get_tventa()->result_array());
-  }
-
-  public function editar_registro_loteRechazo_contraloria_proceceso5(){
-
-	$idLote=$this->input->post('idLote');
-	$idCondominio=$this->input->post('idCondominio');
-	$nombreLote=$this->input->post('nombreLote');
-	$idStatusContratacion=$this->input->post('idStatusContratacion');
-	$idMovimiento=$this->input->post('idMovimiento');
-	$idCliente=$this->input->post('idCliente');
-	$comentario=$this->input->post('comentario');
-	$perfil=$this->input->post('perfil');
-	$modificado=date("Y-m-d H:i:s");
-
-	$arreglo=array();
-	$arreglo["idStatusContratacion"]= 1;
-	$arreglo["idMovimiento"]=20; 
-	$arreglo["comentario"]=$comentario;
-	$arreglo["usuario"]=$this->session->userdata('id_usuario');
-	$arreglo["perfil"]=$this->session->userdata('id_rol');
-	$arreglo["modificado"]=date("Y-m-d H:i:s");
-	$arreglo["fechaVenc"]= $modificado;
-
-
-	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=1;
-	$arreglo2["idMovimiento"]=20;
-	$arreglo2["nombreLote"]=$nombreLote;
-	$arreglo2["comentario"]=$comentario;
-	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-	$arreglo2["perfil"]=$this->session->userdata('id_rol');
-	$arreglo2["modificado"]=date("Y-m-d H:i:s");
-	$arreglo2["fechaVenc"]= $modificado;
-	$arreglo2["idLote"]= $idLote;  
-	$arreglo2["idCondominio"]= $idCondominio;         
-	$arreglo2["idCliente"]= $idCliente;    
-
-	$datos= $this->Contraloria_model->getCorreoSt($idCliente);
-	$lp = $this->Contraloria_model->get_lp($idLote);
-
-	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
-	   $array = array_unique($correosClean);
-	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
-	}
-
-	$infoLote = $this->Contraloria_model->getNameLote($idLote);
-	$data_mail[0] = json_decode(json_encode($infoLote), true);
-	$data_encabezados_tabla = array("comentario" => $comentario);
-	foreach ($infoLote as $key => $value) {
-		array_push($data_encabezados_tabla, $key);
-	}
-	crearPlantillaCorreo('programador.analista18@ciudadmaderas.com', null, $data_mail, $data_encabezados_tabla, Comentarios_Correos::EMAIL_RECHAZO_STATUS_5);
-	$data['message'] = 'OK';
-	echo json_encode($data);
-
-	
-	$mail = $this->phpmailer_lib->load();
-
-
-	$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-  
-	foreach($array as $email)
-	{
-		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-			if (trim($email) != ''){ 
-				$mail->addAddress($email);
-			}
-		}
-
-		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
 		}
 	}
 
+	public function get_sede(){
+		echo json_encode($this->Contraloria_model->get_sede()->result_array());
+	}
+
+	public function get_tventa(){
+		echo json_encode($this->Contraloria_model->get_tventa()->result_array());
+	}
+
+	public function editar_registro_loteRechazo_contraloria_proceceso5(){
+
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idStatusContratacion=$this->input->post('idStatusContratacion');
+		$idMovimiento=$this->input->post('idMovimiento');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$perfil=$this->input->post('perfil');
+		$modificado=date("Y-m-d H:i:s");
+
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]= 1;
+		$arreglo["idMovimiento"]=20; 
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"]= $modificado;
 
 
-	$mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
-	$mail->isHTML(true);
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=1;
+		$arreglo2["idMovimiento"]=20;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;
+		$arreglo2["idCondominio"]= $idCondominio;
+		$arreglo2["idCliente"]= $idCliente;
 
-//   $mailContent = utf8_decode( "<html><head>
-//   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-//   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-//   <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-//   <title>AVISO DE BAJA </title>
-//   <style media='all' type='text/css'>
-// 	  .encabezados{
-// 		  text-align: center;
-// 		  padding-top:  1.5%;
-// 		  padding-bottom: 1.5%;
-// 	  }
-// 	  .encabezados a{
-// 		  color: #234e7f;
-// 		  font-weight: bold;
-// 	  }
-	  
-// 	  .fondo{
-// 		  background-color: #234e7f;
-// 		  color: #fff;
-// 	  }
-	  
-// 	  h4{
-// 		  text-align: center;
-// 	  }
-// 	  p{
-// 		  text-align: right;
-// 	  }
-// 	  strong{
-// 		  color: #234e7f;
-// 	  }
-//   </style>
-// </head>
-// <body>
-//   <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-// 	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-// 		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-// 			  <tr class='navbar navbar-inverse encabezados'><td>
-// 				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-// 			  </td></tr>
-// 		  </table>
-// 	  </td></tr>
-// 	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-// 	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-// 		<tr class='active'>
-// 		  <th>Proyecto</th>
-// 		  <th>Condominio</th> 
-// 		  <th>Lote</th>   
-// 		  <th>Motivo de rechazo</th>   
-// 		  <th>Fecha/Hora</th>
-// 		</tr> 
-// 		<tr>   
-//                <td><center>".$infoLote->nombreResidencial."</center></td>
-//                <td><center>".$infoLote->nombre."</center></td>
-//                <td><center>".$infoLote->nombreLote."</center></td>
-//                <td><center>".$comentario."</center></td>
-//                <td><center>".date("Y-m-d H:i:s")."</center></td>
-// 		</tr>
-// 		</table></center>
-	  
-	  
-// 	  </td></tr>
-//   </table></body></html>");
+		$datos= $this->Contraloria_model->getCorreoSt($idCliente);
+		$lp = $this->Contraloria_model->get_lp($idLote);
 
-	$mail->Body = $mailContent;
+		if(empty($lp)){
+			$correosClean = explode(',', $datos[0]["correos"]);
+			$array = array_unique($correosClean);
+		} else {
+			$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
+			$array = array_unique($correosClean);
+		}
 
+		/*************************************************************************************
+		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		 ************************************************************************************/
+		$infoLote = $this->Contraloria_model->getNameLote($idLote);
+		$datos_correo[0] = json_decode(json_encode($infoLote), true);
+		$datos_correo[0] += ["motivoRechazo" => $comentario];
+		$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
 
-	$validate = $this->Contraloria_model->validateSt5($idLote);
+		$datos_etiquetas = null;
+		
+		$correos_entregar = array('programador.analista18@ciudadmaderas.com', 'programador.analista8@ciudadmaderas.com');
+		// foreach($array as $email)
+		// {
+		// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		// 		if (trim($email) != ''){ 
+		// 			array_push($correos_entregar, $email);
+		// 		}
+		// 	}
 
+		// 	if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+		// 		array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
+		// 	}
+		// }
+		
+		$elementos_correo = array(	"setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+									"Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_5);
 
-	if($validate == 1){
+		$comentario_general = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_5.'<br><br>'.$comentario;
+		$datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5;
+
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		$plantilla_correo = new plantilla_dinamica_correo;
+		$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+																$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+		/****************************************************************************************************/
+
+		$validate = $this->Contraloria_model->validateSt5($idLote);
+
+		if ($envio_correo) {
+			$data['message_email'] = 'OK';
+		} else {
+			$data['message_email'] = $envio_correo;
+		}
+
+		if($validate == 1){
 			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-					$mail->send();
 					$data['message'] = 'OK';
 					echo json_encode($data);
 				}else{
@@ -1292,11 +1090,8 @@ public function get_sede(){
 		}else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
+		}
 	}
-
-
-  }
-
 
   public function editar_registro_lote_contraloria_proceceso6()
   {
@@ -1518,332 +1313,471 @@ public function get_sede(){
 
 
 
-public function editar_registro_loteRechazo_contraloria_proceceso6(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('motivoRechazo');
-    $perfil=$this->input->post('perfil');
-    $modificado=date("Y-m-d H:i:s");
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 1;
-    $arreglo["idMovimiento"]=63; 
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-    $arreglo["fechaVenc"]= $modificado;
+	public function editar_registro_loteRechazo_contraloria_proceceso6()
+	{
+		//phpmailer_lib
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('motivoRechazo');
+		$perfil=$this->input->post('perfil');
+		$modificado=date("Y-m-d H:i:s");
 
 
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=1;
-    $arreglo2["idMovimiento"]=63;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;    
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]= 1;
+		$arreglo["idMovimiento"]=63; 
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"]= $modificado;
 
 
-	$datos= $this->Contraloria_model->getCorreoSt($idCliente);
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=1;
+		$arreglo2["idMovimiento"]=63;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;    
 
-	$lp = $this->Contraloria_model->get_lp($idLote);
 
-	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
-	   $array = array_unique($correosClean);
-	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
+		$datos= $this->Contraloria_model->getCorreoSt($idCliente);
+
+		$lp = $this->Contraloria_model->get_lp($idLote);
+
+		if(empty($lp)){
+			$correosClean = explode(',', $datos[0]["correos"]);
+			$array = array_unique($correosClean);
+		} else {
+			$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
+			$array = array_unique($correosClean);
+		}
+
+		$infoLote = $this->Contraloria_model->getNameLote($idLote);
+
+		/*************************************************************************************
+		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		 ************************************************************************************/
+		$datos_correo[0] = json_decode(json_encode($infoLote), true);
+		$datos_correo[0] += ["motivoRechazo" => $comentario];
+		$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+
+		$datos_etiquetas = null;
+
+		$correos_entregar = array();
+		// foreach($array as $email)
+		// {
+		// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		// 		if (trim($email) != ''){ 
+		// 			array_push($correos_entregar, $email);
+		// 		}
+		// 	}
+
+		// 	if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+		// 		array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
+		// 	}
+		// }
+		array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+
+		$elementos_correo = array("setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+								"Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_6);
+
+		$comentario_general = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_6.'<br><br>'.$comentario;
+		$datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_6;
+
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		//<title>AVISO DE BAJA </title>
+		$plantilla_correo = new plantilla_dinamica_correo;
+		/************************************************************************************************************************/
+		$validate = $this->Contraloria_model->validateSt6($idLote);
+
+		if($validate == 1){
+			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+																		$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+				if($envio_correo){
+					$data['message_email'] = 'OK';
+				}else{
+					$data['message_email'] = $envio_correo;
+				}
+				$data['message'] = 'OK';
+			 	echo json_encode($data);
+			}else{
+				$data['message'] = 'ERROR';
+				echo json_encode($data);
+			}
+		}else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
+		}
 	}
 
-	$infoLote = $this->Contraloria_model->getNameLote($idLote);
 
 
-  $mail = $this->phpmailer_lib->load();
-
-  
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-	foreach($array as $email)
+	public function editar_registro_loteRevision_contraloria_proceceso6()
 	{
-		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-			if (trim($email) != ''){ 
-				$mail->addAddress($email);
+
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');    
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+		$fechaVenc=$this->input->post('fechaVenc');
+
+
+
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]=6;
+		$arreglo["idMovimiento"]=6;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+
+		$horaActual = date('H:i:s');
+		$horaInicio = date("08:00:00");
+		$horaFin = date("16:00:00");
+
+		if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+			$fechaAccion = date("Y-m-d H:i:s");
+			$hoy_strtotime2 = strtotime($fechaAccion);
+			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+			if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+				$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+				$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+				$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+				$sig_fecha_feriado2 == "25-12") {
+		
+				$fecha = $fechaAccion;
+				$i = 0;
+
+				while($i <= 2) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+					if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else{
+						$fecha= $sig_fecha;
+						$i++;
+					} 
+					$fecha = $sig_fecha;
+				}
+
+				$arreglo["fechaVenc"]= $fecha;
+			}else{
+				$fecha = $fechaAccion;
+				$i = 0;
+				while($i <= 1) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+					if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else{
+						$fecha= $sig_fecha;
+						$i++;
+					}
+					$fecha = $sig_fecha;
+				}
+				$arreglo["fechaVenc"]= $fecha;
+			}
+
+		}elseif($horaActual < $horaInicio || $horaActual > $horaFin){
+			$fechaAccion = date("Y-m-d H:i:s");
+			$hoy_strtotime2 = strtotime($fechaAccion);
+			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+			if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+				$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+				$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+				$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+				$sig_fecha_feriado2 == "25-12") {
+				
+				$fecha = $fechaAccion;
+				$i = 0;
+
+				while($i <= 2) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+					if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else {
+						$fecha= $sig_fecha;
+						$i++;
+					} 
+					$fecha = $sig_fecha;
+				}
+				$arreglo["fechaVenc"]= $fecha;
+			}else{
+				$fecha = $fechaAccion;
+
+				$i = 0;
+				while($i <= 2) {
+					$hoy_strtotime = strtotime($fecha);
+					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+					$sig_fecha_dia = date('D', $sig_strtotime);
+					$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+					if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+						$sig_fecha_feriado == "25-12") {}
+					else {
+						$fecha= $sig_fecha;
+						$i++;
+					} 
+					$fecha = $sig_fecha;
+				}
+				$arreglo["fechaVenc"]= $fecha;
 			}
 		}
 
-		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
-		}
-	}
-
-
-  $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)');
-  $mail->isHTML(true);
-
-  $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>AVISO DE BAJA </title>
-  <style media='all' type='text/css'>
-      .encabezados{
-          text-align: center;
-          padding-top:  1.5%;
-          padding-bottom: 1.5%;
-      }
-      .encabezados a{
-          color: #234e7f;
-          font-weight: bold;
-      }
-      
-      .fondo{
-          background-color: #234e7f;
-          color: #fff;
-      }
-      
-      h4{
-          text-align: center;
-      }
-      p{
-          text-align: right;
-      }
-      strong{
-          color: #234e7f;
-      }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-              <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-              </td></tr>
-          </table>
-      </td></tr>
-      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-        <tr class='active'>
-          <th>Proyecto</th>
-          <th>Condominio</th> 
-          <th>Lote</th>   
-          <th>Motivo de rechazo</th>   
-          <th>Fecha/Hora</th>   
-        </tr> 
-        <tr>   
-               <td><center>".$infoLote->nombreResidencial."</center></td>
-               <td><center>".$infoLote->nombre."</center></td>
-               <td><center>".$infoLote->nombreLote."</center></td>
-               <td><center>".$comentario."</center></td>
-               <td><center>".date("Y-m-d H:i:s")."</center></td>
-        </tr>
-        </table></center>
-      
-      
-      </td></tr>
-  </table></body></html>");
-
-  $mail->Body = $mailContent;
-
-
-	$validate = $this->Contraloria_model->validateSt6($idLote);
-
-	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-	   		    $mail->send();
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=6;
+		$arreglo2["idMovimiento"]=6;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $fechaVenc;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;     
+		$validate = $this->Contraloria_model->validateSt6($idLote);
+		if($validate == 1){
+			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
 				$data['message'] = 'OK';
 				echo json_encode($data);
 			}else{
 				$data['message'] = 'ERROR';
 				echo json_encode($data);
+			}
+		}else{
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
 		}
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
+	}
+
+	public function editar_registro_loteRevision_contraloria5_Acontraloria6()
+	{
+
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+		$fechaVenc=$this->input->post('fechaVenc');
+
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]=5;
+		$arreglo["idMovimiento"]=75;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=5;
+		$arreglo2["idMovimiento"]=75;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;     
+
+		$validate = $this->Contraloria_model->validateSt5($idLote);
+
+		if($validate == 1){
+				if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+						$data['message'] = 'OK';
+						echo json_encode($data);
+					}else{
+						$data['message'] = 'ERROR';
+						echo json_encode($data);
+				}
+			}else {
+				$data['message'] = 'FALSE';
+				echo json_encode($data);
+		}
+	}
+
+	public function editar_registro_loteRechazo_contraloria_proceceso5_2()
+	{
+		//phpmailer_lib
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+
+
+
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]= 1;
+		$arreglo["idMovimiento"]=92; 
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=1;
+		$arreglo2["idMovimiento"]=92;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;    
+
+
+		$datos= $this->Contraloria_model->getCorreoSt($idCliente);
+
+		$lp = $this->Contraloria_model->get_lp($idLote);
+
+		if(empty($lp)){
+			$correosClean = explode(',', $datos[0]["correos"]);
+			$array = array_unique($correosClean);
+		} else {
+			$correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
+			$array = array_unique($correosClean);
+		}
+
+		$infoLote = $this->Contraloria_model->getNameLote($idLote);
+
+		/*************************************************************************************
+		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		 ************************************************************************************/
+		$datos_correo[0] = json_decode(json_encode($infoLote), true);
+		$datos_correo[0] += ["motivoRechazo" => $comentario];
+		$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+
+		$datos_etiquetas = null;
+
+		$correos_entregar = array();
+		// foreach($array as $email)
+		// {
+		// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+		// 		if (trim($email) != ''){ 
+		// 			array_push($correos_entregar, $email);
+		// 		}
+		// 	}
+
+		// 	if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+		// 		array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
+		// 	}
+		// }
+		array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+		$elementos_correo = array(	"setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
+									"Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_5_2);
+
+		$comentario_general = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_5_2.'<br><br>'.$comentario;
+		$datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5_2;
+
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		$plantilla_correo = new plantilla_dinamica_correo;
+
+		$validate = $this->Contraloria_model->validateSt5($idLote);
+
+		if($validate == 1){
+			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+																		$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+				if($envio_correo){
+					$data['message_email'] = 'OK';
+				}else{
+					$data['message_email'] = $envio_correo;
+				}
+				$data['message'] = 'OK';
+				echo json_encode($data);
+			}else{
+				$data['message'] = 'ERROR';
+				echo json_encode($data);
+			}
+		}else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
+		}
 	}
 
 
 
-  }
 
 
+	public function editar_registro_loteRevision_contraloria6_AJuridico7()
+	{
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+		$fechaVenc=$this->input->post('fechaVenc');
 
-public function editar_registro_loteRevision_contraloria_proceceso6(){
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]=6;
+		$arreglo["idMovimiento"]=76;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
 
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');    
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
-
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]=6;
-    $arreglo["idMovimiento"]=6;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-	$arreglo["modificado"]=date("Y-m-d H:i:s");
-	
-
-$horaActual = date('H:i:s');
-$horaInicio = date("08:00:00");
-$horaFin = date("16:00:00");
-
-if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-$fechaAccion = date("Y-m-d H:i:s");
-$hoy_strtotime2 = strtotime($fechaAccion);
-$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-
-if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-     $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-     $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-     $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-     $sig_fecha_feriado2 == "25-12") {
-
-    
-$fecha = $fechaAccion;
-$i = 0;
-
-    while($i <= 2) {
-  $hoy_strtotime = strtotime($fecha);
-  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-  $sig_fecha_dia = date('D', $sig_strtotime);
-    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-     $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-     $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-     $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-     $sig_fecha_feriado == "25-12") {
-       }
-         else {
-                $fecha= $sig_fecha;
-                 $i++;
-              } 
-    $fecha = $sig_fecha;
-           }
-
-       $arreglo["fechaVenc"]= $fecha;
-       }else{
-$fecha = $fechaAccion;
-$i = 0;
-    while($i <= 1) {
-  $hoy_strtotime = strtotime($fecha);
-  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-  $sig_fecha_dia = date('D', $sig_strtotime);
-    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-     $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-     $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-     $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-     $sig_fecha_feriado == "25-12") {
-       }
-         else {
-                $fecha= $sig_fecha;
-                 $i++;
-              } 
-    $fecha = $sig_fecha;
-           }
-
-       $arreglo["fechaVenc"]= $fecha;
-       }
-
-} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-$fechaAccion = date("Y-m-d H:i:s");
-$hoy_strtotime2 = strtotime($fechaAccion);
-$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-     $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-     $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-     $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-     $sig_fecha_feriado2 == "25-12") {
-
-    
-$fecha = $fechaAccion;
-$i = 0;
-
-    while($i <= 2) {
-  $hoy_strtotime = strtotime($fecha);
-  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-  $sig_fecha_dia = date('D', $sig_strtotime);
-    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-     $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-     $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-     $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-     $sig_fecha_feriado == "25-12") {
-       }
-         else {
-                $fecha= $sig_fecha;
-                 $i++;
-              } 
-    $fecha = $sig_fecha;
-           }
-       $arreglo["fechaVenc"]= $fecha;
-       }else{
-$fecha = $fechaAccion;
-
-$i = 0;
-    while($i <= 2) {
-  $hoy_strtotime = strtotime($fecha);
-  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-  $sig_fecha_dia = date('D', $sig_strtotime);
-    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-     $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-     $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-     $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-     $sig_fecha_feriado == "25-12") {
-       }
-         else {
-                $fecha= $sig_fecha;
-                 $i++;
-              } 
-    $fecha = $sig_fecha;
-           }
-     $arreglo["fechaVenc"]= $fecha;
-
-       }
-}
-
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=6;
-    $arreglo2["idMovimiento"]=6;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=6;
+		$arreglo2["idMovimiento"]=76;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;     
 
 		$validate = $this->Contraloria_model->validateSt6($idLote);
 
@@ -1859,211 +1793,51 @@ $i = 0;
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
 		}
-
-
-  }
-
-
-  public function editar_registro_loteRevision_contraloria5_Acontraloria6(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
-
-	
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]=5;
-    $arreglo["idMovimiento"]=75;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-	$arreglo["modificado"]=date("Y-m-d H:i:s");
-	
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=5;
-    $arreglo2["idMovimiento"]=75;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
-
-
-	$validate = $this->Contraloria_model->validateSt5($idLote);
-
-
-	if($validate == 1){
-			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-					$data['message'] = 'OK';
-					echo json_encode($data);
-				}else{
-					$data['message'] = 'ERROR';
-					echo json_encode($data);
-			}
-		}else {
-			$data['message'] = 'FALSE';
-			echo json_encode($data);
 	}
 
-
-
-
-
-  }
-
-
-
-
-  public function editar_registro_loteRechazo_contraloria_proceceso5_2(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 1;
-    $arreglo["idMovimiento"]=92; 
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=1;
-    $arreglo2["idMovimiento"]=92;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;    
-
-
-	$datos= $this->Contraloria_model->getCorreoSt($idCliente);
-
-	$lp = $this->Contraloria_model->get_lp($idLote);
-
-	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
-	   $array = array_unique($correosClean);
-	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
-	}
-
-	$infoLote = $this->Contraloria_model->getNameLote($idLote);
-
- 
-  $mail = $this->phpmailer_lib->load();
-
-  
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-	foreach($array as $email)
+	public function editar_registro_lote_contraloria_proceceso9()
 	{
-		if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-			if (trim($email) != ''){ 
-				$mail->addAddress($email);
-			}
-		}
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date("Y-m-d H:i:s");
+		$fechaVenc=$this->input->post('fechaVenc');
+		$totalNeto2=$this->input->post('totalNeto2');
+		$charactersNoPermit = array('$',',');
+		$totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
 
-		if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-			$mail->addAddress('analista.comercial@ciudadmaderas.com');
-		}
-	}
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]=9;
+		$arreglo["idMovimiento"]=39;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]= $this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"]= $modificado;
+		$arreglo["totalNeto2"]=$totalNeto2;
 
-  $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)');
-  $mail->isHTML(true);
-
-  $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>AVISO DE BAJA </title>
-  <style media='all' type='text/css'>
-      .encabezados{
-          text-align: center;
-          padding-top:  1.5%;
-          padding-bottom: 1.5%;
-      }
-      .encabezados a{
-          color: #234e7f;
-          font-weight: bold;
-      }
-      
-      .fondo{
-          background-color: #234e7f;
-          color: #fff;
-      }
-      
-      h4{
-          text-align: center;
-      }
-      p{
-          text-align: right;
-      }
-      strong{
-          color: #234e7f;
-      }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-              <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-              </td></tr>
-          </table>
-      </td></tr>
-      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-        <tr class='active'>
-          <th>Proyecto</th>
-          <th>Condominio</th> 
-          <th>Lote</th>   
-          <th>Motivo de rechazo</th>   
-          <th>Fecha/Hora</th>   
-        </tr> 
-        <tr>  
-			   <td><center>".$infoLote->nombreResidencial."</center></td>
-			   <td><center>".$infoLote->nombre."</center></td>
-			   <td><center>".$infoLote->nombreLote."</center></td>
-			   <td><center>".$comentario."</center></td>
-			   <td><center>".date("Y-m-d H:i:s")."</center></td>
-        </tr>
-        </table></center>
-      
-      
-      </td></tr>
-  </table></body></html>");
-
-  $mail->Body = $mailContent;
-	
-
-	$validate = $this->Contraloria_model->validateSt5($idLote);
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=9;
+		$arreglo2["idMovimiento"]=39;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $fechaVenc;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;         
+		$arreglo2["idCliente"]= $idCliente;          
 
 
-	if($validate == 1){
+		$validate = $this->Contraloria_model->validateSt9($idLote);
+
+		$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
+
+		if($validate == 1){
 			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-	   		        $mail->send();
 					$data['message'] = 'OK';
 					echo json_encode($data);
 				}else{
@@ -2073,707 +1847,562 @@ $i = 0;
 		}else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
-	}
-
-
-  }
-
-
-
-
-
-  public function editar_registro_loteRevision_contraloria6_AJuridico7(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]=6;
-    $arreglo["idMovimiento"]=76;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=6;
-    $arreglo2["idMovimiento"]=76;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
-
-
-	$validate = $this->Contraloria_model->validateSt6($idLote);
-
-	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
 		}
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
 	}
-
-
-
-  }
-
-
-
-
-
-  
-
-
-
-  public function editar_registro_lote_contraloria_proceceso9(){
-
-	$idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date("Y-m-d H:i:s");
-    $fechaVenc=$this->input->post('fechaVenc');
-    $totalNeto2=$this->input->post('totalNeto2');
-    $charactersNoPermit = array('$',',');
-    $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]=9;
-    $arreglo["idMovimiento"]=39;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]= $this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-    $arreglo["fechaVenc"]= $modificado;
-    $arreglo["totalNeto2"]=$totalNeto2;
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=9;
-    $arreglo2["idMovimiento"]=39;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;         
-    $arreglo2["idCliente"]= $idCliente;          
-
-
-	$validate = $this->Contraloria_model->validateSt9($idLote);
-
-	$this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
-
-	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
-		}
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
-	}
-
-  }
-
-
-
-
-
-
 
   public function editar_registro_loteRechazo_contraloria_proceceso9(){
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date("Y-m-d H:i:s");
 
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date("Y-m-d H:i:s");
 
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]= 7;
+		$arreglo["idMovimiento"]=64; 
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["status8Flag"]=0;
 
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 7;
-    $arreglo["idMovimiento"]=64; 
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-	$arreglo["status8Flag"]=0;
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=7;
+		$arreglo2["idMovimiento"]=64;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;    
 
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=7;
-    $arreglo2["idMovimiento"]=64;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;    
+		$validate = $this->Contraloria_model->validateSt9($idLote);
 
-	$validate = $this->Contraloria_model->validateSt9($idLote);
-
-	if($validate == 1){
-		if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
+		if($validate == 1){
+			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+					$data['message'] = 'OK';
+					echo json_encode($data);
+				}else{
+					$data['message'] = 'ERROR';
+					echo json_encode($data);
+			}
+		}else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
 		}
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
 	}
 
 
 
-  }
+	public function registro_lote_contraloria_proceceso10(){
+		$folio = array();
+		$folio["variable"] = $this->Contraloria_model->findCount();
+		
+		if ($folio <> NULL) {
+			foreach ($folio as $folioUpd) {
+				$folioUp = array();
+				$folioUp["contador"] = $folioUpd->contador + 1;
+
+				if ($_POST <> NULL) {
+					$misDatosJSON = json_decode($_POST['datos']);
+
+					$f = 0;
+					$a = 0;
+
+					foreach ($misDatosJSON as list($b)) {
+
+						$info = array();
+						$info["lotes"] = $this->Contraloria_model->selectRegistroPorContrato($b);
+
+						if ($info["lotes"] <> NULL) {
+
+							foreach ($info as $fila) {
+
+								$updateStatus10 = array();
+								$updateStatus10["idStatusContratacion"] = 10;
+								$updateStatus10["idMovimiento"] = 40;
+								$updateStatus10["comentario"] = "Solicitud de validación de enganche y envio de contrato a RL";
+								$updateStatus10["usuario"] = $this->session->userdata('id_usuario');
+								$updateStatus10["perfil"] = $this->session->userdata('id_rol');
+								$updateStatus10["modificado"] = date("Y-m-d H:i:s");
+								$updateStatus10["fechaRL"] = date('Y-m-d H:i:s');
 
 
-
-  public function registro_lote_contraloria_proceceso10(){
-
-	  $folio = array();
-	  $folio["variable"] = $this->Contraloria_model->findCount();
-
-	  if ($folio <> NULL) {
-		  foreach ($folio as $folioUpd) {
-			  $folioUp = array();
-			  $folioUp["contador"] = $folioUpd->contador + 1;
-
-			  if ($_POST <> NULL) {
-
-				  $misDatosJSON = json_decode($_POST['datos']);
-
-				  $f = 0;
-				  $a = 0;
-
-				  foreach ($misDatosJSON as list($b)) {
-
-					  $info = array();
-					  $info["lotes"] = $this->Contraloria_model->selectRegistroPorContrato($b);
-
-					  if ($info["lotes"] <> NULL) {
-
-						  foreach ($info as $fila) {
-
-							  $updateStatus10 = array();
-							  $updateStatus10["idStatusContratacion"] = 10;
-							  $updateStatus10["idMovimiento"] = 40;
-							  $updateStatus10["comentario"] = "Solicitud de validación de enganche y envio de contrato a RL";
-							  $updateStatus10["usuario"] = $this->session->userdata('id_usuario');
-							  $updateStatus10["perfil"] = $this->session->userdata('id_rol');
-							  $updateStatus10["modificado"] = date("Y-m-d H:i:s");
-							  $updateStatus10["fechaRL"] = date('Y-m-d H:i:s');
+								$histStatus10 = array();
+								$histStatus10["idStatusContratacion"] = 10;
+								$histStatus10["idMovimiento"] = 40;
+								$histStatus10["nombreLote"] = $fila->nombreLote;
+								$histStatus10["comentario"] = "Solicitud de validación de enganche y envio de contrato a RL";
+								$histStatus10["usuario"] = $this->session->userdata('id_usuario');
+								$histStatus10["perfil"] = $this->session->userdata('id_rol');
+								$histStatus10["modificado"] = date("Y-m-d H:i:s");
+								$histStatus10["fechaVenc"] = $fila->fechaVenc;
+								$histStatus10["idLote"] = $fila->idLote;
+								$histStatus10["idCondominio"] = $fila->idCondominio;
+								$histStatus10["idCliente"] = $fila->id_cliente;
+								$histStatus10["folioContrato"] = $folioUpd->contador + 1;
 
 
-							  $histStatus10 = array();
-							  $histStatus10["idStatusContratacion"] = 10;
-							  $histStatus10["idMovimiento"] = 40;
-							  $histStatus10["nombreLote"] = $fila->nombreLote;
-							  $histStatus10["comentario"] = "Solicitud de validación de enganche y envio de contrato a RL";
-							  $histStatus10["usuario"] = $this->session->userdata('id_usuario');
-							  $histStatus10["perfil"] = $this->session->userdata('id_rol');
-							  $histStatus10["modificado"] = date("Y-m-d H:i:s");
-							  $histStatus10["fechaVenc"] = $fila->fechaVenc;
-							  $histStatus10["idLote"] = $fila->idLote;
-							  $histStatus10["idCondominio"] = $fila->idCondominio;
-							  $histStatus10["idCliente"] = $fila->id_cliente;
-							  $histStatus10["folioContrato"] = $folioUpd->contador + 1;
+								$arrayAacuse = array();
+								$arrayAacuse["primerNombre"] = $fila->nombre;
+								$arrayAacuse["apellidoPaterno"] = $fila->apellido_paterno;
+								$arrayAacuse["apellidoMaterno"] = $fila->apellido_materno;
+								$arrayAacuse["razonSocial"] = $fila->rfc;
+								$arrayAacuse["code"] = $b;
+								$arrayAacuse["mod"] = date("Y-m-d H:i:s");
+								$arrayAacuse["contratoUrgente"] = $fila->contratoUrgente;
+								// $arrayAacuse["nombreGerente"] = $fila->gerente;
+								// $arrayAacuse["nombreAsesor"] = $fila->asesor;
+								// $arrayAacuse["observacionContratoUrgente"] = $fila->observacionContratoUrgente;
+
+								$dato3 = array();
+								$dato3["numContrato"] = $b;
+								$dato3["fechaRecepcion"] = date('Y-m-d H:i:s');
 
 
-							  $arrayAacuse = array();
-							  $arrayAacuse["primerNombre"] = $fila->nombre;
-							  $arrayAacuse["apellidoPaterno"] = $fila->apellido_paterno;
-							  $arrayAacuse["apellidoMaterno"] = $fila->apellido_materno;
-							  $arrayAacuse["razonSocial"] = $fila->rfc;
-							  $arrayAacuse["code"] = $b;
-							  $arrayAacuse["mod"] = date("Y-m-d H:i:s");
-							  $arrayAacuse["contratoUrgente"] = $fila->contratoUrgente;
-							  // $arrayAacuse["nombreGerente"] = $fila->gerente;
-							  // $arrayAacuse["nombreAsesor"] = $fila->asesor;
-							  // $arrayAacuse["observacionContratoUrgente"] = $fila->observacionContratoUrgente;
+								if ($this->Contraloria_model->updateSt10($b,$updateStatus10,$histStatus10,$dato3,1, $folioUp) == TRUE) {
+									$a = $a+1;
+								} else {
+									$a;
+								}
+								$acuse = array();
+								$i = 0;
+								foreach ($arrayAacuse as $nombre) {
+									$acuse[] = $nombre;
+									$i++;
+								}
+							}
+						} else {
+							$f = $f+1;
+						}
+					}
 
-							  $dato3 = array();
-							  $dato3["numContrato"] = $b;
-							  $dato3["fechaRecepcion"] = date('Y-m-d H:i:s');
+					if($f >= 1){
+						$data['message'] = 'NODETECTED';
+						echo json_encode($data);
+					} else {
 
+						if($a >= 1){
+							$data['message'] = 'OK';
+							echo json_encode($data);
+						} else {
+							$data['message'] = 'ERROR';
+							echo json_encode($data);
+						}
+		
+					}
 
-							  if ($this->Contraloria_model->updateSt10($b,$updateStatus10,$histStatus10,$dato3,1, $folioUp) == TRUE) {
-								 $a = $a+1;
-							  } else {
-								 $a;
-							  }
-							  $acuse = array();
-							  $i = 0;
-							  foreach ($arrayAacuse as $nombre) {
-								  $acuse[] = $nombre;
-								  $i++;
-							  }
-						  }
-					  } else {
-						$f = $f+1;
-					  }
-				  }
-
-
-				  if($f >= 1){
-					$data['message'] = 'NODETECTED';
+				} else {
+					$data['message'] = 'VOID';
 					echo json_encode($data);
-				  } else {
+				}
+			}
+		}
+	}
 
-					if($a >= 1){
-						$data['message'] = 'OK';
-						echo json_encode($data);
-					  } else {
-						$data['message'] = 'ERROR';
-						echo json_encode($data);
-					  }
-	
-				  }
+	public function registroStatus12ContratacionRepresentante(){
+
+		$datos = array();
+		$datos = $this->Contraloria_model->registroStatusContratacion12();
+
+		if($datos != null) {
+			echo json_encode($datos);
+		} else {
+			echo json_encode(array());
+		}
+
+	}
+
+	public function insertContratosFirmados(){
+		if($_POST <> NULL){
+
+			$f = 0;
+			$a = 0;
+
+			$misDatosJSON = json_decode($_POST['datos']);
+
+			foreach ($misDatosJSON as list($b)) {
+
+				$data=array();
+				$data["lotes"]= $this->Contraloria_model->selectRegistroPorContratoStatus12($b);
 
 
-			  } else {
-				$data['message'] = 'VOID';
+				if($data["lotes"] <> NULL) {
+
+					$arreglo=array();
+					$arreglo["idStatusContratacion"]=12;
+					$arreglo["idMovimiento"]=42;
+					$arreglo["comentario"]="Contrato Recibido con firma de RL";
+					$arreglo["usuario"]=$this->session->userdata('id_usuario');
+					$arreglo["perfil"]=$this->session->userdata('id_rol');
+					$arreglo["modificado"]=date("Y-m-d H:i:s");
+					$arreglo["firmaRL"]= "FIRMADO";
+
+
+					$horaActual = date('H:i:s');
+					$horaInicio = date("08:00:00");
+					$horaFin = date("16:00:00");
+
+
+					if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+
+
+						$fechaAccion = date("Y-m-d H:i:s");
+						$hoy_strtotime2 = strtotime($fechaAccion);
+						$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+						$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+						if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+							$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+							$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+							$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+							$sig_fecha_feriado2 == "25-12") {
+
+
+							$fecha = $fechaAccion;
+
+							$i = 0;
+							while($i <= 0) {
+								$hoy_strtotime = strtotime($fecha);
+								$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+								$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+								$sig_fecha_dia = date('D', $sig_strtotime);
+								$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+								if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+									$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+									$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+									$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+									$sig_fecha_feriado == "25-12") {
+								}
+								else {
+									$fecha= $sig_fecha;
+									$i++;
+								}
+								$fecha = $sig_fecha;
+							}
+
+
+							$arreglo["fechaVenc"]= $fecha;
+
+
+						}else{
+
+							$fecha = $fechaAccion;
+
+							$i = 0;
+							while($i <= -1) {
+								$hoy_strtotime = strtotime($fecha);
+								$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+								$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+								$sig_fecha_dia = date('D', $sig_strtotime);
+								$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+								if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+									$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+									$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+									$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+									$sig_fecha_feriado == "25-12") {
+								}
+								else {
+									$fecha= $sig_fecha;
+									$i++;
+								}
+								$fecha = $sig_fecha;
+							}
+
+
+							$arreglo["fechaVenc"]= $fecha;
+
+
+						}
+
+					} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+						$fechaAccion = date("Y-m-d H:i:s");
+						$hoy_strtotime2 = strtotime($fechaAccion);
+						$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+						$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+						if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+							$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+							$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+							$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+							$sig_fecha_feriado2 == "25-12") {
+
+
+							$fecha = $fechaAccion;
+
+							$i = 0;
+							while($i <= 0) {
+								$hoy_strtotime = strtotime($fecha);
+								$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+								$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+								$sig_fecha_dia = date('D', $sig_strtotime);
+								$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+								if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+									$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+									$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+									$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+									$sig_fecha_feriado == "25-12") {
+								}
+								else {
+									$fecha= $sig_fecha;
+									$i++;
+								}
+								$fecha = $sig_fecha;
+							}
+
+
+							$arreglo["fechaVenc"]= $fecha;
+
+
+						}else{
+
+							$fecha = $fechaAccion;
+
+							$i = 0;
+							while($i <= 0) {
+								$hoy_strtotime = strtotime($fecha);
+								$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+								$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+								$sig_fecha_dia = date('D', $sig_strtotime);
+								$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+								if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+									$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+									$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+									$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+									$sig_fecha_feriado == "25-12") {
+								}
+								else {
+									$fecha= $sig_fecha;
+									$i++;
+								}
+								$fecha = $sig_fecha;
+							}
+							$arreglo["fechaVenc"]= $fecha;
+
+
+						}
+					}
+
+
+
+					$dato3=array();
+					$dato3["numContrato"]= $b;
+					$dato3["fechaFirma"]= date('Y-m-d H:i:s');
+
+
+
+
+					foreach ($data as $fila) {
+
+						$dato=array();
+						$dato["idStatusContratacion"]= 12;
+						$dato["idMovimiento"]=42;
+						$dato["nombreLote"]=$fila->nombreLote;
+						$dato["comentario"]= "Contrato Recibido con firma de RL";
+						$dato["usuario"]=$this->session->userdata('id_usuario');
+						$dato["perfil"]=$this->session->userdata('id_rol');
+						$dato["modificado"]=date("Y-m-d H:i:s");
+
+
+
+						$horaInicio = date("08:00:00");
+						$horaFin = date("16:00:00");
+
+						$arregloFechas = array();
+
+						$fechaAccion = $fila->fechaRL;
+						$hoy_strtotime2 = strtotime($fechaAccion);
+						$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+						$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+						$time = date('H:i:s', $hoy_strtotime2);
+
+						if ($time > $horaInicio and $time < $horaFin) {
+
+							if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+								$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+								$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+								$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+								$sig_fecha_feriado2 == "25-12" ) {
+
+
+								$fecha = $fechaAccion;
+
+								$i = 0;
+								while($i <= 4) {
+									$hoy_strtotime = strtotime($fecha);
+									$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+									$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+									$sig_fecha_dia = date('D', $sig_strtotime);
+									$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+									if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+										$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+										$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+										$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+										$sig_fecha_feriado == "25-12") {
+									}
+									else {
+										$arregloFechas[$i] = $sig_fecha;
+										$i++;
+									}
+									$fecha = $sig_fecha;
+								}
+
+								$dato["fechaVenc"]= end($arregloFechas);
+
+
+							}else{
+
+								$fecha = $fechaAccion;
+
+								$i = 0;
+								while($i <= 3) {
+									$hoy_strtotime = strtotime($fecha);
+									$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+									$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+									$sig_fecha_dia = date('D', $sig_strtotime);
+									$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+									if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+										$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+										$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+										$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+										$sig_fecha_feriado == "25-12") {
+									}
+									else {
+										$arregloFechas[$i] = $sig_fecha;
+										$i++;
+									}
+									$fecha = $sig_fecha;
+								}
+
+
+								$dato["fechaVenc"]= end($arregloFechas);
+
+
+							}
+						}
+
+						elseif ($time < $horaInicio || $time > $horaFin) {
+
+
+							if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+								$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+								$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+								$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+								$sig_fecha_feriado2 == "25-12" ) {
+
+
+								$fecha = $fechaAccion;
+
+								$i = 0;
+								while($i <= 4) {
+									$hoy_strtotime = strtotime($fecha);
+									$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+									$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+									$sig_fecha_dia = date('D', $sig_strtotime);
+									$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+									if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+										$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+										$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+										$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+										$sig_fecha_feriado == "25-12") {
+									}
+									else {
+										$arregloFechas[$i] = $sig_fecha;
+										$i++;
+									}
+									$fecha = $sig_fecha;
+								}
+
+								$dato["fechaVenc"]= end($arregloFechas);
+
+
+							}else{
+
+								$fecha = $fechaAccion;
+
+								$i = 0;
+								while($i <= 4) {
+									$hoy_strtotime = strtotime($fecha);
+									$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+									$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+									$sig_fecha_dia = date('D', $sig_strtotime);
+									$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+									if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+										$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+										$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+										$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+										$sig_fecha_feriado == "25-12") {
+									}
+									else {
+										$arregloFechas[$i] = $sig_fecha;
+										$i++;
+									}
+									$fecha = $sig_fecha;
+								}
+
+
+								$dato["fechaVenc"]= end($arregloFechas);
+
+							}
+						}
+
+
+						$dato["idLote"]= $fila->idLote;
+						$dato["idCondominio"]= $fila->idCondominio;
+						$dato["idCliente"]= $fila->id_cliente;
+
+
+						if ($this->Contraloria_model->updateSt12($b,$arreglo,$dato,$dato3) == TRUE) {
+							$a = $a+1;
+						} else {
+							$a;
+						}
+
+					}
+				}
+
+				else {
+					$f = $f+1;
+				}
+
+			}
+
+			if($f >= 1){
+				$data['message'] = 'NODETECTED';
 				echo json_encode($data);
-			  }
-		  }
-	  }
-  }
+			} else {
 
-  public function registroStatus12ContratacionRepresentante(){
+				if($a >= 1){
+					$data['message'] = 'OK';
+					echo json_encode($data);
+				} else {
+					$data['message'] = 'ERROR';
+					echo json_encode($data);
+				}
 
-	  $datos = array();
-	  $datos = $this->Contraloria_model->registroStatusContratacion12();
+			}
 
-	  if($datos != null) {
-		  echo json_encode($datos);
-	  } else {
-		  echo json_encode(array());
-	  }
+		}else{
 
-  }
+			$data['message'] = 'VOID';
+			echo json_encode($data);
+		}
 
-
-
-
-
-    public function insertContratosFirmados(){
-
-        if($_POST <> NULL){
-
-            $f = 0;
-            $a = 0;
-
-            $misDatosJSON = json_decode($_POST['datos']);
-
-            foreach ($misDatosJSON as list($b)) {
-
-                $data=array();
-                $data["lotes"]= $this->Contraloria_model->selectRegistroPorContratoStatus12($b);
-
-
-                if($data["lotes"] <> NULL) {
-
-                    $arreglo=array();
-                    $arreglo["idStatusContratacion"]=12;
-                    $arreglo["idMovimiento"]=42;
-                    $arreglo["comentario"]="Contrato Recibido con firma de RL";
-                    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-                    $arreglo["perfil"]=$this->session->userdata('id_rol');
-                    $arreglo["modificado"]=date("Y-m-d H:i:s");
-                    $arreglo["firmaRL"]= "FIRMADO";
-
-
-                    $horaActual = date('H:i:s');
-                    $horaInicio = date("08:00:00");
-                    $horaFin = date("16:00:00");
-
-
-                    if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-
-
-                        $fechaAccion = date("Y-m-d H:i:s");
-                        $hoy_strtotime2 = strtotime($fechaAccion);
-                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-                        if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                            $sig_fecha_feriado2 == "25-12") {
-
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-                            while($i <= 0) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                }
-                                else {
-                                    $fecha= $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-
-
-                            $arreglo["fechaVenc"]= $fecha;
-
-
-                        }else{
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-                            while($i <= -1) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                }
-                                else {
-                                    $fecha= $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-
-
-                            $arreglo["fechaVenc"]= $fecha;
-
-
-                        }
-
-                    } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-
-                        $fechaAccion = date("Y-m-d H:i:s");
-                        $hoy_strtotime2 = strtotime($fechaAccion);
-                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-                        if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                            $sig_fecha_feriado2 == "25-12") {
-
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-                            while($i <= 0) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                }
-                                else {
-                                    $fecha= $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-
-
-                            $arreglo["fechaVenc"]= $fecha;
-
-
-                        }else{
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-                            while($i <= 0) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                }
-                                else {
-                                    $fecha= $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-                            $arreglo["fechaVenc"]= $fecha;
-
-
-                        }
-                    }
-
-
-
-                    $dato3=array();
-                    $dato3["numContrato"]= $b;
-                    $dato3["fechaFirma"]= date('Y-m-d H:i:s');
-
-
-
-
-                    foreach ($data as $fila) {
-
-                        $dato=array();
-                        $dato["idStatusContratacion"]= 12;
-                        $dato["idMovimiento"]=42;
-                        $dato["nombreLote"]=$fila->nombreLote;
-                        $dato["comentario"]= "Contrato Recibido con firma de RL";
-                        $dato["usuario"]=$this->session->userdata('id_usuario');
-                        $dato["perfil"]=$this->session->userdata('id_rol');
-                        $dato["modificado"]=date("Y-m-d H:i:s");
-
-
-
-                        $horaInicio = date("08:00:00");
-                        $horaFin = date("16:00:00");
-
-                        $arregloFechas = array();
-
-                        $fechaAccion = $fila->fechaRL;
-                        $hoy_strtotime2 = strtotime($fechaAccion);
-                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-                        $time = date('H:i:s', $hoy_strtotime2);
-
-                        if ($time > $horaInicio and $time < $horaFin) {
-
-                            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                                $sig_fecha_feriado2 == "25-12" ) {
-
-
-                                $fecha = $fechaAccion;
-
-                                $i = 0;
-                                while($i <= 4) {
-                                    $hoy_strtotime = strtotime($fecha);
-                                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                    $sig_fecha_dia = date('D', $sig_strtotime);
-                                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                        $sig_fecha_feriado == "25-12") {
-                                    }
-                                    else {
-                                        $arregloFechas[$i] = $sig_fecha;
-                                        $i++;
-                                    }
-                                    $fecha = $sig_fecha;
-                                }
-
-                                $dato["fechaVenc"]= end($arregloFechas);
-
-
-                            }else{
-
-                                $fecha = $fechaAccion;
-
-                                $i = 0;
-                                while($i <= 3) {
-                                    $hoy_strtotime = strtotime($fecha);
-                                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                    $sig_fecha_dia = date('D', $sig_strtotime);
-                                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                        $sig_fecha_feriado == "25-12") {
-                                    }
-                                    else {
-                                        $arregloFechas[$i] = $sig_fecha;
-                                        $i++;
-                                    }
-                                    $fecha = $sig_fecha;
-                                }
-
-
-                                $dato["fechaVenc"]= end($arregloFechas);
-
-
-                            }
-                        }
-
-                        elseif ($time < $horaInicio || $time > $horaFin) {
-
-
-                            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                                $sig_fecha_feriado2 == "25-12" ) {
-
-
-                                $fecha = $fechaAccion;
-
-                                $i = 0;
-                                while($i <= 4) {
-                                    $hoy_strtotime = strtotime($fecha);
-                                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                    $sig_fecha_dia = date('D', $sig_strtotime);
-                                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                        $sig_fecha_feriado == "25-12") {
-                                    }
-                                    else {
-                                        $arregloFechas[$i] = $sig_fecha;
-                                        $i++;
-                                    }
-                                    $fecha = $sig_fecha;
-                                }
-
-                                $dato["fechaVenc"]= end($arregloFechas);
-
-
-                            }else{
-
-                                $fecha = $fechaAccion;
-
-                                $i = 0;
-                                while($i <= 4) {
-                                    $hoy_strtotime = strtotime($fecha);
-                                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                    $sig_fecha_dia = date('D', $sig_strtotime);
-                                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                        $sig_fecha_feriado == "25-12") {
-                                    }
-                                    else {
-                                        $arregloFechas[$i] = $sig_fecha;
-                                        $i++;
-                                    }
-                                    $fecha = $sig_fecha;
-                                }
-
-
-                                $dato["fechaVenc"]= end($arregloFechas);
-
-                            }
-                        }
-
-
-                        $dato["idLote"]= $fila->idLote;
-                        $dato["idCondominio"]= $fila->idCondominio;
-                        $dato["idCliente"]= $fila->id_cliente;
-
-
-                        if ($this->Contraloria_model->updateSt12($b,$arreglo,$dato,$dato3) == TRUE) {
-                            $a = $a+1;
-                        } else {
-                            $a;
-                        }
-
-                    }
-                }
-
-                else {
-                    $f = $f+1;
-                }
-
-            }
-
-            if($f >= 1){
-                $data['message'] = 'NODETECTED';
-                echo json_encode($data);
-            } else {
-
-                if($a >= 1){
-                    $data['message'] = 'OK';
-                    echo json_encode($data);
-                } else {
-                    $data['message'] = 'ERROR';
-                    echo json_encode($data);
-                }
-
-            }
-
-        }else{
-
-            $data['message'] = 'VOID';
-            echo json_encode($data);
-        }
-
-    }
-	
-	
-
+	}
 
 	public function editar_registro_lote_contraloria_proceceso13(){
 
@@ -3066,105 +2695,97 @@ public function editar_registro_lote_contraloria_proceceso15(){
 
   }
 
+	public function liberacion_contraloria(){
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+		/*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+		$this->load->view("contraloria/vista_liberacion_contraloria", $datos);
+	}
 
 
-
-
-
-  public function liberacion_contraloria(){
-	/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-	/*-------------------------------------------------------------------------------*/
-	$this->load->view('template/header');
-	$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-	$this->load->view("contraloria/vista_liberacion_contraloria", $datos);
-}
-
-
-public function app_lib(){
-	$res =  $this->Contraloria_model->aplicaLiberaciones($this->input->post('idResidencial'));  
-	if($res == true){
-		$data['message'] = 'OK';
-		echo json_encode($data);
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
-    }
-
-}
-
-
-
-public function return1(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');    
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date('Y-m-d H:i:s');
-    $fechaVenc=$this->input->post('fechaVenc');
-
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]=6;
-    $arreglo["idMovimiento"]=95;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-	$arreglo["modificado"]=date("Y-m-d H:i:s");
-
-	
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=6;
-    $arreglo2["idMovimiento"]=95;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $modificado;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;     
-
-		$validate = $this->Contraloria_model->validateSt6($idLote);
-
-		if($validate == 1){
-			if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-					$data['message'] = 'OK';
-					echo json_encode($data);
-				}else{
-					$data['message'] = 'ERROR';
-					echo json_encode($data);
-			}
+	public function app_lib(){
+		$res =  $this->Contraloria_model->aplicaLiberaciones($this->input->post('idResidencial'));  
+		if($res == true){
+			$data['message'] = 'OK';
+			echo json_encode($data);
 		}else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
 		}
+	}
 
 
-  }
+
+	public function return1(){
+
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');    
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+		$fechaVenc=$this->input->post('fechaVenc');
 
 
-  public function changeUb(){
 
-	$idLote=$this->input->post('idLote');
-	$ubicacion=$this->input->post('ubicacion');
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]=6;
+		$arreglo["idMovimiento"]=95;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
 
-	$validate = $this->Contraloria_model->update_sede($idLote, $ubicacion);
+		
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]=6;
+		$arreglo2["idMovimiento"]=95;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $modificado;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;     
+
+			$validate = $this->Contraloria_model->validateSt6($idLote);
+
+			if($validate == 1){
+				if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+						$data['message'] = 'OK';
+						echo json_encode($data);
+					}else{
+						$data['message'] = 'ERROR';
+						echo json_encode($data);
+				}
+			}else {
+				$data['message'] = 'FALSE';
+				echo json_encode($data);
+			}
+
+
+	}
+
+
+	public function changeUb(){
+
+		$idLote=$this->input->post('idLote');
+		$ubicacion=$this->input->post('ubicacion');
+
+		$validate = $this->Contraloria_model->update_sede($idLote, $ubicacion);
 
 		if ($validate == TRUE){
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
+			$data['message'] = 'OK';
+			echo json_encode($data);
+		}else{
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
 		}
-
-
-  }
+	}
 
 
 	public function inventario_c()

@@ -1,4 +1,8 @@
-<?php class RegistroLote extends CI_Controller
+<?php
+
+use application\helpers\email\registro_lote\Elementos_Correo_Registro_Lote;
+
+ class RegistroLote extends CI_Controller
 {
 	public function __construct()
 	{
@@ -9,9 +13,9 @@
 		$this->load->model('model_queryinventario');
 
 		$this->load->library(array('session', 'form_validation'));
-   //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-   $this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url','form'));
+		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
+		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->helper(array('url','form', 'email/registro_lote/elementos_correo', 'email/plantilla_dinamica_correo'));
 
 		$this->load->database('default');
 
@@ -327,59 +331,37 @@
 			$data["user"] = $this->session->userdata('username');
 			$data["idAsesor"] = $idAsesor;
 			$data["idAsesor2"] = $idAsesor2;
+			
+			/********************************************************************************
+            * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+            ********************************************************************************/
+			$datos_correo[0] = json_decode(json_encode($datos["lote"]), true);
+			$datos_correo[0] += ["create_at"	=>	date("Y-m-d H:i:s")];
 
-			$dataCorreo = array();
+			$datos_etiquetas = null;
 
-			$dataCorreo["residencial"] = $datos["lote"]->nombreResidencial;
-			$dataCorreo["condominio"] = $datos["lote"]->nombreCondominio;
-			$dataCorreo["nombreLote"] = $datos["lote"]->nombreLote;
-			$dataCorreo["create_at"] = date("Y-m-d H:i:s");
+			//Correos establecidos estaticamente.
+			$correos_entregar = array('programador.analista18@ciudadmaderas.com');
+			//$correos_entregar = array("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
+			
+			$elementos_correo = array("setFrom" => Elementos_Correo_Registro_Lote::SET_FROM_EMAIL,
+			"Subject" => Elementos_Correo_Registro_Lote::ASUNTO_CORREO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA);
 
+			$comentario_general = Elementos_Correo_Registro_Lote::EMAIL_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+			$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA;
 
-			$mail = $this->phpmailer_lib->load();
-	
-			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->addAddress("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
-			$mail->Subject = utf8_decode('LOTE BLOQUEADO-CIUDAD MADERAS');
-			$mail->isHTML(true);
-			$mailContent = utf8_decode(
-
-				"<style type='text/css'>
-   
-  table {  color: #333; border-collapse: collapse;}
-  td, th { border: 20px solid transparent; height: 30px; }
-  th { background: #D3D3D3; font-weight: bold; }
-  td { background: #FAFAFA; text-align: center; }
-  tr:nth-child(even) td { background: #F1F1F1; }  
-  tr:nth-child(odd) td { background: #FEFEFE; } 
-  tr td:hover { background: #666; color: #FFF; }
-  
-  </style>
-  
-  <h4><center>Lote Bloqueado:</center></h4>
-  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-    <tr class='active'>
-      <th>Proyecto</th>
-      <th>Condominio</th> 
-      <th>Lote</th>   
-      <th>Fecha/Hora</th>   
-    </tr> 
-    <tr>   
-           <td><center>" . $dataCorreo["residencial"] . "</center></td>
-           <td><center>" . $dataCorreo["condominio"] . "</center></td>
-           <td><center>" . $dataCorreo["nombreLote"] . "</center></td>
-           <td><center>" . $dataCorreo["create_at"] . "</center></td>
-    </tr>
-    </table></center>"
-
-			);
-
-			$mail->Body = $mailContent;
-
-
+			//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+			$plantilla_correo = new plantilla_dinamica_correo;
+			/********************************************************************************************/
 			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
 				$this->registrolote_modelo->insert_bloqueos($data);
-				$mail->send();
+				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+																		$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+				if($envio_correo){
+					$data['message_email'] = 'OK';
+				}else{
+					$data['message_email'] = $envio_correo;
+				}
 				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
 			} else {
 				die("ERROR");
@@ -18389,68 +18371,38 @@ tr td:hover { background: #666; color: #FFF; }
 	{
 
 		$datos["mailbloqueos"] = $this->registrolote_modelo->sendMailBloqueosDireccion();
+		/********************************************************************************
+        * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+        ********************************************************************************/
+		$datos_correo = array();
 
-		$mail = $this->phpmailer_lib->load();
+		foreach ($datos["mailbloqueos"] as $indice => $info_lote_bloqueado) {
+			$datos_correo[$indice] = json_decode(json_encode($info_lote_bloqueado), true);
+			$fecha_bloqueo = date_create($info_lote_bloqueado->create_at);
+			$fecha_hoy = date_create(date("Y-m-d H:i:s"));
 
-		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		$mail->addAddress("programador.analista1@ciudadmaderas.com");
-		$mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
-		$mail->isHTML(true);
-		$mailContent = utf8_decode(
-
-			"<style type='text/css'>
- 
-table {  color: #333; border-collapse: collapse;}
-td, th { border: 20px solid transparent; height: 30px; }
-th { background: #D3D3D3; font-weight: bold; }
-td { background: #FAFAFA; text-align: center; }
-tr:nth-child(even) td { background: #F1F1F1; }  
-tr:nth-child(odd) td { background: #FEFEFE; } 
-tr td:hover { background: #666; color: #FFF; }
-
-</style>
-
-<h4><center>Lotes Bloqueados al:" . " " . date("Y-m-d H:i:s") . "</center></h4>
-<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-  <tr class='active'>
-  <th>Proyecto</th>
-  <th>Condominio</th> 
-  <th>Lote</th>
-  <th>Fecha Bloqueo</th>
-  <th>Días acumulados con estatus Bloqueado</th>
-  </tr> 
-
-  ");
-
-
-		foreach ($datos["mailbloqueos"] as $row_bloqueos) {
-			$fechaBloqueo = date_create($row_bloqueos->create_at);
-			$fechaHoy = date_create(date("Y-m-d H:i:s"));
-
-			$diff = date_diff($fechaBloqueo, $fechaHoy);
-			$countDias = ($diff->format("%a") + 1);
-
-			if ($countDias >= 45) {
-				$mailContent .= utf8_decode("
-  <tr>   
-           <td><center>" . $row_bloqueos->nombreResidencial . "</center></td>
-           <td><center>" . $row_bloqueos->nombreCondominio . "</center></td>
-           <td><center>" . $row_bloqueos->nombreLote . "</center></td>
-           <td><center>" . $row_bloqueos->create_at . "</center></td>
-           <td><center>" . $countDias . "</center></td>
-  </tr>
-  ");
-			}
+			$dias_diferencia = (date_diff($fecha_bloqueo, $fecha_hoy)->format("%a") + 1);
+			$datos_correo[$indice] += ['diasDiferencia'	=>	$dias_diferencia];
 		}
-		$mailContent .= utf8_decode("</table></center>"
+		$datos_etiquetas = null;
+		$correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
-		);
+		$elementos_correo = array(	"setFrom" => Elementos_Correo_Registro_Lote::SET_FROM_EMAIL,
+									"Subject" => Elementos_Correo_Registro_Lote::ASUNTO_CORREO_TABLA_LOTES_BLOQUEADOS_A_FECHA);
 
-		$mail->Body = $mailContent;
-		$mail->send();
-
+		$comentario_general = Elementos_Correo_Registro_Lote::EMAIL_LOTES_BLOQUEADOS_A_FECHA . date("Y-m-d H:i:s") .
+																							  '<br><br>'. (!isset($comentario) ? '' : $comentario);
+		$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_A_FECHA;
+		$plantilla_correo = new plantilla_dinamica_correo;
+		/********************************************************************************************/
+		$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+																$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+		if($envio_correo === 1 ){
+			$datos['message_email'] = 'OK';
+		}else{
+			$datos['message_email'] = $envio_correo;
+		}
 	}
-
 
 	public function getDatosClientesChangeAsesor()
 	{

@@ -1,14 +1,17 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+use application\helpers\email\asistenete_gerente\Elementos_Correo_Asistenete_Gerente;
+
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
-	public function __construct() {
-		parent::__construct();
+  public function __construct() {
+    parent::__construct();
 		$this->load->model('VentasAsistentes_model');
 		$this->load->model('registrolote_modelo');
 				$this->load->model('asesor/Asesor_model');
  		$this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-       $this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url','form'));
+    $this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->helper(array('url','form', 'email/asistenete_gerente/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->load->library('phpmailer_lib');
 		$this->validateSession();
@@ -289,7 +292,6 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
 	}
 }
 
-
   public function editar_registro_loteRechazoAstatus2_asistentes_proceceso8() {
     $idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
@@ -324,129 +326,74 @@ public function editar_registro_loteRechazo_asistentes_proceceso8(){
 
 	  $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
 
-	$lp = $this->VentasAsistentes_model->get_lp($idLote);
+    $lp = $this->VentasAsistentes_model->get_lp($idLote);
 
-	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
-	   $array = array_unique($correosClean);
-	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
-	}
+    if(empty($lp)){
+      $correosClean = explode(',', $datos[0]["correos"]);
+      $array = array_unique($correosClean);
+    } else {
+      $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
+      $array = array_unique($correosClean);
+    }
 
+    $infoLote = $this->VentasAsistentes_model->getNameLote($idLote);
 
-	$infoLote = $this->VentasAsistentes_model->getNameLote($idLote);
+    /*************************************************************************************
+		* Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+		************************************************************************************/
+    $datos_correo[0] = json_decode(json_encode($infoLote), true);
+    $datos_correo[0] += ["motivoRechazo" =>  $comentario];
+    $datos_correo[0] += ["fechaHora"     =>  $modificado];
 
-
-  $mail = $this->phpmailer_lib->load();
- 
+    $datos_etiquetas = null;
+		
+		$correos_entregar = array('programador.analista18@ciudadmaderas.com');
+		// foreach($array as $email)
+		// {
+    //   if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
+    //     if (trim($email) != ''){ 
+    //       array_push($correos_entregar, $email);
+    //     }
+    //   }
   
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+    //   if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+    //     array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
+    //   }
+		// }
 
-  foreach($array as $email)
-  {
-    if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-      if (trim($email) != ''){ 
-        $mail->addAddress($email);
-      }
+		$elementos_correo = array("setFrom" => Elementos_Correo_Asistenete_Gerente::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_Asistenete_Gerente::ASUNTO_CORREO_TABLA_RECHAZO_ESTATUS_8);
+
+		$comentario_general = Elementos_Correo_Asistenete_Gerente::EMAIL_RECHAZO_ESTATUS_8.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+		$datos_encabezados_tabla = Elementos_Correo_Asistenete_Gerente::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_ESTATUS_8;
+
+		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+		$plantilla_correo = new plantilla_dinamica_correo;
+		/********************************************************************************************/
+
+	  $validate = $this->VentasAsistentes_model->validateSt8($idLote);
+
+    if($validate == 1){
+
+      if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+        $data_enviar_mail = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+                                                                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+        if ($data_enviar_mail > 0) {
+          $data['status_msg'] = 'Correo enviado correctamente';
+        } else {
+          $data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
+        }
+        $data['message'] = 'OK';
+        echo json_encode($data);
+
+        }else{
+          $data['message'] = 'ERROR';
+          echo json_encode($data);
+        }
+    }else {
+      $data['message'] = 'FALSE';
+      echo json_encode($data);
     }
-
-    if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-      $mail->addAddress('analista.comercial@ciudadmaderas.com');
-    }
-  }
-
-
-  $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)');
-  $mail->isHTML(true);
-
-  $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>AVISO DE BAJA </title>
-  <style media='all' type='text/css'>
-      .encabezados{
-          text-align: center;
-          padding-top:  1.5%;
-          padding-bottom: 1.5%;
-      }
-      .encabezados a{
-          color: #234e7f;
-          font-weight: bold;
-      }
-      
-      .fondo{
-          background-color: #234e7f;
-          color: #fff;
-      }
-      
-      h4{
-          text-align: center;
-      }
-      p{
-          text-align: right;
-      }
-      strong{
-          color: #234e7f;
-      }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-              <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-              </td></tr>
-          </table>
-      </td></tr>
-      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-        <tr class='active'>
-          <th>Proyecto</th>
-          <th>Condominio</th> 
-          <th>Lote</th>   
-          <th>Motivo de rechazo</th>   
-          <th>Fecha/Hora</th>   
-        </tr> 
-        <tr>   
-			   <td><center>".$infoLote->nombreResidencial."</center></td>
-			   <td><center>".$infoLote->nombre."</center></td>
-			   <td><center>".$infoLote->nombreLote."</center></td>
-			   <td><center>".$comentario."</center></td>
-			   <td><center>".date("Y-m-d H:i:s")."</center></td>
-
-        </tr>
-        </table></center>
-      
-      
-      </td></tr>
-  </table></body></html>");
-
-  $mail->Body = $mailContent;
-
-
-	$validate = $this->VentasAsistentes_model->validateSt8($idLote);
-
-	if($validate == 1){
-
-	if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-   	    $mail->send();
-		$data['message'] = 'OK';
-		echo json_encode($data);
-
-		}else{
-			$data['message'] = 'ERROR';
-			echo json_encode($data);
-		}
-
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
-	}
-
-
   }
 
 
@@ -1086,3 +1033,4 @@ public function setVar($var)
 
  
 }
+?>
