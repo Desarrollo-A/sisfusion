@@ -7,8 +7,8 @@ class Elementos_Correos_Admin
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION editar_registro_loteRechazo_administracion_proceceso11:                                  *
-    * 1.- EMAIL_RECHAZO_ADMIN_PROC_11: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                                      *
-    * 2.- ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINAMICAMENTE     *
+    * 1.- EMAIL_RECHAZO_ADMIN_PROC_11: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                                      *
+    * 2.- ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINÁMICAMENTE     *
     **************************************************************************************************************************************/
     CONST EMAIL_RECHAZO_ADMIN_PROC_11 = 'Hemos registrado un cambio de estatus al tipo "RECHAZADO" de parte de administración,
                                         enseguida puede encontrar los comentarios y la información correspondiente respecto a dicho cambio.';

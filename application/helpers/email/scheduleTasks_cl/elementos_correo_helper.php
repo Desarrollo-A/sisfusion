@@ -8,8 +8,8 @@ class Elementos_Correo_ScheduleTasks_Cl
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION sendRv5:                                                                            *
-    * 1.- EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                                          *
-    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINAMICAMENTE    *
+    * 1.- EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                                          *
+    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINÁMICAMENTE    *
     **************************************************************************************************************************************/
     CONST EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE = 'Acumulado de lotes sin integrar Expediente';
     CONST ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE = array( 'nombreResidencial' =>  'Plaza',
@@ -26,8 +26,8 @@ class Elementos_Correo_ScheduleTasks_Cl
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION mailBloqueosAfter45:                                                                     *
-    * 1.- EMAIL_LOTES_BLOQUEADOS_45_DIAS: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                                          *
-    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_45_DIAS: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINAMICAMENTE    *
+    * 1.- EMAIL_LOTES_BLOQUEADOS_45_DIAS: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                                          *
+    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_45_DIAS: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINÁMICAMENTE    *
     **************************************************************************************************************************************/
     CONST EMAIL_LOTES_BLOQUEADOS_45_DIAS = 'Lotes Bloqueados al: ';
     CONST ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_45_DIAS = array('nombreResidencial' =>  'Proyecto',
@@ -44,7 +44,7 @@ class Elementos_Correo_ScheduleTasks_Cl
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION sendMailReportER --> notifyRejEv:                                                        *
-    * 1.- EMAIL_REPORTE_EVIDENCIAS_RECHAZADAS_CONTRALORÍA: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                              *
+    * 1.- EMAIL_REPORTE_EVIDENCIAS_RECHAZADAS_CONTRALORÍA: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                              *
     * 2.- ETIQUETAS_ENCABEZADO_TABLA_REPORTE_EVIDENCIAS_RECHAZADAS_CONTRALORÍA: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE             *
     *     GENERA DINAMICAMENTE.                                                                                                           *
     * 3.- NO EXISTE ASUNTO COMO CONSTANTE YA QUE DENTRO DE ESTA FUNCION (sendMailReportER) VARIA DEPENDIENTO EL ROL DEL USUARIO           *
@@ -82,7 +82,7 @@ class Elementos_Correo_ScheduleTasks_Cl
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION mailContentComptrollerNotification --> sendComptrollerNotification:                      *
-    * 1.- EMAIL_REPORTE_ESTATUS_10: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                              *
+    * 1.- EMAIL_REPORTE_ESTATUS_10: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                              *
     * 2.- ETIQUETAS_ENCABEZADO_TABLA_REPORTE_ESTATUS_10: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE             *
     *     GENERA DINAMICAMENTE.                                                                                                           *
     * 3.- NO EXISTE ASUNTO COMO CONSTANTE YA QUE DENTRO DE ESTA FUNCION (sendMailReportER) VARIA DEPENDIENTO EL ROL DEL USUARIO           *
@@ -132,17 +132,17 @@ class Elementos_Correo_ScheduleTasks_Cl
 
     /**************************************************************************************************************************************
     * VARIABLES MANDAN LO SIGUIENTE PARA FUNCION sendRv5:                                                                            *
-    * 1.- EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCION DEL MISMO.                                          *
-    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINAMICAMENTE    *
+    * 1.- EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE: PARTE DEL CUERPO DEL CORREO DANDO UNA INTRODUCCIÓN DEL MISMO.                                          *
+    * 2.- ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE: ETIQUETAS PARA COLOCAR LOS ENCABEZADOS DE LA TABLA QUE SE GENERA DINÁMICAMENTE    *
     **************************************************************************************************************************************/
     CONST EMAIL_CAMBIO_CONTRASEÑA = '<h3>¡ Buenos días estimad@ !</h3>
                                      <p style="padding: 10px 90px;text-align: center;">
-                                        A continuacion se muestra usuario, nueva contraseña y tiempo de validez para la informacion dada.
+                                        A continuación se muestra usuario, nueva contraseña y tiempo de validez para la información dada.
                                      </p>';
     CONST ETIQUETAS_ENCABEZADO_TABLA_CAMBIO_CONTRASEÑA = array( 'usuario'       =>  'USUARIO',
                                                                 'contraseña'    =>  'CONTRASEÑA NUEVA',
-                                                                'diasVencer'    =>  'DÍAS VALIDOS',
-                                                                'fechaAccion'   =>  'FECHA CREACION');
+                                                                'diasVencer'    =>  'DÍAS VÁLIDOS',
+                                                                'fechaAccion'   =>  'FECHA CREACIÓN');
     CONST ASUNTO_CORREO_TABLA_CAMBIO_CONTRASEÑA = 'Cambio de contraseña ASESOR COMODÍN.';
     /*************************************************************************************************************************************/
 }
