@@ -549,7 +549,7 @@ class Administracion extends CI_Controller{
          );
 
 		 #PROVICIONAL TESTING
-          $correos_submit[0] = 'programador.analista18@ciudadmaderas.com';
+          $correos_submit[0] = 'programador.analista26@ciudadmaderas.com';
           //$correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
@@ -649,7 +649,7 @@ class Administracion extends CI_Controller{
 		
 		$modificado=date('Y-m-d H:i:s');
 
-		$correos_submit = array( 'programador.analista18@ciudadmaderas.com');
+		$correos_submit = array( 'programador.analista26@ciudadmaderas.com');
 		if(!is_null($data_send)){
 			$data_mail[0] = array(
 				"proyecto" => $data_send->nombreResidencial,
@@ -689,7 +689,7 @@ class Administracion extends CI_Controller{
 
 	public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correo_new = 'programador.analista26@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         //$correoDir = $data_eviRec['correo_a_enviar'];
 
         $mail = $this->phpmailer_lib->load();
@@ -702,7 +702,7 @@ class Administracion extends CI_Controller{
         }
 
         $mail->addAddress($correo_new);
-         $mail->addcc('erick_eternal@live.com.mx'); #copia oculta
+         $mail->addcc('programador.analista26@ciudadmaderas.com'); #copia oculta
 
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);
@@ -866,7 +866,7 @@ class Administracion extends CI_Controller{
         }
 	}
     function testMail(){
-        $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
+        $correos_submit[0] = 'programador.analista26@ciudadmaderas.com';
         $comentarioGeneral = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
