@@ -207,7 +207,6 @@ class Administracion extends CI_Controller{
 
                       $d = end($arregloFechas);
                       $dataPer[$i]['fechaVenc2'] = $d;
-                      echo 'aqui<br>';
 
                   }
                   else {
