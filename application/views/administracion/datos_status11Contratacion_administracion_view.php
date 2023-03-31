@@ -701,7 +701,6 @@
 				type: 'POST', 
 				success: function(data){
 				response = JSON.parse(data);
-
 					if(response.message == 'OK') {
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
