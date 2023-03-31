@@ -253,8 +253,11 @@
                         <th>Subdirector</th>
                         <th>Director regional</th>
                         <th>Fecha de apartado</th>
-                        <th>Días desde apartado</th>
+                        <th>Fecha último estatus</th>
+                        <th>Días último estatus</th>
                         <th>Estatus contratación</th>
+                        <th>Fecha estatus 9</th>
+                        <th>Días estatus 9</th>
                         <th>Estatus lote</th>
                         <th>Fecha liberación</th>
                         <th>Motivo</th>

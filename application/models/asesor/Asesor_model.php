@@ -185,15 +185,14 @@ class Asesor_model extends CI_Model
     }
 
     /******NUEVO MODELO 28-10-20********/
-    public function get_info_prospectos($id_asesor)
-    {
+    public function get_info_prospectos($id_asesor) {
         $query = $this->db->query("SELECT p.*, lp.nombre as lugar_prospeccion, pv.nombre as plaza_venta,
         nac.nombre as nacionalidad
         FROM prospectos p
         LEFT JOIN opcs_x_cats lp ON lp.id_opcion=p.lugar_prospeccion AND lp.id_catalogo = 9
         LEFT JOIN opcs_x_cats pv ON pv.id_opcion=p.plaza_venta AND pv.id_catalogo = 5
         LEFT JOIN opcs_x_cats nac ON nac.id_opcion=p.nacionalidad AND nac.id_catalogo = 11
-        WHERE p.estatus = 1 AND id_asesor=" . $id_asesor . ";");
+        WHERE p.estatus = 1 AND id_asesor = $id_asesor AND p.lugar_prospeccion != 6");
         return $query->result();
     }
 
