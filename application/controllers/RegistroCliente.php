@@ -1,4 +1,8 @@
-<?php class RegistroCliente extends CI_Controller {
+<?php
+
+use application\helpers\email\registro_cliente\Elementos_Correo_Registro_Cliente;
+
+class RegistroCliente extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
@@ -9,7 +13,7 @@
       $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->library('Pdf');
 		$this->load->library('phpmailer_lib');
-		$this->load->helper(array('url','form'));
+		$this->load->helper(array('url','form', 'email/registro_cliente/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
@@ -1372,40 +1376,49 @@
 
             $pdf->Output(utf8_decode($namePDF), 'I');
 
-
-
-
-
             $attachment= $pdf->Output(utf8_decode($namePDF), 'S');
             // PHPMailer object
-            $mail = $this->phpmailer_lib->load();
 
+            /*************************************************************************************
+             * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+             ************************************************************************************/
+            $datos_correo[0] = array();
 
-            $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-            //$mail->AddAddress('programador.analista1@ciudadmaderas.com');
+            $datos_etiquetas = null;
 
-            foreach ($arrayCorreoNotRepeat AS $arrCorreo){
-                if ($arrCorreo){
-                    $mail->AddAddress($arrCorreo);
-                }
-            }
-            // Email subject
+            $correos_entregar = array();
+            
+            // foreach($arrayCorreoNotRepeat as $email)
+            // {
+            //   if ($email){
+            //     array_push($correos_entregar, $email);
+            //   }
+            // }
+            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
 
-            $mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
+            $archivo_adjunto = array("adjunto"  =>  $attachment,
+                                     "nombre_pdf" =>  $namePDF);
+            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+                        "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD);
 
-            // Set email format to HTML
-            $mail->isHTML(true);
+            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_DEPOSITO_SERIEDAD.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD;
 
-            // Email body content
-            $mailContent = utf8_decode("<h1>Ciudad Maderas</h1>
-            <p>Se adjunta el archivo Depósito de seriedad correspondiente.</p>");
-            $mail->Body = $mailContent;
-            $mail->AddStringAttachment($attachment, $namePDF);
+            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+            //<title>AVISO DE BAJA </title>
+            $plantilla_correo = new plantilla_dinamica_correo;
+            /************************************************************************************************************************/
             if ($this->registrolote_modelo->editaRegistroClienteDS_EA($idCliente,$arreglo,$arreglo2)){
-                $mail->send();
-            }else
-            {
-                die("ERROR");
+              $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                                                      $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
+              if($envio_correo){
+                $data['message_email'] = 'OK';
+              }else{
+                $data['message_email'] = $envio_correo;
+              }
+              $data['message'] = 'OK';
+            }else{
+              die("ERROR");
             }
         }
 
@@ -7106,23 +7119,45 @@
 			$namePDF = utf8_decode('DEPÓSITO_DE_SERIEDAD_'.$idCliente.'.pdf');
 			$pdf->Output(utf8_decode($namePDF), 'I');
 			$attachment= $pdf->Output(utf8_decode($namePDF), 'S');
-			// PHPMailer object
-			$mail = $this->phpmailer_lib->load();
+			
+      // PHPMailer object
+      /*************************************************************************************
+       * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+       ************************************************************************************/
+      $datos_correo[0] = array();
 
-			$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-			$mail->AddAddress('programador.analista1@ciudadmaderas.com');
-			// Email subject
-			$mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
-			// Set email format to HTML
-			$mail->isHTML(true);
-			// Email body content
-			$mailContent = utf8_decode("<h1>Ciudad Maderas</h1>
-             <p>Se adjunta el archivo Depósito de seriedad correspondiente.</p>");
-			$mail->Body = $mailContent;
-			$mail->AddStringAttachment($attachment, $namePDF);
+      $datos_etiquetas = null;
 
+      $correos_entregar = array();
+      
+      // foreach($arrayCorreoNotRepeat as $email)
+      // {
+      //   if ($email){
+      //     array_push($correos_entregar, $email);
+      //   }
+      // }
+
+      array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+      
+      $archivo_adjunto = array("adjunto"  =>  $attachment,
+                                "nombre_pdf" =>  $namePDF);
+      $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+                  "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD);
+
+      $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_DEPOSITO_SERIEDAD.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+      $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD;
+
+      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+      //<title>AVISO DE BAJA </title>
+      $plantilla_correo = new plantilla_dinamica_correo;
+      /************************************************************************************************************************/
 			if ($this->registrolote_modelo->editaRegistroClienteDS($idCliente,$arreglo,$arreglo2)){
-				// $mail->send();
+				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
+        if($envio_correo){
+          $data['message_email'] = 'OK';
+        }else{
+          $data['message_email'] = $envio_correo;
+        }
 			}else
 			{
 				die("ERROR");
@@ -7565,6 +7600,7 @@
 		$data["data"]= $this->registrolote_modelo->registroCliente();
 		echo json_encode($data);
 	}
+  
 	public function sendAut()
 	{
 		$idCliente=$this->input->post('idCliente');
@@ -7593,95 +7629,42 @@
 				$correoDir= 'programador.analista8@ciudadmaderas.com';//adriana.manas@ciudadmaderas.com
 				break;
 		}*/
-        $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-        $correoDir = $dataUser[0]->correo;/*linea de codigo para produccion*/
-		$mail = $this->phpmailer_lib->load();
 
-		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		$mail->addAddress($correoDir);
+    /********************************************************************************
+    * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+    ********************************************************************************/
+    $datos_correo[0] = array("nombreResidencial" =>  $nombreResidencial,
+                          "nombreCondominio"  =>  $nombreCondominio,
+                          "nombreLote"        =>  $nombreLote,
+                          "motivoAut"         =>  $motivoAut,
+                          "fechaHora"         =>  date("Y-m-d H:i:s"));
+    $datos_etiquetas = null;
+    
+    $correos_entregar = array('programador.analista18@ciudadmaderas.com');
+    // $dataUser = $this->Asesor_model->getInfoUserById($idAut);
+    // array_push($correos_entregar, $dataUser[0]->correo);
+    $comentario = $motivoAut;
+    $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_SOLICITUD_AUTORIZACION_CONTRATACION);
 
-		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
-		$mail->isHTML(true);
+    $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_AUTORIZACION_CONTRATACION.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+    $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_AUTORIZACION_CONTRATACION;
 
-		$mailContent = utf8_decode( "<html><head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-      <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-      <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-      <style media='all' type='text/css'>
-          .encabezados{
-              text-align: center;
-              padding-top:  1.5%;
-              padding-bottom: 1.5%;
-          }
-          .encabezados a{
-              color: #234e7f;
-              font-weight: bold;
-          }
-          
-          .fondo{
-              background-color: #234e7f;
-              color: #fff;
-          }
-          
-          h4{
-              text-align: center;
-          }
-          p{
-              text-align: right;
-          }
-          strong{
-              color: #234e7f;
-          }
-          .table{width:100%}
-          .tr{border:0px}
-          .td{padding:25px;border: 0px;border-bottom: 1px solid #003d82}
-      </style>
-    </head>
-    <body>
-      <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-          <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-              <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                  <tr class='navbar navbar-inverse encabezados'><td>
-                      <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                  </td></tr>
-              </table>
-          </td></tr>
-          <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-          <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-            <tr class='active'>
-              <th>Proyecto</th>
-              <th>Condominio</th> 
-              <th>Lote</th>   
-              <th>Autorización</th>   
-              <th>Fecha/Hora</th>   
-            </tr> 
-            <tr style='border: 0px'>   
-                   <td><center>".$nombreResidencial."</center></td>
-                   <td><center>".$nombreCondominio."</center></td>
-                   <td><center>".$nombreLote."</center></td>
-                   <td><center>".$motivoAut."</center></td>
-                   <td><center>".date("Y-m-d H:i:s")."</center></td>
-            </tr>
-            </table></center>
-          
-          
-          </td></tr>
-      </table></body></html>");
-
-		$mail->Body = $mailContent;
-
-
+    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+    $plantilla_correo = new plantilla_dinamica_correo;
+    /********************************************************************************************/
 		$arr=array();
 		$arr["autorizacion"]= 1;
 		$arr["idAut"]= $idAut;
 		$arr["motivoAut"]= $motivoAut;
-
-
 		if (($this->registrolote_modelo->editaAut($idLote,$arr,$idCliente)) == TRUE) {
-			if($correoDir == 'gustavo.mancilla@ciudadmaderas.com'){
-            
-      }else{
-        $mail->send();
+			if($correoDir !== 'gustavo.mancilla@ciudadmaderas.com'){
+        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+				if($envio_correo){
+					$data['message_email'] = 'OK';
+				}else{
+					$data['message_email'] = $envio_correo;
+				}
       }
 		}
 	}
@@ -7863,7 +7846,7 @@
 
 			// únicamente se ponen las obsercaciones cuyo estatus sea 3 - va para DC
 			if ($_POST['accion'.$i] == 3) {
-				$autorizacionComent .= $_POST['observaciones'.$i].". ";
+				$autorizacionComent .= ($i+1).'.- '.$_POST['observaciones'.$i].".<br>";
 			}
 
 			$dataUpdAut = $this->registrolote_modelo->updAutFromDC($idAut, $dataUPDAut);
@@ -7894,7 +7877,43 @@
 		}
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
 		if ($type == 1) {
-			$this->notifyUsers($this->session->userdata('id_usuario'), $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
+			//$this->notifyUsers($this->session->userdata('id_usuario'), $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
+      
+      $idAut = $this->session->userdata('id_usuario');
+      $motivoAut = $autorizacionComent;
+      /********************************************************************************
+      * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+      ********************************************************************************/
+      $datos_correo[0] = array('nombreResidencial' =>  $nombreResidencial,
+      'nombreCondominio'  =>  $nombreCondominio,
+      'nombreLote'        =>  $nombreLote,
+      'motivoAut'         =>  $motivoAut,
+      'fechaHora'         =>  date("Y-m-d H:i:s"));
+      $datos_etiquetas = null;
+      $comentario = $autorizacionComent;
+      $dataUser = $this->Asesor_model->getInfoUserById($idAut);
+      $correos_entregar = array('programador.analista18@ciudadmaderas.com'); //quit ar correo de test
+      //array_push($correos_entregar, $dataUser[0]->correo);
+
+      $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+                                "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES);
+
+      $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_ASESOR_AUTORIZACIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+
+      $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES;
+
+      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+      $plantilla_correo = new plantilla_dinamica_correo;
+      /********************************************************************************************/
+      if($correos_entregar[0] != 'gustavo.mancilla@ciudadmaderas.com'){
+        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                                                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+        if($envio_correo === 1 ){
+          $data['message_email'] = 'OK';
+        }else{
+          $data['message_email'] = $envio_correo;
+        }
+      }
 		}
     $respuesta = array(
       'code'    => $code,
@@ -7903,88 +7922,6 @@
       // donde 1 es succes y 2 es error
     );
     echo json_encode ($respuesta);
-	}
-
-	public function notifyUsers($idAut, $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $motivoAut)
-	{
-
-		$dataUser = $this->Asesor_model->getInfoUserById($idAut);
-		//$correoDir= 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-		$correoDir = $dataUser[0]->correo;/*linea de codigo para produccion*/
-
-		$mail = $this->phpmailer_lib->load();
-
-		$mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-		$mail->addAddress($correoDir);/*$correoDir*/
-		$mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
-		$mail->isHTML(true);
-		$mailContent = utf8_decode( "<html><head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-      <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-      <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-      <style media='all' type='text/css'>
-          .encabezados{
-              text-align: center;
-              padding-top:  1.5%;
-              padding-bottom: 1.5%;
-          }
-          .encabezados a{
-              color: #234e7f;
-              font-weight: bold;
-          }
-          
-          .fondo{
-              background-color: #234e7f;
-              color: #fff;
-          }
-          
-          h4{
-              text-align: center;
-          }
-          p{
-              text-align: right;
-          }
-          strong{
-              color: #234e7f;
-          }
-        </style>
-            </head>
-            <body>
-              <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-                      <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                          <tr class='navbar navbar-inverse encabezados'><td>
-                              <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                          </td></tr>
-                      </table>
-                  </td></tr>
-                  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-                  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-                    <tr class='active'>
-                      <th>Proyecto</th>
-                      <th>Condominio</th> 
-                      <th>Lote</th>   
-                      <th>Autorización</th>   
-                      <th>Fecha/Hora</th>   
-                    </tr> 
-                    <tr>   
-                           <td><center>".$nombreResidencial."</center></td>
-                           <td><center>".$nombreCondominio."</center></td>
-                           <td><center>".$nombreLote."</center></td>
-                           <td><center>".$motivoAut."</center></td>
-                           <td><center>".date("Y-m-d H:i:s")."</center></td>
-                    </tr>
-                    </table></center>
-                  
-                  
-                  </td></tr>
-              </table></body></html>");
-
-		$mail->Body = $mailContent;
-
-    if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
-      $mail->send();
-      }
 	}
 
     function getLotesAsesor($condominio,$residencial) {
@@ -8310,7 +8247,7 @@
         if(count($query) <= 0){
             $query = $this->registrolote_modelo->getdp_DS($lotes);
         }
-
+        
         $data = array_merge(
           $query,
           $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
@@ -8401,114 +8338,74 @@
 
     public function deleteCorrida()
     {
-        $idDocumento = $this->input->post('idDocumento');
-        $data = array();
-        $data["expediente"] = NULL;
-        $data["modificado"] = date("Y-m-d H:i:s");
-        $data["idUser"] = $this->session->userdata('id_usuario');
-        $nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-        $file = "./static/documentos/cliente/corrida/" . $nombreExp->expediente;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $delete = $this->registrolote_modelo->deleteDoc($idDocumento, $data);
-        $validaDelete = $delete == TRUE ? 1 : 0;
-        if ($validaDelete == 1) {
-            $response['message'] = 'OK';
-            echo json_encode($response);
-            $validaMail = $this->registrolote_modelo->sendMailAdmin($nombreExp->idLote);
-            if ($validaMail->idHistorialLote != NULL) {
-                $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
-                $mail = $this->phpmailer_lib->load();
-         
-                $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-                $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
-                $mail->AddAddress('karen.pina@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
-                $mail->AddAddress('coord.administrativo7@ciudadmaderas.com');
-                $mail->AddAddress('asistente.admon@ciudadmaderas.com');
-                $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
-                $mail->isHTML(true);
-                $mailContent = utf8_decode("<html><head>
-					  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-					  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-					  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-					  <style media='all' type='text/css'>
-						  .encabezados{
-							  text-align: center;
-							  padding-top:  1.5%;
-							  padding-bottom: 1.5%;
-						  }
-						  .encabezados a{
-							  color: #234e7f;
-							  font-weight: bold;
-						  }
-						  
-						  .fondo{
-							  background-color: #234e7f;
-							  color: #fff;
-						  }
-						  
-						  h4{
-							  text-align: center;
-						  }
-						  p{
-							  text-align: right;
-						  }
-						  strong{
-							  color: #234e7f;
-						  }
-					  </style>
-					</head>
-					<body>
-					  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-						  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-							  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-								  <tr class='navbar navbar-inverse encabezados'><td>
-									  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-								  </td></tr>
-							  </table>
-						  </td></tr>
-						  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-						  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-							<tr class='active'>
-							  <th>Proyecto</th>
-							  <th>Condominio</th> 
-							  <th>Lote</th>   
-							  <th>Observación</th>   
-							  <th>Fecha/Hora</th>   
-							</tr> 
-							<tr>   
-								   <td><center>" . $infoLote->nombreResidencial . "</center></td>
-								   <td><center>" . $infoLote->nombre . "</center></td>
-								   <td><center>" . $infoLote->nombreLote . "</center></td>
-								   <td><center> SE MODIFICO CORRIDA FINANCIERA </center></td>
-								   <td><center>" . date("Y-m-d H:i:s") . "</center></td>
-							</tr>
-							</table></center>
-						  
-						  
-						  </td></tr>
-					  </table></body></html>");
-                $mail->Body = $mailContent;
-                $mail->send();
+      
+      $idDocumento = $this->input->post('idDocumento');
+      $data = array();
+      $data["expediente"] = NULL;
+      $data["modificado"] = date("Y-m-d H:i:s");
+      $data["idUser"] = $this->session->userdata('id_usuario');
+      $nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
+      $file = "./static/documentos/cliente/corrida/" . $nombreExp->expediente;
+      if (file_exists($file)) {
+          unlink($file);
+      }
+      $delete = $this->registrolote_modelo->deleteDoc($idDocumento, $data);
+      $validaDelete = $delete == TRUE ? 1 : 0;
+      if ($validaDelete == 1) {
+          $response['message'] = 'OK';
+          echo json_encode($response);
+          $validaMail = $this->registrolote_modelo->sendMailAdmin($nombreExp->idLote);
+          if ($validaMail->idHistorialLote != NULL) {
+            $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
+            $comentario = 'SE MODIFICO CORRIDA FINANCIERA';
+            /********************************************************************************
+            * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+            ********************************************************************************/
+            // l.idLote, l.nombreLote, cond.nombre,res.nombreResidencial
+            $datos_correo[0] = json_decode(json_encode($infoLote), true);
+            $datos_correo[0] += ["observacion" => $comentario];
+            $datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
 
+            $datos_etiquetas = null;
+
+            $correos_entregar = array('programador.analista18@ciudadmaderas.com');
+            // $correos_entregar = array('coord.administrativoslp@ciudadmaderas.com',
+            //                         'coord.administrativo@ciudadmaderas.com',
+            //                         'coord.administrativo1@ciudadmaderas.com',
+            //                         'coord.administrativo2@ciudadmaderas.com',
+            //                         'coord.administrativo3@ciudadmaderas.com',
+            //                         'karen.pina@ciudadmaderas.com',
+            //                         'coord.administrativo4@ciudadmaderas.com',
+            //                         'coord.administrativo5@ciudadmaderas.com',
+            //                         'coord.administrativo7@ciudadmaderas.com',
+            //                         'asistente.admon@ciudadmaderas.com');
+
+
+            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+                                      "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_ELIMINAR_ARCHIVO_CORRIDA);
+
+            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_ELIMINAR_ARCHIVO_CORRIDA.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_ELIMINAR_ARCHIVO_CORRIDA;
+
+            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+            $plantilla_correo = new plantilla_dinamica_correo;
+            /********************************************************************************************/
+            $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+            if($envio_correo){
+              $data['message_email'] = 'OK';
+            }else{
+              $data['message_email'] = $envio_correo;
             }
-
-        }
-        else if ($validaDelete == 0) {
-            $response['message'] = 'ERROR';
-            echo json_encode($response);
-        }
-        else {
-            $response['message'] = 'ERROR';
-            echo json_encode($response);
-        }
+          }
+      }
+      else if ($validaDelete == 0) {
+          $response['message'] = 'ERROR';
+          echo json_encode($response);
+      }
+      else {
+          $response['message'] = 'ERROR';
+          echo json_encode($response);
+      }
     }
 
 	public function addFileContrato(){
