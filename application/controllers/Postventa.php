@@ -692,7 +692,10 @@ class Postventa extends CI_Controller
             break;
             case 21:
                 $folder = "static/documentos/postventa/escrituracion/RFC_MORAL/";
-            break;  
+            break;
+            case 22:
+                $folder = "static/documentos/postventa/escrituracion/FORMAS_PAGO_FECHA/";
+            break;    
         }
         return $folder;
 
@@ -1882,7 +1885,7 @@ function saveNotaria(){
 
     }
     
-    public function descuentoUpdateTi(){
+    public function reasignacionSolicitudEsc(){
 
         $id_solicitud       = $this->input->post('id_solicitud');
         $id_titulacion       = $this->input->post('id_titulacion');
@@ -2378,7 +2381,7 @@ function saveNotaria(){
 	  }
   </style>
 </head>
-<body>
+                    <body>
   <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
 	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
 		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
@@ -2685,6 +2688,403 @@ function saveNotaria(){
         }
 
     }
+    public function enviaDirectoStatus6(){
+
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+
+        $idMovimiento = 106;
+        $idStatusContratacion = 5;
+
+
+        $arreglo=array();
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+
+
+
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+
+        }
+        elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+
+                $fecha = $fechaAccion;
+
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+        }
+
+
+
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;
+        $arreglo2["idCondominio"]= $idCondominio;
+        $arreglo2["idCliente"]= $idCliente;
+
+
+
+        $validate = $this->Postventa_model->validateSt3($idLote);
+
+        if($validate == 1){
+
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                $data['message'] = 'OK';
+                echo json_encode($data);
+
+            }else{
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+
+        }else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+
+    }
+    public function enviaDirectoStatus7(){
+
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+
+        $idMovimiento = 112;
+        $idStatusContratacion = 6;
+
+
+        $arreglo=array();
+        $arreglo["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo["idMovimiento"]=$idMovimiento;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+
+
+
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+
+        }
+        elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+
+                $fecha = $fechaAccion;
+
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }else{
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    }
+                    else {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"]= $fecha;
+            }
+        }
+
+
+
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]= $idStatusContratacion;
+        $arreglo2["idMovimiento"]=$idMovimiento;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;
+        $arreglo2["idCondominio"]= $idCondominio;
+        $arreglo2["idCliente"]= $idCliente;
+
+
+
+        $validate = $this->Postventa_model->validateSt3($idLote);
+
+
+//        print_r($arreglo);
+//        echo '<br><br>';
+//        print_r($arreglo);
+//        echo '<br><br>';
+//        print_r($validate);
+//
+//        exit;
+
+        if($validate == 1){
+
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                $data['message'] = 'OK';
+                echo json_encode($data);
+
+            }else{
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+
+        }else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+
+    }
 
     //Función para pausar solicitudes
     public function pausarSolicitud()
@@ -2702,15 +3102,42 @@ function saveNotaria(){
     }
 
     public function borrarSolicitud(){
+        $fecha = date("Y-m-d H:i:s");
         $idSolicitud = $this->input->post("id_solicitud");
         $comentarioPausa = $this->input->post("comentarioPausa");
         $banderaCliente = $this->input->post("banderaCliente");
         $idusuario = $this->session->userdata('id_usuario');
-        $idCliente = $this->session->userdata('idCliente');
-        $idLote = $this->session->userdata('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $idLote = $this->input->post('idLote');
 
-        $respuesta =  $this->Postventa_model->borrarSolicitud($idSolicitud, $comentarioPausa,$banderaCliente,$idusuario);
-        if ($respuesta) {
+        if($banderaCliente == 1){
+            //EL CLIENTE SE CREO EN EL PROCESO DE ESCRITURACIÓN Y YA NO PROCEDE, SE DA DE BAJA, EN SILICITUDES SE ACTUALIZA LOTE Y CLIENTE A 0
+            //ACTUALIZAR idCliente,usuario,status EN LA TABLA LOTES
+            $updateLote = array("idCliente" => 0, "usuario" => $idusuario);
+            $updateResponse = $this->General_model->updateRecord("lotes", $updateLote, "idLote", $idLote);
+            //ACTUALIZAR idLote,modificado_por EN LA TABLA CLIENTES
+            $updateCliente = array("idLote" => 0, "status" => 0, "modificado_por" => $idusuario);
+            $updateResponse = $this->General_model->updateRecord("clientes", $updateCliente, "id_cliente", $idCliente);
+        }
+        $updateDataSolicitud = array("id_estatus" => 0,"id_lote" => 0, "id_cliente" => 0, "modificado_por" => $idusuario);
+        $updateResponse = $this->General_model->updateRecord("solicitudes_escrituracion", $updateDataSolicitud, "id_solicitud", $idSolicitud);
+        $comentarioAdicional = '. Datos Eliminados idLote: '.$idLote.', idCliente: '.$idCliente;
+        
+        $insertData[0] = array(
+            "id_solicitud" => $idSolicitud,
+            "numero_estatus" => 1,
+            "tipo_movimiento" => 0,
+            "descripcion" => $comentarioPausa.$comentarioAdicional,
+            "fecha_creacion" => $fecha,
+            "creado_por" => $idusuario,
+            "fecha_modificacion" => $fecha,
+            "modificado_por" => $idusuario,
+            "estatus_siguiente" => 0
+        );
+        $updateResponse = $this->General_model->insertBatch("historial_escrituracion", $insertData);
+
+
+        if ($updateResponse) {
             echo json_encode(1);
         } else {
             echo json_encode(0);

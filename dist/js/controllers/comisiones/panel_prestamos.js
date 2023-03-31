@@ -92,7 +92,7 @@ $("#form_prestamos").on('submit', function(e){
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
             }
-            else if(data == 3){
+            else if(data == 4){
                 closeModalEng();
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");

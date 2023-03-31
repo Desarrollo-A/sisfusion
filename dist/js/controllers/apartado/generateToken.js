@@ -281,6 +281,7 @@ $(document).on('click', '.validateEvidence', function () {
 });
 
 function verEvidencia(fileName, lote){
+    $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: "viewDropboxFile",
         type: 'POST',

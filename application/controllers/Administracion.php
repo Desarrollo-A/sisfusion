@@ -1,7 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Administracion extends CI_Controller{
 
- /*primer commit*/
 	public function __construct()
 	{
 		parent::__construct();
@@ -41,10 +40,9 @@ class Administracion extends CI_Controller{
             $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
 			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
-			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '70' &&
-            $this->session->userdata('id_rol') != '71' && $this->session->userdata('id_rol') != '72' &&
-            $this->session->userdata('id_rol') != '73'
+			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
+			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
+			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83' && $this->session->userdata('id_rol') != '84'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -112,12 +110,9 @@ class Administracion extends CI_Controller{
 		  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 		  $time = date('H:i:s', $hoy_strtotime2);
 		  
-
-
-
           if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
               $dataPer[$i]['fechaVenc2'] = 'N/A';
-          }else{
+          }else {
               if ($time > $horaInicio and $time < $horaFin) {
                   if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                       $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
@@ -212,7 +207,6 @@ class Administracion extends CI_Controller{
 
                       $d = end($arregloFechas);
                       $dataPer[$i]['fechaVenc2'] = $d;
-                      echo 'aqui<br>';
 
                   }
                   else {
@@ -555,7 +549,7 @@ class Administracion extends CI_Controller{
          );
 
 		 #PROVICIONAL TESTING
-          $correos_submit[0] = 'programador.analista18@ciudadmaderas.com';
+          $correos_submit[0] = 'programador.analista26@ciudadmaderas.com';
           //$correos_submit[1] = 'mariadejesus.garduno@ciudadmaderas.com';
         //print_r($data_eviRec['comentario']);
           #PROVICIONAL TESTING
@@ -655,7 +649,7 @@ class Administracion extends CI_Controller{
 		
 		$modificado=date('Y-m-d H:i:s');
 
-		$correos_submit = array( 'programador.analista18@ciudadmaderas.com');
+		$correos_submit = array( 'programador.analista26@ciudadmaderas.com');
 		if(!is_null($data_send)){
 			$data_mail[0] = array(
 				"proyecto" => $data_send->nombreResidencial,
@@ -695,7 +689,7 @@ class Administracion extends CI_Controller{
 
 	public function notifyRejEv($data_correo, $data_eviRec, $data_send)
     {
-        $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+        $correo_new = 'programador.analista26@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
         //$correoDir = $data_eviRec['correo_a_enviar'];
 
         $mail = $this->phpmailer_lib->load();
@@ -708,7 +702,7 @@ class Administracion extends CI_Controller{
         }
 
         $mail->addAddress($correo_new);
-         $mail->addcc('erick_eternal@live.com.mx'); #copia oculta
+         $mail->addcc('programador.analista26@ciudadmaderas.com'); #copia oculta
 
         $mail->Subject = utf8_decode('[RECHAZO ADMINISTRACIÓN] '.$data_eviRec['comentario']);
         $mail->isHTML(true);
@@ -872,7 +866,7 @@ class Administracion extends CI_Controller{
         }
 	}
     function testMail(){
-        $correos_submit[0] = 'programador.analista8@ciudadmaderas.com';
+        $correos_submit[0] = 'programador.analista26@ciudadmaderas.com';
         $comentarioGeneral = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 

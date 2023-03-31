@@ -751,8 +751,7 @@ class Caja_outside extends CI_Controller {
                 $dataUpdateLote2 = array(
                     'total' => ($total + $total_construccion),
                     'enganche' => (($total + $total_construccion) * 0.1),
-                    'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
-                    'nombreLote' => $nl
+                    'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1)
                 );
             }
             else if ($datosView->lotes[0]->tipo_lote == 'AURA') {
@@ -773,8 +772,7 @@ class Caja_outside extends CI_Controller {
                 $dataUpdateLote2 = array(
                     'total' => ($total + $total_construccion),
                     'enganche' => (($total + $total_construccion) * 0.1),
-                    'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1),
-                    'nombreLote' => $nl
+                    'saldo' => ($total + $total_construccion) - (($total + $total_construccion) * 0.1)
                 );
             }
             else if ($datosView->lotes[0]->tipo_lote == 'TERRENO') {

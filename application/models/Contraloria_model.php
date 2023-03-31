@@ -150,7 +150,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		WHERE l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94') and cl.status = 1
+		WHERE l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94', '106', '108') and cl.status = 1
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -167,7 +167,7 @@ class Contraloria_model extends CI_Model {
 	public function validateSt6($idLote){
         $this->db->where("idLote",$idLote);
 		$this->db->where_in('idStatusLote', 3);
-		$this->db->where("(idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94))");	
+		$this->db->where("(idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106))");
 		$query = $this->db->get('lotes');
 		$valida = (empty($query->result())) ? 0 : 1;
 		return $valida;
@@ -857,7 +857,7 @@ class Contraloria_model extends CI_Model {
 									CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) as asesor,
 									CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
 									CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
-									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
+									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche,FORMAT(ISNULL(lot.totalNeto, 0), 'C') as engancheContra, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
 									sl.nombre as lote, sc.nombreStatus as contratacion,
 									(CASE WHEN hl.idLote IS NULL THEN 0 ELSE 1 END) validacion_estatus_9,lot.registro_comision
 								FROM clientes cli

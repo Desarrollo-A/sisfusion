@@ -897,7 +897,7 @@ class Asesor_model extends CI_Model
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
         WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
-        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99) AND 
+        AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) AND 
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
 	}
@@ -906,7 +906,7 @@ class Asesor_model extends CI_Model
     public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96))");
+        $this->db->where("(idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 102, 104, 107, 108, 109, 111))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;

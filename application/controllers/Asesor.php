@@ -3723,12 +3723,28 @@ class Asesor extends CI_Controller
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
-
-
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ){
-            $statusContratacion = 3;
-            $idMovimiento = 98;
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
+                $statusContratacion = 2;
+                $idMovimiento = 105;
+            }elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+                $statusContratacion = 2;
+                $idMovimiento = 110;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102){ #rechazo del status 5
+                $statusContratacion = 2;
+                $idMovimiento = 113;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107){ #rechazo del status 6
+                $statusContratacion = 2;
+                $idMovimiento = 114;
+            }
+            else{
+                $statusContratacion = 3;
+                $idMovimiento = 98;
+            }
+
         }else{
             $statusContratacion = 2;
             $idMovimiento = 84;
@@ -3924,6 +3940,7 @@ class Asesor extends CI_Controller
 
             $validate = $this->Asesor_model->validateSt2($idLote);
 
+
             if ($validate == 1) {
 
                 if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
@@ -3956,9 +3973,19 @@ class Asesor extends CI_Controller
         $fechaVenc = $this->input->post('fechaVenc');
 
 
+        $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+        if($valida_tl[0]['tipo_venta'] == 1){
+            $idStaC = 3;
+            $idMov = 98;
+        }else{
+            $idStaC = 2;
+            $idMov = 62;
+        }
+
         $arreglo = array();
-        $arreglo["idStatusContratacion"] = 2;
-        $arreglo["idMovimiento"] = 62;
+        $arreglo["idStatusContratacion"] = $idStaC;
+        $arreglo["idMovimiento"] = $idMov;
         $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
@@ -4089,8 +4116,8 @@ class Asesor extends CI_Controller
 
 
         $arreglo2 = array();
-        $arreglo2["idStatusContratacion"] = 2;
-        $arreglo2["idMovimiento"] = 62;
+        $arreglo2["idStatusContratacion"] = $idStaC;
+        $arreglo2["idMovimiento"] = $idMov;
         $arreglo2["nombreLote"] = $nombreLote;
         $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
@@ -4100,6 +4127,9 @@ class Asesor extends CI_Controller
         $arreglo2["idLote"] = $idLote;
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
+
+
+
 
         $validate = $this->Asesor_model->validateSt2($idLote);
 
@@ -4331,10 +4361,18 @@ class Asesor extends CI_Controller
         $comentario = $this->input->post('comentario');
         $fechaVenc = $this->input->post('fechaVenc');
 
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+        if($valida_tventa[0]['tipo_venta'] == 1 ){
+            $statusContratacion = 3;
+            $idMovimiento = 98;
+        }else{
+            $statusContratacion = 7;
+            $idMovimiento = 83;
+        }
 
         $arreglo = array();
-        $arreglo["idStatusContratacion"] = 7;
-        $arreglo["idMovimiento"] = 83;
+        $arreglo["idStatusContratacion"] = $statusContratacion;
+        $arreglo["idMovimiento"] = $idMovimiento;
         $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
@@ -4479,8 +4517,8 @@ class Asesor extends CI_Controller
 
 
         $arreglo2 = array();
-        $arreglo2["idStatusContratacion"] = 7;
-        $arreglo2["idMovimiento"] = 83;
+        $arreglo2["idStatusContratacion"] = $statusContratacion;
+        $arreglo2["idMovimiento"] = $idMovimiento;
         $arreglo2["nombreLote"] = $nombreLote;
         $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');

@@ -1184,7 +1184,6 @@
                     $update_pcasas["total"] = ($total + $total_construccion);
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                    $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
                 }
                 else if ($array_casas[$c][1] == 'AURA') {
@@ -1204,7 +1203,6 @@
                     $update_pcasas["total"] = ($total + $total_construccion);
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                    $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
                 } /*if($array_casas[$c][1] == 'STELLA'){
              
