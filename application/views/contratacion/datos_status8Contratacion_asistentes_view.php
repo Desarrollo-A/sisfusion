@@ -2,11 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php 
-            $this->load->view('template/sidebar', '');
-        ?>
-
-        <!-- Modals -->
+        <?php $this->load->view('template/sidebar', ''); ?>
 
         <!-- modal  ENVIA A CONTRALORIA 7-->
         <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
@@ -150,7 +146,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th></th>
+                                                        <th>TIPO DE VENTA</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>

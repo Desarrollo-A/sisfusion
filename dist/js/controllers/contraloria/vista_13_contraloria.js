@@ -1,28 +1,20 @@
-var url = "<?=base_url()?>";
-var url2 = "<?=base_url()?>index.php/";
-
 var getInfo1 = new Array(6);
-
 $("#tabla_ingresar_13").ready(function () {
-
     $('#tabla_ingresar_13 thead tr:eq(0) th').each(function (i) {
 
-        if (i != 0 && i != 8 && i != 1) {
+        if (i != 0) {
             var title = $(this).text();
             $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (tabla_13.column(i).search() !== this.value) {
-                    tabla_13
-                        .column(i)
-                        .search(this.value)
-                        .draw();
+                    tabla_13.column(i).search(this.value).draw();
                 }
             });
         }
     });
 
     tabla_13 = $("#tabla_ingresar_13").DataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: 'auto',
         buttons: [
             {
@@ -30,14 +22,14 @@ $("#tabla_ingresar_13").ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Registro estatus 13',
-                title:"Registro estatus 13",
+                title: "Registro estatus 13",
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 1:
-                                    return 'TIPO VENTA';
+                                    return 'TIPO DE VENTA';
                                 case 2:
                                     return 'PROYECTO';
                                 case 3:
@@ -54,7 +46,10 @@ $("#tabla_ingresar_13").ready(function () {
                                     break;
                                 case 7:
                                     return 'RL';
-                                break;
+                                    break;
+                                case 8:
+                                    return 'UBICACIÓN';
+                                    break;
                             }
                         }
                     }
@@ -69,12 +64,12 @@ $("#tabla_ingresar_13").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 1:
-                                    return 'TIPO VENTA';
+                                    return 'TIPO DE VENTA';
                                 case 2:
                                     return 'PROYECTO';
                                 case 3:
@@ -91,7 +86,10 @@ $("#tabla_ingresar_13").ready(function () {
                                     break;
                                 case 7:
                                     return 'RL';
-                                break;
+                                    break;
+                                case 8:
+                                    return 'UBICACIÓN';
+                                    break;
                             }
                         }
                     }
@@ -99,7 +97,7 @@ $("#tabla_ingresar_13").ready(function () {
             }
         ],
         language: {
-            url: general_base_url + "static/spanishLoader_v2.json",
+            url: `${general_base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -110,98 +108,66 @@ $("#tabla_ingresar_13").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        "bAutoWidth": false,
-        "fixedColumns": true,
-        "ordering": false,
-        "columns": [
-            {//0
-                "width": "3%",
-                "className": 'details-control',
-                "orderable": false,
-                "data": null,
-                "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+        bAutoWidth: false,
+        fixedColumns: true,
+        ordering: false,
+        columns: [
+            {
+                width: "3%",
+                className: 'details-control',
+                orderable: false,
+                data: null,
+                defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
             {
-//1
-                "data": function (d) {
-                    var lblStats;
-
-                    if (d.tipo_venta == 1) {
-                        lblStats = '<span class="label label-danger">Venta Particular</span>';
-                    } else if (d.tipo_venta == 2) {
-                        lblStats = '<span class="label label-success">Venta normal</span>';
-                    } else if (d.tipo_venta == 3) {
-                        lblStats = '<span class="label label-warning">Bono</span>';
-                    } else if (d.tipo_venta == 4) {
-                        lblStats = '<span class="label label-primary">Donación</span>';
-                    } else if (d.tipo_venta == 5) {
-                        lblStats = '<span class="label label-info">Intercambio</span>';
-                    } else if(d.tipo_venta==6) {
-                        lblStats ='<span class="label label-info">Reubicación</span>';
-                    } else if(d.tipo_venta==7) {
-                        lblStats ='<span class="label label-info">Venta especial</span>';
-                    } else if (d.tipo_venta == null) {
-                        lblStats = '<span class="label label-info"></span>';
-                    }
-
-
-                    return lblStats;
+                data: function (d) {
+                    return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
                 }
             },
             {
-//2
-                "width": "10%",
-                "data": function (d) {
+                data: function (d) {
                     return '<p class="m-0">' + d.nombreResidencial + '</p>';
                 }
             },
             {
-  //3
-                "width": "10%",
-                "data": function (d) {
-                    return '<p class="m-0">' + (d.nombreCondominio).toUpperCase();
-                    +'</p>';
+                data: function (d) {
+                    return '<p class="m-0">' + (d.nombreCondominio).toUpperCase(); + '</p>';
                 }
             },
             {
-     //4
-                "width": "15%",
-                "data": function (d) {
+                data: function (d) {
                     return '<p class="m-0">' + d.nombreLote + '</p>';
 
                 }
             },
             {
-        //5
-                "width": "20%",
-                "data": function (d) {
+                data: function (d) {
                     return '<p class="m-0">' + d.gerente + '</p>';
                 }
             },
             {
-           //6
-                "width": "20%",
-                "data": function (d) {
+                data: function (d) {
                     return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                 }
             },
             {
-              //7
-                "width": "15%",
-                "data": function (d) {
-                    if (d.RL == null || d.RL == ''  ){
+                data: function (d) {
+                    if (d.RL == null || d.RL == '') {
                         return '<p class="m-0"> No definido  </p>';
-                    }else{
+                    } else {
                         return '<p class="m-0">' + d.RL + '</p>';
                     }
-                
+
                 }
             },
             {
-                //8
-                "width": "40%",
-                "orderable": false,
-                "data": function (data) {
+                data: function (d) {
+                    return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+                }
+            },
+            {
+                orderable: false,
+                data: function (data) {
                     var cntActions;
 
                     if (data.vl == '1') {
@@ -244,39 +210,31 @@ $("#tabla_ingresar_13").ready(function () {
                         }
 
                     }
-
-                    return '<div class="d-flex justify-center">'+cntActions+'</div>';
-
+                    return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
             }
-
         ],
-
         columnDefs: [
             {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
+                searchable: false,
+                orderable: false,
+                targets: 0
             },
-
         ],
-
-        "ajax": {
-            "url": general_base_url + "Contraloria/getregistroStatus13ContratacionContraloria",
-            "dataSrc": "",
-            "type": "POST",
+        ajax: {
+            url: `${general_base_url}Contraloria/getregistroStatus13ContratacionContraloria`,
+            dataSrc: "",
+            type: "POST",
             cache: false,
-            "data": function (d) {
+            data: function (d) {
             }
         },
-        "order": [[1, 'asc']]
-
+        order: [[1, 'asc']]
     });
 
     $('#tabla_ingresar_13 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_13.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -291,7 +249,6 @@ $("#tabla_ingresar_13").ready(function () {
             } else {
                 status = 'N/A';
             }
-
             if (row.data().idStatusContratacion == 12 && row.data().idMovimiento == 42 &&
                 row.data().validacionEnganche == "VALIDADO" && row.data().firmaRL == "FIRMADO") {
                 fechaVenc = row.data().fechaVenc;
@@ -307,8 +264,6 @@ $("#tabla_ingresar_13").ready(function () {
             } else {
                 fechaVenc = 'N/A';
             }
-
-
             var informacion_adicional2 = '<table class="table text-justify">' +
                 '<tr><b>INFORMACIÓN ADICIONAL</b>:' +
                 '<td style="font-size: .8em"><strong>ESTATUS: </strong>' + status + '</td>' +
@@ -325,7 +280,7 @@ $("#tabla_ingresar_13").ready(function () {
             informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
             informacion_adicional += '          <label><b>Información adicional</b></label>';
             informacion_adicional += '      </div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>' + status + '</label></div>';
             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA VENCIMIENTO: </b> ' + fechaVenc + '</label></div>';
             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA REALIZADO: </b> ' + row.data().modificado + '</label></div>';
@@ -333,20 +288,15 @@ $("#tabla_ingresar_13").ready(function () {
             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
             informacion_adicional += '  </div>';
             informacion_adicional += '</div>';
-
-
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
-
-
     });
 
 
     $("#tabla_ingresar_13 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
-
         getInfo1[0] = $(this).attr("data-idCliente");
         getInfo1[1] = $(this).attr("data-nombreResidencial");
         getInfo1[2] = $(this).attr("data-nombreCondominio");
@@ -355,26 +305,18 @@ $("#tabla_ingresar_13").ready(function () {
         getInfo1[5] = $(this).attr("data-idLote");
         getInfo1[6] = $(this).attr("data-fecven");
         getInfo1[7] = $(this).attr("data-code");
-
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
-
         $('#editReg').modal('show');
-
     });
-
 });
 
 
 $(document).on('click', '#save1', function (e) {
     e.preventDefault();
-
     var comentario = $("#comentario").val();
-
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
-
     var dataExp1 = new FormData();
-
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -383,17 +325,13 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("idLote", getInfo1[5]);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
-
-
-    if (validaComent == 0) {
+    if (validaComent == 0)
         alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
-    }
 
     if (validaComent == 1) {
-
         $('#save1').prop('disabled', true);
         $.ajax({
-            url: general_base_url + "Contraloria/editar_registro_lote_contraloria_proceceso13/",
+            url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso13/`,
             data: dataExp1,
             cache: false,
             contentType: false,
@@ -401,7 +339,6 @@ $(document).on('click', '#save1', function (e) {
             type: 'POST',
             success: function (data) {
                 response = JSON.parse(data);
-
                 if (response.message == 'OK') {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
@@ -426,11 +363,8 @@ $(document).on('click', '#save1', function (e) {
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
         });
-
     }
-
 });
-
 
 $(document).on('click', '.boton', function (e) {
     var nomLote = $(this).attr("data-nomLote");
@@ -450,12 +384,9 @@ $(document).on('click', '.boton_1', function (e) {
     $('#showMessageStats').modal();
 });
 
-
 jQuery(document).ready(function () {
-
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
     })
-
-})
+});
