@@ -125,7 +125,7 @@ function getClientsByProyect(id_proyecto){
                 {
                     "data": function (d) {
                         if (d.edad == null || d.edad == 'null') {
-                            return '<center>'+ d.edadFirma+'<p><p> <span class="label label-danger" style="background:#f7b42f;">Edad de fimra</span> </center>';
+                            return '<center>'+ d.edadFirma+'<p><p> <span class="label label-danger" style="background:#00bcd41f; color:#00bcd4">Edad de firma</span> </center>';
                         }else{
                             return d.edad;
                         }

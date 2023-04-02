@@ -1289,7 +1289,7 @@ function fillTableReport(dataObject) {
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if(i != 0){
                     if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
@@ -1297,6 +1297,8 @@ function fillTableReport(dataObject) {
                     }
                 }
             });
+            $('[data-toggle="tooltip"]').tooltip();
+
         });
 
         generalDataTable = $('#lotesInformationTable').dataTable({
@@ -1309,7 +1311,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1537,7 +1539,8 @@ function fillTableReport(dataObject) {
 
         $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+
             $('input', this).on('keyup change', function () {
                 if(i != 0){
                     if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
@@ -1546,6 +1549,7 @@ function fillTableReport(dataObject) {
                     }
                 }
             });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
@@ -1558,7 +1562,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1602,19 +1606,31 @@ function fillTableReport(dataObject) {
                                         return 'Fecha de apartado';
                                         break;
                                     case 13:
-                                        return 'Días desde apartado';
-                                        break;    
+                                        return 'Fecha de último estatus';
+                                        break;
                                     case 14:
+                                        return 'Días últimos estatus';
+                                        break;    
+                                    case 15:
                                         return 'Estatus contratación';
                                         break;
-                                    case 15:
-                                        return 'Estatus lote';
-                                        break;
                                     case 16:
-                                        return 'Fecha liberación';
+                                        return 'Fecha estatus 9';
                                         break;
                                     case 17:
+                                        return 'Días estatus 9';
+                                        break;
+                                    case 18:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 19:
+                                        return 'Fecha liberación';
+                                        break;
+                                    case 20:
                                         return 'Motivo';
+                                        break;
+                                    case 21:
+                                        return 'Apartado';
                                         break;
                                 }
                             }
@@ -1706,12 +1722,31 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
-                        return d.diasApartado;
+                        return d.fechaUltimoStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasUltimoStatus;
                     }
                 },
                 {
                     data: function (d) {
                         return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if(d.fechaStatus9 == null){
+                            return 'No aplica';
+                        }
+                        else
+                            return d.fechaStatus9;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasStatus9;
                     }
                 },
                 {

@@ -1,13 +1,18 @@
-<?php class ScheduleTasks_cl extends CI_Controller {
+<?php
+
+use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl;
+
+ class ScheduleTasks_cl extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
     $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model'));
 		$this->load->library(array('session','form_validation'));
-		$this->load->helper(array('url','form'));
+		$this->load->helper(array('url','form', 'email/scheduleTasks_cl/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
 		$this->load->library('phpmailer_lib');
     date_default_timezone_set('America/Mexico_City');
-    $this->gphsis = $this->load->database('GPHSIS', TRUE);
+//    $this->gphsis = $this->load->database('GPHSIS', TRUE);
+    $this->load->database('default');
 		
 	}
 
@@ -48,164 +53,88 @@
 	
 	
 	
-public function sendRv5(){
+  public function sendRv5(){
  
-  $datos["sendApartados_old"]= $this->scheduleTasks_model->sendMailVentasRetrasos();
-  
+    $datos["sendApartados_old"]= $this->scheduleTasks_model->sendMailVentasRetrasos();
+    
+    /************************************************************************************
+    * Armado de parámetros a mandar a plantilla para creación de correo electrónico	    *
+    ************************************************************************************/
+    // $correos_entregar = array('lucero.velazquez@ciudadmaderas.com',
+    //                         'mariela.sanchez@ciudadmaderas.com'
+    //                         'subdirector.contraloria@ciudadmaderas.com',
+    //                         'rigel.silva@prohabitacion.com',
+    //                         'rafael.bautista@ciudadmaderas.com',
+    //                         'vicky.paulin@ciudadmaderas.com',
+    //                         'adriana.rodriguez@ciudadmaderas.com',
+    //                         'aurea.garcia@ciudadmaderas.com',
+    //                         'valeria.palacios@ciudadmaderas.com',
+    //                         'juanamaria.guzman@ciudadmaderas.com',
+    //                         'adriana.perez@ciudadmaderas.com',
+    //                         'fernanda.monjaraz@ciudadmaderas.com',
+    //                         'grisell.malagon@ciudadmaderas.com',
+    //                         'karen.ponce@ciudadmaderas.com',
+    //                         'luz.angeles@ciudadmaderas.com',
+    //                         'irene.vallejo@ciudadmaderas.com',
+    //                         'leydi.sanchez@ciudadmaderas.com',
+    //                         'monserrat.cazares@ciudadmaderas.com');
+    $correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
-  $mail = $this->phpmailer_lib->load();
-
-  
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-  $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
-  $mail->addAddress('rigel.silva@prohabitacion.com');
-  $mail->addAddress('rafael.bautista@ciudadmaderas.com');
-  $mail->addAddress('vicky.paulin@ciudadmaderas.com');
-  $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
-  $mail->addAddress('aurea.garcia@ciudadmaderas.com');
-  $mail->addAddress('valeria.palacios@ciudadmaderas.com');
-  $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
-  $mail->addAddress('adriana.perez@ciudadmaderas.com');
-  $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
-  $mail->addAddress('grisell.malagon@ciudadmaderas.com');
-  $mail->addAddress('karen.ponce@ciudadmaderas.com');
-  $mail->addAddress('luz.angeles@ciudadmaderas.com');
-  $mail->addAddress('irene.vallejo@ciudadmaderas.com');
-  $mail->addAddress('leydi.sanchez@ciudadmaderas.com');
-  $mail->addAddress('monserrat.cazares@ciudadmaderas.com');
-  $mail->addAddress('danae.perez@ciudadmaderas.com');
-  //$mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-
-
-
-  $mail->Subject = utf8_decode("Acumulado de lotes sin integrar Expediente al:"." ".date("Y-m-d H:i:s"));
-  $mail->isHTML(true);
-
-  $mailContent = utf8_decode("<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>AVISO </title>
-  <style media='all' type='text/css'>
-      .encabezados{
-          text-align: center;
-          padding-top:  1.5%;
-          padding-bottom: 1.5%;
-      }
-      .encabezados a{
-          color: #234e7f;
-          font-weight: bold;
-      }
+    $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE.date("Y-m-d H:i:s"));
+    
+    $datos_correo[] = array();
+    foreach ($datos['sendApartados_old'] as $key  =>  $valor) {
+      $fechaHoy = $valor->fechaApartado;
+      $fechaDes = date('Y-m-d');
+      $arregloFechas2 = array();
+      $a = 0;
       
-      .fondo{
-          background-color: #234e7f;
-          color: #fff;
+      while($fechaHoy <= $fechaDes) {
+        $hoy_strtotime = strtotime($fechaHoy);
+        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+        $sig_fecha = date("Y-m-d", $sig_strtotime );
+        $excluir_dia = date('D', $sig_strtotime);
+        $excluir_feriado = date('d-m', $sig_strtotime);
+
+        if($excluir_dia == "Sat" || $excluir_dia == "Sun" || $excluir_feriado == "01-01" || $excluir_feriado == "06-02" ||
+        $excluir_feriado == "20-03" || $excluir_feriado == "01-05" || $excluir_feriado == "16-09" || $excluir_feriado == "20-11" ||
+        $excluir_feriado == "25-12") {
+        }
+        else {
+          $arregloFechas2[$a]= $sig_fecha;
+          $a++;
+        }
+        $fechaHoy = $sig_fecha;
       }
-      
-      h4{
-          text-align: center;
+
+      if (count($arregloFechas2)>=5) {
+        //array_push($datos_correo, json_decode(json_encode($value), true));
+        $datos_correo[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
+                                  'nombreCondominio'  =>  $valor->nombreCondominio,
+                                  'nombreLote'        =>  $valor->nombreLote,
+                                  'fechaApartado'     =>  $valor->fechaApartado,
+                                  'nomCliente'        =>  $valor->nc." ".$valor->appc." ".$valor->apmc,
+                                  'gerente'           =>  $valor->gerente,
+                                  'coordinador'       =>  $valor->coordinador,
+                                  'asesor'            =>  $valor->asesor,
+                                  'diasAcumulados'    =>  count($arregloFechas2) );
       }
-      p{
-          text-align: right;
-      }
-      strong{
-          color: #234e7f;
-      }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-              <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-              </td></tr>
-          </table>
-      </td></tr>
-      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-        <tr class='active'>
-
-              <th >Plaza</th>
-              <th>Condominio</th> 
-              <th>Lote</th>
-              <th>Fecha Apartado</th>
-              <th>Cliente</th>
-              <th>Gerente</th>
-              <th>Coordinador</th>
-              <th>Asesor</th>
-              <th>Días acumulados sin integrar Expediente</th>
-
-        </tr>");
-
-        foreach ($datos["sendApartados_old"] as $row_cliente){
-  
-  
-          $fechaHoy = $row_cliente->fechaApartado;
-          $fechaDes = date('Y-m-d');
-          $arregloFechas2 = array();
-          
-          $a = 0;
-          
-          while($fechaHoy <= $fechaDes) {
-          $hoy_strtotime = strtotime($fechaHoy);
-          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-          $sig_fecha = date("Y-m-d", $sig_strtotime );
-          $excluir_dia = date('D', $sig_strtotime);
-          $excluir_feriado = date('d-m', $sig_strtotime);
-          
-        
-          if($excluir_dia == "Sat" || $excluir_dia == "Sun" || $excluir_feriado == "01-01" || $excluir_feriado == "06-02" ||
-          $excluir_feriado == "20-03" || $excluir_feriado == "01-05" || $excluir_feriado == "16-09" || $excluir_feriado == "20-11" ||
-          $excluir_feriado == "25-12") {
-          
-          } 
-          
-            else { 
-              $arregloFechas2[$a]= $sig_fecha ;
-              $a++; 
-            } 
-            $fechaHoy = $sig_fecha;
-          }
-          
-          
-          
-        if (count($arregloFechas2)>=5) {
-
-
-        $mailContent.= utf8_decode( 
-        "<tr>   
-
-         <td><center>".$row_cliente->nombreResidencial."</center></td>
-         <td><center>".$row_cliente->nombreCondominio."</center></td>
-         <td><center>".$row_cliente->nombreLote."</center></td>
-         <td><center>".$row_cliente->fechaApartado."</center></td>
-         <td><center>".$row_cliente->nc." ".$row_cliente->appc." ".$row_cliente->apmc."</center></td>
-         <td><center>".$row_cliente->gerente."</center></td>
-         <td><center>".$row_cliente->coordinador."</center></td>
-         <td><center>".$row_cliente->asesor."</center></td>
-         <td><center>".count($arregloFechas2)."</center></td>
-
-        </tr>");
-
-  
-      }  
     }
 
+    $datos_encabezados_tabla = Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_LOTES_SIN_INTEGRAR_EXPEDIENTE;
 
-  $mailContent.= utf8_decode("</table></center>
-      
-      
-      </td></tr>
-  </table></body></html>");
+    $datos_etiquetas = null;
 
-  $mail->Body = $mailContent;
-  $mail->send();
+    $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_LOTES_SIN_INTEGRAR_EXPEDIENTE.'<br><br>'. (!isset($comentario) ? '' : $comentario);
 
-  
-}  
+    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
 
-
+    $plantilla_correo = new plantilla_dinamica_correo;
+    /************************************************************************************************************************/
+    $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+  }
 
 public function eventBloqueos(){
   
@@ -228,90 +157,55 @@ public function eventBloqueos(){
 
 
 
-public function mailBloqueosAfter45(){
- 
-  $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
-
-  $mail = $this->phpmailer_lib->load();
-
+  public function mailBloqueosAfter45(){
   
-  $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-  $mail->addAddress("contraloria.corporativa6@ciudadmaderas.com");
-  $mail->Subject = utf8_decode('LOTES BLOQUEADOS-CIUDAD MADERAS');
-  $mail->isHTML(true);
-  $mailContent = utf8_decode(
+    $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
+    //print_r($datos["mailbloqueos"]); exit;
+    /************************************************************************************
+    * Armado de parámetros a mandar a plantilla para creación de correo electrónico	    *
+    ************************************************************************************/
+    //$correos_entregar = array("contraloria.corporativa6@ciudadmaderas.com");
+    $correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
-"<style type='text/css'>
- 
-table {  color: #333; border-collapse: collapse;}
-td, th { border: 20px solid transparent; height: 30px; }
-th { background: #D3D3D3; font-weight: bold; }
-td { background: #FAFAFA; text-align: center; }
-tr:nth-child(even) td { background: #F1F1F1; }  
-tr:nth-child(odd) td { background: #FEFEFE; } 
-tr td:hover { background: #666; color: #FFF; }
+    $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_LOTES_BLOQUEADOS_45_DIAS);
+    
+    $datos_correo[] = array();
+    foreach ($datos["mailbloqueos"] as $key  =>  $valor) {
+      $fechaBloqueo = date_create($valor->create_at);
+      $fechaHoy = date_create(date("Y-m-d H:i:s"));
+    
+      $diff=date_diff($fechaBloqueo,$fechaHoy);
+      $countDias = ($diff->format("%a") + 1);
+    
+      if ($countDias>=45) {
+        //array_push($datos_correo, json_decode(json_encode($value), true));
+        $datos_correo[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
+                                  'nombreCondominio'  =>  $valor->nombreCondominio,
+                                  'nombreLote'        =>  $valor->nombreLote,
+                                  'sup'               =>  $valor->sup,
+                                  'gerente'           =>  $valor->gerente,
+                                  'coordinador'       =>  $valor->coordinador,
+                                  'asesor'            =>  $valor->asesor,
+                                  'create_at'         =>  $valor->create_at,
+                                  'countDias'         =>  $countDias );
+      }
+    }
 
-</style>
+    $datos_encabezados_tabla = Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_45_DIAS;
 
-<h4><center>Lotes Bloqueados al:"." ".date("Y-m-d H:i:s")."</center></h4>
-<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-  <tr class='active'>
-  <th>Proyecto</th>
-  <th>Condominio</th> 
-  <th>Lote</th>
-  <th>Superficie</th>
-  <th>Gerente</th>
-  <th>Coordinador</th>
-  <th>Asesor</th>
-  <th>Fecha Bloqueo</th>
-  <th>Días acumulados con estatus Bloqueado</th>
-  </tr> 
+    $datos_etiquetas = null;
 
-  ");
+    $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_LOTES_BLOQUEADOS_45_DIAS. date("Y-m-d H:i:s") . '<br><br>'. (!isset($comentario) ? '' : $comentario);
 
+    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
 
-  foreach ($datos["mailbloqueos"] as $row_bloqueos){
-    $fechaBloqueo = date_create($row_bloqueos->create_at);
-    $fechaHoy = date_create(date("Y-m-d H:i:s"));
-  
-    $diff=date_diff($fechaBloqueo,$fechaHoy);
-    $countDias = ($diff->format("%a") + 1);
-  
-    if ($countDias>=45) {
-      $mailContent.= utf8_decode("
-  <tr>   
-           <td><center>".$row_bloqueos->nombreResidencial."</center></td>
-           <td><center>".$row_bloqueos->nombreCondominio."</center></td>
-           <td><center>".$row_bloqueos->nombreLote."</center></td>
-           <td><center>".$row_bloqueos->sup."</center></td>
-		   <td><center>".$row_bloqueos->gerente."</center></td>
-		   <td><center>".$row_bloqueos->coordinador."</center></td>
-		   <td><center>".$row_bloqueos->asesor."</center></td>
-           <td><center>".$row_bloqueos->create_at."</center></td>
-           <td><center>".$countDias."</center></td>
-		   
-  </tr>
-  ");
+    $plantilla_correo = new plantilla_dinamica_correo;
+    /************************************************************************************************************************/
+    $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
+                                            $datos_etiquetas, $comentario_general);
   }
-}
-
-    $mail->Body = $mailContent;
-    $mail->send();
-
-}
-
-
-	
-	
-
-
-
-
 //---------------------------------------- T A S K   C O M I S I O N E S ------------------------------------------
-
-
-
-
 
 function insertar_gph_maderas_normal(){ //HACER INSERT DE LOS LOTES EN 0 Y PASARLOS A 1 VENTA ORDINARIA
 
@@ -1001,51 +895,55 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 /*****Fncion para enviar el correo de las evidencias rechazadas******/
     function sendMailReportER()
     {
+      $data_request = null;
+      $data_enviar_mail = NULL;
       $users_array = $this->scheduleTasks_model->getUsersList();
+      
       for ($i = 0; $i < count($users_array); $i++) {
         $rol = explode(", ", $users_array[$i]['id_sede']);
         $result = "'" . implode("', '", $rol) . "'";
-        if ($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 20){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR COBRANZA PARA SUBDIRECTOR (19) Y GERNETE MKTD (20)
+        if($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 20){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR COBRANZA PARA SUBDIRECTOR (19) Y GERNETE MKTD (20)
           $data_rechazo_cobranza = $this->scheduleTasks_model->getRejectList($result, '10', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_sEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
+          
           if (count($data_rechazo_cobranza) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_cobranza, 'REPORTE SEMANA ' . date("W") . ' COBRANZA ', $users_array[$i]['id_rol']);
             //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente.';
+              $data_request['msg'] = 'Correo enviado correctamente (cobranza).';
             } else {
-              $data_request['msg'] = 'Correo no enviado.';
+              $data_request['msg'] = 'Correo no enviado (cobranza).';
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo.';
+            $data_request['msg'] = 'No hay registros para enviar un correo (cobranza).';
           }
         }
         if ($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 28){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR CONTRALORÍA PARA SUBDIRECTOR (19) Y COBRANZA (28)
           $data_rechazo_contraloria = $this->scheduleTasks_model->getRejectList($result, '20', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_SEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
+          
           if (count($data_rechazo_contraloria) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_contraloria, 'REPORTE SEMANA ' . date("W") . ' CONTRALORÍA ', $users_array[$i]['id_rol']);
-            //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente.';
+              $data_request['msg'] = 'Correo enviado correctamente (controlaria).';
             } else {
-              $data_request['msg'] = 'Correo no enviado.';
+              $data_request['msg'] = 'Correo no enviado (controlaria).';
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo.';
+            $data_request['msg'] = 'No hay registros para enviar un correo (controlaria).';
           }
         }
         if ($users_array[$i]['id_rol'] == 32){ // MJ: SE TRAEN LOS LOTES DONDE SE INDICÓ QUE NO ERA UNA VENTA DE MKTD
           $data_rechazo_mktd = $this->scheduleTasks_model->getRejectList($result, '0', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_SEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
+
           if (count($data_rechazo_mktd) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_mktd, 'REPORTE SEMANA ' . date("W") . ' CONTRALORÍA (ELIMINADOS DE LA LISTA MKTD)', $users_array[$i]['id_rol']);
-            //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente.';
+              $data_request['msg'] = 'Correo enviado correctamente (MKTD).';
             } else {
-              $data_request['msg'] = 'Correo no enviado.';
+              $data_request['msg'] = 'Correo no enviado (MKTD).';
 
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo.';
+            $data_request['msg'] = 'No hay registros para enviar un correo (MKTD).';
           }
         }
         if ($data_request != null) {
@@ -1057,345 +955,143 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function notifyRejEv($correo, $data_eviRec, $subject, $userType) {
-        $correo_test= 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
-        $mail = $this->phpmailer_lib->load();
-   
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo);
-        $mail->Subject = $subject;
-        $mail->isHTML(true);
-        $mailContent = "<html><head>
-          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-          <style media='all' type='text/css'>
-              .encabezados{
-                  text-align: center;
-                  padding-top:  1.5%;
-                  padding-bottom: 1.5%;
-              }
-              .encabezados a{
-                  color: #234e7f;
-                  font-weight: bold;
-              }
-              
-              .fondo{
-                  background-color: #234e7f;
-                  color: #fff;
-              }
-              
-              h4{
-                  text-align: center;
-              }
-              p{
-                  text-align: right;
-              }
-              strong{
-                  color: #234e7f;
-              }
-          </style>
-        </head>
-        <body>
-          <img src='".base_url()."static/images/mailER/header9@4x.png' width='100%'>
-          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'> <br><br>";
+      $correo_test= 'programador.analista18@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
+      /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
+      /*************************************************************************************
+      * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+      ************************************************************************************/
+      $datos_correo = array();
 
-              if ($userType == 32) { // CONTRALORÍA
-              $mailContent .= "
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: justify;'>¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias donde se removió <b>marketing digital</b> de la venta, te invito a leer las observaciones.
-                    </p><br><br>
-                    
-                    
-                </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                      <th>ID lote</th>   
-                      <th>Lote</th>   
-                      <th>Comentario</th>   
-                      <th>Cliente</th>   
-                      <th>Usuario</th>   
-                      <th>Fecha</th>   
-                    </tr>";
-                      for($p=0; $p < count($data_eviRec); $p++)
-                      {
-                          $mailContent .= '<tr>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['idLote'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['nombreLote'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['observacion'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['nombreCliente'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['nombreSolicitante'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['fecha_creacion'].'</center></td>';
-                          $mailContent .= '</tr>';
-                      }
-                      $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-              </tr>";
-            } else { // MKTD
-              $mailContent .= "
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: justify;'>¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias rechazadas por
-                        <b>cobranza/contraloría</b>, te invito a leer las observaciones. Recuerda que deben ser corregidas a más
-                        tardar los jueves a las 12:00 PM, con esto ayudas a que el proceso en cobranza sea en tiempo y forma,
-                        dando como resultado el cobro a tiempo de las comisiones.
-                    </p><br><br>
-                    
-                    
-                </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                      <th>Número semana</th>   
-                      <th>Plaza</th>   
-                      <th>Solicitante</th>   
-                      <th>Lote</th>   
-                      <th>Comentario</th>   
-                      <th>Fecha creación</th>   
-                      <th>Fecha rechazo</th>   
-                    </tr>";
-                      for($p=0; $p < count($data_eviRec); $p++)
-                      {
-                          $mailContent .= '<tr>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['weekNumber'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['plaza'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['nombreSolicitante'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['nombreLote'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['comentario_autorizacion'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['fecha_creacion'].'</center></td>';
-                          $mailContent .= '    <td><center>'.$data_eviRec[$p]['fechaRechazo'].'</center></td>';
-                          $mailContent .= '</tr>';
-                      }
-                      $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-              </tr>";
-            }
-          $mailContent .= "</table>
-          <img src='".base_url()."static/images/mailER/footer@4x.png' width='100%'>
-          </body></html>";
+      $datos_correo = $data_eviRec;
 
-        $mail->Body = utf8_decode($mailContent);
-        //return $mailContent;
-        if($mail->send()){return 1;} else{return $mail->ErrorInfo;}
-    }
+      $datos_etiquetas = null;
 
-    public function mailContentComptrollerNotification()
-    {
-      $date = date("Y-m-d");
-      $mod_date = strtotime($date."- 1 days");
-      $finalDate = date("Y-m-d", $mod_date);
-      $data_first_report = $this->scheduleTasks_model->getReportInformation(1, $finalDate);
-      $data_second_report = $this->scheduleTasks_model->getReportInformation(2, $finalDate);
-      // MJ: FIRST EMAIL - ESTATUS 10
-      if (count($data_first_report) > 0) {
-        $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, 'REPORTE ESTATUS 10 ' . $finalDate, 1);
-        //echo $data_enviar_mail;
-        if ($data_enviar_mail > 0) {
-          $data_request['msg'] = 'Correo enviado correctamente.';
-          echo $data_request['msg'];
-        } else {
-          $data_request['msg'] = 'Correo no enviado.';
-          echo $data_request['msg'];
-        }
+      $correos_entregar = array('programador.analista18@ciudadmaderas.com');
+      
+      // if(is_array($correo) && count($correo) > 1){
+      //   foreach($correo as $correo_destinatario){
+      //     if ($correo_destinatario){
+      //       array_push($correos_entregar, $correo_destinatario);
+      //     }
+      //   }
+      // }else{
+      //   array_push($correos_entregar, $correo);
+      // }
+
+      $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
+                                "Subject" => $subject);
+
+      $comentario_general = $userType === 32
+                            ? Elementos_Correo_ScheduleTasks_Cl::EMAIL_REPORTE_EVIDENCIAS_RECHAZADAS_CONTRALORÍA.'<br>'. (!isset($comentario) ? '' : $comentario)
+                            : Elementos_Correo_ScheduleTasks_Cl::EMAIL_REPORTE_EVIDENCIAS_RECHAZADAS_MKTD. (!isset($comentario) ? '' : '<br>'.$comentario);
+
+      $datos_encabezados_tabla = $userType === 32
+                                  ? Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_REPORTE_EVIDENCIAS_RECHAZADAS_CONTRALORÍA
+                                  : Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_REPORTE_EVIDENCIAS_RECHAZADAS_MKTD;
+
+      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+      $plantilla_correo = new plantilla_dinamica_correo;
+      /************************************************************************************************************************/
+      $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
+                                                              $datos_etiquetas, $comentario_general);
+      return $envio_correo;
+  }
+
+  public function mailContentComptrollerNotification()
+  {
+    $date = date("Y-m-d");
+    $mod_date = strtotime($date."- 1000 days");
+    $finalDate = date("Y-m-d", $mod_date);
+    $data_first_report = $this->scheduleTasks_model->getReportInformation(1, $finalDate);
+    $data_second_report = $this->scheduleTasks_model->getReportInformation(2, $finalDate);
+    // MJ: FIRST EMAIL - ESTATUS 10
+    if (count($data_first_report) > 0) {
+      $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, $finalDate, 1);
+      //echo $data_enviar_mail;
+      if ($data_enviar_mail > 0) {
+        $data_request['msg'] = 'Correo enviado correctamente.';
+        echo $data_request['msg'];
       } else {
-          $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, 'REPORTE ESTATUS 10 ' . $finalDate, 3);
-          if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente.';
-              echo $data_request['msg'];
-          } else {
-              $data_request['msg'] = 'Correo no enviado.';
-              echo $data_request['msg'];
-          }
-      }
-
-      // MJ: SECOND EMAIL - LIBERACIONES
-      if (count($data_second_report) > 0) {
-        $data_enviar_mail = $this->sendComptrollerNotification($data_second_report, 'REPORTE LOTES PARA LIBERAR ' . $finalDate, 2);
-        //echo $data_enviar_mail;
-        if ($data_enviar_mail > 0) {
-          $data_request['msg'] = 'Correo enviado correctamente.';
-          echo $data_request['msg'];
-        } else {
-          $data_request['msg'] = 'Correo no enviado.';
-          echo $data_request['msg'];
-        }
-      } else {
-        $data_request['msg'] = 'No hay registros para enviar un correo.';
+        $data_request['msg'] = 'Correo no enviado.';
         echo $data_request['msg'];
       }
+    } else {
+        $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, $finalDate, 3);
+        if ($data_enviar_mail > 0) {
+            $data_request['msg'] = 'Correo enviado correctamente.';
+            echo $data_request['msg'];
+        } else {
+            $data_request['msg'] = 'Correo no enviado.';
+            echo $data_request['msg'];
+        }
+    }
+
+    // MJ: SECOND EMAIL - LIBERACIONES
+    if (count($data_second_report) > 0) {
+      $data_enviar_mail = $this->sendComptrollerNotification($data_second_report, $finalDate, 2);
+      //echo $data_enviar_mail;
+      if ($data_enviar_mail > 0) {
+        $data_request['msg'] = 'Correo enviado correctamente.';
+        echo $data_request['msg'];
+      } else {
+        $data_request['msg'] = 'Correo no enviado.';
+        echo $data_request['msg'];
+      }
+    } else {
+      $data_request['msg'] = 'No hay registros para enviar un correo.';
+      echo $data_request['msg'];
+    }
 
     }
 
-    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction) {
-        $mail = $this->phpmailer_lib->load();
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress('supervisor.bd@ciudadmaderas.com');
-        $mail->addAddress('coord.contraloriacorporativa@ciudadmaderas.com');
-        $mail->addAddress('mariela.sanchez@ciudadmaderas.com');
-        $mail->addAddress('irene.vallejo@ciudadmaderas.com');
-        $mail->Subject = $subject;
-        $mail->isHTML(true);
-        $mailContent = "<html><head>
-          <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-          <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-          <style media='all' type='text/css'>
-              .encabezados{
-                  text-align: center;
-                  padding-top:  1.5%;
-                  padding-bottom: 1.5%;
-              }
-              .encabezados a{
-                  color: #234e7f;
-                  font-weight: bold;
-              }
-              
-              .fondo{
-                  background-color: #234e7f;
-                  color: #fff;
-              }
-              
-              h4{
-                  text-align: center;
-              }
-              p{
-                  text-align: right;
-              }
-              strong{
-                  color: #234e7f;
-              }
-          </style>
-        </head>
-        <body>
-          <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-          <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'> <br><br>";
+    public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
+    {
 
-        if ($typeTransaction == 1) { // MJ: REPORTE ESTATUS 10
-            $mailContent .= "
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes cuyo contrato se envió a firma de RL.
-                    </p><br><br>
-                    
-                    
-                </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                      <th>SEDE</th>   
-                      <th>PROYECTO</th>   
-                      <th>CONDOMINIO</th>   
-                      <th>LOTE</th>   
-                      <th>CLIENTE</th>   
-                      <th>SUPERFICIE</th>   
-                      <th>REFERENCIA</th>   
-                      <th>GERENTE</th>   
-                      <th>ASESOR</th>   
-                      <th>ESTATUS</th>   
-                      <th>FECHA APARTADO</th>   
-                    </tr>";
-            for ($p = 0; $p < count($data_eviRec); $p++) {
-                $mailContent .= '<tr>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreSede'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreResidencial'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreCondominio'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreLote'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreCliente'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['sup'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['referencia'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreGerente'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreAsesor'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['estatusLote'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['fechaApartado'] . '</center></td>';
-                $mailContent .= '</tr>';
-            }
-            $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-              </tr>";
-        } else if ($typeTransaction == 2) { // MJ: REPORTE LIBERACIONES
-            $mailContent .= "
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes que se marcaron para liberación.
-                    </p><br><br>
-                    
-                    
-                </td>
-              </tr>
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                      <th>PROYECTO</th>   
-                      <th>CONDOMINIO</th>   
-                      <th>LOTE</th>   
-                      <th>SUPERFICIE</th>   
-                      <th>REFERENCIA</th>   
-                      <th>GERENTE</th>   
-                      <th>ASESOR</th>   
-                      <th>ESTATUS</th>   
-                      <th>FECHA APARTADO</th>  
-                      <th>FECHA LIBERACIÓN</th>  
-                    </tr>";
-            for ($p = 0; $p < count($data_eviRec); $p++) {
-                $mailContent .= '<tr>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreResidencial'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreCondominio'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreLote'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['sup'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['referencia'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreGerente'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreAsesor'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['estatusLote'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['fechaApartado'] . '</center></td>';
-                $mailContent .= '    <td><center>' . $data_eviRec[$p]['fechaLiberacion'] . '</center></td>';
-                $mailContent .= '</tr>';
-            }
-            $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-              </tr>";
-        } else if ($typeTransaction == 3) { // MJ: REPORTE ESTATUS 10  (NOTIFICACIÓN SIN REGISTROS)
-            $mailContent .= "
-              <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: center;'>¿Cómo estás?, espero que bien. El día de hoy no hay registros de lotes cuyo contrato se envió a firma de RL.
-                    </p><br><br>
-                </td>
-              </tr>";
-        }
-        $mailContent .= "</table>
-          <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-          </body></html>";
+      $datos_correo[] = array();
+      /*************************************************************************************
+      * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+      ************************************************************************************/
+      $correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
-        $mail->Body = utf8_decode($mailContent);
-        //return $mailContent;
-        if ($mail->send()) {
-            return 1;
-        } else {
-            return $mail->ErrorInfo;
-        }
+      // $correos_entregar = array('asistente.pv2@ciudadmaderas.com',
+      //                           'coord.contraloriacorporativa@ciudadmaderas.com',
+      //                           'subdirector.contraloria@ciudadmaderas.com',
+      //                           'supervisor.bd@ciudadmaderas.com',
+      //                           'coord.contraloriacorporativa@ciudadmaderas.com',
+      //                           'mariela.sanchez@ciudadmaderas.com',
+      //                           'irene.vallejo@ciudadmaderas.com');
+
+      $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
+                                "Subject" => $typeTransaction === 3 
+                                              ? Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_REPORTE_LOTES_LIBERAR.$subject
+                                              : Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_REPORTE_ESTATUS_10.$subject);
+
+      $datos_correo[] = array();
+
+      $datos_correo = $data_eviRec;
+
+      $datos_etiquetas = null;
+
+      $datos_encabezados_tabla = array();
+
+      if($typeTransaction === 1){
+        $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_REPORTE_ESTATUS_10. (!isset($comentario) ? '' : '<br>'.$comentario);
+      }elseif($typeTransaction === 2){
+        $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_REPORTE_LOTES_LIBERAR. (!isset($comentario) ? '' : '<br>'.$comentario);
+      }else{
+        $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_REPORTE_ESTATUS_10_NOTIFICACION_SIN_REGISTRO. (!isset($comentario) ? '' : '<br>'.$comentario);
+      }
+
+      $datos_encabezados_tabla = $typeTransaction === 1
+                                  ? Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_REPORTE_ESTATUS_10
+                                  : Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_REPORTE_LOTES_LIBERAR;
+
+      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+      $plantilla_correo = new plantilla_dinamica_correo;
+      /************************************************************************************************************************/
+      $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
+                                                              $datos_etiquetas, $comentario_general);
+      return $envio_correo;
     }
 
     // public function interesMenos(){
@@ -1452,78 +1148,49 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function change_password_mail($key){
-      $mail = $this->phpmailer_lib->load();
-      $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-      $mail->addAddress('mariadejesus.garduno@ciudadmaderas.com');
-      $mail->addAddress('rafael.bautista@ciudadmaderas.com');
-      $mail->addAddress('vicky.paulin@ciudadmaderas.com');
-      $mail->addAddress('adriana.perez@ciudadmaderas.com');
-      $mail->addAddress('leonardo.aguilar@ciudadmaderas.com');
-      $mail->addAddress('grisell.malagon@ciudadmaderas.com');
-      $mail->addAddress('jorge.mugica@ciudadmaderas.com');
-      $mail->addAddress('adriana.rodriguez@ciudadmaderas.com');
-      $mail->addAddress('fernanda.monjaraz@ciudadmaderas.com');
-      $mail->addAddress('valeria.palacios@ciudadmaderas.com');
-      $mail->addAddress('juanamaria.guzman@ciudadmaderas.com');
-      $mail->addAddress('monserrat.cazares@ciudadmaderas.com');
-      $mail->addAddress('leydi.sanchez@ciudadmaderas.com');
-      $mail->addAddress('nohemi.castillo@ciudadmaderas.com');
-      $mail->addAddress('lorena.serrato@ciudadmaderas.com');
-      $mail->addCC('yaretzi.rosales@ciudadmaderas.com');
-      $mail->Subject = utf8_decode("Cambio de contraseña ASESOR COMODÍN.");
-      $mail->isHTML(true);
-      $mailContent ="<html><head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-      <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-      <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-      <style media='all' type='text/css'>
-          .encabezados{
-              text-align: center;
-              padding-top:  1.5%;
-              padding-bottom: 1.5%;
-          }
-          .encabezados a{
-              color: #234e7f;
-              font-weight: bold;
-          }
-          
-          .fondo{
-              background-color: #234e7f;
-              color: #fff;
-          }
-          
-          h4{
-              text-align: center;
-          }
-          p{
-              text-align: right;
-          }
-          strong{
-              color: #234e7f;
-          }
-      </style>
-    </head>
-    <body>
-      <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-      <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'> <br><br>
-      <tr>
-      <td border=1 bgcolor='#FFFFFF' align='center'> 
-          <h3>¡ Buenos días estimad@ !</h3><br> <br>
-          
-          <p style='padding: 10px 90px;text-align: center;'>La nueva contraseña del usuario ASESOR COMODÍN es: $key
-          </p>
-          <p style='padding: 10px 90px;text-align: center;'><b>*Recuerda que esta contraseña sólo es válida durante 1 mes.</b> 
-          </p>
-      </td>
-    </tr></table>
-    <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-    </body></html>";
-      $mail->Body = utf8_decode($mailContent);
-      if ($mail->send()) {
-        return 1;
-      } else {
-        return $mail->ErrorInfo;
-      }
+      /*************************************************************************************
+      * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+      ************************************************************************************/
+      $correos_entregar = array('programador.analista18@ciudadmaderas.com');
+      
+      // $correos_entregar = array('mariadejesus.garduno@ciudadmaderas.com',
+      //                           'rafael.bautista@ciudadmaderas.com',
+      //                           'vicky.paulin@ciudadmaderas.com',
+      //                           'adriana.perez@ciudadmaderas.com',
+      //                           'leonardo.aguilar@ciudadmaderas.com',
+      //                           'grisell.malagon@ciudadmaderas.com',
+      //                           'jorge.mugica@ciudadmaderas.com',
+      //                           'adriana.rodriguez@ciudadmaderas.com',
+      //                           'fernanda.monjaraz@ciudadmaderas.com',
+      //                           'valeria.palacios@ciduadmaderas.com',
+      //                           'juanamaria.guzman@ciudadmaderas.com',
+      //                           'monserrat.cazares@ciudadmaderas.com',
+      //                           'leydi.sanchez@ciudadmaderas.com',
+      //                           'nohemi.castillo@ciudadmaderas.com',
+      //                           'lorena.serrato@ciudadmaderas.com',
+      //                           'yaretzi.rosales@ciudadmaderas.com');
+      
+      $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
+                                "Subject" => Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_CAMBIO_CONTRASEÑA);
+
+      $datos_correo[0] = array('usuario'      =>  'ASESOR COMODÍN',
+                               'contraseña'   =>  $key,
+                               'diasVencer'   =>  '15',
+                               'fechaAccion'  =>  date('Y-m-d H:i:s'));
+
+      $datos_encabezados_tabla = Elementos_Correo_ScheduleTasks_Cl::ETIQUETAS_ENCABEZADO_TABLA_CAMBIO_CONTRASEÑA;
+                                  
+
+      $datos_etiquetas = null;
+
+      $comentario_general = Elementos_Correo_ScheduleTasks_Cl::EMAIL_CAMBIO_CONTRASEÑA. (!isset($comentario) ? '' : '<br>'.$comentario);
+
+      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+      $plantilla_correo = new plantilla_dinamica_correo;
+      /************************************************************************************************************************/
+      $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
+                                                              $datos_etiquetas, $comentario_general);
+      return $envio_correo;
     }
 
     function updatePresupuestos() {
@@ -1541,3 +1208,4 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
 }
+?>
