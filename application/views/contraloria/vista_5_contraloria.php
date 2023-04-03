@@ -2,19 +2,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-    ?>
+    <?php $this->load->view('template/sidebar', ''); ?>
 
 	<!-- modal para revision status 5 100% -->
-
-
 	<div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content" >
@@ -170,7 +160,7 @@ $datos = array();
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th></th>
+                                                <th>TIPO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

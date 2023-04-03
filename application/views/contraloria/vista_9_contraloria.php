@@ -31,7 +31,7 @@
                                             
                                             <tr>
                                                 <th></th>
-                                                <th></th>
+                                                <th>TIPO DE VENTA</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

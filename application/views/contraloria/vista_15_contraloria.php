@@ -2,17 +2,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-    /*-------------------------------------------------------*/
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
-    ?>
+    <?php $this->load->view('template/sidebar', ''); ?>
     <!--Contenido de la página-->
-
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -43,6 +34,7 @@
                                                 <th>LOTE</th>
                                                 <th>GERENTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>UBICACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

@@ -474,7 +474,7 @@
 
     $("#tabla_clientes").ready(function () {
         $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-            if (i != 0 && i != 11) {
+            if (i != 0 && i != 15) {
                 var title = $(this).text();
                 $(this).html('<input class="textoshead" placeholder="' + title + '"/>');
                 $('input', this).on('keyup change', function () {
