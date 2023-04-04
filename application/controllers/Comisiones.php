@@ -3,6 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
@@ -17,8 +18,8 @@ class Comisiones extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
-    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
-    $this->load->helper(array('url', 'form'));
+    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'phpmailer_lib'));
+    $this->load->helper(array('url', 'form', 'email/comisiones/elementos_correo', 'email/plantilla_dinamica_correo'));
     $this->load->database('default');
     $this->jwt_actions->authorize('7396', $_SERVER['HTTP_HOST']);
     $this->validateSession();
@@ -65,6 +66,7 @@ public function getPuestosDescuentos(){
     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
     $this->load->view("ventas/dispersar_pago_neodata", $datos);
   }
@@ -218,7 +220,6 @@ public function getPuestosDescuentos(){
      }
      echo json_encode( array( "data" => $dat));
     }
-
     public function insertar_codigo_postal(){
       $dato_solicitudcp = $this->input->post('dato_solicitudcp');
       $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);      
@@ -726,35 +727,72 @@ function update_estatus(){
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-   
+    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;
+
       if( $consulta_comisiones->num_rows() > 0 ){
 
         $validar_sede = $this->session->userdata('id_sede');
         date_default_timezone_set('America/Mexico_City');       
-        $fecha_actual = strtotime(date("d-m-Y H:i:00"));
-          //fecha inicio
-          $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-          $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-          $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
-          //fecha fin
-          
-          if($validar_sede == 8){
-            $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
-            $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
-            $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
-          }else{
+        $fecha_actual = strtotime($obtenerFechaSql);
 
-            $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
-            $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
-            $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
-    
-          }
-          //$resultado = array("resultado" => 3);
-          if( 
-            ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-            ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-            ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ||
-            ($id_user_Vl == 7689))
+
+        
+           //fecha inicio
+      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
+      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
+      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
+      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
+      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
+      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
+      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
+      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
+      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
+      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
+      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
+      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
+      //fecha fin
+      
+      if($validar_sede == 8){
+        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
+      }else{
+        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
+
+      }
+      //$resultado = array("resultado" => 3);
+      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
+        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
+        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
+        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
+        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
+        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
+        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
+        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
+        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
+        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 7689)||($id_user_Vl == 1))
             {
 
 
@@ -1188,50 +1226,55 @@ function update_estatus(){
 
     $validar_user = $this->session->userdata('id_usuario');
     $validar_sede = $this->session->userdata('id_sede');
+    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
     date_default_timezone_set('America/Mexico_City');       
-    $fecha_actual = strtotime(date("d-m-Y H:i:00"));
+    $fecha_actual = strtotime($obtenerFechaSql);
       //fecha inicio
-      $fecha_entrada2 = strtotime("01-02-2022 00:00:00");
-      $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
-      $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
-      $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
-      $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
-      $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
-      $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
-      $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
-      $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-      $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-      $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
+      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
+      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
+      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
+      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
+      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
+      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
+      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
+      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
+      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
+      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
+      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
+      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
       //fecha fin
       
       if($validar_sede == 8){
-        $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
-        $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
-        $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
-        $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
-        $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
-        $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
-        $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
-        $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
-        $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
-        $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
-        $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
+        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
       }else{
-        $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
-        $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
-        $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
-        $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
-        $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
-        $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
-        $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
-        $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
-        $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
-        $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
-        $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
 
       }
       //$resultado = array("resultado" => 3);
-      if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
+        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
         ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
         ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
         ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
@@ -1241,7 +1284,7 @@ function update_estatus(){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 1)){
       
 
 
@@ -1443,14 +1486,14 @@ if( isset( $_FILES ) && !empty($_FILES) ){
 
             if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
        
-            if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+            if($datos_xml['claveProdServ'][0]=='80131600' || (($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
               $diasxmes = date('t');
                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
                $fecha2 = date('Y-m-').$diasxmes;
               if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
 
             if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
-            if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+            if($datos_xml['regimenFiscal'][0]=='612' || ( ($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
             if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
             if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
             if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
@@ -1543,53 +1586,56 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
 
       date_default_timezone_set('America/Mexico_City');       
-      $fecha_actual = strtotime(date("d-m-Y H:i:00"));
+      $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
+      $fecha_actual = strtotime($obtenerFechaSql);
 
       //fecha inicio
-     $fecha_entrada2 = strtotime("07-02-2022 00:00:00");
-      $fecha_entrada3 = strtotime("07-03-2022 00:00:00");
-      $fecha_entrada4 = strtotime("11-04-2022 00:00:00");
-      $fecha_entrada5 = strtotime("09-05-2022 00:00:00");
-      $fecha_entrada6 = strtotime("13-06-2022 00:00:00");
-      $fecha_entrada7 = strtotime("11-07-2022 00:00:00");
-      $fecha_entrada8 = strtotime("08-08-2022 00:00:00");
-      $fecha_entrada9 = strtotime("12-09-2022 00:00:00");
-      $fecha_entrada10 = strtotime("10-10-2022 00:00:00");
-      $fecha_entrada11 = strtotime("07-11-2022 00:00:00");
-      $fecha_entrada12 = strtotime("12-12-2022 00:00:00");
+      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
+      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
+      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
+      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
+      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
+      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
+      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
+      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
+      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
+      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
+      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
+      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
       //fecha fin
       
       if($validar_sede == 8){
-        $fecha_entrada22 = strtotime("08-02-2022 15:59:00");
-        $fecha_entrada33 = strtotime("08-03-2022 15:59:00");
-        $fecha_entrada44 = strtotime("12-04-2022 15:59:00");
-        $fecha_entrada55 = strtotime("10-05-2022 15:59:00");
-        $fecha_entrada66 = strtotime("14-06-2022 15:59:00");
-        $fecha_entrada77 = strtotime("12-07-2022 15:59:00");
-        $fecha_entrada88 = strtotime("09-08-2022 15:59:00");
-        $fecha_entrada99 = strtotime("13-09-2022 15:59:00");
-        $fecha_entrada100 = strtotime("11-10-2022 15:59:00");
-        $fecha_entrada111 = strtotime("08-11-2022 15:59:00");
-        $fecha_entrada122 = strtotime("13-12-2022 15:59:00");
+        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
       }else{
-        $fecha_entrada22 = strtotime("08-02-2022 13:59:00");
-        $fecha_entrada33 = strtotime("08-03-2022 13:59:00");
-        $fecha_entrada44 = strtotime("12-04-2022 13:59:00");
-        $fecha_entrada55 = strtotime("10-05-2022 13:59:00");
-        $fecha_entrada66 = strtotime("14-06-2022 13:59:00");
-        $fecha_entrada77 = strtotime("12-07-2022 13:59:00");
-        $fecha_entrada88 = strtotime("09-08-2022 13:59:00");
-        $fecha_entrada99 = strtotime("13-09-2022 13:59:00");
-        $fecha_entrada100 = strtotime("11-10-2022 13:59:00");
-        $fecha_entrada111 = strtotime("08-11-2022 13:59:00");
-        $fecha_entrada122 = strtotime("13-12-2022 13:59:00");
+        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
+        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
+        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
+        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
+        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
+        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
+        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
+        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
+        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
+        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
+        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
+        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
 
       }
-
-
       $resultado = array("resultado" => 3);
 
-      if(($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
+      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
+        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
         ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
         ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
         ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
@@ -1599,7 +1645,8 @@ if( isset( $_FILES ) && !empty($_FILES) ){
         ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
         ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
         ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122) ){
+        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 1)){
+
       
       if($usuario != ''){
         $usuarioid = $usuario;
@@ -2639,6 +2686,7 @@ public function porcentajes2($idLote){
 }
  
 
+
    public function revision_xml()
     {
       $datos = array();
@@ -3325,7 +3373,6 @@ public function LiquidarLote(){
       $NumeroPagos = $this->input->post("numeroP");
       $IdUsuario = $this->input->post("usuarioid");
       $comentario = $this->input->post("comentario");
-      $tipo = $this->input->post("tipo");
       $tipo = $this->input->post("tipo");
       $idUsu = intval($this->session->userdata('id_usuario')); 
       $pesos = str_replace(",", "", $monto);
@@ -5500,13 +5547,73 @@ public function getAsesoresBaja() {
 }
 
 public function CederComisiones(){
-
+  //setlocale(LC_MONETARY, 'es_MX');
   $idAsesorOld = $this->input->post('asesorold');
   $rol = $this->input->post('roles2');
   $newUsuario = $this->input->post('usuarioid2');
   $comentario= $this->input->post('comentario');
-   $respuesta = array($this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol));
-  echo json_encode($respuesta[0]);
+  $respuesta = $this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol);
+  
+  /***********************************************************************************
+  *   Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+  ***********************************************************************************/
+  if($respuesta !== 0 && !empty($respuesta) && !is_null($respuesta)){
+
+    $datos_etiquetas = null;
+    
+    $datos_correo[] = array();
+    
+    $informacionUsuariosComentario = null;
+
+    $correos_entregar = array();
+
+    foreach($respuesta as $indice => $valor){
+
+      foreach ($valor as $subIndice =>  $informacionCorreo) {
+
+        if($indice === 'usuarioAnterior'){
+          $informacionUsuariosComentario .= 'El ' . $informacionCorreo['rol'] . ' ' . $informacionCorreo['nombre'] . ' cedió sus comisiones al ';
+        }elseif($indice === 'usuarioActual'){
+          $informacionUsuariosComentario .= $informacionCorreo['rol']." ".$informacionCorreo['nombre'];
+        }elseif($indice === 'infoCedida'){
+          $informacionCorreo['com_total']= '$ '.number_format($informacionCorreo['com_total'], 2);
+          $informacionCorreo['tope']= '$ '.number_format($informacionCorreo['tope'], 2);
+          $informacionCorreo['resto']= '$ '.number_format($informacionCorreo['resto'], 2);
+          $datos_correo[$subIndice] = $informacionCorreo;
+        }
+
+      }
+
+    }
+
+    array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+
+    $comentario = $informacionUsuariosComentario . '.<br>A continuación se muestran los comentarios correspondientes a este proceso de "Cesión de comisiones": <br>' . $comentario;
+    
+    $elementos_correo = array("setFrom" => Elementos_Correo_Ceder_Comisiones::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_Ceder_Comisiones::ASUNTO_CORREO_TABLA_CEDER_COMISIONES);
+
+    $comentario_general = Elementos_Correo_Ceder_Comisiones::EMAIL_CEDER_COMISIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+    $datos_encabezados_tabla = Elementos_Correo_Ceder_Comisiones::ETIQUETAS_ENCABEZADO_TABLA_CEDER_COMISIONES;
+
+    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+    //<title>AVISO DE BAJA </title>
+    $plantilla_correo = new plantilla_dinamica_correo;
+    /************************************************************************************************************************/
+
+    $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+    if($envio_correo){
+      $data['message_email'] = 'OK';
+      $data['respuesta'] = 1;
+    }else{
+      $data['message_email'] = 'ERROR';
+      $data['respuesta'] = $envio_correo;
+    }
+  }else{
+    $data['respuesta'] = 0;
+  }
+  echo json_encode($data['respuesta']);
 }
 
 public function datosLotesaCeder($id_usuario){
@@ -5801,93 +5908,7 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
   echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismktd,$IdResidencial),JSON_NUMERIC_CHECK);
 }
 
-    // public function InsertNeo(){
-    //   $lote_1 =  $this->input->post("idLote");
-    //   $bonificacion =  $this->input->post("bonificacion");
-    //   $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
-    //   if(sizeof($responses) > 0 && $responses[0]['bandera'] != 0) {
-    //     $respuesta[0] = 2;
-    // } else {
-    
-    //         $disparador =  $this->input->post("id_disparador");
-    //         if($disparador == '1' || $disparador == 1){
-    //             $lote_1 =  $this->input->post("idLote");
-    //             $pending_1 =  $this->input->post("pending");
-    //             $abono_nuevo = $this->input->post("abono_nuevo[]");
-    //             $rol = $this->input->post("rol[]");
-    //             $id_comision = $this->input->post("id_comision[]");
-    //             $pago = $this->input->post("pago_neo");
-    //             $suma = 0;
-    //             $replace = [",","$"];
-    //             for($i=0;$i<sizeof($id_comision);$i++){
-    //               $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-    //               $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
-    //               }
-    //             for($i=0;$i<sizeof($abono_nuevo);$i++){
-    //               $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-    //               $suma = $suma + $var_n ;
-    //             }
-    //             $resta = $pending_1 - $pago;
-    //               $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-    //             $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
-    //           }else if($disparador == '0' || $disparador == 0){
-    //             $replace = [",","$"];
-    //             $id_usuario = $this->input->post("id_usuario[]");
-    //             $comision_total = $this->input->post("comision_total[]");
-    //             $porcentaje = $this->input->post("porcentaje[]");
-    //             $id_rol = $this->input->post("id_rol[]");
-    //             $comision_abonada = $this->input->post("comision_abonada[]");
-    //             $comision_pendiente = $this->input->post("comision_pendiente[]");
-    //             $comision_dar = $this->input->post("comision_dar[]");
-    
-    //             $pago_neo = $this->input->post("pago_neo");
-    //             $porcentaje_abono = $this->input->post("porcentaje_abono");
-    //             $abonado = $this->input->post("abonado");
-    //             $total_comision = $this->input->post("total_comision");
-    //             $pendiente = $this->input->post("pendiente");
-    //             $idCliente = $this->input->post("idCliente");
-    
-    //             $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
-    //             $lugar_p = $this->input->post('lugar_p');
-    //             $totalNeto2 = $this->input->post('totalNeto2');
-
-    //             $banderita = 0;
-    //             $PorcentajeAsumar=0;
-    //             // 1.- validar tipo venta
-    //             if($tipo_venta_insert <= 6 || $tipo_venta_insert == 11 || $tipo_venta_insert == 13){
-    //               if($porcentaje_abono < 8){
-    //                 $PorcentajeAsumar = 8 - $porcentaje_abono;
-    //                 $banderita=1;
-    //                 $porcentaje_abono =8;
-    //               }
-    //             }
-                
-    //             $pivote=0;
-    
-    //             for ($i=0; $i <count($id_usuario) ; $i++) { 
-
-    //               if($banderita == 1 && $id_rol[$i] == 45){
-    //                 $banderita=0;
-
-//               $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
-            
-//             }
-//             $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-//             $respuesta =  $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
-
-//                   if($banderita == 1){
-//                     $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
-//                      $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
-
-//                   }
-
-             
-//           }
-
-// }
-// echo json_encode( $respuesta );
-// }
-
+ 
 public function InsertNeo(){
   $lote_1 =  $this->input->post("idLote");
   $bonificacion =  $this->input->post("bonificacion");
@@ -6001,10 +6022,6 @@ public function InsertNeo(){
 }
 echo json_encode( $respuesta );
 }
-
-// public function porcentajes($cliente,$tipo,$vigencia){
-//   echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipo,$vigencia)->result_array(),JSON_NUMERIC_CHECK);
-// }
 
 
     public function porcentajes($cliente,$tipoVenta){
@@ -6796,7 +6813,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function changeLoteToStopped()
     {
-
+        // var_dump($_POST['motivo']);
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
@@ -6962,7 +6979,6 @@ for ($d=0; $d <count($dos) ; $d++) {
       // echo $_POST['id_lote'];
       // echo $_POST['id_cliente'];
       
-      
         $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
                 'penalizaciones', 'NULL');
         if ($response) {
@@ -6999,7 +7015,13 @@ for ($d=0; $d <count($dos) ; $d++) {
          echo json_encode($response);
     }
 
-    // END INSTALACIÓN PENALIZACIONES
+    public function InsertPena($lote_1)
+    {
+      $response =$this->Comisiones_model->InsertPenalizacionComision($lote_1);
+      if ($response) {
+      return $this->Comisiones_model->InsertPenalizacionHistorial($lote_1);
+      }
+    }
 
     public function insertCertificacion(){
       $id_descuento       = $this->input->post('id_descuento');

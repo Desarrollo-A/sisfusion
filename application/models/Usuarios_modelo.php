@@ -79,8 +79,8 @@ class Usuarios_modelo extends CI_Model
                     $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%')";
                 else if ($this->session->userdata('id_usuario') == 10924 || $this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%') AND usuarios.id_usuario != " . $this->session->userdata('id_lider_2') . "";
-                else if($this->session->userdata('id_usuario') == 6831) //6831	YARETZI MARICRUZ ROSALES HERNANDEZ
-                    $id_sede = "(usuarios.id_sede LIKE '%8%' OR usuarios.id_sede LIKE '%10%')";
+               /* else if($this->session->userdata('id_usuario') == 6831) //6831	YARETZI MARICRUZ ROSALES HERNANDEZ
+                    $id_sede = "(usuarios.id_sede LIKE '%8%' OR usuarios.id_sede LIKE '%10%')";*/
                 else
                     $id_sede = "(usuarios.id_sede LIKE('%" . $this->session->userdata('id_sede') . "%'))";
 
@@ -107,6 +107,7 @@ class Usuarios_modelo extends CI_Model
                 ORDER BY nombre");
                 break;
             case '6': // ASISTENTE GERENCIA
+                $id_lider = $this->session->userdata('id_lider');
                 if ($this->session->userdata('id_usuario') == 895) { // MICHELLE
                     return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
                     CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
@@ -121,15 +122,18 @@ class Usuarios_modelo extends CI_Model
                     FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                     INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                     LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                    WHERE ((id_lider = " . $this->session->userdata('id_lider') . " OR id_lider_2 = " . $this->session->userdata('id_lider') . ") AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = " . $this->session->userdata('id_lider') . " OR usuarios.id_lider = 896)
+                    WHERE ((id_lider = $id_lider OR id_lider_2 = $id_lider) AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = $id_lider OR usuarios.id_lider = 896)
                     ORDER BY nombre");
                 } else {
                     $id_users = "";
-                    if ($this->session->userdata('id_sede') == 6) {
+                    if ($this->session->userdata('id_sede') == 6)
                         $id_users = " OR (usuarios.id_usuario IN (9827)) ";
-                    } else if ($this->session->userdata('id_sede') == 4) {
+                    else if ($this->session->userdata('id_sede') == 4)
                         $id_users = " OR (usuarios.id_usuario IN (9359)) ";
-                    }
+                    
+                    if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
+                        $id_lider = $this->session->userdata('id_lider') . ', 106';
+
                     return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
                     CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
                     CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
@@ -137,16 +141,16 @@ class Usuarios_modelo extends CI_Model
                     id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico
                     FROM usuarios 
                     INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider  
+                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
                     FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord  
+                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider_coord  
                     FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                     INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                     LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                    WHERE (((id_lider = " . $this->session->userdata('id_lider') . " OR id_lider_2 = " . $this->session->userdata('id_lider') . ") AND 
+                    WHERE (((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND 
                     id_rol IN (7, 9) AND 
                     (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'))
-                    $id_users OR usuarios.id_usuario = " . $this->session->userdata('id_lider') . " OR usuarios.gerente_id = " . $this->session->userdata('id_lider') . ")");
+                    $id_users OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))");
                 }
                 break;
             case '41': // GENERALISTA
@@ -174,6 +178,8 @@ class Usuarios_modelo extends CI_Model
             case '33': // CONSULTA (CONTROL INTERNO)
             case '40': // COBRANZA
             case '73': // PRACTICANTE CONTRALORÍA
+            case '80': // COORDINADOR DE CALL CENTER POSTVENTA
+            case '81': // SUBDIRECCIÓN POSTVENTA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.id_usuario IN (3, 5, 607) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 

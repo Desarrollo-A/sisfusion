@@ -186,6 +186,7 @@
 	<script>
 		function validateEmptyFields(){
 			var miArray = [];
+			
 			for (i = 0; i < $("#tamanocer").val(); i++) {
 				if ($("#comentario_"+i).val() == "") {
 					$("#comentario_"+i).focus();
@@ -524,6 +525,7 @@
 			validateNumsOfAutorizacion();
 			$('#comentario_0').val('');
 			/**********/
+
 			$('#idCliente').val($itself.attr('data-idCliente'));
 			$('#idLote').val($itself.attr('data-idLote'));
 			$('#nombreCondominio').val($itself.attr('data-nombreCondominio'));

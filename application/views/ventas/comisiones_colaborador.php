@@ -84,12 +84,13 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Verifica o captura tu codigo postal</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
+                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.</p>
                     </div>
                     <form id="codigoForm">
                     <div class="modal-body">
                         <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="1"
-                        max="999999" placeholder="Captura tu codigo postal" required>
+                        min="10000" max="99999" placeholder="Captura tu Código Postal" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="codigopostalCancel" class="btn btn-secondary" data-dismiss="modal" style="display:none" >Close</button>

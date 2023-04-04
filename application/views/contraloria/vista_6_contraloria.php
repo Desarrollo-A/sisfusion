@@ -3,15 +3,7 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-    <?php
-		$datos = array();
-		$datos = $datos4;
-		$datos = $datos2;
-		$datos = $datos3;  
-		$this->load->view('template/sidebar', $datos);
-    ?>
-
-
+    <?php $this->load->view('template/sidebar', $datos); ?>
 	<!-- modal para registrar corrida elaborada-->
 	<div class="modal fade " id="regCorrElab" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
@@ -274,7 +266,7 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th></th>
+                                                <th>TIPO DE VENTA</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -283,6 +275,7 @@
                                                 <th>F.MOD</th>
                                                 <th>F.VENC</th>
                                                 <th>UC</th>
+                                                <th>UBICACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

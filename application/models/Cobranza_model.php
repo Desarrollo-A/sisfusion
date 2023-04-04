@@ -308,10 +308,10 @@ class Cobranza_model extends CI_Model {
             $filtroComisionista = "AND cl.id_subdirector = $comisionista";
         else if($tipoUsuario == 59) // SE BUSCA COMO DIRECTOR REGIONAL
             $filtroComisionista = "AND cl.id_regional = $comisionista";
-        else if($tipoUsuario == 1)// SE BUSCA COMO DIRECTOR COMERCIAL
+        else // SE BUSCA COMO DIRECTOR COMERCIAL
             $filtroComisionista = "";
         
-        $query="SELECTT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
+        $query="SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
         FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(ISNULL(se.nombre, 'SIN ESPECIFICAR')) plaza,
         lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
         0 estatusComision, 0.00 porcentaje_decimal,
@@ -323,12 +323,7 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
         ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
-        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
-            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
-            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
-            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
-            WHEN cl.id_regional = $comisionista THEN 'Regional' 
-        END rol
+		0 as ultimoEstatusCanceladas
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -359,12 +354,7 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
         ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
-        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
-            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
-            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
-            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
-            WHEN cl.id_regional = $comisionista THEN 'Regional' 
-        END rol
+		0 as ultimoEstatusCanceladas
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -413,12 +403,7 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
         ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
-        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
-            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
-            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
-            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
-            WHEN cl.id_regional = $comisionista THEN 'Regional' 
-        END rol
+		0 as ultimoEstatusCanceladas
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -452,12 +437,7 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
         ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
-        CASE WHEN cl.id_asesor = $comisionista THEN 'Asesor' 
-            WHEN cl.id_coordinador = $comisionista THEN 'Coordinador' 
-            WHEN cl.id_gerente = $comisionista THEN 'Gerente'
-            WHEN cl.id_subdirector = $comisionista THEN 'Subdirector' 
-            WHEN cl.id_regional = $comisionista THEN 'Regional' 
-        END rol
+		0 as ultimoEstatusCanceladas
         FROM lotes lo
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
@@ -490,13 +470,16 @@ class Cobranza_model extends CI_Model {
         ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
         ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
         ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
-        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+		hlo2.idStatusContratacion as ultimoEstatusCanceladas
         FROM lotes lo
         INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND isNULL(cl.noRecibo, '') != 'CANCELADO' $filtroComisionista $filtroFecha
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
 		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista AND cm.estatus = 8 AND cm.idCliente = cl.id_cliente
+		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+        LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista AND cm.estatus = 8 --AND cm.idCliente = cl.id_cliente
         INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
@@ -508,6 +491,41 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
         WHERE lo.status = 1 AND cm.id_comision IS NULL
+        UNION ALL
+        SELECT UPPER(CAST(re.descripcion AS VARCHAR(74))) nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.idLote,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, CONVERT(varchar, cl.fechaApartado, 20) fechaApartado, UPPER(ISNULL(se.nombre, 'SIN ESPECIFICAR')) plaza,
+        lo.idStatusContratacion, sl.nombre nombreEstatusLote, sl.color, sl.background_sl, lo.registro_comision registroComision, 
+        pc.bandera estatusComision, ISNULL(cm.porcentaje_decimal, 0.00) porcentaje_decimal,
+        ISNULL(cm.comision_total, '0.00') comisionTotal, 
+        ISNULL(pci3.abonoDispersado, '0.00') abonoDispersado, 
+        ISNULL(pci2.abonoPagado, '0.00') abonoPagado, 8 rec,
+        REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '') lugar_prospeccion,
+        ISNULL(UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)), 'SIN ESPECIFICAR') nombreCliente,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+        ISNULL(UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 'SIN ESPECIFICAR') nombreCoordinador,
+        ISNULL(UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)), 'SIN ESPECIFICAR') nombreGerente,
+        ISNULL(UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 'SIN ESPECIFICAR') nombreSubdirector,
+        ISNULL(UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)), 'SIN ESPECIFICAR') nombreRegional,
+		hlo2.idStatusContratacion as ultimoEstatusCanceladas
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND isNULL(cl.noRecibo, '') != 'CANCELADO' $filtroComisionista $filtroFecha
+        INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
+		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
+        INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
+        LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.id_usuario = $comisionista AND cm.estatus = 8 --AND cm.idCliente = cl.id_cliente
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN pago_comision pc ON pc.id_lote = lo.idLote    
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoPagado, id_comision FROM pago_comision_ind WHERE estatus IN (11) GROUP BY id_comision) pci2 ON cm.id_comision = pci2.id_comision
+        LEFT JOIN (SELECT SUM(abono_neodata) abonoDispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON cm.id_comision = pci3.id_comision
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
+        WHERE lo.status = 1 AND cm.id_comision IS NOT NULL
         ORDER BY nombreLote";
         return $this->db->query($query);
     }

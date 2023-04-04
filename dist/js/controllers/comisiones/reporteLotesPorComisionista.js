@@ -181,7 +181,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
             {data: 'nombreRegional'},
             { data: function (d) {
                 if(d.rec == 8)
-                    return '-';
+                    return d.ultimoEstatusCanceladas;
                 else
                     return d.idStatusContratacion;
             }},
@@ -235,7 +235,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     return '$' + formatMoney(d.abonoPagado);
                 }
             },
-            {data: 'rol'}
+            {data: 'lugar_prospeccion'}
         ],
         columnDefs: [{
             visible: false,

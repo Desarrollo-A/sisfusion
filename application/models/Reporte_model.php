@@ -456,6 +456,7 @@ class Reporte_model extends CI_Model {
             apartadas.nombreUsuario, contratadas.nombreUsuario, general.userID, canapartadas.nombreUsuario, cancontratadas.nombreUsuario
             ORDER BY apartadas.nombreUsuario
         ");
+
         return $query;
     }
 
