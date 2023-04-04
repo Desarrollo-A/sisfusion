@@ -40,14 +40,15 @@ class PaquetesCorrida_model extends CI_Model
         where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
         $query_superdicie
         $query_tipo_lote");
+        
         $this->db->query("UPDATE  l 
-        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        inner join clientes cl on cl.id_cliente=l.idCliente
-        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
-        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
+        SET l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio=l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
+        WHERE r.idResidencial IN($desarrollos) AND l.idStatusLote IN (3, 2)
+        AND cl.fechaApartado BETWEEN '$inicio 00:00:00.000' AND '$fin 23:59:59.999'
         $query_superdicie
         $query_tipo_lote"); 
     }

@@ -243,7 +243,7 @@ class PaquetesCorrida extends CI_Controller
         $datosInsertar_x_condominio = array();
         $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lote,$superficie,$inicio,$fin);
         
-         $this->PaquetesCorrida_model->UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$this->session->userdata('id_usuario'),$inicio,$fin);
+        $this->PaquetesCorrida_model->UpdateLotes($desarrollos, $cadena_lotes, $query_superdicie, $query_tipo_lote,$this->session->userdata('id_usuario'),$Fechainicio,$Fechafin);
 
       
         if ($this->db->trans_status() === FALSE) {
