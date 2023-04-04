@@ -12,7 +12,7 @@ let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÃ
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
-    $(this).html(`<input class="${width}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
+    $(this).html(`<input class="${width}" id="head_${i}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
             $('#escrituracion-datatable').DataTable().column(i).search(this.value).draw();
@@ -20,6 +20,13 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
+function borrarClase(){
+    const indices = [0,1,2,4,5,7,8,10];
+    for (let index = 0; index < indices.length; index++) {
+        $(`#head_${indices[index]}`).removeClass("head_escrituracion");
+    }
+}
+
 $('#carga-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>` );
@@ -1009,6 +1016,7 @@ function fillTable(beginDate, endDate, estatus) {
         escrituracionTable = $('#escrituracion-datatable').DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
+        fixedHeader: true,
         scrollX: true,
         pagingType: "full_numbers",
         language: {
@@ -1022,64 +1030,54 @@ function fillTable(beginDate, endDate, estatus) {
         ordering: false,
         columns: [
             {
-                "width": "2%",
                 data: function (d) {
                     return d.id_solicitud;
                 }
 
             },
             {   
-                "width": "2.5%",
                 data: function (d) {
                     return d.nombreResidencial
                 }
 
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return d.nombreLote
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return d.cliente;
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return d.valor_contrato;
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return d.fecha_creacion;
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return `<center><span><b> ${d.nombre_estatus}</b></span><center>`;   
                     // <center><span>(${d.area})</span><center></center>
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return `<center>${d.area}</center>`;
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return `<center>${d.asignada_a}</center>`;
                 }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
 
                     if(d.id_estatus == 27 || d.id_estatus == 28 || d.id_estatus == 30 || d.id_estatus == 31){
@@ -1090,13 +1088,11 @@ function fillTable(beginDate, endDate, estatus) {
                  }
             },
             {
-                "width": "2.5%",
                 data: function (d) {
                     return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
                 }
             },
             {   
-                "width": "3%",
                 data: function (d) {
                     var group_buttons = '';    //variable para botones que se muestran en el datatable 
                     let btnsAdicionales = ''; //variable para botones que se envian a la funcion de permisos
