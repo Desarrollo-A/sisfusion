@@ -317,8 +317,8 @@
 												<th>ASESOR</th>
 												<th>COORDINADOR</th>
 												<th>GERENTE</th>
-												<!-- <th>SUBDIRECTOR</th>
-												<th>DIRECTOR REGIONAL</th> -->
+												<th>SUBDIRECTOR</th>
+												<th>DIRECTOR REGIONAL</th>
 												<th>ESTATUS</th>
 												<th>APARTADO</th>
 												<th>COMENTARIO</th>
@@ -392,7 +392,7 @@
 			$(document).ready(function(){
 				$.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
 					var len = data.length;
-					$("#condominio").append($('<option disabled selected>- SELECCIONA CONDOMINIO -</option>'));
+					$("#condominio").append($('<option disabled selected> SELECCIONA CONDOMINIO </option>'));
 					for( var i = 0; i<len; i++){
 						var id = data[i]['idCondominio'];
 						var name = data[i]['nombre'];
@@ -473,21 +473,27 @@
 										return 'GERENTE';
 										break;
 									case 13:
+										return 'SUBDIRECTOR';
+									break;
+									case 14:
+										return 'DIRECTOR';
+									break;	
+									case 15:
 										return 'ESTATUS';
 										break;
-									case 14:
+									case 16:
 										return 'APARTADO';
 										break;
-									case 15:
+									case 17:
 										return 'COMENTARIO';
 										break;
-									case 16:
+									case 18:
 										return 'LUGAR PROSPECCIÓN';
 										break;
-									case 17:
+									case 19:
 										return 'FECHA VALIDACION ENGANCHE';
 										break;
-									case 18:
+									case 20:
 										return 'CANTIDAD ENGANCHE PAGADO';
 										break;
 								}
@@ -804,6 +810,20 @@
 							gerente = d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
 						return gerente;
 					}
+				},
+				{	
+					data: function(d){
+						var subdirector;
+						subdirector = d.subdirector == '  ' ? 'SIN ESPECIFICAR' : d.subdirector;
+						return subdirector;						
+					}
+				},			
+				{
+					data: function(d){
+						var director;
+							director = d.director == '  ' ? 'SIN ESPECIFICAR' : d.	director;
+						return 	director;						
+					}	
 				},
 				{
 					"data": function(d){

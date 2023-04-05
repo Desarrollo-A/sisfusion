@@ -672,7 +672,7 @@ class Reporte_model extends CI_Model {
             CASE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
             CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, sc.nombreStatus, st.nombre estatusLote,
             FORMAT(ISNULL(lo.total, '0.00'), 'C') precioLista, 
-			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion
+			FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioDescuento, CASE WHEN(lo.casa = '0') THEN 'Sin casa' ELSE 'Con casa' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion, lo.sup,
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -699,7 +699,7 @@ class Reporte_model extends CI_Model {
             UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
             UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
             CONVERT(VARCHAR, cl.fechaApartado, 103), sc.nombreStatus, st.nombre, lo.total, lo.totalNeto2, lo.casa, 
-            cl.fechaApartado, cl.fechaAlta, cl.apartadoXReubicacion, cl.fechaApartado
+            cl.fechaApartado, cl.fechaAlta, cl.apartadoXReubicacion, cl.fechaApartado, lo.sup
             ORDER BY sc.nombreStatus");
         } else if ($type == 3 || $type == 33 || $type == 4 || $type == 44) { // MJ: CANCELADOS CONTRATADOS / APARTADOS
             // $statusLote = ($type == 4 || $type == 44) ? "AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)" : "";
@@ -712,7 +712,7 @@ class Reporte_model extends CI_Model {
                 $extraValidacion = " WHERE idStatusContratacion = 9 AND idMovimiento = 39";
             }
             $filtroSede = ($type == 33 || $type == 44) ? "AND re.sede_residencial = $sede" : "";
-            $query = $this->db->query("SELECT CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
+            $query = $this->db->query("SELECT CAST(re.descripcion AS VARCHAR(150)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, lo.sup, 
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
             UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
             CASE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) WHEN '  ' THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,

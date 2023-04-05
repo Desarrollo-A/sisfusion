@@ -1309,7 +1309,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1323,45 +1323,48 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
+                                        return 'Superficie'
+                                        break;    
+                                    case 4:
                                         return 'Precio de lista';
                                         break;
-                                    case 4:
+                                    case 5:
                                         return 'Precio con desc';
                                         break;
-                                    case 5:
+                                    case 6:
                                         return 'Casa';
                                         break;
-                                    case 6:
+                                    case 7:
                                         return 'Cliente';
                                         break;
-                                    case 7:
+                                    case 8:
                                         return 'Asesor';
                                         break;
-                                    case 8:
+                                    case 9:
                                         return 'Coordinador';
                                         break;
-                                    case 9:
+                                    case 10:
                                         return 'Gerente';
                                         break;
-                                    case 10:
+                                    case 11:
                                         return 'Subdirector';
                                         break;
-                                    case 11:
+                                    case 12:
                                         return 'Director regional';
                                         break;
-                                    case 12:
+                                    case 13:
                                         return 'Fecha de apartado';
                                         break;
-                                    case 13:
+                                    case 14:
                                         return 'Días desde apartado';
                                         break;
-                                    case 14:
+                                    case 15:
                                         return 'Estatus contratación';
                                         break;
-                                    case 15:
+                                    case 16:
                                         return 'Estatus lote';
                                         break;
-                                    case 16:
+                                    case 17:
                                         return 'Apartado';
                                         break;
                                 }
@@ -1401,6 +1404,11 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.sup;
                     }
                 },
                 {
@@ -1474,7 +1482,7 @@ function fillTableReport(dataObject) {
                             return 'Apartado por reubicación';
                         }
                         else{
-                            return 'Estandar';
+                            return 'Estándar';
                         }
                     }
                 }
@@ -1623,6 +1631,11 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.sup;
                     }
                 },
                 {

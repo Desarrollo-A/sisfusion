@@ -407,6 +407,8 @@ class Contratacion_model extends CI_Model {
           CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) END as gerente2,
           lot.precio, lot.fecha_modst,  ISNULL(CONVERT(varchar, cl.fechaApartado, 21), '') AS fechaApartado, ISNULL (cl.apartadoXReubicacion, 0) AS apartadoXReubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 21), '') AS fechaAlta, lot.observacionContratoUrgente,
           CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
+          CONCAT(subdirector.nombre, ' ', subdirector.apellido_paterno, ' ', subdirector.apellido_materno) as subdirector,
+          CONCAT(director.nombre, ' ', director.apellido_paterno, ' ', director.apellido_materno) as director,
           $prospectingPlaceDetail lugar_prospeccion, 
           lot.fecha_creacion, lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
           lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'Sin copropietarios') nombreCopropietario,
@@ -423,6 +425,8 @@ class Contratacion_model extends CI_Model {
           LEFT JOIN usuarios asesor2 ON lot.idAsesor = asesor2.id_usuario
           LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
           LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+          LEFT JOIN usuarios subdirector ON cl.id_subdirector = subdirector.id_usuario
+          LEFT JOIN usuarios director ON cl.id_regional = director.id_usuario
           LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
           LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
           LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
@@ -546,8 +550,10 @@ class Contratacion_model extends CI_Model {
       CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
       lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
+      CONCAT(subdirector.nombre, ' ', subdirector.apellido_paterno, ' ', subdirector.apellido_materno) as subdirector,
+      CONCAT(director.nombre, ' ', director.apellido_paterno, ' ', director.apellido_materno) as regional,
       $prospectingPlaceDetail lugar_prospeccion, 
-      lot.fecha_creacion,
+      lot.fecha_creacion,sl.background_sl,
       lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
@@ -561,6 +567,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios asesor2 ON lot.idAsesor = asesor2.id_usuario
       LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
       LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
+      LEFT JOIN usuarios subdirector ON gerente2.id_lider = subdirector.id_usuario
+      LEFT JOIN usuarios director ON subdirector.id_lider = director.id_usuario
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto       
       WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
