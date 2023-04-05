@@ -183,6 +183,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+	
+	<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 	<script>
 		var url = "<?=base_url()?>";
 		var url2 = "<?=base_url()?>index.php/";
@@ -319,8 +321,7 @@
 				{
 					"width": "6%",
 					"data": function( d ){
-						var a = (d.totalNeto == null || d.totalNeto == .00) ? formatMoney(0) : formatMoney(d.totalNeto);
-						return '<p class="m-0">' + a + '</p>';
+						return '<p class="m-0">$ ' + formatMoney(d.totalNeto) + '</p>';
 					}
 				},
 				{
@@ -729,12 +730,6 @@
 			alerts.showNotification("top", "right", "Recuerda sólo ingresar números", "danger");
 		return false;
 		}
-	}
-
-
-
-	function formatMoney(number) {
-		return '$'+ number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
         // Jquery Dependency
