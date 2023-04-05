@@ -2762,7 +2762,9 @@ public function getSettledCommissions($val = '') {
      
     $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
     CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
-    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,          
+    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,  
+    convert(nvarchar, pc.fecha_modificacion, 6) date_final,
+    convert(nvarchar, pc.fecha_neodata, 6) date_neodata,         
     CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
     CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
     CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,

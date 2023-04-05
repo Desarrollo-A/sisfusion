@@ -75,6 +75,8 @@
                                                         <th>TIPO DE VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
+                                                        <th>FECHA SISTEMA</th>
+                                                        <th>FECHA NEODATA</th>
                                                         <th>PLAN VENTA</th>
                                                         <th>TOTAL</th>
                                                         <th>PORCENTAJE</th>
