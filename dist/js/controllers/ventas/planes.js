@@ -2,28 +2,24 @@
 $("#table_planes").ready(function() {
     let titulos = [];
     $('#table_planes thead tr:eq(0) th').each( function (i) {
-        // if(i != 0){
-            var title = $(this).text();
-            titulos.push(title);
+        var title = $(this).text();
+        titulos.push(title);
 
-            $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function() {
+        $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function() {
 
-                if (tabla_nuevas.column(i).search() !== this.value) {
-                    tabla_nuevas
-                        .column(i)
-                        .search(this.value)
-                        .draw();
+            if (tabla_nuevas.column(i).search() !== this.value) {
+                tabla_nuevas
+                    .column(i)
+                    .search(this.value)
+                    .draw();
 
-                    var total = 0;
-                    var index = tabla_nuevas.rows({
-                        selected: true,
-                        search: 'applied'
-                    }).indexes();
-                    var data = tabla_nuevas.rows(index).data();
-                }
-            });
-        // }
+                var index = tabla_nuevas.rows({
+                    selected: true,
+                    search: 'applied'
+                }).indexes();
+            }
+        });
     });
 
     tabla_nuevas = $("#table_planes").DataTable({
@@ -47,7 +43,7 @@ $("#table_planes").ready(function() {
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -190,7 +186,7 @@ $("#table_planes").ready(function() {
         }],
         columnDefs: [{}],
         ajax: {
-            "url": url2 + "PaquetesCorrida/listaDescuentos",
+            "url": general_base_url + "PaquetesCorrida/listaDescuentos",
             "type": "POST",
             cache: false,
             "data": function(d) {}
@@ -199,7 +195,6 @@ $("#table_planes").ready(function() {
             [1, 'asc']
         ]
     });
-
 });
 
 
@@ -424,7 +419,7 @@ function llenarTables(){
         }],
         pagingType: "full_numbers",
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -458,7 +453,7 @@ function llenarTables(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
+            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -482,7 +477,7 @@ function llenarTables(){
         }],
         pagingType: "full_numbers",
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -517,7 +512,7 @@ function llenarTables(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: url2 + "PaquetesCorrida/getDescuentos/"+2+"/"+2+"/"+0+"/"+0,
+            url: general_base_url + "PaquetesCorrida/getDescuentos/"+2+"/"+2+"/"+0+"/"+0,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -541,7 +536,7 @@ function llenarTables(){
         }],
         pagingType: "full_numbers",
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -575,7 +570,7 @@ function llenarTables(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+4+"/"+0+"/"+1,
+            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+4+"/"+0+"/"+1,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -599,7 +594,7 @@ function llenarTables(){
         }],
         pagingType: "full_numbers",
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -633,7 +628,7 @@ function llenarTables(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+12+"/"+1+"/"+1,
+            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+12+"/"+1+"/"+1,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -657,7 +652,7 @@ function llenarTables(){
         }],
         pagingType: "full_numbers",
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: general_base_url + "spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -691,7 +686,7 @@ function llenarTables(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: url2 + "PaquetesCorrida/getDescuentos/"+1+"/"+13+"/"+1+"/"+1,
+            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+13+"/"+1+"/"+1,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -701,8 +696,6 @@ function llenarTables(){
 
 $('[data-toggle="tooltip"]').tooltip();
 
-var url = "<?=base_url()?>";
-var url2 = "<?=base_url()?>index.php/";
 var totaPen = 0;
 var tr;
 
@@ -717,7 +710,7 @@ function formatMoney( n ) {
 };
 
 $(document).ready(function() {
-    $.post("<?=base_url()?>index.php/PaquetesCorrida/lista_sedes", function (data) {
+    $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
         $('[data-toggle="tooltip"]').tooltip()
         var len = data.length;
         $("#sede").append($('<option>').val("").text("Seleccione una opción"));
@@ -857,7 +850,7 @@ $.post('getPaquetes',params, function(data) {
                                     <input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" value="${dataPaquetes[index].descripcion}">
                                     <div class="mt-1" id="checks_${indexNext}">
                                         <div class="loadCard w-100">
-                                            <img src= '`+url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+                                            <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
                                         </div>
                                     </div>						
                                     <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
@@ -985,7 +978,7 @@ function GenerarCard(){
                             <input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" placeholder="Descripción del plan (*)">
                             <div class="mt-1" id="checks_${indexNext}">
                                 <div class="loadCard w-100">
-                                    <img src= '`+url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+                                    <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
                                 </div>
                             </div>						
                             <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
@@ -1604,7 +1597,7 @@ function noCreatedCards(){
     $('#showPackage').append(`
         <div class="emptyCards h-100 d-flex justify-center align-center pt-4">
             <div class="h-100 text-center pt-4">
-                <img src= '`+url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+                <img src= '`+general_base_url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
                 <h3 class="titleEmpty">Aún no ha agregado ningún plan</h3>
                 <div class="subtitleEmpty">Puede comenzar llenando el formulario de la izquierda <br>para después crear un nuevo plan</div>
             </div>
