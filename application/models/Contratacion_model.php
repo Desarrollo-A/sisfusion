@@ -77,7 +77,8 @@ class Contratacion_model extends CI_Model {
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion,
-      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+      sed.nombre as ubicacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -92,6 +93,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+      LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       WHERE lot.status = 1 and lot.idCondominio = ".$condominio." AND lot.idStatusLote = ".$estatus." ORDER BY lot.idLote");
    }
 
@@ -142,7 +144,8 @@ class Contratacion_model extends CI_Model {
             CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
             $prospectingPlaceDetail lugar_prospeccion, 
             lot.fecha_creacion,
-            lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+            lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+            sed.nombre as ubicacion
             FROM [lotes] lot
             INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
             INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -157,6 +160,7 @@ class Contratacion_model extends CI_Model {
             LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
             LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+            LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
             WHERE lot.status = 1 and lot.idStatusLote = ".$estatus." ORDER BY lot.idLote");
          } else {
             return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, lot.total, 
@@ -171,7 +175,8 @@ class Contratacion_model extends CI_Model {
             CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
             $prospectingPlaceDetail lugar_prospeccion, 
             lot.fecha_creacion,
-            lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+            lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+            sed.nombre as ubicacion
             FROM [lotes] lot
             INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
             INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -186,6 +191,7 @@ class Contratacion_model extends CI_Model {
             LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
             LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+            LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
             WHERE lot.status = 1 and res.idResidencial = ".$proyecto." AND lot.idStatusLote = ".$estatus." ORDER BY con.nombre, lot.idLote");
          }
      }
@@ -204,7 +210,8 @@ class Contratacion_model extends CI_Model {
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion,
-      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+      sed.nombre as ubicacion
       FROM [lotes] lot 
       INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
       INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
@@ -219,6 +226,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+      LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       WHERE lot.status = 1 and lot.idStatusLote = ".$estatus." ORDER BY lot.idLote");
    }
 
@@ -239,7 +247,8 @@ class Contratacion_model extends CI_Model {
          CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
          $prospectingPlaceDetail lugar_prospeccion, 
          lot.fecha_creacion,
-         lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+         lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+         sed.nombre as ubicacion
          FROM lotes lot 
          INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
          INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -253,7 +262,8 @@ class Contratacion_model extends CI_Model {
          LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
          LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
          LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
-         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto         
+         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+         LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
          WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
       } else {
          return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, 
@@ -270,7 +280,8 @@ class Contratacion_model extends CI_Model {
          CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
          $prospectingPlaceDetail lugar_prospeccion, 
          lot.fecha_creacion,
-         lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+         lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+         sed.nombre as ubicacion
          FROM lotes lot 
          INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
          INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -285,6 +296,7 @@ class Contratacion_model extends CI_Model {
          LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario      
          LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
          LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
+         LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
          WHERE lot.status = 1 and res.idResidencial = $proyecto ORDER BY res.nombreResidencial, con.nombre, lot.idLote");
       }
    }
@@ -303,7 +315,8 @@ class Contratacion_model extends CI_Model {
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
       $prospectingPlaceDetail lugar_prospeccion, 
       lot.fecha_creacion,
-      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion,
+      sed.nombre as ubicacion
       FROM lotes lot INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
@@ -317,6 +330,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+      LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       WHERE lot.status = 1 and res.idResidencial = ".$proyecto." AND lot.idCondominio = ".$condominio." ORDER BY lot.idLote");
    }
 
