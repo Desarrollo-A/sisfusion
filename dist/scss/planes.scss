@@ -165,11 +165,20 @@
         border:none;
         margin-left: 5px;
       }
+      .btnAction{
+        height: 40px;
+        border: none;
+        border-radius: 27px;
+        color: $blueIndigo;
+        background-color: #1341761a;
+        margin-left: 5px;
+        padding: 0 10px;
+      }
     }
     .leyendItems{
       position: absolute;
       top: -25px;
-      right: 65px;
+      right: 165px;
       font-size: 18px;
       .items{
         font-weight: 400;

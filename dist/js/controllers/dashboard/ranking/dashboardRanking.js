@@ -7,7 +7,7 @@ function readyRanking(){
     setInitialDatesRanking();
     recreatApexChartRanking(false);
     getRankings(true, 'general');
-    getSedes().then( response => { 
+    getSedesRanking().then( response => { 
         dataSedes = response 
         buildSelectSedes(dataSedes);
     });
@@ -766,7 +766,7 @@ function getDates(typeRanking){
     return {beginDate: beginDate == null ? beginDate : formatDate(beginDate), endDate: endDate == null ? endDate : formatDate(endDate)};
 }
 
-function getSedes(){
+function getSedesRanking(){
     return $.ajax({
         type: 'POST',
         url: `${base_url}Ranking/getSedes`,

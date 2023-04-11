@@ -21,6 +21,7 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		$this->validateSession();
 	}
 
+
 	public function index()
 	{
 		if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '11' && $this->session->userdata('id_rol') != '34' 
@@ -41,8 +42,9 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
             $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
 			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
 			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
-			$this->session->userdata('id_rol') != '67' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '69'
+			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
+			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
+			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83' && $this->session->userdata('id_rol') != '84'
         ) {
 			redirect(base_url() . 'login');
 		}
@@ -207,9 +209,8 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 							$fecha = $sig_fecha;
 						}
 
-						$d = end($arregloFechas);
-						$dataPer[$i]['fechaVenc2'] = $d;
-						echo 'aqui<br>';
+                      $d = end($arregloFechas);
+                      $dataPer[$i]['fechaVenc2'] = $d;
 
 					}
 					else {
@@ -255,6 +256,7 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		/*-------------------------------------------------------------------------------*/
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
+		$datos["rol"] = $this->session->userdata('id_rol');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
 	}
 
@@ -569,7 +571,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		}
 	}
 	
-	
 	public function get_data_asignacion($idLote){
         $data = $this->Administracion_model->get_data_asignacion($idLote);
         echo json_encode($data);
@@ -637,4 +638,7 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
         }
 	}
 }
-?>
+
+
+
+

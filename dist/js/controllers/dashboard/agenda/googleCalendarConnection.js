@@ -1,14 +1,8 @@
-  // LOCAL
-  var CLIENT_ID = '20777256148-vn24jag8p6gg898hu4ncoabsqc3galup.apps.googleusercontent.com';
+  // PRUEBAS
+  var CLIENT_ID = '161969316544-ou10ee3mktbmp2og21po8rj2eke8ej9t.apps.googleusercontent.com';
 
   // PRUEBAS
-  // var CLIENT_ID = '267709590113-v4i5keof8q5gb07c85kbcl0in9tjuq1u.apps.googleusercontent.com';
-  
-  // LOCAL
-  var API_KEY = 'AIzaSyCG2ig3Dj3XGIvTpcRCiT10hQ8jdEVxANg';
-
-  // PRUEBAS
-  // var API_KEY = 'AIzaSyCT-w9W-QZ6mEex9OUzmlKK9Z_Q5VVwBP0';
+  var API_KEY = 'AIzaSyCCR6Rd3y0E3FgV4iBWTVn_ZtLYMIvZPNw';
 
   // Array of API discovery doc URLs for APIs used by the quickstart
   var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -30,7 +24,8 @@
       apiKey: API_KEY,
       clientId: CLIENT_ID,
       discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES
+      scope: SCOPES,
+      plugin_name: 'Google Auth production'
     }).then(function () {
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
@@ -46,8 +41,6 @@
     if (isSignedIn) {
       $(".fc-googleSignIn-button").attr("style", "display: none !important");
       $(".fc-googleLogout-button").attr("style", "display: block !important");
-      // if (typeof(sideCalendar) != 'undefined') listUpcomingEvents();
-      // if (typeof(calendar) != 'undefined') listUpcomingEvents();
     } else {
       $(".fc-googleSignIn-button").attr("style", "display: block !important");
       $(".fc-googleLogout-button").attr("style", "display: none !important");
@@ -66,7 +59,6 @@
       'maxResults': 2500,
       'orderBy': 'startTime'
     }).then(function(response) {
-      // if (typeof(sideCalendar) !== 'undefined') arrayEvents = [];
       var googleAppointments = response.result.items;
       for(let i = 0; i < googleAppointments.length; i++){
         if(!(googleAppointments[i].hasOwnProperty('extendedProperties') && googleAppointments[i].extendedProperties.hasOwnProperty('private') && googleAppointments[i].extendedProperties.private.hasOwnProperty('setByFullCalendar'))){
@@ -83,16 +75,6 @@
         
         calendar.refetchEvents();
       }
-        
-      // if(typeof(sideCalendar) != 'undefined'){
-        // sideCalendar.addEventSource({
-        //   title: 'sourceGoogle',
-        //   display:'block',
-        //   events: arrayEvents
-        // })
-        
-        // sideCalendar.refetchEvents();
-      // }
     });
   }
 
@@ -117,7 +99,6 @@
   
   function removeEvents(){
     let srcEventos;
-    // if (typeof(sideCalendar) != 'undefined') srcEventos = sideCalendar.getEventSources();
     if (typeof(calendar) != 'undefined') srcEventos = calendar.getEventSources();
   
     srcEventos.forEach(event => {

@@ -4,7 +4,21 @@
     <div class="wrapper ">
      
 
-  
+    <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <div class="row" style="text-align: center">
+                            <h3>Consulta en NEODATA</h3>
+                        </div>
+                    </div>
+                    <form method="post" id="form_NEODATA">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">

@@ -3,7 +3,8 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="4"){
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="4"
+            || $this->session->userdata('id_usuario') == 10894 || $this->session->userdata('id_rol')=="70"){
             /*-----------------------------contraloria--------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -584,7 +585,7 @@
                     "data": function( data ){
 
                         var BtnStats;
-                        if(id_user_session == 1875){
+                        if(id_user_session == 1875 || id_user_session == 10894){
                             BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                         }
                         else{

@@ -88,6 +88,7 @@
     }
 }
 .overflow-hidden{ overflow: hidden;}
+.overflow-auto{ overflow: auto;}
 .t-0{ top: 0;}
 .r-0{ right: 0;}
 .b-0{ bottom: 0;}
@@ -141,53 +142,63 @@
 /* Text */
 
 /* Vrbls colores */
-$white         : #ffffff;
-$cultured      : #f8f8f8;
-$platinumLight : #eeeeee;
-$grayDisabled  : #F1F1F1;
-$platinum      : #eaeaea;
-$platinumScroll: #c1c1c1;
-$deepGray      : #929292;
-$grey9         : #999999;
-$grayOxford    : #4e4e4e;
-$gray          : #333333;
-$grayDark      : #191B1C;
-$goldMaderas   : #96843D;
-$water         : #D1EEFF;
-$blueLight     : #5DADE2;
-$shadowBlue    : #7083A9;
-$aqua          : #54d2d2;
-$sky           : #00bcd4;
-$cerulean      : #00A0FF;
-$blueFrance    : #2C93E7;
-$azure         : #4382EF;
-$blueMaderas   : #0a548b;
-$blueIndigo    : #103f75;
-$blueSubmit    : #003d82;
-$blueIndigoDeep: #143860;
-$indigo        : #163960;
-$violetChin    : #8E6C88;
-$violetLight   : #9392e8;
-$violetBoots   : #563D7C;
-$redLight      : #f44336;
-$red           : #c01313;
-$redGoogle     : #EA4335;
-$jellyBean     : #df5a5a;
-$orangeYellow  : #ff9800;
-$orangeLight   : #f8aa4b;
-$greenExcel    : #209E63;
-$green         : #28B463;
-$harlequin     : #50d920;
-$acidGreen     : #AFB42B;
-$violet        : #702497;
-$lapisLazuli   : #22639B;
-$blueNCS       : #0089B7;
-$viridianGreen : #039590;
-$tiffanyBlue   : #00ACB8;
-$oceanGreen    : #4BBC8E;
-$caribbeanGreen: #00CDA3;
-$lightGreen    : #92E784;
-$sunny         : #F9F871;
+$white              : #ffffff;
+$cultured           : #f8f8f8;
+$platinumLight      : #eeeeee;
+$grayDisabled       : #F1F1F1;
+$platinum           : #eaeaea;
+$platinumScroll     : #c1c1c1;
+$deepGray           : #929292;
+$deepGrayOpacity    : #92929218;
+$grey9              : #999999;
+$grey9Opacity       : #99999913;
+$grayOxford         : #4e4e4e;
+$gray               : #333333;
+$grayOpacity        : #33333318;
+$grayDark           : #191B1C;
+$goldMaderas        : #96843D;
+$water              : #D1EEFF;
+$blueLight          : #5DADE2;
+$shadowBlue         : #7083A9;
+$aqua               : #54d2d2;
+$sky                : #00bcd4;
+$skyOpacity         : #00bcd418;
+$cerulean           : #00A0FF;
+$blueFrance         : #2C93E7;
+$azure              : #4382EF;
+$blueMaderas        : #0a548b;
+$blueMaderasOpacity : #0a538b18;
+$blueIndigo         : #103f75;
+$blueSubmit         : #003d82;
+$blueIndigoDeep     : #143860;
+$indigo             : #163960;
+$violetChin         : #8E6C88;
+$violetChinOPacity  : #8e6c8818;
+$violetLight        : #9392e8;
+$violetBoots        : #563D7C;
+$violetBootsOpacity : #563D7C18;
+$redLight           : #f44336;
+$red                : #c01313;
+$redOpacity         : #c0131318;
+$redGoogle          : #EA4335;
+$jellyBean          : #df5a5a;
+$orangeYellow       : #ff9800;
+$orangeLight        : #f8aa4b;
+$greenExcel         : #209E63;
+$green              : #28B463;
+$greenOpacity       : #28b46218;
+$harlequin          : #50d920;
+$acidGreen          : #AFB42B;
+$violet             : #702497;
+$violetOpacity      : #70249718;
+$lapisLazuli        : #22639B;
+$blueNCS            : #0089B7;
+$viridianGreen      : #039590;
+$tiffanyBlue        : #00ACB8;
+$oceanGreen         : #4BBC8E;
+$caribbeanGreen     : #00CDA3;
+$lightGreen         : #92E784;
+$sunny              : #F9F871;
 /* END vrbls coloress */
 
 
@@ -415,7 +426,8 @@ $tv                 : "(min-width: 1280px)";
   }
 .btn-green{
     color: $green;
-    border: 1px solid $green;
+    border: none;
+    background-color: #28b46218;
 }
 .btn-green:hover{
     background-color: $green;
@@ -423,7 +435,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-green-excel{
     color: $greenExcel;
-    border: 1px solid $greenExcel;
+    border: none;
+    background: #209E6318;
 }
 .btn-green-excel:hover{
     background-color: $greenExcel;
@@ -431,7 +444,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-gray{
     color: $gray;  
-    border: 1px solid $gray;
+    border: none;
+    background-color: #33333318;
 }
 .btn-gray:hover{
     background-color: $gray;
@@ -439,7 +453,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetDeep{
     color: $violet;
-    border: 1px solid $violet;
+    border: none;
+    background-color: #70249718;
 }
 .btn-violetDeep:hover{
     background-color: $violet;
@@ -447,7 +462,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-deepGray{
     color: $deepGray;
-    border: 1px solid $deepGray;
+    border: none;
+    background-color: #92929218;
 }
 .btn-deepGray:hover{
     color: $deepGray;
@@ -455,7 +471,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-blueMaderas{
     color: $blueMaderas;
-    border: 1px solid $blueMaderas;
+    border: none;
+    background-color: #0a538b18;
 }
 .btn-blueMaderas:hover{
     background-color: $blueMaderas;
@@ -463,7 +480,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetChin{
     color:$violetChin;
-    border: 1px solid $violetChin;
+    border: none;
+    background-color: #8E6C8818;
 }
 .btn-violetChin:hover {
     background-color: $violetChin;
@@ -471,7 +489,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-violetBoots{
     color:$violetBoots;
-    border: 1px solid $violetBoots;
+    border: none;
+    background-color: #563D7C18;
 }
 .btn-violetBoots:hover {
     background-color: $violetBoots;
@@ -480,7 +499,8 @@ $tv                 : "(min-width: 1280px)";
 
 .btn-orangeYellow{
     color: $orangeYellow;
-    border: 1px solid $orangeYellow;
+    border: none;
+    background-color: #ff980018;
 }
 .btn-orangeYellow:hover {
     background-color: $orangeYellow;
@@ -488,7 +508,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-sky{
     color: $sky;
-    border: 1px solid $sky;
+    border: none;
+    background-color: #00bcd418;
 }
 .btn-sky:hover {
     background-color: $sky;
@@ -496,8 +517,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-warning{
     color:$red;
-    border: 1px solid $red;
-    background: none;
+    border: none;
+    background-color: #c0131318;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
@@ -505,7 +526,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-acidGreen{
     color:$acidGreen;
-    border: 1px solid $acidGreen;
+    border: none;
+    background-color: #AFB42B18;
 }
 .btn-acidGreen:hover {
     background-color: $acidGreen;
@@ -513,7 +535,8 @@ $tv                 : "(min-width: 1280px)";
 }
 .btn-details-grey{
     color:$grey9;
-    border:1px solid $grey9 !important;
+    border:none;
+    background-color: #99999918;
 }
 .btn-details-grey:hover{
     background:$grey9;
@@ -549,7 +572,7 @@ $tv                 : "(min-width: 1280px)";
 }
 /* Color de la barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb{
-    border-radius: 10px;
+    // border-radius: 10px;
     background-color: $platinumScroll;
 }
 /* Color del HOVER de barra de desplazamiento */
@@ -737,12 +760,12 @@ $tv                 : "(min-width: 1280px)";
 /* tooltip styles */
 .tooltip{
     width: fit-content;
+    position: fixed;
     .tooltip-inner {
         padding: 5px 10px;
         color: $white;
         background-color: $gray;
-    width: fit-content;
-
+        width: fit-content;
     }
 }
 .tooltip.top .tooltip-arrow {

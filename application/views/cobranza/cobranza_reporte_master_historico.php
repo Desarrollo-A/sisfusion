@@ -11,6 +11,21 @@
         $this->load->view('template/sidebar', $datos);
         ?>
   
+          <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <div class="row" style="text-align: center">
+                            <h3>Consulta en NEODATA</h3>
+                        </div>
+                    </div>
+                    <form method="post" id="form_NEODATA">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
@@ -71,7 +86,7 @@
                                 <i class="fas fa-wallet fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Cobranza master</h3>
+                                <h3 class="card-title center-align">Cobranza master v2</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -138,6 +153,8 @@
                                                     <th title="PUESTO">PUESTO</th>
                                                     <th title="PLAZA">PLAZA</th>
                                                     <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
+                                                    
+                                                    <th title="DETALLE">DETALLE</th>
                                                     <th title="MAS">MÁS</th>
                                                 </tr>
                                                 </thead>

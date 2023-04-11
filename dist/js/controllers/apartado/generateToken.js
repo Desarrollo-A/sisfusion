@@ -208,7 +208,7 @@ function generateToken() {
                     $('#spiner-loader').addClass('hide');
                     alerts.showNotification("top", "right", response["message"], response["status"] != 200 ? "danger" : "success");
                     if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
-                        $(".generated-token").val("https://ciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
+                        $(".generated-token").val("http://pagosciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
                         $("#generateTokenModal").modal("hide");
                         $("#evidenceTable").DataTable().ajax.reload(null, false);
                     }
@@ -281,6 +281,7 @@ $(document).on('click', '.validateEvidence', function () {
 });
 
 function verEvidencia(fileName, lote){
+    $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: "viewDropboxFile",
         type: 'POST',

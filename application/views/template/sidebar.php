@@ -1,6 +1,7 @@
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
+            <!-- <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;"> -->
             <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div>
@@ -24,7 +25,7 @@ elseif ($rol == 55 || $rol == 56 || $rol == 57) {
 }
 elseif ($rol == 11 || $rol == 23 || $rol == 26 || $rol == 34 || $rol == 35 || $rol == 38 || $rol == 41 || $rol == 49 || $rol == 50 || $rol == 40 || $rol == 54 || $rol == 58
 || $rol == 8 || $rol == 10 || $rol == 19 || $rol == 20 || $rol == 21 || $rol == 23 || $rol == 28 || $rol == 33 || $rol == 25 || $rol == 27 || $rol == 30
- || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64 || $rol == 65 || $rol == 39 || $rol == 66 || $rol == 67 || $rol == 68 || $rol == 69 ) {
+ || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64 || $rol == 65 || $rol == 39 || $rol == 66 || $rol == 67 || $rol == 68 || $rol == 69 || $rol == 70 || $rol == 71 || $rol == 72 || $rol == 73 || $rol == 74 || $rol == 75 || $rol == 76 || $rol == 77 || $rol == 78 || $rol == 79 || $rol == 80 || $rol == 81 || $rol == 82 || $rol == 83 || $rol == 84) {
     $url2 = base_url()."Administracion";
 }
 elseif ($rol == 12) {
@@ -212,8 +213,6 @@ foreach($datos2 as $datos)
     </div>
 </div>
 
-<?php $this->load->view('template/calendar_sidebar');?>
-
 <?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
@@ -235,11 +234,6 @@ foreach($datos2 as $datos)
 					<img src="<?=base_url()?>static/images/img.ico" class="img-responsive" width="15%">
 				</a>
                 <div class="divIconsNav">
-                    <div class="divCalendar hidden" id="divCalendar">
-                        <a id="minimizeSidecalendar" class="navbar-brand responsive">
-                            <i class="material-icons far fa-calendar-alt"></i>
-                        </a>
-                    </div>
                     <a class="navbar-brand responsive" href="<?=base_url()?>index.php/Usuarios/configureProfile">
                         <span class="material-icons">settings</span>
                     </a>
@@ -254,12 +248,6 @@ foreach($datos2 as $datos)
                     <input type="hidden" id="uri2" value="<?=$url?>">
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
-                    <!-- Abrir side-calendar -->
-					<li class="icoNav noResponsive hidden" id ="openCalendar" rel="tooltip" data-placement="bottom" title="calendario">
-						<a id="minimizeSidecalendar">
-                            <span class="material-icons">date_range</span>
-						</a>
-                    </li>
                     <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>

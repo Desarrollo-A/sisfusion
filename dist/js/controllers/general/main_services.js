@@ -177,7 +177,7 @@ function getRejectionReasons(tipo_proceso) {
     $("#rejectionReasons").empty().selectpicker('refresh');
     $("#rejectionReasons").append($('<option disabled>').val("0").text("Selecciona un motivo de rechazo"));
     $.ajax({
-        url: base_url + 'Documentacion/getRejectionReasons',
+        url: general_base_url + 'Documentacion/getRejectionReasons',
         type: 'post',
         dataType: 'json',
         data: {"tipo_proceso": tipo_proceso}, // MJ: TRAE MOTIVOS DE RECHAZO PARA ÁRBOL DE DOCUMENTOS POR PROCESO

@@ -4,10 +4,10 @@ var tr;
 let tablaGeneral;
 let titulosTablaGeneral = [];
 
-$(document).ready(function() { 
-    console.log('entrando al nuevo js');
+$(document).ready(function() {  
+
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
-        if (i !== 13) {
+        if (i !== 15) {
             const title = $(this).text();
             titulosTablaGeneral.push(title);
  
@@ -17,6 +17,8 @@ $(document).ready(function() {
                     tablaGeneral.column(i).search(this.value).draw();
 
                     let totalDescuento = 0;
+                    let totalAbonado = 0;
+                    let totalPendiente = 0;
                     const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
                     const data = tablaGeneral.rows(index).data();
 
@@ -122,7 +124,7 @@ function loadTable(tipoDescuento) {
                     titleAttr: 'DESCUENTOS UNIVERSIDAD',
                     title: 'DESCUENTOS UNIVERSIDAD',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14],
                         format: {
                             header: function (d, columnIndex) {
                                 return ' ' + titulosTablaGeneral[columnIndex] + ' ';
@@ -144,6 +146,7 @@ function loadTable(tipoDescuento) {
                     next: "<i class='fa fa-angle-right'>"
                 }
             },
+            scrollX: true,
             pagingType: "full_numbers",
             "columns": [
                 {
@@ -362,90 +365,411 @@ function loadTable(tipoDescuento) {
                     }
                 },
                 {
-                    // Acciones
                     "data": function (d) {
-                        const btnEliminarEditar = ((d.estatus == 1 || d.estatus == 2 || d.estatus == 5)
-                            && d.no_descuentos == 0 && d.pagado_caja == 0 && d.status == 1)
-                            ? `<button class="btn-data btn-warning btn-eliminar-descuento"
-                                value="${d.id_descuento}">
-                                <i class="fa fa-trash"></i>
-                               </button>
-                               <button class="btn-data btn-green btn-editar-descuento"
-                                value="${d.id_descuento}">
-                                <i class="fa fa-edit"></i>
-                               </button>`
-                            : '';
+                        if(d.certificacion ==  null || d.certificacion == ''){
+                            return '<p style="font-size: 1em; color:gray"><b> SIN DEFINIR</b></p>';
 
-                        if (d.estatus == 0) {
-                            return `
-                                    <div class="d-flex justify-center">
-                                        <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="Detalles">
-                                                <i class="fas fa-info-circle"></i>
-                                        </button>
-                                        <button value="${d.id_usuario}"
-                                            class="btn-data btn-violetDeep activar-prestamo"
-                                            title="Activar">
-                                            <i class="fa fa-rotate-left"></i>
-                                        </button>
-                                    </div>
-                                `;
-                        } else if ((d.estatus == 1 || d.estatus == 5) && d.pagos_activos == 0) {
-                            return `
-                                    <div class="d-flex justify-center">
-                                        <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
-                                            data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="Detalles">
-                                                <i class="fas fa-info-circle"></i>
-                                        </button>${btnEliminarEditar}
-                                    </div>
-                                `;
-                        } else if (tipoDescuento === '2' || tipoDescuento === '3') {
-                            return `
-                                <div class="d-flex justify-center">
-                                    <button value="${d.id_usuario}"
-                                        data-value="${d.nombre}"
-                                        data-code="${d.id_usuario}"
-                                        class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                        title="Detalles">
-                                            <span class="fas fa-info-circle"></span>
-                                    </button>
-                                    <button value="${d.id_usuario}"
-                                        data-value="${d.nombre}"
-                                        data-code="${d.id_usuario}"
-                                        class="btn-data btn-gray consultar_historial_pagos"
-                                        title="Historial pagos">
-                                            <i class="fas fa-chart-bar"></i>
-                                    </button>${btnEliminarEditar}
-                                </div>`;
+                        }else{
+                            
+                            return '<span class="label label-warning" style="background:' + d.colorCertificacion + ';"> '+ d.certificacion +' </span>';
                         }
+                    }
+                },
+                // {
+                //     // Acciones
+                //     "data": function (d) {
+                //         const btnEliminarEditar = ((d.estatus == 1 || d.estatus == 2 || d.estatus == 5)
+                //             && d.no_descuentos == 0 && d.pagado_caja == 0 && d.status == 1)
+                //             ? `<button class="btn-data btn-warning btn-eliminar-descuento"
+                //                 value="${d.id_descuento}">
+                //                 <i class="fa fa-trash"></i>
+                //                </button>
+                //                <button class="btn-data btn-green btn-editar-descuento"
+                //                 value="${d.id_descuento}">
+                //                 <i class="fa fa-edit"></i>
+                //                </button>`
+                //             : '';
 
-                        let tipo_descuento = d.queryType;
-                        if(tipo_descuento == 2){
-                            return `
-                                <div class="d-flex justify-center">
-                                    <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
+                //         if (d.estatus == 0) {
+                //             return `
+                //                     <div class="d-flex justify-center">
+                //                         <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                             title="Detalles">
+                //                                 <i class="fas fa-info-circle"></i>
+                //                         </button>
+                //                         <button value="${d.id_usuario}"
+                //                             class="btn-data btn-violetDeep activar-prestamo"
+                //                             title="Activar">
+                //                             <i class="fa fa-rotate-left"></i>
+                //                         </button>
+                //                     </div>
+                //                 `;
+                //         } else if ((d.estatus == 1 || d.estatus == 5) && d.pagos_activos == 0) {
+                //             return `
+                //                     <div class="d-flex justify-center">
+                //                         <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                             title="Detalles">
+                //                                 <i class="fas fa-info-circle"></i>
+                //                         </button>${btnEliminarEditar}
+                //                     </div>
+                //                 `;
+                //         } else if (tipoDescuento === '2' || tipoDescuento === '3') {
+                //             return `
+                //                 <div class="d-flex justify-center">
+                //                     <button value="${d.id_usuario}"
+                //                         data-value="${d.nombre}"
+                //                         data-code="${d.id_usuario}"
+                //                         class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                         title="Detalles">
+                //                             <span class="fas fa-info-circle"></span>
+                //                     </button>
+                //                     <button value="${d.id_usuario}"
+                //                         data-value="${d.nombre}"
+                //                         data-code="${d.id_usuario}"
+                //                         class="btn-data btn-gray consultar_historial_pagos"
+                //                         title="Historial pagos">
+                //                             <i class="fas fa-chart-bar"></i>
+                //                     </button>${btnEliminarEditar}
+                //                 </div>`;
+                //         }
+
+                //         let tipo_descuento = d.queryType;
+                //         if(tipo_descuento == 2){
+                //             return `
+                //                 <div class="d-flex justify-center">
+                //                     <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                             title="Detalles">
+                //                                 <span class="fas fa-info-circle"></span>
+                //                     </button>
+                //                     <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                             title="editarDescuento">
+                //                                 <span class="fas fa-info-circle"></span>
+                //                     </button>${btnEliminarEditar}
+                //                 </div>`;
+                //         } else if(tipo_descuento == 1 ){
+                //             if (d.status == 0) {
+                //                 let pendiente = parseFloat(d.monto - d.aply);
+                //                 if(pendiente < 0 ){
+                //                    actividad =  (pendiente * -1);
+                //                 }
+                //                 let total ;
+                //                 if(d.aply == null || d.aply <= 1){
+                //                     total = d.pagado_caja;
+                //                 } else {
+                //                     total = d.aply;
+                //                 }
+                //                 return `
+                //                     <div class="d-flex justify-center">
+                //                         <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                             title="Detalles">
+                //                             <i class="fas fa-info-circle"></i>
+                //                         </button>
+                                        
+                //                         <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-darkMaderas consultar_historial_pagos"
+                //                             title="Historial pagos">
+                //                             <i class="fas fa-chart-bar"></i>
+                //                         </button>
+                //                         </button>
+                //                         <button value="${d.id_usuario}"
+                //                          data-value="${d.id_descuento}"
+                //                          data-code="${d.id_usuario}"
+                //                          data-descuento="${d.monto}"
+                //                          data-mensual="${d.pago_individual}"
+                //                          data-pendiente="${pendiente}"
+                //                          data-total="${total}"
+                //                          class="btn-data btn-violetBoots editar_descuentos"
+                //                          title="Cambiar descuentos">
+                //                          <i class="fas fa-money-check-alt"></i>
+                //                      </button>
+                //                         <button value="${d.id_usuario}"
+                //                             data-value="${d.nombre}"
+                //                             data-code="${d.id_usuario}"
+                //                             class="btn-data btn-darkMaderas pagos"
+                //                             title="Editar descuento">
+                //                             <i class="fa-duotone fa-money-check-dollar-pen"></i>
+                //                         </button>${btnEliminarEditar}
+                //                     </div>`;
+
+                //             } else {
+                //                 OK = parseFloat(d.pago_individual * d.pagos_activos);
+                //                 OP = parseFloat(d.monto - d.aply);
+
+                //                 if (OK > OP) {
+                //                     pend = OP;
+                //                 } else {
+                //                     pend = OK;
+                //                 }
+
+
+                //                 if (d.estatus == 2 || d.estatus == 3 || d.estatus == 4 || d.status == 3) {
+                //                     BOTON = 0;
+                //                 } else if (pend > 0) {
+                //                     if (d.id_sede == 6) {
+                //                         if (d.abono_nuevo < 15000) {
+                //                             BOTON = 0;
+                //                         } else {
+                //                             validar = Math.trunc(d.abono_nuevo / 15000);
+                //                             if (validar >= d.pagos_activos) {
+                //                                 validar = d.pagos_activos;
+                //                                 pendiente = pend;
+                //                             } else {
+                //                                 pendiente = (validar * d.pago_individual);
+                //                             }
+                //                             BOTON = 1;
+                //                         }
+                //                     } else if (d.abono_nuevo < 10000) {
+                //                         BOTON = 0;
+                //                     } else {
+                //                         validar = Math.trunc(d.abono_nuevo / 10000);
+                //                         if (validar >= d.pagos_activos) {
+                //                             validar = d.pagos_activos;
+                //                             pendiente = pend;
+                //                         } else {
+                //                             // pendiente = (validar * d.pago_individual);
+                //                             if((validar * d.pago_individual)>(d.monto - d.aply)){
+                //                                 pendiente = (d.monto - d.aply);
+                //                             }else{
+                //                                 pendiente = (validar * d.pago_individual);
+                //                             }
+                //                         }
+                //                         BOTON = 1;
+                //                     }
+                //                 } else {
+                //                     BOTON = 0;
+                //                 }
+
+                //                 if (BOTON == 0) {
+                //                     let pendiente = parseFloat(d.monto - d.aply);
+                //                     if(pendiente < 0 ){
+                //                        actividad =  (pendiente * -1);
+                //                     }
+                //                     let total ;
+                //                     if(d.aply == null || d.aply <= 1){
+                //                         total = d.pagado_caja;
+                //                     } else {
+                //                         total = d.aply;
+                //                     }
+                                    
+                //                     return `
+                //                         <div class="d-flex justify-center">
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${d.nombre}"
+                //                                 data-code="${d.id_usuario}"
+                //                                 class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                //                                 title="Detalles">
+                //                                 <span class="fas fa-info-circle"></span>
+                //                             </button>
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${d.aply}"
+                //                                 data-code="${d.id_usuario}"
+                //                                 class="btn-data btn-orangeYellow topar_descuentos"
+                //                                 title="Detener descuentos">
+                //                                 <i class="fas fa-money"></i>
+                //                             </button>
+                //                                <button value="${d.id_usuario}"
+                //                                 data-value="${d.id_descuento}"
+                //                                 data-code="${d.id_usuario}"
+                //                                 data-descuento="${d.monto}"
+                //                                 data-mensual="${d.pago_individual}"
+                //                                 data-pendiente="${pendiente}"
+                //                                 data-total="${total}"
+                //                                 class="btn-data btn-violetBoots editar_descuentos"
+                //                                 title="Cambiar descuentos">
+                //                                 <i class="fas fa-money-check-alt"></i>
+                //                             </button>
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${d.nombre}"
+                //                                 data-code="${d.id_usuario}"
+                                               
+                //                                 class="btn-data btn-gray consultar_historial_pagos"
+                //                                 title="Historial pagos">
+                                              
+                //                                 <i class="fas fa-chart-bar"></i>
+                //                             </button>${btnEliminarEditar}
+                //                         </div>`;
+                //                 } else if (d.estatus == 5) {
+                //                     let pendiente = parseFloat(d.monto - d.aply);
+                //                     if(pendiente < 0 ){
+                //                        actividad =  (pendiente * -1);
+                //                     }
+                //                     let total ;
+                //                     if(d.aply == null || d.aply <= 1){
+                //                         total = d.pagado_caja;
+                //                     } else {
+                //                         total = d.aply;
+                //                     }
+                //                     return `
+                //                         <div class="d-flex justify-center">
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${d.nombre}"
+                //                                 data-code="${d.id_usuario}"
+                //                                 class="btn-data btn-gray consultar_historial_pagos"
+                //                                 title="Historial pagos">
+                //                                 <i class="fas fa-chart-bar"></i>
+                //                             </button>${btnEliminarEditar}
+                //                             </button>
+                //                             <button value="${d.id_usuario}"
+                //                              data-value="${d.id_descuento}"
+                //                              data-code="${d.id_usuario}"
+                //                              data-descuento="${d.monto}"
+                //                              data-mensual="${d.pago_individual}"
+                //                              data-pendiente="${pendiente}"
+                //                              data-total="${total}"
+                //                              class="btn-data btn-violetBoots editar_descuentos"
+                //                              title="Cambiar descuentos">
+                //                              <i class="fas fa-money-check-alt"></i>
+                //                             </button>    
+                //                         </div>
+                //                         `;
+                //                 } else {
+                //                     let pendiente = parseFloat(d.monto - d.aply);
+                //                     if(pendiente < 0 ){
+                //                        actividad =  (pendiente * -1);
+                //                     }
+                //                     let total ;
+                //                     if(d.aply == null || d.aply <= 1){
+                //                         total = d.pagado_caja;
+                //                     } else {
+                //                         total = d.aply;
+                //                     }
+                //                     return `
+                //                         <div class="d-flex justify-center">
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${pendiente}"
+                //                                 data-saldoCom="${d.abono_nuevo}"
+                //                                 data-sede="${d.id_sede}"
+                //                                 data-validate="${validar}"
+                //                                 data-code="${d.cbbtton}"
+                //                                 class="btn-data btn-violetDeep agregar_nuevo_descuento"
+                //                                 title="Aplicar descuento">
+                //                                 <i class="fas fa-plus"></i>
+                //                             </button>
+                //                             </button>
+                //                             <button value="${d.id_usuario}"
+                //                              data-value="${d.id_descuento}"
+                //                              data-code="${d.id_usuario}"
+                //                              data-descuento="${d.monto}"
+                //                              data-mensual="${d.pago_individual}"
+                //                              data-pendiente="${pendiente}"
+                //                              data-total="${total}"
+                //                              class="btn-data btn-violetBoots editar_descuentos"
+                //                              title="Cambiar descuentos">
+                //                              <i class="fas fa-money-check-alt"></i>
+                //                          </button>
+                //                             <button value="${d.id_usuario}"
+                //                                 data-value="${d.nombre}"
+                //                                 data-code="${d.id_usuario}"
+                //                                 class="btn-data btn-gray consultar_historial_pagos"
+                //                                 title="Historial pagos">
+                //                                 <i class="fas fa-chart-bar"></i>
+                //                             </button>${btnEliminarEditar}
+                //                         </div>`
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }],
+
+                {
+                        // Acciones
+                        "data": function (d) {
+                            let valor = ''; 
+                            if(d.aply == null || d.aply <= 1){
+                                total = d.pagado_caja;
+                            } else {
+                                total = d.aply;
+                            }
+                   
+                            if(d.idCertificacion == null )
+                            {
+                                // document.getElementById("certificaciones").value = '0';
+                                valor = 0
+                            }else{
+                               
+                                // document.getElementById("certificaciones").value = d.idCertificacion;
+                                valor = d.idCertificacion
+                            }
+
+                            let pendientes = parseFloat(d.monto - d.aply);
+                            if(pendientes < 0 ){
+                               actividad =  (pendientes * -1);
+                            }
+                            if (d.estatusDU == 0) {
+                                return `
+                                        <div class="d-flex justify-center">
+                                            <button value="${d.id_usuario}"
+                                                data-value="${d.nombre}"
+                                                data-code="${d.id_usuario}"
+                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                                title="Detalles">
+                                                    <i class="fas fa-info-circle"></i>
+                                            </button>
+                                            <button value="${d.id_usuario}"
+                                                class="btn-data btn-violetDeep activar-prestamo"
+                                                title="Activar">
+                                                <i class="fa fa-rotate-left"></i>
+                                            </button>
+                                        </div>
+                                        <button value="${d.id_usuario}"
                                             data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="Detalles">
-                                                <span class="fas fa-info-circle"></span>
-                                    </button>
-                                    <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
+                                            data-nombre="${d.nombre}"
+                                            data-value="${d.id_descuento}"
                                             data-code="${d.id_usuario}"
-                                            class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                            title="editarDescuento">
-                                                <span class="fas fa-info-circle"></span>
-                                    </button>${btnEliminarEditar}
-                                </div>`;
-                        } else if(tipo_descuento == 1 ){
-                            if (d.status == 0) {
+                                            data-descuento="${d.monto}"
+                                            data-mensual="${d.pago_individual}"
+                                            data-pendiente="${pendientes}"
+                                            data-idCertificacion="${valor}"
+                                            data-total="${total}"
+                                            class="btn-data btn-acidGreen uniAdd"
+                                            title="Editar suficiente">
+                                            <i class="fas fa-money-check-alt"></i>
+                                        </button>
+                                    `;
+                            } else if ((d.estatusDU == 1 || d.estatusDU == 5) && d.pagos_activos == 0) {
+                                return `
+                                        <div class="d-flex justify-center">
+                                            <button value="${d.id_usuario}"
+                                                data-value="${d.nombre}"
+                                                data-code="${d.id_usuario}"
+                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                                title="Detalles">
+                                                    <i class="fas fa-info-circle"></i>
+                                            </button>
+                                            
+                                        </div>
+                                    `;
+                            } else if (tipoDescuento === '2' || tipoDescuento === '3') {
+
+                                  // aqui podemos ponerles 
+                                  let total ;
+                                  if(d.aply == null || d.aply <= 1){
+                                      total = d.pagado_caja;
+                                  } else {
+                                      total = d.aply;
+                                  }
+                                  let pendientes = parseFloat(d.monto - d.aply);
+                                  if(pendientes < 0 ){
+                                     actividad =  (pendientes * -1);
+                                  }
+
                                 return `
                                     <div class="d-flex justify-center">
                                         <button value="${d.id_usuario}"
@@ -453,45 +777,71 @@ function loadTable(tipoDescuento) {
                                             data-code="${d.id_usuario}"
                                             class="btn-data btn-blueMaderas consultar_logs_asimilados"
                                             title="Detalles">
-                                            <i class="fas fa-info-circle"></i>
+                                                <span class="fas fa-info-circle"></span>
                                         </button>
-                                        
                                         <button value="${d.id_usuario}"
                                             data-value="${d.nombre}"
                                             data-code="${d.id_usuario}"
-                                            class="btn-data btn-darkMaderas consultar_historial_pagos"
-                                            title="Historial pagos">
-                                            <i class="fas fa-chart-bar"></i>
+                                            title="Historial pagos"
+                                            class="btn-data btn-gray consultar_historial_pagos">
+                                                <i class="fas fa-chart-bar"></i>
                                         </button>
-                                        
                                         <button value="${d.id_usuario}"
-                                            data-value="${d.nombre}"
                                             data-code="${d.id_usuario}"
-                                            class="btn-data btn-darkMaderas pagos"
-                                            title="Editar descuento">
-                                            <i class="fa-duotone fa-money-check-dollar-pen"></i>
-                                        </button>${btnEliminarEditar}
+                                            data-nombre="${d.nombre}"
+                                            data-value="${d.id_descuento}"
+                                            data-code="${d.id_usuario}"
+                                            data-descuento="${d.monto}"
+                                            data-mensual="${d.pago_individual}"
+                                            data-pendiente="${pendientes}"
+                                            data-total="${total}"
+                                            data-idCertificacion="${valor}"
+                                            class="btn-data btn-acidGreen uniAdd"
+                                            title="Editar suficiente">
+                                            <i class="fas fa-money-check-alt"></i>
+                                        </button>
                                     </div>`;
+                            }
 
-                            } else {
-                                OK = parseFloat(d.pago_individual * d.pagos_activos);
-                                OP = parseFloat(d.monto - d.aply);
+                            let tipo_descuento = d.queryType;
+                            if(tipo_descuento == 2){
+                                return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button></div>';
+                            } else if(tipo_descuento == 1 ){
+                                if (d.status == 0) {
+                                    return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
+                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
 
-                                if (OK > OP) {
-                                    pend = OP;
                                 } else {
-                                    pend = OK;
-                                }
+                                    OK = parseFloat(d.pago_individual * d.pagos_activos);
+                                    OP = parseFloat(d.monto - d.aply);
+
+                                    if (OK > OP) {
+                                        pend = OP;
+                                    } else {
+                                        pend = OK;
+                                    }
 
 
-                                if (d.estatus == 2 || d.estatus == 3 || d.estatus == 4 || d.status == 3) {
-                                    BOTON = 0;
-                                } else if (pend > 0) {
-                                    if (d.id_sede == 6) {
-                                        if (d.abono_nuevo < 15000) {
+                                    if (d.estatus == 2 || d.estatus == 3 || d.estatus == 4 || d.status == 3) {
+                                        BOTON = 0;
+                                    } else if (pend > 0) {
+                                        if (d.id_sede == 6) {
+                                            if (d.abono_nuevo < 15000) {
+                                                BOTON = 0;
+                                            } else {
+                                                validar = Math.trunc(d.abono_nuevo / 15000);
+                                                if (validar >= d.pagos_activos) {
+                                                    validar = d.pagos_activos;
+                                                    pendiente = pend;
+                                                } else {
+                                                    pendiente = (validar * d.pago_individual);
+                                                }
+                                                BOTON = 1;
+                                            }
+                                        } else if (d.abono_nuevo < 10000) {
                                             BOTON = 0;
                                         } else {
-                                            validar = Math.trunc(d.abono_nuevo / 15000);
+                                            validar = Math.trunc(d.abono_nuevo / 10000);
                                             if (validar >= d.pagos_activos) {
                                                 validar = d.pagos_activos;
                                                 pendiente = pend;
@@ -500,112 +850,28 @@ function loadTable(tipoDescuento) {
                                             }
                                             BOTON = 1;
                                         }
-                                    } else if (d.abono_nuevo < 10000) {
+                                    } else {
                                         BOTON = 0;
-                                    } else {
-                                        validar = Math.trunc(d.abono_nuevo / 10000);
-                                        if (validar >= d.pagos_activos) {
-                                            validar = d.pagos_activos;
-                                            pendiente = pend;
-                                        } else {
-                                            // pendiente = (validar * d.pago_individual);
-                                            if((validar * d.pago_individual)>(d.monto - d.aply)){
-                                                pendiente = (d.monto - d.aply);
-                                            }else{
-                                                pendiente = (validar * d.pago_individual);
-                                            }
-                                        }
-                                        BOTON = 1;
                                     }
-                                } else {
-                                    BOTON = 0;
-                                }
 
-                                if (BOTON == 0) {
-                                    let pendiente = parseFloat(d.monto - d.aply);
-                                    if(pendiente < 0 ){
-                                       actividad =  (pendiente * -1);
-                                    }
-                                    let total ;
-                                    if(d.aply == null || d.aply <= 1){
-                                        total = d.pagado_caja;
+                                    if (BOTON == 0) {
+                                        return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<span class="fas fa-info-circle"></span></button><button href="#" value="' + d.id_usuario + '" data-value="' + d.aply + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos">' + '<i class="fas fa-money"></i></button>'+
+                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button> '+
+                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd"      data-idCertificacion="'+valor+'"  title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
+                                        
+                                        ' </div>';
                                     } else {
-                                        total = d.aply;
+                                        return '<div class="d-flex justify-center"><button href="#" value="' + d.id_usuario + '" data-value="' + pendiente + '"  ' +
+                                        'data-saldoCom="'+d.abono_nuevo+'" data-sede="' + d.id_sede + '" data-validate="' + validar + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-violetDeep agregar_nuevo_descuento"  title="Aplicar descuento">' + '<i class="fas fa-plus"></i></button>'+
+                                        '<button value="'+d.id_usuario+'"  data-code="'+d.id_usuario+'" data-nombre="'+d.nombre+'" data-value="'+d.id_descuento+'"  data-code="'+d.id_usuario+'" data-descuento="'+d.monto+'" data-mensual="'+d.pago_individual+'" data-pendiente="'+pendientes+'" data-total="'+total+'" class="btn-data btn-acidGreen uniAdd" data-idCertificacion="'+valor+'" title="Editar suficiente"> <i class="fas fa-money-check-alt"></i> </button>' +
+                                        '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-gray consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button></div>';
+                                        
                                     }
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-blueMaderas consultar_logs_asimilados"
-                                                title="Detalles">
-                                                <span class="fas fa-info-circle"></span>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.aply}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-orangeYellow topar_descuentos"
-                                                title="Detener descuentos">
-                                                <i class="fas fa-money"></i>
-                                            </button>
-                                               <button value="${d.id_usuario}"
-                                                data-value="${d.id_descuento}"
-                                                data-code="${d.id_usuario}"
-                                                data-descuento="${d.monto}"
-                                                data-mensual="${d.pago_individual}"
-                                                data-pendiente="${pendiente}"
-                                                data-total="${total}"
-                                                class="btn-data btn-violetBoots editar_descuentos"
-                                                title="Cambiar descuentos">
-                                                <i class="fas fa-money-check-alt"></i>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                               
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                              
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>`;
-                                } else if (d.estatus == 5) {
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>`;
-                                } else {
-                                    return `
-                                        <div class="d-flex justify-center">
-                                            <button value="${d.id_usuario}"
-                                                data-value="${pendiente}"
-                                                data-saldoCom="${d.abono_nuevo}"
-                                                data-sede="${d.id_sede}"
-                                                data-validate="${validar}"
-                                                data-code="${d.cbbtton}"
-                                                class="btn-data btn-violetDeep agregar_nuevo_descuento"
-                                                title="Aplicar descuento">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                            <button value="${d.id_usuario}"
-                                                data-value="${d.nombre}"
-                                                data-code="${d.id_usuario}"
-                                                class="btn-data btn-gray consultar_historial_pagos"
-                                                title="Historial pagos">
-                                                <i class="fas fa-chart-bar"></i>
-                                            </button>${btnEliminarEditar}
-                                        </div>`
                                 }
                             }
                         }
-                    }
-                }],
+                    }],
+                    
             "ajax": {
                 "url": `getDataConglomerado/${tipoDescuento}`,
                 "type": "GET",
@@ -615,17 +881,18 @@ function loadTable(tipoDescuento) {
         });
         $(document).on("click", ".editar_descuentos", function () {
             $("#editDescuento").modal();
+            document.getElementById("fechaIncial").value = ' ';
             document.getElementById("descuento1").value = '';
             id_descuento = $(this).attr("data-value");
             id_user = $(this).attr("data-code");
             pago_mensual = $(this).attr("data-mensual");
             descuento = $(this).attr("data-descuento");
             pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
-            total = $(this).attr("data-total");
+            total = $(this).attr("data-total"); //dinero que ha pagado al momento
             descuento = Math.round(descuento);
             pago_mensual = Math.round(pago_mensual);
             cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
-
+            document.getElementById("pagado").value = total;
             document.getElementById("mensualidad").value = pago_mensual;
             document.getElementById("descuento_id").value = id_descuento;
             document.getElementById("total_pagos").value = cantidad_de_pagos;
@@ -638,54 +905,47 @@ function loadTable(tipoDescuento) {
             document.getElementById("descuento1").value = descuento;
             
             if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
-                console.log(mensualidadesFaltantesMostrar);
-                console.log('1');
+
             }else{
                 if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
                 {
                     if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
                     {
-                        console.log('33');
+                     
                         mensualidadesFaltantesMostrar = 1;
                     }else{
-                        console.log('22');  
+                     
                     }
-                    console.log('44');
+           
                 }else{
-
-                    console.log('54');
                     mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
                 }
                // mensualidadesFaltantes
             }
             if ((mensualidadesFaltantes % 1)  == 0 ){
-                console.log(mensualidadesFaltantes);
-                console.log('1');
+
             }else{
                 if( 0 == Math.trunc(mensualidadesFaltantes))
                 {
                     if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
                     {
-                        console.log('33');
                         mensualidadesFaltantes = 1;
                     }else{
-                        console.log('22');  
                     }
-                    console.log('44');
                 }else{
-
-                    console.log('54');
-                    mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+                        mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
                 }
                // mensualidadesFaltantes
             }
          
             document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
-            
+        
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
-            console.log(Total_a_pagar);
 
-            NuevasMensualidades = Total_a_pagar / mensualidadesFaltantes;
+            
+            sobrante = Total_a_pagar - total;
+            //para agregar llo que ya se pago
+            NuevasMensualidades = sobrante  / mensualidadesFaltantes;
 
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
 
@@ -698,11 +958,15 @@ function loadTable(tipoDescuento) {
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
-
+            pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
             loQueSedebe  = document.getElementById("descuento1").value ;
             pagos  = document.getElementById("numeroPagos1").value ;
+            loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
 
+            
+
+            
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
             
 
@@ -710,22 +974,24 @@ function loadTable(tipoDescuento) {
         });
 
         $(document).on('input', '.descuento1', function(){
-
             total_pagos = document.getElementById("total_pagos").value ;
             actualess = document.getElementById("actualess").value ;
             totalmeses = document.getElementById("totalmeses").value ;
             cuanto = document.getElementById("cuanto").value ;
             mensualidad = document.getElementById("mensualidad").value ;
-
+            pagado = document.getElementById("pagado").value ;  // lo que se ya se ha pagado
             loQueSedebe  = document.getElementById("descuento1").value ;
             pagos  = document.getElementById("numeroPagos1").value ;
+
+            loQueSedebe = loQueSedebe - pagado;
             NuevasMensualidades = loQueSedebe / pagos;
             document.getElementById("pago_ind011").value = Math.trunc( NuevasMensualidades);
             
 
           
         });
-      
+     
+     
         $(document).on("click", ".updateDescuento", function () {
             document.getElementById('updateDescuento').disabled = true;
             let validation = true;
@@ -741,7 +1007,7 @@ function loadTable(tipoDescuento) {
                 validation = false;
             }
        
-       
+            id_descuento = document.getElementById("descuento_id").value; 
             if (validation ){
                 $.ajax({
                     url : 'UpdateDescuent',
@@ -843,7 +1109,6 @@ function loadTable(tipoDescuento) {
             saldo_comisiones = $(this).attr("data-saldoCom");
 
             // alert(validar);
-            console.log('saldo_comisiones: ', saldo_comisiones);
 
             $("#miModal modal-body").html("");
             $("#miModal").modal();
@@ -870,9 +1135,6 @@ function loadTable(tipoDescuento) {
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
 
 
-
-                    console.log('suma lote ' + comtotal);
-                    console.log('suma2 lote ' + sumaselected);
 
 
                     $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
@@ -1196,7 +1458,7 @@ $('#actualizar-descuento-form')
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    console.log(data);
+                   
                     $('#actualizar-descuento-modal').modal('hide');
                     alerts.showNotification("top", "right", "Descuento actualizado con exito.", "success");
                     $('#tabla-general').DataTable().ajax.reload(null, false);
@@ -1247,9 +1509,9 @@ $('#mes').change(function(ruta) {
 });
 
 $('#anio').change(function(ruta) {
+    let user = $('#userid').val();
     mes = $('#mes').val();
     anio = $('#anio').val();
-    let user = $('#userid').val();
 
     if(mes != '' && (anio != '' || anio != null || anio != undefined)){
         //alert(34)
@@ -1296,7 +1558,7 @@ $("#form_interes").submit(function (e) {
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-        console.log(data);
+   
         // data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: url + "Comisiones/topar_descuentos",
@@ -1347,7 +1609,7 @@ function filter(__val__) {
 }
 
 
-$("#roles").change(function () {
+    $("#roles").change(function () {
         var parent = $(this).val();
 
         $("#users2").val('');
@@ -1651,11 +1913,11 @@ $("#idloteorigen").change(function () {
                     $("#montodisponible").selectpicker('refresh');
                 }, 'json');
             }
-            console.log(suma);
+         
         } else {
             var comision = $(this).val();
             datos = comision[0].split(',');
-            let id = datos[0];
+              let id = datos[0];
             let monto = datos[1];
             //alert(id+'-------'+monto);
             document.getElementById('monto').value = '';
@@ -1690,12 +1952,6 @@ function verificar() {
         let disponible = parseFloat(disponiblefinal);
         let monto = parseFloat(montofinal);
 
-        console.log('disponiblefinal: ' + disponiblefinal);
-        console.log('montofinal: ' + montofinal);
-        console.log('disponible: ' + disponible);
-        console.log('monto: ' + monto);
-       
-
         if (monto < 1 || isNaN(monto)) {
             alerts.showNotification("top", "right", "No hay saldo disponible para descontar.", "warning");
 
@@ -1712,7 +1968,7 @@ function verificar() {
                 $('#btn_abonar').prop('disabled', false);
                 document.getElementById('btn_abonar').disabled = false;
 
-                // console.log('OK');
+               
                 let cuantos = $('#idloteorigen').val().length;
                 let cadena = '';
                 var data = $('#idloteorigen').select2('data')
@@ -1720,7 +1976,6 @@ function verificar() {
                     let datos = data[index].id;
                     let montoLote = datos.split(',');
                     let abono_neo = montoLote[1];
-                   console.log('abono_neo: ' + abono_neo);
 
                     if (parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1) {
                         document.getElementById('msj2').innerHTML = "El monto ingresado se cubre con la comisión " + data[index].text;
@@ -1732,7 +1987,6 @@ function verificar() {
                         break;
                     }
 
-                // console.log(data[index].text);
                 if(cuantos == 1){
                     let datosLote = data[index].text.split('-   $');
                     let nameLote = datosLote[0]
@@ -1803,3 +2057,468 @@ function open_Mb() {
 $('#ModalBonos').on('hidden.bs.modal', function() {
     $('#form_nuevo').trigger('reset');
 });
+
+
+
+$(document).on("click", ".uniAdd", function () {
+    let banderaLiquidados = false;
+    $("#modalUni").modal();
+    
+    document.getElementById("fechaIncial").value = '';
+    
+    document.getElementById("descuentoEscrito").value = '';
+    // el que modificaremos    
+    id_descuento = $(this).attr("data-value");
+    //id_usuario perteneciente a ese id_user
+    id_user = $(this).attr("data-code");    
+    // aqui mero va la bander de saber que info se guardara
+    pago_mensual = $(this).attr("data-mensual");
+    nombre = $(this).attr("data-nombre")
+    descuento = $(this).attr("data-descuento");
+  
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    MontoDescontarCerti = $(this).attr("data-value");
+    valorCertificacion = $(this).attr("data-idCertificacion");
+
+
+    // if(valorCertificacion == null )
+    // {
+    //     console.log(valorCertificacion);
+    //     document.getElementById("certificaciones").value = '0';
+    // }else{
+    //      console.log(valorCertificacion);
+      
+    // }
+    document.getElementById("certificaciones").value = valorCertificacion;
+    if (descuento == total){
+        banderaLiquidados = true;
+
+    }else{
+
+        banderaLiquidados = false;
+    }
+    descuento = Math.round(descuento);
+    pago_mensual = Math.round(pago_mensual);
+
+    cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+
+    
+ 
+    document.getElementById("banderaLiquidado").value = banderaLiquidados;
+    document.getElementById("dineroPagado").value = total;
+    document.getElementById("pagoIndiv").value = pago_mensual;
+    document.getElementById("idDescuento").value = id_descuento;
+    document.getElementById("totalPagos").value = cantidad_de_pagos;
+    document.getElementById("pagoDado").value = pagoDado;
+    // monto a descontar,  lp importante es mas 
+    id_user = $(this).attr("data-code");
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+
+    valorPendiente = pendiente;
+
+    var titulo  = ' ';
+    titulo += '  <h3 id="tituloModalUni" name="tituloModalUni">Editando descuento actual para '+ nombre  +'</h3>';
+
+
+
+    var informacion_adicional = ' '; //inicio de div que contiene todo el modal
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+ 
+    informacion_adicional += '        <div class="form-group text-left">';
+    informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
+    informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
+    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '               required />';
+    informacion_adicional += '         </div>';
+    informacion_adicional += '       </div>';
+
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+    informacion_adicional += '        <div class="form-group text-left">';
+    informacion_adicional += '          <label class="label">Pagos repartidos*</label> ';
+    informacion_adicional += '         <select class="form-control mensualidadesC" name="mensualidadesC" id="mensualidadesC" required>';
+    informacion_adicional += '          <option value="" disabled="true" selected="selected">- Selecciona opción';
+    informacion_adicional += '          </option>';
+    informacion_adicional += '          <option value="1">1</option>';
+    informacion_adicional += '          <option value="2">2</option>';
+    informacion_adicional += '          <option value="3">3</option>';
+    informacion_adicional += '          <option value="4">4</option>';
+    informacion_adicional += '          <option value="5">5</option>';
+    informacion_adicional += '          <option value="6">6</option>';
+    informacion_adicional += '          <option value="7">7</option>';
+    informacion_adicional += '          <option value="8">8</option>';
+    informacion_adicional += '          <option value="9">9</option>';
+    informacion_adicional += '          <option value="10">10</option>';
+    informacion_adicional += '         </select>';
+    informacion_adicional += '        </div>';
+    informacion_adicional += '      </div>';
+
+    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
+    informacion_adicional += '        <div class="form-group text-left">';
+    informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
+    informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
+    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '               required />';
+    informacion_adicional += '         </div>';
+    informacion_adicional += '      </div>';
+    // eee
+
+    var cuerpoModalUni = document.getElementById('cuerpoModalUni');
+    cuerpoModalUni.innerHTML = informacion_adicional;
+
+    document.getElementById("MontoDescontarCerti").value = descuento;
+    var myCommentsLote = document.getElementById('tituloModalUni');
+    myCommentsLote.innerHTML = '';
+
+    var Header_modal = document.getElementById('header_modal');
+    Header_modal.innerHTML = titulo;
+
+
+    // if(banderaLiquidados){
+    //     document.getElementById("mensualidadesC").value = 1;
+    // }else{
+    //     document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+    // }
+       mensualidadesFaltantes = total / pago_mensual ;
+            mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
+            if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
+
+            }else{
+                if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
+                {
+                    if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
+                    {
+                        mensualidadesFaltantesMostrar = 1;
+                    }else{
+
+                    }           
+                }else{
+
+                    mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
+                }
+               // mensualidadesFaltantes
+            }
+            if ((mensualidadesFaltantes % 1)  == 0 ){
+
+            }else{
+                if( 0 == Math.trunc(mensualidadesFaltantes))
+                {
+                    if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
+                    {
+
+                        mensualidadesFaltantes = 1;
+                    }else{
+                    
+                    }
+                }else{
+                        mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+                }
+               // mensualidadesFaltantes
+            }
+            if(banderaLiquidados){
+                document.getElementById("mensualidadesC").value = 1;
+                mensualidadesFaltantesMostrar = 1;
+                mensualidadesFaltantes = 1;
+            }else{
+                mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
+                document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+            }
+
+
+            ultimaMensualidad = document.getElementById("mensualidadesC").value
+            Total_a_pagar = ultimaMensualidad * pago_mensual;
+
+            sobrante = Total_a_pagar - total;
+
+            //para agregar llo que ya se pago
+            descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
+         
+            NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
+
+            if(banderaLiquidados){
+
+                sobrante = document.getElementById("MontoDescontarCerti").value;
+                sobrante =  total - sobrante ;
+                NuevasMensualidades = sobrante  / mensualidadesFaltantes;
+            }
+            document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+            //faltantes = mensualidadesFaltantes/mensual;
+            document.getElementById("precioOrginal").value =   NuevasMensualidades.toFixed(2);
+
+});  
+
+$(document).on("click", "#cancelarOperation", function () {
+
+// $('#botonesInicio').css('display', 'none');
+$('#editDescuento').modal('hide');
+});
+
+$('#editDescuento').on("click", "#editarDescuentos", function (){
+
+});
+$(document).on("click", "#editarDescuentos", function () {
+    $('#botonesInicio').css('display', 'none');
+    $('#updateDescuento').css('display', 'block');
+    $('#fomularioEditarDescuento').css('display', 'block');
+});
+$(document).on("click", "#descuentoCertificaciones", function () {
+
+}); 
+
+// Nueva functionalidad
+ //  aqui mero 
+
+$("#certificaciones").change(function () {
+
+    pagos  = document.getElementById("numeroDeMensualidades").value ;
+    selectCertificacion = document.getElementById("certificaciones").value;
+
+    var comentarioDescrip = document.getElementById('textDescripcion');
+    comentarioDescrip.innerHTML = '';
+    if(selectCertificacion == 1){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que obtuvo una calificación favorable y con ello la certificación.';
+    }else if(selectCertificacion == 2){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que obtuvo una ponderación menor a la deseada y por ende no obtiene la certificación';
+    }else if(selectCertificacion == 3){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que al no seguir los lineamientos de la institución evaluadora se le suspende su proceso de certificación. ';
+    }else if(selectCertificacion == 4){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que se encuentra por hacer examen final con el Tecnológico de Monterrey.';
+    }else if(selectCertificacion == 5){
+        comentarioDescrip.innerHTML = 'Personas que está en valoración el que se certifiquen en este año, así que en sus casos hay que dejar activo el pago, porque dependiendo de cómo se desenvuelva cada caso puede ser que aplique incremento.';
+        comentarioDescrip.innerHTML = '';
+    }else{
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'No definido';
+    }
+    
+});
+
+$(document).on("click", ".editar_descuentos", function () {
+
+
+});
+
+function subirInfo(){  
+    document.getElementById("descuentoEscrito").value = '';
+    id_descuento = $(this).attr("data-value");
+    id_user = $(this).attr("data-code");    
+    // aqui mero va la bander de saber que info se guardara
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    descuento = Math.round(descuento);
+    pago_mensual = Ma/th.round(pago_mensual);
+    cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+    document.getElementById("pagado").value = total;
+    document.getElementById("mensualidad").value = pago_mensual;
+    document.getElementById("descuento_id").value = id_descuento;
+    document.getElementById("pagoDado").value = dineroPagado;
+    valor = 0;
+    valor1 = 0;
+ }
+ 
+
+
+
+$(document).on('input', '.MontoDescontarCerti', function(){
+    // total_pagos = document.getElementById("total_pagos").value ;
+    // actualess = document.getElementById("actualess").value ;
+    // totalmeses = document.getElementById("totalmeses").value ;
+    // cuanto = document.getElementById("cuanto").value ;
+    // mensualidad = document.getElementById("mensualidad").value ;
+    mensualidadesC = document.getElementById("mensualidadesC").value;
+    pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+    loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+    pagos  = document.getElementById("mensualidadesC").value ;
+    banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+    if(banderaLiquidado){
+        loQueSedebe = loQueSedebe - pagado;
+
+        NuevasMensualidades = loQueSedebe / pagos;
+    }else{
+        loQueSedebe = loQueSedebe - pagado;
+
+        NuevasMensualidades = loQueSedebe / pagos;   
+    }
+
+    document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    
+});
+
+// $("#numeroPagos").change(function () {
+    $(document).on('change', '#mensualidadesC', function() {
+
+        mensualidadesC = document.getElementById("mensualidadesC").value;
+        loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+        pagos  = document.getElementById("mensualidadesC").value ;
+
+        banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+        if(banderaLiquidado){
+            loQueSedebe = loQueSedebe - pagado;
+            NuevasMensualidades = loQueSedebe / pagos;
+  
+        }else{
+            loQueSedebe = loQueSedebe - pagado;
+            NuevasMensualidades = loQueSedebe / pagos;
+        } 
+        document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    
+    });
+    
+    // $("#mensualidadesC").change(function () {
+        // console.log('mensaje de realizacioón');
+        // alert('refromazado');
+   
+    //     mensualidadesC = document.getElementById("mensualidadesC").value;
+    //     pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+    //     loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+    //     pagos  = document.getElementById("mensualidadesC").value ;
+    //     console.log("loQueSedebe" + loQueSedebe );
+    //     banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+    //     if(banderaLiquidado){
+    //         loQueSedebe = loQueSedebe - pagado;
+    //         console.log("Pagado" + pagado );
+    //         NuevasMensualidades = loQueSedebe / pagos;
+    //     }else{
+    //         loQueSedebe = loQueSedebe - pagado;
+    //         console.log("Pagado" + pagado );
+    //         NuevasMensualidades = loQueSedebe / pagos;
+    //     } 
+    //     document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    // 
+    // });                                                                                                                                                                                              
+
+$(document).on("click", ".updateDescuentoCertificado", function () {
+    let tipoDescuento = $('#tipo_descuento').val();
+    // let fechaSeleccionada = $('#fechaIncial').val();
+    const fecha = new Date()
+    let pagos_activos ;
+    let banderaSoloEstatus = false ; 
+    let banderaPagosActivos = 0 ;
+    // bandera pagos activos
+    let fechanoEscrita = false; 
+    // 1 fecha usuario < día 5  mismo mes  2: fecha usuario > día 5 y > mes actual  3: no se mueve los movimientos actuales,
+    let validacion = true;
+    let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
+    let escritoPorUsuario = document.getElementById("newMensualidades").value;
+    let fechaSeleccionada = '';
+    fechaSeleccionada = document.getElementById("fechaIncial").value;
+
+    if(tipoDescuento == 3){
+        estatus = 1;
+    }else{
+        estatus = '';
+    }
+    
+    if(fechaSeleccionada == '' && banderaEditarEstatus == escritoPorUsuario){
+        banderaSoloEstatus = true ;    
+    }else{
+        fechanoEscrita = true
+        fechaSeleccionada == ''
+    }
+    year = fecha.getFullYear()
+    month = (fecha.getMonth())
+    day = fecha.getDate()
+    // const msg = new day;
+    const FechaEnArreglo = fechaSeleccionada.split("-");
+    // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
+    fechaComparar = (year + '-' + month + '-' + day);
+    var f1 = new Date(year,month, day);
+    var f2 = new Date(fechaSeleccionada);
+  
+    MesSelecionado = parseInt(FechaEnArreglo[1]);
+    DiaSeleccionado = parseInt(FechaEnArreglo[2]);
+    MesSistemas = parseInt(month+1);
+    // fecha f2 es para la fecha seleccionada 
+    // fecha f1 es para la fecha del sistema 
+    // Se compara las fechas son para 
+    if(  (f2 > f1 || f2 == f1)){
+        // validamos que sea mayor la fecha seleccionada o que sean iguales
+        validacion =true;
+        if(DiaSeleccionado <= 5 && MesSelecionado == MesSistemas ){
+            banderaPagosActivos = 1;
+                        // && MesSelecionado == MesSistemas  
+        }else if(DiaSeleccionado > 5 ||  MesSelecionado >= MesSistemas  ){
+            banderaPagosActivos = 2 ;
+        }else {
+            banderaPagosActivos = 0;
+        }
+    }else if(f2 < f1){
+        alerts.showNotification("top", "right", "Upss, La fecha seleccionada es menor que la fecha actual", "warning");
+        validacion =false;
+    }
+
+    if(validacion ){
+
+
+        mensualidadesC  = document.getElementById("mensualidadesC").value;
+        id_descuento     = document.getElementById("idDescuento").value;
+        monto           = document.getElementById("MontoDescontarCerti").value;
+        pago_individual = document.getElementById("newMensualidades").value;
+        estatus_certificacion  = document.getElementById("certificaciones").value;
+    
+            $.ajax({
+            url : 'descuentoUpdateCertificaciones',
+            type : 'POST',
+            dataType: "json",
+            data: {
+            "banderaSoloEstatus"    : banderaSoloEstatus, 
+            "fechaSeleccionada"     : fechaSeleccionada, 
+            "pagos_activos"         : pagos_activos,
+            "estatus"               : estatus,
+            "banderaPagosActivos"   : banderaPagosActivos,
+            "estatus_certificacion" : estatus_certificacion,
+            "id_descuento"          : id_descuento,
+            "monto"                 : monto,
+            "pago_individual"       : pago_individual,
+              }, 
+    
+              success: function(data) {
+               
+                alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                document.getElementById('updateDescuento').disabled = false;
+                $('#tabla-general').DataTable().ajax.reload(null, false );
+                
+                // toastr[response.response_type](response.message);
+                $('#modalUni').modal('toggle');
+            },              
+            error : (a, b, c) => {
+                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            }
+    
+        });
+    }else{
+    
+    }
+
+  
+});
+
+
+
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const FechaIncial = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    FechaIncial = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    // console.log('Fecha inicio: ', finalBeginDate);
+    // console.log('Fecha final: ', finalEndDate);
+    // $("#beginDate").val(finalBeginDate);
+    // $("#endDate").val(finalEndDate);
+ 
+}

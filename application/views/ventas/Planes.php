@@ -3,6 +3,11 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
 <body>
+	<style>
+		.select2-container {
+			width: 100%!important;
+		}
+	</style>
 	<div class="wrapper">
 		<?php
 		$datos = array();
@@ -244,9 +249,10 @@
 												<div class="row">
 													<div class="boxInfoGral">
 														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
-														<div class="container-fluid" id="boxMainForm">
+														<div class="container-fluid dataTables_scrollBody" id="boxMainForm">
 															<div class="row">
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
 																	<div class="form-group">
@@ -306,7 +312,6 @@
 																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
-																	<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes"><p class="mb-0 mr-1">Guardar todo</p><i class="fas fa-save"></i></button>
 																</div>
 															</div>
 														</div>
@@ -330,7 +335,6 @@
 													<thead>
 														<tr>
 														<th>PROYECTO</th>
-														<!-- <th>CONDOMINIO</th> -->
 														<th>TIPO LOTE</th>
 														<th>SUPERFICIE</th>
 														<th>DESCRIPCIÓN</th>
@@ -341,18 +345,8 @@
 														<th>BONO</th>
 														<th>MSI</th>
 														<th>VALOR</th>
-														<!-- <th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-														<th>SUPERFICIE</th>
-															<th>PLAN</th>
-															<th>TOTAL</th>
-															<th>ENGANCHE</th>
-															<th>M2</th>
-															
-															<th>DESARROLLO</th>
-															<th>TOT. COM.</th> -->
+														<th>FECHA INICIO</th>
+														<th>FECHA FIN</th>
 														</tr>
 													</thead>
 												</table>
@@ -415,15 +409,6 @@ $("#table_planes").ready(function() {
                 // }
             });
 
-            // $('#table_planes').on('xhr.dt', function(e, settings, json, xhr) {
-            //     var total = 0;
-            //     $.each(json.data, function(i, v) {
-            //         total += parseFloat(v.pago_cliente);
-            //     });
-            //     var to = formatMoney(total);
-            //     // document.getElementById("myText_nuevas").value = to;
-            // });
-
             tabla_nuevas = $("#table_planes").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
@@ -434,16 +419,10 @@ $("#table_planes").ready(function() {
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'PAQUETES DESCUENTOS',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                         format: {
                             header:  function (d, columnIdx) {
-                                if(columnIdx == 0){
-                                    return ' '+d +' ';
-                                }
-                                else{
-                                        return ' '+titulos[columnIdx-1] +' ';
-                                    }
-                                 
+                                return titulos[columnIdx];
                             }
                         }
                     },
@@ -465,12 +444,6 @@ $("#table_planes").ready(function() {
                         return '<p class="m-0">'+d.nombreResidencial+'</p>';
                     }
                 },
-                // {  
-                //     "width": "15%",
-                //     "data": function( d ){
-                //         return '<p class="m-0">'+d.nombre_condominio+'</p>';
-                //     }
-                // },
 				{  
                     "width": "10%",
                     "data": function( d ){
@@ -581,11 +554,21 @@ $("#table_planes").ready(function() {
 							break;
 
 							default:
-								return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
+								return '<p class="m-0"><b>'+(d.porcentaje)+'</b></p>';
 							break;
 
 						}
                         
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_inicio+'</p>';
+                    }
+                },
+				{  
+                    data: function( d ){
+                        return '<p class="m-0">'+d.fecha_fin+'</p>';
                     }
                 }],
                 columnDefs: [{}],
@@ -1202,7 +1185,7 @@ $("#table_planes").ready(function() {
 		function ClearAll2(){
 			document.getElementById('showPackage').innerHTML = '';
 			$('#index').val(0);	
-			setInitialValues();
+			//setInitialValues();
 			//noCreatedCards();
 			$(".leyendItems").addClass('d-none');
 			$("#btn_save").addClass('d-none');
@@ -1222,9 +1205,10 @@ $("#table_planes").ready(function() {
 /**--------------------------FUNCIONES PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
 function ConsultarPlanes(){
 	$('#spiner-loader').removeClass('hide');
-	ClearAll2();
+	
 	if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val()};
+		let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
+		ClearAll2();
 		$.post('getPaquetes',params, function(data) {
 			let countPlanes = data.length;
 			if(countPlanes >1){

@@ -17,6 +17,8 @@ class Login extends CI_Controller
 		$this->load->library(array('session','form_validation'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
+//        $this->load->helper('language'); // cargo la libreria language
+//        $this->lang->load('generales'); // cargo los archivos del lenguaje
 	}
 
 	public function index()
@@ -78,7 +80,22 @@ class Login extends CI_Controller
 		case '67': // LEXINTEL
 		case '68': // DIRECTOR SUMA
 		case '69': // DIRECTOR GENERAL
-            redirect(base_url().'Administracion');
+		case '70': // EJECUTIVO CONTRALORÍA JR
+		case '71': // AUXILIAR DE ARCHIVO
+		case '72': // DIRECCIÓN BIOFÍSICA
+		case '73': // PRACTICANTE CONTRALORÍA
+		case '74': // EJECUTIVO DE POSTVENTA
+		case '75': // SUPERVISOR POSTVENTA
+		case '76': // ASISTENTE SUBDIRECCIÓN POSTVENTA
+		case '77': // AUXILIAR POSTVENTA
+		case '78': // BASE DE DATOS POSTVENTA
+		case '79': // COORDINADOR DE POSTVENTA
+		case '80': // COORDINADOR DE CALL CENTER POSTVENTA
+		case '81': // SUBDIRECCIÓN POSTVENTA 
+		case '82': // AGENTE DE ASIGNACIÓN 
+		case '83': // AGENTE DE CALIDAD 
+		case '84': // CONSULTA BBVA
+					redirect(base_url().'Administracion');
         break;
 
         case '12':

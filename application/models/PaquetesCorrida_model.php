@@ -30,14 +30,24 @@ class PaquetesCorrida_model extends CI_Model
         group by id_tdescuento,inicio,fin,id_condicion,eng_top,apply,porcentaje 
         order by porcentaje");
     }
-
-    public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario){
+ 
+    public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario,$inicio,$fin){
         $this->db->query("UPDATE  l 
         set l.id_descuento = '$cadena_lotes',usuario='$usuario'
         from lotes l
         inner join condominios c on c.idCondominio=l.idCondominio 
         inner join residenciales r on r.idResidencial=c.idResidencial
-        where r.idResidencial in($desarrollos)  and l.idStatusLote!=2
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
+        $query_superdicie
+        $query_tipo_lote");
+        $this->db->query("UPDATE  l 
+        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        inner join clientes cl on cl.id_cliente=l.idCliente
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
+        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
         $query_superdicie
         $query_tipo_lote"); 
     }
@@ -170,22 +180,26 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
         }
     }
-    public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos){
-        /*echo "SELECT DISTINCT(id_descuento)
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        where l.idStatusLote!=2 and r.idResidencial in($desarrollos) AND id_descuento is not null
+     
+    public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
+        return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
+        SELECT DISTINCT(id_descuento) descuentos
+        FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
         $query_superdicie
-        $query_tipo_lote";*/
-        
-        return  $this->db->query("SELECT DISTINCT(id_descuento)
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        where l.idStatusLote!=2 and r.idResidencial in($desarrollos) AND id_descuento is not null
+        $query_tipo_lote
+        UNION ALL
+        SELECT DISTINCT(id_descuento) descuentos
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        where l.idStatusLote = 3 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
         $query_superdicie
-        $query_tipo_lote ORDER BY l.id_descuento ASC")->result_array();
+        $query_tipo_lote
+        ) t")->result_array();
     }
 
     public function getPaquetesById($id_paquete){

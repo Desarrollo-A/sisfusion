@@ -5,7 +5,7 @@
 <div class="wrapper ">
     <?php
 
-    if ($this->session->userdata('id_rol') == "33"||$this->session->userdata('id_rol') == "17") {
+    if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83'))) {
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
@@ -48,6 +48,7 @@
                                                     <th>PRECIO LOTE</th>
                                                     <th>TOTAL COM. ($)</th>
                                                     <th>ABONADO</th>
+                                                    <th>PAGADO</th>
                                                     <th>CLIENTE</th>
                                                     <th>ESTATUS</th>
                                                     <th></th>
@@ -135,6 +136,7 @@
                                                 <th style="font-size: .9em;">PRECIO LOTE</th>
                                                 <th style="font-size: .8em;">TOTAL COM. ($)</th>
                                                 <th style="font-size: .8em;">ABONADO</th>
+                                                <th style="font-size: .8em;">PAGADO</th>
                                                 <th style="font-size: .8em;">CLIENTE</th>
                                                 <th style="font-size: .9em;">ESTATUS</th>
                                                 <th style="font-size: .8em;"></th>
@@ -243,7 +245,7 @@
                     titleAttr: 'REPORTE_GENERAL_TOTALES_COMISIONES',
                     title: 'REPORTE GENERAL TOTALES COMISIONES',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10],
+                        columns: [1,2,3,4,5,6,7,8,9,10,11],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -271,9 +273,12 @@
                                         return 'ABONADO';
                                         break;
                                     case 9:
-                                        return 'CLIENTE';
+                                        return 'PAGADO';
                                         break;
                                     case 10:
+                                        return 'CLIENTE';
+                                        break;
+                                    case 11:
                                         return 'ESTATUS';
                                         break;
                                 }
@@ -364,7 +369,14 @@
                 {
                     "width": "10%",
                     "data": function (d) {
-                        return '<p style="font-size: .8em; color:gray;">$<b>' + formatMoney(d.abonado) + '</b></p>';
+                        return '<p style="font-size: .8em; color:gray;">$<b>' + formatMoney(d.abonados) + '</b></p>';
+                    }
+                },
+
+                {
+                    "width": "10%",
+                    "data": function (d) {
+                        return '<p style="font-size: .8em; color:gray;">$<b>' + formatMoney(d.abono_pagos) + '</b></p>';
                     }
                 },
                

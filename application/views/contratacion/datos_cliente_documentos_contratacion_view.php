@@ -25,8 +25,19 @@
 			case '50': // GENERALISTA MKTD
 			case '40': // COBRANZA
 			case '53': // analista comisisones
+            case '55': // POSTVENTA
 			case '58': // ANALISTA DE DATOS
-			case '65': // CONTABILIDAD (EXTERNO)	
+			case '65': // CONTABILIDAD (EXTERNO)
+            case '74': //  Ejecutivo Postventa(EXTERNO)
+            case '75': //  Supervisor Postventa(EXTERNO)
+            case '76': //  Asistente subdirección Postventa(EXTERNO)
+            case '77': //  Auxiliar Postventa(EXTERNO)
+            case '78': //  Base de Datos Postventa(EXTERNO)
+            case '79': //  Coordinador de Postventa(EXTERNO)
+            case '80': //  Coordinador de Call Center Postventa(EXTERNO)
+            case '81': //  Subdirección Postventa(EXTERNO)
+            case '82': //  Agente de asignación(EXTERNO)
+            case '83': //  Agente de calidad(EXTERNO)
 				$datos = array();
 				$datos = $datos4;
 				$datos = $datos2;
@@ -55,7 +66,7 @@
 								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
-							<input type="text" class="form-control" id= "txtexp" readonly>
+							<input type="text" class="form-control" id="txtexp" readonly>
 						</div>
 
 					</div>
@@ -92,7 +103,7 @@
 					</div>
 					<div class="modal-footer">
 						<br><br>
-						<button type="button" id="aceptoDelete" class="btn btn-primary"> Si, borrar </button>
+						<button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
 					</div>
 				</div>
@@ -230,7 +241,7 @@
 	</script>
 	<script>
 		var id_rol_current = <?php echo $this->session->userdata('id_rol')?>;
-		$(document).ready (function() {
+
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
 					log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -243,15 +254,16 @@
 
 
 		$(document).on('change', '.btn-file :file', function() {
+		    console.log('karma mi perro', $(this));
 			var input = $(this),
 				numFiles = input.get(0).files ? input.get(0).files.length : 1,
 				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
-			console.log('triggered');
+			console.log('fileselect', [numFiles, label]);
 		});
 
 
-
+        $(document).ready (function() {
 			$('#filtro3').change(function(){
 				var valorSeleccionado = $(this).val();
 				//build select condominios
@@ -449,57 +461,86 @@
 								data: null,
 								render: function ( data, type, row ){
 									// if(data.flag_compartida == 1){
+                                    var disabled_option = myFunctions.revisaObservacionUrgente(data.observacionContratoUrgente);
 										datos = data.id_asesor;
+										// ES ODF
 										if (getFileExtension(data.expediente) == "pdf") {
-											if(data.tipo_doc == 8){
+											if(data.tipo_doc == 8){ // CONTRATO
 												file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
-											}else if(data.tipo_doc == 66){
+											}else if(data.tipo_doc == 66){ // EVIDENCIA MKTD
 												file = '<a class="verEVMKTD btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
-											} else {
+											} else if(data.tipo_doc == 30){
+                                                file = '<center><a class="pdfLinkContratoFirmado btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
+                                                if(id_rol_general ==73 || id_rol_general==70 || id_rol_general==17){
+                                                    file += '  | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-tipoId="'+data.tipo_doc+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+                                                }
+                                            }
+											else {
+												// EVALÚA CON EL ROL Y ESTATUS
 												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
 												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1) ){
-													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo jajaja" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
 												} else {
-													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+													file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo pppp" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 												}
-												<?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
+												<?php } else {?>
+                                                        file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo jijijij" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+                                                        <?php
+                                                                if($this->session->userdata('id_rol') == 6){?>
+                                                            file += '  <button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                        <?php
+                                                                }
+                                                        ?>
+
+
+                                                <?php } ?>
 											}
 										}
+										// NO ES ODF, ES EXEL. HABILITA OPCIÓN PARA DESCARGA
 										else if (getFileExtension(data.expediente) == "xlsx" || getFileExtension(data.expediente) == "XLSX") {
 											file = "<a href='../../static/documentos/cliente/corrida/" + data.expediente + "' class='btn-data btn-green-excel'><i class='fas fa-file-excel'></i><src='../../static/documentos/cliente/corrida/" + data.expediente + "'> </a>";
 										}
+										// EVALUA SI ESTÁ VACÍO
 										else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
-											console.log('TIPO DOC:'+data.tipo_doc);
-											console.log('MOVIMIENTO:'+data.idMovimiento);
-													console.log('ROL:'+id_rol_current);
-													console.log('VENTA COMPARTIDA:'+ventaC);
-
-													console.log('***************ATENCION***********');
-												// console.log(<?php echo $this->session->userdata('datauserjava'); ?>);
-											if(data.tipo_doc == 7){
+											if(data.tipo_doc == 7) { // MUESTRA ICONO DISABLED PARA CORRIDA CUANDO NO ESTÉ LLENO
 												file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning disabled" disabled><i class="fas fa-file-excel"></i></button>';
-											} else if(data.tipo_doc == 8){
+											} else if(data.tipo_doc == 8){  // MUESTRA ICONO DISABLED PARA CONTRATO CUANDO NO ESTÉ LLENO
 												file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
-											} else {
-												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
-												// 
-												if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1)){
-													file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+                                            } else if(data.tipo_doc == 29  && (id_rol_current != 6 && id_rol_current != 5)){
+                                                file = '<button type="button" title= "Carta Domicilio inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fas fa-file"></i></button>';
+                                            }
+                                            else {
+
+												// AVALUA SI ES ASISTENET DE GERENCIA
+                                                <?php if($this->session->userdata('id_rol') == 6){?>
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && ((id_rol_current == 6 || id_rol_current == 5) && data.tipo_doc==29)){
+                                                            file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+                                                        }
+												// EVALÚA ROL
+												<?php }elseif($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
+													// EVALÚA ESTATUS DEL EXPEDIENTE (QUE SEAN LOS QUE LE PERTENECEN AL ASESOR) SI CUMPLE, HABILITA BOTÓN PARA CARGA
+													if((data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96) && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3 || id_rol_current==2) && (ventaC == 1)){
+													file = '<button type="button" '+disabled_option+' id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
 												} else {
+													// SINO CUMPLE SÓLO HABILITA BOTÓN DISABLED
 													file = '<button id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
 												}
 												<?php } else {?> file = '<button id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
 											}
 										}
+										// SI VIENE EL DS PINTA BOTÓN PARA CONSULTA (VERSIÓN ACTUAL)
 										else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
 											file = '<a class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
 										}
+										// SI VIENE EL DS PINTA BOTÓN PARA CONSULTA (VERSIÓN VIEJA)
 										else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
 											file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
 										}
+										// SI VIENEN AUTORIZACIONES PINTA BOTÓN PARA CONSULTA
 										else if (getFileExtension(data.expediente) == "Autorizaciones") {
 											file = '<a href="#" class="btn-data btn-blueMaderas seeAuts" title= "Autorizaciones" data-idCliente="'+data.idCliente+'" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
 										}
+										// SI VIENE PROSPECTO BOTÓN PARA CONSULTA (VERSIÓN ACTUAL)
 										else if (getFileExtension(data.expediente) == "Prospecto") {
 											file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-lp="'+data.lugar_prospeccion+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-check"></i></a>';
 										}
@@ -530,9 +571,18 @@
 												if(data.tipo_doc == 66){
 												file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>';
 												}else{
-													file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-												}
-												
+                                                    file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+                                                    if(data.tipo_doc==29 && (id_rol_current == 6 || id_rol_current == 5)){
+                                                        if((data.idMovimiento == 37 || data.idMovimiento == 7 || data.idMovimiento == 64 || data.idMovimiento == 66 || data.idMovimiento == 77 || data.idMovimiento == 41) && ((id_rol_current == 6 || id_rol_current == 5) &&  data.tipo_doc==29)){
+                                                            file+= '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                        }
+                                                    }else{
+                                                        file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
+
+                                                    }
+
+                                                }
+
 											<?php }?>
 
 										}
@@ -630,6 +680,17 @@
 			});
 		});
 
+        $(document).on('click', '.pdfLinkContratoFirmado', function () {
+            var $itself = $(this);
+            Shadowbox.open({
+                content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/contratoFirmado/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+                player:     "html",
+                title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+                width:      985,
+                height:     660
+            });
+        });
+
 
 		/*evidencia MKTD PDF*/
 		$(document).on('click', '.verEVMKTD', function () {
@@ -696,10 +757,9 @@
 			});
 		});
 		
-		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2){?>
+		<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 5){?>
 		var miArrayAddFile = new Array(8);
 		var miArrayDeleteFile = new Array(1);
-		$(document).ready (function() {
 			$(document).on("click", ".update", function(e){
 				e.preventDefault();
 				$('#txtexp').val('');
@@ -726,7 +786,6 @@
 				$(".lote").html(descdoc);
 				$('#addFile').modal('show');
 			});
-		});
 
 		$(document).on('click', '#sendFile', function(e) {
 			e.preventDefault();
@@ -770,11 +829,20 @@
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
 							alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
-						} else if(response.message == 'ERROR'){
+						}
+                        else if(response.message == 'OBSERVACION_CONTRATO'){
+                            alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás subir documentación" +
+                                " hasta que el proceso de liberación haya concluido.", "danger");
+                            $("#expediente").val('');
+                            $('#sendFile').prop('disabled', false);
+                        }
+						else if(response.message == 'ERROR'){
 							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+                            $("#expediente").val('');
 							$('#sendFile').prop('disabled', false);
 						}
 					}

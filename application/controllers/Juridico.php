@@ -11,6 +11,7 @@ class Juridico extends CI_Controller
 		parent::__construct();
 		$this->load->model('Juridico_model');
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+		$this->load->model('Contraloria_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->library(array('session','form_validation'));
 		 //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 		$this->load->library(array('session','form_validation', 'get_menu'));
@@ -590,11 +591,20 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $comentario=$this->input->post('comentario');
     $modificado=date("Y-m-d H:i:s");
 
-	
+
+      $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+      if($valida_tl[0]['tipo_venta'] == 1){
+          $idStatusContratacion = 1;
+          $idMovimiento = 109;
+      }else{
+          $idStatusContratacion = 3;
+          $idMovimiento = 82;
+      }
 
 	$arreglo=array();
-	$arreglo["idStatusContratacion"]=3;
-	$arreglo["idMovimiento"]=82;
+	$arreglo["idStatusContratacion"]=$idStatusContratacion;
+	$arreglo["idMovimiento"]=$idMovimiento;
 	$arreglo["comentario"]=$comentario;
 	$arreglo["usuario"]=$this->session->userdata('id_usuario');
 	$arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -744,8 +754,8 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	
 	
 	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=3;
-	$arreglo2["idMovimiento"]=82;
+	$arreglo2["idStatusContratacion"]=$idStatusContratacion;
+	$arreglo2["idMovimiento"]=$idMovimiento;
 	$arreglo2["nombreLote"]=$nombreLote;
 	$arreglo2["comentario"]=$comentario;
 	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -804,6 +814,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	$plantilla_correo = new plantilla_dinamica_correo;
 	/********************************************************************************************/
 	$validate = $this->Juridico_model->validateSt7($idLote);
+
 
 	if($validate == 1){
 		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
@@ -970,17 +981,29 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $comentario=$this->input->post('comentario');
     $modificado=date("Y-m-d H:i:s");
 
+
+      $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+      if($valida_tventa[0]['tipo_venta'] == 1 ){
+          if($valida_tventa[0]['idStatusContratacion'] == 6 && $valida_tventa[0]['idMovimiento']==112){
+              $statusContratacion = 1;
+              $idMovimiento = 109;
+          }
+      }else{
+          $statusContratacion = 1;
+          $idMovimiento = 96;
+      }
+
 	$arreglo=array();
-	$arreglo["idStatusContratacion"]=1;
-	$arreglo["idMovimiento"]=96;
+	$arreglo["idStatusContratacion"]=$statusContratacion;
+	$arreglo["idMovimiento"]=$idMovimiento;
 	$arreglo["comentario"]=$comentario;
 	$arreglo["usuario"]=$this->session->userdata('id_usuario');
 	$arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");		
 	
 	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=1;
-	$arreglo2["idMovimiento"]=96;
+	$arreglo2["idStatusContratacion"]=$statusContratacion;
+	$arreglo2["idMovimiento"]=$idMovimiento;
 	$arreglo2["nombreLote"]=$nombreLote;
 	$arreglo2["comentario"]=$comentario;
 	$arreglo2["usuario"]=$this->session->userdata('id_usuario');

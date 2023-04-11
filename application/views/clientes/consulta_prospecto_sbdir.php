@@ -440,7 +440,6 @@ if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol')
     }
     
     $(document).on('change', '#subdirector',function () {
-        /**/
         var subdirector = $("#subdirector").val();
         console.log('Elegiste: ', subdirector);
 

@@ -56,8 +56,6 @@
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
                                                     <th>LUGAR PROSPECCIÓN</th>
                                                     <th>CREACIÓN</th>
                                                     <!--<th>VENCIMIENTO</th>-->

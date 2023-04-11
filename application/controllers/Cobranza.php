@@ -25,17 +25,12 @@ class Cobranza extends CI_Controller
         }
     }
 
-    public function masterCobranza()
-    {
-        if ($this->session->userdata('id_rol') == FALSE) {
+    public function masterCobranza() {
+        if ($this->session->userdata('id_rol') == FALSE)
             redirect(base_url());
-        }
-
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-            $this->load->view('template/header');
-           // $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
-             $this->load->view("cobranza/masterCobranza", $datos);
-   
+        $this->load->view('template/header');
+        $this->load->view("cobranza/masterCobranza", $datos);
     }
 
     public function getInformation()
@@ -191,9 +186,6 @@ class Cobranza extends CI_Controller
         $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
     }
 
-    public function getComments($pago){
-        echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
-    }
     public function informationMasterCobranzaHistorial() {
         $idLote = $this->input->post("idLote");
         $bandera = $this->input->post("bandera");
@@ -207,6 +199,52 @@ class Cobranza extends CI_Controller
        
         $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
          echo json_encode($data);
+    }
+
+    public function getComments($pago){
+        echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
+    }
+    
+    public function reporteLotesPorComisionista() {
+        if ($this->session->userdata('id_rol') == FALSE)
+            redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("comisiones/reporteLotesPorComisionista_view", $datos);
+    }
+
+    public function getReporteLotesPorComisionista() {
+        if (isset($_POST) && !empty($_POST)) {
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $comisionista = $this->input->post("comisionista");       
+            $tipoUsuario = $this->input->post("tipoUsuario");
+            $data['data'] = $this->Cobranza_model->getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario)->result_array();
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
+
+    public function getOpcionesParaReporteComisionistas() {
+        $seeAll = $this->input->post("seeAll");
+        $condicionXUsuario = '';
+        if ($seeAll == 0 ){
+            $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
+        }
+        echo json_encode($this->Cobranza_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
+    }
+
+    public function getDetalleVentasPorComisionista() {
+        $comisionista = $this->input->post("comisionista");
+        $ventasActivasPorRol = $this->Cobranza_model->getVentasActivasPorRol($comisionista)->result_array();
+        if (count($ventasActivasPorRol) > 0) {
+            for($i = 0; $i < count($ventasActivasPorRol); $i ++) {
+                $ventasActivasPorRol[$i]['datos'] = $this->Cobranza_model->getVentasPorRolPorAnio($comisionista, $ventasActivasPorRol[$i]['columna'])->result_array();
+            }
+            echo json_encode($ventasActivasPorRol);
+        }
+        else
+            echo json_encode(array());
     }
 
 }

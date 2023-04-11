@@ -1556,7 +1556,7 @@
  table.dataTable > thead > tr > td,
  table.dataTable > tbody > tr > td,
  table.dataTable > tfoot > tr > td {
-   padding: 5px !important;
+   padding: 2px 5px !important;
    outline: 0;
  }
  table.dataTable > thead > tr > th {
@@ -5716,7 +5716,7 @@
    transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
  }
  .main-panel > .content {
-   margin-top: 65px;
+   margin-top: 40px;
    padding: 30px 15px;
    min-height: calc(100vh - 123px);
  }
@@ -10023,7 +10023,7 @@
    transform: translate3d(0, 5px, 0);
  }
  .tooltip.left .tooltip-arrow {
-   border-left-color: #FFFFFF;
+   border-left-color: #333333;
  }
  .tooltip.right .tooltip-arrow {
    border-right-color: #FFFFFF;
@@ -11732,4 +11732,9 @@
   .dashboard-nav-pills> li.active > a, .dashboard-nav-pills > li.active > a:focus, .dashboard-nav-pills > li.active > a:hover {
     border-bottom: none;
   }
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: transparent;
 }

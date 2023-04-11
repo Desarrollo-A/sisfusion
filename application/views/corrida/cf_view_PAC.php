@@ -10,12 +10,12 @@
 
 
 
-	<?php
-	if($this->session->userdata('perfil') == FALSE || $this->session->userdata('perfil') != 'asesor' && $this->session->userdata('perfil') != 'ventasAsistentes' && $this->session->userdata('perfil') != 'contratacion')
-	{
-		redirect(base_url().'login');
-	}
-	?>
+<!--	--><?php
+//	if($this->session->userdata('perfil') == FALSE || $this->session->userdata('perfil') != 'asesor' && $this->session->userdata('perfil') != 'ventasAsistentes' && $this->session->userdata('perfil') != 'contratacion')
+//	{
+//		redirect(base_url().'login');
+//	}
+//	?>
 
 
 	<!-- Tell the browser to be responsive to screen width -->

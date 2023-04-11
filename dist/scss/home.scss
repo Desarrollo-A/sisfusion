@@ -86,10 +86,15 @@
     }
 }
 .footer{
-    margin-top: -83px;
+    margin-top: -110px;
     border: none!important;
     color: $white;
     .container-fluid{
+        span{
+            a{
+                color: $gray;
+            }
+        }
         a{
             color: $white;
             font-weight: bold;

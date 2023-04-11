@@ -3,7 +3,8 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"){
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"
+            || $this->session->userdata('id_rol')=="70"){
             /*--------------------contraloria-----------------------------------*/
             $datos = array();
             $datos = $datos4;
@@ -125,7 +126,7 @@
                                  <div class="card-content">
                                     <div class="encabezadoBox">
                                         <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
+                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago como ventas especiales)</p>
                                     </div>
                                     <div class="toolbar">
                                         <div class="row">

@@ -93,28 +93,43 @@ class VentasAsistentes_model extends CI_Model {
         return $query->result();
     }
    
-
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        } else { // MJ: ES VENTAS
+        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)// MJ: ES CONTRALORÍA CORPORATIVA
+        {
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815){
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            }
+            else{
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
+            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
+
+        }
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
+        else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+                $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             $filtroGerente = "";
-            if ($this->session->userdata('id_usuario') == 6831)
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre as nombreSede,
         CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, l.observacionContratoUrgente as vl,
+        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -127,11 +142,13 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         WHERE $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, l.observacionContratoUrgente,   
+        tv.tipo_venta, l.observacionContratoUrgente,
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
@@ -229,30 +246,43 @@ class VentasAsistentes_model extends CI_Model {
 	
 
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 17) { // MJ: ES CONTRALORÍA CORPORATIVA
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 AND l.tipo_venta IN (4, 6)";
-        } else { // MJ: ES VENTAS
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70){ // MJ: ES CONTRALORÍA CORPORATIVA
+            $filtroUsuarioBR = '';
+            if($this->session->userdata('id_usuario') == 2815)
+                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            else
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;
+        }
+        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63)  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
+        else { // MJ: ES VENTAS
             $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
+            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+                $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
+            else if ($id_sede == 10) 
+                $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
-            if ($this->session->userdata('id_usuario') == 6831)
+            $filtroGerente = "";
+            if ($this->session->userdata('id_usuario') == 6831) {
                 $filtroGerente = "AND cl.id_gerente = 690";
-            else
-                $filtroGerente = "";
+                $filtroSede = "";
+            }
 
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta,
+        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
         CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
-        cond.idCondominio, l.observacionContratoUrgente AS vl
+        cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede
         FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -260,14 +290,17 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         WHERE $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        tv.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, l.observacionContratoUrgente;");
+        cond.idCondominio, l.observacionContratoUrgente, sd.nombre
+        ORDER BY l.nombreLote");
 		return $query->result();
 	}
 
@@ -287,5 +320,15 @@ class VentasAsistentes_model extends CI_Model {
         FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
 		return $query->row();
 	}
- 
+
+	public function validaCartaCM($idCliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
+        INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND tipo_doc=29 AND movimiento='CARTA DOMICILIO CM';");
+        return $query->result_array();
+    }
+    public function check_carta($idCliente){
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$idCliente);
+        return $query->result_array();
+    }
 }

@@ -195,6 +195,9 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
+                        <th>Precio de lista</th>
+                        <th>Precio con desc</th>
+                        <th>Casa</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
                         <th>Coordinador</th>
@@ -202,8 +205,13 @@
                         <th>Subdirector</th>
                         <th>Director regional</th>
                         <th>Fecha de apartado</th>
+                        <th>Fecha último estatus</th>
+                        <th>Días último estatus</th>
                         <th>Estatus contratación</th>
+                        <th>Fecha estatus 9</th>
+                        <th>Días estatus 9</th>
                         <th>Estatus lote</th>
+                        <th>Apartado</th>
                     </tr>
                 </thead>
             </table>
@@ -235,6 +243,9 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
+                        <th>Precio de lista</th>
+                        <th>Precio con desc</th>
+                        <th>Casa</th>
                         <th>Cliente</th>
                         <th>Asesor</th>
                         <th>Coordinador</th>
@@ -242,10 +253,15 @@
                         <th>Subdirector</th>
                         <th>Director regional</th>
                         <th>Fecha de apartado</th>
+                        <th>Fecha último estatus</th>
+                        <th>Días último estatus</th>
                         <th>Estatus contratación</th>
+                        <th>Fecha estatus 9</th>
+                        <th>Días estatus 9</th>
                         <th>Estatus lote</th>
                         <th>Fecha liberación</th>
                         <th>Motivo</th>
+                        <th>Apartado</th>
                     </tr>
                 </thead>
             </table>

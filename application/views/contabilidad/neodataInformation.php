@@ -89,9 +89,9 @@
                                         <th>CÓDIGO CLIENTE</th>
                                         <th>CUENTA 2170</th>
                                         <th>CUENTA 1150</th>
-                                        <th>CLIENTE</th>
-                                        <th>CONTRATO</th>
                                         <th>VIVIENDA</th>
+                                        <th>CONTRATO</th>
+                                        <th>CLIENTE</th>
                                         <th>SÚPER CONTRATO</th>
                                         <th>PRECIO DE VENTA</th>
                                         <th>FECHA DE CONTRATO</th>
@@ -217,13 +217,13 @@
                                     case 2:
                                         return "CUENTA 1150"
                                     case 3:
-                                        return "CLIENTE";
+                                        return "VIVIENDA";
                                         break;
                                     case 4:
                                         return "CONTRATO";
                                         break;
                                     case 5:
-                                        return "VIVIENDA";
+                                        return "CLIENTE";
                                         break;
                                     case 6:
                                         return "SÚPER CONTRATO";
@@ -304,7 +304,7 @@
                 },
                 {
                     data: function (d) {
-                        return d.cliente;
+                        return d.Vivienda;
                     }
                 },
                 {
@@ -314,7 +314,7 @@
                 },
                 {
                     data: function (d) {
-                        return d.Vivienda;
+                        return d.cliente;
                     }
                 },
                 {
@@ -324,7 +324,7 @@
                 },
                 {
                     data: function (d) {
-                        return '<p>'+formatMoney(d.precioventa)+'</p>';
+                        return '<p>'+formatMoney((d.precioventa).slice(0, -2))+'</p>';
                     }
                 },
                 {

@@ -105,54 +105,28 @@
   }
   }
 
-  public function loadFinalPayment()
-  {
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol') );
+  public function loadFinalPayment() {
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-      if($this->session->userdata('id_rol') != 31){
-        $this->load->view("internomex/load_final_payment_ase", $datos);
-      }else{
-        $this->load->view("internomex/load_final_payment", $datos);
-      }
+    $this->load->view("internomex/load_final_payment", $datos);
   }
 
-  public function getPaymentsListByCommissionAgent()
+  public function getPaymentsListByCommissionAgent($tipo_pago)
   {
-    $data = $this->Internomex_model->getCommissions()->result_array();
-    echo json_encode($data);
-  }
-  public function getPagosFinal(){
-    $year   = date("Y");
-    $mes    = date("m");
-    $Udia   = date("t");
-    if($this->session->userdata('id_rol') != 31){
-      $clave_user = $this->session->userdata('id_usuario'); 
-      $clave_user = 9341;
-      $cmd = ' and u.id_usuario = '.$clave_user; 
-   
-    }else{
-      
-      $cmd = '';
-    }
-    $fechaInicio = $this->input->post('fechaInicio');
-    $fechaFin = $this->input->post('fechaFin');
-
-    if(!isset($fechaFin) and !isset($fechaInicio))
-    {
-      $mes = date("m");
-      $year = date("Y");
-      $fechaInicio = $year.'-'.$mes.'-'.'1';
-      $fechaFin = date("Y-m-t");   
-
-    }
-    $fechaInicio = $fechaInicio ." 0:00:00"; 
-    $fechaFin = $fechaFin ." 23:59:59"; 
-    $data['data'] = $this->Internomex_model->getMFPagos($fechaInicio ,$fechaFin, $cmd)->result_array();
+    $data = $this->Internomex_model->getCommissions($tipo_pago)->result_array();
     echo json_encode($data);
   }
 
+  public function getPagosFinal() {
+    $beginDate = $this->input->post('beginDate');
+    $endDate = $this->input->post('endDate');
+    $data['data'] = $this->Internomex_model->getPagosFinal($beginDate, $endDate)->result_array();
+    echo json_encode($data);
+  }
 
-  public function insertInformation() {
+  public function insertInformation($tipo_pago) {
+//        print_r($tipo_pago);
+//        exit;
     if (!isset($_POST))
       echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
     else {
@@ -175,7 +149,7 @@
             for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA VALIDACIÓN DE DATOS (CHECAR QUE LOS REGISTROS NOS SE HAYAN INSERTADO YA)
               // SE VERIFICA QUE LA FILA DE DATOS CONTEGA LA INFORMACIÓN QUE SE VA A INSERTAR Y QUE NO VENGA VACÍA
               if (isset($decodedData[$i]->id_usuario) && !empty($decodedData[$i]->id_usuario) && isset($decodedData[$i]->formaPago) && !empty($decodedData[$i]->formaPago) && isset($decodedData[$i]->montoSinDescuentos) && !empty($decodedData[$i]->montoSinDescuentos) &&
-              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal))
+              isset($decodedData[$i]->montoConDescuentosSede) && !empty($decodedData[$i]->montoConDescuentosSede) && isset($decodedData[$i]->montoFinal) && !empty($decodedData[$i]->montoFinal) && isset($decodedData[$i]->comentario))
                 $id_usuario[$i] = (int)$decodedData[$i]->id_usuario;
               else {
                 unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIORMENTE
@@ -189,8 +163,6 @@
             }
             for ($i = 0; $i < count($decodedData); $i++) { // CICLO PARA RECORRER ARRAY DE DATOS Y ARMAR ARRAY PARA EL BATCH INSERT
               $commonData = array();
-              
-              //var_dump($verifiedData);              
               if (count($verifiedData) > 0) { // SE ENCONTRARON REGISTROS YA INSERTADOS EN EL MES
                 for($e = 0; $e < count($verifiedData); $e++){
                   if((int)$decodedData[$i]->id_usuario === (int)$verifiedData[$e]->id_usuario)
@@ -198,44 +170,30 @@
                   //  $reinsertArrayData[$i] =  (int)$decodedData[$i];
                     $flag = true;
                     $flagB = false;
-
                     //$reinsertArrayData = $decodedData[$e];
                     unset($decodedData[$i]); // SE ELIMINA LA POSICIÓN QUE YA SE INSERTÓ ANTERIO  RMENTE
                     $decodedData = array_values($decodedData); // SE REORDENA EL ARRAY
                   }
                 
                 }
-                //var_dump($reinsertArrayData);
               }
-              //var_dump($reinsertArrayData);
-              //var_dump('data del real insertada');
               if (count($decodedData) > 0) {
                 $commonData += array("id_usuario" => (int)$decodedData[$i]->id_usuario, 
-                //  $this->formatter->convertPaymentMethod($decodedData[$i]->formaPago)
-                  "forma_pago" => 1,
+                  "forma_pago" => (int)$this->formatter->convertPaymentMethod($decodedData[$i]->formaPago),
                   "monto_sin_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoSinDescuentos), 
                   "monto_con_descuento" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoConDescuentosSede), 
-                  "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal));
+                  "monto_internomex" => (float)$this->formatter->removeNumberFormat($decodedData[$i]->montoFinal),
+                  "comentario" => $decodedData[$i]->comentario,
+                  "tipo_pago" => $tipo_pago
+                );
                 $commonData += $insertAuditoriaData; // SE CONCATENA LA DATA BASE + LA DATA DEL ARRAY PRINCIPAL
                 array_push($insertArrayData, $commonData);
-         
-              }
-              else{
-                
-                
               }
             }
-            if ($flag){
+            if ($flag) {
               $flagB = false;
-
               echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
-
             }
-           // if ($flag){
-           //   echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);            
-           // }
-
-            
             if (count($insertArrayData) > 0) { // AL TERMINAR EL CICLO SE EVALÚA SI EL ARRAY DE DATOS PARA EL BATCH INSERT TIENE DATA VA Y TIRA EL BATCH
               $insertResponse = $this->General_model->insertBatch("pagos_internomex", $insertArrayData);
               if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
@@ -243,26 +201,47 @@
               else // FALLÓ EL BATCH
                 echo json_encode(array("status" => 500, "message" => "No se logró procesar la petición."), JSON_UNESCAPED_UNICODE);
             }
-            else
-                 if($flag){
-                    if ($flagB){
-                      
-                      // echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
-                       }
-            
-                      }else{
-                        echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
-                      }
-           }
+            else if($flag){
+              if ($flagB) {
+                // echo json_encode(array("status" => 301, "message" => "Es posible que más de un dato ya estuviera registrado en este mes"), JSON_UNESCAPED_UNICODE);
+              }
+            } else {
+              echo json_encode(array("status" => 500, "message" => "No hay información para procesar (vacío)."), JSON_UNESCAPED_UNICODE);
+            }
+          }
           else // ARRAY VACÍO
             echo json_encode(array("status" => 500, "message" => "No hay información para procesar (inicio)."), JSON_UNESCAPED_UNICODE);
         }
       }
     }
- }
+  }
 
+  public function updateMontoInternomex()
+  {
+ 
+     if(!isset($_POST)){
+      echo json_encode(array("status" => 500, "message" => "No hay información para procesar (inicio)."), JSON_UNESCAPED_UNICODE);
+  
+      }
+      else{
 
+        $updateData = array(
+          "monto_internomex" => (float)$this->formatter->removeNumberFormat($this->input->post("monto")) ,
+          "fecha_modificacion" => date('Y-m-d H:m:s'),
+          "modificado_por" =>  (int)$this->session->userdata('id_usuario')
+      );
+      $reuslt = $this->General_model->updateRecord("pagos_internomex", $updateData, "id_pagoi", $this->input->post("id_pago"));
+      if ($reuslt == true)
+          echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+      else
+          echo json_encode(array("status" => 400, "message" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+      }
+  }
 
+  public function getBitacora($id_pago)
+  {
+      echo json_encode($this->Internomex_model->getBitacora($id_pago)->result_array());
+  }
 
 
 

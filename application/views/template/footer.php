@@ -47,23 +47,25 @@
 <script src="<?=base_url()?>dist/js/controllers/select2/select2.full.min.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
-<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<!-- <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
-<script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script>
+<!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
+    var general_base_url = "<?=base_url()?>";
+    let id_rol_general = <?= $this->session->userdata('id_rol') ?> ;
+    let id_usuario_general =  <?= $this->session->userdata('id_usuario') ?>;
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
 		<?php
-            if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 1
-                || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3
-                || $this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5
-                || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 9)
-            { }
-//                if ($this->session->userdata('no_show_modal_info')==0) {
-//                    echo '$("#avisoNovedades").modal("toggle");';
-//                }
+            /*if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9
+                || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 3)
+            {
+                if ($this->session->userdata('no_show_modal_info')==0) {
+                    echo '$("#avisoNovedades").modal("toggle");';
+                }
+            }*/
 
          ?>
 	});
@@ -103,7 +105,6 @@
     var mySound = new Audio('../static/tono-mensaje.mp3');
    
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
-    console.log(im);
     if ($(window).width() < 996){
         console.log("chico");
     }
@@ -299,6 +300,4 @@
 </script>
 <?php }?>
 
-<script>
-    let general_base_url = "<?=base_url()?>";
-</script>
+

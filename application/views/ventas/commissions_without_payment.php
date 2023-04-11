@@ -8,6 +8,7 @@
             case '17': // SUBDIRECTOR CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
             case '11': // ADMINISTRACIÓN
+            case '70': // EJECUTIVO CONTRALORIA JR
                 $datos = array();
                 $datos = $datos4;
                 $datos = $datos2;
@@ -89,6 +90,14 @@
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
+
+    <script>
+        userType = <?= $this->session->userdata('id_rol') ?> ;     
+        var url = "<?= base_url() ?>";
+        var url2 = url;
+    </script>
+
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/commissions_without_payment.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -97,150 +106,4 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
-    <script>
-        userType = <?= $this->session->userdata('id_rol') ?> ;
-
-        $(document).ready(function() {
-            $.post(url + "Contratacion/lista_proyecto", function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idResidencial'];
-                    var name = data[i]['descripcion'];
-                    $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#proyecto").selectpicker('refresh');
-            }, 'json');
-        });
-
-        $('#proyecto').change( function(){
-            index_proyecto = $(this).val();
-            index_condominio = 0
-            $("#condominio").html("");
-            $(document).ready(function(){
-                $.post(url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
-                    var len = data.length;
-                    $("#condominio").append($('<option disabled selected>Selecciona una opción</option>'));
-
-                    for( var i = 0; i<len; i++)
-                    {
-                        var id = data[i]['idCondominio'];
-                        var name = data[i]['nombre'];
-                        $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
-                    }
-                    $("#condominio").selectpicker('refresh');
-                }, 'json');
-            });
-            fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
-        });
-
-        $('#condominio').change( function(){
-            index_proyecto = $('#proyecto').val();
-            index_condominio = $(this).val();
-            // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
-            fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
-        });
-
-        var url = "<?= base_url() ?>";
-        var url2 = "<?= base_url() ?>index.php/";
-        var totaPen = 0;
-        var tr;
-
-        $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
-            var title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
-                    $('#tabla_comisiones_sin_pago').DataTable()
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
-        });
-
-        function fillCommissionTableWithoutPayment (proyecto, condominio) {
-            tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
-                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: 'auto',
-                language: {
-                    url: "../static/spanishLoader.json"
-                },
-                pagingType: "full_numbers",
-                fixedHeader: true,
-                language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
-                    paginate: {
-                        previous: "<i class='fa fa-angle-left'>",
-                        next: "<i class='fa fa-angle-right'>"
-                    }
-                },
-                destroy: true,
-                ordering: false,
-                buttons: [{
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                        className: 'btn buttons-excel',
-                        titleAttr: 'Descargar archivo de Excel',
-                }],
-                columns: [{
-                    data: function(d) {
-                        return '<p class="m-0">' + d.idLote + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreResidencial + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreCondominio + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreLote + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreCliente + ' </p>';
-                    }
-                },
-
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreAsesor + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreCoordinador + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.nombreGerente + '</p>';
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<p class="m-0">' + d.reason + '</p>';
-                    }
-                }],
-                columnDefs: [{
-                    defaultContent: "",
-                    targets: "_all",
-                    searchable: true,
-                    orderable: false
-                }],
-                ajax: {
-                    url: url2 + "ComisionesNeo/getGeneralStatusFromNeodata/" + proyecto + "/" + condominio,
-                    type: "POST",
-                    cache: false,
-                    data: function(d) {}
-                },
-            });
-        }
-    </script>
 </body>

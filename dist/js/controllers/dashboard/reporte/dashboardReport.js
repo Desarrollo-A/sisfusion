@@ -1,5 +1,35 @@
-// AA: Obtener fecha inicial y cuatro meses atrás para mini charts.
-var chart;
+let chart, rolOnReport, idUserOnReport;
+
+document.querySelector(".c-filter__toggle").addEventListener("click", function () {
+    this.classList.toggle("c-filter__toggle--active");
+    document.querySelector(".c-filter__ul").classList.toggle("c-filter__ul--active");
+});
+
+function asDirector(userType){
+    // 18: Fabián
+    //  4: Asistente dirección administración
+    // 63: Control interno
+    // 33: Consulta
+    // 58: Asistente de dirección general
+    // 69: Dirección general
+    //  2: Subidrector
+    //  72: Dirección biofísica
+    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
+        rolOnReport = '1';
+        idUserOnReport = '2';
+    }
+    //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
+    else if( userType == '5' && ( idUser == '28' || idUser == '30' || idUser == '4888')){
+        rolOnReport = '1';
+        idUserOnReport = '2';
+    }
+    
+    else{
+        rolOnReport = userType;
+        idUserOnReport = idUser;
+    }
+}
+
 var initialOptions = {
     series: [],
     chart: {
@@ -12,7 +42,25 @@ var initialOptions = {
         }
     },
     colors: [],
-    grid: { show: false},
+    grid: {
+        show: true,
+        borderColor: '#f3f3f3',
+        strokeDashArray: 0,
+        position: 'back',
+        yaxis: {
+            lines: {
+                show: true
+            }
+        },
+        row: {
+            colors: undefined,
+            opacity: 0.5
+        },
+        column: {
+            colors: undefined,
+            opacity: 0.5
+        },
+    },
     dataLabels: { enabled: false },
     legend: { show: false },
     stroke: {
@@ -36,7 +84,7 @@ var initialOptions = {
         axisTicks: {show:false},
     },
     fill: {
-        opacity: 1,
+        opacity: 0,
         type: 'gradient',
         gradient: {
             shade: 'light',
@@ -50,7 +98,7 @@ var initialOptions = {
             colorStops: []
         }
     },
-    tooltip: { enabled: true},
+    tooltip: { enabled: false},
     markers: {
         size: `5`,
         colors: '#143860',
@@ -66,30 +114,63 @@ function readyReport(){
     $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    initReport();
     setInitialValuesReporte();
+    initReport();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
 
     $('[data-toggle="tooltip"]').tooltip();
+    setListEstatus();
 }
 
 async function initReport(){
-    getLastSales(null, null);
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    asDirector(userType);
+    filters = validateFilters();
+    getLastSales(filters, rolOnReport);
+    // let rol = userType == 2 ? await getRolDR(idUser): userType;
+    
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' )
+    if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
         rolString = 'gerente';
-    else if ( rol == '3' || rol == '6' )
+    else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-        
-    fillBoxAccordions(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
+    
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, [0, null, null, null, null, null, rolOnReport], filters);
+}
+
+function validateFilters(){
+    filters = [];
+    //Filtros con enganche / sin enganche
+    let selector1 = $('#typeSale1')[0];
+    let selector2 = $('#typeSale2')[0];
+    //Tipo de lote
+    let selector3 = $('#typeLote1')[0];
+    let selector4 = $('#typeLote2')[0];
+    // Con casa / sin casa
+    let selector5 = $('#typeBuild1')[0];
+    let selector6 = $('#typeBuild2')[0];
+    //Rango de fechas
+    let beginDate = $('#tableBegin').val();
+    let endDate = $('#tableEnd').val();
+    //Estauts de contratación
+    let estatus = $("#estatusContratacion").val();
+
+    filters.push({
+        typeSale: (selector1.checked && !selector2.checked) ? selector1.value : (selector2.checked && !selector1.checked) ? selector2.value : ( selector1.checked && selector2.checked ) ? 3 : 0,
+        typeLote: (selector3.checked && !selector4.checked) ? selector3.value : (selector4.checked && !selector3.checked) ? selector4.value : ( selector3.checked && selector4.checked ) ? 3 : 0,
+        typeConstruccion: (selector5.checked && !selector6.checked) ? selector5.value : (selector6.checked && !selector5.checked) ? selector6.value : ( selector5.checked && selector6.checked ) ? 3 : 0,
+        begin: beginDate,
+        end: endDate,
+        estatus: estatus
+    });
+
+    return filters;
 }
 
 function createAccordions(option, render, rol){
@@ -132,7 +213,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=null, leadersList){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30) )
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30) )
@@ -140,7 +221,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
     else if( rol == 6 )
         rolEspecial = 3;
     else if( rol == 4 || rol == 33 || rol == 58 || rol == 63 || rol == 69)
-        rolEspecial = 2
+        rolEspecial = 2;
     else rolEspecial = rol;
 
     createAccordions(option, render, rolEspecial);
@@ -336,8 +417,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
             cache: false,
             data: {
                 "typeTransaction": transaction,
-                "beginDate": dates != null ? formatDate(dates.begin): '',
-                "endDate":  dates != null ? formatDate(dates.end): '',
                 "where": '1',
                 "type": rol,
                 "id_usuario": id_usuario,
@@ -346,7 +425,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, dates=n
                 "coordinador": leadersList[2],
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
-                "regional": leadersList[5]
+                "regional": leadersList[5],
+                "filters" : filters
             }
         }
     });
@@ -430,42 +510,43 @@ $(document).on('click', '.update-dataTable', function (e) {
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
-    let dates = transaction == 2 ?  {begin: $('#tableBegin').val(), end: $('#tableEnd').val()}:null;
+    
+    let filters = validateFilters();
 
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); 
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, dates, [7, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [59, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [2, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
@@ -475,11 +556,11 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if( idUser == 28 || idUser == 30 ){
                 const table = "gerente";
-                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, dates, [3, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
-                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, dates, [9, asesor, coordinador, gerente, subdirector, regional, type]); // VA POR LOS COORDINADORES
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
             }
         } 
     }
@@ -595,8 +676,6 @@ $(document).on('click', '.btnSub', function () {
         table: $(this).closest('table'),
         thisVar: $(this),
         option: $(this).data("option"),
-        begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val()),
         leader: $(this).data("leader"),
         asesor: $(this).data("as"),
         coordinador: $(this).data("co"),
@@ -607,35 +686,28 @@ $(document).on('click', '.btnSub', function () {
     initDetailRow(data);
 });
 
-$(document).on('click', '#searchByDateRangeTable', async function (e) {
+$(document).on('click', '#filterAction', async function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
-
-    /**********************/
-
     loaderCharts();
-    $("#modalChart .boxModalTitle .total").html('');
-    /**********************/
 
-    let dates = {begin: $('#tableBegin').val(), end: $('#tableEnd').val()};
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    filters = validateFilters();
 
     let rolString;
-    if ( rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69')
+    if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
         rolString = 'gerente';
-    else if ( rol == '3' || rol == '6' )
+    else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
-    // getSpecificChart('na', formatDate($('#tableBegin').val()), formatDate($('#tableEnd').val()));
-    getLastSales($('#tableBegin').val(), $('#tableEnd').val());
-    fillBoxAccordions(rolString, rol, idUser, 1, 2, dates, [0, null, null, null, null, null, rol]);
-
+    
+    getLastSales(filters, rolOnReport);
+    fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -676,26 +748,33 @@ async function chartDetail(e, tipoChart){
         finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
         finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
         finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    }else{
+    }
+    else{
         finalBeginDate2 = fecha_inicio;
         finalEndDate2 = fecha_fin;
     }
 
-
-
-
     $("#modalChart #beginDate").val(finalBeginDate2);
     $("#modalChart #endDate").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
-    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2));
+    filters = validateFilters();
+    getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), filters);
 }
 
-function getSpecificChart(type, beginDate, endDate){
+function getSpecificChart(type, beginDate, endDate, filters){
     $('.loadChartModal').removeClass('d-none');
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 0, tipoChart: type, beginDate: beginDate, endDate: endDate},
+        data: {
+            general: 0, 
+            tipoChart: type, 
+            beginDate: beginDate, 
+            endDate: endDate, 
+            filters: filters, 
+            type: rolOnReport,
+            render: 1
+        },
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -725,17 +804,23 @@ function getSpecificChart(type, beginDate, endDate){
     });
 }
 
-function getLastSales(beginDate, endDate){
+function getLastSales(filters, rol){
     $('.loadChartMini').removeClass('d-none');
-
     $.ajax({
         type: "POST",
         url: `${base_url}Reporte/getDataChart`,
-        data: {general: 1, tipoChart:'na', beginDate: beginDate, endDate: endDate},
+        data: {
+            general: 1, 
+            tipoChart:'na',
+            filters: filters,
+            type: rol,
+            render: 1
+        },
         dataType: 'json',
         cache: false,
         success: function(data){
             $('.loadChartMini').addClass('d-none');
+            $('.money').removeClass('d-none');
             let miniChart = 1, total = 0;
             let orderedArray = orderedDataChart(data);
             for ( i=0; i<orderedArray.length; i++ ){
@@ -766,64 +851,40 @@ function getLastSales(beginDate, endDate){
     });
 }
 
-$(document).on("click", "#searchByDateRange", function () {
-    var beginDate = $("#modalChart #beginDate").val();
-    var endDate = $("#modalChart #endDate").val();
-    var type = $("#modalChart #type").val();
-    $("#modalChart .boxModalTitle .total").html('');
-    getSpecificChart(type, formatDate(beginDate), formatDate(endDate));
-});
-
 function loaderCharts(){
+    $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
-    // $('.appliedFilter').removeAttr('title');
     $('.appliedFilter').removeAttr('data-original-title');
     let fechaInicio= $('#tableBegin').val();
     let fechaTermino= $('#tableEnd').val();
-    // console.log('fechaInicio', fechaInicio);
-    // console.log('fechaTermino', fechaTermino);
-   $('.appliedFilter .selectMini').html('');
-   $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
+    $('.appliedFilter .selectMini').html('');
+    $('.appliedFilter .selectMini').append('Del: '+fechaInicio+' al: '+fechaTermino+'');
     $('.appliedFilter').attr('data-toggle', 'tooltip');
-    // $('.appliedFilter').attr('title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
+    $('.appliedFilter').attr('data-placement', 'bottom');
     $('.appliedFilter').attr('data-original-title', 'Del: '+$('#tableBegin').val()+' al: '+$('#tableEnd').val());
-    //<label style="font-size: 0.5em">Al: '+fechaTermino+'</label>
 
-    $('#totventasContratadas').addClass('subtitle_skeleton');
-    $('#totventasContratadas').text('');
-
-    $('#totventasApartadas').addClass('subtitle_skeleton');
-    $('#totventasApartadas').text('');
-
-    $('#totcanceladasContratadas').addClass('subtitle_skeleton');
-    $('#totcanceladasContratadas').text('');
-
-    $('#totcanceladasApartadas').addClass('subtitle_skeleton');
-    $('#totcanceladasApartadas').text('');
-
-
+    $('.money').addClass('d-none');
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
                      '</div>';
-    // $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
+    $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 
     //add attr al miniboton para que al abrir tenga la fecha seteada
     $('.moreMiniChart').attr('data-fi', fechaInicio);
     $('.moreMiniChart').attr('data-ft', fechaTermino);
-
-
 };
+
 function orderedDataChart(data){
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];
 
-        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
+        nameTypeChart = `${ (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca') ? 'canceladasApartadas' : 'ventasTotales' }`;
 
-        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : 'canceladasApartadas' }`;
-        
+        nameSerie = `${ (rol == '9') ? 'Coordinador' : (rol == '7') ? 'Asesor' : (tipo == 'vc') ? 'ventasContratadas' : (tipo == 'va') ? 'ventasApartadas' : (tipo == 'cc') ? 'canceladasContratadas' : (tipo == 'ca' ) ? 'canceladasApartadas' : 'ventasTotales' }`;
+
         totalMes.push( (total != null) ? parseFloat(total.replace(/[^0-9.-]+/g,"")) : 0 );
         if( (i+1) < data.length ){
             if(tipo == data[i + 1].tipo){
@@ -888,7 +949,14 @@ function getRolDR(idUser){
             },
             success: function(data){
                 $('#spiner-loader').addClass('hide');
-                resolve (data.length > 0 ? 59:2);
+                if (data.length > 0){
+                    resolve (59);
+                }
+                else{
+                    resolve (2);
+
+                }
+                // resolve (data.length > 0 ? 59:2);
             },
             error: function() {
             $('#spiner-loader').addClass('hide');
@@ -985,6 +1053,7 @@ function accordionToRemove(rol){
         case 58: // Asistente dirección general
         case 63: // Control interno
         case 69: // Dirección general
+        case 72: // Dirección biofísica
             $(".boxAccordions").find(`[data-rol='${59}']`).remove();
             $(".boxAccordions").find(`[data-rol='${2}']`).remove();
             $(".boxAccordions").find(`[data-rol='${3}']`).remove();
@@ -1013,7 +1082,7 @@ function accordionToRemove(rol){
 function initDetailRow(dataObj){
     var detailRows = [];
     var tr = $(`#details-${dataObj.user}`).closest('tr');
-    var table = $(`#details-${dataObj.user}`).closest('table');
+    // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
@@ -1034,19 +1103,19 @@ function initDetailRow(dataObj){
 }
 
 function createDetailRow(row, tr, dataObj){
+    filters = validateFilters();
     $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
         render:  dataObj.render,
         transaction: dataObj.transaction,
-        beginDate: dataObj.begin,
-        endDate: dataObj.end,
         leader: dataObj.leader,
         asesor: dataObj.asesor,
         coordinador: dataObj.coordinador,
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
-        regional: dataObj.regional
+        regional: dataObj.regional,
+        filters: filters
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         
@@ -1117,6 +1186,7 @@ async function setInitialValuesReporte() {
     $('#tableBegin').val(finalBeginDate2);
     $('#tableEnd').val(finalEndDate2);
 }
+
 function titleCase(string){
     return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }
@@ -1201,8 +1271,6 @@ $(document).on('click', '.btnModalDetails', function () {
         rol: $(this).data("rol"),
         option: $(this).data("option"),
         render: $(this).data("render"),
-        begin: formatDate($('#tableBegin').val()), 
-        end: formatDate($('#tableEnd').val()),
         asesor: $(this).data("as"),
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
@@ -1217,18 +1285,20 @@ $(document).on('click', '.btnModalDetails', function () {
 });
 
 function fillTableReport(dataObject) {
+    filters = validateFilters();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if(i != 0){
                     if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTable").DataTable().column(i)
-                            .search(this.value).draw();
+                        $("#lotesInformationTable").DataTable().column(i).search(this.value).draw();
                     }
                 }
             });
+            $('[data-toggle="tooltip"]').tooltip();
+
         });
 
         generalDataTable = $('#lotesInformationTable').dataTable({
@@ -1241,7 +1311,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1255,31 +1325,55 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
-                                        return 'Cliente';
+                                        return 'Precio de lista';
                                         break;
                                     case 4:
-                                        return 'Asesor';
+                                        return 'Precio con desc';
                                         break;
                                     case 5:
-                                        return 'Coordinador';
+                                        return 'Casa';
                                         break;
                                     case 6:
-                                        return 'Gerente';
+                                        return 'Cliente';
                                         break;
                                     case 7:
-                                        return 'Subdirector';
+                                        return 'Asesor';
                                         break;
                                     case 8:
-                                        return 'Director regional';
+                                        return 'Coordinador';
                                         break;
                                     case 9:
-                                        return 'Fecha de apartado';
+                                        return 'Gerente';
                                         break;
                                     case 10:
-                                        return 'Estatus contratación';
+                                        return 'Subdirector';
                                         break;
                                     case 11:
+                                        return 'Director regional';
+                                        break;
+                                    case 12:
+                                        return 'Fecha de apartado';
+                                        break;
+                                    case 13:
+                                        return 'Fecha último estatus';
+                                        break;
+                                    case 14:
+                                        return 'Días último estatus';
+                                        break;
+                                    case 15:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 16:
+                                        return 'Fecha estatus 9';
+                                        break;
+                                    case 17:
+                                        return 'Días estatus 9';
+                                        break;
+                                    case 18:
                                         return 'Estatus lote';
+                                        break;
+                                    case 19:
+                                        return 'Apartado';
                                         break;
                                 }
                             }
@@ -1322,6 +1416,21 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
+                        return d.precioLista;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.precioDescuento;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.casa;
+                    }
+                },
+                {
+                    data: function (d) {
                         return d.nombreCliente;
                     }
                 },
@@ -1350,10 +1459,19 @@ function fillTableReport(dataObject) {
                         return d.nombreRegional;
                     }
                 },
-
                 {
                     data: function (d) {
                         return d.fechaApartado;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.fechaUltimoStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasUltimoStatus;
                     }
                 },
                 {
@@ -1363,7 +1481,31 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
+                        if(d.fechaStatus9 == null){
+                            return 'No aplica';
+                        }
+                        else
+                            return d.fechaStatus9;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasStatus9;
+                    }
+                },
+                {
+                    data: function (d) {
                         return d.estatusLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
+                            return 'Apartado por reubicación';
+                        }
+                        else{
+                            return 'Estandar';
+                        }
                     }
                 }
             ],
@@ -1384,13 +1526,12 @@ function fillTableReport(dataObject) {
                     "rol": dataObject.rol,
                     "render": dataObject.render,
                     "option": dataObject.option,
-                    "beginDate": dataObject.begin,
-                    "endDate": dataObject.end,
                     "asesor": dataObject.asesor,
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "filters" : filters
                 }
             }
         });
@@ -1398,7 +1539,8 @@ function fillTableReport(dataObject) {
 
         $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+
             $('input', this).on('keyup change', function () {
                 if(i != 0){
                     if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
@@ -1407,6 +1549,7 @@ function fillTableReport(dataObject) {
                     }
                 }
             });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
@@ -1419,7 +1562,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12, 13],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1433,37 +1576,61 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
-                                        return 'Cliente';
+                                        return 'Precio de lista';
                                         break;
                                     case 4:
-                                        return 'Asesor';
+                                        return 'Precio con desc';
                                         break;
                                     case 5:
-                                        return 'Coordinador';
+                                        return 'Casa';
                                         break;
                                     case 6:
-                                        return 'Gerente';
+                                        return 'Cliente';
                                         break;
                                     case 7:
-                                        return 'Subdirector';
+                                        return 'Asesor';
                                         break;
                                     case 8:
-                                        return 'Director regional';
+                                        return 'Coordinador';
                                         break;
                                     case 9:
-                                        return 'Fecha de apartado';
+                                        return 'Gerente';
                                         break;
                                     case 10:
-                                        return 'Estatus contratación';
+                                        return 'Subdirector';
                                         break;
                                     case 11:
-                                        return 'Estatus lote';
+                                        return 'Director regional';
                                         break;
                                     case 12:
-                                        return 'Fecha liberación';
+                                        return 'Fecha de apartado';
                                         break;
                                     case 13:
+                                        return 'Fecha de último estatus';
+                                        break;
+                                    case 14:
+                                        return 'Días últimos estatus';
+                                        break;    
+                                    case 15:
+                                        return 'Estatus contratación';
+                                        break;
+                                    case 16:
+                                        return 'Fecha estatus 9';
+                                        break;
+                                    case 17:
+                                        return 'Días estatus 9';
+                                        break;
+                                    case 18:
+                                        return 'Estatus lote';
+                                        break;
+                                    case 19:
+                                        return 'Fecha liberación';
+                                        break;
+                                    case 20:
                                         return 'Motivo';
+                                        break;
+                                    case 21:
+                                        return 'Apartado';
                                         break;
                                 }
                             }
@@ -1476,8 +1643,6 @@ function fillTableReport(dataObject) {
                 [10, 25, 50, -1],
                 [10, 25, 50, "Todos"]
             ],
-            destroy: true,
-            ordering: false,
             scrollX: true,
             language: {
                 url: `${base_url}static/spanishLoader_v2.json`,
@@ -1502,6 +1667,21 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.nombreLote;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.precioLista;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.precioDescuento;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.casa;
                     }
                 },
                 {
@@ -1542,7 +1722,31 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
+                        return d.fechaUltimoStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasUltimoStatus;
+                    }
+                },
+                {
+                    data: function (d) {
                         return d.nombreStatus;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if(d.fechaStatus9 == null){
+                            return 'No aplica';
+                        }
+                        else
+                            return d.fechaStatus9;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return d.diasStatus9;
                     }
                 },
                 {
@@ -1559,6 +1763,16 @@ function fillTableReport(dataObject) {
                     data: function (d) {
                         return d.motivoLiberacion;
                     }
+                },
+                {
+                    data: function (d) {
+                        if (d.apartadoXReubicacion == 1){
+                            return 'Apartado por reubicación';
+                        }
+                        else{
+                            return 'Estandar';
+                        }
+                    }
                 }
             ],
             columnDefs: [{
@@ -1578,15 +1792,47 @@ function fillTableReport(dataObject) {
                     "rol": dataObject.rol,
                     "render": dataObject.render,
                     "option": dataObject.option,
-                    "beginDate": dataObject.begin,
-                    "endDate": dataObject.end,
                     "asesor": dataObject.asesor,
                     "coordinador": dataObject.coordinador,
                     "gerente": dataObject.gerente,
                     "subdirector": dataObject.subdirector,
-                    "regional": dataObject.regional
+                    "regional": dataObject.regional,
+                    "filters" : filters
                 }
             }
         });
     }
+}
+
+$(".scrollCharts").scroll(function() {
+    var scrollDiv = $(".scrollCharts").scrollLeft();
+
+    if (scrollDiv > 0){
+        $(".gradientLeft").removeClass("d-none");
+        $(".gradientLeft").addClass("fading");
+    }
+    else{
+        $(".gradientLeft").addClass("d-none");
+    }
+});
+
+function formatMoney(n) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+function setListEstatus(){
+    $('#spiner-loader').removeClass('hide');
+    $.getJSON( base_url + "Reporte/getEstatusContratacionList").done( function( data ){
+        $('#spiner-loader').addClass('hide');
+        $.each( data, function( i, v){
+            $("#estatusContratacion").append($('<option>').val(data[i]['idStatusContratacion']).text(data[i]['nombreStatus'].toUpperCase()));
+        });
+        $("#estatusContratacion").selectpicker('refresh');
+    });
 }

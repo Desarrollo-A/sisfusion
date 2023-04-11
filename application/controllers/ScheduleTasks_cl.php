@@ -61,6 +61,7 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
     * Armado de parámetros a mandar a plantilla para creación de correo electrónico	    *
     ************************************************************************************/
     // $correos_entregar = array('lucero.velazquez@ciudadmaderas.com',
+    //                         'mariela.sanchez@ciudadmaderas.com'
     //                         'subdirector.contraloria@ciudadmaderas.com',
     //                         'rigel.silva@prohabitacion.com',
     //                         'rafael.bautista@ciudadmaderas.com',
@@ -73,7 +74,10 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
     //                         'fernanda.monjaraz@ciudadmaderas.com',
     //                         'grisell.malagon@ciudadmaderas.com',
     //                         'karen.ponce@ciudadmaderas.com',
-    //                         'luz.angeles@ciudadmaderas.com');
+    //                         'luz.angeles@ciudadmaderas.com',
+    //                         'irene.vallejo@ciudadmaderas.com',
+    //                         'leydi.sanchez@ciudadmaderas.com',
+    //                         'monserrat.cazares@ciudadmaderas.com');
     $correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
     $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
@@ -1051,7 +1055,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
       // $correos_entregar = array('asistente.pv2@ciudadmaderas.com',
       //                           'coord.contraloriacorporativa@ciudadmaderas.com',
-      //                           'subdirector.contraloria@ciudadmaderas.com');
+      //                           'subdirector.contraloria@ciudadmaderas.com',
+      //                           'supervisor.bd@ciudadmaderas.com',
+      //                           'coord.contraloriacorporativa@ciudadmaderas.com',
+      //                           'mariela.sanchez@ciudadmaderas.com',
+      //                           'irene.vallejo@ciudadmaderas.com');
 
       $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
                                 "Subject" => $typeTransaction === 3 
@@ -1155,7 +1163,12 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       //                           'adriana.rodriguez@ciudadmaderas.com',
       //                           'fernanda.monjaraz@ciudadmaderas.com',
       //                           'valeria.palacios@ciduadmaderas.com',
-      //                           'juanamaria.guzman@ciudadmaderas.com');
+      //                           'juanamaria.guzman@ciudadmaderas.com',
+      //                           'monserrat.cazares@ciudadmaderas.com',
+      //                           'leydi.sanchez@ciudadmaderas.com',
+      //                           'nohemi.castillo@ciudadmaderas.com',
+      //                           'lorena.serrato@ciudadmaderas.com',
+      //                           'yaretzi.rosales@ciudadmaderas.com');
       
       $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,
                                 "Subject" => Elementos_Correo_ScheduleTasks_Cl::ASUNTO_CORREO_TABLA_CAMBIO_CONTRASEÑA);

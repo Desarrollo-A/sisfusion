@@ -14,9 +14,7 @@ class General extends CI_Controller
         $this->validateSession();
     }
 
-    public function index()
-    {
-    }
+    public function index(){}
 
     public function validateSession()
     {
@@ -60,8 +58,8 @@ class General extends CI_Controller
             echo json_encode(array());
     }
 
-    public function multirol(){ //chriscrosspapas
-        $usuario = $this->session->userdata('id_usuario');
+    public function multirol(){
+        $usuario = ($this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 4 ) ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
         $data = $this->General_model->getMultirol($usuario)->result_array();
         if ($data != null)
             echo json_encode($data,  JSON_NUMERIC_CHECK);
@@ -78,6 +76,7 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
+
     public function getCatalogOptions(){
         if ($this->input->post("id_catalogo") == '')
             echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
@@ -93,5 +92,4 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
-
 }

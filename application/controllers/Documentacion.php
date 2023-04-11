@@ -256,7 +256,7 @@ class Documentacion extends CI_Controller
                         "tipo_documento" => $this->input->post("id_documento"),
                         "motivo" => $this->input->post("reject_reason"),
                         "estatus" => 1,
-                        "tipo_proceso" => 2,
+                        "tipo_proceso" =>$this->input->post("id_documento") == 0 ? 3 :  2,
                         "creado_por" => $this->session->userdata('id_usuario'),
                         "fecha_creacion" => date('Y-m-d H:i:s'),
                         "modificado_por" => $this->session->userdata('id_usuario'),
@@ -314,13 +314,17 @@ class Documentacion extends CI_Controller
             echo json_encode(array());
     }
 
-    function getLotesList_escrituracion()
-    {
+    function getLotesList_escrituracion(){
         $idCondominio = $this->input->post("idCondominio");
         $data = $this->Documentacion_model->getLotesList_escrituracion($idCondominio)->result_array();
         if ($data != null)
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+    
+    public function getCatalogOptions(){
+        
+            echo json_encode($this->Documentacion_model->getCatalogOptions()->result_array());
     }
 }

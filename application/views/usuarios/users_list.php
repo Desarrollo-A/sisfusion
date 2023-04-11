@@ -74,15 +74,7 @@
                                                         <th class="disabled-sorting">TELÉFONO</th>
                                                         <th class="disabled-sorting">TIPO</th>
                                                         <th class="disabled-sorting">SEDE</th>
-                                                        <th class="disabled-sorting">COORDINADOR</th>
-                                                        <th class="disabled-sorting">GERENTE</th>
-                                                        <th class="disabled-sorting">SUBDIRECTOR</th>
-                                                        <th class="disabled-sorting">DIRECTOR REGIONAL</th>
-                                                        <th class="disabled-sorting">TALLA</th>
-                                                        <th class="disabled-sorting">GÉNERO</th>
-                                                        <th class="disabled-sorting">HIJOS + 12</th>
-                                                        <th class="disabled-sorting">REINGRESO</th>
-                                                        <th class="disabled-sorting">BAJA</th>
+                                                        <th class="disabled-sorting">JEFE DIRECTO</th>
                                                         <th class="disabled-sorting">ACCIONES</th>
 
                                                     </tr>
@@ -152,21 +144,24 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-6">
                                                                     <div class="form-group label-floating select-is-empty div_headquarter">
                                                                         <label class="control-label"><small class="isRequired">*</small>Sede</label>
                                                                         <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()">
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
+                                                                <div class="col-estructura"></div>
+                                                                <div class="col-sm-6" id="tipoMiembro_column">
                                                                     <div class="form-group label-floating select-is-empty div_membertype">
                                                                         <label class="control-label"><small class="isRequired">*</small>Tipo de miembro</label>
-                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="getLeadersList()">
+                                                                        <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un rol" data-size="7" data-container="body" required
+                                                                                onchange="getLeadersList()">
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
+                                                                <div class="simbolico_column"></div>
+                                                                <div class="col-sm-6">
                                                                     <div class="form-group label-floating select-is-empty div_leader">
                                                                         <input type="hidden" name="rol_actual" id="rol_actual">
                                                                         <label class="control-label"><small class="isRequired">*</small>Líder</label>
@@ -226,7 +221,7 @@
                                                                     <div class="col-md-12 d-flex justify-end">
                                                                     <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
                                                                         </button>
-                                                                        <button type="submit" class="btn btn-primary mt-1">Aceptar</button>
+                                                                        <button type="submit" id="btn_acept" class="btn btn-primary mt-1">Aceptar</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -404,17 +399,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
-    <!--<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.css"/>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/pdfmake.min.js"></script>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/vfs_fonts.js"></script>
-    <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/datatables/datatables.min.js"></script>-->
-
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
     <script>
         userId = <?= $this->session->userdata('id_usuario') ?>;
         rolId = <?= $this->session->userdata('id_rol') ?>;
-
     </script>
-
     </html>

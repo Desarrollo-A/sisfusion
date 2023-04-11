@@ -33,12 +33,31 @@
 .subSpan i{
     color: #999999;
 }
+#reviewTokenEvidence .modal-content{
+    background-color: #00000087;
+    padding: 10px 20px;
+}
 </style>
 
 <body class="">
 <div class="wrapper">
 
     <?php $this->load->view('template/sidebar', ""); ?>
+
+    <div class="modal fade in" id="reviewTokenEvidence" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog" style="max-width: inherit;">
+            <div class="modal-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <div id="img_actual">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="generateTokenModal">
         <div class="modal-dialog" role="document">
@@ -76,8 +95,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"    onclick="cleanSelects()">Cerrar</button>
                     <button class="btn btn-primary" onclick="generateToken()">Generar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cleanSelects()">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -115,7 +134,6 @@
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
                                 </div>
-                                <!--        Here you can write extra buttons/actions for the toolbar              -->
                             </div>
                             <div class="table-responsive box-table">
                                 <table id="evidenceTable" name="evidenceTable"
@@ -142,6 +160,7 @@
             </div>
         </div>
     </div>
+    <?php $this->load->view('token/common_modals'); ?>
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>

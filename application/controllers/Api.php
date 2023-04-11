@@ -14,7 +14,7 @@ class Api extends CI_Controller
             date_default_timezone_set('America/Mexico_City');
             $this->load->helper(array('form'));
             $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-            $this->load->model(array('Api_model', 'General_model'));
+            $this->load->model(array('Api_model', 'General_model', 'Internomex_model'));
     }
 
     function authenticate()
@@ -26,7 +26,7 @@ class Api extends CI_Controller
             if ($data->username == "" || $data->password == "")
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                $JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
+                //$JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
                 //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
                 $time = time();
                 $result = true;
@@ -35,9 +35,37 @@ class Api extends CI_Controller
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        "data" => array("id" => 1, "username" => $data->username, "password" => encriptar($data->password), "descripcion" => ''),
+                        "data" => array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr"),
                     );
-                    $token = JWT::encode($data, $JwtSecretKey);
+                    $token = JWT::encode($data, '977929_5117+8773_');
+                    echo json_encode(array("id_token" => $token));
+                } else
+                    echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
+            }
+        }
+    }
+
+    function authenticateInternomex()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!isset($data->username) || !isset($data->password))// contraseña antes de ser encriptada: I2503^831NQqHWxr, usuario : ojqd58DY3@
+            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
+        else {
+            if ($data->username == "" || $data->password == "")
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
+            else {
+                //$JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
+                //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
+                $time = time();
+                $result = true;
+                if ($result != false) { // MJ: SE ENCONTRÓ REGISTRO DE USUARIO ACTIVO
+                    $data = array(
+                        "iat" => $time, // Tiempo en que inició el token
+                        "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
+                        //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
+                        "data" => array("username" => "aQec6TVjo6cHLqb2c0P6lw==", "password" => "MsxRmMdCqRLMLE3varV8Qw=="),
+                    );
+                    $token = JWT::encode($data, 'vZ6ZlvUJY0J7Kf/UdXt8yw==');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -54,8 +82,8 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             else {
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(9860);
-                $valida_token = json_decode($this->validateToken($token, 9860));
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(6489);
+                $valida_token = json_decode($this->validateToken($token, 6489));
                 if ($valida_token->status !== 200){
                     echo json_encode($valida_token);
                 }else {
@@ -84,7 +112,7 @@ class Api extends CI_Controller
                         if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDDRAGON))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
-                            if ($data->NOMBRE == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '')
+                            if ($data->NOMBRE == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '' || $data->IDDRAGON == '')
                                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                             else {
                                 $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
@@ -104,8 +132,8 @@ class Api extends CI_Controller
                                         "apellido_materno" => $data->APELLIDOMATERNO,
                                         "correo" => $data->Mail,
                                         "telefono" => $data->Phone,
-                                        "lugar_prospeccion" => $data->CampaignID,
-                                        "otro_lugar" => 0,
+                                        "lugar_prospeccion" => 42,
+                                        "otro_lugar" => $data->CampaignID,
                                         "plaza_venta" => 0,
                                         "fecha_creacion" => date("Y-m-d H:i:s"),
                                         "creado_por" => 1,
@@ -120,7 +148,7 @@ class Api extends CI_Controller
                                     );
                                     $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
                                     if ($dbTransaction) // SUCCESS TRANSACTION
-                                        echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                        echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
                                     else // ERROR TRANSACTION
                                         echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                                 }
@@ -134,6 +162,72 @@ class Api extends CI_Controller
         }
     }
 
+    // Empieza apartado para consulta de internomex
+
+    function consultLeadRecord()
+    {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(8134);
+                $valida_token = json_decode($this->validateToken($token, 8134));
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if(!isset($data->empresa) || $data->empresa === ''){
+                            echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                        }else{
+                            $result = $this->Internomex_model->getInformacionR($data->empresa);
+
+                            foreach ($result as &$fila) {
+                                foreach ($fila as $clave => &$valor) {
+                                    if (is_null($valor)) {
+                                        $valor = 0;
+                                    }
+                                }
+                            }
+                            
+                            unset($fila, $valor);
+                        }
+                        
+                        if (count($result) != 0) // SUCCESS TRANSACTION
+                            echo json_encode($result);
+                        else // ERROR TRANSACTION
+                            echo json_encode(array("status" => 503,
+                                                   "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud.
+                                                                 Por favor, inténtelo de nuevo más tarde."),
+                                                    JSON_UNESCAPED_UNICODE);
+                    }else{
+                        echo json_encode($checkSingup);
+                    }
+                }
+            }
+        }
+    }
+
+    // Termina apartado para consulta de internomex
+
     function getFolderFile($documentType)
     {
         if ($documentType == 7) $folder = "static/documentos/cliente/corrida/";
@@ -143,13 +237,13 @@ class Api extends CI_Controller
     }
 
     function validateToken($token, $controller = null)
-    {
+    {   
         $time = time();
         if (is_null($controller))
             $JwtSecretKey = $this->jwt_key->getSecretKey();
         else
             $JwtSecretKey = $this->jwt_actions->getSecretKey($controller);
-        $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+            $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
         if (in_array($result, array('ALR001', 'ALR003', 'ALR004', 'ALR005', 'ALR006', 'ALR007', 'ALR008', 'ALR009', 'ALR010', 'ALR012', 'ALR013'))) {
             return json_encode(array("timestamp" => $time, "status" => 503, "error" => "Servicio no disponible", "exception" => "Servicio no disponible", "message" => "El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."));
         } else if ($result == 'ALR002') {

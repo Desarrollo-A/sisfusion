@@ -789,13 +789,7 @@ public function getStatusMktdPreventa(){
         }
     }
 
-    // public function getProspectsReport(){
-        // $data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        // echo json_encode($data);
-    // }
-    public function getProspectsReport(){
-        //$data['data'] = $this->Clientes_model->getProspectsReport()->result_array();
-        //echo json_encode($data);
+    public function getProspectsReport() {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -1190,8 +1184,9 @@ public function getStatusMktdPreventa(){
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
-        if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
+        if ((($this->session->userdata('id_usuario') == $_POST['owner']) && (($_POST['source']!=0 || $_POST['source']!=null) && $_POST['editProspecto']==0) )) {
             $data["nombre"] = $_POST['name'];
+            $data["editProspecto"]= 1;
         }
         $response = $this->Clientes_model->updateProspect($data, $this->input->post("id_prospecto_ed"));
         echo json_encode($response);
@@ -1210,26 +1205,19 @@ public function getStatusMktdPreventa(){
         echo json_encode($response);
     }
 
-    public function saveProspect()
-    {
-
-        /*-------------------------------------*/
-
+    public function saveProspect() {
         $cambio = 0;
-        if (!isset($_POST['lives_at_home'])) {
+        if (!isset($_POST['lives_at_home']))
             $cambio = 6;
-        } else {
+        else
             $cambio = $_POST['lives_at_home'];
-        }
-        /*----------------------------------------------------------*/
-
 
         $specify = $_POST['specify'];
-        if ($specify == '' || $specify == null) {
+        if ($specify == '' || $specify == null)
             $final_specification = 0;
-        } else {
+        else
             $final_specification = $specify;
-        }
+        
         $date = date("Y-m-d");
         $date = strtotime($date . "+ 30 days");
         $data = array(
@@ -1276,36 +1264,8 @@ public function getStatusMktdPreventa(){
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
-        // SE VALIDA SI ALGÚN MIEMBRO DE MKTD (GERENTE O SUBDIRECTOR INGRESAN UN PROSPECTO=
-       /* if (in_array($this->session->userdata('id_rol'), array("19", "20"))) {
-            $rol = $this->Clientes_model->getRole($_POST['asesor_prospecto'])->row();
-            if ($rol->id_rol == 7) { // IS ASESOR
-                $informacion = $this->Clientes_model->getLeadersByAdviser($_POST['asesor_prospecto'])->row();
-            } else if ($rol->id_rol == 9) { // IS COORDINADOR
-                $informacion = $this->Clientes_model->getLeadersByCoordinator($_POST['asesor_prospecto'])->row();
-            }
-            $data["id_sede"] = in_array($this->session->userdata('id_rol'), array("19", "20", "22", "35")) ? ($this->session->userdata('id_rol') == 19  ? explode(", ", $this->session->userdata('id_sede'))[0]:$this->session->userdata('id_sede')): $_POST['sales_plaza'];
-            $data["id_asesor"] = $_POST['asesor_prospecto'];
-            $data["id_coordinador"] = $this->session->userdata('id_usuario'); // si es gerente o coordinador, se infiere que el coordinador son ellos mismos, de lo contrario es su líder directo,
-            $data["id_gerente"] = in_array($this->session->userdata('id_rol'), array("19")) ? $this->session->userdata('id_usuario') : $this->session->userdata('id_lider');// si es gerente el genrente es el mismo, si es coordinador el gerente es su jefe directo y si es asesor el gerente es el líder de su líder
-            if ($_POST['prospecting_place'] == 6) {
-                $data_spi["id_asesor"] = $_POST['asesor_prospecto'] == 0 ? $this->session->userdata('id_usuario'): $_POST['asesor_prospecto'];
-                $data_spi["id_coordinador"] = $informacion->id_coordinador == $_POST['asesor_prospecto'] ? 0 : ($_POST['asesor_prospecto'] == 0 ? $this->session->userdata('id_usuario'):$informacion->id_coordinador);
-                $data_spi["id_gerente"] = $informacion->id_gerente ? $informacion->id_gerente:$this->session->userdata('id_usuario');
-                $data_spi["tipo"] = 2; // VENTAS INFORMATION
-                $response = $this->Clientes_model->saveProspectMktd($data, $data_spi);
-            } else {
-                $response = $this->Clientes_model->saveProspect($data);
-            }
-        } else {*/
-            $data["id_sede"] = $this->session->userdata('id_sede');
-           
-           
-           /* $data["id_asesor"] = $this->session->userdata('id_usuario');
-            $data["id_coordinador"] = in_array($this->session->userdata('id_rol'), array("3", "9", "6")) ? $this->session->userdata('id_usuario') : $this->session->userdata('id_lider'); // si es gerente o coordinador, se infiere que el coordinador son ellos mismos, de lo contrario es su líder directo,
-            $data["id_gerente"] = in_array($this->session->userdata('id_rol'), array("3")) ? $this->session->userdata('id_usuario') : (in_array($this->session->userdata('id_rol'), array("9", "6")) ? $this->session->userdata('id_lider') : $this->session->userdata('id_lider_2'));// si es gerente el genrente es el mismo, si es coordinador el gerente es su jefe directo y si es asesor el gerente es el líder de su líder
-           */
-          if($this->session->userdata('id_rol') == 7){
+        $data["id_sede"] = $this->session->userdata('id_sede');
+        if($this->session->userdata('id_rol') == 7) {
             //ASESOR
             if($this->session->userdata('id_lider') == 832){
                 $data["id_asesor"] = $this->session->userdata('id_usuario');
@@ -1315,7 +1275,7 @@ public function getStatusMktdPreventa(){
                 $data["id_regional"] = $this->session->userdata('id_lider_5');
                 $data["id_regional_2"] = $this->session->userdata('id_regional_2');
 
-            }else{
+            } else {
                 $data["id_asesor"] = $this->session->userdata('id_usuario');
                 $data["id_coordinador"] = $this->session->userdata('id_lider');
                 $data["id_gerente"] = $this->session->userdata('id_lider_3');
@@ -1323,17 +1283,15 @@ public function getStatusMktdPreventa(){
                 $data["id_regional"] = $this->session->userdata('id_lider_5');
                 $data["id_regional_2"] = $this->session->userdata('id_regional_2');
             }
-        }else if($this->session->userdata('id_rol') == 9){
+        } else if($this->session->userdata('id_rol') == 9) {
             //COORDIDADOR
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
-            $data["id_gerente"] = $this->session->userdata('id_lider_3');
-            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
-            $data["id_regional"] = $this->session->userdata('id_lider_5');
+            $data["id_gerente"] = $this->session->userdata('id_lider');
+            $data["id_subdirector"] = $this->session->userdata('id_lider_3');
+            $data["id_regional"] = $this->session->userdata('id_lider_4');
             $data["id_regional_2"] = $this->session->userdata('id_regional_2');
-
-
-        }else if($this->session->userdata('id_rol') == 3){
+        } else if($this->session->userdata('id_rol') == 3) {
             //GERENTE
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
@@ -1341,37 +1299,23 @@ public function getStatusMktdPreventa(){
             $data["id_subdirector"] = $this->session->userdata('id_lider_4');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
             $data["id_regional_2"] = $this->session->userdata('id_regional_2');
-
-
-        }/*else if($this->session->userdata('id_rol') == 6){
-            //ASISTENTE DE GERENTE
-            $data["id_asesor"] = $this->session->userdata('id_usuario');
-            $data["id_coordinador"] = $this->session->userdata('id_usuario');
-            $data["id_gerente"] = $this->session->userdata('id_lider');
-            $data["id_subdirector"] = $this->session->userdata('id_lider_2');
-            $data["id_regional"] = $this->session->userdata('id_lider_5');
-
-        }*/
-           
-           
-            if ($_POST['prospecting_place'] == 6) {
-                $rol = $this->Clientes_model->getRole($this->session->userdata('id_usuario'))->row();
-                $informacion = $this->Clientes_model->getLeadersBySede($rol->id_sede)->row();
-                $data_spi["id_asesor"] = $this->session->userdata('id_usuario');
-                if($informacion) { // TIENE DATOS
-                    $data_spi["id_coordinador"] = $informacion->id_coordinador == $this->session->userdata('id_usuario') ? 0 : $informacion->id_coordinador;
-                    $data_spi["id_gerente"] = $informacion->id_gerente;
-                } else { // NO TIENE DATOS
-                    $informacion2 = $this->Clientes_model->getVicePrincipal($rol->id_sede)->row();
-                    $data_spi["id_coordinador"] = $informacion2->id_coordinador;
-                    $data_spi["id_gerente"] = $informacion2->id_gerente;
-                }
-                $data_spi["tipo"] = 1; // MAKETING DIGITAL INFORMATION
-                $response = $this->Clientes_model->saveProspectMktd($data, $data_spi);
-            } else {
-                $response = $this->Clientes_model->saveProspect($data);
+        }
+        if ($_POST['prospecting_place'] == 6) {
+            $rol = $this->Clientes_model->getRole($this->session->userdata('id_usuario'))->row();
+            $informacion = $this->Clientes_model->getLeadersBySede($rol->id_sede)->row();
+            $data_spi["id_asesor"] = $this->session->userdata('id_usuario');
+            if($informacion) { // TIENE DATOS
+                $data_spi["id_coordinador"] = $informacion->id_coordinador == $this->session->userdata('id_usuario') ? 0 : $informacion->id_coordinador;
+                $data_spi["id_gerente"] = $informacion->id_gerente;
+            } else { // NO TIENE DATOS
+                $informacion2 = $this->Clientes_model->getVicePrincipal($rol->id_sede)->row();
+                $data_spi["id_coordinador"] = $informacion2->id_coordinador;
+                $data_spi["id_gerente"] = $informacion2->id_gerente;
             }
-       // }
+            $data_spi["tipo"] = 1; // MAKETING DIGITAL INFORMATION
+            $response = $this->Clientes_model->saveProspectMktd($data, $data_spi);
+        } else
+            $response = $this->Clientes_model->saveProspect($data);
         echo json_encode($response);
     }
 
@@ -1976,6 +1920,23 @@ public function getStatusMktdPreventa(){
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
+//            print_r($this->input->post("endDate"));
+//            echo'<br>';
+//            print_r(strtotime($this->input->post("endDate")));
+//            echo'<br>';
+//            exit;
+
+//
+//            print_r($typeTransaction);
+//            echo'<br>';
+//            print_r($beginDate);
+//            echo'<br>';
+//            print_r($endDate);
+//            echo'<br>';
+//            print_r($where);
+//            echo'<br>';
+//            exit;
+
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
 
@@ -2619,6 +2580,7 @@ public function getStatusMktdPreventa(){
             case '13': // CONTRALORÍA
             case '13': // CONTRALORÍA
             case '17': // CONTROL INTERNO
+            case '70': // EJECUTIVO CONTRALORIA JR
                 $this->load->view("clientes/clients_report_ventas", $datos);
             break;
         }
@@ -2981,7 +2943,10 @@ public function getStatusMktdPreventa(){
         $mail = $this->input->post("mail");
         $telephone = $this->input->post("telephone");
         $sede = $this->input->post("sede");
+        $id_dragon = $this->input->post("id_dragon");
         $tipo_busqueda = $this->input->post("TB");
+        $fecha_init = $this->input->post("fecha_init");
+        $fecha_end = $this->input->post("fecha_end");
 
         $data_search = array(
             'idLote' => $idLote,
@@ -2989,7 +2954,10 @@ public function getStatusMktdPreventa(){
             'correo' => $mail,
             'telefono' => $telephone,
             'sede' => $sede,
-            'tipo_busqueda' => $tipo_busqueda
+            'id_dragon' => $id_dragon,
+            'tipo_busqueda' => $tipo_busqueda,
+            'fecha_init' => $fecha_init,
+            'fecha_end' => $fecha_end
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
@@ -3008,6 +2976,17 @@ public function getStatusMktdPreventa(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
         $this->load->view("clientes/prospectosDR",$datos);
+    }
+
+    public function dragonsClientsList() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("marketing/dragonsClientsList", $datos);
+    }
+
+    public function getDragonsClientsList() {
+        $result['data'] = $this->Clientes_model->getDragonsClientsList();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
     /**************************************************************************************

@@ -4,19 +4,10 @@
 <div class="wrapper ">
 	<?php
 	//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12")//contratacion
-		{
-			
-			$datos = array();
-			$datos = $datos4;
-			$datos = $datos2;
-			$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
-		}
+	if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12" || $this->session->userdata('id_rol')=="70"|| $this->session->userdata('id_rol') == "71"|| $this->session->userdata('id_rol') == "73")//contratacion
+		$this->load->view('template/sidebar', "");
 	else
-	{
 		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-	}
 	?>
 
 
@@ -152,7 +143,43 @@ c                                    </span>
 				</div>
 			</div>
 			<!-- modal INSERT-->
-			
+
+
+            <!-- add contrato -->
+            <div class="modal fade" id="addContrato" >
+                <div class="modal-dialog">
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <center><h3 class="modal-title" ><span class="loteContrato"></span></h3></center>
+                        </div>
+                        <div class="modal-body">
+                            <!--<div class="input-group">
+                                <label class="input-group-btn">
+                                    <span class="btn btn-primary">
+c                                    </span>
+                                </label>
+                                <input type="text" class="form-control" id= "txtexp" name="txtexp" readonly>
+                            </div>-->
+                            <div class="input-group">
+                                <label class="input-group-btn">
+									<span class="btn btn-primary btn-file">
+									Seleccionar archivo&hellip;<input type="file" name="expedienteContrato" accept="application/pdf"
+                                                                      id="expedienteContrato" style="display: none;">
+									</span>
+                                </label>
+                                <input type="text" class="form-control" id= "txtexp2" readonly>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="enviarContrato" class="btn btn-primary"><span
+                                        class="material-icons" >send</span> Guardar documento </button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 			
 			
 			<!-- autorizaciones-->
@@ -523,23 +550,28 @@ c                                    </span>
 							data: null,
 							render: function ( data, type, row )
 							{
+							    var disabled_option = myFunctions.revisaObservacionUrgente(data.observacionContratoUrgente);
 
 								if (getFileExtension(data.expediente) == "pdf") {
 									if(data.tipo_doc == 8){
-										file = '<center><a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
+										file = '<center><a class="pdfLink3 btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
 									} else if(data.tipo_doc == 66){
-										file = '<center><a class="verEVMKTD btn-data btn-warning" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a></center>';
-									}else {
-										file = '<center><a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
+										file = '<center><a class="verEVMKTD btn-data btn-warning" '+disabled_option+' data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a></center>';
+									}else if(data.tipo_doc == 30){
+                                        file = '<center><a class="pdfLinkContratoFirmado btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-tipoId="'+data.tipo_doc+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+                                    }
+
+									else {
+										file = '<center><a class="pdfLink btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo"  data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a></center>';
 									}
 								}
 
 								else if (getFileExtension(data.expediente) == "xlsx") {
 
 									if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94){
-										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" class="btn-data btn-green-excel"> <i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" '+disabled_option+' class="btn-data btn-green-excel"> <i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a> | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
 									} else {
-										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" class="btn-data btn-green-excel"><i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a></center>';
+										file = '<center><a href="../../static/documentos/cliente/corrida/' + data.expediente + '" '+disabled_option+' class="btn-data btn-green-excel"><i class="fas fa-file-excel"></i><src="../../static/documentos/cliente/corrida/"' + data.expediente + '"></a></center>';
 									}
 
 								}
@@ -547,42 +579,52 @@ c                                    </span>
 								else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
 
 									if(data.tipo_doc == 7){
-										if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94){
+										if(data.idMovimiento == 35 || data.idMovimiento == 22 || data.idMovimiento == 62 || data.idMovimiento == 75 || data.idMovimiento == 94 || data.idMovimiento==106){
 											file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" ' +
                                                 'data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" ' +
                                                 'data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" ' +
                                                 'data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" ' +
-                                                'data-idLote="'+data.idLote+'"><i class="fa fa-upload" aria-hidden="true"></i></button>';
+                                                'data-idLote="'+data.idLote+'" '+disabled_option+'><i class="fa fa-upload" aria-hidden="true"></i></button>';
 										} else {
 											file = '<center><button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
 										}
 
 									} else if(data.tipo_doc == 8){
 										file = '<center><button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fa fa-clipboard" aria-hidden="true"></i></button></center>';
-									} else {
+									}
+                                    else if(data.tipo_doc == 30){
+                                            if(data.idMovimiento == 45 && (id_rol_general ==73 || id_rol_general==70 || id_rol_general==17) ){
+                                                file = '<center><button type="button" id="subirContrato" title= "Adjuntar archivo" class="btn-data btn-green subirContrato" ' +
+                                                    'data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" ' +
+                                                    'data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" ' +
+                                                    'data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" ' +
+                                                    'data-idLote="'+data.idLote+'" '+disabled_option+'><i class="fa fa-upload" aria-hidden="true"></i></button>';
+                                        }
+                                    }
+                                    else {
 										file = '<center><button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green disabled" disabled><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
 									}
 								}
 
 								else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
-									file = '<center><a class="btn-data btn-blueMaderas pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a></center>';
+									file = '<center><a class="btn-data btn-blueMaderas pdfLink2" '+disabled_option+' data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a></center>';
 								}
                                 else if (getFileExtension(data.expediente) == "Depósito de seriedad versión anterior") {
-                                    file = '<a class="btn-data btn-blueMaderas pdfLink22" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+                                    file = '<a class="btn-data btn-blueMaderas pdfLink22" '+disabled_option+' data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
                                 }
 								else if (getFileExtension(data.expediente) == "Autorizaciones") {
-									file = '<a href="#" class="btn-data btn-warning seeAuts" title= "Autorizaciones" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
+									file = '<a href="#" class="btn-data btn-warning seeAuts" '+disabled_option+' title= "Autorizaciones" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
 								}
 								else if (getFileExtension(data.expediente) == "Prospecto") {
-									file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'" data-lp="'+data.lugar_prospeccion+'"><i class="fas fa-user-check"></i></a>';
+									file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" '+disabled_option+' title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'" data-lp="'+data.lugar_prospeccion+'"><i class="fas fa-user-check"></i></a>';
 								}
 								else
 								{
 									if(data.tipo_doc == 66){
-										file = '<center><a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a></center>';
+										file = '<center><a class="verEVMKTD btn-data btn-acidGreen" '+disabled_option+' data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a></center>';
 										}
 										else{
-											file = '<center><a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a></center>';
+											file = '<center><a class="pdfLink btn-data btn-acidGreen" '+disabled_option+' data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a></center>';
 										}
 									
 								}
@@ -635,6 +677,16 @@ c                                    </span>
 			height:     660
 		});
 	});
+    $(document).on('click', '.pdfLinkContratoFirmado', function () {
+        var $itself = $(this);
+        Shadowbox.open({
+            content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/contratoFirmado/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+            player:     "html",
+            title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+            width:      985,
+            height:     660
+        });
+    });
 
 
 	$(document).on('click', '.pdfLink2', function () {
@@ -823,8 +875,11 @@ c                                    </span>
 		e.preventDefault();
 		var iddoc = $(this).data("iddoc");
 		var tipodoc = $(this).data("tipodoc");
+		var tipo_documento = $(this).data("tipoid");
 
 		miArrayDeleteFile[0] = iddoc;
+        miArrayDeleteFile[1] = tipodoc;
+        miArrayDeleteFile[2] = tipo_documento;
 
 		$(".tipoA").html(tipodoc);
 		$('#cuestionDelete').modal('show');
@@ -834,12 +889,23 @@ c                                    </span>
 	$(document).on('click', '#aceptoDelete', function(e) {
 		e.preventDefault();
 		var id = miArrayDeleteFile[0];
+		var tipo_docum = miArrayDeleteFile[2];
 		var dataDelete = new FormData();
 		dataDelete.append("idDocumento", id);
+        dataDelete.append("tipo_doc", tipo_docum);
+
+        var funcion = '';
+
+        if(tipo_docum == 8){
+            funcion = 'deleteCorrida';
+        }else if(tipo_docum == 30){
+            funcion = 'deleteContrato';
+        }
+
 
 		$('#aceptoDelete').prop('disabled', true);
 		$.ajax({
-			url: "<?=base_url()?>index.php/registroCliente/deleteCorrida",
+			url: "<?=base_url()?>index.php/registroCliente/"+funcion,
 			data: dataDelete,
 			cache: false,
 			contentType: false,
@@ -904,6 +970,93 @@ c                                    </span>
 	});
 
 
+    $(document).on("click", ".subirContrato", function(e){
 
+        e.preventDefault();
+
+        var descdoc= $(this).data("descdoc");
+        var idCliente = $(this).attr("data-idCliente");
+        var nombreResidencial = $(this).attr("data-nombreResidencial");
+        var nombreCondominio = $(this).attr("data-nombreCondominio");
+        var idCondominio = $(this).attr("data-idCondominio");
+        var nombreLote = $(this).attr("data-nombreLote");
+        var idLote = $(this).attr("data-idLote");
+        var tipodoc = $(this).attr("data-tipodoc");
+        var iddoc = $(this).attr("data-iddoc");
+
+        miArrayAddFile[0] = idCliente;
+        miArrayAddFile[1] = nombreResidencial;
+        miArrayAddFile[2] = nombreCondominio;
+        miArrayAddFile[3] = idCondominio;
+        miArrayAddFile[4] = nombreLote;
+        miArrayAddFile[5] = idLote;
+        miArrayAddFile[6] = tipodoc;
+        miArrayAddFile[7] = iddoc;
+
+        $(".loteContrato").html(descdoc);
+        $('#addContrato').modal('show');
+
+    });
+
+
+    $(document).on('click', '#enviarContrato', function(e) {
+        e.preventDefault();
+        var idCliente = miArrayAddFile[0];
+        var nombreResidencial = miArrayAddFile[1];
+        var nombreCondominio = miArrayAddFile[2];
+        var idCondominio = miArrayAddFile[3];
+        var nombreLote = miArrayAddFile[4];
+        var idLote = miArrayAddFile[5];
+        var tipodoc = miArrayAddFile[6];
+        var iddoc = miArrayAddFile[7];
+        var expediente = $("#expedienteContrato")[0].files[0];
+
+        var validaFile = (expediente == undefined) ? 0 : 1;
+
+        var dataFile = new FormData();
+
+        dataFile.append("idCliente", idCliente);
+        dataFile.append("nombreResidencial", nombreResidencial);
+        dataFile.append("nombreCondominio", nombreCondominio);
+        dataFile.append("idCondominio", idCondominio);
+        dataFile.append("nombreLote", nombreLote);
+        dataFile.append("idLote", idLote);
+        dataFile.append("expediente", expediente);
+        dataFile.append("tipodoc", tipodoc);
+        dataFile.append("idDocumento", iddoc);
+
+        if (validaFile == 0) {
+            //toastr.error('Debes seleccionar un archivo.', '¡Alerta!');
+            alerts.showNotification('top', 'right', 'Debes seleccionar un archivo', 'danger');
+        }
+
+        if (validaFile == 1) {
+            $('#enviarContrato').prop('disabled', true);
+            $.ajax({
+                url: "<?=base_url()?>index.php/registroCliente/addFileContrato",
+                data: dataFile,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success : function (response) {
+                    response = JSON.parse(response);
+                    if(response.message == 'OK') {
+                        //toastr.success('Corrida enviada.', '¡Alerta de Éxito!');
+                        alerts.showNotification('top', 'right', 'Corrida enviada', 'success');
+                        $('#enviarContrato').prop('disabled', false);
+                        $('#addContrato').modal('hide');
+                        $('#tableDoct').DataTable().ajax.reload();
+                        $('#txtexp2').val('');
+                    } else if(response.message == 'ERROR'){
+                        //toastr.error('Error al enviar corrida y/o formato no válido.', '¡Alerta de error!');
+                        alerts.showNotification('top', 'right', 'Error al enviar corrida y/o formato no válido', 'danger');
+                        $('#enviarContrato').prop('disabled', false);
+                    }
+                }
+            });
+        }
+
+    });
 </script>
 

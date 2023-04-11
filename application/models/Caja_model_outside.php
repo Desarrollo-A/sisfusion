@@ -22,7 +22,7 @@
     public function getResidencialDis2($rol)
     {
 
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1,101,102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
 
 
         return $this->db->query("SELECT residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX)) as descripcion FROM residenciales
@@ -48,7 +48,7 @@
     public function getCondominioDis2($residencial, $rol)
     {
 
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1,101,102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
 
 
         return $this->db->query("SELECT condominios.idCondominio, condominios.nombre FROM condominios
@@ -87,7 +87,7 @@
     }
 
     public function getLotesDis2($condominio, $rol) {
-        $val_idStatusLote = ($rol == 8 || $rol == 4) ? ('1, 101, 102') : ('1');
+        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1, 101, 102') : ('1');
         return $query = $this->db->query("SELECT lotes.idLote, lotes.nombreLote, lotes.precio, lotes.total, lotes.sup, condominios.tipo_lote, lotes.referencia, lotes.casa, (
         CASE lotes.casa WHEN 0 THEN '' WHEN 1 THEN  casas.casasDetail END) casasDetail, re.empresa
         FROM lotes
@@ -142,6 +142,16 @@
             $query = $query->result_array();
             return $query;
         }
+    }
+
+    public function getAllLotes($condominio){
+        $query = $this->db->query("SELECT idLote, nombreLote, idStatusLote FROM lotes WHERE idCondominio = $condominio AND status = 1")->result_array();
+        return $query;
+    }
+
+    public function getAllClientsByLote($lote){
+        $query = $this->db->query("SELECT id_cliente, CONCAT( nombre, ' ', apellido_paterno, ' ', apellido_materno, ' - ', CONVERT(varchar, fechaApartado, 23)) nombre, fechaApartado FROM clientes WHERE idLote =  $lote")->result_array();
+        return $query;
     }
 
 
@@ -266,29 +276,31 @@
                         }
                     }
                 }
-                $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                fechaVenc = null, modificado = null, status8Flag = 0, 
-                ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
-                totalValidado = 0, validacionEnganche = 'NULL', 
-                fechaSolicitudValidacion = null, 
-                fechaRL = null, 
-                registro_comision = 8,
-                tipo_venta = $tv, 
-                observacionContratoUrgente = null,
-                firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
-                observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
-                fechaLiberacion = '".date("Y-m-d H:i:s")."', 
-                userLiberacion = '".$this->session->userdata('username')."',
-                precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
-                enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
-                WHERE idLote IN (".$row['idLote'].") and status = 1 ");
+                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
+                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                    fechaVenc = null, modificado = null, status8Flag = 0, 
+                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
+                    totalValidado = 0, validacionEnganche = 'NULL', 
+                    fechaSolicitudValidacion = null, 
+                    fechaRL = null, 
+                    registro_comision = 8,
+                    tipo_venta = $tv, 
+                    observacionContratoUrgente = null,
+                    firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
+                    observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
+                    fechaLiberacion = '".date("Y-m-d H:i:s")."', 
+                    userLiberacion = '".$this->session->userdata('username')."',
+                    precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
+                    enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
+                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
+                    WHERE idLote IN (".$row['idLote'].") and status = 1 ");
                 } else if ($datos['activeLE'] == 1){
                     $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
                     idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0,
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null,
                     fechaRL = null, 
@@ -345,14 +357,13 @@
     }
 
 
-    public function prospectoXAsesor($idAsesor)
-    {
-        $query = $this->db->query("SELECT p.id_prospecto, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno, ' (', (CASE oxc.nombre WHEN 'Evento (especificar)' THEN 'Evento' 
-        WHEN 'MKT digital (especificar)' THEN 'MKT digital'WHEN 'Pase (especificar)' THEN 'Pase' WHEN 'Visita a empresas (especificar)' THEN 'Visita a empresas' 
-        WHEN 'Recomendado (especificar)' THEN 'Recomendado' WHEN 'Otro (especificar)' THEN 'Otro' ELSE oxc.nombre END), ')') nombre,
-        p.nombre nombre_cliente, p.apellido_paterno, p.apellido_materno, p.source
-         FROM prospectos p 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9 WHERE p.id_asesor = $idAsesor AND p.estatus = 1");
+    public function prospectoXAsesor($idAsesor) {
+        $query = $this->db->query("SELECT p.id_prospecto, CONCAT(UPPER(p.nombre), ' ', UPPER(p.apellido_paterno), ' ', UPPER(p.apellido_materno), ' (', REPLACE(oxc.nombre, ' (especificar)', ''), ')') nombre,
+        UPPER(p.nombre) nombre_cliente, UPPER(p.apellido_paterno) apellido_paterno, UPPER(p.apellido_materno) apellido_materno, p.source
+        FROM prospectos p 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9
+		WHERE p.id_asesor = $idAsesor AND p.estatus = 1 AND p.lugar_prospeccion != 6
+		ORDER BY nombre, apellido_paterno, apellido_materno");
         return $query->result();
     }
 
@@ -728,7 +739,7 @@
 
     public function getGerente()
     {
-        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5)");
+        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092)");
         return $query->result_array();
     }
 
@@ -740,7 +751,7 @@
             SELECT id_usuario, CONCAT(id_usuario,' - ', nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_usuario = $id_gerente");*/
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
-			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5)) ORDER BY nombre");
+			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806)) ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -752,7 +763,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -864,9 +875,8 @@
         ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
         ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
 		CASE
-		WHEN (registro_comision != 1) THEN 0
-        WHEN (cl.lugar_prospeccion IN(27, 28)) THEN 0
-		ELSE registro_comision
+		WHEN registro_comision IN (0, 8) THEN 0
+		ELSE 1
 		END AS registro_comision,
         cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, residencial.descripcion , cl.status, nombreLote,
         (SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS ncliente,
@@ -1158,6 +1168,7 @@
                 $info = $this->getDatosLote($array_casas[$c][0]);
 
                 if ($array_casas[$c][1] == 'STELLA') {
+                    $tipo_casa = 2;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Stella') {
@@ -1173,9 +1184,10 @@
                     $update_pcasas["total"] = ($total + $total_construccion);
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                    $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
-                } else if ($array_casas[$c][1] == 'AURA') {
+                }
+                else if ($array_casas[$c][1] == 'AURA') {
+                    $tipo_casa = 1;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXRTAS
                     foreach ($cd->tipo_casa as $value) {
                         if ($value->nombre == 'Aura') {
@@ -1191,7 +1203,6 @@
                     $update_pcasas["total"] = ($total + $total_construccion);
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                    $update_pcasas["nombreLote"] = $array_casas[$c][3];
 
                 } /*if($array_casas[$c][1] == 'STELLA'){
              
@@ -1263,7 +1274,7 @@
  
              }*/ else if ($array_casas[$c][1] == 'TERRENO') {
 
-
+                    $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);
                     $e = ($t * 0.1);
                     $s = ($t - $e);
@@ -1276,6 +1287,7 @@
 
                 }
                 $this->addClientToLote($array_casas[$c][0], $update_pcasas);
+                $this->db->query("UPDATE clientes SET tipo_casa=".$tipo_casa." WHERE id_cliente=".$cliente_id);
             }
 
         }
@@ -1360,7 +1372,7 @@
         return $this->db->query("SELECT id_lider as id_subdirector, 
         (CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609) THEN 607 
+        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609 OR us.id_lider = 690) THEN 607 
         --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
         ELSE 0 END) id_regional,
 		CASE us.id_sede WHEN '11' 

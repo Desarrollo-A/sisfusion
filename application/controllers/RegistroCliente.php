@@ -3418,34 +3418,29 @@ class RegistroCliente extends CI_Controller {
 	
 
 	public function insertarCliente(){
-
-    	 $arreglo=array();
-    	 $fechaApartado= date('Y-m-d H:i:s');
-		 $arreglo["primerNombre"]=$this->input->post('primerNombre');
-		 $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
-		 $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
-		 $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
-		 $arreglo["idAsesor"]=$this->input->post('filtro2');
-		 $arreglo["idLote"]=$this->input->post('filtro5');
-		 $arreglo["idCondominio"]=$this->input->post('filtro4');
-		 $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
-		 $arreglo["concepto"]=$this->input->post('concepto');
-		 $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
-		 $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
-		 $arreglo["noRecibo"]=$this->input->post('noRecibo');
-		 $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
-		 $arreglo["user"]=$this->session->userdata('username');
-		 $arreglo["idAsesor2"]=$this->input->post('filtro9');
-		 $arreglo["idAsesor3"]=$this->input->post('filtro11');
-	
-	
-		$arreglo["idGerente"]=$this->input->post('filtro1');
-		$arreglo["idGerente2"]=$this->input->post('filtro8');
-		$arreglo["idGerente3"]=$this->input->post('filtro10');
-	
-	
-	$fechaAccion = date("Y-m-d H:i:s");
-	$hoy_strtotime2 = strtotime($fechaAccion);
+      $arreglo=array();
+      $fechaApartado= date('Y-m-d H:i:s');
+      $arreglo["primerNombre"]=$this->input->post('primerNombre');
+      $arreglo["segundoNombre"]=$this->input->post('segundoNombre');
+      $arreglo["apellidoPaterno"]=$this->input->post('apellidoPaterno');
+      $arreglo["apellidoMaterno"]=$this->input->post('apellidoMaterno');
+      $arreglo["idAsesor"]=$this->input->post('filtro2');
+      $arreglo["idLote"]=$this->input->post('filtro5');
+      $arreglo["idCondominio"]=$this->input->post('filtro4');
+      $arreglo["engancheCliente"]=$this->input->post('engancheCliente');
+      $arreglo["concepto"]=$this->input->post('concepto');
+      $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
+      $arreglo["fechaApartado"]=date('Y-m-d H:i:s');
+      $arreglo["noRecibo"]=$this->input->post('noRecibo');
+      $arreglo["idTipoPago"]=$this->input->post('idTipoPago');
+      $arreglo["user"]=$this->session->userdata('username');
+      $arreglo["idAsesor2"]=$this->input->post('filtro9');
+      $arreglo["idAsesor3"]=$this->input->post('filtro11');
+      $arreglo["idGerente"]=$this->input->post('filtro1');
+      $arreglo["idGerente2"]=$this->input->post('filtro8');
+      $arreglo["idGerente3"]=$this->input->post('filtro10');
+      $fechaAccion = date("Y-m-d H:i:s");
+      $hoy_strtotime2 = strtotime($fechaAccion);
 	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 	  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 	
@@ -7782,15 +7777,16 @@ class RegistroCliente extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function updateAutsFromsDC()
-	{
-		$tamanoOfAuts = ($_POST['numeroDeRow']);
 
+	public function updateAutsFromsDC(){
+		$tamanoOfAuts = ($_POST['numeroDeRow']);
+    $response =  0 ;
 		$idCliente = ($_POST['idCliente']);
 		$idCondominio = ($_POST['idCondominio']);
 		$idLote = ($_POST['idLote']);
 		$idAut = ($_POST['id_autorizacion']);
-
+    $code = '';
+    $mensaje = '';
 		$nombreResidencial=($_POST['nombreResidencial']);
 		$nombreCondominio=($_POST['nombreCondominio']);
 		$nombreLote=($_POST['nombreLote']);
@@ -7798,13 +7794,11 @@ class RegistroCliente extends CI_Controller {
 		$motivoAut='';
 		$type = 0;
 
-		for($i=0; $i<$tamanoOfAuts; $i++)
-		{
+		for($i=0; $i<$tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
 			if ($_FILES["docArchivo".$i]["name"] != '' && $_FILES["docArchivo".$i]["name"] != null) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
-				/*archivo*/
 				$proyecto = str_replace(' ', '',$nombreResidencial);
 				$condominio = str_replace(' ', '',$nombreCondominio);
 				$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
@@ -7837,9 +7831,7 @@ class RegistroCliente extends CI_Controller {
 
 				$this->registrolote_modelo->insert_historial_documento($arreglo2);
 				if (move_uploaded_file($_FILES["docArchivo".$i]["tmp_name"],"static/documentos/cliente/expediente/".$expediente)) {
-					//        echo 'success';
 				}
-				/**/
 			}
 
 			$dataUPDAut = array(
@@ -7867,12 +7859,20 @@ class RegistroCliente extends CI_Controller {
 				} else {
 					$type = 2;
 				}
+        $response = 1 ;
+        $code = 'success';
+        $mensaje = 'La acción se ha realizado correctamente.';
+        // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('success', 1);
 			}
 			else
 			{
 				$type = 3;
+        $response = 2 ;
+        // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('error', 99);
+        $code = 'warning';
+        $mensaje = 'No se ha ejecutado la acción correctamente';
 			}
 		}
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
@@ -7915,12 +7915,18 @@ class RegistroCliente extends CI_Controller {
         }
       }
 		}
-		redirect(base_url()."index.php/registroCliente/directivosAut");
+    $respuesta = array(
+      'code'    => $code,
+      'mensaje' => $mensaje,
+      'respuesta' => $response,
+      // donde 1 es succes y 2 es error
+    );
+    echo json_encode ($respuesta);
 	}
 
     function getLotesAsesor($condominio,$residencial) {
         $data['lotes'] = $this->registrolote_modelo->getLotesAsesor($condominio,$residencial);
-
+        $data2 = array();
         if(count($data['lotes'])<=0)
         {
             $data['lotes'][0]['idLote'] = 0;
@@ -8133,56 +8139,66 @@ class RegistroCliente extends CI_Controller {
 		$idDocumento=$this->input->post('idDocumento');
 
 
-		$proyecto = str_replace(' ', '',$nombreResidencial);
-		$condominio = str_replace(' ', '',$nombreCondominio);
-		$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-		$condom = substr($condominioQuitaN, 0, 3);
-		$cond= strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-		$date= date('dmYHis');
-		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
-		$nombArchivo= $composicion;
-		$expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
+        $data = $this->Asesor_model->revisaOU($idLote);
+        if(count($data)>=1){
+            $data['message'] = 'OBSERVACION_CONTRATO';
+            echo json_encode($data);
+            exit;
+        }
+        else{
+            $proyecto = str_replace(' ', '',$nombreResidencial);
+            $condominio = str_replace(' ', '',$nombreCondominio);
+            $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
+            $condom = substr($condominioQuitaN, 0, 3);
+            $cond= strtoupper($condom);
+            $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+            $date= date('dmYHis');
+            $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
 
-		$fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
+            $nombArchivo= $composicion;
+            $expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
 
-
-		if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
-
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
-			$validaMove = $move == FALSE ? 0 : 1;
-
-			if ($validaMove == 1) {
-
-				$arreglo=array();
-				$arreglo["expediente"] = $expediente.'.'.$fileExt;
+            $fileExt = strtolower(substr($expediente_file, strrpos($expediente_file, '.') + 1));
 
 
-                $arreglo2=array();
-				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
-				$arreglo2["modificado"]= date('Y-m-d H:i:s');
-				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
-				$this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
-				$this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+            if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
 
-				$response['message'] = 'OK';
-				echo json_encode($response);
+                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
+                $validaMove = $move == FALSE ? 0 : 1;
 
-			} else if ($validaMove == 0){
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			} else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
+                if ($validaMove == 1) {
 
-		} else {
+                    $arreglo=array();
+                    $arreglo["expediente"] = $expediente.'.'.$fileExt;
 
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
 
-		}
+                    $arreglo2=array();
+                    $arreglo2["expediente"]= $expediente.'.'.$fileExt;
+                    $arreglo2["modificado"]= date('Y-m-d H:i:s');
+                    $arreglo2["idUser"]= $this->session->userdata('id_usuario');
+                    $this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
+                    $this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
+
+                    $response['message'] = 'OK';
+                    echo json_encode($response);
+
+                } else if ($validaMove == 0){
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode($response);
+                }
+
+            } else {
+
+                $response['message'] = 'ERROR';
+                echo json_encode($response);
+
+            }
+        }
+
 	}
 
 	public function deleteFile(){
@@ -8401,7 +8417,7 @@ class RegistroCliente extends CI_Controller {
 		$nombreLote=$this->input->post('nombreLote');
 		$idLote=$this->input->post('idLote');
 		$idCondominio=$this->input->post('idCondominio');
-		$expediente= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
+		$expediente_crudo= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
 
@@ -8421,22 +8437,28 @@ class RegistroCliente extends CI_Controller {
 		$arreglo=array();
 		$arreglo["expediente"] = $expediente;
 
-		$fileExt = strtolower(substr($expediente, strrpos($expediente, '.') + 1));
+		$fileExt = strtolower(substr($expediente_crudo, strrpos($expediente_crudo, '.') + 1));
+
+		if($tipodoc == 8){
+            $contrato_tipo = 'contrato';
+        }else if($tipodoc == 30){
+            $contrato_tipo = 'contratoFirmado';
+        }
 
 
 		if ($fileExt == 'pdf'){
 
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/contrato/".$expediente);
+			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$contrato_tipo."/".$expediente.'.'.$fileExt);
 			$validaMove = $move == FALSE ? 0 : 1;
 
 			if ($validaMove == 1) {
 
 				$arreglo=array();
-				$arreglo["expediente"] = $expediente;
+				$arreglo["expediente"] = $expediente.'.'.$fileExt;
 
 
 				$arreglo2=array();
-				$arreglo2["expediente"]= $expediente;
+				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
 				$arreglo2["modificado"]= date('Y-m-d H:i:s');
 				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
 
@@ -8465,14 +8487,24 @@ class RegistroCliente extends CI_Controller {
 	public function deleteContrato(){
 
 		$idDocumento=$this->input->post('idDocumento');
+		$tipo_documento = $this->input->post('tipo_doc');
 
 		$data=array();
 		$data["expediente"]= NULL;
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=$this->session->userdata('id_usuario');
 
+		$carpeta = '';
+		if($tipo_documento == 8){
+            $carpeta = 'contrato';
+        }elseif($tipo_documento == 30){
+            $carpeta = 'contratoFirmado';
+        }else{
+            $carpeta = '';
+        }
+
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/contrato/".$nombreExp->expediente;
+		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 		if(file_exists($file)){
 			unlink($file);
@@ -8493,7 +8525,8 @@ class RegistroCliente extends CI_Controller {
 		}
 
 	}
-	
+
+
     public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);

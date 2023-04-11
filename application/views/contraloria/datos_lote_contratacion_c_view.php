@@ -610,7 +610,7 @@
                                             <th style="font-size: .9em;">SUBDIRECTOR</th>
                                             <th style="font-size: .9em;">DIRECTOR REGIONAL</th>
                                             <th style="font-size: .9em;">ESTATUS</th>
-                                            <th style="font-size: .9em;">FECHA.AP</th>
+                                            <th style="font-size: .9em;">FECHA.AP</th>      
                                             <th style="font-size: .9em;">COMENTARIO</th>
                                             <th style="font-size: .9em;">LUGAR PROSPECCIÓN</th>
                                             <th style="font-size: .9em;">FECHA APERTURA</th>

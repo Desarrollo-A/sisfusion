@@ -4,7 +4,8 @@
 <div class="wrapper">
 
     <?php
-    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="18" || $this->session->userdata('id_usuario')=="2767"){
+    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="18"
+        || $this->session->userdata('id_usuario')=="2767" || $this->session->userdata('id_rol')=="70"){
         //sistemas
         $datos = array();
         $datos = $datos4;
@@ -352,7 +353,7 @@
                                                                         <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
                                                                             <?php
                                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                                for ($i = 2019; $i <= 2022; $i++) {
+                                                                                for ($i = 2019; $i <= 2023; $i++) {
                                                                                     $yearName  = $i;
                                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                                 }

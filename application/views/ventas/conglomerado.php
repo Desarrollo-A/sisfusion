@@ -33,8 +33,115 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>  
    <!-- inicia modal para editar descuento  -->
+        <!--Modal para add costo universidad -->
+        <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" id="header_modal" name="header_modal">
+                        <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
+                    </div>
+                    <div class="modal-body" >
+                    <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label class="label">Certificaciones*</label>       
+                                    <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
+                                        <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
+                                            <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
+                                        <?php } } ?>
+                                    </select>
+                                </div>      
+                    </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="dineroPagado" id="dineroPagado" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="pagoIndiv" id="pagoIndiv" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="idDescuento" id="idDescuento" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="totalPagos" id="totalPagos" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="pagoDado" id="pagoDado" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
+                                    </div>
+                                </div>   
+                                  <div class="col-md-4" style="display:none;">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"   name="precioOrginal" id="precioOrginal" readonly>
+                                    </div>
+                                </div>
+                        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label class="label">Descripcion:</label> 
+                                    <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
+                                    Persona que obtuvo una calificación favorable y con ello la certificación
+                                    </span>        
+                                </div>
+                        </div>
+                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
+                            <div class="form-group">
+                                    <label class="label">Fecha nueva*</label>  
+                                            <div class="row">
+                                                <div class="col-md-12 p-r">
+                                                    <div > 
+                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
+                                                    </div>
+                                                </div>
+                                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <div class="row">
+                                
+                                <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">
+                                                
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12" >
+                                </div>
+                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <center>
+                                                <button name="updateDescuentoCertificado" style="display:block;" id="updateDescuentoCertificado"
+                                                    class="btn btn-primary updateDescuentoCertificado">GUARDAR</button>
+                                            </center>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <center>
+                                                <button class="btn btn-danger" type="button" data-dismiss="modal"
+                                                    data-toggle="modal">
+                                                    CANCELAR
+                                                </button>
+                                            </center>
+                                        </div>
+                                    </div>
+                            </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin modal add costo Universidad -->
    <div class="modal fade" id="editDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -51,6 +158,12 @@
                             <div class="col-md-4" style="display:none;">
                                 <div class="form-group">
                                     <input class="form-control" type="text"   name="mensualidad" id="mensualidad" readonly>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="pagado" id="pagado" readonly>
                                 </div>
 
                             </div>
@@ -89,10 +202,10 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Monto Descuento *</label>
-                                    <input class="form-control descuento1"
+                                    <input class="form-control descuentoEscrito"
                                            type="number"
-                                           id="descuento1"
-                                           name="descuento1"
+                                           id="descuentoEscrito"
+                                           name="descuentoEscrito"
                                            autocomplete="off"
                                            min="1"
                                            max="19000"
@@ -106,8 +219,8 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Número de Pagos Restantes*</label>
-                                    <select class="form-control" name="numeroPagos1" id="numeroPagos1" >
+                                    <label class="label">Pagos Restantes*</label>
+                                    <select class="form-control" name="numeroDeMensualidades" id="numeroDeMensualidades" >
                                         <option value="" disabled="true" selected="selected">- Selecciona opción -</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -128,7 +241,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Monto a descontar</label>
-                                    <input class="form-control" type="text" id="pago_ind011" name="pago_ind011" readonly>
+                                    <input class="form-control" type="text" id="nuevasMensualidades" name="nuevasMensualidades">
                                 </div>
                             </div>
 
@@ -142,7 +255,7 @@
                             <center>
                                 <button  name="updateDescuento" id="updateDescuento" class="btn btn-primary updateDescuento">GUARDAR</button>
                                 <button class="btn btn-danger" type="button" data-dismiss="modal" data-toggle="modal">
-                                    CANCELAR
+                                    eee
                                 </button>
                             </center>
                         </div>
@@ -429,8 +542,7 @@
                                            min="1"
                                            max="19000"
                                            step=".01"
-                                           required
-                                    />
+                                           required />
                                 </div>
                             </div>
 
@@ -618,23 +730,23 @@
                                             <h3 class="card-title center-align">Descuentos Universidad</h3>
                                             <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
                                             </h5>
                                         </div>
@@ -645,23 +757,23 @@
                                             <h3 class="card-title center-align">Descuentos Universidad</h3>
                                             <p class="card-title pl-1">(Listado de descuentos de usuarios inactivos)</p><br>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-baja">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-baja">
                                             </h5>
                                         </div>
@@ -674,23 +786,23 @@
                                         </div>
                                          
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-liquidado">
                                             </h5>
                                         </div>
@@ -703,23 +815,23 @@
                                         <div class="col-lg-12 text-center mt-1 p-0">
                                             <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Total<b>:</b> $
+                                                Total $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-conglomerado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Abonado<b>:</b> $
+                                            Total recaudado $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
                                             </h5>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <h5 class="card-title center-align">
-                                                Pendiente<b>:</b> $
+                                                Pendiente $
                                                 <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-conglomerado">
                                             </h5>
                                         </div>
@@ -761,6 +873,7 @@
                                                 <th>DISPONIBLE DESC.</th>
                                                 <th>FEC. DESC. 1</th>
                                                 <th>FEC. CREACIÓN</th>
+                                                <th>ESTATUS CERTIFICACIONES</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

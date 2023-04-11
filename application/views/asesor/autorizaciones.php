@@ -65,13 +65,8 @@
 							<center><h4 class="modal-title">Solicitar autorización</h4></center>
 						</div>
 						<div class="modal-body">
-							<label>Autoriza: *</label><br>
-							<select name="id_aut" id="dirAutoriza" class="selectpicker" data-style="btn btn-primary" title="TIPO USUARIO" data-size="7">
-								<option value="0">--SELECCIONA--</option>
-								<option value="2401">Ing. Jesús Torre</option>
-								<option value="2402">Lic. Emilio Fernandez</option>
-								<option value="2403">Lic. Francisco Martínez</option>
-								<option value="2404">Lic. Adriana Mañas</option>
+							<label>Autoriza: </label><br>
+							<select name="id_aut" id="dirAutoriza" class="selectpicker select-gral" data-style="btn btn-round" title="TIPO USUARIO" data-size="7">
 							</select><br><br><br>
 							<label>Observaciones: *</label>
 							<textarea class="form-control" id="comentario_0" name="comentario_0" rows="3" style="width:100%;"
@@ -110,11 +105,8 @@
 					<div class="modal-header">
 						<h4 class="modal-title">Ver autorizaciones en proceso</h4>
 					</div>
-					<div class="modal-body">
-						<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<div id="auts-loads">
-
-							</div>
+					<div class="modal-body pl-0 pr-0">
+						<div class="scroll-styles" id="auts-loads" style="max-height: 450px; overflow:auto; padding: 0 20px">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -190,6 +182,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/intro.min.js"></script>
 	<script>
 		function validateEmptyFields(){
 			var miArray = [];
@@ -556,24 +549,37 @@
 				var statusProceso;
 				$.each(JSON.parse(data), function(i, item) {
 					if(item['estatus'] == 0){
-						statusProceso="<small class='label bg-green' style='background-color: #00a65a;border-radius: 0px'>ACEPTADA</small>";
+						statusProceso="<span style='color: #00a65a'>ACEPTADA</span>";
 					}
 					else if(item['estatus'] == 1){
-						statusProceso="<small class='label bg-orange' style='background-color: #ffaa00;border-radius: 0px'>En proceso</small>";
+						statusProceso="<span style='color: #ffaa00'>En proceso</span>";
 					}
 					else if(item['estatus'] == 2){
-						statusProceso="<small class='label bg-red' style='background-color: #ff0000;border-radius: 0px'>DENEGADA</small>";
+						statusProceso="<span style='color: #ff0000'>DENEGADA</span>";
 					}
 					else if(item['estatus'] == 3){
-						statusProceso="<small class='label bg-blue' style='background-color: #002a80;border-radius: 0px'>En DC</small>";
+						statusProceso="<span style='color: #002a80'>En DC</span>";
 					}
 					else{
-						statusProceso="<small class='label bg-gray' style='background-color: #a0a0a0;border-radius: 0px'>N/A</small>";
+						statusProceso="<span style='color: #a0a0a0'>N/A</span>";
 					}
-					$('#auts-loads').append('<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7"><label>Solicitud de autorización:  '+statusProceso+'</label></div><div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="font-size: 0.8em;text-align: right"><small>'+item['fecha_creacion']+'</small></div>');
-					$('#auts-loads').append('<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><p style="text-align: justify;"><i>'+item['autorizacion']+'</i></p>' +
-						'<br><hr style="border-top: 1px solid #565656;"></div>');
-
+					$('#auts-loads').append(`
+						<div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
+							<div class="row">
+								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
+									<label style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></label>
+								</div>
+								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="text-align: right">
+									<label style="font-weight:100; font-size: 12px">${item['fecha_creacion'].split(":").shift()}</label>
+								</div>
+								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<p style="text-align: justify;">
+										<span class="font-weight:400">${item['autorizacion']}</span>
+									</p>
+								</div>
+							</div>
+						</div>
+					`);
 				});
 				$('#verAutorizacionesAsesor').modal('show');
 			});
@@ -618,13 +624,11 @@
 			<?php
 			if($this->session->userdata('success') == 1){
 				echo 'toastr.success("Se enviaron las autorizaciones correctamente");';
-				echo 'console.log("logrado correctamente");';
 				$this->session->unset_userdata('success');
 
 			}
 			elseif($this->session->userdata('error') == 99){
 				echo 'toastr.error("Ocurrio un error al enviar la autorización	");';
-				echo 'console.log("OCURRIO UN ERROR");';
 				$this->session->unset_userdata('error');
 			}
 			?>

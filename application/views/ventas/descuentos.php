@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="32"){
+        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="70"){
         /*----------------contraloria---------------------------------------*/
         $datos = array();
         $datos = $datos4;
@@ -156,8 +156,8 @@
                                         <label class="label">Monto disponible</label>
                                         <input class="form-control" type="text" id="idmontodisponible2" readonly name="idmontodisponible2" value="">
                                     </div>
-                                    <div id="montodisponible2"></div>
-                                    <b id="sumaReal2"></b>   
+                                    <div id="montodisponible2"></div> 
+                                    <b id="sumaReal2"></b>  
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -242,16 +242,25 @@
                                                     <p class="input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
                                                 </div>
                                             </div>
+
+                                            <?php if($this->session->userdata('id_rol') != 63){?>
+
+
                                             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group">
                                                     <button ype="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Desc. pagos nuevos sin solicitar</button>
                                                 </div>
                                             </div>
+                                            
+
+
                                             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group">
                                                     <button ype="button" class="btn-data-gral" data-toggle="modal" data-target="#miModal2">Desc. pagos en revisión contraloria</button>
                                                 </div>
                                             </div>
+
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -267,7 +276,6 @@
                                                         <th>LOTE</th>
                                                         <th>MOTIVO</th>
                                                         <th>ESTATUS</th>
-                                                        <th>TIPO</th>
                                                         <th>CREADO POR</th>
                                                         <th>FECHA CAPTURA</th>
                                                         <th>OPCIONES</th>
@@ -298,7 +306,11 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-    <script>
+    <script>rolPermission = <?= $this->session->userdata('id_rol') ?>;</script>
+
+<script>
+
+
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
         var totaPen = 0;
@@ -319,7 +331,6 @@
                 processData:false,
                 success: function(data) {
                     if (data == 1) {
-                        document.getElementById('btn_abonar').disabled=false;
                         document.getElementById("form_descuentos").reset();
                         $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                         $('#miModal').modal('hide');
@@ -328,7 +339,8 @@
                         $("#roles").selectpicker("refresh");
                         $('#usuarioid').val('default');
                         $("#usuarioid").selectpicker("refresh");
-
+                        document.getElementById('sumaReal').innerHTML = '';
+                        document.getElementById('btn_abonar').disabled=false;
                         alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
                     }
                     else if(data == 2) {
@@ -357,9 +369,9 @@
         });
 
         $("#form_descuentos2").on('submit', function(e){ 
+            document.getElementById('btn_abonar2').disabled=true;
             $("#idloteorigen2").prop("disabled", false);
             e.preventDefault();
-            document.getElementById('btn_abonar2').disabled=true;
 
             let formData = new FormData(document.getElementById("form_descuentos2"));
             formData.append("dato", "valor");
@@ -381,6 +393,8 @@
                         $("#roles2").selectpicker("refresh");
                         $('#usuarioid2').val('default');
                         $("#usuarioid2").selectpicker("refresh");
+                        document.getElementById('sumaReal2').innerHTML = '';
+                        document.getElementById('btn_abonar2').disabled=true;
 
                         alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
                     }
@@ -454,7 +468,7 @@
                     titleAttr: 'Descargar archivo de Excel',
                     title: 'DESCUENTOS_SIN_APPLICAR',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8],
+                        columns: [0,1,2,3,4,5,6,7],
                         format: {
                             header:  function (d, columnIdx) {
                                 if(columnIdx == 0){
@@ -470,12 +484,10 @@
                                 }else if(columnIdx == 5){
                                     return 'ESTATUS';
                                 }else if(columnIdx == 6){
-                                    return 'TOPO';
-                                }else if(columnIdx == 7){
                                     return 'CREADO POR';
-                                }else if(columnIdx == 8){
+                                }else if(columnIdx == 7){
                                     return 'FECHA CAPTURA';
-                                }else if(columnIdx != 9 && columnIdx !=0){
+                                }else if(columnIdx != 8 && columnIdx !=0){
                                     return ' '+titulos[columnIdx-1] +' ';
                                 }
                             }
@@ -551,12 +563,17 @@
                     "width": "8%",
                     "orderable": false,
                     "data": function( d ){
-                        if(d.estatus != 16 || d.estatus != '16' ){
+
+                        
+                        if((d.estatus != 16 || d.estatus != '16') && (rolPermission != 63)){
                             return '<div class="d-flex justify-center"><button class="btn-data btn-green btn-update" value="'+d.id_pago_i+','+d.monto+','+d.usuario+','+d.nombreLote+'"><i class="material-icons" data-toggle="tooltip" data-placement="right" title="APROBAR DESCUENTO">check</i></button></div>';
                         }
                         else{
                             return '';
                         }
+
+                        
+
                     }
                 }],
                 columnDefs: [{
@@ -776,6 +793,8 @@
             document.getElementById('idmontodisponible2').value = '';
             document.getElementById('sumaReal2').innerHTML = '';
             document.getElementById('comentario2').value = '';
+            document.getElementById('sumaReal2').innerHTML = '';
+
             $('#usuarioid2 option').remove();
             $('#idloteorigen2 option').remove();
     
@@ -807,7 +826,7 @@
             document.getElementById('comentario').value = '';
             document.getElementById('montodisponible').innerHTML = '';
             document.getElementById('sumaReal').innerHTML = '';
-
+            
             var user = $(this).val();
             $('#idloteorigen option').remove(); // clear all values
             $.post('getLotesOrigen/'+user+'/'+1, function(data) {
@@ -833,16 +852,16 @@
                 //    $("#idloteorigen").selectpicker('refresh');
                 }
                 $("#idloteorigen").selectpicker('refresh');
-            }, 'json');   
+            }, 'json');     
             document.getElementById("monto").focus();
-            alerts.showNotification("top", "right", "Debe ingresar el monto a descontar, antes de seleccionar pagos.", "warning");
+            alerts.showNotification("top", "right", "Debe ingresar el monto a descontar, antes de seleccionar pagos.", "warning"); 
         });
         
         $("#usuarioid2").change(function() {
             document.getElementById('monto2').value = ''; 
-            document.getElementById('idmontodisponible2').value = ''; 
+            document.getElementById('idmontodisponible2').value = '';
             document.getElementById('comentario2').value = '';
-            document.getElementById('montodisponible2').innerHTML = '';
+            document.getElementById('montodisponible2').innerHTML = ''; 
             document.getElementById('sumaReal2').innerHTML = '';
 
             var user = $(this).val();
@@ -872,8 +891,6 @@
 
         /**--------------------------------------------------- */
         $("#idloteorigen").change(function() {
-           
-
             let cuantos = $('#idloteorigen').val().length;
             let suma =0;
             
@@ -883,7 +900,7 @@
                     datos = comision[index].split(',');
                     let id = datos[0];
                     let monto = datos[1];
-                    //document.getElementById('monto').value = ''; 
+                   // document.getElementById('monto').value = ''; 
                     
                     $.post('getInformacionData/'+id+'/'+1, function(data) {
                         var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
@@ -892,7 +909,7 @@
                         document.getElementById('montodisponible').innerHTML = '';
                         document.getElementById('sumaReal').innerHTML = 'Suma real:'+suma;
                         $("#idmontodisponible").val('$'+formatMoney(suma));
-                        $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+suma.toFixed(3)+'">');
+                        $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+suma+'">');
                         $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
             
                         var len = data.length;
@@ -905,12 +922,12 @@
                     }, 'json');
                 }
             }
-            else{
+            else if(cuantos == 1){
                 var comision = $(this).val();
                 datos = comision[0].split(',');
                 let id = datos[0];
                 let monto = datos[1];
-              //  document.getElementById('monto').value = ''; 
+                //document.getElementById('monto').value = ''; 
                 $.post('getInformacionData/'+id+'/'+1, function(data) {
                     var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
                     var idecomision = data[0]['id_pago_i'];
@@ -930,8 +947,13 @@
                     $("#montodisponible").selectpicker('refresh');
                     verificarMontos();
                 }, 'json'); 
+            }else {
+                document.getElementById('montodisponible').innerHTML = '';
+                    document.getElementById('sumaReal').innerHTML = '';
+                $("#montodisponible").append('');
+                $("#idmontodisponible").val(0);
             }
-           
+
         });
 
         $("#idloteorigen2").change(function() {
@@ -951,7 +973,7 @@
                         document.getElementById('montodisponible2').innerHTML = '';
                         document.getElementById('sumaReal2').innerHTML = 'Suma real:'+suma;
                         $("#idmontodisponible2").val('$'+formatMoney(suma));
-                        $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+suma.toFixed(3)+'">');
+                        $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+suma+'">');
                         $("#montodisponible2").append('<input type="hidden" name="ide_comision2" id="ide_comision2" value="'+idecomision+'">');
                     
                         var len = data.length;
@@ -962,18 +984,17 @@
                         $("#montodisponible2").selectpicker('refresh');
                         verificarMontos2();
                     }, 'json');
-                    
                 }
             }
-            else{
+            else if(cuantos == 1){
                 var comision = $(this).val();
                 datos = comision[0].split(',');
                 let id = datos[0];
                 let monto = datos[1];
-                //document.getElementById('monto2').value = ''; 
+               // document.getElementById('monto2').value = ''; 
                 $.post('getInformacionData/'+id+'/'+2, function(data) {
                     var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
-                    var idecomision = data[0]['id_pago_i'];                
+                    var idecomision = data[0]['id_pago_i'];
                     document.getElementById('montodisponible2').innerHTML = '';
                     document.getElementById('sumaReal2').innerHTML = 'Suma real:'+disponible;
                     $("#montodisponible2").append('<input type="hidden" name="valor_comision2" id="valor_comision2" value="'+disponible+'">');
@@ -988,8 +1009,12 @@
                     $("#montodisponible2").selectpicker('refresh');
                     verificarMontos2();
                 }, 'json'); 
-                
 
+            }else {
+                document.getElementById('montodisponible2').innerHTML = '';
+                    document.getElementById('sumaReal2').innerHTML = '';
+                $("#montodisponible2").append('');
+                $("#idmontodisponible2").val(0);
             }
         });
 
@@ -1041,6 +1066,7 @@
                 }
             }
         });
+
         function replaceAll(text, busca, reemplaza) {
         while (text.toString().indexOf(busca) != -1)
             text = text.toString().replace(busca, reemplaza);
@@ -1048,120 +1074,26 @@
          }
         function verificarMontos(){
             
-           // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
-            let disponible = replaceAll($('#valor_comision').val(), '$', '');
-            disponible = replaceAll(disponible, ',', '');
-           // let monto = parseFloat($('#monto').val()).toFixed(2);
-            let monto = replaceAll($('#monto').val(), ',', '');
-            //monto = replaceAll(monto, ',', '');
-            let cuantos = $('#idloteorigen').val().length;
-            console.log(monto);
-            console.log(disponible);
-            if(parseFloat(monto) <= parseFloat(disponible) ){
-                $("#idloteorigen").prop("disabled", true);
-                $("#btn_abonar").prop("disabled", false);    
-                    let cantidad = parseFloat($('#numeroP').val());
-                    resultado = monto /cantidad;
-                    $('#pago').val(formatMoney(resultado));
-                    document.getElementById('btn_abonar').disabled=false;
-
-                  
-                    let cadena = '';
-                    var data = $('#idloteorigen').select2('data')
-                    for (let index = 0; index < cuantos; index++) {
-                        let datos = data[index].id;
-                        let montoLote = datos.split(',');
-                        /*let abono_neo = montoLote[1];
-                        if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
-                            document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
-                            document.getElementById('btn_abonar').disabled=true; 
-                            break;  
-                        }*/
-                        cadena = cadena+' , '+data[index].text;
-                        document.getElementById('msj2').innerHTML='';
-                    }
-                    $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
-                }
-                else if(parseFloat(monto) > parseFloat(disponible) ){
-                   // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
-                    
-                    //document.getElementById('monto').value = ''; 
-                    document.getElementById('btn_abonar').disabled=true; 
-                }
-        }
-        /*function verificar(){
-            let disponible = replaceAll($('#valor_comision').val(), '$', '');
-            disponible = replaceAll(disponible, ',', '');
-            let monto = replaceAll($('#monto').val(), ',', '');
-           
-            if(parseFloat(monto) < 1 || isNaN(monto)){
-                alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
-                document.getElementById('btn_abonar').disabled=true; 
-            }
-            else{
-                console.log(disponible)
-                console.log(monto)
-
-                if(parseFloat(disponible) > parseFloat(monto)){
-                    $("#idloteorigen").prop("disabled", true);
-                }else{
-                    $("#idloteorigen").prop("disabled", false);
-                }
-                console.log('essfsf');     
-            }      
-        }*/
-
-         function verificar(){
-            let disponible = $('#valor_comision').val();
-            //
-            let monto = replaceAll($('#monto').val(), ',', '');
-            
-            // let monto = parseFloat($('#monto').val()).toFixed(2);
-             if(monto < 1 || isNaN(monto)){
-                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
-                 document.getElementById('btn_abonar').disabled=true; 
-             }
-             else{
-                console.log(disponible)
-                console.log(monto)
-                if(disponible !== '' && disponible !== undefined && disponible !== 'undefined'){
-                    disponible = replaceAll($('#valor_comision').val(), '$', '');
-                    disponible = replaceAll(disponible, ',', '');
-                    if(parseFloat(disponible) > parseFloat(monto)){
-                    $("#idloteorigen").prop("disabled", true);
-                    document.getElementById('btn_abonar').disabled=false; 
-                    }else{
-                        $("#idloteorigen").prop("disabled", false);
-                    }
-                }else{
-                    $("#idloteorigen").prop("disabled", false);
-                }
-                
-                
-             }      
-         }
-         function verificarMontos2(){
-            
             // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
-             let disponible = replaceAll($('#valor_comision2').val(), '$', '');
+             let disponible = replaceAll($('#valor_comision').val(), '$', '');
              disponible = replaceAll(disponible, ',', '');
             // let monto = parseFloat($('#monto').val()).toFixed(2);
-             let monto = replaceAll($('#monto2').val(), ',', '');
+             let monto = replaceAll($('#monto').val(), ',', '');
              //monto = replaceAll(monto, ',', '');
-             let cuantos = $('#idloteorigen2').val().length;
+             let cuantos = $('#idloteorigen').val().length;
              console.log(monto);
              console.log(disponible);
              if(parseFloat(monto) <= parseFloat(disponible) ){
-                 $("#idloteorigen2").prop("disabled", true);
-                 $("#btn_abonar2").prop("disabled", false);
-                     let cantidad = parseFloat($('#numeroP2').val());
+                 $("#idloteorigen").prop("disabled", true);
+                 $("#btn_abonar").prop("disabled", false);    
+                     let cantidad = parseFloat($('#numeroP').val());
                      resultado = monto /cantidad;
-                     $('#pago2').val(formatMoney(resultado));
-                     document.getElementById('btn_abonar2').disabled=false;
+                     $('#pago').val(formatMoney(resultado));
+                     document.getElementById('btn_abonar').disabled=false;
  
                    
                      let cadena = '';
-                     var data = $('#idloteorigen2').select2('data')
+                     var data = $('#idloteorigen').select2('data')
                      for (let index = 0; index < cuantos; index++) {
                          let datos = data[index].id;
                          let montoLote = datos.split(',');
@@ -1172,43 +1104,138 @@
                              break;  
                          }*/
                          cadena = cadena+' , '+data[index].text;
-                         document.getElementById('msj').innerHTML='';
+                         document.getElementById('msj2').innerHTML='';
                      }
-                     $('#comentario2').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+                     $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
                  }
                  else if(parseFloat(monto) > parseFloat(disponible) ){
                     // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
                      
                      //document.getElementById('monto').value = ''; 
-                     document.getElementById('btn_abonar2').disabled=true; 
+                     document.getElementById('btn_abonar').disabled=true; 
                  }
          }
+         /*function verificar(){
+             let disponible = replaceAll($('#valor_comision').val(), '$', '');
+             disponible = replaceAll(disponible, ',', '');
+             let monto = replaceAll($('#monto').val(), ',', '');
+            
+             if(parseFloat(monto) < 1 || isNaN(monto)){
+                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+                 document.getElementById('btn_abonar').disabled=true; 
+             }
+             else{
+                 console.log(disponible)
+                 console.log(monto)
+ 
+                 if(parseFloat(disponible) > parseFloat(monto)){
+                     $("#idloteorigen").prop("disabled", true);
+                 }else{
+                     $("#idloteorigen").prop("disabled", false);
+                 }
+                 console.log('essfsf');     
+             }      
+         }*/
+ 
+          function verificar(){
+             let disponible = $('#valor_comision').val();
+             //
+             let monto = replaceAll($('#monto').val(), ',', '');
+              monto = replaceAll(monto, '$', '');
+             // let monto = parseFloat($('#monto').val()).toFixed(2);
+              if(monto < 1 || isNaN(monto)){
+                  alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+                  document.getElementById('btn_abonar').disabled=true; 
+              }
+              else{
+                 console.log(disponible)
+                 console.log(monto)
+                 if(disponible !== '' && disponible !== undefined && disponible !== 'undefined'){
+                     disponible = replaceAll($('#valor_comision').val(), '$', '');
+                     disponible = replaceAll(disponible, ',', '');
+                     if(parseFloat(disponible) >= parseFloat(monto)){
+                     $("#idloteorigen").prop("disabled", true);
+                     document.getElementById('btn_abonar').disabled=false; 
+                     }else{
+                         $("#idloteorigen").prop("disabled", false);
+                         document.getElementById('btn_abonar').disabled=true; 
+                     }
+                 }else{
+                     $("#idloteorigen").prop("disabled", false);
+                 }       
+              }      
+          }
+          function verificarMontos2(){
+             
+             // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
+              let disponible = replaceAll($('#valor_comision2').val(), '$', '');
+              disponible = replaceAll(disponible, ',', '');
+             // let monto = parseFloat($('#monto').val()).toFixed(2);
+              let monto = replaceAll($('#monto2').val(), ',', '');
+              //monto = replaceAll(monto, ',', '');
+              let cuantos = $('#idloteorigen2').val().length;
+              console.log(monto);
+              console.log(disponible);
+              if(parseFloat(monto) <= parseFloat(disponible) ){
+                  $("#idloteorigen2").prop("disabled", true);
+                  $("#btn_abonar2").prop("disabled", false);
+                      let cantidad = parseFloat($('#numeroP2').val());
+                      resultado = monto /cantidad;
+                      $('#pago2').val(formatMoney(resultado));
+                      document.getElementById('btn_abonar2').disabled=false;
+  
+                    
+                      let cadena = '';
+                      var data = $('#idloteorigen2').select2('data')
+                      for (let index = 0; index < cuantos; index++) {
+                          let datos = data[index].id;
+                          let montoLote = datos.split(',');
+                          /*let abono_neo = montoLote[1];
+                          if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
+                              document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
+                              document.getElementById('btn_abonar').disabled=true; 
+                              break;  
+                          }*/
+                          cadena = cadena+' , '+data[index].text;
+                          document.getElementById('msj').innerHTML='';
+                      }
+                      $('#comentario2').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+                  }
+                  else if(parseFloat(monto) > parseFloat(disponible) ){
+                     // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
+                      
+                      //document.getElementById('monto').value = ''; 
+                      document.getElementById('btn_abonar2').disabled=true; 
+                  }
+          }
+ 
+         function verificar2(){
+             let disponible = $('#valor_comision2').val();
+             let monto = replaceAll($('#monto2').val(), ',', '');
+              monto = replaceAll(monto, '$', '');
+             if(monto < 1 || isNaN(monto)){
+                 alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+                 document.getElementById('btn_abonar2').disabled=true; 
+             }
+             else{
+                 console.log(disponible)
+                 if(disponible != '' && disponible !== undefined && disponible != 'undefined'){
+                     disponible = replaceAll(disponible, '$', '');
+                     disponible = replaceAll(disponible, ',', '');
 
-
-         
-
-        function verificar2(){
-            let disponible = $('#valor_comision2').val();
-            let monto = parseFloat($('#monto2').val()).toFixed(3);
-            if(monto < 1 || isNaN(monto)){
-                alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
-                document.getElementById('btn_abonar2').disabled=true; 
-            }
-            else{
-                console.log(disponible)
-                if(disponible != '' && disponible !== undefined && disponible != 'undefined'){
-                    disponible = replaceAll($('#valor_comision').val(), '$', '');
-                    disponible = replaceAll(disponible, ',', '');
-
-                    if(parseFloat(disponible) > parseFloat(monto)){
-                    $("#idloteorigen2").prop("disabled", true);
-                    document.getElementById('btn_abonar2').disabled=false; 
-                    }else{
-                        $("#idloteorigen2").prop("disabled", false);
-                    }
-                }else{
-                    $("#idloteorigen2").prop("disabled", false);
-                }            }    
-        }
+                     if(parseFloat(disponible) >= parseFloat(monto)){
+                     $("#idloteorigen2").prop("disabled", true);
+                     document.getElementById('btn_abonar2').disabled=false; 
+                     }else{
+                         $("#idloteorigen2").prop("disabled", false);
+                         document.getElementById('btn_abonar2').disabled=true; 
+                     }
+                 }else{
+                     $("#idloteorigen2").prop("disabled", false);
+                 }            }    
+         }
     </script>
+
+ 
+
 </body>

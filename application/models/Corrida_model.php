@@ -202,9 +202,11 @@
 
     public function getResidencialDis() {
         $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) as descripcion 
-                                FROM [residenciales] res INNER JOIN [condominios] con ON con.idResidencial = res.idResidencial 
-                                INNER JOIN [lotes] lot ON lot.idCondominio = con.idCondominio WHERE lot.idStatusLote = 1 
-                                GROUP BY res.idResidencial,res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) ORDER BY res.idResidencial");
+        FROM [residenciales] res 
+        INNER JOIN [condominios] con ON con.idResidencial = res.idResidencial 
+        INNER JOIN [lotes] lot ON lot.idCondominio = con.idCondominio 
+        --WHERE lot.idStatusLote = 1 
+        GROUP BY res.idResidencial,res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) ORDER BY res.idResidencial");
         return $query->result_array();
     }
 
@@ -215,10 +217,19 @@
 
             $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
                                     WHERE lotes.idStatusLote in ('1', '3') AND con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
-        } else {
+        } elseif ($this->session->userdata('id_rol') == 11 AND $this->session->userdata('id_usuario') == 2755) {
 
             $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
-                                    WHERE lotes.idStatusLote = '1' AND con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
+                                    WHERE con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
+        }else
+         {
+            $statusLote = '1';
+                if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){
+                    $statusLote = '2,3';
+                } 
+
+            $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
+                                    WHERE lotes.idStatusLote in($statusLote) AND con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
 
 
         }
@@ -474,13 +485,16 @@
     function getCorridasPCByLote($idLote){
         $id_usuario = $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT *, c.nombre as nombreCondominio, pc.fecha_creacion as fecha_creacionpc, 
-        CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as nombre_creador
+        CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as nombre_creador,
+        CONCAT(um.nombre,' ', um.apellido_paterno,' ', um.apellido_materno) as modificado_nombre
         FROM pagos_capital pc
         INNER JOIN lotes l ON l.idLote = pc.idLote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
-        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por WHERE pc.idLote=".$idLote);
+        INNER JOIN usuarios u ON u.id_usuario = pc.creado_por 
+        LEFT JOIN usuarios um ON um.id_usuario = pc.modificado_por
+        WHERE pc.idLote=".$idLote);
         return $query->result_array();
     }
     public function getLotesPC($condominio,$residencial){
@@ -488,8 +502,9 @@
                         INNER JOIN pagos_capital pc ON l.idLote = pc.idLote
                         /*INNER JOIN clientes cl ON cl.id_cliente = l.idCliente*/
                         INNER JOIN usuarios u ON u.id_usuario = pc.creado_por
-                        WHERE l.idCondominio = ".$condominio." AND pc.creado_por=".$this->session->userdata('id_usuario')."
-                        GROUP BY l.idLote, nombreLote, idStatusLote, pc.creado_por;");
+                        WHERE l.idCondominio = ".$condominio." GROUP BY l.idLote, nombreLote, idStatusLote, pc.creado_por;");
+        #AND pc.creado_por=".$this->session->userdata('id_usuario')."
+        #se cambia para que todos puedan verlo
         if($query){
             $query = $query->result_array();
             return $query;

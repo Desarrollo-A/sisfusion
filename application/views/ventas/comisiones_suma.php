@@ -389,25 +389,23 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>ID PAGO</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>NOMBRE</th>
-                                                                    <th>SEDE</th>
-                                                                    <th>FORMA PAGO</th>
-                                                                    <th>TOTAL COMISION</th>
-                                                                    <th>IMPUESTO</th>
-                                                                    <th>% COMISION</th>
-                                                                    <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>ID PAGO</th>
+                                                                <th>REFERENCIA</th>
+                                                                <th>NOMBRE</th>
+                                                                <th>SEDE</th>
+                                                                <th>FORMA PAGO</th>
+                                                                <th>TOTAL COMISION</th>
+                                                                <th>IMPUESTO</th>
+                                                                <th>% COMISION</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>MÁS</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -427,24 +425,22 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>NOMBRE</th>
-                                                            <th>SEDE</th>
-                                                            <th>FORMA PAGO</th>
-                                                            <th>TOTAL COMISION</th>
-                                                            <th>IMPUESTO</th>
-                                                            <th>% COMISION</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>FORMA PAGO</th>
+                                                        <th>TOTAL COMISION</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISION</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="porPagar">
                                             <div class="encabezadoBox">
@@ -462,24 +458,22 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>NOMBRE</th>
-                                                            <th>SEDE</th>
-                                                            <th>FORMA PAGO</th>
-                                                            <th>TOTAL COMISION</th>
-                                                            <th>IMPUESTO</th>
-                                                            <th>% COMISION</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>FORMA PAGO</th>
+                                                        <th>TOTAL COMISION</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISION</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="pausadas">
                                             <div class="encabezadoBox">
@@ -497,24 +491,22 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_pausadas_comisiones" name="tabla_pausadas_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>NOMBRE</th>
-                                                            <th>SEDE</th>
-                                                            <th>FORMA PAGO</th>
-                                                            <th>TOTAL COMISION</th>
-                                                            <th>IMPUESTO</th>
-                                                            <th>% COMISION</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_pausadas_comisiones" name="tabla_pausadas_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>FORMA PAGO</th>
+                                                        <th>TOTAL COMISION</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISION</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div><!-- Panes -->
                                     </div>
                                 </div>
@@ -540,6 +532,7 @@
     <script>
         userType = <?= $this->session->userdata('id_rol') ?>;
         userSede = <?= $this->session->userdata('id_sede') ?>;
+        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         Shadowbox.init();
     </script>
     <script src="<?=base_url()?>dist/js/controllers/suma/comisionesSuma.js"></script>
