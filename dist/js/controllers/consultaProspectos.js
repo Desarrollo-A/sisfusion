@@ -26,27 +26,27 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                        b = '<center><span class="label btn-noHover-brown">Descartado</span><center>';
+                        b = '<center><span class="label lbl-brown">Descartado</span><center>';
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                        b = '<center><span class="label btn-noHover-brown" >Interesado sin cita</span><center>';
+                        b = '<center><span class="label lbl-brown" >Interesado sin cita</span><center>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<center><span class="label btn-noHover-yellow">Con cita</span><center>';
+                        b = '<center><span class="label lbl-yellow">Con cita</span><center>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<center><span class="label btn-noHover-gray">Sin especificar</span><center>';
+                        b = '<center><span class="label lbl-gray">Sin especificar</span><center>';
                     else if (d.estatus_particular == 5) // PAUSADO
-                        b = '<center><span class="label btn-noHover-violetBoots">Pausado</span><center>';
+                        b = '<center><span class="label lbl-violetBoots">Pausado</span><center>';
                     else if (d.estatus_particular == 6) // PREVENTA
-                        b = '<center><span class="label btn-noHover-azure">Preventa</span><center>';
+                        b = '<center><span class="label lbl-azure">Preventa</span><center>';
                     else if (d.estatus_particular == 7) // CLIENTE
-                        b = '<center><span class="label btn-noHover-green">Cliente</span><center>';
+                        b = '<center><span class="label lbl-green">Cliente</span><center>';
                     else // CLIENTE
-                        b = '<center><span class="label btn-noHover-gray">Sin especificar</span><center>';
+                        b = '<center><span class="label lbl-gray">Sin especificar</span><center>';
                     return b;
                 }
             },
             {
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label btn-noHover-acidGreen">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen">'+ d.id_prospecto +'</span>';
                 }
             },
             {

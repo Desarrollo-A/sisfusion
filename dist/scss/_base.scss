@@ -422,7 +422,7 @@ $tv                 : "(min-width: 1280px)";
     opacity: 0.6;
     cursor: not-allowed;
   }
-.btn-noHover-green{
+.lbl-green{
     color: $green;
     border: none;
     background-color: #28b46218;
@@ -445,7 +445,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $greenExcel;
     color: $white!important;
 }
-.btn-noHover-gray{
+.lbl-gray{
     color: $gray;  
     border: none;
     background-color: #33333318;
@@ -459,7 +459,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $gray;
     color: $white!important;
 }
-.btn-noHover-violetDeep{
+.lbl-violetDeep{
     color: $violet;
     border: none;
     background-color: #70249718;
@@ -473,7 +473,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $violet;
     color: $white!important;
 }
-.btn-noHover-deepGray{
+.lbl-deepGray{
     color: $deepGray;
     border: none;
     background-color: #92929218;
@@ -487,7 +487,7 @@ $tv                 : "(min-width: 1280px)";
     color: $deepGray;
     color: $white!important;
 }
-.btn-noHover-blueMaderas{
+.lbl-blueMaderas{
     color: $blueMaderas;
     border: none;
     background-color: #0a538b18;
@@ -501,7 +501,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $blueMaderas;
     color: $white;
 }
-.btn-noHover-violetChin{
+.lbl-violetChin{
     color:$violetChin;
     border: none;
     background-color: #8E6C8818;
@@ -510,7 +510,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $violetChin;
     color: $white;
 }
-.btn-noHover-violetBoots{
+.lbl-violetBoots{
     color:$violetBoots;
     border: none;
     background-color: #563D7C18;
@@ -524,7 +524,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $violetBoots;
     color: $white;
 }
-.btn-noHover-orangeYellow{
+.lbl-orangeYellow{
     color: $orangeYellow;
     border: none;
     background-color: #ff980018;
@@ -538,7 +538,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $orangeYellow;
     color: $white !important;
 }
-.btn-noHover-brown{
+.lbl-brown{
     color: $brown;
     border: none;
     background-color: #6E2C0018;
@@ -552,7 +552,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $brown;
     color: $white !important;
 }
-.btn-noHover-azure{
+.lbl-azure{
     color: $azure;
     border: none;
     background-color: #4382EF18;
@@ -566,7 +566,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $azure;
     color: $white !important;
 }
-.btn-noHover-yellow{
+.lbl-yellow{
     color: $yellow;
     border: none;
     background-color: #ffd12918;
@@ -580,7 +580,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $yellow;
     color: $white !important;
 }
-.btn-noHover-sky{
+.lbl-sky{
     color: $sky;
     border: none;
     background-color: #00bcd418;
@@ -594,7 +594,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $sky;
     color: $white !important;
 }
-.btn-noHover-warning{
+.lbl-warning{
     color:$red;
     border: none;
     background-color: #c0131318;
@@ -608,7 +608,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $red!important;
     color: $white !important;
 }
-.btn-noHover-acidGreen{
+.lbl-acidGreen{
     color:$acidGreen;
     border: none;
     background-color: #AFB42B18;
