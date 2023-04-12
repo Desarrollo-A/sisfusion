@@ -203,11 +203,11 @@ $("#tabla_ingresar_9").ready(function () {
             if(d.fecha_modificacion == null ) {
                 lblStats ='';
             
-                lblStats ='<span class="label label-gray" style="color:gray;">Sin especificar</span>';
+                lblStats ='<span class="label label-gray" style="background:#AFAFB0;">Sin especificar</span>';
             
             }else{
 
-                lblStats ='<span class="label label-info">'+d.date_final +'</span>';
+                lblStats ='<span class="label label-info" style="background:#11DFC6;">'+d.date_final +'</span>';
             }
             return lblStats;
         }
@@ -216,14 +216,19 @@ $("#tabla_ingresar_9").ready(function () {
         "width": "8%",
         "data": function( d ){
             var lblStats;
-
+            var date_neodata
             if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
                 lblStats ='';
             }else if (d.registro_comision == 8){
                 lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
             }
             else {
-                lblStats ='<span class="label label-info">'+d.date_final+'</span>';
+                if(d.date_neodata == null){
+                    date_neodata = 'No definida';
+                }else{
+                    date_neodata = d.date_neodata;
+                }
+                lblStats ='<span class="label label-info" >'+date_neodata+'</span>';
             }
             return lblStats;
         }

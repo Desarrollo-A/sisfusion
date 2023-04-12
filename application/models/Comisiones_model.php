@@ -17,6 +17,7 @@ public function getActiveCommissions($val = '') {
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
             convert(nvarchar, pc.fecha_modificacion, 6) date_final,
+            convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
@@ -327,8 +328,7 @@ public function getDataDispersionPago($val = '') {
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente,
             vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
             convert(nvarchar, pc.fecha_modificacion, 6) date_final,  
-            convert(nvarchar, pc.fecha_neodata, 6) date_neodata, 
-             pc.fecha_sistema as  fecha_sistema, 
+            convert(nvarchar, pc.fecha_neodata, 6) date_neodata,           
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, 
             se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
@@ -2760,9 +2760,11 @@ public function getSettledCommissions($val = '') {
     ini_set('memory_limit', -1);
     // set_time_limit(300);
      
-    $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  
+    $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
     CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
-    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,            
+    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,  
+    convert(nvarchar, pc.fecha_modificacion, 6) date_final,
+    convert(nvarchar, pc.fecha_neodata, 6) date_neodata,         
     CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
     CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
     CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
@@ -4273,6 +4275,7 @@ function getInformacionDataResguardo($var){
     function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
     
         $estatus = 16;
+        
     
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
         $insert_id = $this->db->insert_id();
@@ -4289,13 +4292,14 @@ function getInformacionDataResguardo($var){
 
     function update_descuentoEsp($id_pago_i,$monto, $comentario, $usuario,$valor,$user){
     
-        $estatus =4;
+        $estatus = 4;
             
             if($monto == 0){
                 $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 16, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='DESCUENTO',descuento_aplicado=1 WHERE id_pago_i=$id_pago_i");
                 $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
     
             }else{
+                $estatus = $monto < 1 ? 0 : 4;
                 $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, modificado_por= $usuario, fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='NUEVO PAGO DESCUENTO' WHERE id_pago_i=$id_pago_i");
                 $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'SE ACTUALIZÓ NUEVO PAGO. MOTIVO: ".$comentario."')");
     
@@ -4313,24 +4317,21 @@ function getInformacionDataResguardo($var){
 
     function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
 
-        $estatus = 1;
+        $estatus = $monto < 1 ? 0 : 1;
         if($valor == 2){
-        
-            $estatus = 4;
+            $estatus = $monto < 1 ? 0 : 4;
         }
         else if($valor == 3){
-        
-            $estatus = 1;
+            $estatus = $monto < 1 ? 0 : 1;
         }
-    
     
             $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
             $insert_id = $this->db->insert_id();
         
             $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
         
-        
-            if (! $respuesta ) {
+            
+           if (! $respuesta ) {
                 return 0;
                 } else {
                 return 1;
@@ -6393,184 +6394,101 @@ public function getAsesoresBaja(){
 public function CederComisiones($usuarioold,$newUser,$rol){
     ini_set('max_execution_time', 0);
     $comisiones =  $this->db->query("select com.id_comision,com.id_lote,com.id_usuario,l.totalNeto2,l.nombreLote,com.comision_total,com.porcentaje_decimal 
-    from comisiones com 
-    inner join lotes l on l.idLote=com.id_lote 
-    where com.id_usuario=".$usuarioold."")->result_array();
-$infoCedida = array();
-$respuesta=true;
-$cc=0;
-    for ($i=0; $i <count($comisiones) ; $i++) { 
-
+                                    from comisiones com 
+                                    inner join lotes l on l.idLote=com.id_lote 
+                                    where com.id_usuario=".$usuarioold."")->result_array();
+    $infoCedida = array();
+    $respuesta=true;
+    $cc=0;
+    $datosCreacionCorreo = array();
+    for ($i=0; $i <count($comisiones) ; $i++) {
         $sumaxcomision=0;
         $Restante=0;
-            $pagosElimnar = $this->db->query("SELECT pci.id_usuario,pci.id_pago_i,pci.abono_neodata,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,pci.comentario
-            FROM pago_comision_ind pci INNER JOIN usuarios u ON u.id_usuario=pci.id_usuario 
-             WHERE pci.id_comision=".$comisiones[$i]['id_comision']." AND pci.estatus in(1,6)")->result_array();
+            $pagosElimnar = $this->db->query("SELECT pci.id_usuario,pci.id_pago_i,pci.abono_neodata,
+                                              CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,pci.comentario
+                                              FROM pago_comision_ind pci INNER JOIN usuarios u ON u.id_usuario=pci.id_usuario 
+                                              WHERE pci.id_comision=".$comisiones[$i]['id_comision']." AND pci.estatus in(1,6)")->result_array();
 
-            $SumaTopar = $this->db->query("select SUM(abono_neodata) as suma from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']." and estatus not in(1,6)")->result_array();
+            $SumaTopar = $this->db->query(" SELECT SUM(abono_neodata) as suma 
+                                            FROM pago_comision_ind 
+                                            WHERE id_comision=".$comisiones[$i]['id_comision']." AND estatus NOT IN(1,6)")->result_array();
+
             if( $SumaTopar[0]['suma'] == 'NULL' ||  $SumaTopar[0]['suma'] == null ||  $SumaTopar[0]['suma'] == 0 || $SumaTopar[0]['suma'] == '' ){
                 $sumaxcomision = 0;
             }else{
                 $sumaxcomision = $SumaTopar[0]['suma'];
             }
             
-            $Restante=0;
+        $Restante=0;
         if(count($pagosElimnar) > 0 || $sumaxcomision < ($comisiones[$i]['comision_total'] - 0.5)){
 
             if(count($pagosElimnar) > 0){
                 for ($j=0; $j <count($pagosElimnar) ; $j++) { 
                     $comentario= 'Se eliminó pago';
-                    $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagosElimnar[$j]['id_pago_i']." AND id_usuario=".$pagosElimnar[$j]['id_usuario'].";");
-                    $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagosElimnar[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
-                
+                    $respuesta =  $this->db->query("UPDATE pago_comision_ind
+                                                    SET estatus = 0, abono_neodata = 0, modificado_por = '".$this->session->userdata('id_usuario')."'
+                                                    WHERE id_pago_i=".$pagosElimnar[$j]['id_pago_i']." AND id_usuario=".$pagosElimnar[$j]['id_usuario'].";");
+                    $respuesta = $this->db->query(" INSERT INTO historial_comisiones 
+                                                    VALUES (".$pagosElimnar[$j]['id_pago_i'].",
+                                                            ".$this->session->userdata('id_usuario').",
+                                                            GETDATE(), 1, '".$comentario."')");
                 }
             }
 
             if($sumaxcomision < ($comisiones[$i]['comision_total'] - 0.5)){
                 $Restante = $comisiones[$i]['comision_total'] - $sumaxcomision;
-                $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=$newUser,modificado_por='".$this->session->userdata('id_usuario')."' where id_comision=".$comisiones[$i]['id_comision']." ");
-                $this->db->query("INSERT INTO comisiones VALUES (".$comisiones[$i]['id_lote'].",".$newUser.",".$Restante.",1,'COMISIÓN CEDIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),".$comisiones[$i]['porcentaje_decimal'].",GETDATE(),".$rol.",$usuarioold,'".$this->session->userdata('id_usuario')."')");
+                $this->db->query("  UPDATE comisiones 
+                                    SET comision_total = $sumaxcomision,
+                                        descuento = $newUser,
+                                        modificado_por='".$this->session->userdata('id_usuario')."'
+                                    WHERE id_comision=".$comisiones[$i]['id_comision']." ");
+                $this->db->query("INSERT INTO comisiones 
+                                  VALUES(".$comisiones[$i]['id_lote'].",
+                                         ".$newUser.",
+                                         ".$Restante.",
+                                         1,
+                                         'COMISIÓN CEDIDA',
+                                         NULL,
+                                         NULL,
+                                         ".$this->session->userdata('id_usuario').",
+                                         GETDATE(),
+                                         ".$comisiones[$i]['porcentaje_decimal'].",
+                                         GETDATE(),
+                                         ".$rol.",
+                                         NULL,
+                                         $usuarioold,
+                                         '".$this->session->userdata('id_usuario')."')");
               
-              $infoCedida[$cc] = array(
-                "id_lote" => $comisiones[$i]['id_lote'],
-                "nombreLote" => $comisiones[$i]['nombreLote'],
-                "com_total" => $comisiones[$i]['comision_total'],
-                "tope" => $sumaxcomision,
-                "resto" => $Restante
-              );
-              $cc=$cc+1;
-
-
+                $infoCedida[$cc] = array(
+                    "id_lote" => $comisiones[$i]['id_lote'],
+                    "nombreLote" => $comisiones[$i]['nombreLote'],
+                    "com_total" => $comisiones[$i]['comision_total'],
+                    "tope" => $sumaxcomision,
+                    "resto" => $Restante
+                );
+                $cc=$cc+1;
             }
         }
-        
     }
-
     /**-------------------------ENVIO DE CORREO----------------------- */
-    $datosUsuarioOld = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,o.nombre as rol FROM usuarios u inner join opcs_x_cats o on o.id_opcion=u.id_rol WHERE u.id_usuario=".$usuarioold." and o.id_catalogo=1")->result_array();
-    $datosUsuarioNew = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,o.nombre as rol FROM usuarios u inner join opcs_x_cats o on o.id_opcion=u.id_rol WHERE u.id_usuario=".$newUser." and o.id_catalogo=1")->result_array();
-//echo var_dump($datosUsuarioOld);
-//echo var_dump($datosUsuarioNew);
-    //echo var_dump($infoCedida);
-//echo $infoCedida[0]['id_lote'];
-    $mail = $this->phpmailer_lib->load();
+    $datosUsuarioOld = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,o.nombre as rol 
+                                         FROM usuarios u 
+                                         INNER JOIN opcs_x_cats o ON o.id_opcion=u.id_rol 
+                                         WHERE u.id_usuario=".$usuarioold." and o.id_catalogo=1")->result_array();
 
- // SMTP configuration
-//  $mail->isSMTP();
-//  $mail->Host     = 'smtp.gmail.com';
-//  $mail->SMTPAuth = true;
-//  $mail->Username = 'noreply@ciudadmaderas.com';
-//  $mail->Password = 'Marzo2019@';
-//  $mail->SMTPSecure = 'ssl';
-//  $mail->Port     = 465;
+    $datosUsuarioNew = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre,o.nombre AS rol 
+                                         FROM usuarios u INNER JOIN opcs_x_cats o ON o.id_opcion=u.id_rol
+                                         WHERE u.id_usuario=".$newUser." and o.id_catalogo=1")->result_array();
 
-
-  $mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-  $mail->AddAddress('programador.analista16@ciudadmaderas.com');
-  
- $mail->Subject = utf8_decode('COMISIONES CEDIDAS');
- // Set email format to HTML
- $mail->isHTML(true);
-
- $mailContent = utf8_decode( "<html><head>
- <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
- <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
- <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
- <title>COMISIONES CEDIDAS</title>
- <style media='all' type='text/css'>
-   .encabezados{
-     text-align: center;
-     padding-top:  1.5%;
-     padding-bottom: 1.5%;
-     font-size: 25px;
-   }
-   .encabezados a{
-     color: #234e7f;
-     font-weight: bold;
-   }
-   .fondo{
-     background-color: #234e7f;
-     color: #fff;
-   }
-
-   h4{
-     text-align: center;
-   }
-   p{
-     text-align: right;
-   }
-   strong{
-     color: #234e7f;
-   }
-   b {
-     color: white;
-   }
- </style>
- </head>
- <body>
- <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-
-   <tr colspan='3'>
-       <td class='navbar navbar-inverse' align='center'>
-             <table width='90%' cellspacing='0' cellpadding='3' class='container'>
-                 <tr class='navbar navbar-inverse encabezados'>
-                     <th style='text-align:left; width:30%;'>
-                     
-                     </th>
-                     <th style='text-align:right; width:70%;'>
-                     <a href='#'>CIUDAD MADERAS</a>
-                     </th>
-                 </tr>
-                 <tr class='navbar navbar-inverse'>
-                    <b> &nbsp </b>
-                 </tr>
-             </table>
-       </td>
-   </tr>
-
-   <tr><td border=1 bgcolor='#FFFFFF' align='center'>
-   <h4>El ".$datosUsuarioOld[0]['rol']." ".$datosUsuarioOld[0]['nombre']." cedió sus comisiones al  ".$datosUsuarioNew[0]['rol']." ".$datosUsuarioNew[0]['nombre']."  </h4>
-   <center>
-       <table id='email' cellpadding='0' cellspacing='0' border='1' width ='90%' style class='darkheader'>
-
-                   <tr class='active'>
-                   <th>ID LOTE</th>
-                   <th>LOTE</th>
-                   <th>COMISIÓN TOTAL</th>
-                   <th>COMISIÓN TOPADA</th>
-                    <th>COMISIÓN TOTAL NUEVO ASESOR</th>
-                   </tr>");    
-                   
-                  for ($m=0; $m <count($infoCedida) ; $m++) { 
-                   $mailContent .= utf8_decode("<tr>
-                   <td><center>".$infoCedida[$m]['id_lote']."</center></td>
-                   <td><center>".$infoCedida[$m]['nombreLote']."</center></td>
-                   <td><center>".number_format($infoCedida[$m]['com_total'], 2, '.', '')."</center></td>
-                   <td><center>".number_format($infoCedida[$m]['tope'], 2, '.', '')."</center></td>
-                   <td><center>".number_format($infoCedida[$m]['resto'], 2, '.', '')."</center></td>
-
-               </tr>");
-                  } 
-                   
-
-$mailContent .= utf8_decode("</table>
-   </center>
-
-   </td></tr>
- </table>
-
- </body></html>");
-
-   $mail->Body = $mailContent;
-   $mail->send();
-
-
+    $datosCreacionCorreo += ["usuarioAnterior"  =>  $datosUsuarioOld];
+    $datosCreacionCorreo += ["usuarioActual"    =>  $datosUsuarioNew];
+    $datosCreacionCorreo += ["infoCedida"       =>  $infoCedida];
     /**--------------------------------------------------------------- */
     if($respuesta){
-        return 1;
-        }else{
-          return 0;
-            }
+        return $datosCreacionCorreo;;
+    }else{
+        return 0;
+    }
 
 }
 /**---------------------------------------------------------- */
@@ -6580,34 +6498,38 @@ public function datosLotesaCeder($id_usuario){
     from comisiones com 
     inner join lotes l on l.idLote=com.id_lote 
     where com.id_usuario=".$id_usuario."")->result_array();
-$infoCedida = array();
-$cc=0;
+    
+    $infoCedida = array();
+    $cc=0;
     for ($i=0; $i <count($comisiones) ; $i++) { 
 
         $sumaxcomision=0;
         $Restante=0;
 
-            $SumaTopar = $this->db->query("select SUM(abono_neodata) as suma from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']." and estatus not in(1,6)")->result_array();
-            if( $SumaTopar[0]['suma'] == 'NULL' ||  $SumaTopar[0]['suma'] == null ||  $SumaTopar[0]['suma'] == 0 || $SumaTopar[0]['suma'] == '' ){
-                $sumaxcomision = 0;
-            }else{
-                $sumaxcomision = $SumaTopar[0]['suma'];
-            }
-            
-            $Restante=0;
+        $SumaTopar = $this->db->query(" SELECT SUM(abono_neodata) AS suma 
+                                        FROM pago_comision_ind 
+                                        WHERE id_comision=".$comisiones[$i]['id_comision']." and estatus not in(1,6)")->result_array();
 
-            if($sumaxcomision < ($comisiones[$i]['comision_total'] - 0.5)){
-                $Restante = $comisiones[$i]['comision_total'] - $sumaxcomision;
-              
-              $infoCedida[$cc] = array(
-                "id_lote" => $comisiones[$i]['id_lote'],
-                "nombreLote" => $comisiones[$i]['nombreLote'],
-                "com_total" => $comisiones[$i]['comision_total'],
-                "tope" => $sumaxcomision,
-                "resto" => $Restante
-              );
-              $cc=$cc+1;
-            }    
+        if( $SumaTopar[0]['suma'] == 'NULL' ||  $SumaTopar[0]['suma'] == null ||  $SumaTopar[0]['suma'] == 0 || $SumaTopar[0]['suma'] == '' ){
+            $sumaxcomision = 0;
+        }else{
+            $sumaxcomision = $SumaTopar[0]['suma'];
+        }
+        
+        $Restante=0;
+
+        if($sumaxcomision < ($comisiones[$i]['comision_total'] - 0.5)){
+            $Restante = $comisiones[$i]['comision_total'] - $sumaxcomision;
+            
+            $infoCedida[$cc] = array(
+            "id_lote" => $comisiones[$i]['id_lote'],
+            "nombreLote" => $comisiones[$i]['nombreLote'],
+            "com_total" => $comisiones[$i]['comision_total'],
+            "tope" => $sumaxcomision,
+            "resto" => $Restante
+            );
+            $cc=$cc+1;
+        }
     }
 
     return $infoCedida;
@@ -8264,12 +8186,14 @@ return $query->result();
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario
+        ,oxc.nombre as motivoOpc
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
@@ -8352,18 +8276,26 @@ return $query->result();
         if ($anio != 0) {
             $whereUserClause = "WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio";
         }
-        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
+        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, 
+		CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', 
         u .apellido_materno) AS nombre_completo, 
-        oxc.nombre as puesto, pa.id_usuario, pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario,
-        rpp.id_relacion_pp,oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
+        oxc.nombre as puesto, pa.id_usuario, 
+		pa.monto as monto_prestado, pci.abono_neodata, pa.pago_individual, 
+		convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, 
+		pa.comentario,
+		lo.nombreLote, 
+        rpp.id_relacion_pp,
+		oxc2.nombre as tipo, oxc2.id_opcion, pend.pendiente
         FROM prestamos_aut pa
         JOIN usuarios u ON u.id_usuario = pa.id_usuario
         JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-        JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i  
+        JOIN comisiones co ON  pci.id_comision = co.id_comision
+		JOIN lotes lo ON lo.idCliente = co.idCliente 
+		JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
         JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
         JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) as pendiente, pa1.id_usuario
-            FROM prestamos_aut pa1
+			FROM prestamos_aut pa1
             JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
             JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
             GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
@@ -8371,6 +8303,7 @@ return $query->result();
         WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio
         GROUP BY pci.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, 
         u .apellido_materno, 
+		lo.nombreLote,
         oxc.nombre, pa.id_usuario, pa.monto, pci.abono_neodata, pa.pago_individual,pci.fecha_pago_intmex, pa.comentario,
         rpp.id_relacion_pp,oxc2.nombre, oxc2.id_opcion, pend.pendiente
         ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
@@ -9094,7 +9027,14 @@ function descuentos_universidad($clave , $data){
     }
 
    
+    public function getMotivosControversia()
+    {
+        $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 88";
+        $query = $this->db->query($cmd);
+        return $query->result_array();   
+    }
 
+   
     // function InsertGenerico($insert, $table){
         
     //     try {

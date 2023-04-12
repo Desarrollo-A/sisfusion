@@ -719,13 +719,14 @@ $('#filtro55').change(function(ruta){
 let titulos = [];
 function onKeyUp(event) {
     var keycode = event.keyCode;
-    if(keycode == '13'){
+    if(keycode != '13'){
         $('.find_doc').click();
     }
 }
 
 $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
+   if(idLote != '' ){
     tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
         dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: 'auto',
@@ -918,6 +919,8 @@ $(".find_doc").click( function() {
             }
         }]
     });
+   }
+  
 
     $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_precio", function(){
         var tr = $(this).closest('tr');

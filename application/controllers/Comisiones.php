@@ -3,6 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
@@ -17,8 +18,8 @@ class Comisiones extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
-    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
-    $this->load->helper(array('url', 'form'));
+    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'phpmailer_lib'));
+    $this->load->helper(array('url', 'form', 'email/comisiones/elementos_correo', 'email/plantilla_dinamica_correo'));
     $this->load->database('default');
     $this->jwt_actions->authorize('7396', $_SERVER['HTTP_HOST']);
     $this->validateSession();
@@ -65,6 +66,7 @@ public function getPuestosDescuentos(){
     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
     $this->load->view("ventas/dispersar_pago_neodata", $datos);
   }
@@ -5545,13 +5547,73 @@ public function getAsesoresBaja() {
 }
 
 public function CederComisiones(){
-
+  //setlocale(LC_MONETARY, 'es_MX');
   $idAsesorOld = $this->input->post('asesorold');
   $rol = $this->input->post('roles2');
   $newUsuario = $this->input->post('usuarioid2');
   $comentario= $this->input->post('comentario');
-   $respuesta = array($this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol));
-  echo json_encode($respuesta[0]);
+  $respuesta = $this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol);
+  
+  /***********************************************************************************
+  *   Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
+  ***********************************************************************************/
+  if($respuesta !== 0 && !empty($respuesta) && !is_null($respuesta)){
+
+    $datos_etiquetas = null;
+    
+    $datos_correo[] = array();
+    
+    $informacionUsuariosComentario = null;
+
+    $correos_entregar = array();
+
+    foreach($respuesta as $indice => $valor){
+
+      foreach ($valor as $subIndice =>  $informacionCorreo) {
+
+        if($indice === 'usuarioAnterior'){
+          $informacionUsuariosComentario .= 'El ' . $informacionCorreo['rol'] . ' ' . $informacionCorreo['nombre'] . ' cedió sus comisiones al ';
+        }elseif($indice === 'usuarioActual'){
+          $informacionUsuariosComentario .= $informacionCorreo['rol']." ".$informacionCorreo['nombre'];
+        }elseif($indice === 'infoCedida'){
+          $informacionCorreo['com_total']= '$ '.number_format($informacionCorreo['com_total'], 2);
+          $informacionCorreo['tope']= '$ '.number_format($informacionCorreo['tope'], 2);
+          $informacionCorreo['resto']= '$ '.number_format($informacionCorreo['resto'], 2);
+          $datos_correo[$subIndice] = $informacionCorreo;
+        }
+
+      }
+
+    }
+
+    array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+
+    $comentario = $informacionUsuariosComentario . '.<br>A continuación se muestran los comentarios correspondientes a este proceso de "Cesión de comisiones": <br>' . $comentario;
+    
+    $elementos_correo = array("setFrom" => Elementos_Correo_Ceder_Comisiones::SET_FROM_EMAIL,
+                              "Subject" => Elementos_Correo_Ceder_Comisiones::ASUNTO_CORREO_TABLA_CEDER_COMISIONES);
+
+    $comentario_general = Elementos_Correo_Ceder_Comisiones::EMAIL_CEDER_COMISIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+    $datos_encabezados_tabla = Elementos_Correo_Ceder_Comisiones::ETIQUETAS_ENCABEZADO_TABLA_CEDER_COMISIONES;
+
+    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+    //<title>AVISO DE BAJA </title>
+    $plantilla_correo = new plantilla_dinamica_correo;
+    /************************************************************************************************************************/
+
+    $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+    if($envio_correo){
+      $data['message_email'] = 'OK';
+      $data['respuesta'] = 1;
+    }else{
+      $data['message_email'] = 'ERROR';
+      $data['respuesta'] = $envio_correo;
+    }
+  }else{
+    $data['respuesta'] = 0;
+  }
+  echo json_encode($data['respuesta']);
 }
 
 public function datosLotesaCeder($id_usuario){
@@ -6751,7 +6813,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function changeLoteToStopped()
     {
-
+        // var_dump($_POST['motivo']);
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
