@@ -101,14 +101,14 @@
                                    name="statusLote"
                                    id="statusLote">
                             
-                            <div class="col-lg-12" id="planes-div">
+                            <div class="col-lg-12" >
                                 <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
                                     <select class="selectpicker select-gral"
                                             id="motivo"
                                             name="motivo"
                                             data-style="btn"
                                             required>
-                                            <?php var_dump($controversias); ?>
                                             <?php foreach($controversias as $controversia){ ?>
                                             
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
