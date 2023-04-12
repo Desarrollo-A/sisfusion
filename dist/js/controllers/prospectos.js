@@ -352,6 +352,7 @@ function validateProspectingPlace() {
         $("#specify").removeAttr("style");
         document.getElementById('specify').removeAttribute("readonly");
         $("#specify_mkt").css({ "display": "none" });
+        $("#specify_mkt_div").css({ "display": "none" });
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
 
@@ -364,17 +365,8 @@ function validateProspectingPlace() {
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
         $("#specify_mkt").removeAttr("style");
-    } else if (pp == 21) { // RECOMMENDED SPECIFICATION
-        document.getElementById('specify').value = '';
-        document.getElementById('specify_mkt').value = '';
-        $("#specify").css({ "display": "none" });
-        $("#specify_mkt").css({ "display": "none" });
-        $("#specify_recommends").removeAttr("style");
-        $("#specify_recommends").css({ "required": "true" });
-        $("#specify_recommends").empty();
-        $("#specify_recommends").select2();
-        getPersonsWhoRecommends();
-    } else { // WITHOUT SPECIFICATION
+        $("#specify_mkt_div").removeAttr("style");
+    } else{ // WITHOUT SPECIFICATION
         document.getElementById('specify').value = '';
         document.getElementById('specify_mkt').value = '';
         document.getElementById('specify_recommends').value = '';
@@ -382,6 +374,7 @@ function validateProspectingPlace() {
         document.getElementById('specify').setAttribute("readonly", "true");
         $("#specify_recommends").removeAttr("required");
         $("#specify_mkt").css({ "display": "none" });
+        $("#specify_mkt_div").css({ "display": "none" });
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
         $("#specify").removeAttr("style");

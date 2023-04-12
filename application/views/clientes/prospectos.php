@@ -303,24 +303,28 @@
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">Específique cuál</label>
                                                     <input id="specify" name="specify" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                    <select id="specify_mkt"
-                                                            name="specify_mkt" 
-                                                            class="selectpicker select-gral m-0"                                                             
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="Seleccione una opción"
-                                                            data-size="7"
+                                                    <div    id="specify_mkt_div"
+                                                            name="specify_mkt_div"
                                                             style="display: none;">
-                                                        <option value="0" id="sm" disabled selected>Seleccione una opción</option>
-                                                        <option value="01 800">01 800</option>
-                                                        <option value="Chat">Chat</option>
-                                                        <option value="Contacto web">Contacto web</option>
-                                                        <option value="Facebook">Facebook</option>
-                                                        <option value="Instagram">Instagram</option>
-                                                        <option value="Recomendado">Recomendado</option>
-                                                        <option value="WhatsApp">WhatsApp</option>
-                                                    </select>
+                                                        <select id="specify_mkt"
+                                                                name="specify_mkt" 
+                                                                class="selectpicker select-gral m-0"                                                             
+                                                                data-style="btn"
+                                                                data-show-subtext="true"
+                                                                data-live-search="true"
+                                                                title="Seleccione una opción"
+                                                                data-size="7"
+                                                                style="display: none;">
+                                                            <option value="0" id="sm" disabled selected>Seleccione una opción</option>
+                                                            <option value="01 800">01 800</option>
+                                                            <option value="Chat">Chat</option>
+                                                            <option value="Contacto web">Contacto web</option>
+                                                            <option value="Facebook">Facebook</option>
+                                                            <option value="Instagram">Instagram</option>
+                                                            <option value="Recomendado">Recomendado</option>
+                                                            <option value="WhatsApp">WhatsApp</option>
+                                                        </select>
+                                                    </div>
                                                     <select id="specify_recommends"
                                                             name="specify"
                                                             class="form-control input-gral"
