@@ -20,43 +20,33 @@ $(document).ready(function() {
 
     function fillTable(transaction, beginDate, endDate, where) {
         prospectsTable = $('#prospects-datatable').DataTable({
-            dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-            width: 'auto',
+            dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
             columns: [
-            /*{
-                data: function(d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
-                    } else {
-                        return '<center><span class="label label-danger" style="background:#E74C3C">Sin vigencia</span><center>';
-                    }
-                }
-
-            },*/
             {
                 data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                        b = '<center><span class="label" style="background:#E59866; color:#6E2C00">Descartado</span><center>';
+                        b = '<center><span class="label btn-noHover-brown">Descartado</span><center>';
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                        b = '<center><span class="label" style="background:#D98880; color:#641E16">Interesado sin cita</span><center>';
+                        b = '<center><span class="label btn-noHover-brown" >Interesado sin cita</span><center>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<center><span class="label" style="background:#F7DC6F; color:#7D6608">Con cita</span><center>';
+                        b = '<center><span class="label btn-noHover-yellow">Con cita</span><center>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<center><span class="label" style="background:#808B96; color:#17202A">Sin especificar</span><center>';
+                        b = '<center><span class="label btn-noHover-gray">Sin especificar</span><center>';
                     else if (d.estatus_particular == 5) // PAUSADO
-                        b = '<center><span class="label" style="background:#C39BD3; color:#512E5F">Pausado</span><center>';
+                        b = '<center><span class="label btn-noHover-violetBoots">Pausado</span><center>';
                     else if (d.estatus_particular == 6) // PREVENTA
-                        b = '<center><span class="label" style="background:#7FB3D5; color:#154360">Preventa</span><center>';
+                        b = '<center><span class="label btn-noHover-azure">Preventa</span><center>';
                     else if (d.estatus_particular == 7) // CLIENTE
-                        b = '<center><span class="label" style="background:#73C6B6; color:#0B5345">Cliente</span><center>';
+                        b = '<center><span class="label btn-noHover-green">Cliente</span><center>';
                     else // CLIENTE
-                        b = '<center><span class="label" style="background:#808B96; color:#17202A">Sin especificar</span><center>';
+                        b = '<center><span class="label btn-noHover-gray">Sin especificar</span><center>';
                     return b;
                 }
             },
             {
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label" style="background: #A3E4D7; color: #0E6251">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label btn-noHover-acidGreen">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -88,11 +78,6 @@ $(document).ready(function() {
                     return d.fecha_creacion;
                 }
             },
-            /*{
-                data: function(d) {
-                    return d.fecha_vencimiento;
-                }
-            },*/
             {
                 data: function(d) {
                     if (typeTransaction == 0) { // Marketing
@@ -112,7 +97,7 @@ $(document).ready(function() {
                                 return '<center>'+actions+'<center>';
                             } else { // IS NOT ACTIVE
                                 var actions = '';
-                                if (d.vigencia >= 0 /*< 5 && d.fecha_creacion >= '2021-04-19 23:59:59.000'*/) {
+                                if (d.vigencia >= 0 ) {
                                     actions += '<button class="btn-data btn-deepGray update-validity" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Renovar vigencia"><i class="fas fa-history"></i></button>';
                                 }
                                 actions += change_buttons;
