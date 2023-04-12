@@ -750,7 +750,7 @@
   cursor: not-allowed;
 }
 
-.btn-noHover-green {
+.lbl-green {
   color: #28B463;
   border: none;
   background-color: #28b46218;
@@ -778,7 +778,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-gray {
+.lbl-gray {
   color: #333333;
   border: none;
   background-color: #33333318;
@@ -795,7 +795,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-violetDeep {
+.lbl-violetDeep {
   color: #702497;
   border: none;
   background-color: #70249718;
@@ -812,7 +812,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-deepGray {
+.lbl-deepGray {
   color: #929292;
   border: none;
   background-color: #92929218;
@@ -829,7 +829,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-blueMaderas {
+.lbl-blueMaderas {
   color: #0a548b;
   border: none;
   background-color: #0a538b18;
@@ -846,7 +846,7 @@
   color: #ffffff;
 }
 
-.btn-noHover-violetChin {
+.lbl-violetChin {
   color: #8E6C88;
   border: none;
   background-color: #8E6C8818;
@@ -857,7 +857,7 @@
   color: #ffffff;
 }
 
-.btn-noHover-violetBoots {
+.lbl-violetBoots {
   color: #563D7C;
   border: none;
   background-color: #563D7C18;
@@ -874,7 +874,7 @@
   color: #ffffff;
 }
 
-.btn-noHover-orangeYellow {
+.lbl-orangeYellow {
   color: #ff9800;
   border: none;
   background-color: #ff980018;
@@ -891,7 +891,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-brown {
+.lbl-brown {
   color: #6E2C00;
   border: none;
   background-color: #6E2C0018;
@@ -908,7 +908,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-azure {
+.lbl-azure {
   color: #4382EF;
   border: none;
   background-color: #4382EF18;
@@ -925,7 +925,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-yellow {
+.lbl-yellow {
   color: #ffd129;
   border: none;
   background-color: #ffd12918;
@@ -942,7 +942,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-sky {
+.lbl-sky {
   color: #00bcd4;
   border: none;
   background-color: #00bcd418;
@@ -959,7 +959,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-warning {
+.lbl-warning {
   color: #c01313;
   border: none;
   background-color: #c0131318;
@@ -976,7 +976,7 @@
   color: #ffffff !important;
 }
 
-.btn-noHover-acidGreen {
+.lbl-acidGreen {
   color: #AFB42B;
   border: none;
   background-color: #AFB42B18;
