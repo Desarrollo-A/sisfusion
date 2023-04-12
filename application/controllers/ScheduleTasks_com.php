@@ -160,11 +160,11 @@ public function activar_bandera_neo(){
         }
     }
 
-    $this->ComisionesNeo_model->UpdateBanderaPagoComisionAnticipo();
-    $dataUpdate = $this->Comisiones_
-    foreach($dataUpdate  as $update ){
-        $this->Comisiones_model->updateBanderaDetenida($update['idLote'],true );
-    }
+    // $this->ComisionesNeo_model->UpdateBanderaPagoComisionAnticipo();
+    // $dataUpdate = $this->Comisiones_
+    // foreach($dataUpdate  as $update ){
+    //     $this->Comisiones_model->updateBanderaDetenida($update['idLote'],true );
+    // }
     
 }
 
