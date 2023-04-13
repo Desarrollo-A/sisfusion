@@ -199,41 +199,14 @@ $("#table_planes").ready(function() {
 
 $('[data-toggle="tooltip"]').tooltip();
 const arr = [];
-function OpenModal(tipo,boton){
-    if(tipo == 1){
-        $('#descuento').val('');
-        $('#id_condicion').val(1);
-        $('#boton').val(boton);
-        $('#tipo_d').val(1);
-        document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total';
-    }else if(tipo == 2){
-        $('#descuento').val('');
-        $('#id_condicion').val(2);
-        $('#boton').val(boton);
-        $('#tipo_d').val(2);
-        document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
-    }else if(tipo == 4){
-        $('#descuento').val('');
-        $('#id_condicion').val(4);
-        $('#boton').val(boton);
-        $('#tipo_d').val(4);
-        document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
-    }else if(tipo == 12){
-        $('#descuento').val('');
-        $('#id_condicion').val(12);
-        $('#boton').val(boton);
-        $('#tipo_d').val(12);
-        document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono';
-    }
-    else if(tipo == 13){
-        $('#descuento').val('');
-        $('#id_condicion').val(13);
-        $('#boton').val(boton);
-        $('#tipo_d').val(13);
-        document.getElementById('label_descuento').innerHTML = 'Agregar descuento meses sin intereses';
-    }
+
+function addDescuento(id_condicion, descripcion){
+    $('#descuento').val('');
+    $('#label_descuento').html();
+    $('#id_condicion').val(id_condicion);
+    $('#label_descuento').html('Agregar descuento a "' + descripcion +'"');
     $('#ModalFormAddDescuentos').modal();
-}
+};
 
 $("input[data-type='currency']").on({
     keyup: function() {
@@ -381,7 +354,7 @@ async function construirTablas(){
                 title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
             },
             {
-                text: `<a href="#" onclick="OpenModal(${id_condicion});" >Agregar descuento</a>`,
+                text: `<a href="#" onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</a>`,
                 className: 'btn-azure',
             }],
             pagingType: "full_numbers",

@@ -85,24 +85,19 @@
 						<div class="tabbable-line">
 							<ul class="nav nav-tabs ">
 								<li class="active">
-									<a href="#tab_default_1" data-toggle="tab">
-									precio total </a>
+									<a href="#tab_default_1" data-toggle="tab">Precio total</a>
 								</li>
 								<li>
-									<a href="#tab_default_2" data-toggle="tab">
-									Enganche </a>
+									<a href="#tab_default_2" data-toggle="tab">Enganche</a>
 								</li>
 								<li>
-									<a href="#tab_default_3" data-toggle="tab">
-									Precio por M2 </a>
+									<a href="#tab_default_3" data-toggle="tab">Precio por M2</a>
 								</li>
 								<li>
-									<a href="#tab_default_4" data-toggle="tab">
-									Precio por bono </a>
+									<a href="#tab_default_4" data-toggle="tab">Precio por bono</a>
 								</li>
 								<li>
-									<a href="#tab_default_5" data-toggle="tab">
-									MSI </a>
+									<a href="#tab_default_5" data-toggle="tab">MSI</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -199,20 +194,12 @@
 						<input type="hidden" value="0" name="boton" id="boton">
 						<input type="hidden" value="0" name="tipo_d" id="tipo_d">
 						<div class="form-group d-flex justify-center">
-							<div class="">
-								<p class="m-0" id="label_descuento"></p>
-								<input type="text" class="input-gral border-none w-100" required  data-type="currency"   id="descuento" name="descuento">
-							</div>
+							<p class="m-0" id="label_descuento"></p>
+							<input type="text" class="input-gral border-none w-100" required  data-type="currency" id="descuento" name="descuento">
 						</div>
 						<div class="container-fluid">
-							<div class="row mt-1 mb-1">
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="Guardar">
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
-								</div>
-							</div>
+							<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR"></button>
+							<button type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="Guardar"></button>
 						</div>
 					</form>
 				</div>

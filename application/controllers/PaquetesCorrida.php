@@ -273,7 +273,7 @@ class PaquetesCorrida extends CI_Controller
   {
     $id_condicion = $this->input->post("id_condicion");
     $descuento = $this->input->post("descuento");
-    if ($this->input->post("tipo_d") == 4 || $this->input->post("tipo_d") == 12) {
+    if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12) {
       $replace = ["$", ","];
       $descuento = str_replace($replace, "", $descuento);
     }
