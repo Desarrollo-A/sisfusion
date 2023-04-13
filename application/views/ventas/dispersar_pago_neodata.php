@@ -101,14 +101,14 @@
                                    name="statusLote"
                                    id="statusLote">
                             
-                            <div class="col-lg-12" id="planes-div">
+                            <div class="col-lg-12" >
                                 <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
                                     <select class="selectpicker select-gral"
                                             id="motivo"
                                             name="motivo"
                                             data-style="btn"
                                             required>
-                                            <?php var_dump($controversias); ?>
                                             <?php foreach($controversias as $controversia){ ?>
                                             
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
@@ -532,7 +532,7 @@
     var url2 = "<?=base_url()?>index.php/";
 
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/despersar_pago_neodata.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersar_pago_neodata.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

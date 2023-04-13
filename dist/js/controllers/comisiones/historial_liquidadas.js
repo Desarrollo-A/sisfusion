@@ -127,15 +127,48 @@ $("#tabla_ingresar_9").ready(function () {
             return lblStats;
         }
     },
+    {
+        "width": "8%",
+        "data": function( d ){
+            var lblStats;
 
+            if(d.date_final == null ) {
+                lblStats ='';
+            
+                lblStats ='<span class="label label-gray" style="background:#AFAFB0;">Sin especificar</span>';
+            
+            }else{
+
+                lblStats ='<span class="label label-info" style="background:#11DFC6;">'+d.date_final +'</span>';
+            }
+            return lblStats;
+        }
+    },
+    {
+        "width": "8%",
+        "data": function( d ){
+            var lblStats;
+            var date_neodata
+             if (d.registro_comision == 8){
+                lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+            }
+            else {
+                if(d.date_neodata == null){
+                    date_neodata = 'No definida';
+                }else{
+                    date_neodata = d.date_neodata;
+                }
+                lblStats ='<span class="label label-info" >'+date_neodata+'</span>';
+            }
+            return lblStats;
+        }
+    },
     {
         "width": "8%",
         "data": function( d ){
             return d.plan_descripcion;
         }
     },
-
-
     {
             "width": "15%",
             "data": function( d ){
@@ -143,24 +176,22 @@ $("#tabla_ingresar_9").ready(function () {
                 // return '<p class="m-0">'+d.nombreLote+'</p>';
 
             }
-        },
-            {
+    },
+    {
                 "data": function (d) {
                     if (d.porcentaje_comisiones) {
                         return `${parseInt(d.porcentaje_comisiones)}%`;
                     }
                     return '-';
                 }
-            },
-        {
+    },
+    {
             "width": "15%",
             "data": function( d ){
                 return '$'+formatMoney(d.pendiente);
             }
-        }, 
-
-     
-        {
+    },
+    {
             "width": "8%",
             "orderable": false,
             "data": function (data) {
