@@ -555,14 +555,14 @@ class Cobranza_model extends CI_Model {
         SELECT YEAR(cl.fechaApartado) anio, COUNT(*) total
         FROM clientes cl 
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.status = 1
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         WHERE cl.$columna = $comisionista AND cl.status = 1 GROUP BY YEAR(cl.fechaApartado)) tbl1
         LEFT JOIN (
         SELECT YEAR(cl.fechaApartado) anio, COUNT(*) total
         FROM clientes cl 
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.status = 1
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         WHERE cl.$columna = $comisionista AND cl.status = 0 AND isNULL(noRecibo, '') != 'CANCELADO' GROUP BY YEAR(cl.fechaApartado)) tbl2 ON tbl2.anio = tbl1.anio
         ORDER BY tbl1.anio");
     }
-
-
 }
