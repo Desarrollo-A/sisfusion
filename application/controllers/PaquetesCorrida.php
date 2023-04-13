@@ -366,13 +366,12 @@ class PaquetesCorrida extends CI_Controller
     echo json_encode(array("data" => $stack));
   }
 
-  public function getPaquetes()
-  {
+  public function getPaquetes(){
     $index = $this->input->post("index");
-    $datos_sede = explode(",", $this->input->post("sede"));
+    $datos_sede = explode(",",$this->input->post("sede"));
     $id_sede = $datos_sede[0];
     $residenciales = $this->input->post("residencial[]");
-    $desarrollos = implode(",", $residenciales);
+    $desarrollos = implode(",",$residenciales);
     $superficie = $this->input->post("superficie");
     /***/
     $inicio = $this->input->post("inicio");
@@ -386,43 +385,42 @@ class PaquetesCorrida extends CI_Controller
      * 1.-Mayor a
      * 2.-Rango
      * 3.-Cualquiera
-     */
-    if ($superficie == 1) { //Mayor a
-      $query_superdicie = 'and sup >= ' . $fin . ' ';
-    } else if ($superficie == 2) { // Menor a
-      $query_superdicie = 'and sup < ' . $fin . ' ';
-    } else if ($superficie == 3) { // Cualquiera
+     */ 
+    if($superficie == 1){ //Mayor a
+      $query_superdicie = 'and sup >= '.$fin.' ';
+    }else if($superficie == 2){ // Menor a
+      $query_superdicie = 'and sup < '.$fin.' ';
+    }else if($superficie == 3){ // Cualquiera
       $query_superdicie = '';
     }
-
+  
     /*
     Tipo lote
     1.-Habitacional
     2.-Comercial
     3.-AmbosPlanes
-    */
+    */  
     $ArrPAquetes = array();
     $TipoLote = $this->input->post("tipolote");
-    if ($TipoLote == 1) { //Habitacional
+    if($TipoLote == 1){ //Habitacional
       $query_tipo_lote = 'and c.tipo_lote = 0 ';
-    } else if ($TipoLote == 2) { // Comercial
+    }else if($TipoLote == 2){ // Comercial
       $query_tipo_lote = 'and c.tipo_lote = 1 ';
-
-    } else if ($TipoLote == 3) { // Ambos
+  
+    }else if($TipoLote == 3){ // Ambos
       $query_tipo_lote = '';
     }
-
-    $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
-
-    $data = array();
-    if (count($row) == 0) {
-
-    } else if (count($row) == 1) {
-      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
-    } else if (count($row) > 1) {
-      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
-    }
-    echo json_encode(array(array("paquetes" => $data)));
+  
+   $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
+  //var_dump($row);
+   $data = array();
+   if(count($row) == 0){
+   }else if(count($row) == 1){
+    $data = $row[0]['id_descuento'] != NULL ? $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']) : [];
+   }else if(count($row) > 1 ){
+    $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+   }
+   echo json_encode(array(array("paquetes"=>$data)));
   }
 
   public function getDescuentosByPlan()

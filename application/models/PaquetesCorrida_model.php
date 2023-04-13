@@ -255,7 +255,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
         $query_superdicie
         $query_tipo_lote
-        UNION ALL
+        UNION 
         SELECT DISTINCT(id_descuento) descuentos
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
@@ -277,6 +277,35 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         inner join condiciones c on c.id_condicion = d.id_condicion
         inner join tipos_condiciones tc on tc.id_tcondicion=c.id_tcondicion
         where r.id_paquete in ($id_paquete) and c.id_condicion=$id_tcondicion  order by r.prioridad asc")->result_array();
+    }
+    
+
+    public function getPaquetesDisponiblesyApart($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
+            $paquetes =  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
+                SELECT DISTINCT(id_descuento) descuentos
+                FROM lotes l
+                INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+                INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+                where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
+                $query_superdicie
+                $query_tipo_lote
+                ) t")->result_array();
+                if(count($paquetes) == 0){
+                    $paquetes =  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
+                        SELECT DISTINCT(id_descuento) descuentos
+                        FROM lotes l
+                        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
+                        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
+                        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+                        where l.idStatusLote = 3 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
+                        $query_superdicie
+                        $query_tipo_lote
+                        ) t")->result_array();
+                }
+            return $paquetes;
+        
+
+        
     }
     
 
