@@ -19,7 +19,7 @@ var getInfo3 = new Array(6);
 function showDetailModal(idPlan) {
     $('#planes-div').hide();
     $.ajax({
-        url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
+        url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -32,7 +32,7 @@ function showDetailModal(idPlan) {
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                     $('#plan-detalle-tabla tbody').append('<tr>');
-                    $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
+                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
                     $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
                     $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                     $('#plan-detalle-tabla tbody').append('</tr>');
@@ -50,7 +50,7 @@ $('#btn-detalle-plan').on('click', function () {
     $('#planes').append($('<option>').val(0).text('SELECCIONA UNA OPCIÓN')).selectpicker('refresh');
 
     $.ajax({
-        url: `${url}Comisiones/findAllPlanes`,
+        url: `${url}Comisiones/getPlanesComisiones`,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -72,7 +72,7 @@ $('#planes').change(function () {
     const idPlan = $(this).val();
     if (idPlan !== '0') {
         $.ajax({
-            url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
+            url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -81,7 +81,7 @@ $('#planes').change(function () {
                 roles.forEach(rol => {
                     if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                         $('#plan-detalle-tabla tbody').append('<tr>');
-                        $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                         $('#plan-detalle-tabla tbody').append('</tr>');

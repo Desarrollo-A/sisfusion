@@ -8469,39 +8469,40 @@ return $query->result();
 /**----------------------------------------FIN BONOS Y PRESTAMOS------------------------------- */
 /**---------------------------------------------- */
 
-    public function findAllPlanes()
-    {
-        $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
-        return $query->result_array();
-    }
+public function getPlanesComisiones()
+{
+    $query = $this->db->query('SELECT id_plan, descripcion FROM plan_comision WHERE estatus = 1');
+    return $query->result_array();
+}
 
-    public function findPlanDetailById($idPlan)
-    {
-        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion,
-            pc.comDi, pc.neoDi, rolDir.nombre AS director, 
-            pc.comRe, pc.neoRe, 'Regional' AS regional,
-            pc.comSu, pc.neoSu, 'Subdirector' AS subdirector,
-            pc.comGe, pc.neoGe, rolGer.nombre AS gerente,
-            pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador,
-            pc.comAs, pc.neoAs, rolAse.nombre AS asesor,
-            pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro,
-            pc.comMk, pc.neoMk, rolMkt.nombre AS mktd,
-            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2
-            FROM plan_comision pc
-            LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
-            LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
-                LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
-            LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
-                LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
-            WHERE pc.id_plan = $idPlan");
-        return $query->row();
-    }
+public function getDetallePlanesComisiones($idPlan)
+{
+    $query = $this->db->query("SELECT pc.id_plan, pc.descripcion,
+        pc.comDi, pc.neoDi, rolDir.nombre AS director, 
+        pc.comRe, pc.neoRe, 'Regional' AS regional,
+        pc.comSu, pc.neoSu, 'Subdirector' AS subdirector,
+        pc.comGe, pc.neoGe, rolGer.nombre AS gerente,
+        pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador,
+        pc.comAs, pc.neoAs, rolAse.nombre AS asesor,
+        pc.comMk, pc.neoMk, rolMkt.nombre AS mktd,
+        pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro,
+        pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2
+        FROM plan_comision pc
+        LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
+        LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
+        LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
+        LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
+        LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
+        LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
+        WHERE pc.id_plan = $idPlan");
+    
+    return $query->row();
+}
 
     public function getVentasCanceladas()
     {
