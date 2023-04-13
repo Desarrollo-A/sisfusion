@@ -100,24 +100,8 @@
                                    <input type="hidden"
                                    name="statusLote"
                                    id="statusLote">
-                            
-                            <div class="col-lg-12" id="planes-div">
-                                <div class="form-group">
-                                    <select class="selectpicker select-gral"
-                                            id="motivo"
-                                            name="motivo"
-                                            data-style="btn"
-                                            required>
-                                            <?php var_dump($controversias); ?>
-                                            <?php foreach($controversias as $controversia){ ?>
-                                            
-                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                            <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- <div class="col-lg-12">
+
+                            <div class="col-lg-12">
                                 <div class="form-group is-empty">
                                     <label for="motivo" class="control-label label-gral">Motivo</label>
                                     <input id="motivo"
@@ -129,7 +113,7 @@
                                            maxlength="50"
                                            required />
                                 </div>
-                            </div> -->
+                            </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
@@ -433,7 +417,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y recesiones con la nueva venta.</p>
+                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -498,7 +482,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID</th>
+                                                        <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
@@ -509,7 +493,7 @@
                                                         <th>PLAN VENTA</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -532,7 +516,7 @@
     var url2 = "<?=base_url()?>index.php/";
 
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/despersar_pago_neodata.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersar_pago_neodata.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
