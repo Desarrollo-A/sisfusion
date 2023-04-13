@@ -62,11 +62,11 @@ $("#form_prestamos").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_prestamos"));
 
 
-    let uploadedDocument = $("#evidencia")[0].files[0];
-    let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
+    // let uploadedDocument = $("#evidencia")[0].files[0];
+    //let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
-    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
-    else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+   // if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
+   // else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
         data: formData, 
@@ -382,9 +382,10 @@ $("#tabla_prestamos").ready( function(){
                 botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
              
                 }
-                
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-pen-nib"></i></button>`;
-             
+                if (d.estatus == 1 && d.total_pagado == null ){
+                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
+                }
+
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }
         }],
@@ -417,6 +418,27 @@ $("#tabla_prestamos").ready( function(){
 
         //});
     });
+
+
+    $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
+        const idPrestamo = $(this).val();
+        const nombreUsuario = $(this).attr("data-name");
+    //	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
+            const Modalbody = $('#ModalEdit .modal-body');
+            const Modalfooter = $('#ModalEdit .modal-footer');
+            // Modalbody.html('');
+            Modalfooter.html('');
+    
+                Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+
+            //console.log(data);
+            $("#ModalEdit").modal();
+        //	$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+
+        //});
+    });
+
+
 
     $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
         $('#spiner-loader').removeClass('hide');

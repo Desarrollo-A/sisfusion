@@ -43,6 +43,49 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade modal-alertas" name="ModalEdit" id="ModalEdit" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-red">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
+					</div>
+					<form method="post" id="form_prestamos_edit">
+						<div class="modal-body">
+							<div class="form-group row">
+								<div class="col-md-4">
+									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
+									<input class="form-control" type="number" step="any" required  id="montoPagos" name="monto">
+								</div>
+								<div class="col-md-4">
+									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
+									<input class="form-control" id="numeroPagos" required  type="number" name="numeroP">
+								</div>
+								<div class="col-md-4">
+									<label class="label">Pago</label>
+									<input class="form-control" id="pagoEdit" required type="text" name="pago" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<p>Nota:</label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
+								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
+							</div>
+						
+							<div class="form-group">
+								<center>
+									<button type="submit" id="btn_abonars" class="btn btn-success">GUARDAR</button>
+									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+								</center>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
 		<div class="modal fade modal-alertas" name="miModal" id="miModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
