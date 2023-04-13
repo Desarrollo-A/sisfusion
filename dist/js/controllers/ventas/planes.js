@@ -1,13 +1,13 @@
+let allCondiciones;
+var primeraCarga = 1;
 
 $("#table_planes").ready(function() {
-    let titulos = [];
+    let titulos = [];  
     $('#table_planes thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-
         $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
-
             if (tabla_nuevas.column(i).search() !== this.value) {
                 tabla_nuevas
                     .column(i)
@@ -39,7 +39,7 @@ $("#table_planes").ready(function() {
                     }
                 }
             },
-        } ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -197,54 +197,37 @@ $("#table_planes").ready(function() {
     });
 });
 
-
-
 $('[data-toggle="tooltip"]').tooltip();
 const arr = [];
 function OpenModal(tipo,boton){
     if(tipo == 1){
         $('#descuento').val('');
-        $('#tdescuento').val(1);
         $('#id_condicion').val(1);
-        $('#eng_top').val(0);
-        $('#apply').val(1);
         $('#boton').val(boton);
         $('#tipo_d').val(1);
         document.getElementById('label_descuento').innerHTML = 'Agregar descuento al precio total';
     }else if(tipo == 2){
         $('#descuento').val('');
-        $('#tdescuento').val(2);
         $('#id_condicion').val(2);
-        $('#eng_top').val(0);
-        $('#apply').val(0);
         $('#boton').val(boton);
         $('#tipo_d').val(2);
         document.getElementById('label_descuento').innerHTML = 'Agregar descuento al enganche';
     }else if(tipo == 4){
         $('#descuento').val('');
-        $('#tdescuento').val(1);
         $('#id_condicion').val(4);
-        $('#eng_top').val(0);
-        $('#apply').val(1);
         $('#boton').val(boton);
         $('#tipo_d').val(4);
         document.getElementById('label_descuento').innerHTML = 'Agregar descuento al total por M2';
     }else if(tipo == 12){
         $('#descuento').val('');
-        $('#tdescuento').val(1);
         $('#id_condicion').val(12);
-        $('#eng_top').val(1);
-        $('#apply').val(1);
         $('#boton').val(boton);
         $('#tipo_d').val(12);
         document.getElementById('label_descuento').innerHTML = 'Agregar descuento por bono';
     }
     else if(tipo == 13){
         $('#descuento').val('');
-        $('#tdescuento').val(1);
         $('#id_condicion').val(13);
-        $('#eng_top').val(1);
-        $('#apply').val(1);
         $('#boton').val(boton);
         $('#tipo_d').val(13);
         document.getElementById('label_descuento').innerHTML = 'Agregar descuento meses sin intereses';
@@ -341,356 +324,94 @@ $("#addNewDesc").on('submit', function(e){
     });
 });
 
-/**-------------------------TABLAS----------- */
-$('#table_total thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (table_total.column(i).search() !== this.value ) {
-                table_total.column(i).search(this.value).draw();
-            }
-        });
-    }
-});
+function getDescuentos(primeraCarga){
+    $('#spiner-loader').removeClass('hide');
 
-$('#table_enganche thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (table_enganche.column(i).search() !== this.value ) {
-                table_enganche.column(i).search(this.value).draw();
-            }
-        });
-    }
-});
-
-$('#table_m2 thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (table_m2.column(i).search() !== this.value ) {
-                table_m2.column(i).search(this.value).draw();
-            }
-        });
-    }
-});
-
-$('#table_bono thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (table_bono.column(i).search() !== this.value ) {
-                table_bono.column(i).search(this.value).draw();
-            }
-        });
-    }
-});
-
-$('#table_msi thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (table_msi.column(i).search() !== this.value ) {
-                table_msi.column(i).search(this.value).draw();
-            }
-        });
-    }
-});
-
-function llenarTables(){
-    table_total = $("#table_total").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "auto",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS AL PRECIO TOTAL',
-        },
-        {
-            text: `<a href="#" onclick="OpenModal(1, 'tab_default_1');" >Agregar descuento</a>`,
-            className: 'btn-azure',
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.porcentaje+'%</p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.descripcion+'</p>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+1+"/"+0+"/"+1,
+    return new Promise ((resolve, reject) => {   
+        $.ajax({
             type: "POST",
+            url: `getDescuentos`,
+            data: { "primeraCarga": primeraCarga },
             cache: false,
-            data: function( d ){}
-        },
+            success: function(data){
+                primeraCarga = 0;
+                resolve(data);
+                $('#spiner-loader').addClass('hide');
+            },
+            error: function() {
+                $('#spiner-loader').addClass('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     });
+}
 
-    //DESCUENTO AL ENGANCHE
-    table_enganche = $("#table_enganche").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "auto",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS AL ENGANCHE',
-        },
-        {
-            text: `<a href="#" onclick="OpenModal(2, 'tab_default_2');" >Agregar descuento</a>`,
-            className: 'btn-azure',
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                
-                return '<p class="m-0">'+d.porcentaje+'%</p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.descripcion+'</p>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "PaquetesCorrida/getDescuentos/"+2+"/"+2+"/"+0+"/"+0,
-            type: "POST",
-            cache: false,
-            data: function( d ){}
-        },
-    });
+async function construirTablas(){
+    if(primeraCarga == 1){
+        allCondiciones = await getDescuentos(primeraCarga);
+        allCondiciones = JSON.parse(allCondiciones);
+        primeraCarga = 0;
+    }
 
-    //DESCUENTO AL M2
-    table_m2 = $("#table_m2").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "auto",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS AL TOTAL POR M2',
-        },
-        {
-            text: `<a href="#" onclick="OpenModal(4,'tab_default_3')" >Agregar descuento</a>`,
-            className: 'btn-azure',
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
+    allCondiciones.forEach(element => {
+        
+        let descripcion = element['condicion']['descripcion'];
+        let id_condicion = element['condicion']['id_condicion'];
+        let dataCondicion = element['data'];
+        let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
+        
+        $('#table'+title+' thead tr:eq(0) th').each( function (i) {
+            var subtitle = $(this).text();
+            $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>' );
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#table' + title).column(i).search() !== this.value ) {
+                    $('#table' + title).column(i).search(this.value).draw();
+                }
+            });
+        });
+        
+        $("#table"+title).DataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: "auto",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
+            },
+            {
+                text: `<a href="#" onclick="OpenModal(${id_condicion});" >Agregar descuento</a>`,
+                className: 'btn-azure',
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: general_base_url + "static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            columns: [{
+                data: 'id_descuento'
+            },
+            {
+                data: function (d) {
+                    return d.porcentaje + '%';
+                }
             }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.porcentaje)+'</p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.descripcion+'</p>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+4+"/"+0+"/"+1,
-            type: "POST",
-            cache: false,
-            data: function( d ){}
-        },
-    });
-
-    //DESCUENTO POR BONO
-    table_bono = $("#table_bono").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "auto",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS POR BONO',
-        },
-        {
-            text: `<a href="#" onclick="OpenModal(12,'tab_default_4');" >Agregar descuento</a>`,
-            className: 'btn-azure',
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.porcentaje)+'</p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+ d.descripcion+'</p>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+12+"/"+1+"/"+1,
-            type: "POST",
-            cache: false,
-            data: function( d ){}
-        },
-    });
-
-    ///DESCUENTO MSI
-    table_msi = $("#table_msi").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "auto",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS MSI',
-        },
-        {
-            text: `<a href="#" onclick="OpenModal(13,'tab_default_5');" >Agregar descuento</a>`,
-            className: 'btn-azure',
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.id_descuento+'</b></p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.porcentaje+'%</p>';
-            }
-        },
-        {
-            "width": "30%",
-            "data": function( d ){
-                return '<p class="m-0">'+ d.descripcion+'</p>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "PaquetesCorrida/getDescuentos/"+1+"/"+13+"/"+1+"/"+1,
-            type: "POST",
-            cache: false,
-            data: function( d ){}
-        },
+            ],
+            data: dataCondicion,
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+        });
     });
 }
 
@@ -1137,10 +858,7 @@ function llenar(e,indexGral,index,datos,id_select,id,leng,ifor){
                 }
 }
 async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,ifor = 0){
-    let tdescuento=0;
     let id_condicion=0;
-    let eng_top=0;
-    let apply=0;
     let id_con = id;
     var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
     boxDetail.removeClass('hidden');
@@ -1148,9 +866,9 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
     if(id == 1){
         if($(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked')){
             $(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-            tdescuento=1;
+            
             id_condicion=1;
-            apply=1;			
+            	
             ///TOTAL DE LOTE
             $(`#selectDescuentos_${indexGral}_${index}`).append(`
             <div class="w-100 d-flex justify-center align-center">
@@ -1158,7 +876,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 <select id="ListaDescuentosTotal_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosTotal_[]" multiple class="form-control" data-live-search="true">
             </div>`);
 
-            $.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+            $.post('getDescuentosPorTotal',{id_condicion: id_condicion}, function(data) {
                 $(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
@@ -1215,7 +933,6 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
     else if(id == 2){
         if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
             $(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-            tdescuento=2;
             id_condicion=2;		
         
             ///TOTAL DE ENGANCHE
@@ -1225,7 +942,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
             </div>`);
 
             $(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
-            $.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+            $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
                 $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
@@ -1283,17 +1000,14 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
         //Descuentos m2
         if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {
             $(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-    
-            tdescuento=1;
             id_condicion=4;
-            apply=1;			
         
             $(`#selectDescuentos_${indexGral}_${index}`).append(`
             <div class="w-100 d-flex justify-center align-center">
                 <select id="ListaDescuentosM2_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosM2_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
             </div>`);
 
-            $.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+            $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
                 $(`#ListaDescuentosM2_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
@@ -1349,10 +1063,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
         //Bono
         if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
             $(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-            tdescuento=1;
-            id_condicion=12;
-            eng_top=1;
-            apply=1;			
+            id_condicion=12;		
             
             $(`#selectDescuentos_${indexGral}_${index}`).append(`
             <div class="w-100 d-flex justify-center align-center">
@@ -1360,7 +1071,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
             </div>`);
 
             $(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
-            $.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+            $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
                 $(`#ListaDescuentosBono_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
@@ -1414,10 +1125,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
         //MSI
         if( $(`#inlineCheckbox1_${indexGral}_${index}`).is(':checked') ) {	
             $(`#orden_${indexGral}_${index}`).prop( "disabled", false );
-            tdescuento=1;
-            id_condicion=13;
-            eng_top=1;
-            apply=1;			
+            id_condicion=13;			
             
             $(`#selectDescuentos_${indexGral}_${index}`).append(`
             <div class="w-100 d-flex justify-center align-center">
@@ -1425,7 +1133,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
             </div>`);
             
             $(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
-            $.post('getDescuentosPorTotal',{ tdescuento: tdescuento, id_condicion: id_condicion,eng_top:eng_top,apply:apply }, function(data) {
+            $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
                 $(`#ListaDescuentosMSI_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){

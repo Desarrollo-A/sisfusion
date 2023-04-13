@@ -40,6 +40,7 @@ class PaquetesCorrida extends CI_Controller
     else
       echo json_encode(array());
   }
+  
   function getTipoDescuento()
   {
     $data = $this->PaquetesCorrida_model->getTipoDescuento();
@@ -105,7 +106,6 @@ class PaquetesCorrida extends CI_Controller
     $hoy = date('Y-m-d');
     $hoy2 = date('Y-m-d H:i:s');
     $desarrollos = implode(",", $residenciales);
-
 
     for ($i = 1; $i <= $index; $i++) {
       //VALIDAR SI EXISTE PAQUETE EN EL FORM
@@ -258,33 +258,30 @@ class PaquetesCorrida extends CI_Controller
   }
   public function getDescuentosPorTotal()
   {
-    $tdescuento = $this->input->post("tdescuento");
     $id_condicion = $this->input->post("id_condicion");
-    $eng_top = $this->input->post("eng_top");
-    $apply = $this->input->post("apply");
-    echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento, $id_condicion, $eng_top, $apply)->result_array(), JSON_NUMERIC_CHECK);
+    echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($id_condicion)->result_array(), JSON_NUMERIC_CHECK);
   }
 
-  public function getDescuentos($primeraCarga, $type){
-    echo json_encode(array("data" => $this->PaquetesCorrida_model->getDescuentos($tdescuento, $id_condicion, $eng_top, $apply)->result_array()));
+  public function getDescuentos(){
+    $primeraCarga = $this->input->post("primeraCarga");
+    if( $primeraCarga == 1 ){
+      echo json_encode($this->PaquetesCorrida_model->getDescuentos($primeraCarga));
+    }
   }
 
   public function SaveNewDescuento()
   {
-    $tdescuento = $this->input->post("tdescuento");
     $id_condicion = $this->input->post("id_condicion");
-    $eng_top = $this->input->post("eng_top");
-    $apply = $this->input->post("apply");
     $descuento = $this->input->post("descuento");
     if ($this->input->post("tipo_d") == 4 || $this->input->post("tipo_d") == 12) {
       $replace = ["$", ","];
       $descuento = str_replace($replace, "", $descuento);
     }
-    $row = $this->PaquetesCorrida_model->ValidarDescuento($tdescuento, $id_condicion, $eng_top, $apply, $descuento)->result_array();
+    $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
     if (count($row) > 0) {
       echo json_encode(2);
     } else {
-      echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($tdescuento, $id_condicion, $eng_top, $apply, $descuento));
+      echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento));
     }
   }
 
@@ -316,33 +313,27 @@ class PaquetesCorrida extends CI_Controller
         END) tipo_lote,
         p.descripcion, 
         (CASE 
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 'TOTAL DE LOTE'
-        WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 'ENGANCHE'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 'M2'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 'BONO'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 'MSI'
-        END) tipo, 
-        (CASE 
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 1
-        WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 2
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 3
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 4
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 5
+        WHEN d.id_condicion = 1 THEN 1
+        WHEN d.id_condicion = 2 THEN 2
+        WHEN d.id_condicion = 4  THEN 3
+        WHEN d.id_condicion = 12 THEN 4
+        WHEN d.id_condicion = 13 THEN 5
         END) tipo_check,
         (CASE 
         WHEN d.id_condicion = 13 THEN rl.msi_descuento ELSE d.porcentaje END) porcentaje, rl.msi_descuento, 
         (CASE 
         WHEN d.id_condicion != 13 AND rl.msi_descuento NOT IN (0) THEN rl.msi_descuento ELSE 0 END) msi_extra,
-        CONVERT(varchar, p.fecha_inicio, 3) fecha_inicio, CONVERT(varchar, p.fecha_fin, 3) fecha_fin
+        CONVERT(varchar, p.fecha_inicio, 3) fecha_inicio, CONVERT(varchar, p.fecha_fin, 3) fecha_fin, co.descripcion tipo
         FROM lotes l
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
         INNER JOIN paquetes p ON p.id_paquete IN (" . $cuari1[$i]['paquetes'] . ") AND l.id_descuento = '" . $cuari1[$i]['paquetes'] . "'
         INNER JOIN relaciones rl ON rl.id_paquete = p.id_paquete
         INNER JOIN descuentos d ON d.id_descuento = rl.id_descuento
+        INNER JOIN condiciones co ON d.id_condicion = co.id_condicion
         WHERE l.id_descuento is not null --AND p.tipo_lote IS NOT NULL
-        GROUP BY r.nombreResidencial, p.descripcion, p.super1, p.super2, d.id_tdescuento,
-        d.id_condicion, d.eng_top, d.apply, rl.msi_descuento, d.porcentaje, p.tipo_lote, CONVERT(varchar, p.fecha_inicio, 3), CONVERT(varchar, p.fecha_fin, 3)");
+        GROUP BY r.nombreResidencial, p.descripcion, p.super1, p.super2, co.id_tdescuento,
+        d.id_condicion, co.eng_top, co.apply, co.descripcion, rl.msi_descuento, d.porcentaje, p.tipo_lote, CONVERT(varchar, p.fecha_inicio, 3), CONVERT(varchar, p.fecha_fin, 3)");
 
       foreach ($queryRes->result() as $valor) {
         array_push($stack, array(
@@ -432,6 +423,4 @@ class PaquetesCorrida extends CI_Controller
     $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete, $id_tcondicion);
     echo json_encode($data);
   }
-
-
 }

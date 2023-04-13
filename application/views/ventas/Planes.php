@@ -110,12 +110,11 @@
 									<!-- Precio total -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="table_total" name="table_total">
+											<table class="table-striped table-hover" id="tableTotal" name="tableTotal">
 												<thead>
 													<tr>
 														<th>ID DESCUENTO</th>
 														<th>PORCENTAJE</th>
-														<th>DESCUENTO A</th>
 													</tr>
 												</thead>
 											</table>
@@ -126,12 +125,11 @@
 									<!-- Enganche -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="table_enganche" name="table_enganche">
+											<table class="table-striped table-hover" id="tableEnganche" name="tableEnganche">
 												<thead>
 													<tr>
 														<th>ID DESCUENTO</th>
 														<th>PORCENTAJE</th>
-														<th>DESCUENTO A</th>
 													</tr>
 												</thead>
 											</table>
@@ -142,12 +140,11 @@
 									<!-- Precio por M2 -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="table_m2" name="table_m2">
+											<table class="table-striped table-hover" id="tableEfectivoporm" name="tableEfectivoporm">
 												<thead>
 													<tr>
 														<th>ID DESCUENTO</th>
 														<th>PORCENTAJE</th>
-														<th>DESCUENTO A</th>
 													</tr>
 												</thead>
 											</table>
@@ -158,12 +155,11 @@
 									<!-- Precio por bono -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="table_bono" name="table_bono">
+											<table class="table-striped table-hover" id="tableBono" name="tableBono">
 												<thead>
 													<tr>
 														<th>ID DESCUENTO</th>
 														<th>PORCENTAJE</th>
-														<th>DESCUENTO A</th>
 													</tr>
 												</thead>
 											</table>
@@ -174,12 +170,11 @@
 									<!-- MSI -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
-											<table class="table-striped table-hover" id="table_msi" name="table_msi">
+											<table class="table-striped table-hover" id="tableMSI" name="tableMSI">
 												<thead>
 													<tr>
 														<th>ID DESCUENTO</th>
 														<th>PORCENTAJE</th>
-														<th>DESCUENTO A</th>
 													</tr>
 												</thead>
 											</table>
@@ -200,10 +195,7 @@
 						<h5 class="modal-title text-center">Cargar nuevo descuento</h5>
 					</div>
 					<form id="addNewDesc">
-						<input type="hidden" value="0" name="tdescuento" id="tdescuento">
 						<input type="hidden" value="0" name="id_condicion" id="id_condicion">
-						<input type="hidden" value="0" name="eng_top" id="eng_top">
-						<input type="hidden" value="0" name="apply" id="apply">
 						<input type="hidden" value="0" name="boton" id="boton">
 						<input type="hidden" value="0" name="tipo_d" id="tipo_d">
 						<div class="form-group d-flex justify-center">
@@ -248,7 +240,7 @@
 											<div class="container-fluid">
 												<div class="row">
 													<div class="boxInfoGral">
-														<button type="button" data-toggle="modal" onclick="llenarTables();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
+														<button type="button" data-toggle="modal" onclick="construirTablas();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
 														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-0">
