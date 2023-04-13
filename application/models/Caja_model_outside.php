@@ -211,9 +211,13 @@
         }
 
     }
-
+    public function getDatosCondominio($idCondominio){
+       return $this->db->query("SELECT * FROM condominios WHERE idCondominio=$idCondominio")->result_array();
+    }
 
     public function aplicaLiberacion($datos){
+       $descuentos=NULL;
+       var_dump($datos);
         $query = $this->db-> query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = ".$datos['idCondominio']." and nombreLote = '".$datos['nombreLote']."' and status = 1");
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
@@ -234,8 +238,16 @@
                 }
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
-            //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
+            $this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
+           
+           /**PAQUETES CF */
+                  if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+                    //si el condominio es comercial solo consultar sin importar la superficie
+                   $descuentos=$datos['descuentosComerciales'];
+                  }else{ //0 - Habitacional
+                          $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
+                 }
             /**----------------------------------------------- */
             $data_l = array(
             'nombreLote'=> $datos['nombreLote'],
@@ -285,6 +297,7 @@
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
                     registro_comision = 8,
+                    id_descuento='$descuentos',
                     tipo_venta = $tv, 
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
@@ -306,6 +319,7 @@
                     fechaRL = null, 
                     registro_comision = 8,
                     tipo_venta = null, 
+                    id_descuento='$descuentos',
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                     observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
@@ -1415,10 +1429,12 @@
     }
 
     public function validateCurrentLoteStatus($idLote){
-        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote, 
+        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote,con.tipo_lote,re.idResidencial,lo.sup, 
         UPPER(sc.nombreStatus) nombreStatusContratacion, st.nombre nombreStatusLote FROM lotes lo
         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+        LEFT JOIN condominios con ON con.idCondominio=lo.idCondominio
+        LEFT JOIN residenciales re ON re.idResidencial=con.idResidencial
         WHERE lo.idLote IN ($idLote)");
     }
 

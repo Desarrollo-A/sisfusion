@@ -8174,7 +8174,8 @@ return $query->result();
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
-        WHERE l.idStatusContratacion BETWEEN 9 AND 15 
+        WHERE l.idStatusContratacion = 15 
+		AND	hl.motivo = 2 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
         AND l.tipo_venta IS NOT NULL 
@@ -9010,10 +9011,33 @@ function descuentos_universidad($clave , $data){
    
     public function getMotivosControversia()
     {
-        $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 88";
+        $cmd = "SELECT * FROM opcs_x_cats wh
+        WHere id_catalogo = 88";
         $query = $this->db->query($cmd);
         return $query->result_array();   
     }
+
+    // public function lotesPermitidos(){
+    //     $cmd ="SELECT DISTINCT(l.idLote)
+    //     FROM lotes l 
+    //     INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
+    //     INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
+    //     INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+    //     INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
+    //     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+    //     LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
+    //     WHERE l.idStatusContratacion BETWEEN 9 AND 15 
+    //     AND l.status = 1 
+    //     AND l.registro_comision in (10,11,18)
+    //     AND l.tipo_venta IS NOT NULL 
+    //     AND l.tipo_venta IN (1,2,7)
+    //     ORDER BY l.idLote";
+
+    //     $query = $this->db->query($cmd);
+        
+    //     return  $query->result;
+
+    // }
 
    
     // function InsertGenerico($insert, $table){

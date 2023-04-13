@@ -2987,6 +2987,7 @@ public function LiquidarLote(){
         $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $salida = str_replace('' . base_url() . '', '', $val);
         $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
         $this->load->view('template/header');
         $this->load->view("ventas/active_commissions", $datos);
     }

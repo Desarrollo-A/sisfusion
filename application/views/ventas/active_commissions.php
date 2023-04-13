@@ -112,7 +112,7 @@
                                    name="id_pagoc"
                                    id="id-lote-detenido">
 
-                            <div class="col-lg-12">
+                            <!-- <div class="col-lg-12">
                                 <div class="form-group is-empty">
                                     <label for="motivo" class="control-label label-gral">Motivo</label>
                                     <input id="motivo"
@@ -123,6 +123,21 @@
                                            minlength="3"
                                            maxlength="50"
                                            required />
+                                </div>
+                            </div> -->
+                            <div class="col-lg-12" >
+                                <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <select class="selectpicker select-gral"
+                                            id="motivo"
+                                            name="motivo"
+                                            data-style="btn"
+                                            required>
+                                            <?php foreach($controversias as $controversia){ ?>
+                                            
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            <?php } ?>
+                                    </select>
                                 </div>
                             </div>
 
