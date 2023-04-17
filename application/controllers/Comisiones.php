@@ -3369,7 +3369,7 @@ public function LiquidarLote(){
     public function savePrestamo()
     {
       $this->input->post("pago");
-      $file = $_FILES["evidencia"];
+      // $file = $_FILES["evidencia"];
       $monto = $this->input->post("monto");
       $NumeroPagos = $this->input->post("numeroP");
       $IdUsuario = $this->input->post("usuarioid");
@@ -3380,14 +3380,14 @@ public function LiquidarLote(){
       
       $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
      
-      if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
-      $aleatorio = rand(100,1000);
-      $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
-      $date = date('dmYHis');
-      $expediente = $date."_".$aleatorio."_prestamo";
-      $ruta = "static/documentos/evidencia_prestamo_auto/";
+      // if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+      // $aleatorio = rand(100,1000);
+      // $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+      // $date = date('dmYHis');
+      // $expediente = $date."_".$aleatorio."_prestamo";
+      // $ruta = "static/documentos/evidencia_prestamo_auto/";
 
-      if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
+      // if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
             if(empty($dato)){
               $pesos=str_replace("$", "", $monto);
               $comas =str_replace(",", "", $pesos);
@@ -3407,7 +3407,7 @@ public function LiquidarLote(){
                 'modificado_por'  => $idUsu ,
                 'fecha_modificacion'   => date("Y-m-d H:i:s"),
                 'tipo'            => $tipo,
-                'evidenciaDocs'    => "$expediente",
+                // 'evidenciaDocs'    => "$expediente",
                                 );
               $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
               echo json_encode($respuesta);
@@ -3415,14 +3415,11 @@ public function LiquidarLote(){
               $respuesta = 3;
               echo json_encode($respuesta);
             }
-      }else{
-        $respuesta = 4;
-        echo json_encode($respuesta);
-      }
-     
-     
-
-      }
+      // }else{
+      //   $respuesta = 4;
+      //   echo json_encode($respuesta);
+      // }
+      // }
     
     }
 
@@ -7155,6 +7152,40 @@ for ($d=0; $d <count($dos) ; $d++) {
       $this->load->view('template/header');
         $this->load->view("ventas/historial_prestamo_view", $datos);    
     }
+   
+    public function updatePrestamos (){
+      $pagoEdit       = $this->input->post('pagoEdit');
+      $Numero_pagos   = $this->input->post('numeroPagos');
+      $montoPagos     = $this->input->post('montoPagos');
+      $comentario     = $this->input->post('comentario');
+      $id_prestamo    =  $this->input->post('prestamoId');
+   
 
+          $arr_update = array( 
+                            "monto"                 =>  $pagoEdit,
+                            "num_pagos"             =>  $Numero_pagos,
+                            "pago_individual"       =>  $montoPagos,
+                            "comentario"           =>  $comentario,
+                            );
+                            
+        $update = $this->Comisiones_model->updatePrestamosEdit($id_prestamo  , $arr_update);
+        
+        if($update){
+          $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Prestamo actualizado");
+
+        }else{
+          $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'error',
+            "message" => "Prestamo no actualizado, inténtalo más tarde ");
+
+        }
+        echo json_encode ($respuesta);
+            
+    }
+   
 
 }

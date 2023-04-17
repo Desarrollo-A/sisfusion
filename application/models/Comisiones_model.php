@@ -4908,14 +4908,24 @@ function TieneAbonos($id){
                 }
             
 
-                function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago,$tipo){
-                    $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
-                    if (! $respuesta ) {
+                function insertar_prestamos($insertArray){
+
+
+                    $this->db->insert('prestamos_aut', $insertArray);
+                 
+                    // $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo)
+                    //  VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
+                    $afftectedRows = $this->db->affected_rows();
+                    
+                    if ( $afftectedRows == 0  ) {
                         return 0;
                         } else {
                         return 1;
                         }
+               
                 }
+
+
                 function getPrestamos(){
                 return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
                 p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
@@ -9034,6 +9044,18 @@ function descuentos_universidad($clave , $data){
         WHere id_catalogo = 88";
         $query = $this->db->query($cmd);
         return $query->result_array();   
+    }
+
+    public function updatePrestamosEdit($clave, $data){
+            try {
+                $this->db->where('id_prestamo', $clave);
+                $this->db->update('prestamos_aut', $data);
+                $afftectedRows = $this->db->affected_rows();
+                return $afftectedRows > 0 ? TRUE : FALSE ;
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }     
     }
 
     // public function lotesPermitidos(){
