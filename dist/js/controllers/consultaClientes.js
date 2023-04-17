@@ -1,7 +1,9 @@
 $(document).ready(function() 
 {
     $usersTable = $('#clients-datatable').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -66,7 +68,7 @@ $(document).ready(function()
         ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label" style="background:#1ABC9C">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -149,8 +151,6 @@ function printProspectInfoMktd() {
     window.open("printProspectInfoMktd/" + id_prospecto, "_blank")
 }
 function fillTimeline(v) {
-    //colours = ["success", "danger", "warning", "info", "rose"];
-    //colourSelected = colours[Math.floor(Math.random() * colours.length)];
     $("#comments-list").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge info"></div>\n' +
         '    <div class="timeline-panel">\n' +

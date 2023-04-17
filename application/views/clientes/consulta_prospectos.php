@@ -2,14 +2,12 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php //include 'sidebarParams_prospectsList.php'
-        /*-------------------------------------------------------*/
+        <?php 
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
         $datos = $datos3;  
         $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
         ?>
 
         <div class="content boxContent">
@@ -45,28 +43,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <div class="material-datatables">
-                                        <table id="prospects-datatable" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <!--<th>ESTADO</th>-->
-                                                    <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                    <th>CREACIÓN</th>
-                                                    <!--<th>VENCIMIENTO</th>-->
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                        <?php include 'common_modals.php' ?>
-                                    </div>
+                                <div class="material-datatables">
+                                    <table id="prospects-datatable" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ETAPA</th>
+                                                <th>PROSPECTO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>CREACIÓN</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <?php include 'common_modals.php' ?>
                                 </div>
                             </div>
                         </div>
