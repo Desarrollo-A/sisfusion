@@ -62,11 +62,11 @@ $("#form_prestamos").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_prestamos"));
 
 
-    let uploadedDocument = $("#evidencia")[0].files[0];
-    let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
+    // let uploadedDocument = $("#evidencia")[0].files[0];
+    //let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
-    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
-    else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+   // if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
+   // else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
         data: formData, 
@@ -230,6 +230,7 @@ $("#tabla_prestamos").ready( function(){
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
+        scrollX: true,
         language: {
             url: url+"/static/spanishLoader_v2.json",
             paginate: {
@@ -369,22 +370,19 @@ $("#tabla_prestamos").ready( function(){
             "orderable": false,
             "data": function( d ){
                 var botonesModal = ''; 
-   
                 botonesModal +=  `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
-
                 if(d.evidencia != null ){
-                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;    
-                
+                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;       
                 }
-
                 if(d.id_prestamo2 == null && d.estatus == 1){
               
                 botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
              
                 }
-                
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-pen-nib"></i></button>`;
-             
+                if (d.estatus == 1 && d.total_pagado == null ){
+                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
+                }
+
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }
         }],
@@ -405,9 +403,7 @@ $("#tabla_prestamos").ready( function(){
             Modalbody.html('');
             Modalfooter.html('');
 
-            Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
-                   
-                `);
+            Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
 
                 Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
 
@@ -417,6 +413,138 @@ $("#tabla_prestamos").ready( function(){
 
         //});
     });
+
+
+    $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
+        const idPrestamo = $(this).val();
+        const prestamoId = $(this).attr("data-idPrestamo");
+        const montoPagos = $(this).attr("data-individual");
+        const nombreUsuario = $(this).attr("data-name");
+        const numeroPagos = $(this).attr("data-npagos");
+        const pagoEdit = $(this).attr("data-monto");
+        const comentario = $(this).attr("data-comentario");
+        
+    //	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
+            const Modalbody = $('#ModalEdit .modal-body');
+            const Modalfooter = $('#ModalEdit .modal-footer');
+            
+            document.getElementById("montoPagos").value = '';
+            document.getElementById("numeroPagos").value = '';
+            document.getElementById("pagoEdit").value = '';
+            document.getElementById("informacionText").value = '';
+            document.getElementById("prestamoId").value = '';
+             
+            // descuento = Math.round(descuento);
+            // pago_mensual = Math.round(pago_mensual);
+            // cantidad_de_pagos = descuento / pago_mensual;
+
+            document.getElementById("montoPagos").value = pagoEdit ;
+            document.getElementById("numeroPagos").value = numeroPagos;
+            document.getElementById("pagoEdit").value = montoPagos;
+            document.getElementById("informacionText").value = comentario;
+            document.getElementById("prestamoId").value = prestamoId;
+
+            // const montoPagos = $(this).val  
+            // Modalbody.html('');
+            Modalfooter.html('');
+                Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="cambiar_prestamo"  id="cambiar_prestamo" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+
+            //console.log(data);
+            $("#ModalEdit").modal();
+        //	$('#tabla_prestamos').DataTable().ajax.reload(null, false);
+
+        //});
+    });
+    $(document).on("click", ".updatePrestamo", function () {
+
+        pagoEdit    =  document.getElementById("montoPagos").value  ;
+        numeroPagos = document.getElementById("numeroPagos").value  ;
+        montoPagos  = document.getElementById("pagoEdit").value ;
+        comentario  = document.getElementById("informacionText").value  ;
+        prestamoId  = document.getElementById("prestamoId").value ;
+
+        if(pagoEdit != '' || numeroPagos != '' || montoPagos != '' || comentario != '' || prestamoId != ''   ){
+            $.ajax({
+                url : 'updatePrestamos',
+                type : 'POST',
+                dataType: "json",
+                data: {
+                "pagoEdit"           : pagoEdit, 
+                "numeroPagos"        : numeroPagos, 
+                "montoPagos"         : montoPagos,
+                "comentario"         : comentario,
+                "prestamoId"         : prestamoId,
+                  }, 
+        
+                  success: function(data) {
+                   
+                    alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                  
+
+                    $('#tabla_prestamos').DataTable().ajax.reload(null, false );
+                    
+                    // toastr[response.response_type](response.message);
+                    $('#ModalEdit').modal('toggle');
+                },              
+                error : (a, b, c) => {
+                    alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+                }
+            });
+        }else{
+       
+        }
+    });
+
+    // $(document).on('input', '.montoPagos', function(){
+    $('#montoPagos').change(function () {
+        // alert ('4444444444444444444');
+        const bandera = true ;
+        Monto = document.getElementById("montoPagos").value ;
+        numeroPagos = document.getElementById("numeroPagos").value ;
+        mensualidades = document.getElementById("pagoEdit").value ;
+        comentario = document.getElementById("informacionText").value ;
+        
+        if(numeroPagos == null || numeroPagos == '' ){
+            bandera = false;
+        }
+        if(Monto == null || Monto == ''){
+            
+            bandera = false;
+        }
+        if(bandera){
+            NuevasMensualidades = Monto / numeroPagos;
+            document.getElementById("pagoEdit").value = Math.trunc( NuevasMensualidades);
+        }else {
+            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
+                     
+        }        
+    });
+    $('#numeroPagos').change(function () {
+        // alert ('4444444444444444444');
+        const bandera = true ;
+        Monto = document.getElementById("montoPagos").value ;
+        numeroPagos = document.getElementById("numeroPagos").value ;
+        mensualidades = document.getElementById("pagoEdit").value ;
+        comentario = document.getElementById("informacionText").value ;
+        
+        if(numeroPagos == null || numeroPagos == '' ){
+            bandera = false;
+        }
+        if(Monto == null || Monto == ''){
+            
+            bandera = false;
+        }
+        if(bandera){
+            NuevasMensualidades = Monto / numeroPagos;
+            document.getElementById("pagoEdit").value = Math.trunc( NuevasMensualidades);
+        }else {
+            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
+                     
+        }        
+    });
+
+
+
 
     $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
         $('#spiner-loader').removeClass('hide');
