@@ -577,6 +577,7 @@ class Caja_outside extends CI_Controller {
             'fecha_modificacion' => date('Y-m-d H:i:s'),
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
@@ -1883,6 +1884,7 @@ class Caja_outside extends CI_Controller {
                         $arreglo["id_sede"] = 0;
                         $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
                         $arreglo['id_regional'] = $dataLider[0]['id_regional'];
+                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
                         $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
@@ -2237,7 +2239,8 @@ class Caja_outside extends CI_Controller {
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-            "id_regional" => $dataLider[0]['id_regional']
+            "id_regional" => $dataLider[0]['id_regional'],
+            "id_regional_2" => $dataLider[0]['id_regional_2']
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();
@@ -2313,6 +2316,7 @@ class Caja_outside extends CI_Controller {
                 "id_gerente" => $dataJson->id_gerente,
                 "id_subdirector" => $data['lider'][0]['id_subdirector'],
                 "id_regional" => $data['lider'][0]['id_regional'],
+                "id_regional_2" => $data['lider'][0]['id_regional_2'],
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $dataJson->id_usuario
             );

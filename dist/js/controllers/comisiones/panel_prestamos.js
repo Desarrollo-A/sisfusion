@@ -238,6 +238,7 @@ $("#tabla_prestamos").ready( function(){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        scrollX: true,
         destroy: true,
         ordering: false,
         columns: [
