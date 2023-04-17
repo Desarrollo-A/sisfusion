@@ -1,7 +1,7 @@
 $(document).ready(function() 
 {
     $usersTable = $('#clients-datatable').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: '100%',
         scrollX: true,
         buttons: [{
@@ -68,7 +68,7 @@ $(document).ready(function()
         ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen" style="color: #00CDA3; background: #00CDA318;">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -150,18 +150,6 @@ function printProspectInfoMktd() {
     id_prospecto = $("#prospecto_lbl").val();
     window.open("printProspectInfoMktd/" + id_prospecto, "_blank")
 }
-function fillTimeline(v) {
-    $("#comments-list").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge info"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>' + v.creador + '</h6></label>\n' +
-        '            <br>' + v.observacion + '\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + '</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
-}
 
 function fillFields(v, type) {
     /*
@@ -210,7 +198,6 @@ function fillFields(v, type) {
         }
 
         pp = v.lugar_prospeccion;
-        console.log(pp);
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
             $("#specify").val(v.otro_lugar);
         } else if (pp == 6) { // SPECIFY MKTD OPTION
@@ -276,7 +263,27 @@ function cleanComments() {
     myChangelog.innerHTML = '';
 }
 
+
+function fillTimeline(v, counter) {
+    console.log('SIN DATOS POR MOSTRAR');
+    if(counter > 0){
+        $("#comments-list").append('<li class="timeline-inverted">\n' +
+            '    <div class="timeline-badge info"></div>\n' +
+            '    <div class="timeline-panel">\n' +
+            '            <label><h6>' + v.creador + '</h6></label>\n' +
+            '            <br>' + v.observacion + '\n' +
+            '        <h6>\n' +
+            '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + '</span>\n' +
+            '        </h6>\n' +
+            '    </div>\n' +
+            '</li>');
+    }else{
+        $("#comments-list").append("SIN DATOS POR MOSTRAR");
+    }
+}
+
 $(document).on('click', '.see-information', function(e) {
+
     id_prospecto = $(this).attr("data-id-prospecto");
     $("#seeInformationModal").modal();
     $("#prospecto_lbl").val(id_prospecto);
@@ -289,10 +296,14 @@ $(document).on('click', '.see-information', function(e) {
 
     $.getJSON("getComments/" + id_prospecto).done(function(data) {
         counter = 0;
+        v = '';
         $.each(data, function(i, v) {
             counter++;
             fillTimeline(v, counter);
         });
+        if(counter == 0){
+            fillTimeline(v, counter);
+        }
     });
 
     $.getJSON("getChangelog/" + id_prospecto).done(function(data) {

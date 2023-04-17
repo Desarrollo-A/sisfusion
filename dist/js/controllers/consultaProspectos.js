@@ -26,27 +26,28 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                        b = '<center><span class="label lbl-brown">Descartado</span><center>';
+                        b = '<span class="label lbl-warning">Descartado</span>';
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                        b = '<center><span class="label lbl-brown" >Interesado sin cita</span><center>';
+                        b = '<span class="label lbl-brown" >Interesado sin cita</span>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<center><span class="label lbl-yellow">Con cita</span><center>';
+                        b = '<span class="label lbl-yellow">Con cita</span>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<center><span class="label lbl-gray">Sin especificar</span><center>';
+                        b = '<span class="label lbl-orangeYellow">Sin especificar</span>';
                     else if (d.estatus_particular == 5) // PAUSADO
-                        b = '<center><span class="label lbl-violetBoots">Pausado</span><center>';
+                        b = '<span class="label lbl-violetBoots">Pausado</span>';
                     else if (d.estatus_particular == 6) // PREVENTA
-                        b = '<center><span class="label lbl-azure">Preventa</span><center>';
+                        b = '<span class="label lbl-azure">Preventa</span>';
                     else if (d.estatus_particular == 7) // CLIENTE
-                        b = '<center><span class="label lbl-green">Cliente</span><center>';
+                        b = '<span class="label lbl-green">Cliente</span>';
                     else // CLIENTE
-                        b = '<center><span class="label lbl-gray">Sin especificar</span><center>';
+                        b = '<span class="label lbl-gray">Sin especificar</span>';
                     return b;
                 }
             },
             {
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen">'+ d.id_prospecto +'</span>';
+                    elemento = d.nombre + '<br>' +'<span class="label" style="color: #00CDA3; background: #00CDA318;" >'+ d.id_prospecto +'</span>';
+                    return elemento;
                 }
             },
             {
@@ -852,10 +853,10 @@ function validateEmptyFields(v, type) {
         if (v.posicion != '') {
             $(".div-position").removeClass("is-empty");
         }
-        if (v.antiguedad != '') {
+        if (v.antiguedad != '' || v.antiguedad == 0 ) {
             $(".div-antiquity").removeClass("is-empty");
         }
-        if (v.edadFirma != '') {
+        if (v.edadFirma != '' || v.edadFirma == 0) {
             $(".div-company-antiquity").removeClass("is-empty");
         }
         if (v.domicilio != '') {
@@ -1179,12 +1180,16 @@ function showSpecificationObject() {
     pp = pp.value;
     if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
         $("#specify").removeAttr("style");
+        $("#specify_mkt_div").css({ "display": "none" });
     } else if (pp == 6) { // SPECIFY MKTD OPTION
         $("#specify_mkt").removeAttr("style");
+        $("#specify_mkt_div").removeAttr("style");
     } else if (pp == 21) { // RECOMMENDED SPECIFICATION
         $("#specify_recommends").removeAttr("style");
+        $("#specify_mkt_div").css({ "display": "none" });
     } else { // WITHOUT SPECIFICATION
         $("#specify").removeAttr("style");
+        $("#specify_mkt_div").css({ "display": "none" });
     }
 }
 

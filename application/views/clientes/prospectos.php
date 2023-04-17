@@ -1,4 +1,4 @@
-<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/scss/_base.scss" rel="stylesheet"/>
 <body>
     <div class="wrapper">
         <?php
@@ -56,153 +56,175 @@
                                             </div>
                                             <div class="col-sm-12 box-alert" style="display:none">
                                                 <div class="alert alert-danger" role="alert">
-                                                El nombre o teléfono o email, ya están registrados. Favor de verficar.
+                                                    El nombre o teléfono o email, ya están registrados. Favor de verficar.
                                                 </div>
                                             </div>
-                                            <div class="col-sm-2 col-sm-offset-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Nacionalidad<small> (requerido)</small></label>
-                                                    <select id="nationality" name="nationality"
-                                                            class="selectpicker select-gral m-0"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="Seleccione una opción"
-                                                            data-size="7"
-                                                            data-container="body"
-                                                            required>
-                                                    </select>
+
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">* Nacionalidad<small> (requerido)</small></label>
+                                                        <select id="nationality" name="nationality"
+                                                                class="selectpicker select-gral m-0"
+                                                                data-style="btn"
+                                                                data-show-subtext="true"
+                                                                data-live-search="true"
+                                                                title="Selecciona una opción"
+                                                                data-size="7"
+                                                                data-container="body"
+                                                                required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">* Personalidad jurídica<small> (requerido)</small></label>
+                                                        <select id="legal_personality" 
+                                                                name="legal_personality"
+                                                                class="selectpicker select-gral m-0"
+                                                                data-style="btn"
+                                                                data-show-subtext="true"
+                                                                title="Selecciona una opción"
+                                                                data-size="7"
+                                                                data-container="body"
+                                                                required
+                                                                onchange="validatePersonality()"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">CURP</label>
+                                                        <input  id="curp" 
+                                                                name="curp"
+                                                                type="text"
+                                                                class="form-control input-gral" 
+                                                                minlength="18" 
+                                                                maxlength="18" 
+                                                                readonly
+                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">RFC</label>
+                                                        <input id="rfc" name="rfc" type="text" class="form-control input-gral" minlength="12" maxlength="13" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Personalidad jurídica<small> (requerido)</small></label>
-                                                    <select id="legal_personality" 
-                                                            name="legal_personality"
-                                                            class="selectpicker select-gral m-0"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="Seleccione una opción"
-                                                            data-size="7"
-                                                            data-container="body"
-                                                            required
-                                                            onchange="validatePersonality()"></select>
+
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">* Nombre / Razón social<small> (requerido)</small></label>
+                                                        <input  id="name"
+                                                                name="name"
+                                                                type="text"
+                                                                class="form-control input-gral"
+                                                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                                onchange="validateInputs(this);">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Apellido paterno</label>
+                                                        <input id="last_name" name="last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Apellido materno</label>
+                                                        <input  id="mothers_last_name"
+                                                                name="mothers_last_name"
+                                                                type="text"
+                                                                class="form-control input-gral"
+                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">Fecha de nacimiento</label>
+                                                        <input  id="date_birth" name="date_birth" type="date" class="form-control input-gral" onchange="getAge(1)"/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">CURP</label>
-                                                    <input id="curp" name="curp" type="text" class="form-control input-gral" minlength="18" maxlength="18" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                            
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-2">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">Edad</label>
+                                                        <input id="company_antiquity" name="company_antiquity" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Correo electrónico</label>
+                                                        <input id="email" name="email" type="email" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">* Teléfono celular<small> (requerido)</small></label>
+                                                        <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onchange="validateInputs(this);">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Teléfono casa</label>
+                                                        <input id="phone_number2" name="phone_number2" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">RFC</label>
-                                                    <input id="rfc" name="rfc" type="text" class="form-control input-gral" minlength="12" maxlength="13" onkeyup="javascript:this.value=this.value.toUpperCase();">
+
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-2">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">Estado civil</label>
+                                                        <select id="civil_status"
+                                                                name="civil_status"
+                                                                class="selectpicker select-gral m-0"
+                                                                data-style="btn"
+                                                                data-show-subtext="true"
+                                                                title="Selecciona una opción"
+                                                                data-size="7"
+                                                                data-container="body">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group label-floating select-is-empty">
+                                                        <label class="control-label">Régimen matrimonial</label>
+                                                        <select id="matrimonial_regime"
+                                                                name="matrimonial_regime"
+                                                                class="selectpicker select-gral m-0"
+                                                                data-style="btn"
+                                                                data-show-subtext="true"
+                                                                title="Selecciona una opción"
+                                                                data-size="7"
+                                                                data-container="body"
+                                                                onchange="validateMatrimonialRegime(1)">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Cónyugue</label>
+                                                        <input id="spouce" name="spouce" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Originiario de</label>
+                                                        <input id="from" name="from" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Domicilio particular</label>
+                                                        <input id="home_address" name="home_address" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-sm-offset-1">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Nombre / Razón social<small> (requerido)</small></label>
-                                                    <input id="name" name="name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Apellido paterno</label>
-                                                    <input id="last_name" name="last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Apellido materno</label>
-                                                    <input  id="mothers_last_name"
-                                                            name="mothers_last_name"
-                                                            type="text"
-                                                            class="form-control input-gral"
-                                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Fecha de nacimiento</label>
-                                                    <input  id="date_birth" name="date_birth" type="date" class="form-control input-gral" onchange="getAge(1)"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2 col-sm-offset-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Edad</label>
-                                                    <input id="company_antiquity" name="company_antiquity" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Correo electrónico</label>
-                                                    <input id="email" name="email" type="email" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">* Teléfono celular<small> (requerido)</small></label>
-                                                    <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onchange="validateInputs(this);">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Teléfono casa</label>
-                                                    <input id="phone_number2" name="phone_number2" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2 col-sm-offset-1">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Estado civil</label>
-                                                    <select id="civil_status"
-                                                            name="civil_status"
-                                                            class="selectpicker select-gral m-0"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="Seleccione una opción"
-                                                            data-size="7"
-                                                            data-container="body">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">Régimen matrimonial</label>
-                                                    <select id="matrimonial_regime"
-                                                            name="matrimonial_regime"
-                                                            class="selectpicker select-gral m-0"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="Seleccione una opción"
-                                                            data-size="7"
-                                                            data-container="body"
-                                                            onchange="validateMatrimonialRegime(1)">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Cónyugue</label>
-                                                    <input id="spouce" name="spouce" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 col-sm-offset-1">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Originiario de</label>
-                                                    <input id="from" name="from" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Domicilio particular</label>
-                                                    <input id="home_address" name="home_address" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                </div>
-                                            </div>
+                                            
                                             <br>
                                             <div class="col-lg-10 col-lg-offset-1">La casa donde vive es</div>
                                             <div class="col-lg-10 col-lg-offset-2">
@@ -293,7 +315,7 @@
                                                             data-style="btn"
                                                             data-show-subtext="true"
                                                             data-live-search="true"
-                                                            title="Seleccione una opción"
+                                                            title="Selecciona una opción"
                                                             data-size="7"
                                                             onchange="validateProspectingPlace()">
                                                     </select>
@@ -312,10 +334,9 @@
                                                                 data-style="btn"
                                                                 data-show-subtext="true"
                                                                 data-live-search="true"
-                                                                title="Seleccione una opción"
+                                                                title="Selecciona una opción"
                                                                 data-size="7"
                                                                 style="display: none;">
-                                                            <option value="0" id="sm" disabled selected>Seleccione una opción</option>
                                                             <option value="01 800">01 800</option>
                                                             <option value="Chat">Chat</option>
                                                             <option value="Contacto web">Contacto web</option>
@@ -343,7 +364,7 @@
                                                             data-style="btn"
                                                             data-show-subtext="true"
                                                             data-live-search="true"
-                                                            title="Seleccione una opción"
+                                                            title="Selecciona una opción"
                                                             data-size="7"
                                                             required>
                                                     </select>
@@ -392,7 +413,7 @@
                                             </h5>
                                         </div>
                                         <div class="modal-footer"><br><br>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                                             <button type="submit" id="btns" onclick="save();" class="btn btn-primary">Guardar</button>
                                         </div>
                                     </div>
@@ -410,29 +431,4 @@
     <script src="<?=base_url()?>dist/js/controllers/prospectos.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/global_functions.js"></script>
 
-    <script type="text/javascript">
-        let coincidencias = 0;
-        $(document).ready(function() {
-            demo.initMaterialWizard();
-            md.initSliders()
-            demo.initFormExtendedDatetimepickers();
-        });
-
-        function validateInputs(t){
-            let id_input = t.id;
-            let value = t.value;
-        }
-
-        function validateCoincidences(){
-            console.log(coincidencias);
-            if (coincidencias >= 2){
-                $(".box-alert").css("display", "block");
-                $('.btn-next').prop('disabled', true);
-            }
-            else{
-                $(".box-alert").css("display", "none");
-                $('.btn-next').prop('disabled', false);
-            }
-        }
-    </script>
 </body>

@@ -1,7 +1,6 @@
 $(document).ready(function() 
 {
     $.getJSON("fillSelects").done(function(data) {
-        $(".legal_personality").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
         $(".advertising").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
 
         $("#estatus_particular2").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
