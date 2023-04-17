@@ -9085,4 +9085,10 @@ function descuentos_universidad($clave , $data){
     //         return $e->getMessage();
     //     }
     // }
+
+
+    
+function getRolesIn($catalogo,$roles){
+    return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=$catalogo AND id_opcion IN($roles)")->result_array();    
+    }
 }

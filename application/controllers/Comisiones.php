@@ -19,7 +19,7 @@ class Comisiones extends CI_Controller
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'phpmailer_lib'));
-    $this->load->helper(array('url', 'form', 'email/comisiones/elementos_correo', 'email/plantilla_dinamica_correo'));
+    $this->load->helper(array('url', 'form'));
     $this->load->database('default');
     $this->jwt_actions->authorize('7396', $_SERVER['HTTP_HOST']);
     $this->validateSession();
@@ -3900,17 +3900,12 @@ echo json_encode($respuesta);
 
 public function descuentos_contraloria()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    /*-------------------------------------------------------------------------------*/
     $this->load->view('template/header');
     $this->load->view("ventas/descuentos", $datos);
-  }
+  } 
   public function descuentos_contra()
   {
 
@@ -5547,17 +5542,13 @@ public function getAsesoresBaja() {
   exit;
 }
 
-public function CederComisiones(){
-  //setlocale(LC_MONETARY, 'es_MX');
+/*public function CederComisiones(){
   $idAsesorOld = $this->input->post('asesorold');
   $rol = $this->input->post('roles2');
   $newUsuario = $this->input->post('usuarioid2');
   $comentario= $this->input->post('comentario');
   $respuesta = $this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol);
-  
-  /***********************************************************************************
-  *   Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-  ***********************************************************************************/
+
   if($respuesta !== 0 && !empty($respuesta) && !is_null($respuesta)){
 
     $datos_etiquetas = null;
@@ -5597,13 +5588,11 @@ public function CederComisiones(){
     $comentario_general = Elementos_Correo_Ceder_Comisiones::EMAIL_CEDER_COMISIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
     $datos_encabezados_tabla = Elementos_Correo_Ceder_Comisiones::ETIQUETAS_ENCABEZADO_TABLA_CEDER_COMISIONES;
 
-    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-    //<title>AVISO DE BAJA </title>
-    $plantilla_correo = new plantilla_dinamica_correo;
-    /************************************************************************************************************************/
 
-    $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+    $plantilla_correo = new plantilla_dinamica_correo;
+    
+
+    $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,                                                             $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
     if($envio_correo){
       $data['message_email'] = 'OK';
       $data['respuesta'] = 1;
@@ -5615,7 +5604,7 @@ public function CederComisiones(){
     $data['respuesta'] = 0;
   }
   echo json_encode($data['respuesta']);
-}
+}*/
 
 public function datosLotesaCeder($id_usuario){
 
@@ -7154,6 +7143,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
         $this->load->view("ventas/historial_prestamo_view", $datos);    
+    }
+    public function getRolesIn(){
+      $resultado = $this->Comisiones_model->getRolesIn($this->input->post('catalogo'),$this->input->post('roles'));
+      echo json_encode ($resultado);
     }
 
 
