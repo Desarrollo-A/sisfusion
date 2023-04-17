@@ -1196,13 +1196,6 @@
   background-color: #F1F1F1;
 }
 
-.input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
 
 .input-gral ::placeholder {
   margin-left: 20px;
@@ -1213,13 +1206,6 @@
   margin: 0 3px;
 }
 
-.input-gral {
-  background-color: #eaeaea !important;
-  color: #929292 !important;
-  border-radius: 27px !important;
-  background-image: none !important;
-  padding-left: 20px;
-}
 
 .label-gral {
   left: 10px;
