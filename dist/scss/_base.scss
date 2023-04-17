@@ -506,6 +506,11 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #8E6C8818;
 }
+.btn-violetChin{
+    color:$violetChin;
+    border: none;
+    background-color: #8E6C8818;
+}
 .btn-violetChin:hover {
     background-color: $violetChin;
     color: $white;

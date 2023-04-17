@@ -852,6 +852,12 @@
   background-color: #8E6C8818;
 }
 
+.btn-violetChin {
+  color: #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
+}
+
 .btn-violetChin:hover {
   background-color: #8E6C88;
   color: #ffffff;
