@@ -179,7 +179,7 @@ $('#idLote').change(function () {
                     buttonIcon = '';
                     buttonTypeTransaction = '';
                     if (data.tipo_doc == 8) { // CONTRATO
-                        if (data.expediente == "NULL" || data.expediente == 'null' || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(36, 6, 23, 76, 83, 95, 97) && id_rol_general == 15) // ESTÁ EN ESTATUS 7 Y ES JURÍDICO EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
                             else // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -194,7 +194,7 @@ $('#idLote').change(function () {
                         }
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
                     } else if (data.tipo_doc == 7) { // CORRIDA
-                        if (data.expediente == "NULL" || data.expediente == 'null' || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(35, 22, 62, 75, 94, 106) && (id_rol_general == 13 || id_rol_general == 32 || id_rol_general == 17 || id_rol_general == 70)) // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
                             else // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -209,7 +209,7 @@ $('#idLote').change(function () {
                         }
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
                     } else if (data.tipo_doc == 29) { // CARTA DOMICILIO
-                        if (data.expediente == "NULL" || data.expediente == 'null' || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(37, 7, 64, 66, 77, 41) && (id_rol_general == 6 || id_rol_general == 5)) // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
                             else // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -239,7 +239,7 @@ $('#idLote').change(function () {
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
                     } else { // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
-                        if (data.expediente == "NULL" || data.expediente == 'null' || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(31, 85, 20, 63, 73, 82, 92, 96) && (id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3 || id_rol_general == 2)) // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
                             else // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
