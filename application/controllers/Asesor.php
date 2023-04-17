@@ -4150,11 +4150,10 @@ class Asesor extends CI_Controller
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
-        if ($this->session->userdata('id_rol') == 32) {
+        if (in_array($id_rol, array(13, 32, 17, 70)))
             $documentsNumber = 3;
-        } else {
-            $documentsNumber = 4;
-        }
+        else
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
         $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
