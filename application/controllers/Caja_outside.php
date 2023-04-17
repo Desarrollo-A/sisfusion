@@ -2302,36 +2302,33 @@ class Caja_outside extends CI_Controller {
     }
 
 
-    public function changeTitular()
-    {
-
-        $data = json_decode(file_get_contents("php://input"));
-        $id_cliente = $data->id_cliente;
-
-        if ($data->id_gerente != null) {
-
+    public function changeTitular() {
+        $dataJson = json_decode(file_get_contents("php://input"));
+        $id_cliente = $dataJson->id_cliente;
+        if ($dataJson->id_gerente != null) {
+            $data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
             $data = array(
-                "id_asesor" => $data->id_asesor,
-                "id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
-                "id_gerente" => $data->id_gerente,
+                "id_asesor" => $dataJson->id_asesor,
+                "id_coordinador" => $dataJson->id_coordinador == $dataJson->id_asesor ? 0 : $dataJson->id_coordinador,
+                "id_gerente" => $dataJson->id_gerente,
+                "id_subdirector" => $data['lider'][0]['id_subdirector'],
+                "id_regional" => $data['lider'][0]['id_regional'],
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $data->id_usuario
+                "modificado_por" => $dataJson->id_usuario
             );
             $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
-
             if ($res == 1) {
                 $response['message'] = 'SUCCESS';
                 echo json_encode($response);
-            } else {
+            }
+            else {
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
-
         } else {
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
-
     }
 
 
