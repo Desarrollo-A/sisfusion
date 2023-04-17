@@ -224,7 +224,7 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
                     $('#personalidad').val(data.personalidad);
                 }
             $("#perj").selectpicker('refresh'); 
-            $('#correo').val(data.correo);
+            $('#correo').val(data.correo.split(',')[0]);
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
             $('#direccion').val(dir); 
             $('#rfc').val(data.rfc);
@@ -268,7 +268,7 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
 
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
-            $('#correo').val(data.correo);
+            $('#correo').val(data.correo.split(',')[0]);
             let dir = `${data.direccion}, ${data.colonia} ${data.cod_post}`;
             $('#direccion').val(dir); 
             $('#rfc').val(data.rfc);

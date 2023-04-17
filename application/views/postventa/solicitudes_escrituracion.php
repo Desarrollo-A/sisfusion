@@ -23,10 +23,7 @@
     width: 100%;
 }
 </style>
-
-
 <body>
-
     <div class="wrapper"> 
 
         <?php  $this->load->view('template/sidebar', ""); ?>
@@ -36,7 +33,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#solicitudes" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
+                                <a href="#solicitudes" onclick="borrarClase()" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
                             </li>
 
                             <li>
