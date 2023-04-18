@@ -3594,9 +3594,9 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-        function updateBandera($id_pagoc, $param) {
+    function updateBandera($id_pagoc, $param) {
         // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param.", fecha_modificacion = GETDATE() WHERE id_lote IN (".$id_pagoc.")");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
 
         if($param == 55){
           $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
