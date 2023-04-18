@@ -8203,6 +8203,7 @@
 
 
 
+
         $data = $this->Asesor_model->revisaOU($idLote);
         if(count($data)>=1){
             $data['message'] = 'OBSERVACION_CONTRATO';
@@ -8226,8 +8227,14 @@
 
 
             if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
+                $carpeta = '';
+                if($tipodoc==31){
+                    $carpeta = 'autFechainicio';
+                }else{
+                    $carpeta = 'expediente';
+                }
+                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$carpeta."/".$expediente.'.'.$fileExt);
 
-                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
                 $validaMove = $move == FALSE ? 0 : 1;
 
                 if ($validaMove == 1) {
@@ -8267,15 +8274,22 @@
 	public function deleteFile(){
 
 		$idDocumento=$this->input->post('idDocumento');
+        $id_tipoDoc = $this->input->post('id_tipoDoc');
 
 		$data=array();
 		$data["expediente"]= NULL;
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=0;
 
+		$carpeta = '';
+		if($id_tipoDoc == 31){
+            $carpeta = 'autFechainicio';
+        }else{
+            $carpeta = 'expediente';
+        }
 
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/expediente/".$nombreExp->expediente;
+		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 
 		if(file_exists($file)){

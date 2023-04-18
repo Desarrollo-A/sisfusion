@@ -475,6 +475,12 @@
                                                     file += '  | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-tipoId="'+data.tipo_doc+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
                                                 }
                                             }
+                                            else if(data.tipo_doc == 31){
+                                                file = '<center><a class="pdfAutFI btn-data btn-warning" '+disabled_option+' data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-file-pdf"></i></a>';
+                                                if(id_rol_general == 7){
+                                                    file += '  | <button type="button" title= "Eliminar archivo" id="deleteDoc" class=" btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-tipoId="'+data.tipo_doc+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button></center>';
+                                                }
+                                            }
 											else {
 												// EVALÚA CON EL ROL Y ESTATUS
 												<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 2 /*&& $this->session->userdata('id_usuario') == $this->session->userdata('datauserjava')*/){?>
@@ -553,7 +559,10 @@
 												if(data.tipo_doc == 66){
 												file = '<a class="verEVMKTD btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fas-folder-open"></i></a>' +
 													'';
-											}else{
+											    }else if(data.tipo_doc == 31){
+                                                    file = '<a class="autFI btn-data btn-acidGreen" data-expediente="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><i class="fas fa-image"></i></a>' +
+                                                        '<button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipoId="'+data.tipo_doc+'" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+                                                }else{
 												file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>' +
 													'';
 												}
@@ -618,7 +627,20 @@
 			}
 		});
 
-		$(document).on('click', '.pdfLink', function () {
+        $(document).on('click', '.autFI', function () {
+            console.log('vámonos alv');
+            var $itself = $(this);
+            Shadowbox.open({
+                content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/autFechainicio/'+$itself.attr('data-expediente')+'"></iframe></div>',
+                player:     "html",
+                title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+                width:      985,
+                height:     660
+            });
+        });
+
+
+        $(document).on('click', '.pdfLink', function () {
 			var $itself = $(this);
 			Shadowbox.open({
 				content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/cliente/expediente/'+$itself.attr('data-Pdf')+'"></iframe></div>',
@@ -684,6 +706,16 @@
             var $itself = $(this);
             Shadowbox.open({
                 content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/contratoFirmado/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+                player:     "html",
+                title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+                width:      985,
+                height:     660
+            });
+        });
+        $(document).on('click', '.pdfAutFI', function () {
+            var $itself = $(this);
+            Shadowbox.open({
+                content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/autFechainicio/'+$itself.attr('data-Pdf')+'"></iframe></div>',
                 player:     "html",
                 title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
                 width:      985,
@@ -855,8 +887,10 @@
 				e.preventDefault();
 				var iddoc= $(this).data("iddoc");
 				var tipodoc= $(this).data("tipodoc");
+				var ti_doc= $(this).data("tipoid");
 
 				miArrayDeleteFile[0] = iddoc;
+				miArrayDeleteFile[1] = ti_doc;
 
 				$(".tipoA").html(tipodoc);
 				$('#cuestionDelete').modal('show');
@@ -867,8 +901,10 @@
 		$(document).on('click', '#aceptoDelete', function(e) {
 			e.preventDefault();
 			var id = miArrayDeleteFile[0];
+			var id_tipoDoc = miArrayDeleteFile[1];
 			var dataDelete = new FormData();
 			dataDelete.append("idDocumento", id);
+			dataDelete.append("id_tipoDoc", id_tipoDoc);
 
 			$('#aceptoDelete').prop('disabled', true);
 			$.ajax({

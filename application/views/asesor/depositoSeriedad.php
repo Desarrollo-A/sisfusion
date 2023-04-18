@@ -1138,6 +1138,11 @@ $('#condominio').change( function(){
                         $('#modal1').modal('hide');
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
+                    } else if(response.message == 'MISSING_AUTFI'){
+                        $('#save1').prop('disabled', false);
+                        $('#modal1').modal('hide');
+                        $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Asegúrate de subir la autorización para el cambio de fecha de inicio en la corrida financiera", "danger");
                     }
                 },
                 error: function( data ){

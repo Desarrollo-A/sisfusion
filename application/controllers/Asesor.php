@@ -3772,15 +3772,23 @@ class Asesor extends CI_Controller
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
+        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
+
+
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         }
         else if($validacion) {
             $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
+        }
+        else if(count($validacionIM)>0){
+            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+                $data['message'] = 'MISSING_AUTFI';
+                echo json_encode($data);
+            }
         }
         else {
             date_default_timezone_set('America/Mexico_City');
