@@ -51,10 +51,8 @@ class PaquetesCorrida extends CI_Controller
   }
 
 
-  public function SavePaquete()
-  {
+  public function SavePaquete(){
     $this->db->trans_begin();
-    //echo $this->input->post("pago");
     $index = $this->input->post("index");
     $datos_sede = explode(",", $this->input->post("sede"));
     $id_sede = $datos_sede[0];
@@ -264,97 +262,30 @@ class PaquetesCorrida extends CI_Controller
 
   public function getDescuentos(){
     $primeraCarga = $this->input->post("primeraCarga");
-    if( $primeraCarga == 1 ){
-      echo json_encode($this->PaquetesCorrida_model->getDescuentos($primeraCarga));
-    }
+    $tipoCondicion = $this->input->post("tipoCondicion");
+
+    echo json_encode($this->PaquetesCorrida_model->getDescuentos($primeraCarga, $tipoCondicion));
   }
 
-  public function SaveNewDescuento()
-  {
+  public function SaveNewDescuento(){
     $id_condicion = $this->input->post("id_condicion");
     $descuento = $this->input->post("descuento");
+
     if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12) {
       $replace = ["$", ","];
       $descuento = str_replace($replace, "", $descuento);
     }
+    
     $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
     if (count($row) > 0) {
-      echo json_encode(2);
-    } else {
-      echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento));
+      echo(json_encode(array("status" => 403, "mensaje" => "El descuento ingresado, ya existe.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
+    } 
+    else {
+      $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
+      $lastRecords = $this->PaquetesCorrida_model->getDescuentos(0, $id_condicion);
+      
+      echo(json_encode(array("status" => 402, "mensaje" => "Descuento almacenado correctamente", "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }
-  }
-
-
-  public function listaDescuentos()
-  {
-    date_default_timezone_set('America/Mexico_City');
-    $cuari1 = $this->db->query("SELECT DISTINCT(ISNULL(id_descuento, 0)) paquetes FROM lotes")->result_array();
-    $stack = array();
-
-    for ($i = 0; $i < sizeof($cuari1); $i++) {
-      $queryRes = $this->db->query("SELECT r.nombreResidencial, 
-        (CASE 
-        WHEN p.super1 = '0' AND p.super2 = '0' THEN 'Cualquiera'
-        WHEN p.super1 = '0' AND p.super2 != '0' THEN concat('Mayor igual a ',p.super2 )
-        WHEN p.super1 != '0' AND p.super2 = '0' THEN concat('Menor a ',p.super2 )
-        ELSE 'NA' END) superficie,   
-        (CASE 
-        WHEN p.super1 = 0 AND p.super2 = 0 THEN '#2874A6'
-        WHEN p.super1 = 0 AND p.super2 != 0 THEN '#3498DB'
-        WHEN p.super1 != 0 AND p.super2 = 0 THEN '#85C1E9'
-        ELSE 'blue'
-        END) color_superficie,
-        (CASE 
-        WHEN p.tipo_lote = 1 THEN 'HABITACIONAL'
-        WHEN p.tipo_lote = 2 THEN 'COMERCIAL'
-        WHEN p.tipo_lote = 3 THEN 'AMBOS'
-        ELSE '-'
-        END) tipo_lote,
-        p.descripcion, 
-        (CASE 
-        WHEN d.id_condicion = 1 THEN 1
-        WHEN d.id_condicion = 2 THEN 2
-        WHEN d.id_condicion = 4  THEN 3
-        WHEN d.id_condicion = 12 THEN 4
-        WHEN d.id_condicion = 13 THEN 5
-        END) tipo_check,
-        (CASE 
-        WHEN d.id_condicion = 13 THEN rl.msi_descuento ELSE d.porcentaje END) porcentaje, rl.msi_descuento, 
-        (CASE 
-        WHEN d.id_condicion != 13 AND rl.msi_descuento NOT IN (0) THEN rl.msi_descuento ELSE 0 END) msi_extra,
-        CONVERT(varchar, p.fecha_inicio, 3) fecha_inicio, CONVERT(varchar, p.fecha_fin, 3) fecha_fin, co.descripcion tipo
-        FROM lotes l
-        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
-        INNER JOIN paquetes p ON p.id_paquete IN (" . $cuari1[$i]['paquetes'] . ") AND l.id_descuento = '" . $cuari1[$i]['paquetes'] . "'
-        INNER JOIN relaciones rl ON rl.id_paquete = p.id_paquete
-        INNER JOIN descuentos d ON d.id_descuento = rl.id_descuento
-        INNER JOIN condiciones co ON d.id_condicion = co.id_condicion
-        WHERE l.id_descuento is not null --AND p.tipo_lote IS NOT NULL
-        GROUP BY r.nombreResidencial, p.descripcion, p.super1, p.super2, co.id_tdescuento,
-        d.id_condicion, co.eng_top, co.apply, co.descripcion, rl.msi_descuento, d.porcentaje, p.tipo_lote, CONVERT(varchar, p.fecha_inicio, 3), CONVERT(varchar, p.fecha_fin, 3)");
-
-      foreach ($queryRes->result() as $valor) {
-        array_push($stack, array(
-          'nombreResidencial' => $valor->nombreResidencial,
-          // 'nombre_condominio'=>$valor->nombre_condominio, 
-          'superficie' => $valor->superficie,
-          'descripcion' => $valor->descripcion,
-          'tipo' => $valor->tipo,
-          'porcentaje' => $valor->porcentaje,
-          'msi_descuento' => $valor->msi_descuento,
-          'color_superficie' => $valor->color_superficie,
-          'tipo_lote' => $valor->tipo_lote,
-          'tipo_check' => $valor->tipo_check,
-          'msi_extra' => $valor->msi_extra,
-          'fecha_inicio' => $valor->fecha_inicio,
-          'fecha_fin' => $valor->fecha_fin
-        )
-        );
-      }
-    }
-    echo json_encode(array("data" => $stack));
   }
 
   public function getPaquetes()

@@ -66,25 +66,25 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
-    public function getDescuentos($primeraCarga)
-    {
-        $queryFinal = '';
-        $condiciones = '';
-        if($primeraCarga == 1){
-            $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1")->result_array();
+    public function getDescuentos($primeraCarga, $tipoCondicion){
+        $queryFinal = ''; $condiciones = '';
 
-            foreach ($condiciones as $index => $valor) {
-                $id_condicion = $valor['id_condicion'];
-                $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
-                MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-                FROM descuentos d
-                INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-                WHERE d.id_condicion = $id_condicion 
-                AND d.inicio IS NULL
-                GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
-                if( ($index+1) != count($condiciones)) {
-                    $queryFinal .= " UNION ALL ";
-                }
+        if($primeraCarga == 1)
+            $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1")->result_array();
+        else
+            $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1 AND id_condicion = $tipoCondicion")->result_array();
+
+        foreach ($condiciones as $index => $valor) {
+            $id_condicion = $valor['id_condicion'];
+            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
+            MAX(d.id_descuento) AS id_descuento, d.porcentaje 
+            FROM descuentos d
+            INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+            WHERE d.id_condicion = $id_condicion 
+            AND d.inicio IS NULL
+            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
+            if( ($index+1) != count($condiciones)) {
+                $queryFinal .= " UNION ALL ";
             }
         }
         
@@ -105,10 +105,12 @@ class PaquetesCorrida_model extends CI_Model
 
     public function SaveNewDescuento($id_condicion,$descuento){
       $response =  $this->db->query("INSERT INTO descuentos VALUES(NULL,NULL,$id_condicion,$descuento,NULL)"); 
+      
         if (! $response ) {
             return $finalAnswer = 0;
         } else {
-            return $finalAnswer = 1;
+            $finalAnswer = $this->db->query("SELECT IDENT_CURRENT('descuentos') as lastId")->result_array();
+            return $finalAnswer;
         }
     }
 

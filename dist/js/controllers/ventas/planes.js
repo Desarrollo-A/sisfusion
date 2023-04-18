@@ -1,209 +1,17 @@
-let allCondiciones;
+let allDataDescuentos, allCondiciones;
 var primeraCarga = 1;
 
-$("#table_planes").ready(function() {
-    let titulos = [];  
-    $('#table_planes thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function() {
-            if (tabla_nuevas.column(i).search() !== this.value) {
-                tabla_nuevas
-                    .column(i)
-                    .search(this.value)
-                    .draw();
-
-                var index = tabla_nuevas.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
-            }
-        });
-    });
-
-    tabla_nuevas = $("#table_planes").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'PAQUETES DESCUENTOS',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                format: {
-                    header:  function (d, columnIdx) {
-                        return titulos[columnIdx];
-                    }
-                }
-            },
-        }],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        language: {
-            url: general_base_url + "spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{  
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreResidencial+'</p>';
-            }
-        },
-        {  
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0"><span class="label" style="background:'+d.color_superficie+';">'+d.tipo_lote+'</span></p>';
-            }
-        },
-        {  
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0"><span class="label" style="background:'+d.color_superficie+';">'+d.superficie+'</span></p>';
-            }
-        },
-        {
-            "width": "15%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.descripcion+'</b></p>';
-            }
-        },
-        {
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0"><span class="label" style="background:#48C9B0;">'+d.tipo+'</span></p>';
-            }
-        },
-        {  
-            "width": "5%",
-            "data": function( d ){
-
-                if(d.tipo_check == 1){
-                    if(d.msi_extra!=0){
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }else{
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }
-                }else{
-                    return '';
-                }
-            }
-        },
-        {
-            "width": "5%",
-            "data": function( d ){
-                if(d.tipo_check == 2){
-                    if(d.msi_extra!=0){
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }else{
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }
-                }else{
-                    return '';
-                }
-            }
-        },
-        {  
-            "width": "5%",
-            "data": function( d ){
-                if(d.tipo_check == 3){
-                    if(d.msi_extra!=0){
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }else{
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }
-                }else{
-                    return '';
-                }
-            }
-        },
-        {
-            "width": "5%",
-            "data": function( d ){
-                if(d.tipo_check == 4){
-                    if(d.msi_extra!=0){
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }else{
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }
-                }else{
-                    return '';
-                }
-            }
-        },
-        {  
-            "width": "5%",
-            "data": function( d ){
-                if(d.tipo_check == 5){
-                    if(d.msi_extra!=0){
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="MSI:'+d.msi_extra+'" style="background-color:#C2DCF0;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }else{
-                        return '<center><button class="btn btn btn-round btn-fab btn-fab-mini" title="SIN MSI" style="background-color:white;color:#0a548b"><i class="material-icons">check</i></button></center>';
-                    }
-                }else{
-                    return '';
-                }
-            }
-        },
-        {
-            "width": "10%",
-            "data": function( d ){
-                switch(d.tipo_check){
-                    case '1':
-                    case '2':
-                        return '<p class="m-0"><b>'+(d.porcentaje)+'%</b></p>';
-                    break;
-
-                    case '3':
-                    case '4':
-                        return '<p class="m-0"><b>$'+formatMoney(d.porcentaje)+'</b></p>';
-                    break;
-
-                    default:
-                        return '<p class="m-0"><b>'+(d.porcentaje)+'</b></p>';
-                    break;
-
-                }
-                
-            }
-        },
-        {  
-            data: function( d ){
-                return '<p class="m-0">'+d.fecha_inicio+'</p>';
-            }
-        },
-        {  
-            data: function( d ){
-                return '<p class="m-0">'+d.fecha_fin+'</p>';
-            }
-        }],
-        columnDefs: [{}],
-        ajax: {
-            "url": general_base_url + "PaquetesCorrida/listaDescuentos",
-            "type": "POST",
-            cache: false,
-            "data": function(d) {}
-        },
-        order: [
-            [1, 'asc']
-        ]
-    });
-});
-
-$('[data-toggle="tooltip"]').tooltip();
 const arr = [];
+
+function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
 
 function addDescuento(id_condicion, descripcion){
     $('#descuento').val('');
     $('#label_descuento').html();
     $('#id_condicion').val(id_condicion);
+    $('#nombreCondicion').val(descripcion);
     $('#label_descuento').html('Agregar descuento a "' + descripcion +'"');
     $('#ModalFormAddDescuentos').modal();
 };
@@ -223,9 +31,6 @@ $("input[data-type='currency']").on({
     }
 });
 
-function formatNumber(n) {
-    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
 
 function formatCurrency(input, blur) {
     var input_val = input.val();
@@ -257,21 +62,12 @@ function formatCurrency(input, blur) {
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
 
-function CloseModalSave(boton){
-    $('#ModalFormAddDescuentos').modal('toggle');
-    $(`#btn_open_modal#${boton}`).trigger("click");
-    document.getElementById('addNewDesc').reset();
-    table_total.ajax.reload();
-    table_enganche.ajax.reload();
-    table_m2.ajax.reload();
-    table_bono.ajax.reload();
-    table_msi.ajax.reload();
-}
-
 $("#addNewDesc").on('submit', function(e){ 
     e.preventDefault();
-    let boton = $('#boton').val();
+    $('#spiner-loader').removeClass('hide');
+
     let formData = new FormData(document.getElementById("addNewDesc"));
+    let nombreCondicion = (($("#nombreCondicion").val()).replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
     $.ajax({
         url: 'SaveNewDescuento',
         data: formData,
@@ -279,32 +75,43 @@ $("#addNewDesc").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        success: function(data) {	
-            if(data == 1){
-                CloseModalSave(boton);
-                alerts.showNotification("top", "right", "Descuento almacenado correctamente.", "success");	
-            }else if(data ==2 ){
-                alerts.showNotification("top", "right", "El descuento ingresado, ya existe.", "warning");	
+        success: function(data) {
+            data =  JSON.parse(data);
+            if ( data['status'] = 402 ){
+                allDataDescuentos.forEach(element => {
+                    if ( element['condicion']['id_condicion'] == data['detalle'][0]['condicion']['id_condicion'] ){
+                        element['data'] = [];
+                        element['data'] = data['detalle'][0]['data'];
+
+                        $("#table"+nombreCondicion).DataTable().clear().rows.add(element['data']).draw();
+                    }
+                });
             }
-            else{
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            }
+
+            alerts.showNotification("top", "right", ""+data["mensaje"]+"", ""+data["color"]+"");
+
+            //Se cierra el modal
+            $('#ModalFormAddDescuentos').modal('toggle');
+            document.getElementById('addNewDesc').reset();
+            $('#spiner-loader').addClass('hide');
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
         },
         async: false
     });
 });
 
-function getDescuentos(primeraCarga){
+
+function getDescuentos(primeraCarga, tipoCondicion){
     $('#spiner-loader').removeClass('hide');
 
     return new Promise ((resolve, reject) => {   
         $.ajax({
             type: "POST",
             url: `getDescuentos`,
-            data: { "primeraCarga": primeraCarga },
+            data: { "primeraCarga": primeraCarga, "tipoCondicion": tipoCondicion },
             cache: false,
             success: function(data){
                 primeraCarga = 0;
@@ -321,13 +128,15 @@ function getDescuentos(primeraCarga){
 
 async function construirTablas(){
     if(primeraCarga == 1){
-        allCondiciones = await getDescuentos(primeraCarga);
-        allCondiciones = JSON.parse(allCondiciones);
+        allDataDescuentos = await getDescuentos(primeraCarga, 0);
+        allDataDescuentos = JSON.parse(allDataDescuentos);
         primeraCarga = 0;
     }
+    
+    allDataDescuentos.forEach(element => {
+        //Llenamos array de SOLO condiciones
+        allCondiciones.push(element['condicion']);
 
-    allCondiciones.forEach(element => {
-        
         let descripcion = element['condicion']['descripcion'];
         let id_condicion = element['condicion']['id_condicion'];
         let dataCondicion = element['data'];
@@ -384,30 +193,22 @@ async function construirTablas(){
                 searchable:false,
                 className: 'dt-body-center'
             }],
+            order: [
+                [1, 'desc']
+            ]
         });
     });
+
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
-$('[data-toggle="tooltip"]').tooltip();
-
-var totaPen = 0;
 var tr;
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 $(document).ready(function() {
     $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
         $('[data-toggle="tooltip"]').tooltip()
         var len = data.length;
-        $("#sede").append($('<option>').val("").text("Seleccione una opción"));
+        $("#sede").append($('<option>').val("").text("SELECCIONA UNA OPCIÓN"));
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_sede']+','+data[i]['abreviacion'];
             var name = data[i]['nombre'];
@@ -415,8 +216,8 @@ $(document).ready(function() {
         }
         $("#sede").selectpicker('refresh');
     }, 'json');
-    setInitialValues();
-    noCreatedCards();
+    setIniDatesXMonth("#fechainicio", "#fechafin");
+    sinPlanesDiv();
 });
 
 $("#sede").change(function() {
@@ -428,7 +229,7 @@ $("#sede").change(function() {
 
     $.post('getResidencialesList/'+id_sede, function(data) {
         $('#spiner-loader').addClass('hide');
-        $("#residencial").append($('<option disabled>').val("default").text("Seleccione una opción"));
+        $("#residencial").append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
         var len = data.length;
         for( var i = 0; i<len; i++){
             var name = data[i]['nombreResidencial']+' '+data[i]['descripcion'];
@@ -489,11 +290,10 @@ $("#form-paquetes").on('submit', function(e){
 function ClearAll2(){
     document.getElementById('showPackage').innerHTML = '';
     $('#index').val(0);	
-    //setInitialValues();
-    //noCreatedCards();
     $(".leyendItems").addClass('d-none');
     $("#btn_save").addClass('d-none');
 }
+
 function ClearAll(){
     $("#ModalAlert").modal('toggle');
     document.getElementById('form-paquetes').reset();
@@ -501,33 +301,30 @@ function ClearAll(){
     $('#residencial option').remove();
     document.getElementById('showPackage').innerHTML = '';
     $('#index').val(0);	
-    setInitialValues();
-    noCreatedCards();
+    setIniDatesXMonth("fechainicio", "fechafin");
+    sinPlanesDiv();
     $(".leyendItems").addClass('d-none');
     $("#btn_save").addClass('d-none');
 }
-/**--------------------------FUNCIONES PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
+
+/**--------------------------FN PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
 function ConsultarPlanes(){
 $('#spiner-loader').removeClass('hide');
 
 if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
-ClearAll2();
-$.post('getPaquetes',params, function(data) {
-    let countPlanes = data.length;
-    if(countPlanes >1){
-        //MOSTRAR MODAL CON LOS PLANES, DAR OPCIÓN PARA SELECCIONAR ALGUN PAQUETE DE PLANES
-
-    }else if(countPlanes == 1){
-        //MOSTRAR TODOS LOS PLANES EXISTENTES
-         data[0].paquetes.unshift({});
-        let dataPaquetes = data[0].paquetes; //.id_descuento.split(',');
-        for (let index = 1; index < dataPaquetes.length; index++){
-        let planes = {"id_plan":dataPaquetes[index].id_paquete}
-        var indexActual = document.getElementById('index');
-        var indexNext = (document.getElementById('index').value - 1) + 2;
-        indexActual.value = indexNext;
-        $('#showPackage').append(`
+    let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
+    ClearAll2();
+    $.post('getPaquetes',params, function(data) {
+        let countPlanes = data.length;
+        if(countPlanes == 1){
+            //MOSTRAR TODOS LOS PLANES EXISTENTES
+            data[0].paquetes.unshift({});
+            let dataPaquetes = data[0].paquetes;
+            for (let index = 1; index < dataPaquetes.length; index++){
+                var indexActual = document.getElementById('index');
+                var indexNext = (document.getElementById('index').value - 1) + 2;
+                indexActual.value = indexNext;
+                $('#showPackage').append(`
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
                     <div class="cardPlan dataTables_scrollBody">
                         <div class="container-fluid">
@@ -553,99 +350,92 @@ $.post('getPaquetes',params, function(data) {
                         </div>
                     </div>
                 </div>`);
+
                 llenarDiv(indexNext,dataPaquetes[index].id_paquete,dataPaquetes.length,index)
                 validateNonePlans();
 
                 $('[data-toggle="tooltip"]').tooltip();
-                
-
-        $('.popover-dismiss').popover({
-            trigger: 'focus'
-        });
-    
+                $('.popover-dismiss').popover({
+                    trigger: 'focus'
+                });
         
+            
+            }
+        }else if(countPlanes == 0){
+            alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
         }
-        
-    }else if(countPlanes == 0){
-        alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
+    }, 'json');
+
     }
-
-}, 'json');
-
-}else{
-alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
-}
+    else{
+        alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
+    }
             
 }
 
 
 async function llenarDiv(indexNext,id_paquete,leng,ifor){
-$.post('getTipoDescuento', function(data2) {
-            $("#checks_"+indexNext).html('');
-            $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
-            var len = data2.length;
-            
-            for( var i = 0; i<len; i++){
-                var id = data2[i]['id_tcondicion'];
-                var descripcion = data2[i]['descripcion'];
-                $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
-                $("#checks_"+indexNext).append(`
-                <div class="row boxAllDiscounts">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="check__item" for="inlineCheckbox1">
-                            <label>
-                                <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
-                                ${descripcion}
-                                <span class="custom__check"></span>
-                            </label>
-                        </div>
+    $.post('getTipoDescuento', function(data2) {
+        $("#checks_"+indexNext).html('');
+        $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
+        var len = data2.length;
+        
+        for( var i = 0; i<len; i++){
+            var id = data2[i]['id_tcondicion'];
+            var descripcion = data2[i]['descripcion'];
+            $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
+            $("#checks_"+indexNext).append(`
+            <div class="row boxAllDiscounts">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="check__item" for="inlineCheckbox1">
+                        <label>
+                            <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
+                            ${descripcion}
+                            <span class="custom__check"></span>
+                        </label>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="boxDetailDiscount hidden">
-                            <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
-                            <div class="container-fluid rowDetailDiscount hidden">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
-                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
-                                </div>
-                                <div class="container-flluid" id="listamsi_${indexNext}_${i}">
-                                </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="boxDetailDiscount hidden">
+                        <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
+                        <div class="container-fluid rowDetailDiscount hidden">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+                            </div>
+                            <div class="container-flluid" id="listamsi_${indexNext}_${i}">
                             </div>
                         </div>
                     </div>
-                </div>`);
-                llenarSelects(indexNext,id_paquete,i,id,leng,ifor);
+                </div>
+            </div>`);
+            llenarSelects(indexNext,id_paquete,i,id,leng,ifor);
+        }
 
-                
-
-            }
-
-            if(len<=0){
-                $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-            }
-            $("#tipo_descuento_"+indexNext).selectpicker('refresh');
-        }, 'json');
-                
+        if(len<=0){
+            $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#tipo_descuento_"+indexNext).selectpicker('refresh');
+    }, 'json');               
 }
 
 async function llenarSelects(indexNext,id_paquete,i,id,len,ifor){
-
-let params = {'id_paquete':id_paquete,'id_tcondicion':id}
-$.ajax({
-async: true,
-url: 'getDescuentosByPlan',
-type: 'POST',
-data: params,
-success: function (data2) {
-//Las locas respuestas de las peticiones anidadas van aquí
-data2 = JSON.parse(data2);
-if(data2.length > 0){
-    const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${i}`);
-    check.checked = true;
-    const a = PrintSelectDesc(check, id,i,indexNext,1,data2,len,ifor);
-}
-},
-})	
+    let params = {'id_paquete':id_paquete,'id_tcondicion':id}
+    $.ajax({
+        async: true,
+        url: 'getDescuentosByPlan',
+        type: 'POST',
+        data: params,
+        success: function (data2) {
+            //Las locas respuestas de las peticiones anidadas van aquí
+            data2 = JSON.parse(data2);
+            if(data2.length > 0){
+                const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${i}`);
+                check.checked = true;
+                const a = PrintSelectDesc(check, id,i,indexNext,1,data2,len,ifor);
+            }
+        },
+    })	
 }
 
 /**********************************------------------------------------------------------------------------- */		
@@ -687,7 +477,7 @@ function GenerarCard(){
         /**-----------TIPO DESCUENTO------------------ */
         $.post('getTipoDescuento', function(data) {
             $("#checks_"+indexNext).html('');
-            $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("Seleccione una opción"));
+            $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
             var len = data.length;
 
             // $('#checks_'+indexNext).append(`<div class="w-100"><label class="mt-2">Descuento a</label></div>`);
@@ -850,7 +640,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
             </div>`);
 
             $.post('getDescuentosPorTotal',{id_condicion: id_condicion}, function(data) {
-                $(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosTotal_${indexGral}_${index}`).append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
@@ -868,7 +658,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 
             }, 'json');
 
-            $(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
+            $(`#ListaDescuentosTotal_${indexGral}_${index}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: false, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true});
 
             $(`#ListaDescuentosTotal_${indexGral}_${index}`).on("select2:select", function (evt){
                 var element = evt.params.data.element;
@@ -914,9 +704,9 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 <select id="ListaDescuentosEnganche_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosEnganche_[]" multiple="multiple" class="form-control" required data-live-search="true"></select>
             </div>`);
 
-            $(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
+            $(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false});
             $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
-                $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosEnganche_${indexGral}_${index}`).append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
@@ -933,7 +723,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 $(`#ListaDescuentosEnganche_${indexGral}_${index}`).selectpicker('refresh');
             }, 'json');
         
-            $(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
+            $(`#ListaDescuentosEnganche_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false});
             $(`#ListaDescuentosEnganche_${indexGral}_${index}`).on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
@@ -981,12 +771,12 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
             </div>`);
 
             $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
-                $(`#ListaDescuentosM2_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosM2_${indexGral}_${index}`).append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosM2_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${formatMoney(name)}</option>`);
+                    $(`#ListaDescuentosM2_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${ name }</option>`);
                 }
                 if(len<=0){
                     $(`#ListaDescuentosM2_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -998,7 +788,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 
             }, 'json');
 
-            $(`#ListaDescuentosM2_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
+            $(`#ListaDescuentosM2_${indexGral}_${index}`).select2({containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false});
             $(`#ListaDescuentosM2_${indexGral}_${index}`).on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
@@ -1043,14 +833,14 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 <select id="ListaDescuentosBono_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosBono_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
             </div>`);
 
-            $(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
+            $(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false});
             $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
-                $(`#ListaDescuentosBono_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosBono_${indexGral}_${index}`).append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
                     var id = data[i]['id_descuento'];
-                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${formatMoney(name)}</option>`);
+                    $(`#ListaDescuentosBono_${indexGral}_${index}`).append(`<option value='${id}' label="${name}">$${ name }</option>`);
                 }
                 if(len<=0){
                     $(`#ListaDescuentosBono_${indexGral}_${index}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -1061,7 +851,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 $(`#ListaDescuentosBono_${indexGral}_${index}`).selectpicker('refresh');
             }, 'json');
 
-            $(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false });
+            $(`#ListaDescuentosBono_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false });
             $(`#ListaDescuentosBono_${indexGral}_${index}`).on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
@@ -1105,9 +895,9 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 <select id="ListaDescuentosMSI_${indexGral}_${index}" required name="${indexGral}_${index}_ListaDescuentosMSI_[]" multiple="multiple" class="form-control"  required data-live-search="true"></select>
             </div>`);
             
-            $(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false});
+            $(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false});
             $.post('getDescuentosPorTotal',{ id_condicion: id_condicion }, function(data) {
-                $(`#ListaDescuentosMSI_${indexGral}_${index}`).append($('<option disabled>').val("default").text("Seleccione una opción"));
+                $(`#ListaDescuentosMSI_${indexGral}_${index}`).append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
                 var len = data.length;
                 for( var i = 0; i<len; i++){
                     var name = data[i]['porcentaje'];
@@ -1123,7 +913,7 @@ async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,
                 }
                 $(`#ListaDescuentosMSI_${indexGral}_${index}`).selectpicker('refresh');
             }, 'json');
-            $(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true, tags: false	});
+            $(`#ListaDescuentosMSI_${indexGral}_${index}`).select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown", closeOnSelect : false, placeholder : "SELECCIONA UNA OPCIÓN", allowHtml: true, allowClear: true, tags: false	});
             $(`#ListaDescuentosMSI_${indexGral}_${index}`).on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
@@ -1178,7 +968,7 @@ function removeElementCard(divNum) {
     $('#ModalRemove').modal('show');
 }
 function crearBoxDetailDescuentos(indexN,i,select,id,text,pesos = 0){
-    let texto = pesos == 2 ? text : (pesos == 1 ? '$'+formatMoney(text) : text + '%');
+    let texto = pesos == 2 ? text : (pesos == 1 ? '$'+ text : text + '%');
     $(`#listamsi_${indexN}_${i}`).append(`
         <div class="row d-flex align-center mb-1" id="${indexN}_${id}_span">
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 d-flex align-center">
@@ -1192,24 +982,6 @@ function crearBoxDetailDescuentos(indexN,i,select,id,text,pesos = 0){
                 </div>
             </div>
         </div>`);
-}
-
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-
-    $('#fechainicio').val(finalBeginDate);
-    $('#fechafin').val(finalEndDate);
 }
 
 function turnOnOff(e){
@@ -1274,7 +1046,7 @@ function validateNonePlans(){
     }
 }
 
-function noCreatedCards(){
+function sinPlanesDiv(){
     $('#showPackage').append(`
         <div class="emptyCards h-100 d-flex justify-center align-center pt-4">
             <div class="h-100 text-center pt-4">
