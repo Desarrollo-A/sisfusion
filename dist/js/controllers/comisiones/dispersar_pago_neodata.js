@@ -19,7 +19,7 @@ var getInfo3 = new Array(6);
 function showDetailModal(idPlan) {
     $('#planes-div').hide();
     $.ajax({
-        url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
+        url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -32,7 +32,7 @@ function showDetailModal(idPlan) {
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                     $('#plan-detalle-tabla tbody').append('<tr>');
-                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
+                    $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
                     $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
                     $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                     $('#plan-detalle-tabla tbody').append('</tr>');
@@ -50,7 +50,7 @@ $('#btn-detalle-plan').on('click', function () {
     $('#planes').append($('<option>').val(0).text('SELECCIONA UNA OPCIÓN')).selectpicker('refresh');
 
     $.ajax({
-        url: `${url}Comisiones/getPlanesComisiones`,
+        url: `${url}Comisiones/findAllPlanes`,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -72,7 +72,7 @@ $('#planes').change(function () {
     const idPlan = $(this).val();
     if (idPlan !== '0') {
         $.ajax({
-            url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
+            url: `${url}Comisiones/findPlanDetailById/${idPlan}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -81,7 +81,7 @@ $('#planes').change(function () {
                 roles.forEach(rol => {
                     if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
                         $('#plan-detalle-tabla tbody').append('<tr>');
-                        $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
+                        $('#plan-detalle-tabla tbody').append(`<td>${rol.puesto}</td>`);
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                         $('#plan-detalle-tabla tbody').append('</tr>');
@@ -154,130 +154,164 @@ $("#tabla_dispersar_comisiones").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
+            "width": "2%",
             "className": 'details-control',
             "orderable": false,
             "data" : null,
             "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
         },
         {
+            "width": "5%",
             "data": function( d ){
-                var labelIdLote;
-                labelIdLote ='<p class="m-0"><b>'+d.idLote+'</b></p>';
-                return labelIdLote;
+                var lblStats;
+                lblStats ='<p class="m-0"><b>'+d.idLote+'</b></p>';
+                return lblStats;
             }
         },
         {
+            "width": "8%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreResidencial+'</p>';
             }
         },
         {
+            "width": "8%",
             "data": function( d ){
                 return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
             }
         },
         {
+            "width": "12%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreLote+'</p>';
             }
         }, 
         {
+            "width": "12%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.nombre_cliente+'</b></p>';
             }
         }, 
         {
+            "width": "7%",
             "data": function( d ){
-                var labelTipoVenta;
-
-                if(d.tipo_venta == 1) {
-                    labelTipoVenta ='<span class="label" style="color:#78281F;background:#F5B7B1;">Particular</span>';
-
-                }else if(d.tipo_venta == 2) {
-                    labelTipoVenta ='<span class="label" style="color:#186A3B;background:#ABEBC6;">Normal</span>';
-
+                var lblType;
+                if(d.tipo_venta==1) {
+                    lblType ='<span class="label label-danger">Particular</span>';
+                }else if(d.tipo_venta==2) {
+                    lblType ='<span class="label label-success">normal</span>';
+                }
+                else if(d.tipo_venta==7) {
+                    lblType ='<span class="label label-warning">especial</span>';
                 }else{
-                    labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    lblType ='<span class="label label-danger">SIN TIPO DE VENTA</span>';
                 }
-                return labelTipoVenta;
+                return lblType;
             }
         }, 
         {
+            "width": "7%",
             "data": function( d ){
-                var labelCompartida;
-
-                if(d.compartida == null) {
-                    labelCompartida ='<span class="label" style="color:#7D6608;background:#F9E79F;">Individual</span>';
-
-                } else{
-                    labelCompartida ='<span class="label" style="color:#7E5109;background:#FAD7A0;">Compartida</span>';
-                }
-
-                return labelCompartida;
-            }
-        }, 
-        {
-            "data": function( d ){
-                var labelStatus;
-                
-                if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
-
+                var lblStats;
+                if(d.compartida==null) {
+                    lblStats ='<span class="label label-warning" style="background:#E5D141;">Individual</span>';
                 }else {
-                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
+                    lblStats ='<span class="label label-warning">Compartida</span>';
                 }
-                return labelStatus;
+                return lblStats;
+            }
+        }, 
+        {
+            "width": "7%",
+            "data": function( d ){
+                var lblStats;
+                if(d.idStatusContratacion==15) {
+                    lblStats ='<span class="label label-success" style="background:#9E9CD5;">Contratado</span>';
+                }else {
+                    lblStats ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
+                }
+                return lblStats;
             }
         },
-        {
-            "data": function( d ){
-                var labelEstatus;
-                 
-                if(d.totalNeto2 == null) {
-                    labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
 
+        {
+            "width": "8%",
+            "data": function( d ){
+                var lblStats;
+                var lblPenalizacion = '';
+
+            if (d.penalizacion == 1){
+                lblPenalizacion ='<br><span class="label label-warning" style="color:red;">+ 90 días</span>';
+            }
+
+                if(d.totalNeto2==null) {
+                    lblStats ='<span class="label label-danger">Sin precio lote</span>';
                 } else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
-                
+                    lblStats ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                 }else{
-                    labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                    lblStats = `<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
-                return labelEstatus;
+                return lblStats+lblPenalizacion;
             }
         },
+        // {
+        //     "width": "8%",
+        //     "data": function( d ){
+        //         var lblStats;
+
+        //         if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
+        //             lblStats ='';
+        //         }else if (d.registro_comision == 8){
+        //             lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+        //         }
+        //         else {
+        //             lblStats ='<span class="label label-info">'+d.date_final+'</span>';
+        //         }
+        //         return lblStats;
+        //     }
+        // },
         {
+            "width": "8%",
             "data": function( d ){
-                var fechaSistema;
-                if(d.fecha_sistema == null ) {
+                var lblStatss;
+                if(d.date_final == null ) {
                  
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    lblStatss ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
+                    // lblStatss ='<span class="label label-info">'+d.fecha_modificacion+'</span>';
                 }else {
 
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
+                    lblStatss ='<span class="label label-info"  style="background:#11DFC6;">'+d.date_final+'</span>';
                 }
 
-                return fechaSistema;
+                return lblStatss;
             }
+
+
+
         },
         {
+            "width": "8%",
             "data": function( d ){
-                var fechaNeodata;
-                var rescisionLote;
-                fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
-                rescisionLote = '';
-
-                if(d.fecha_neodata <= '01 JAN 21' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                var lblStats;
+                lblStats = '<span class="label label-gray" style="color:gray;">'+d.date_neodata+'</span>';
+                if(d.date_neodata <= '2021-01-01' || d.date_neodata == null ) {
+                    lblStats ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
+                }else if (d.registro_comision == 8){
+                    lblStats = '<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
+                }
+                else if(d.date_neodata != null ) {
+                    lblStats = '<span class="label label-info">'+d.date_neodata+'</span>';
+                }else{
+                    lblStats ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
                 }
 
-                if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
-                }
-                 
-                return fechaNeodata+rescisionLote;
+               //   lblStats = '<span class="label label-gray" style="color:gray;">'+d.date_neodata+'</span>';
+                return lblStats;
             }
         },
         {
+            "width": "8%",
+            "orderable": false,
             "data": function( data ){
                 var BtnStats = '';
                 var RegresaActiva = '';
