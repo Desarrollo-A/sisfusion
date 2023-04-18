@@ -69,7 +69,7 @@
                                             <thead>
                                             <tr>
                                                 <th></th>
-                                                <th></th>
+                                                <th>TIPO DE VENTA</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -531,24 +531,7 @@ if(idResidencial == 27 ){
                 {
 
                     "data": function (d) {
-                        var lblStats;
-
-                        if (d.tipo_venta == 1) {
-                            lblStats = '<span class="label label-danger">Venta Particular</span>';
-                        } else if (d.tipo_venta == 2) {
-                            lblStats = '<span class="label label-success">Venta normal</span>';
-                        } else if (d.tipo_venta == 3) {
-                            lblStats = '<span class="label label-warning">Bono</span>';
-                        } else if (d.tipo_venta == 4) {
-                            lblStats = '<span class="label label-primary">Donación</span>';
-                        } else if (d.tipo_venta == 5) {
-                            lblStats = '<span class="label label-info">Intercambio</span>';
-                        } else if (d.tipo_venta == null) {
-                            lblStats = '<span class="label label-info"></span>';
-                        }
-
-
-                        return lblStats;
+                        return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
                     }
                 },
                 {
@@ -620,30 +603,7 @@ if(idResidencial == 27 ){
                 {
                     width: "17%",
                     data: function( d ){
-                        let ubicacionExpediente;
-                        if (d.ubicacion == "1")
-                            ubicacionExpediente = `<span class="label" style="background: #F1948A; color: #78281F">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "2")
-                            ubicacionExpediente = `<span class="label" style="background: #C39BD3; color: #512E5F">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "3")
-                            ubicacionExpediente = `<span class="label" style="background: #7FB3D5; color: #154360">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "4")
-                            ubicacionExpediente = `<span class="label" style="background: #76D7C4; color: #0E6251">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "5")
-                            ubicacionExpediente = `<span class="label" style="background: #82E0AA; color: #186A3B">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "6")
-                            ubicacionExpediente = `<span class="label" style="background: #F7DC6F; color: #7D6608">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "7")
-                            ubicacionExpediente = `<span class="label" style="background: #85C1E9; color: #1B4F72">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "8")
-                            ubicacionExpediente = `<span class="label" style="background: #E59866; color: #6E2C00">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "9")
-                            ubicacionExpediente = `<span class="label" style="background: #D7DBDD; color: #626567">${d.nombreSede}</span>`;
-                        else if (d.ubicacion == "10")
-                            ubicacionExpediente = `<span class="label" style="background: #5D6D7E; color: #1B2631">${d.nombreSede}</span>`;
-                        else
-                            ubicacionExpediente = `<span class="label" style="background: #F8C471; color: #7E5109">${d.nombreSede}</span>`;
-                        return ubicacionExpediente;
+                        return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
                     }
                 },
                 {
@@ -734,12 +694,12 @@ if(idResidencial == 27 ){
                                 cntActions = 'N/A';
                             }
 
-                            if (user == 2762 || user == 6096 || user == 6864 || user == 10937 || user == 10938) {
+                            if (user == 2762 || user == 6096 || user == 6864 || user == 10937 || user == 10938 || user == 12136 || user == 12173) {
                                 cntActions += '<li><button href="#" title= "Cambio de sede" data-nomLote="' + data.nombreLote + '" data-lote="' + data.idLote + '" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button></li><br>';
 
                             }
 
-                            if ((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864 || user == 10937 || user == 10938)) {
+                            if ((data.ubicacion == 1 || data.ubicacion == 2 || data.ubicacion == 4 || data.ubicacion == 5 || data.ubicacion == 3 || data.ubicacion == 12) && (data.user == 2762 || data.user == 2845 || data.user == 2747 || user == 6096 || user == 6864 || user == 10937 || user == 10938 || user == 12136 || user == 12173)) {
                                 cntActions += '<li><button href="#" title= "Reasignacion" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>';
                             }
                             var color = (data.idMovimiento == 36) ? '#58D68D' :

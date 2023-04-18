@@ -1,4 +1,8 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+use application\helpers\email\asesor\Elementos_Correos_Asesor;
+
+ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Asesor extends CI_Controller
 {
@@ -14,7 +18,7 @@ class Asesor extends CI_Controller
         $this->load->library(array('session', 'form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
-        $this->load->helper(array('url', 'form'));
+        $this->load->helper(array('url', 'form', 'email/asesor/elementos_correo', 'email/plantilla_dinamica_correo'));
         $this->load->database('default');
         $this->load->library('Pdf');
         $this->load->library('phpmailer_lib');
@@ -2392,7 +2396,7 @@ class Asesor extends CI_Controller
             }
         }
         /*****MARTHA DEBALE OPTION*******/
-//        $descuento_mdb = $this->input->post('descuento_mdb');
+        //$descuento_mdb = $this->input->post('descuento_mdb');
         /*************/
         $des_casa = $this->input->post('des_hide');
 
@@ -3320,42 +3324,54 @@ class Asesor extends CI_Controller
 
             $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
             // PHPMailer object
-            $mail = $this->phpmailer_lib->load();
 
-   
+            /************************************************************************************
+            * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
+            ************************************************************************************/
+            $correos_entregar = array();
+            // if(count($arrayCorreoNotRepeat)>0){
+            //     foreach ($arrayCorreoNotRepeat as $arrCorreo){
+            //         if ($arrCorreo) {
+            //             array_push($correos_entregar, $arrCorreo);
+            //         }
+            //     }
+            // }
 
+            $datos_etiquetas = null;
 
-            $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-            /*$mail->AddAddress('programador.analista8@ciudadmaderas.com');*/
-            foreach ($arrayCorreoNotRepeat AS $arrCorreo) {
-                if ($arrCorreo) {
-                    $mail->AddAddress($arrCorreo);
-                }
-            }
+            $archivo_adjunto = array('adjunto'      =>  $attachment,
+                                     'nombre_pdf'   =>  $namePDF);
 
+            $datos_correo[0] = array();
 
-            // Email subject
+            #PROVICIONAL TESTING
+            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+            //$correos_entregar[0] = 'programador.analista18@ciudadmaderas.com';
+            //$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
 
-            $mail->Subject = utf8_decode('DEPÓSITO DE SERIEDAD-CIUDAD MADERAS');
+            $elementos_correo = array(  "setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
+                                        "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD_ASESOR);
 
-            // Set email format to HTML
-            $mail->isHTML(true);
+            $comentario_general = Elementos_Correos_Asesor::EMAIL_DEPOSITO_SERIEDAD_ASESOR;
+            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD_ASESOR;
 
-            // Email body content
-            $mailContent = utf8_decode("<h1>Ciudad Maderas</h1>
-     <p>Se adjunta el archivo Depósito de seriedad correspondiente.</p>");
-            $mail->Body = $mailContent;
-            $mail->AddStringAttachment($attachment, $namePDF);
-
+            $plantilla_correo = new plantilla_dinamica_correo;
+            /********************************************************************************************************************************************/
 
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
             if (count($checkIfRefExist) >= 1) {
                 /**********/
                 if (count($array17) > 0) {
                     for ($i = 0; $i < sizeof($array17); $i++) {
-                        $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
-                                rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
-                            WHERE id_copropietario = " . $array17[$i]);
+                        $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', 
+                                                            telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "',
+                                                            nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "',
+                                                            domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "',
+                                                            conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "',
+                                                            ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "',
+                                                            antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
+                                                            rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
+                                                        WHERE id_copropietario = " . $array17[$i]);
                     }
                 }
                 /**********/
@@ -3394,8 +3410,13 @@ class Asesor extends CI_Controller
                             //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
                     }
-                    $mail->send();
-                    ECHO "SUCCESS";
+                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+                                                                                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
+                    if ($datos_correo_enviar > 0) {
+                        ECHO "SUCCESS";
+                    } else {
+                        ECHO 'Correo no enviado '.$datos_correo_enviar;
+                    }
 
                 } else {
 
@@ -3450,8 +3471,13 @@ class Asesor extends CI_Controller
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
                     $this->Asesor_model->insertnewRef($arreglo_referencia2);
-                    $mail->send();
-                    ECHO "SUCCESS";
+                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
+                                                                                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
+                    if ($datos_correo_enviar > 0) {
+                        ECHO "SUCCESS";
+                    } else {
+                        ECHO 'Correo no enviado '.$datos_correo_enviar;
+                    }
 
                 } else {
 
@@ -3554,7 +3580,6 @@ class Asesor extends CI_Controller
         }
     }
 
-
     /*autorizaciones*/
     public function autorizaciones()
     {
@@ -3596,7 +3621,6 @@ class Asesor extends CI_Controller
     {
         $data = array();
         $tamanoArreglo = $_POST['tamanocer'];
-        //print_r($tamanoArreglo);
         $idCliente = $_POST['idCliente'];
         $idLote = $_POST['idLote'];
         $id_sol = $_POST['id_sol'];
@@ -3609,7 +3633,7 @@ class Asesor extends CI_Controller
         $idCondominio = $_POST['idCondominio'];
         $autorizacionComent = "";
         /*termina nuevo*/
-
+        $comentario = '';
         for ($n = 0; $n < $tamanoArreglo; $n++) {
             $data = array(
                 'idCliente' => $idCliente,
@@ -3619,100 +3643,63 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $_POST['comentario_' . $n]
             );
-            //echo "comentario ".$n.": ".$_POST['comentario_'.$n]."<br>";
-            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
+            $dataInsert = 1;//$this->Asesor_model->insertAutorizacion($data);
+            $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
             $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
         }
+
         if ($dataInsert == 1) {
-            $this->notifyUsers($id_aut, $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
+            $correos_entregar = array();
+            //funcion aterior -> notifyUsers 
+            /************************************************************************************
+		    * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
+		    ************************************************************************************/
+            $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
+
+            $datos_correo[0] = array('nombreResidencial'   =>  $nombreResidencial,
+                                  'nombreCondominio'    =>  $nombreCondominio,
+                                  'nombreLote'          =>  $nombreLote,
+                                  'motivoAut'           =>  $autorizacionComent,
+                                  'fecgaHora'           =>  date("Y-m-d H:i:s"));
+
+            $datos_etiquetas = null; 
+            $elementos_correo = array("setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
+							          "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_NUEVA_AUTORIZACION_SBMT);
+
+            $comentario_general = Elementos_Correos_Asesor::EMAIL_NUEVA_AUTORIZACION_SBMT.'<br><br>'. $comentario;
+            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_NUEVA_AUTORIZACION_SBMT;
+
+            $plantilla_correo = new plantilla_dinamica_correo;
+
+            // if(count($dataUser)>0){
+            //     $index_correo = 0;
+            //     foreach ($dataUser as $item => $value){
+            //         $index_correo ++;
+            //         $correos_entregar += ["correo".$index_correo  =>  $value->correo];
+            //     }
+            // }
+            // if (!empty(array_search('gustavo.mancilla@ciudadmaderas.com', $correos_entregar))){
+            //     unset($correos_entregar[array_search('gustavo.mancilla@ciudadmaderas.com', $correos_entregar)]);
+            // }
+
+            /***************
+            *CORREO TESTING* 
+            ****************/
+            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+
+            /**************************************************************************************/
+            if(count($correos_entregar) > 0){
+                /*envia un correo cuando se solicita una nueva autorizacion*/
+                $plantilla_correo
+                    ->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+            }
+
             echo json_encode($dataInsert);
         } else {
             echo json_encode($dataInsert);
         }
     }
-
-    /*envia un correo cuando se solicita una nueva autorizacion*/
-    public function notifyUsers($idAut, $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $motivoAut)
-    {
-        $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-        $correoDir = $dataUser[0]->correo;/*linea de codigo para produccion*/
-
-
-        $mail = $this->phpmailer_lib->load();
-      
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correoDir);/*$correoDir*/
-
-        $mail->Subject = utf8_decode('SOLICITUD DE AUTORIZACIÓN-CONTRATACIÓN');
-        $mail->isHTML(true);
-
-        $mailContent = utf8_decode("<html><head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-      <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-      <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-      <style media='all' type='text/css'>
-          .encabezados{
-              text-align: center;
-              padding-top:  1.5%;
-              padding-bottom: 1.5%;
-          }
-          .encabezados a{
-              color: #234e7f;
-              font-weight: bold;
-          }
-          
-          .fondo{
-              background-color: #234e7f;
-              color: #fff;
-          }
-          
-          h4{
-              text-align: center;
-          }
-          p{
-              text-align: right;
-          }
-          strong{
-              color: #234e7f;
-          }
-      </style>
-    </head>
-    <body>
-      <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-          <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-              <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                  <tr class='navbar navbar-inverse encabezados'><td>
-                      <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                  </td></tr>
-              </table>
-          </td></tr>
-          <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-          <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-            <tr class='active'>
-              <th>Proyecto</th>
-              <th>Condominio</th> 
-              <th>Lote</th>   
-              <th>Autorización</th>   
-              <th>Fecha/Hora</th>   
-            </tr> 
-            <tr>   
-                   <td><center>" . $nombreResidencial . "</center></td>
-                   <td><center>" . $nombreCondominio . "</center></td>
-                   <td><center>" . $nombreLote . "</center></td>
-                   <td><center>" . $motivoAut . "</center></td>
-                   <td><center>" . date("Y-m-d H:i:s") . "</center></td>
-            </tr>
-            </table></center>
-          
-          
-          </td></tr>
-      </table></body></html>");
-
-        $mail->Body = $mailContent;
-        if($correoDir != 'gustavo.mancilla@ciudadmaderas.com'){
-        $mail->send();
-        }
-}
 
     public function intExpAsesor()
     {
@@ -4171,11 +4158,10 @@ class Asesor extends CI_Controller
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
-        if ($this->session->userdata('id_rol') == 32) {
+        if (in_array($id_rol, array(13, 32, 17, 70)))
             $documentsNumber = 3;
-        } else {
-            $documentsNumber = 4;
-        }
+        else
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
         $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
@@ -4559,11 +4545,8 @@ class Asesor extends CI_Controller
 
     }
 
-
     public function editar_registro_loteRevision_eliteAcontraloria5_proceceso2()
     {
-
-
         $idLote = $this->input->post('idLote');
         $idCondominio = $this->input->post('idCondominio');
         $nombreLote = $this->input->post('nombreLote');
@@ -4625,11 +4608,8 @@ class Asesor extends CI_Controller
 
     }
 
-
     public function editar_registro_loteRevision_eliteAcontraloria5_proceceso2_2()
     {
-
-
         $idLote = $this->input->post('idLote');
         $idCondominio = $this->input->post('idCondominio');
         $nombreLote = $this->input->post('nombreLote');
@@ -4780,12 +4760,9 @@ class Asesor extends CI_Controller
         }
     }
 
-
     /*----------------------------CARPETAS--------------------------------------*/
     public function saveCarpetas()
     {
-
-
         $fileTmpPath = $_FILES['file-upload']['tmp_name'];
         $fileName = $_FILES['file-upload']['name'];
         $fileSize = $_FILES['file-upload']['size'];
@@ -5417,56 +5394,83 @@ class Asesor extends CI_Controller
         $correo = '';
 
         for ($i = 0; $i < count($sedes_array); $i++) {
+            
+            $correos_entregar = array();
+            $elementos_correo = array();
+            $datos_correo[] = array();
+            $datos_encabezados_tabla = '';
+            $datos_etiquetas = null;
+            $comentario_general = '';
+
             $data_eviRec = $this->Asesor_model->getEviRecBySede($sedes_array[$i]['id_sede']);
             switch ($sedes_array[$i]['id_sede']) {
                 case 1:
                     //SLP
-                    $correo = 'bertha.magos@ciudadmaderas.com';
+                   // $correo = 'bertha.magos@ciudadmaderas.com';
                     break;
                 case 2:
                     //QRO
-                    $correo = 'estefania.oceguera@ciudadmaderas.com';
+                    //$correo = 'estefania.oceguera@ciudadmaderas.com';
                     break;
                 case 3:
                     //PEN
-                    $correo = 'maricela.rico@ciudadmaderas.com';
+                    //$correo = 'maricela.rico@ciudadmaderas.com';
                     break;
                 case 4:
                     //CDMX
-                    $correo = 'sergio.colina@ciudadmaderas.com';
+                    //$correo = 'sergio.colina@ciudadmaderas.com';
                     break;
                 case 5:
                     //LEO
-                    $correo = 'maria.licea@ciudadmaderas.com';
+                    //$correo = 'maria.licea@ciudadmaderas.com';
                     break;
                 case 6:
                     //CAN
-                    $correo = 'villanueva@ciudadmaderas.com';
+                    //$correo = 'villanueva@ciudadmaderas.com';
                     break;
                 case 7:
                     //US
-                    $correo = 'programador.analista8@ciudadmaderas.com';
+                    //$correo = 'programador.analista8@ciudadmaderas.com';
                     break;
                 default:
-                    $correo = 'programador.analista8@ciudadmaderas.com';
+                    //$correo = 'programador.analista8@ciudadmaderas.com';
                     break;
             }
 
             if (count($data_eviRec) > 0) {
-                $data_enviar_mail = $this->notifyRejEv($correo, $data_eviRec, $sedes_array[$i]['abreviacion']);
+                /***********************************************************************************
+                *   Armado de parámetros a mandar a plantilla para creación de correo electrónico  *
+                ***********************************************************************************/
+                $correo = 'programador.analista18@ciudadmaderas.com';
+                array_push($correos_entregar, $correo);
 
-                if ($data_enviar_mail > 0) {
+                $elementos_correo = array('setFrom'  =>  Elementos_Correos_Asesor::SET_FROM_EMAIL,
+                                         'Subject'  =>  '['.strtoupper($sedes_array[$i]['abreviacion']).']'.
+                                                        Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR . $correo);
+
+                $datos_correo = $data_eviRec;
+
+                $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR;
+                
+                //$data_enviar_mail = $this->notifyRejEv($correo, $data_eviRec, $sedes_array[$i]['abreviacion']);
+
+                $comentario_general = Elementos_Correos_Asesor::EMAIL_EVIDENCIAS_RECHAZADAS_ASESOR . '<br>' . (!isset($comentario) ? '' : '<br>'. $comentario);
+
+                $plantilla_correo = new plantilla_dinamica_correo;
+                /************************************************************************************************************************/
+                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+                                                                        $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
+                if ($envio_correo > 0) {
                     $data_request['msg'] = 'Correo enviado correctamente [' . $sedes_array[$i]['abreviacion'] . ']';
                 } else {
-                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . '] : [' . $data_enviar_mail . ']';
-
+                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . '] : [' . $envio_correo . ']';
                 }
-            } else {
+            }else {
                 $data_request['msg'] = 'No hay registros para enviar un correo en [' . $sedes_array[$i]['abreviacion'] . ']';
             }
             if ($data_request != null) {
                 echo json_encode($data_request);
-            } else {
+            }else {
                 echo json_encode(array());
             }
         }
@@ -5845,3 +5849,4 @@ class Asesor extends CI_Controller
         return $folder;
     }
 }
+?>

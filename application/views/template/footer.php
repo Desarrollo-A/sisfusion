@@ -58,16 +58,6 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
-		<?php
-            /*if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9
-                || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 3)
-            {
-                if ($this->session->userdata('no_show_modal_info')==0) {
-                    echo '$("#avisoNovedades").modal("toggle");';
-                }
-            }*/
-
-         ?>
 	});
 
     function validaCheckSession(){
@@ -121,17 +111,12 @@
             "emisor":1
         }
         });
-        // console.log(socket);
         var i=0;
-        function sendNotify(data, numeroNot)
-        {
-            // console.log(data);
+        function sendNotify(data, numeroNot){
             $('#cpoNtallSys').empty();
 
-            if(data.length >0)
-            {
-                if(data[data.length-1]['emisor'] == "0")
-                {
+            if(data.length >0){
+                if(data[data.length-1]['emisor'] == "0"){
                     $('#numberMsgAllSys').append('<span class="notification">'+numeroNot+'</span>');
                     window.document.title = "MaderasCRM | Ciudad Maderas Nuevo mensaje("+numeroNot+")";
                     var  w=0;
@@ -175,7 +160,6 @@
         }
 
         socket.on('chat message', function(data) {
-            // console.log(data);
             var sessionNotificacion;
             if (localStorage.getItem("dataNotificaciones") === null) {
                 console.log('no, no existe');
@@ -203,38 +187,26 @@
                 localStorage.setItem("contadorNotificaciones", numeroNotificaciones);
             }
 
-
-
-
             setTimeout(function () {
                var sessionNotify = localStorage.getItem("dataNotificaciones");
                var sessionContador = localStorage.getItem("contadorNotificaciones");
                 sessionNotify = JSON.parse(sessionNotify);
-                // console.log(sessionNotify);
-                // console.log(sessionContador);
-
                 sendNotify(sessionNotify, sessionContador);
             }, 500);
         });
 
     }
 
-
-
-
     function urlify(text) {
         var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
-        //var urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, function(url,b,c) {
             var url2 = (c == 'www.') ?  'http://' +url : url;
             return '<a class="link_chat" href="' +url2+ '" target="_blank">' + url + '</a>';
         })
     }
     $(document).ready(function () {
-        //cleanRepMsg();
-
-        let currentNot = (localStorage.getItem("contadorNotificaciones") === null) ? 0 : localStorage.getItem("contadorNotificaciones");<?php #echo #$this->session->userdata('mensajes_count');?>;
-        var totalData = JSON.parse((localStorage.getItem("dataNotificaciones") === null) ? 0 : localStorage.getItem("dataNotificaciones")); <?php #print_r(json_encode($this->session->userdata('msg_data')))?>;
+        let currentNot = (localStorage.getItem("contadorNotificaciones") === null) ? 0 : localStorage.getItem("contadorNotificaciones");
+        var totalData = JSON.parse((localStorage.getItem("dataNotificaciones") === null) ? 0 : localStorage.getItem("dataNotificaciones")); 
             if(totalData.length >0)
             {
                     if(currentNot > 0)
@@ -242,7 +214,6 @@
                         $('#numberMsgAllSys').append('<span class="notification">'+currentNot+'</span>');
                         window.document.title += " ("+currentNot+" mensaje(s) sin leer)";
                     }
-
                     var  w=1;
                     for(var t=(totalData.length-1); t>=0; t--)
                     {
@@ -264,7 +235,6 @@
             {
                 $('#cpoNtallSys').append('<li style="background:black;color:white;text-align:center"><a style="color:white" href="#">NO HAY MENSAJES</i></a></li>');
             }
-
     });
 
     $(document).on('click', '#numberMsgAllSys', function () {

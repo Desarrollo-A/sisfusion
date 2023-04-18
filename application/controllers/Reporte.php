@@ -3,7 +3,7 @@ class Reporte extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reporte_model', 'General_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions', 'Formatter'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -185,6 +185,22 @@ class Reporte extends CI_Controller {
             
 
             $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+
+            for ( $x = 0; $x < count($data['data']); $x++ ){
+                $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
+                $fechaApartado = $data['data'][$x]['fechaApartado'];
+                $fechaStatus9 = $data['data'][$x]['fechaStatus9'];
+
+                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
+                
+                if ( $fechaStatus9 != null){
+                    $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
+                }
+                else $diasStatus9 = 'No aplica';
+
+                $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
+                $data['data'][$x]['diasStatus9'] = $diasStatus9;
+            }
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
             echo json_encode(array());

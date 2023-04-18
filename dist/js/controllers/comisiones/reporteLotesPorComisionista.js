@@ -5,7 +5,6 @@ $(document).ready(function () {
     }
 
     $.post('getOpcionesParaReporteComisionistas', { seeAll:  seeAll}, function(data) {
-        $("#tipoUsuario").append($('<option>').val(0).text("TODOS LOS ROLES"));
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2']}).text(data[i]['nombre']));
@@ -182,7 +181,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
             {data: 'nombreRegional'},
             { data: function (d) {
                 if(d.rec == 8)
-                    return '-';
+                    return d.ultimoEstatusCanceladas;
                 else
                     return d.idStatusContratacion;
             }},
@@ -236,7 +235,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     return '$' + formatMoney(d.abonoPagado);
                 }
             },
-            {data: 'rol'}
+            {data: 'lugar_prospeccion'}
         ],
         columnDefs: [{
             visible: false,

@@ -176,7 +176,7 @@
                                                         <th>USUARIO</th>
                                                         <th>RFC</th>
                                                         <th>PUESTO</th>
-                                                        <th>CODIGO POSTAL</th>
+                                                        <th>CÓDIGO POSTAL</th>
                                                         <th>FEC. ENVÍO</th>
                                                         <th>MÁS</th>
                                                     </tr>
@@ -417,7 +417,7 @@
                                 }else if(columnIdx == 17){
                                     return 'PUESTO';
                                 }else if(columnIdx == 18){
-                                    return 'CODIGO POSTAL';
+                                    return 'CÓDIGO POSTAL';
                                 }else if(columnIdx == 19){
                                     return 'FECH. ENVÍO';
                                 } else if(columnIdx != 20 && columnIdx !=0){
