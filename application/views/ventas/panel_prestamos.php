@@ -170,13 +170,13 @@
 						<div class="form-group">
 								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="tipo" id="tipo" required>
-								<option value="">----Seleccionar-----</option>
+								<option value="">SELECCIONA UNA OPCIÓN</option>
 								</select>
 							</div> 
 							<div class="form-group">
 								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="roles" id="roles" required>
-									<option value="">----Seleccionar-----</option>
+									<option value="">SELECCIONA UNA OPCIÓN</option>
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>
@@ -187,21 +187,21 @@
 							<div class="form-group row">
 								<div class="col-md-4">
 									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
-									<input class="form-control" type="number" step="any" required onblur="verificar();" id="monto" name="monto">
+									<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control" id="numeroP" required onblur="verificar();" type="number" name="numeroP">
+									<input class="form-control input-gral" id="numeroP" required onblur="verificar();" type="number"  min="1" name="numeroP">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Pago</label>
-									<input class="form-control" id="pago" required type="text" name="pago" readonly>
+									<input class="form-control input-gral" id="pago" required type="text"  min="1" name="pago" readonly>
 								</div>
 							</div>
 							<div class="form-group">
 								<p>Nota:</label><b id="texto" style="font-size:12px;"></b></p>
 								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
-								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
+								<textarea id="comentario" name="comentario" required  class="form-control input-gral" rows="3"></textarea>
 							</div>
 							<!-- <div class="form-group input-group">
 								<label class="input-group-btn">

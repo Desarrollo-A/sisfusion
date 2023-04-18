@@ -7109,13 +7109,13 @@ for ($d=0; $d <count($dos) ; $d++) {
           $respuesta =  array(
             "response_code" => 200, 
             "response_type" => 'success',
-            "message" => "Prestamo actualizado");
+            "message" => "Préstamo actualizado");
 
         }else{
           $respuesta =  array(
             "response_code" => 400, 
             "response_type" => 'error',
-            "message" => "Prestamo no actualizado, inténtalo más tarde ");
+            "message" => "Préstamo no actualizado, inténtalo más tarde ");
 
         }
         echo json_encode ($respuesta);
