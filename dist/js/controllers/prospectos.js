@@ -1,106 +1,16 @@
+let coincidencias = 0;
 $(document).ready(function() {
 	$(".select-is-empty").removeClass("is-empty");
 	$("#prospecto").empty().selectpicker('refresh');
 
-
-	/*$.getJSON("getCAPListByAdvisor").done(function(data) {
-        $("#specify_recommends").append($('<option>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            var type = data[i]['tipo'];
-            $("#specify_recommends").append($('<option>').val(id).attr('data-type', type).text(name));
-        }
-    });
-
-    // Fill the select of prospecting places
-    $.getJSON("getProspectingPlaces").done(function(data) {
-        $(".prospecting_place").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".prospecting_place").append($('<option>').val(id).text(name));
-        }
-    });
-
-      // Fill the select of nationality
-    $.getJSON("getNationality").done(function(data) {
-        $(".nationality").append($('<option disabled selected>').val("").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".nationality").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of legal personality
-    $.getJSON("getLegalPersonality").done(function(data) {
-        $(".legal_personality").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".legal_personality").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of advertising
-    $.getJSON("getAdvertising").done(function(data) {
-        $(".advertising").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".advertising").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of sales plaza
-    $.getJSON("getSalesPlaza").done(function(data) {
-        $(".sales_plaza").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".sales_plaza").append($('<option>').val(id).text(name));
-        }
-    });
-
-
-    // Fill the select of civil status
-    $.getJSON("getCivilStatus").done(function(data) {
-        $(".civil_status").append($('<option selected="true">').val("0").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".civil_status").append($('<option>').val(id).text(name));
-        }
-    });
-
-    // Fill the select of matrimonial regime
-    $.getJSON("getMatrimonialRegime").done(function(data) {
-        $(".matrimonial_regime").append($('<option selected="true">').val("5").text("Seleccione una opción"));
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $(".matrimonial_regime").append($('<option>').val(id).text(name));
-        }
-    });*/
-
     function reloadPage() {
         location.reload();
     }
-
-    $('#myEditModal').modalSteps();
-    $('#myCoOwnerModal').modalSteps();
+    
+    demo.initMaterialWizard();
+    md.initSliders()
+    demo.initFormExtendedDatetimepickers();
 });
-
-
 
 /*update validaciones*/
 $('#finish').on('click', function() {
@@ -123,9 +33,6 @@ $("#my-form").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
-            //validateEmptySelects(1);
-            //enableSelects(1);
             document.getElementById("finish").disabled = true;
             var myDataHTML = '<center>Guardando ...</center> <div class="progress progress-line-info"><div class="progress-bar indeterminate" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div></div>;';
             $('#savingProspect').html(myDataHTML);
@@ -156,7 +63,6 @@ $("#my-form").on('submit', function(e) {
 });
 /*end validaciones*/
 
-
 function validateFile() {
     if ($('#prospecting_place').val() == '' || $('#prospecting_place').val() == null ||
         $('#sales_plaza').val() == '' || $('#sales_plaza').val() == null ||
@@ -184,9 +90,7 @@ function validateEmptySelects(type) {
         if ($("#state").val() == null || $("#state").val() == '') {
             $("#state").val(33);
         }
-        /* if (($("#own").val() == null || $("#own").val() == '') && ($("#rented").val() == null || $("#rented").val() == '') && ($("#paying").val() == null || $("#paying").val() == '') && ($("#family").val() == null || $("#family").val() == '') && ($("#other").val() == null || $("#other").val() == '')) {
-             $("#hidden").val(6);
-         }*/
+
     } else if (type == 3) { // validate fields before insert a co-owner
         if ($("#civil_status_co").val() == null || $("#civil_status_co").val() == '') {
             $("#civil_status_co").val(7);
@@ -352,6 +256,7 @@ function validateProspectingPlace() {
         $("#specify").removeAttr("style");
         document.getElementById('specify').removeAttribute("readonly");
         $("#specify_mkt").css({ "display": "none" });
+        $("#specify_mkt_div").css({ "display": "none" });
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
 
@@ -364,17 +269,8 @@ function validateProspectingPlace() {
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
         $("#specify_mkt").removeAttr("style");
-    } else if (pp == 21) { // RECOMMENDED SPECIFICATION
-        document.getElementById('specify').value = '';
-        document.getElementById('specify_mkt').value = '';
-        $("#specify").css({ "display": "none" });
-        $("#specify_mkt").css({ "display": "none" });
-        $("#specify_recommends").removeAttr("style");
-        $("#specify_recommends").css({ "required": "true" });
-        $("#specify_recommends").empty();
-        $("#specify_recommends").select2();
-        getPersonsWhoRecommends();
-    } else { // WITHOUT SPECIFICATION
+        $("#specify_mkt_div").removeAttr("style");
+    } else{ // WITHOUT SPECIFICATION
         document.getElementById('specify').value = '';
         document.getElementById('specify_mkt').value = '';
         document.getElementById('specify_recommends').value = '';
@@ -382,6 +278,7 @@ function validateProspectingPlace() {
         document.getElementById('specify').setAttribute("readonly", "true");
         $("#specify_recommends").removeAttr("required");
         $("#specify_mkt").css({ "display": "none" });
+        $("#specify_mkt_div").css({ "display": "none" });
         $("#specify_recommends").css({ "display": "none" });
         $("#specify_recommends").next(".select2-container").hide();
         $("#specify").removeAttr("style");
@@ -433,7 +330,6 @@ function fillFields(v, type) {
         $("#prospecting_place").val(v.lugar_prospeccion);
         $("#advertising").val(v.medio_publicitario);
         $("#sales_plaza").val(v.plaza_venta);
-        //document.getElementById("observations").innerHTML = v.observaciones;
         $("#observation").val(v.observaciones);
         if (v.tipo_vivienda == 1) {
             document.getElementById('own').setAttribute("checked", "true");
@@ -578,8 +474,6 @@ function validateEmptyFields(v, type) {
 }
 
 function fillTimeline(v) {
-    //colours = ["success", "danger", "warning", "info", "rose"];
-    //colourSelected = colours[Math.floor(Math.random() * colours.length)];
     $("#comments-list").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge info"></div>\n' +
         '    <div class="timeline-panel">\n' +
@@ -609,8 +503,6 @@ function fillChangelog(v) {
 
 /*VALIDAR ESTAS*/
 
-
-
 function getRecommendationData() {
     type = $("#specify_recommends option:selected").attr('data-type');
     $("#type_recomendado").val(type);
@@ -627,5 +519,22 @@ function showSpecificationObject() {
         $("#specify_recommends").removeAttr("style");
     } else { // WITHOUT SPECIFICATION
         $("#specify").removeAttr("style");
+    }
+}
+
+function validateInputs(t){
+    let id_input = t.id;
+    let value = t.value;
+}
+
+function validateCoincidences(){
+    console.log(coincidencias);
+    if (coincidencias >= 2){
+        $(".box-alert").css("display", "block");
+        $('.btn-next').prop('disabled', true);
+    }
+    else{
+        $(".box-alert").css("display", "none");
+        $('.btn-next').prop('disabled', false);
     }
 }

@@ -153,7 +153,6 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        scrollX: true,
         destroy: true,
         ordering: false,
         columns: [

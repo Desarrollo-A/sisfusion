@@ -168,6 +168,7 @@ class Usuarios_modelo extends CI_Model
             case '73': // PRACTICANTE CONTRALORÍA
             case '80': // COORDINADOR DE CALL CENTER POSTVENTA
             case '81': // SUBDIRECCIÓN POSTVENTA
+            case '55': // POSTVENTA
                 return $this->db->query("SELECT pci2.abono_pendiente ,CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 

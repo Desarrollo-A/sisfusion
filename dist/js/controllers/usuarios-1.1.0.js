@@ -3,9 +3,8 @@ $(document).ready( function() {
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 16){ // PAYMENT METHOD SELECT
+            if (data[i]['id_catalogo'] == 16) // PAYMENT METHOD SELECT
                 $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            }
             if (data[i]['id_catalogo'] == 1) // MEMBER TYPE SELECT
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 0) // HEADQUARTER SELECT
