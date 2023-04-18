@@ -406,7 +406,21 @@ $("#tabla_prestamos").ready( function(){
 
             Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
 
-                Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+                Modalfooter.append(`<div class="row">
+            <div class=" col-md-4">
+			</div>
+			<div class="form-group col-md-4">
+                <button type="button"  class="btn btn-danger btn-simple " 
+                data-dismiss="modal" >Cerrar</button>	
+			</div>
+			<div class="form-group col-md-4">					
+				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
+			</div>
+                
+                
+                <div class="col-md-3"></div><div class="col-md-3">
+              
+               </div></div>`);
 
             //console.log(data);
             $("#myModalDelete").modal();
@@ -426,8 +440,8 @@ $("#tabla_prestamos").ready( function(){
         const comentario = $(this).attr("data-comentario");
         
     //	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
-            const Modalbody = $('#ModalEdit .modal-body');
-            const Modalfooter = $('#ModalEdit .modal-footer');
+            // const Modalbody = $('#ModalEdit .modal-body');
+            // const Modalfooter = $('#ModalEdit .modal-footer');
             
             document.getElementById("montoPagos").value = '';
             document.getElementById("numeroPagos").value = '';
@@ -447,8 +461,8 @@ $("#tabla_prestamos").ready( function(){
 
             // const montoPagos = $(this).val  
             // Modalbody.html('');
-            Modalfooter.html('');
-                Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="cambiar_prestamo"  id="cambiar_prestamo" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
+            // Modalfooter.html('');
+                // Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="cambiar_prestamo"  id="cambiar_prestamo" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
 
             //console.log(data);
             $("#ModalEdit").modal();
@@ -463,8 +477,13 @@ $("#tabla_prestamos").ready( function(){
         montoPagos  = document.getElementById("pagoEdit").value ;
         comentario  = document.getElementById("informacionText").value  ;
         prestamoId  = document.getElementById("prestamoId").value ;
+        bandera_request = comentario == '' ? false : true;
+    if(pagoEdit != '' &&  numeroPagos != '' &&  montoPagos != '' &&  comentario != '' && prestamoId != ''  && bandera_request  )
+    {
 
-        if(pagoEdit != '' || numeroPagos != '' || montoPagos != '' || comentario != '' || prestamoId != ''   ){
+        console.log(comentario)
+        if(pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0){
+
             $.ajax({
                 url : 'updatePrestamos',
                 type : 'POST',
@@ -480,7 +499,6 @@ $("#tabla_prestamos").ready( function(){
                   success: function(data) {
                    
                     alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-                  
 
                     $('#tabla_prestamos').DataTable().ajax.reload(null, false );
                     
@@ -491,8 +509,13 @@ $("#tabla_prestamos").ready( function(){
                     alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
                 }
             });
+
         }else{
-       
+            alerts.showNotification("top", "right", "No es posible guardar los valores sean negativos.", "error");
+        }
+          
+    }else{
+             alerts.showNotification("top", "right", "Es necesario revisar que no se tenga valores vacios.", "error");
         }
     });
 

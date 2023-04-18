@@ -1,7 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
-<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+<!-- <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/> -->
+<!-- <link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css"> -->
 
 <style>
     .modal-backdrop{
@@ -43,47 +43,116 @@
 				</div>
 			</div>
 		</div>
+<!-- --- -->
 
-		<div class="modal fade modal-alertas" name="ModalEdit" id="ModalEdit" role="dialog">
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
+            </div>
+            <form >
+			<div class="form-group row">
+				<div class="col-md-4">
+					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
+					<input class="form-control input-gral"
+					onkeydown="return event.keyCode !== 69"  type="number" step="any" required  id="montoPagos" name="monto" min="1">
+				</div>
+				<div class="col-md-4">
+					<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
+					<input class="form-control input-gral" onkeydown="return event.keyCode !== 69"
+					 id="numeroPagos" required  type="number" name="numeroP" min="1">
+				</div>
+				<div class="col-md-4">
+					<label class="control-label">Pago</label>
+					<input class="form-control input-gral" 
+					onkeydown="return event.keyCode !== 69"  id="pagoEdit" required type="text" name="pago" min="1" readonly>
+				</div>
+				<div class="col-md-12" style="display:block;">
+					<input class="form-control input-gral" id="prestamoId" style="display:none;" required type="text" name="pago" readonly>
+				</div>
+				<div class="col-md-12">
+					<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
+					<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
+					<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
+				</div>	
+			</div>
+			<div class=" col-md-4">
+			</div>
+			<div class="form-group col-md-4">
+                <a type="button"  class="btn btn-danger btn-simple " 
+                        data-dismiss="modal" >Cerrar</a>	
+			</div>
+			<div class="form-group col-md-4">					
+				<a  id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar</a>
+			</div>
+            <div class="modal-footer">     
+            </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- --- -->
+		<div class="modal fade" name="ModalEdits" id="ModalEdits" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header bg-red">
+					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
 					</div>
-					
 						<div class="modal-body">
 							<div class="form-group row">
 								<div class="col-md-4">
 									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
-									<input class="form-control" type="number" step="any" required  id="montoPagos" name="monto">
+							
+									<input class="form-control input-gral" type="number" step="any" required  id="montoPagos" name="monto" min="1">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control" id="numeroPagos" required  type="number" name="numeroP">
+									<input class="form-control input-gral" id="numeroPagos" required  type="number" name="numeroP" min="1">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Pago</label>
-									<input class="form-control" id="pagoEdit" required type="text" name="pago" readonly>
+									<input class="form-control input-gral" id="pagoEdit" required type="text" name="pago" min="1" readonly>
 								</div>
 								<div class="col-md-12" style="display:block;">
-									<input class="form-control" id="prestamoId" style="display:none;" required type="text" name="pago" readonly>
+									<input class="form-control input-gral" id="prestamoId" style="display:none;" required type="text" name="pago" readonly>
 								</div>
+								<div class="col-md-12">
+									<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
+									<label class="label">Comentario(<b class="text-danger">*</b>)</label>
+									<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
+								</div>	
 							</div>
-							<div class="form-group">
-								<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
-								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
-								<textarea id="informacionText" name="informacionText" class="form-control" rows="3"></textarea>
+
+							<div class=" col-md-4">
+					        </div>
+							<div class="form-group col-md-4">
+                                <button type="button"  class="btn btn-danger btn-simple " 
+                                    data-dismiss="modal" >Cerrar
+                                        
+                                </button>	
+							</div>
+							<div class="form-group col-md-4">					
+							    <button type="submit" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar
+								  
+                                </button>
 							</div>
 						
-							<div class="form-group">
-								<center>
+							<!-- <center>
 									<button  id="updatePrestamo" class="btn btn-success updatePrestamo">GUARDAR</button>
 									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-								</center>
-							</div>
+								</center> -->		
+							
 						</div>
-					
+						<div class="footer-model" >
+							
+						</div>
 				</div>
 			</div>
 		</div>
@@ -142,13 +211,26 @@
 								</label>
 									<input type="text" class="form-control" readonly>
 							</div> -->
-
+							
 							<div class="form-group">
+							<div class=" col-md-4">
+							</div>
+							<div class="form-group col-md-4">
+								<button type="button"  class="btn btn-danger btn-simple " 
+										data-dismiss="modal" >Cancelar</button>	
+							</div>
+							<div class="form-group col-md-4">					
+								<button  type="submit" id="btn_abonar" class="btn btn-gral-data ">Guardar</button>
+							</div>
 								<center>
-									<button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
-									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+									<!-- <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button> -->
+									<!-- <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button> -->
 								</center>
 							</div>
+							
+							<div class="modal-footer">     
+            				</div>
+
 						</div>
 					</form>
 				</div>
