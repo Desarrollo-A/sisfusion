@@ -80,18 +80,12 @@
 					<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
 				</div>	
 			</div>
-			<div class=" col-md-4">
-			</div>
-			<div class="form-group col-md-4">
-                <a type="button"  class="btn btn-danger btn-simple " 
-                        data-dismiss="modal" >Cerrar</a>	
-			</div>
-			<div class="form-group col-md-4">					
-				<a  id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar</a>
-			</div>
+			
             <div class="modal-footer">     
+					<button type="button"  class="btn btn-danger btn-simple " 
+							data-dismiss="modal" >Cerrar</button>	
+					<button  type="button" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar</button>
             </div>
-
             </form>
         </div>
     </div>
@@ -129,29 +123,13 @@
 									<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
 								</div>	
 							</div>
-
-							<div class=" col-md-4">
-					        </div>
-							<div class="form-group col-md-4">
-                                <button type="button"  class="btn btn-danger btn-simple " 
-                                    data-dismiss="modal" >Cerrar
-                                        
-                                </button>	
-							</div>
-							<div class="form-group col-md-4">					
-							    <button type="submit" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar
-								  
-                                </button>
-							</div>
-						
-							<!-- <center>
-									<button  id="updatePrestamo" class="btn btn-success updatePrestamo">GUARDAR</button>
-									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-								</center> -->		
-							
 						</div>
 						<div class="footer-model" >
-							
+                                <button type="button"  class="btn btn-danger btn-simple " 
+                                    data-dismiss="modal" >Cerrar
+                                </button>	
+							    <button type="submit" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar
+                                </button>
 						</div>
 				</div>
 			</div>
@@ -168,13 +146,13 @@
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
 						<div class="form-group">
-								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
+								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="tipo" id="tipo" required>
 								<option value="">SELECCIONA UNA OPCIÓN</option>
 								</select>
 							</div> 
 							<div class="form-group">
-								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
+								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
 								<select class="selectpicker" name="roles" id="roles" required>
 									<option value="">SELECCIONA UNA OPCIÓN</option>
 									<option value="7">Asesor</option>
@@ -186,21 +164,21 @@
 							<div class="form-group" id="users"></div>
 							<div class="form-group row">
 								<div class="col-md-4">
-									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
+									<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
 									<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
 								</div>
 								<div class="col-md-4">
-									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
+									<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
 									<input class="form-control input-gral" id="numeroP" required onblur="verificar();" type="number"  min="1" name="numeroP">
 								</div>
 								<div class="col-md-4">
-									<label class="label">Pago</label>
+									<label class="control-label">Pago</label>
 									<input class="form-control input-gral" id="pago" required type="text"  min="1" name="pago" readonly>
 								</div>
 							</div>
 							<div class="form-group">
-								<p>Nota:</label><b id="texto" style="font-size:12px;"></b></p>
-								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
+								<p></label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
 								<textarea id="comentario" name="comentario" required  class="form-control input-gral" rows="3"></textarea>
 							</div>
 							<!-- <div class="form-group input-group">
@@ -211,24 +189,10 @@
 								</label>
 									<input type="text" class="form-control" readonly>
 							</div> -->
-							
-							<div class="form-group">
-							<div class=" col-md-4">
-							</div>
-							<div class="form-group col-md-4">
-								<button type="button"  class="btn btn-danger btn-simple " 
-										data-dismiss="modal" >Cancelar</button>	
-							</div>
-							<div class="form-group col-md-4">					
-								<button  type="submit" id="btn_abonar" class="btn btn-gral-data ">Guardar</button>
-							</div>
-								<center>
-									<!-- <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button> -->
-									<!-- <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button> -->
-								</center>
-							</div>
-							
-							<div class="modal-footer">     
+							<div class="modal-footer">  
+									<button type="button"  class="btn btn-danger btn-simple " 
+											data-dismiss="modal" >Cancelar</button>	
+									<button  type="submit" id="btn_abonar" class="btn btn-gral-data ">Guardar</button>
             				</div>
 
 						</div>

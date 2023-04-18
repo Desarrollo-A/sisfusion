@@ -405,22 +405,10 @@ $("#tabla_prestamos").ready( function(){
             Modalfooter.html('');
 
             Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
-
-                Modalfooter.append(`<div class="row">
-            <div class=" col-md-4">
-			</div>
-			<div class="form-group col-md-4">
-                <button type="button"  class="btn btn-danger btn-simple " 
-                data-dismiss="modal" >Cerrar</button>	
-			</div>
-			<div class="form-group col-md-4">					
+                Modalfooter.append(`
+                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
 				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
-			</div>
-                
-                
-                <div class="col-md-3"></div><div class="col-md-3">
-              
-               </div></div>`);
+			                        `);
 
             //console.log(data);
             $("#myModalDelete").modal();
