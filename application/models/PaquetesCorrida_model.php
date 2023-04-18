@@ -230,7 +230,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                 'id_condominio' => $getPaquetesByName[$o]['condominio'],
                 'id_paquete' => $json,
                 'nombre' => $getPaquetesByName[$o]['descripcion'],
-                'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
+                'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'], 
                 'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
                 'estatus' => 1,
                 'creado_por' => $this->session->userdata('id_usuario'),
@@ -302,12 +302,19 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                         $query_tipo_lote
                         ) t")->result_array();
                 }
-            return $paquetes;
-        
-
-        
+            return $paquetes;   
     }
-    
+    public function getAutorizaciones($id_rol){
+        $estatus = $id_rol == 17 ? '2,3,4' : '1,3,4';
+        return $this->db->query("SELECT aut.*,sd.nombre as sede,opc.nombre as tipoLote,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor
+        FROM autorizaciones_pventas aut
+        INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
+        INNER JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
+        INNER JOIN usuarios us ON us.id_usuario=aut.creado_por
+        WHERE aut.estatus in($estatus)")->result_array();
+    }
+
+
 
 
 

@@ -4,6 +4,7 @@
 
 class PaquetesCorrida extends CI_Controller
 {
+  public $id_rol = FALSE;
     public function __construct()
     {
         parent::__construct();
@@ -12,6 +13,7 @@ class PaquetesCorrida extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->programacion = $this->load->database('default', true);
+        $this->id_rol = $this->session->userdata('id_rol');
     }
 
     public function validateSession()
@@ -19,18 +21,12 @@ class PaquetesCorrida extends CI_Controller
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
             redirect(base_url() . "index.php/login");
         }
-
     }
 
     public function Planes()
     {
-
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/       
+        $datos = $this->get_menu->get_menu_data($this->id_rol);
         $this->load->view('template/header');
         $this->load->view("ventas/Planes", $datos);
     }
@@ -438,6 +434,21 @@ class PaquetesCorrida extends CI_Controller
         $id_tcondicion = $this->input->post("id_tcondicion");
         $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete, $id_tcondicion);
         echo json_encode($data);
+    }
+
+    public function Autorizaciones()
+    {
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/     
+        if ($this->id_rol == FALSE)
+            redirect(base_url());      
+        $datos = $this->get_menu->get_menu_data($this->id_rol);
+        $this->load->view('template/header');
+        $this->load->view("ventas/autorizacionesPVentas", $datos);
+    }
+    public function getAutorizaciones()
+    {
+        echo json_encode(array("data" => $this->PaquetesCorrida_model->getAutorizaciones($this->id_rol)));
+
     }
 
 }
