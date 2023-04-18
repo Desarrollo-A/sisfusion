@@ -88,8 +88,7 @@ class General_model extends CI_Model
             return false;
     }
 
-    public function insertBatch($table, $data)
-    {
+    public function insertBatch($table, $data) {
         $this->db->trans_begin();
         $this->db->insert_batch($table, $data);
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
@@ -101,8 +100,7 @@ class General_model extends CI_Model
         }
     }
 
-    public function updateBatch($table, $data, $key)
-    {
+    public function updateBatch($table, $data, $key) {
         $this->db->trans_begin();
         $this->db->update_batch($table, $data, $key);
         if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
@@ -114,16 +112,15 @@ class General_model extends CI_Model
         }
     }
 
-    public function getInformationSchemaByTable($table) // MJ: RECIBE el nombre de la tabla que se desea consultar column y data_type
-    {
+    public function getInformationSchemaByTable($table) { // MJ: RECIBE el nombre de la tabla que se desea consultar column y data_type
         return $this->db->query("SELECT COLUMN_NAME column_name, DATA_TYPE data_type FROM Information_Schema.Columns WHERE TABLE_NAME = '$table';")->result_array();
     }
 
-    public function getMultirol($usuario){
+    public function getMultirol($usuario) {
         return $this->db->query("SELECT * FROM roles_x_usuario WHERE idUsuario = $usuario");
     }
 
-    public function getUsersByLeader($rol, $secondRol){
+    public function getUsersByLeader($rol, $secondRol) {
         $idrol = $this->session->userdata('id_rol');
         if($idrol == 5)
             $idUsuario = $this->session->userdata('id_lider');
@@ -137,13 +134,12 @@ class General_model extends CI_Model
         INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
         WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)");
     }
-    function getCatalogOptions($id_catalogo)
-    {
+
+    public function getCatalogOptions($id_catalogo) {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
     }
 
-    public function getAsesoresList()
-    {
+    public function getAsesoresList() {
         $idrol = $this->session->userdata('id_rol');
         if($idrol == 84){
             return $this->db->query("SELECT id_usuario id, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre, id_sede sede, id_rol rol 
@@ -162,19 +158,17 @@ class General_model extends CI_Model
         }
     }
 
-    public function existeUsuarioMenuEspecial($idUsuario)
-    {
+    public function existeUsuarioMenuEspecial($idUsuario) {
         $query = $this->db->query("SELECT id_menu_u FROM menu_usuario WHERE id_usuario = $idUsuario");
         $result = $query->result_array();
         return count($result) > 0;
     }
 
-    public function get_submenu_data($id_rol, $id_usuario){
+    public function get_submenu_data($id_rol, $id_usuario) {
         return $this->db->query("SELECT * FROm sub_menu WHERE id_rol = $id_rol OR id_usuario = $id_usuario");
     }
 
-    public function deleteRecord($table, $data) // AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA LLAVE array('id' => $id)
-    {
+    public function deleteRecord($table, $data) { // ELIMINA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA LLAVE array('id' => $id)
         if ($data != '' && $data != null) {
             $this->db->trans_begin();
             $this->db->delete($table, $data);

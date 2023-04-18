@@ -265,7 +265,6 @@ function cleanComments() {
 
 
 function fillTimeline(v, counter) {
-    console.log('SIN DATOS POR MOSTRAR');
     if(counter > 0){
         $("#comments-list").append('<li class="timeline-inverted">\n' +
             '    <div class="timeline-badge info"></div>\n' +

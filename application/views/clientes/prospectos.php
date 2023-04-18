@@ -22,6 +22,21 @@
                 from { left: -25%; width: 25%; }
                 to { left: 100%; width: 25%;}
             }
+
+            .input-gral {
+                background-color: #eaeaea !important;
+                color: #929292 !important;
+                border-radius: 27px !important;
+                background-image: none !important;
+                padding-left: 20px;
+            }
+            .input-gral:placeholder{
+                    margin-left: 20px;
+                }
+            .isRequired{
+                color: #EA4335;
+                margin: 0 3px;
+            }
         </style>
 
         <div class="content">
