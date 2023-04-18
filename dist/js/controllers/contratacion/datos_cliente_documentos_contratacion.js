@@ -193,7 +193,8 @@ $('#idLote').change(function () {
                             }
                         }
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if (data.tipo_doc == 7) { // CORRIDA
+                    }
+                    else if (data.tipo_doc == 7) { // CORRIDA
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(35, 22, 62, 75, 94, 106) && (id_rol_general == 13 || id_rol_general == 32 || id_rol_general == 17 || id_rol_general == 70)) // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
@@ -208,7 +209,8 @@ $('#idLote').change(function () {
                             }
                         }
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if (data.tipo_doc == 29) { // CARTA DOMICILIO
+                    }
+                    else if (data.tipo_doc == 29) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(37, 7, 64, 66, 77, 41) && (id_rol_general == 6 || id_rol_general == 5)) // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
@@ -223,22 +225,56 @@ $('#idLote').change(function () {
                             }
                         }
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN NUVEA)
+                    }
+                    else if (data.tipo_doc == 30) { // CONTRATO FIRMADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                             // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
+                                var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(1);
+                        }
+                        else { // LA RAMA TIENE UN DOCUMENTO CARGADO
+                            var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+                            if( (id_rol_general == 73 || id_rol_general == 70 || id_rol_general == 17)) { // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
+                                let [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(4);
+                                buttonDelete = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
+                            }
+                        }
+                        buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
+                    }
+                    else if (data.tipo_doc == 31) { // CONTRATO FIRMADO
+                        if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
+                            // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
+                            var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(1);
+                        }
+                        else { // LA RAMA TIENE UN DOCUMENTO CARGADO
+                            var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+                            if( (id_rol_general == 7)) { // SÍ ES ASESOR, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
+                                let [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(4);
+                                buttonDelete = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
+                            }
+                        }
+                        buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
+                    }
+                    else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN NUVEA)
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad versión anterior") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN VIEJITA)
+                    }
+                    else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad versión anterior") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN VIEJITA)
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if(data.tipo_doc == 66) { // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
+                    }
+                    else if(data.tipo_doc == 66) { // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if(data.tipo_doc == 'autorizaciones') { // EXISTE LA RAMA DE AUTORIZACIONES
+                    }
+                    else if(data.tipo_doc == 'autorizaciones') { // EXISTE LA RAMA DE AUTORIZACIONES
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else if(data.tipo_doc == 'prospecto') { // EXISTE LA RAMA DEL PROSPECTO
+                    }
+                    else if(data.tipo_doc == 'prospecto') { // EXISTE LA RAMA DEL PROSPECTO
                         var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         buttonMain = `<button class="${buttonClassType} ${buttonClassStatus} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction} data-tipo-documento="${data.tipo_doc}"><i class="${buttonIcon}"></i></button>`;
-                    } else { // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
+                    }
+                    else { // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidos.includes(31, 85, 20, 63, 73, 82, 92, 96) && (id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3 || id_rol_general == 2)) // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 var [buttonTitle, buttonClassStatus, buttonClassType, buttonClassAction, buttonTypeTransaction] = getAtributos(3);
@@ -333,7 +369,26 @@ $(document).on('click', '.verProspectos', function () {
     });
 });
 
-
+$(document).on('click', '.pdfLinkContratoFirmado', function () {
+    var $itself = $(this);
+    Shadowbox.open({
+        content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/contratoFirmado/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+        player:     "html",
+        title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+        width:      985,
+        height:     660
+    });
+});
+$(document).on('click', '.pdfAutFI', function () {
+    var $itself = $(this);
+    Shadowbox.open({
+        content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>static/documentos/cliente/autFechainicio/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+        player:     "html",
+        title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+        width:      985,
+        height:     660
+    });
+});
 /*evidencia MKTD PDF*/
 $(document).on('click', '.verEVMKTD', function () {
     var $itself = $(this);
