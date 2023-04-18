@@ -3341,7 +3341,10 @@ order by historial_lotes.idHistorialLote");
 
 		foreach ($query->result_array() as $desc)
 		{
-			$arrayQuery[] = $this->db-> query('SELECT id_descuento, porcentaje, apply from descuentos WHERE id_descuento IN ('.$desc['id_descuento'].') ')->result_array();
+			$arrayQuery[] = $this->db-> query('SELECT de.id_descuento, de.porcentaje, co.apply 
+			FROM descuentos de
+			INNER JOIN condiciones co ON co.id_condicion = de.id_condicion
+			WHERE de.id_descuento IN ('.$desc['id_descuento'].') ')->result_array();
 
 		}
 
@@ -4777,12 +4780,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				$id_usuario = $this->session->userdata('id_usuario');
 				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
-				else if ($id_usuario == 7096 || $id_usuario == 7097) { // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
+				else if ($id_usuario == 7096 || $id_usuario == 7097  || $id_usuario == 10924) { // MJ: EDGAR Y GRISELL VERÁN LO DE CDMX + SMA
                     $where_sede = ' AND clientes.id_sede IN(4, 9)';
                     $where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9')) OR id_usuario IN (7092, 690))";
                 }
-				else if ($id_usuario == 29) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 666)";
+				else if ($id_usuario == 29 || $id_usuario == 7934) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
+					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12')) OR id_usuario = 666)";
 				else if ($id_usuario == 4888 || $id_usuario == 546) // MJ: ADRIANA PEREZ Y DIRCE
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11'))";
 				else if ($id_usuario == 6831) // MJ: YARETZI MARICRUZ ROSALES HERNANDEZ VE ITZEL ALVAREZ MATA

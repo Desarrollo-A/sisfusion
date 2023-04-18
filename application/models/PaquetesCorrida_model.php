@@ -13,7 +13,7 @@ class PaquetesCorrida_model extends CI_Model
 
     public function getTipoDescuento()
     {
-        return $this->db->query("select * from tipos_condiciones where id_tcondicion in(1,2,4,12,13)")->result_array();
+        return $this->db->query("SELECT * FROM condiciones WHERE estatus = 1")->result_array();
     }
     public  function get_lista_sedes(){
     return $this->db->query("SELECT * FROM sedes where id_sede in(1,2,3,4,5,6,9) ORDER BY nombre");
@@ -23,12 +23,15 @@ class PaquetesCorrida_model extends CI_Model
     {
         return $this->db->query("SELECT idResidencial, nombreResidencial, UPPER(CAST(descripcion AS VARCHAR(75))) descripcion, empresa FROM residenciales WHERE status = 1 and sede_residencial=$id_sede ORDER BY nombreResidencial ASC")->result_array();
     }
-    public function getDescuentosPorTotal($tdescuento,$id_condicion,$eng_top,$apply)
+    public function getDescuentosPorTotal($id_condicion)
     {
-        return $this->db->query("SELECT id_tdescuento,inicio,fin,id_condicion,eng_top,apply,max(id_descuento) AS id_descuento,porcentaje 
-        FROM descuentos WHERE id_tdescuento = $tdescuento AND id_condicion = $id_condicion AND eng_top = $eng_top AND apply = $apply and inicio is null 
-        group by id_tdescuento,inicio,fin,id_condicion,eng_top,apply,porcentaje 
-        order by porcentaje");
+        //Modificar
+        return $this->db->query("SELECT de.inicio, de.fin, de.id_condicion,max(de.id_descuento) AS de.id_descuento, de.porcentaje 
+        FROM descuentos de
+        INNER JOIN condiciones co ON co.id_condicion = de.id_condicion
+        WHERE de.id_condicion = $id_condicion AND de.inicio is null 
+        group by de.inicio, de.fin, de.id_condicion, de.porcentaje 
+        order by de.porcentaje");
     }
  
     public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario,$inicio,$fin){
@@ -63,104 +66,63 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
-    public function getDescuentos($objDescuentos, $primeraCarga)
-    {
-        list($desTotal, $desEnganche, $desPrecioM2, $desBono, $desMSI) = $this->getDescuentosQueries();
+    public function getDescuentos($primeraCarga, $tipoCondicion){
+        $queryFinal = ''; $condiciones = '';
 
-        if($primeraCarga){
-            $data = $this->db->query("$desTotal UNION ALL $desEnganche UNION ALL $desPrecioM2 UNION ALL $desBono UNION ALL $desMSI ORDER BY id_condicion, d.porcentaje");
+        if($primeraCarga == 1)
+            $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1")->result_array();
+        else
+            $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1 AND id_condicion = $tipoCondicion")->result_array();
+
+        foreach ($condiciones as $index => $valor) {
+            $id_condicion = $valor['id_condicion'];
+            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
+            MAX(d.id_descuento) AS id_descuento, d.porcentaje 
+            FROM descuentos d
+            INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+            WHERE d.id_condicion = $id_condicion 
+            AND d.inicio IS NULL
+            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
+            if( ($index+1) != count($condiciones)) {
+                $queryFinal .= " UNION ALL ";
+            }
         }
-        else if( $type == 1 ) // total
-            $data = $this->db->query("$desTotal ORDER BY d.porcentaje");
-        else if( $type == 2) // Enganche
-            $data = $this->db->query("$desEnganche ORDER BY d.porcentaje");
-        else if( $type == 4) // Precio m2
-            $data = $this->db->query("$desPrecioM2 ORDER BY d.porcentaje");
-        else if( $type == 12) // Bono
-            $data = $this->db->query("$desBono ORDER BY d.porcentaje");
-        else if( $type == 13) // MSI
-            $data = $this->db->query("$desMSI ORDER BY d.porcentaje");
+        
+        $data = $this->db->query("$queryFinal ORDER BY id_condicion, d.porcentaje")->result_array();
+        $allArray = array();
+        foreach ($condiciones as $indexC => $condicion) {
+            $arrayXCondicion = array();
+            foreach ($data as $indexD => $valor) {
+                if( $condicion['id_condicion'] == $valor['id_condicion'])
+                    $arrayXCondicion[] = $valor;
+            }
 
-        return $data;
+            $allArray[] = array("condicion" => $condicion, "data" => $arrayXCondicion, );
+        }
+        
+        return $allArray;
     }
 
-    public function getDescuentosQueries(){
-        $desTotal = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 1 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desEnganche = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 1 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desPrecioM2 = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 4 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desBono = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 12 
-        AND d.eng_top = 1 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje";
-
-        $desMSI = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 13 
-        AND d.eng_top = 1 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje";
-
-        return [$desTotal, $desEnganche, $desPrecioM2, $desBono, $desMSI];
-    }
-
-    public function SaveNewDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento){
-      $response =  $this->db->query("INSERT INTO descuentos VALUES($tdescuento,NULL,NULL,$id_condicion,$descuento,$eng_top,$apply,NULL)"); 
+    public function SaveNewDescuento($id_condicion,$descuento){
+      $response =  $this->db->query("INSERT INTO descuentos VALUES(NULL,NULL,$id_condicion,$descuento,NULL)"); 
+      
         if (! $response ) {
             return $finalAnswer = 0;
         } else {
-            return $finalAnswer = 1;
+            $finalAnswer = $this->db->query("SELECT IDENT_CURRENT('descuentos') as lastId")->result_array();
+            return $finalAnswer;
         }
     }
 
-    public function ValidarDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento)
+    public function ValidarDescuento($id_condicion,$descuento)
     {
-        return $this->db->query("SELECT c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,max(d.id_descuento) AS id_descuento,d.porcentaje 
+        return $this->db->query("SELECT c.descripcion,d.inicio,d.fin,d.id_condicion,max(d.id_descuento) AS id_descuento,d.porcentaje 
         FROM descuentos d
 		INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-		WHERE d.id_tdescuento = $tdescuento 
-		AND d.id_condicion = $id_condicion 
-		AND d.eng_top = $eng_top 
-		AND d.apply = $apply
+		AND d.id_condicion = $id_condicion
         AND d.porcentaje=$descuento
 		and d.inicio is null 
-        group by c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,d.porcentaje 
+        group by c.descripcion,d.inicio,d.fin,d.id_condicion,d.porcentaje 
         order by d.porcentaje");
     }
  
@@ -272,11 +234,10 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     }
 
     public function getDescuentosByPlan($id_paquete,$id_tcondicion){
-        return  $this->db->query("select r.*,d.*,c.descripcion from relaciones r 
-        inner join descuentos d on d.id_descuento=r.id_descuento
-        inner join condiciones c on c.id_condicion = d.id_condicion
-        inner join tipos_condiciones tc on tc.id_tcondicion=c.id_tcondicion
-        where r.id_paquete in ($id_paquete) and c.id_condicion=$id_tcondicion  order by r.prioridad asc")->result_array();
+        return  $this->db->query("SELECT r.*,d.*,c.descripcion FROM relaciones r 
+        INNER JOIN descuentos d ON d.id_descuento=r.id_descuento
+        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+        WHERE r.id_paquete IN ($id_paquete) AND c.id_condicion=$id_tcondicion ORDER BY r.prioridad ASC")->result_array();
     }
     
 

@@ -1,55 +1,52 @@
-<?php if (!defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+<?php if (!defined('BASEPATH'))
+  exit('No direct script access allowed');
 
 class PaquetesCorrida extends CI_Controller
 {
-  public $id_rol = FALSE;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu'));
-        $this->load->helper(array('url', 'form'));
-        $this->load->database('default');
-        $this->programacion = $this->load->database('default', true);
-        $this->id_rol = $this->session->userdata('id_rol');
-    }
+    public $id_rol = FALSE;
+  public function __construct()
+  {
+    parent::__construct();
+    $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model'));
+    $this->load->library(array('session', 'form_validation', 'get_menu'));
+    $this->load->helper(array('url', 'form'));
+    $this->load->database('default');
+    $this->programacion = $this->load->database('default', TRUE);
+    $this->id_rol = $this->session->userdata('id_rol');
+  }
 
-    public function validateSession()
-    {
-        if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
-            redirect(base_url() . "index.php/login");
-        }
-    }
 
-    public function Planes()
-    {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/       
-        $datos = $this->get_menu->get_menu_data($this->id_rol);
-        $this->load->view('template/header');
-        $this->load->view("ventas/Planes", $datos);
-    }
-    public function getResidencialesList($id_sede)
-    {
-        $data = $this->PaquetesCorrida_model->getResidencialesList($id_sede);
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
+  public function validateSession()
+  {
+    if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
+      redirect(base_url() . "index.php/login");
+  }
 
-    }
-    public function getTipoDescuento()
-    {
-        $data = $this->PaquetesCorrida_model->getTipoDescuento();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
+  public function Planes()
+  {
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/       
+    $datos = $this->get_menu->get_menu_data($this->id_rol);
+    $this->load->view('template/header');
+    $this->load->view("ventas/Planes", $datos);
+  }
+  function getResidencialesList($id_sede)
+  {
+    $data = $this->PaquetesCorrida_model->getResidencialesList($id_sede);
+    if ($data != null)
+      echo json_encode($data);
+    else
+      echo json_encode(array());
+  }
+  
+  function getTipoDescuento()
+  {
+    $data = $this->PaquetesCorrida_model->getTipoDescuento();
+    if ($data != null)
+      echo json_encode($data);
+    else
+      echo json_encode(array());
+  }
 
-    }
 
     public function SavePaquete()
     {
@@ -256,187 +253,111 @@ class PaquetesCorrida extends CI_Controller
         }
 
     }
-    public function lista_sedes()
-    {
-        echo json_encode($this->PaquetesCorrida_model->get_lista_sedes()->result_array());
+  public function lista_sedes()
+  {
+    echo json_encode($this->PaquetesCorrida_model->get_lista_sedes()->result_array());
+  }
+  public function getDescuentosPorTotal()
+  {
+    $id_condicion = $this->input->post("id_condicion");
+    echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($id_condicion)->result_array(), JSON_NUMERIC_CHECK);
+  }
+
+  public function getDescuentos(){
+    $primeraCarga = $this->input->post("primeraCarga");
+    $tipoCondicion = $this->input->post("tipoCondicion");
+
+    echo json_encode($this->PaquetesCorrida_model->getDescuentos($primeraCarga, $tipoCondicion));
+  }
+
+  public function SaveNewDescuento(){
+    $id_condicion = $this->input->post("id_condicion");
+    $descuento = $this->input->post("descuento");
+
+    if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12) {
+      $replace = ["$", ","];
+      $descuento = str_replace($replace, "", $descuento);
     }
-    public function getDescuentosPorTotal()
-    {
-        $tdescuento = $this->input->post("tdescuento");
-        $id_condicion = $this->input->post("id_condicion");
-        $eng_top = $this->input->post("eng_top");
-        $apply = $this->input->post("apply");
-        echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($tdescuento, $id_condicion, $eng_top, $apply)->result_array(), JSON_NUMERIC_CHECK);
+    
+    $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
+    if (count($row) > 0) {
+      echo(json_encode(array("status" => 403, "mensaje" => "El descuento ingresado, ya existe.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
+    } 
+    else {
+      $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
+      $lastRecords = $this->PaquetesCorrida_model->getDescuentos(0, $id_condicion);
+      
+      echo(json_encode(array("status" => 402, "mensaje" => "Descuento almacenado correctamente", "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }
+  }
 
-    public function getDescuentos($primeraCarga, $type)
-    {
-        echo json_encode(array("data" => $this->PaquetesCorrida_model->getDescuentos($tdescuento, $id_condicion, $eng_top, $apply)->result_array()));
-    }
-
-    public function SaveNewDescuento()
-    {
-        $tdescuento = $this->input->post("tdescuento");
-        $id_condicion = $this->input->post("id_condicion");
-        $eng_top = $this->input->post("eng_top");
-        $apply = $this->input->post("apply");
-        $descuento = $this->input->post("descuento");
-        if ($this->input->post("tipo_d") == 4 || $this->input->post("tipo_d") == 12) {
-            $replace = ["$", ","];
-            $descuento = str_replace($replace, "", $descuento);
-        }
-        $row = $this->PaquetesCorrida_model->ValidarDescuento($tdescuento, $id_condicion, $eng_top, $apply, $descuento)->result_array();
-        if (count($row) > 0) {
-            echo json_encode(2);
-        } else {
-            echo json_encode($response = $this->PaquetesCorrida_model->SaveNewDescuento($tdescuento, $id_condicion, $eng_top, $apply, $descuento));
-        }
-    }
-
-    public function listaDescuentos()
-    {
-        date_default_timezone_set('America/Mexico_City');
-        $cuari1 = $this->db->query("SELECT DISTINCT(ISNULL(id_descuento, 0)) paquetes FROM lotes")->result_array();
-        $stack = array();
-
-        for ($i = 0; $i < sizeof($cuari1); $i++) {
-            $queryRes = $this->db->query("SELECT r.nombreResidencial,
-        (CASE
-        WHEN p.super1 = '0' AND p.super2 = '0' THEN 'Cualquiera'
-        WHEN p.super1 = '0' AND p.super2 != '0' THEN concat('Mayor igual a ',p.super2 )
-        WHEN p.super1 != '0' AND p.super2 = '0' THEN concat('Menor a ',p.super2 )
-        ELSE 'NA' END) superficie,
-        (CASE
-        WHEN p.super1 = 0 AND p.super2 = 0 THEN '#2874A6'
-        WHEN p.super1 = 0 AND p.super2 != 0 THEN '#3498DB'
-        WHEN p.super1 != 0 AND p.super2 = 0 THEN '#85C1E9'
-        ELSE 'blue'
-        END) color_superficie,
-        (CASE
-        WHEN p.tipo_lote = 1 THEN 'HABITACIONAL'
-        WHEN p.tipo_lote = 2 THEN 'COMERCIAL'
-        WHEN p.tipo_lote = 3 THEN 'AMBOS'
-        ELSE '-'
-        END) tipo_lote,
-        p.descripcion,
-        (CASE
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 'TOTAL DE LOTE'
-        WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 'ENGANCHE'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 'M2'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 'BONO'
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 'MSI'
-        END) tipo,
-        (CASE
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 1 AND d.eng_top = 0 AND d.apply = 1 THEN 1
-        WHEN d.id_tdescuento = 2 AND d.id_condicion = 2 AND d.eng_top = 0 AND d.apply = 0 THEN 2
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 4 AND d.eng_top = 0 AND d.apply = 1 THEN 3
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 12 AND d.eng_top = 1 AND d.apply = 1 THEN 4
-        WHEN d.id_tdescuento = 1 AND d.id_condicion = 13 AND d.eng_top = 1 AND d.apply = 1 THEN 5
-        END) tipo_check,
-        (CASE
-        WHEN d.id_condicion = 13 THEN rl.msi_descuento ELSE d.porcentaje END) porcentaje, rl.msi_descuento,
-        (CASE
-        WHEN d.id_condicion != 13 AND rl.msi_descuento NOT IN (0) THEN rl.msi_descuento ELSE 0 END) msi_extra,
-        CONVERT(varchar, p.fecha_inicio, 3) fecha_inicio, CONVERT(varchar, p.fecha_fin, 3) fecha_fin
-        FROM lotes l
-        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN paquetes p ON p.id_paquete IN (" . $cuari1[$i]['paquetes'] . ") AND l.id_descuento = '" . $cuari1[$i]['paquetes'] . "'
-        INNER JOIN relaciones rl ON rl.id_paquete = p.id_paquete
-        INNER JOIN descuentos d ON d.id_descuento = rl.id_descuento
-        WHERE l.id_descuento is not null --AND p.tipo_lote IS NOT NULL
-        GROUP BY r.nombreResidencial, p.descripcion, p.super1, p.super2, d.id_tdescuento,
-        d.id_condicion, d.eng_top, d.apply, rl.msi_descuento, d.porcentaje, p.tipo_lote, CONVERT(varchar, p.fecha_inicio, 3), CONVERT(varchar, p.fecha_fin, 3)");
-
-            foreach ($queryRes->result() as $valor) {
-                array_push($stack, array(
-                    'nombreResidencial' => $valor->nombreResidencial,
-                    // 'nombre_condominio'=>$valor->nombre_condominio,
-                    'superficie' => $valor->superficie,
-                    'descripcion' => $valor->descripcion,
-                    'tipo' => $valor->tipo,
-                    'porcentaje' => $valor->porcentaje,
-                    'msi_descuento' => $valor->msi_descuento,
-                    'color_superficie' => $valor->color_superficie,
-                    'tipo_lote' => $valor->tipo_lote,
-                    'tipo_check' => $valor->tipo_check,
-                    'msi_extra' => $valor->msi_extra,
-                    'fecha_inicio' => $valor->fecha_inicio,
-                    'fecha_fin' => $valor->fecha_fin,
-                )
-                );
-            }
-        }
-        echo json_encode(array("data" => $stack));
+  public function getPaquetes()
+  {
+    $index = $this->input->post("index");
+    $datos_sede = explode(",", $this->input->post("sede"));
+    $id_sede = $datos_sede[0];
+    $residenciales = $this->input->post("residencial[]");
+    $desarrollos = implode(",", $residenciales);
+    $superficie = $this->input->post("superficie");
+    /***/
+    $inicio = $this->input->post("inicio");
+    $fin = $this->input->post("fin");
+    $fechaInicio = $this->input->post("fechaInicio");
+    $fechaFin = $this->input->post("fechaFin");
+    $query_superdicie = '';
+    $query_tipo_lote = '';
+    //Superficie
+    /**
+     * 1.-Mayor a
+     * 2.-Rango
+     * 3.-Cualquiera
+     */
+    if ($superficie == 1) { //Mayor a
+      $query_superdicie = 'and sup >= ' . $fin . ' ';
+    } else if ($superficie == 2) { // Menor a
+      $query_superdicie = 'and sup < ' . $fin . ' ';
+    } else if ($superficie == 3) { // Cualquiera
+      $query_superdicie = '';
     }
 
-    public function getPaquetes()
-    {
-        $index = $this->input->post("index");
-        $datos_sede = explode(",", $this->input->post("sede"));
-        $id_sede = $datos_sede[0];
-        $residenciales = $this->input->post("residencial[]");
-        $desarrollos = implode(",", $residenciales);
-        $superficie = $this->input->post("superficie");
-        /***/
-        $inicio = $this->input->post("inicio");
-        $fin = $this->input->post("fin");
-        $fechaInicio = $this->input->post("fechaInicio");
-        $fechaFin = $this->input->post("fechaFin");
-        $query_superdicie = '';
-        $query_tipo_lote = '';
-        //Superficie
-        /**
-         * 1.-Mayor a
-         * 2.-Rango
-         * 3.-Cualquiera
-         */
-        if ($superficie == 1) { //Mayor a
-            $query_superdicie = 'and sup >= ' . $fin . ' ';
-        } else if ($superficie == 2) { // Menor a
-            $query_superdicie = 'and sup < ' . $fin . ' ';
-        } else if ($superficie == 3) { // Cualquiera
-            $query_superdicie = '';
-        }
+    /*
+    Tipo lote
+    1.-Habitacional
+    2.-Comercial
+    3.-AmbosPlanes
+    */
+    $ArrPAquetes = array();
+    $TipoLote = $this->input->post("tipolote");
+    if ($TipoLote == 1) { //Habitacional
+      $query_tipo_lote = 'and c.tipo_lote = 0 ';
+    } else if ($TipoLote == 2) { // Comercial
+      $query_tipo_lote = 'and c.tipo_lote = 1 ';
 
-        /*
-        Tipo lote
-        1.-Habitacional
-        2.-Comercial
-        3.-AmbosPlanes
-         */
-        $ArrPAquetes = array();
-        $TipoLote = $this->input->post("tipolote");
-        if ($TipoLote == 1) { //Habitacional
-            $query_tipo_lote = 'and c.tipo_lote = 0 ';
-        } else if ($TipoLote == 2) { // Comercial
-            $query_tipo_lote = 'and c.tipo_lote = 1 ';
-
-        } else if ($TipoLote == 3) { // Ambos
-            $query_tipo_lote = '';
-        }
-
-        $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
-        //var_dump($row);
-        $data = array();
-        if (count($row) == 0) {
-        } else if (count($row) == 1) {
-            $data = $row[0]['id_descuento'] != null ? $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']) : [];
-        } else if (count($row) > 1) {
-            $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
-        }
-        echo json_encode(array(array("paquetes" => $data)));
+    } else if ($TipoLote == 3) { // Ambos
+      $query_tipo_lote = '';
     }
 
-    public function getDescuentosByPlan()
-    {
-        $id_paquete = $this->input->post("id_paquete");
-        $id_tcondicion = $this->input->post("id_tcondicion");
-        $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete, $id_tcondicion);
-        echo json_encode($data);
-    }
+    $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
 
-    public function Autorizaciones()
+    $data = array();
+    if (count($row) == 0) {
+
+    } else if (count($row) == 1) {
+      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+    } else if (count($row) > 1) {
+      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+    }
+    echo json_encode(array(array("paquetes" => $data)));
+  }
+
+  public function getDescuentosByPlan()
+  {
+    $id_paquete = $this->input->post("id_paquete");
+    $id_tcondicion = $this->input->post("id_tcondicion");
+    $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete, $id_tcondicion);
+    echo json_encode($data);
+  }
+  public function Autorizaciones()
     {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/     
         if ($this->id_rol == FALSE)
@@ -450,5 +371,4 @@ class PaquetesCorrida extends CI_Controller
         echo json_encode(array("data" => $this->PaquetesCorrida_model->getAutorizaciones($this->id_rol)));
 
     }
-
 }

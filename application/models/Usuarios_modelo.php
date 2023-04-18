@@ -327,7 +327,9 @@ class Usuarios_modelo extends CI_Model
                 $lider = "";
                 if ($headquarter == 11)
                     $sede = " OR id_sede='3'";
-                return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                else if ($headquarter == 12)
+                    $sede = " OR id_sede='5'";
+                    return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                             id_rol = 2 AND (id_sede LIKE '%" . $headquarter . "%' $sede) $lider AND estatus = 1 ORDER BY nombre");
                 break;
             case '4': // ASISTENTE DIRECTOR
