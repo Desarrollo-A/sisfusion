@@ -480,10 +480,7 @@ $("#tabla_prestamos").ready( function(){
         bandera_request = comentario == '' ? false : true;
     if(pagoEdit != '' &&  numeroPagos != '' &&  montoPagos != '' &&  comentario != '' && prestamoId != ''  && bandera_request  )
     {
-
-        console.log(comentario)
         if(pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0){
-
             $.ajax({
                 url : 'updatePrestamos',
                 type : 'POST',
@@ -511,7 +508,7 @@ $("#tabla_prestamos").ready( function(){
             });
 
         }else{
-            alerts.showNotification("top", "right", "No es posible guardar los valores sean negativos.", "error");
+            alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "error");
         }
           
     }else{
@@ -521,13 +518,11 @@ $("#tabla_prestamos").ready( function(){
 
     // $(document).on('input', '.montoPagos', function(){
     $('#montoPagos').change(function () {
-        // alert ('4444444444444444444');
         const bandera = true ;
         Monto = document.getElementById("montoPagos").value ;
         numeroPagos = document.getElementById("numeroPagos").value ;
         mensualidades = document.getElementById("pagoEdit").value ;
         comentario = document.getElementById("informacionText").value ;
-        
         if(numeroPagos == null || numeroPagos == '' ){
             bandera = false;
         }
@@ -544,7 +539,6 @@ $("#tabla_prestamos").ready( function(){
         }        
     });
     $('#numeroPagos').change(function () {
-        // alert ('4444444444444444444');
         const bandera = true ;
         Monto = document.getElementById("montoPagos").value ;
         numeroPagos = document.getElementById("numeroPagos").value ;
