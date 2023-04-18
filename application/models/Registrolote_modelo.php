@@ -4833,7 +4833,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
-		INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
+		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
 		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 		LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
@@ -4949,7 +4949,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 			$where = "cl.status = 1 AND l.status = 1 AND cl.idLote = $idLote";
 		
 		$query = $this->db->query("SELECT 'Prospecto' as expediente, 'PROSPECTO' as movimiento,
-		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
+		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
 		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, 
 		l.observacionContratoUrgente, 'prospecto' tipo_doc,

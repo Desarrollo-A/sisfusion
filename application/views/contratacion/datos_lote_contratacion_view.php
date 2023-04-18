@@ -63,6 +63,7 @@
             case '81': //  Subdirección Postventa(EXTERNO)
             case '82': //  Agente de asignación(EXTERNO)
             case '83': //  Agente de calidad(EXTERNO)
+			case '55': //  POSTVENTA
             $this->load->view('template/sidebar', "");
 			break;
 			default:

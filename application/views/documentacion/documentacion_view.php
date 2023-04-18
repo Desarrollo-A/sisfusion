@@ -4,47 +4,11 @@
 <body class="">
     <div class="wrapper ">
         <?php
-		//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		switch ($this->session->userdata('id_rol')) {
-			case '2': // SUB VENTAS
-			case '3': // GERENTE VENTAS
-			case '4': // ASISTENTE DIRECCIÓN COMERCIAL
-			case '5': // ASISTENTE SUBDIRECCIÓN COMERCIAL
-			case '6': // ASISTENTE GERENCIA COMERCIAL
-			case '7': // ASESOR
-			case '9': // COORDINADOR
-			case '11': // ADMINISTRACIÓN
-			case '12': // CAJA
-			case '13': // CONTRALORÍA
-			case '15': // JURÍDICO
-			case '16': // CONTRATACIÓN
-			case '28': // EJECUTIVO ADMINISTRATIVO MKTD
-			case '32': // CONTRALORÍA CORPORATIVA
-			case '33': // CONSULTA
-			case '34': // FACTURACIÓN
-			case '39': // CONTABILIDAD
-			case '50': // GENERALISTA MKTD
-			case '40': // COBRANZA
-			case '53': // analista comisisones
-			case '58': // ANALISTA DE DATOS
-			case '65': // CONTABILIDAD (EXTERNO)
-			case '74': // EJECUTIVO POSTVENTA
-			case '75': // SUPERVISOR POSTVENTA
-			case '76': // ASISTENTE SUBDIRECCIÓN POSTVENTA
-			case '77': // AUXILIAR POSTVENTA
-			case '78': // BASE DE DATOS POSTVENTA
-			case '79': // COORDINADOR DE POSTVENTA
-			case '80': // COORDINADOR DE CALL CENTER POSTVENTA
-			case '81': // SUBDIRECCIÓN POSTVENTA
-			case '82': // AGENTE DE ASIGNACIÓN
-			case '83': // AGENTE DE CALIDAD 		
-				$this->load->view('template/sidebar', '');
-				break;
-			
-			default:
-				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-				break;
-		}
+		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
+		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55)))	
+                $this->load->view('template/sidebar', '');
+            else
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
         <!-- Modals -->
         <!-- modal  INSERT FILE-->
@@ -206,12 +170,13 @@
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
                                                 <th>SUBDIRECTOR</th>
-                                                <th>REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
                                                 <th>NOMBRE DE DOCUMENTO</th>
                                                 <th>HORA/FECHA</th>
-                                                <th>DOCUMENTO</th>
                                                 <th>RESPONSABLE</th>
                                                 <th>UBICACIÓN</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -238,5 +203,5 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_cliente_documentos_contratacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
 </body>
