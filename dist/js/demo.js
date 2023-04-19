@@ -280,6 +280,7 @@ demo = {
 
     initMaterialWizard: function(){
         // Code for the Validator
+        var $elementos_req = new Array('nationality', 'legal_personality', 'prospecting_place', 'sales_plaza');
         var $validator = $('.wizard-card form').validate({
     		  rules: {
                   nationality: {
@@ -304,7 +305,11 @@ demo = {
             },
 
             errorPlacement: function(error, element) {
-                $(element).parent('div').addClass('has-error');
+                if($elementos_req.includes(element.attr('id'))){
+                    $(element).parent('div').parent('div').addClass('has-error');
+                }else{
+                    $(element).parent('div').addClass('has-error');
+                }
              }
     	});
 
@@ -313,7 +318,6 @@ demo = {
             'tabClass': 'nav nav-pills',
             'nextSelector': '.btn-next',
             'previousSelector': '.btn-previous',
-
             onNext: function(tab, navigation, index) {
             	var $valid = $('.wizard-card form').valid();
             	if(!$valid) {
@@ -321,20 +325,18 @@ demo = {
             		return false;
             	}
             },
-
             onInit : function(tab, navigation, index){
 
               //check number of tabs and fill the entire row
               var $total = navigation.find('li').length;
               $width = 100/$total;
               var $wizard = navigation.closest('.wizard-card');
-
+              //var $wizard = navigation.closest('#wiz-nav');
               $display_width = $(document).width();
-
+              
               if($display_width < 600 && $total > 3){
                   $width = 50;
               }
-
                navigation.find('li').css('width',$width + '%');
                $first_li = navigation.find('li:first-child a').html();
                $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
@@ -445,11 +447,11 @@ demo = {
         });
 
         function refreshAnimation($wizard, index){
-            total_steps = $wizard.find('li').length;
+            total_steps = $wizard.find('.wizard-navigation').find('li').length;
             move_distance = $wizard.width() / total_steps;
             step_width = move_distance;
             move_distance *= index;
-
+            
             $current = index + 1;
 
             if($current == 1){

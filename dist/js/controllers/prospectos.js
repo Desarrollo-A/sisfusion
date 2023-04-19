@@ -64,13 +64,22 @@ $("#my-form").on('submit', function(e) {
 /*end validaciones*/
 
 function validateFile() {
-    if ($('#prospecting_place').val() == '' || $('#prospecting_place').val() == null ||
-        $('#sales_plaza').val() == '' || $('#sales_plaza').val() == null ||
-        $('#asesor_prospecto').val() == '' || $('#asesor_prospecto').val() == null) {
+    var elementos_req = new Array('prospecting_place', 'sales_plaza');
+    var exito_confirmar = false;
+    for (let index = 0; index < elementos_req.length; index++) {
+        index_select = document.getElementById(elementos_req[index]).selectedIndex;
+        if(index_select =! undefined && index_select > 0){
+            $("#"+elementos_req[index]).parent('div').parent('div').removeClass('has-error');
+            exito_confirmar = true;
+        }else{
+            $("#"+elementos_req[index]).parent('div').parent('div').addClass('has-error');
+            exito_confirmar = false;
+        }
+    }
+    if (!exito_confirmar) {
         alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
-
     } else {
-        $('#confirmar').modal('toggle');
+       $('#confirmar').modal('toggle');
     }
 }
 
@@ -528,7 +537,6 @@ function validateInputs(t){
 }
 
 function validateCoincidences(){
-    console.log(coincidencias);
     if (coincidencias >= 2){
         $(".box-alert").css("display", "block");
         $('.btn-next').prop('disabled', true);
@@ -537,4 +545,12 @@ function validateCoincidences(){
         $(".box-alert").css("display", "none");
         $('.btn-next').prop('disabled', false);
     }
+}
+
+//validacion de select 
+function validateSelect(id_elemento) {
+    elemento_select = document.getElementById(id_elemento);
+    index_elemento = elemento_select.selectedIndex;
+    if(index_elemento >= 0)
+        $("#"+id_elemento).parent('div').parent('div').removeClass("has-error");
 }

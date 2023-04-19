@@ -30,9 +30,9 @@ $(document).ready(function() {
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
                         b = '<span class="label lbl-brown" >Interesado sin cita</span>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<span class="label lbl-yellow">Con cita</span>';
+                        b = '<span class="label lbl-darkCyan">Con cita</span>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<span class="label lbl-orangeYellow">Sin especificar</span>';
+                        b = '<span class="label lbl-brightBlue">Sin especificar</span>';
                     else if (d.estatus_particular == 5) // PAUSADO
                         b = '<span class="label lbl-violetBoots">Pausado</span>';
                     else if (d.estatus_particular == 6) // PREVENTA
@@ -46,7 +46,7 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    elemento = d.nombre + '<br>' +'<span class="label" style="color: #00CDA3; background: #00CDA318;" >'+ d.id_prospecto +'</span>';
+                    elemento = d.nombre + '<br>' +'<span class="label lbl-blueNCS" >'+ d.id_prospecto +'</span>';
                     return elemento;
                 }
             },
@@ -68,7 +68,7 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (d.nombre_lp == 'MKTD Dragon')
-                        id_dragon = '<br><span class="label" style="background: #AED6F1; color: #1B4F72">'+ d.id_dragon +'</span>';
+                        id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
                     else
                         id_dragon = '';
                     return d.nombre_lp + id_dragon;

@@ -68,7 +68,7 @@ $(document).ready(function()
         ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label lbl-acidGreen" style="color: #00CDA3; background: #00CDA318;">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-blueNCS">'+ d.id_prospecto +'</span>';
                 }
             },
             {

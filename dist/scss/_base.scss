@@ -201,8 +201,11 @@ $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
 $sunny              : #F9F871;
+$darkCyan           : #30ada1;
+$brightBlue         : #4a30dd;
+$verySoftBlue       : #AED6F1;
+$veryDarkBlue       : #1B4F72;
 /* END vrbls coloress */
-
 
 /* size devices */
 $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
@@ -639,6 +642,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $grayOxford;
     color: $white; 
 }
+
 /* Btns acción dentro de datatable */
 
 /* Etiquetas */
