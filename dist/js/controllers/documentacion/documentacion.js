@@ -1,3 +1,5 @@
+$('[data-toggle="tooltip"]').tooltip();
+
 var movimientosPermitidosContrato = ["36", "6", "23", "76", "83", "95", "97"];
 var rolesPermitidosContrato = [15];
 
@@ -196,10 +198,10 @@ $('#idLote').change(function () {
                             var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                             if(movimientosPermitidosContrato.includes(data.idMovimiento) && rolesPermitidosContrato.includes(id_rol_general)) { // ESTÁ EN ESTATUS 7 Y ES JURÍDICO EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                                 let [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(4);
-                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                             }
                         }
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if (data.tipo_doc == 7) { // CORRIDA
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidosCorrida.includes(data.idMovimiento) && rolesPermitidosContraloria.includes(id_rol_general)) // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -211,10 +213,10 @@ $('#idLote').change(function () {
                             var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                             if(movimientosPermitidosCorrida.includes(data.idMovimiento) && rolesPermitidosContraloria.includes(id_rol_general)) { // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                                 let [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(4);
-                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                             }
                         }
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if (data.tipo_doc == 29) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidosCartaDomicilio.includes(data.idMovimiento) && rolesPermitidosCartaDomicilio.includes(id_rol_general)) // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -226,10 +228,10 @@ $('#idLote').change(function () {
                             var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                             if(movimientosPermitidosCartaDomicilio.includes(data.idMovimiento) && rolesPermitidosCartaDomicilio.includes(id_rol_general)) { // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                                 let [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(4);
-                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                             }
                         }
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if (data.tipo_doc == 30) { // CONTRATO FIRMADO
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidosContratoFirmado.includes(data.idMovimiento) && rolesPermitidosContraloria.includes(id_rol_general)) // ESTÁ EN ESTATUS 15 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -241,25 +243,25 @@ $('#idLote').change(function () {
                             var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                             if(movimientosPermitidosContratoFirmado.includes(data.idMovimiento) && rolesPermitidosContraloria.includes(id_rol_general)) { // ESTÁ EN ESTATUS 8 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                                 let [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(4);
-                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                             }
                         }
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN NUVEA)
                         var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if(data.tipo_doc == 'ds_new' && data.expediente == "Depósito de seriedad versión anterior") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN VIEJITA)
                         var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if(data.tipo_doc == 66) { // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
                         var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if(data.tipo_doc == 'autorizaciones') { // EXISTE LA RAMA DE AUTORIZACIONES
                         var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else if(data.tipo_doc == 'prospecto') { // EXISTE LA RAMA DEL PROSPECTO
                         var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     } else { // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                         if (data.expediente == null || data.expediente == "") { // NO HAY DOCUMENTO CARGADO
                             if(movimientosPermitidosEstatus2.includes(data.idMovimiento) && rolesPermitidosEstatus2.includes(id_rol_general) && data.id_asesor == id_usuario_general) // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -271,10 +273,10 @@ $('#idLote').change(function () {
                             var [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(2); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                             if(movimientosPermitidosEstatus2.includes(data.idMovimiento) && rolesPermitidosEstatus2.includes(id_rol_general) && data.id_asesor == id_usuario_general) { // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                                 let [buttonTitle, buttonStatus, buttonClassColor, buttonClassAction, buttonTypeTransaction, buttonIcon] = getAtributos(4);
-                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                                buttonDelete = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                             }
                         }
-                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus}><i class="${buttonIcon}"></i></button>`;
+                        buttonMain = `<button class="${buttonClassColor} ${buttonClassAction}" title="${buttonTitle}" data-expediente="${data.expediente}" data-transaction="${buttonTypeTransaction}" data-tipo-documento="${data.tipo_doc}" ${buttonStatus} data-toggle="tooltip" data-placement="left"><i class="${buttonIcon}"></i></button>`;
                     }
                    return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                 }
