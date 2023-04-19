@@ -311,7 +311,7 @@ $("#tabla_prestamos").ready(function () {
                     } else if (d.id_opcion == 20) { //PLAZA
                         color = 'lbl-sky';
                     } else if (d.id_opcion == 21) { //LINEA TELEFÓNICA
-                        color = '7282ED';
+                        color = 'lbl-violetDeep';
                     } else if (d.id_opcion == 22) { //MANTENIMIENTO
                         color = 'lbl-violetDeep';
                     } else if (d.id_opcion == 23) { //NÓMINA - ANALISTAS DE COMISIONES
