@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br>
+                                <br> 
                                 <div class="material-datatables" id="box-autorizacionesPVentas">
                                     <div class="form-group">
                                         <div class="table-responsive">

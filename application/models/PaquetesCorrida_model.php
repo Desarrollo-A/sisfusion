@@ -66,7 +66,7 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
-    public function getDescuentos($primeraCarga, $tipoCondicion){
+    public function getDescuentosYCondiciones($primeraCarga, $tipoCondicion){
         $queryFinal = ''; $condiciones = '';
 
         if($primeraCarga == 1)
@@ -274,9 +274,9 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         INNER JOIN usuarios us ON us.id_usuario=aut.creado_por
         WHERE aut.estatus in($estatus)")->result_array();
     }
+    public function saveAutorizacion($datos){
+        var_dump($datos);
+        
 
-
-
-
-
+    }
 }

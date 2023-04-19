@@ -241,7 +241,7 @@ class PaquetesCorrida extends CI_Controller
           "fecha_modificacion" => $hoy2,
            "modificado_por" => $user_sesionado
         );
-        $this->General_model->addRecord('autorizaciones_pventas',$dataInsertAutPventas);
+        $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
         //$this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
@@ -263,11 +263,11 @@ class PaquetesCorrida extends CI_Controller
     echo json_encode($this->PaquetesCorrida_model->getDescuentosPorTotal($id_condicion)->result_array(), JSON_NUMERIC_CHECK);
   }
 
-  public function getDescuentos(){
+  public function getDescuentosYCondiciones(){
     $primeraCarga = $this->input->post("primeraCarga");
     $tipoCondicion = $this->input->post("tipoCondicion");
 
-    echo json_encode($this->PaquetesCorrida_model->getDescuentos($primeraCarga, $tipoCondicion));
+    echo json_encode($this->PaquetesCorrida_model->getDescuentosYCondiciones($primeraCarga, $tipoCondicion));
   }
 
   public function SaveNewDescuento(){
@@ -371,4 +371,12 @@ class PaquetesCorrida extends CI_Controller
         echo json_encode(array("data" => $this->PaquetesCorrida_model->getAutorizaciones($this->id_rol)));
 
     }
+
+    public function avanceAutorizacion(){
+      $estatus = $this->input->post("estatus");
+      $tipo = $this->input->post("tipo");
+      //$comentario = 
+      $this->PaquetesCorrida_model->avanceAutorizacion($this->id_rol);
+    }
+
 }

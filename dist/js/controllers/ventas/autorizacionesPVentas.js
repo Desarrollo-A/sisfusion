@@ -21,7 +21,7 @@ $("#autorizacionesPVentas").ready(function() {
             }
         });
     });
-
+ 
     tablaAutorizacion = $("#autorizacionesPVentas").DataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: 'auto',
@@ -184,3 +184,4 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $("#avanzarAut").modal();
 
     });
+    

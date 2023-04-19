@@ -54,14 +54,12 @@
 						<div class="modal-body">
 						<div class="form-group">
 								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="tipo" id="tipo" required>
-								<option value="">----Seleccionar-----</option>
+								<select class="selectpicker" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required>
 								</select>
 							</div> 
 							<div class="form-group">
 								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="roles" id="roles" required>
-									<option value="">----Seleccionar-----</option>
+								<select class="selectpicker" name="roles" title="SELECCIONA UNA OPCIÓN" id="roles" required>
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>

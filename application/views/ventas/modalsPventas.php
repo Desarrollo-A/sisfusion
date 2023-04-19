@@ -80,15 +80,13 @@
             
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" max="255" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
                     <b id="text-observations" class="text-danger"></b>
-                    <input type="hidden" name="id_solicitud" id="id_solicitud">
-                    <input type="hidden" name="type" id="type">
-                    <input type="hidden" name="status" id="status">
+                    <input type="hidden" name="id_autorizacion" id="id_autorizacion">
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
+                <button type="submit" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>

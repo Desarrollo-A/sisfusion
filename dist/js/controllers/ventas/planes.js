@@ -1,4 +1,5 @@
-let allDataDescuentos, allCondiciones;
+let descuentosYCondiciones;
+let allCondiciones = [];
 var primeraCarga = 1;
 
 const arr = [];
@@ -78,7 +79,7 @@ $("#addNewDesc").on('submit', function(e){
         success: function(data) {
             data =  JSON.parse(data);
             if ( data['status'] = 402 ){
-                allDataDescuentos.forEach(element => {
+                descuentosYCondiciones.forEach(element => {
                     if ( element['condicion']['id_condicion'] == data['detalle'][0]['condicion']['id_condicion'] ){
                         element['data'] = [];
                         element['data'] = data['detalle'][0]['data'];
@@ -104,13 +105,13 @@ $("#addNewDesc").on('submit', function(e){
 });
 
 
-function getDescuentos(primeraCarga, tipoCondicion){
+function getDescuentosYCondiciones(primeraCarga, tipoCondicion){
     $('#spiner-loader').removeClass('hide');
 
     return new Promise ((resolve, reject) => {   
         $.ajax({
             type: "POST",
-            url: `getDescuentos`,
+            url: `getDescuentosYCondiciones`,
             data: { "primeraCarga": primeraCarga, "tipoCondicion": tipoCondicion },
             cache: false,
             success: function(data){
@@ -128,15 +129,13 @@ function getDescuentos(primeraCarga, tipoCondicion){
 
 async function construirTablas(){
     if(primeraCarga == 1){
-        allDataDescuentos = await getDescuentos(primeraCarga, 0);
-        allDataDescuentos = JSON.parse(allDataDescuentos);
+        descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
+        descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
         primeraCarga = 0;
     }
     
-    allDataDescuentos.forEach(element => {
+    descuentosYCondiciones.forEach(element => {
         //Llenamos array de SOLO condiciones
-        allCondiciones.push(element['condicion']);
-
         let descripcion = element['condicion']['descripcion'];
         let id_condicion = element['condicion']['id_condicion'];
         let dataCondicion = element['data'];
@@ -316,7 +315,7 @@ if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tip
     ClearAll2();
     $.post('getPaquetes',params, function(data) {
         let countPlanes = data.length;
-        if(countPlanes == 1){
+        if(countPlanes >= 1){
             //MOSTRAR TODOS LOS PLANES EXISTENTES
             data[0].paquetes.unshift({});
             let dataPaquetes = data[0].paquetes;
@@ -361,7 +360,8 @@ if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tip
         
             
             }
-        }else if(countPlanes == 0){
+        }
+        else{
             alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
         }
     }, 'json');
@@ -438,49 +438,91 @@ async function llenarSelects(indexNext,id_paquete,i,id,len,ifor){
     })	
 }
 
-/**********************************------------------------------------------------------------------------- */		
-
-function GenerarCard(){
-    if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-        var indexActual = document.getElementById('index');
-        var indexNext = (document.getElementById('index').value - 1) + 2;
-        indexActual.value = indexNext;
-        $('#showPackage').append(`
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
-            <div class="cardPlan dataTables_scrollBody">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="title d-flex justify-center align-center">
-                                <h3 class="card-title">Plan</h3>
-                                <button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" placeholder="Descripción del plan (*)">
-                            <div class="mt-1" id="checks_${indexNext}">
-                                <div class="loadCard w-100">
-                                    <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
-                                </div>
-                            </div>						
-                            <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
+// Función para construir plantilla del plan
+function buildTemplateCard(index){
+    $('#showPackage').append(`
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${index}">
+        <div class="cardPlan dataTables_scrollBody">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="title d-flex justify-center align-center">
+                            <h3 class="card-title">Plan</h3>
+                            <button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${index}" onclick="removeElementCard('card_${index}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <input type="text" class="inputPlan" required name="descripcion_${index}" id="descripcion_${index}" placeholder="Descripción del plan (*)">
+                        <div class="mt-1" id="checks_${index}">
+                            <div class="loadCard w-100">
+                                <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+                            </div>
+                        </div>						
+                        <div class="form-group col-md-12" id="tipo_descuento_select_${index}" hidden>
+                    </div>
+                </div>
             </div>
-        </div>`);
-        
+        </div>
+    </div>`);
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
+
+
+async function GenerarCard(){
+    if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        
+        var indexActual = document.getElementById('index');
+        var indexNext = (document.getElementById('index').value - 1) + 2;
+        indexActual.value = indexNext;
+        
+        buildTemplateCard(indexNext);
+        if(descuentosYCondiciones == ''){
+            descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
+        }
+
+        debugger;
+        descuentosYCondiciones.forEach(element => {
+            a = console.log(element);
+            var id = data[i]['id_tcondicion'];
+            var descripcion = data[i]['descripcion'];
+            $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
+            $("#checks_"+indexNext).append(`
+            <div class="row boxAllDiscounts">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="check__item" for="inlineCheckbox1">
+                        <label>
+                            <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
+                            ${descripcion}
+                            <span class="custom__check"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="boxDetailDiscount hidden">
+                        <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
+                        <div class="container-fluid rowDetailDiscount hidden">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+                            </div>
+                            <div class="container-flluid" id="listamsi_${indexNext}_${i}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+        });
+        
         /**-----------TIPO DESCUENTO------------------ */
         $.post('getTipoDescuento', function(data) {
             $("#checks_"+indexNext).html('');
             $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
             var len = data.length;
 
-            // $('#checks_'+indexNext).append(`<div class="w-100"><label class="mt-2">Descuento a</label></div>`);
             
             for( var i = 0; i<len; i++){
                 var id = data[i]['id_tcondicion'];
@@ -620,6 +662,7 @@ function llenar(e,indexGral,index,datos,id_select,id,leng,ifor){
                     $('#spiner-loader').addClass('hide');
                 }
 }
+
 async function PrintSelectDesc(e, id,index,indexGral, j = 0,datos = [],leng = 0,ifor = 0){
     let id_condicion=0;
     let id_con = id;
