@@ -59,12 +59,13 @@
 				<div class="col-md-4">
 					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
 					<input class="form-control input-gral"
-					onkeydown="return event.keyCode !== 69"  type="number" step="any" required  id="montoPagos" name="monto" min="1">
+					onkeydown="return event.keyCode !== 69" maxlength="2" type="number" step="any" 
+					required  id="montoPagos" name="monto" min="1">
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
 					<input class="form-control input-gral" onkeydown="return event.keyCode !== 69"
-					 id="numeroPagos" required  type="number" name="numeroP" min="1">
+					 id="numeroPagos" required  type="number"  maxlength="2" name="numeroP" min="1">
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Pago</label>
