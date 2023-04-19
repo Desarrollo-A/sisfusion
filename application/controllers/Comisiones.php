@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
+// use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
@@ -34,38 +34,21 @@ class Comisiones extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-
    // dispersion-view complete
-  public function dispersion(){
+  public function dispersion() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("comisiones/dispersion-view", $datos);
+      }
 
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $datos = array();
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-     $salida = str_replace('' . base_url() . '', '', $val);
-     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-     $this->load->view('template/header');
-     $this->load->view("comisiones/dispersion-view", $datos);
  
-   }
-
-  public function getDataDispersionPago($val = ''){
-
-    $datos = array();
-    if(empty($val)){
-      $datos = $this->Comisiones_model->getDataDispersionPago();
-    }else{
-      $datos = $this->Comisiones_model->getDataDispersionPago($val);
-    }
-    
-    if ($datos != null) {
-      echo json_encode($datos);
-    } else {
-      echo json_encode(array());
-    }
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
   }
+
 
   public function getPlanesComisiones($val = ''){
 
@@ -82,6 +65,11 @@ class Comisiones extends CI_Controller
         echo json_encode(array());
       }
     }
+
+    public function updateBandera(){
+      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
+      echo json_encode($response);
+  }
     
   // dispersion-view complete-end
 
@@ -3087,11 +3075,7 @@ public function LiquidarLote(){
         }
     }
 
-    public function updateBandera(){
-         // echo($_POST['param']);
-        $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
-        echo json_encode($response);
-    }
+    
 
     public function asigno_region_uno($sol){
       $this->load->model("Comisiones_model");
