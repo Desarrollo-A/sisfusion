@@ -319,7 +319,7 @@ $("#tabla_prestamos").ready(function () {
                     } else if (d.id_opcion == 24) { //NÓMINA - ASISTENTES CDMX
                         color = 'lbl-orangeYellow';
                     } else if (d.id_opcion == 25) { //NÓMINA - IMSS
-                        color = 'acidGreen';
+                        color = 'lbl-acidGreen';
                     } else if (d.id_opcion == 26) { //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
                         color = 'lbl-gray';
                     }
