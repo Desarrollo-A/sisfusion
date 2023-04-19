@@ -230,6 +230,10 @@ $("#tabla_prestamos").ready( function(){
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
         scrollX: true,
         language: {
             url: url+"/static/spanishLoader_v2.json",
@@ -238,118 +242,95 @@ $("#tabla_prestamos").ready( function(){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+
         scrollX: true,
         destroy: true,
         ordering: false,
         columns: [
-            {
-            "width": "4%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.id_prestamo+'</p>';
+            {data: 'id_prestamo'},
+            {data: 'id_usuario'},	
+            {data: 'nombre'},
+            {data: function(d){
+                let formato
+                formato = `<p class="m-0">$${formatMoney(d.monto)} </p> `;
+                return formato;
             }
-        },
-            {
-            "width": "4%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.id_usuario+'</p>';
-            }
-        },	
-            {
-            "width": "13%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.nombre+'</b></p>';
-            }
-        },
+            },
+            {data: 'num_pagos'},
+            {data: function (d)
+                {
+                    let formato
+                    formato = `<p class="m-0">$${formatMoney(d.pago_individual)} </p> `;
+                    return formato;
+                } 
+                
+            },
+            {data : function (d) {
+                let formato
+                formato = `<p class="m-0">$${formatMoney(d.total_pagado)} </p> `;
+                return formato;
+                }
+            },
         {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(d.monto)+'</b></p>';
-            }
-        },
-        {
-            "width": "2%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.num_pagos+'</p>';
-            }
-        },
-        {
-            "width": "5%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.pago_individual)+'</p>';
-            }
-        },
-        {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.total_pagado)+'</p>';
-            }
-        },
-        {
-            "width": "7%",
-            "data": function( d ){
-                let color = 'black';
+            data: function( d ){
+                let formato
+                let color = 'lbl-gral';
                 let resultado  = d.monto - d.total_pagado;
                 if(resultado > 0.5){
-                    color='orange';
+                    color='lbl-orangeYellow';
                 }
                 if(resultado < 0.0){
                     resultado=0;
                 }
-                return '<p class="m-0" style="color:'+color+'">$'+formatMoney(resultado)+'</p>';
+                return '<span class="m-0 '+color+'">$'+formatMoney(resultado)+'</span>';
             }
         },
+        { data:'comentario'},
         {
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.comentario+'</p>';
-            }
-        },
-        {
-            "width": "6%",
-            "data": function( d ){
-
+            data: function( d ){
                 if(d.estatus == 1){
-                    return '<span class="label label-danger" style="background:dodgerblue">ACTIVO</span>';
+                    formato = '<span class="label lbl-blueMaderas " >ACTIVO</span>';
                 }else if(d.estatus == 3 || d.estatus == 2){
-                    return '<span class="label label-danger" style="background:#27AE60">LIQUIDADO</span>';
+                    formato = '<span class="label lbl-green" >LIQUIDADO</span>';
                 }else if(d.estatus == 0){
-                    return '<span class="label label-danger" style="background:#D52803">CANCELADO</span>';
+                    formato = '<span class="label lbl-warning" >CANCELADO</span>';
                 }
-
-                
+                return formato;  
             } 
         },
         {
             "width": "8%",
             "data": function( d ){
                 let etiqueta = '';
-                color='000';
+                color='lbl-blueMaderas';
+                // lbl-gral
                 if(d.id_opcion == 18){ //PRESTAMO
-                    color='89C86C';
+                    color='lbl-green';
                 } else if(d.id_opcion == 19){ //SCIO
-                    color='72EDD6';
+                    color='lbl-azure';
                 }else if(d.id_opcion == 20){ //PLAZA
-                    color='72CBED';
+                    color='lbl-sky';
                 }else if(d.id_opcion == 21){ //LINEA TELEFÓNICA
                     color='7282ED';
                 }else if(d.id_opcion == 22){ //MANTENIMIENTO
-                    color='CA72ED';
+                    color='lbl-violetDeep';
                 }else if(d.id_opcion == 23){ //NÓMINA - ANALISTAS DE COMISIONES
-                    color='CA15ED';
+                    color='lbl-violetChin';
                 }else if(d.id_opcion == 24){ //NÓMINA - ASISTENTES CDMX
-                    color='CA9315';
+                    color='lbl-orangeYellow';
                 }else if(d.id_opcion == 25){ //NÓMINA - IMSS
-                    color='34A25C';
+                    color='acidGreen';
                 }else if(d.id_opcion == 26){ //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
-                    color='165879';
+                    color='lbl-gray';
                 }
-
-                return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
+                // '+color+'
+                 return '<p><span class="label '+color+'" >'+d.tipo+'</span></p>';
+                
             }
         },
         {
-            "width": "12%",
-            "data": function( d ){
+            
+            data: function( d ){
                 if (d.fecha_creacion_referencia !== null && d.estatus == 1) {
                     const fecha = new Date(d.fecha_creacion_referencia);
                     const now = new Date();
@@ -367,9 +348,9 @@ $("#tabla_prestamos").ready( function(){
             }
         },
         {
-            "width": "6%", 
+             
             "orderable": false,
-            "data": function( d ){
+            data: function( d ){
                 var botonesModal = ''; 
                 botonesModal +=  `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
                 if(d.evidencia != null ){
