@@ -54,199 +54,109 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
-                    <div class="modal-header">
-                        <button type="button"class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"><b>Modificar estatus</b></h4>
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
                     </div>
-                        <div class="modal-body" style="text-align: center;">
-                        </div>
+                        <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
-                        <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                        <div class="col-lg-12">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                        </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="modal fade modal-alertas"
-             id="detenciones-modal"
-             role="dialog">
+        <div class="modal fade modal-alertas" id="detenciones-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
                     </div>
-
-                    <form method="post"
-                          class="row"
-                          id="detenidos-form"
-                          autocomplete="off">
+                    <form method="post" class="row" id="detenidos-form" autocomplete="off">
                         <div class="modal-body">
-                            <input type="hidden"
-                                   name="id_pagoc"
-                                   id="id-lote-detenido">
-                                   <input type="hidden"
-                                   name="statusLote"
-                                   id="statusLote">
-
+                            <input type="hidden" name="id_pagoc" id="id-lote-detenido">
+                            <input type="hidden" name="statusLote" id="statusLote">
+                            
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
-                                    <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <input id="motivo"
-                                           name="motivo"
-                                           type="text"
-                                           class="form-control input-gral"
-                                           placeholder="Escriba un motivo corto..."
-                                           minlength="3"
-                                           maxlength="50"
-                                           required />
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="form-control"
-                                              name="descripcion"
-                                              rows="3"
-                                              placeholder="Escriba la descripción de la controversia..."
-                                              required></textarea>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                        <div class="col-lg-12">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                        </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-
-
-
-        <div class="modal fade modal-alertas"
-             id="penalizacion4-modal"
-             role="dialog">
+        <div class="modal fade modal-alertas" id="penalizacion4-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
                     </div>
 
-                    <form method="post"
-                          class="row"
-                          id="penalizacion4-form"
-                          autocomplete="off">
+                    <form method="post" class="row" id="penalizacion4-form" autocomplete="off">
                         <div class="modal-body">
                             <input type="hidden" name="id_lote" id="id-lote-penalizacion4">
                             <input type="hidden" name="id_cliente" id="id-cliente-penalizacion4">
-  
-
                             <div class="col-lg-4">
                                 <div class="form-group is-empty">
                                     <label for="asesor" class="control-label label-gral">Asesor</label>
-                                    <input id="asesor"
-                                           name="asesor"
-                                           type="number" step="any" 
-                                           class="form-control input-gral"
-                                           placeholder="% Asesor"
-                                            required />
+                                    <input id="asesor" name="asesor" type="number" step="any" class="form-control input-gral" placeholder="% Asesor" required />
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="form-group is-empty">
                                     <label for="coordinador" class="control-label label-gral">Coordinador</label>
-                                    <input id="coordinador"
-                                           name="coordinador"
-                                           type="number" step="any" 
-                                           class="form-control input-gral"
-                                           placeholder="% Coordinador"
-                                            required />
+                                    <input id="coordinador" name="coordinador" type="number" step="any" class="form-control input-gral" placeholder="% Coordinador" required />
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="form-group is-empty">
                                     <label for="gerente" class="control-label label-gral">Gerente</label>
-                                    <input id="gerente"
-                                           name="gerente"
-                                           type="number" step="any" 
-                                           class="form-control input-gral"
-                                           placeholder="% Gerente"
-                                            required />
+                                    <input id="gerente" name="gerente" type="number" step="any" class="form-control input-gral" placeholder="% Gerente" required />
                                 </div>
                             </div>
- 
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                      
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                            <button type="submit" class="btn btn-primary"> Aceptar </button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-
-        <div class="modal fade modal-alertas"
-             id="penalizacion-modal"
-             role="dialog">
+        <div class="modal fade modal-alertas" id="penalizacion-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                     </div>
 
-                    <form method="post"
-                          class="row neeed-validation"
-                          id="penalizacion-form"
-                          autocomplete="off" novalidate>
+                    <form method="post" class="row neeed-validation" id="penalizacion-form" autocomplete="off" novalidate>
                         <div class="modal-body">
-                        <input type="hidden" name="id_lote" id="id_lote_penalizacion">
-                        <input type="hidden" name="id_cliente" id="id_cliente_penalizacion">
-                        <div class="col-lg-12">
+                            <input type="hidden" name="id_lote" id="id_lote_penalizacion">
+                            <input type="hidden" name="id_cliente" id="id_cliente_penalizacion">
+                            <div class="col-lg-12">
                                 <div class="form-group is-empty">
                                     <P>Comentarios:</P>
                                     <textarea class="form-control" rows="2" name="comentario_aceptado" id="comentario_aceptado" placeholder="Agregue sus comentarios..." requiere></textarea></p>
@@ -255,15 +165,8 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                            <button type="submit" class="btn btn-primary"> Aceptar </button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar </button>
                         </div>
                     </form>
                 </div>
@@ -272,45 +175,28 @@
 
 
 
-        <div class="modal fade modal-alertas"
-             id="Nopenalizacion-modal"
-             role="dialog">
+        <div class="modal fade modal-alertas" id="Nopenalizacion-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                     </div>
 
-                    <form method="post"
-                          class="row"
-                          id="Nopenalizacion-form"
-                          autocomplete="off">
+                    <form method="post" class="row" id="Nopenalizacion-form" autocomplete="off">
                         <div class="modal-body">
                             <input type="hidden" name="id_lote" id="id_lote_cancelar">
                             <input type="hidden" name="id_cliente" id="id_cliente_cancelar">
-                                <div class="col-lg-12">
-                                    <div class="form-group is-empty">
-                                        <P>Comentarios:</P>
-                                        <textarea class="form-control" rows="2" name="comentario_rechazado" id="comentario_rechazado" placeholder="Agregue sus comentarios..."></textarea>
-                                    </div>
+                            <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <P>Comentarios:</P>
+                                    <textarea class="form-control" rows="2" name="comentario_rechazado" id="comentario_rechazado" placeholder="Agregue sus comentarios..."></textarea>
                                 </div>
+                            </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                            <button type="submit" class="btn btn-primary"> Aceptar </button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar </button>
                         </div>
                     </form>
                 </div>
@@ -344,42 +230,18 @@
         </div>
         <!-- modal -->
 
-        <!-- modal verifyNEODATA -->
-        <!-- <div class="modal fade modal-alertas" id="modal_NEODATA2" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red" >
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <form method="post" id="form_NEODATA2">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
-
         <div class="modal fade" id="detalle-plan-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                         <h4 class="modal-title" id="title-plan"></h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12" id="planes-div">
                                 <div class="form-group">
-                                    <select class="selectpicker select-gral"
-                                            id="planes"
-                                            name="planes"
-                                            data-style="btn"
-                                            required>
+                                    <select class="selectpicker select-gral" id="planes" name="planes" data-style="btn" required>
                                     </select>
                                 </div>
                             </div>
@@ -482,9 +344,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
+                                                        <th>ID LOTE</th>
                                                         <th>LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO VENTA</th>
