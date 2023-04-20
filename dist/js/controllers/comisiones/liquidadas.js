@@ -30,9 +30,9 @@ $(document).ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                titleAttr: 'Reporte de dispersión',
+                title: 'Reporte Comisiones Liquidadas',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -66,8 +66,8 @@ $(document).ready(function () {
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            {data: 'idLote'},
             {data: 'nombreLote'},
+            {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
                 var labelTipoVenta;
@@ -75,6 +75,8 @@ $(document).ready(function () {
                     labelTipoVenta ='<span class="label" style="color:#78281F;background:#F5B7B1;">Particular</span>';
                 }else if(d.tipo_venta == 2) {
                     labelTipoVenta ='<span class="label" style="color:#186A3B;background:#ABEBC6;">Normal</span>';
+                }else if(d.tipo_venta == 7) {
+                    labelTipoVenta ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Especial</span>';
                 }else{
                     labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 }
@@ -185,19 +187,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_comisiones_liquidadas tbody").on('click', '.btn-detener', function () {
-            $("#motivo").val("");
-            $("#descripcion").val("");
-            const idLote = $(this).val();
-            const nombreLote = $(this).attr("data-value");
-            const statusLote = $(this).attr("data-statusLote");
-            $('#id-lote-detenido').val(idLote);
-            $('#statusLote').val(statusLote);
-            $("#detenciones-modal .modal-header").html("");
-            $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-            $("#detenciones-modal").modal();
-        });
-
+ 
     $("#tabla_comisiones_liquidadas tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
@@ -495,76 +485,6 @@ $(document).ready(function () {
     /**----------------------------------------------------------------------- */
 });
 
-$('#detenidos-form').on('submit', function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: 'changeLoteToStopped',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData:false,
-        success: function (data) {
-            if (data) {
-                $('#detenciones-modal').modal("hide");
-                $("#id-lote-detenido").val("");
-                alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_comisiones_liquidadas').DataTable().ajax.reload();
-            } else {
-                alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
-            }
-        }, error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }});
-    });
-
-$("#form_NEODATA").submit( function(e) {
-    $('#dispersar').prop('disabled', true);
-    document.getElementById('dispersar').disabled = true;
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        $('#spiner-loader').removeClass('hidden');
-        var data = new FormData( $(form)[0] );
-        $.ajax({
-            url: url + 'Comisiones/InsertNeo',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data == 1 ){
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_comisiones_liquidadas').DataTable().ajax.reload();
-                    $("#modal_NEODATA").modal( 'hide' );
-                    function_totales();
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                }else if (data == 2) {
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
-                    $('#tabla_comisiones_liquidadas').DataTable().ajax.reload();
-                    $("#modal_NEODATA").modal( 'hide' );
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                }else{
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                }
-            },error: function(){
-                $('#spiner-loader').addClass('hidden');
-                alerts.showNotification("top", "right", "ERROR EN EL SISTEMA, REVISAR CON SISTEMAS", "danger");
-            }
-        });     
-    }
-});   
-
  
 jQuery(document).ready(function(){
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
@@ -602,57 +522,7 @@ function SoloNumeros(evt){
         return false;
     }
 }
-
-$('#fecha1').change( function(){
-    fecha1 = $(this).val(); fecha2
-    var fecha2 = $('#fecha2').val();
-    if(fecha2 == ''){
-        alerts.showNotification("top", "right", "Selecciona la segunda fecha", "info");
-    } else{
-        document.getElementById("fecha2").value = "";
-    }
-});
-
-$('#fecha2').change( function(){  
-    $("#myModal .modal-body").html('');
-    var fecha2 = $(this).val();  
-    var fecha1 = $('#fecha1').val();
-    if(fecha1 == ''){
-        alerts.showNotification("top", "right", "Selecciona la primer fecha", "info");
-    } else{
-        $.getJSON( url + "Comisiones/getMontoDispersadoDates/"+fecha1+'/'+fecha2).done( function( $datos ){
-            $("#myModal .modal-body").append('<div class="row">                <div class="col-md-5"><p class="category"><b>Monto</b>: $'+formatMoney($datos['datos_monto'][0].monto)+'</p></div><div class="col-md-4"><p class="category"><b>Pagos</b>: '+formatMiles($datos['datos_monto'][0].pagos)+'</p></div><div class="col-md-3"><p class="category"><b>Lotes</b>: '+formatMiles($datos['datos_monto'][0].lotes)+'</p></div></div>');
-        });
-    }
-});
-
-$("#my_updatebandera_form").on('submit', function(e){
-    e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: 'updateBandera',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData:false,
-        beforeSend: function(){
-        },
-        success: function(data) {
-            if (data == 1) {
-                $('#myUpdateBanderaModal').modal("hide");
-                $("#id_pagoc").val("");
-                alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
-                $('#tabla_comisiones_liquidadas').DataTable().ajax.reload();
-            } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
-            }
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
+ 
 function formatMoney( n ) {
     var c = isNaN(c = Math.abs(c)) ? 2 : c,
     d = d == undefined ? "." : d,
@@ -718,34 +588,7 @@ function checkDecimal(decimal) {
     }
     return str;
 }
-
-$(document).on('click', '.update_bandera', function(e){
-    id_pagoc = $(this).attr("data-idpagoc");
-        nombreLote = $(this).attr("data-nombreLote");
-        param = $(this).attr("data-param");
-        $("#myUpdateBanderaModal .modal-body").html('');
-        $("#myUpdateBanderaModal .modal-header").html('');
-        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
-        $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
-        $("#myUpdateBanderaModal").modal();
-    $("#id_pagoc").val(id_pagoc);
-    $("#param").val(0);
-});
-
-
-$("#tabla_comisiones_liquidadas tbody").on('click', '.btn-detener', function () {
-    $("#motivo").val("");
-    $("#descripcion").val("");
-    const idLote = $(this).val();
-    const nombreLote = $(this).attr("data-value");
-    const statusLote = $(this).attr("data-statusLote");
-    $('#id-lote-detenido').val(idLote);
-    $('#statusLote').val(statusLote);
-    $("#detenciones-modal .modal-header").html("");
-    $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-    $("#detenciones-modal").modal();
-});
-
+ 
 
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);

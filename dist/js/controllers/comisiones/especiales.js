@@ -2,25 +2,25 @@ $(document).ready(function () {
     
     let titulos_intxt = [];
 
-    $('#tabla_comisiones_activas thead tr:eq(0) th').each( function (i) {
+    $('#tabla_dispersar_especiales thead tr:eq(0) th').each( function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
         if (i != 0 ) {
             $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_comisiones_activas').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_comisiones_activas').DataTable().column(i).search(this.value).draw();
+                if ($('#tabla_dispersar_especiales').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_dispersar_especiales').DataTable().column(i).search(this.value).draw();
                 }
-                var index = $('#tabla_comisiones_activas').DataTable().rows({
+                var index = $('#tabla_dispersar_especiales').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-            var data = $('#tabla_comisiones_activas').DataTable().rows(index).data();
+            var data = $('#tabla_dispersar_especiales').DataTable().rows(index).data();
         });
     }});
     
-    activasDataTable = $('#tabla_comisiones_activas').dataTable({
+    especialesDataTable = $('#tabla_dispersar_especiales').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -30,7 +30,7 @@ $(document).ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Comisiones Activas',
+                title: 'Reporte Comisiones Especiales',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
@@ -81,7 +81,7 @@ $(document).ready(function () {
                     labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 }
                 return labelTipoVenta;
-            }}, 
+            }},  
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
@@ -136,25 +136,14 @@ $(document).ready(function () {
             { data: function (d) {
                 var BtnStats = '';
                 var RegresaActiva = '';
-                
-                    if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
-                        BtnStats = 'Asignar Precio';
-                    }else if(d.tipo_venta==null || d.tipo_venta==0) {
-                        BtnStats = 'Asignar Tipo Venta';
-                    }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
-                        BtnStats = 'Asignar Prospecto';
-                    }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
-                        BtnStats = 'Asignar Subdirector';
-                    }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
-                        BtnStats = 'Asignar Sede';
-                    }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
-                        BtnStats = 'Asignar Plan <br> Sede:'+d.sede;
-                    } else{
-                        
-                        varColor  = 'btn-deepGray';
+
+                if(d.totalNeto2==null) {
+                    BtnStats = '';
+                }else {
+                    varColor  = 'btn-sky';
                             
                             if(d.fecha_modificacion != null ) {
-                                RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
+                                RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                             }
             
                             BtnStats += `
@@ -169,25 +158,25 @@ $(document).ready(function () {
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-            }}  
+            }
             
-       
+        }   
         ],
         columnDefs: [{
             visible: false,
             searchable: false
         }],
         ajax: {
-            url: 'getDataActivasPago',
+            url: 'getDataDispersionPagoEspecial',
             type: "POST",
             cache: false,
             data: function( d ){}
         }
     }) 
  
-    $('#tabla_comisiones_activas tbody').on('click', 'td.details-control', function () {
+    $('#tabla_dispersar_especiales tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
+        var row = $('#tabla_dispersar_especiales').DataTable().row(tr);
 
         if (row.child.isShown()) {
             row.child.hide();
@@ -207,7 +196,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
+    $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
             $("#descripcion").val("");
             const idLote = $(this).val();
@@ -220,12 +209,45 @@ $(document).ready(function () {
             $("#detenciones-modal").modal();
         });
 
-    $("#tabla_comisiones_activas tbody").on("click", ".verify_neodata", async function(){ 
+    $("#tabla_dispersar_especiales tbody").on('click', '.btn-penalizacion', function () {
+            const idLote = $(this).val();
+            const nombreLote = $(this).attr("data-value");
+            const idCliente = $(this).attr("data-cliente");
+            $('#id_lote_penalizacion').val(idLote);
+            $('#id_cliente_penalizacion').val(idCliente);
+            $("#penalizacion-modal .modal-header").html("");
+            $("#penalizacion-modal .modal-header").append('<h4 class="modal-title"> Penalización + 90 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes correspondientes.</P>');
+            $("#penalizacion-modal").modal();
+        });
+        
+    $("#tabla_dispersar_especiales tbody").on('click', '.btn-penalizacion4', function () {
+            const idLote = $(this).val();
+            const nombreLote = $(this).attr("data-value");
+            const idCliente = $(this).attr("data-cliente");
+            $('#id-lote-penalizacion4').val(idLote);
+            $('#id-cliente-penalizacion4').val(idCliente);
+            $("#penalizacion4-modal .modal-header").html("");
+            $("#penalizacion4-modal .modal-header").append('<h4 class="modal-title">Penalización + 160 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al aprobar esta penalización no se podrán revertir los descuentos y se dispersara el pago de comisiones con los porcentajes asignados.</P>');
+            $("#penalizacion4-modal").modal();
+        });
+
+    $("#tabla_dispersar_especiales tbody").on('click', '.btn-Nopenalizacion', function () {
+            const idLote = $(this).val();
+            const nombreLote = $(this).attr("data-value");
+            const idCliente = $(this).attr("data-cliente");
+            $('#id_lote_cancelar').val(idLote);
+            $('#id_cliente_cancelar').val(idCliente);
+            $("#Nopenalizacion-modal .modal-header").html("");
+            $("#Nopenalizacion-modal .modal-header").append('<h4 class="modal-title"> Cancelar Penalización + 90 días, al lote <b>'+nombreLote+'</b></h4><BR><P>Al cancelar esta penalización no se podrán revertir los cambios.</P>');
+            $("#Nopenalizacion-modal").modal();
+        });
+
+    $("#tabla_dispersar_especiales tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
-        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
+        var row = $('#tabla_dispersar_especiales').DataTable().row(tr);
         let cadena = '';
         idLote = $(this).val();
         registro_comision = $(this).attr("data-value");
@@ -341,26 +363,28 @@ $(document).ready(function () {
                                     abonado = parseFloat(abonado) +parseFloat(saldo1C);
                                     porcentaje_abono = parseFloat(porcentaje_abono) + parseFloat(v.porcentaje_decimal);
                                     
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3">
-                                            <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}"><input id="num_usuarios" type="hidden" name="num_usuarios[]" value="${v.num_usuarios}"> 
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row">
+                                            <div class="col-md-3">
+                                            <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}">
                                             <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b></div>
-                                            <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]"  required readonly="true" type="hidden" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : parseFloat(v.porcentaje_decimal)}"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}%"></div>
-                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
+                                            <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]" id="porcentaje_${i}" onchange="validarPorcentaje(${i}, ${resultArr.length})" onblur="Editar(${i},${totalNeto2},${v.id_usuario},${resultArr.length})" required  value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}"></div>
+                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_total[]" id="comision_total_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
                                             <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_abonada[]" required readonly="true" value="${formatMoney(0)}"></div>
-                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_pendiente[]" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
-                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required decimals" name="comision_dar[]"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo1C)}"></div></div>`);
-                                       
+                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" name="comision_pendiente[]" id="comision_pendiente_${i}" required readonly="true" value="${formatMoney(v.comision_total)}"></div>
+                                            <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required decimals" name="comision_dar[]"  data-old="" id="comision_dar_${i}" onblur="DarComision(${i},${resultArr.length},${total0})"   value="0"></div></div>`);
                                             if(i == resultArr.length -1){
                                                 $("#modal_NEODATA .modal-body").append(`
                                                 <input type="hidden" name="pago_neo" id="pago_neo" value="${formatMoney(data[0].Aplicado)}">
                                                 <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                                <input type="hidden" name="porcentaje_abono" id="porcentaje_abono" value="${porcentaje_abono}">
-                                                <input type="hidden" name="abonado" id="abonado" value="${formatMoney(abonado)}">
-                                                <input type="hidden" name="total_comision" id="total_comision" value="${formatMoney(total_comision)}">
-                                                <input type="hidden" name="bonificacion" id="bonificacion" value="${formatMoney(data[0].Bonificado)}">
-                                                <input type="hidden" name="pendiente" id="pendiente" value="${formatMoney(total_comision-abonado)}">
+                                                <input type="hidden" name="porcentaje_abono" id="porcentaje_abono" value="">
+                                                <input type="hidden" name="abonado" id="abonado" value="">
+                                                <input type="hidden" name="total_comision" id="total_comision" value="">
+                                                <input type="hidden" name="bonificacion" id="bonificacion" value="${data[0].Bonificado}">
+                                                <input type="hidden" name="pendiente" id="pendiente" value="">
                                                 <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
                                                 <input type="hidden" name="id_disparador" id="id_disparador" value="0">
+                                                <input type="hidden" name="lugar_p" id="lugar_p" value="${lugar_prospeccionLote}">
+                                                <input type="hidden" name="tipo_venta_insert" id="tipo_venta_insert" value="7">
                                                 <input type="hidden" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
                                                 `);
                                             }
@@ -478,6 +502,8 @@ $(document).ready(function () {
                                                 counts++
                                             });
                                         });
+
+                                        $("#modal_NEODATA .modal-footer").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Dispersar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>');
                                         
                                         if(total < 1 ){
                                             $('#dispersar').prop('disabled', true);
@@ -531,7 +557,7 @@ $('#detenidos-form').on('submit', function (e) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                $('#tabla_dispersar_especiales').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
             }
@@ -539,6 +565,90 @@ $('#detenidos-form').on('submit', function (e) {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }});
     });
+
+    $('#penalizacion-form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'changeLoteToPenalizacion',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function (data) {
+                if (data) {
+                    $('#penalizacion-modal').modal("hide");
+                    $("#id_lote_penalizacion").val("");
+                    $("#id_cliente_penalizacion").val("");
+                    $("#comentario_aceptado").val("");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_dispersar_especiales').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+
+    $('#penalizacion4-form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'changeLoteToPenalizacionCuatro',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function (data) {
+                if (data) {
+                    $('#penalizacion4-modal').modal("hide");
+                    $("#id-lote-penalizacionC").val("");
+                    $("#id-cliente-penalizacionC").val("");
+                    $("#asesor").val("");
+                    $("#coordinador").val("");
+                    $("#gerente").val("");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_dispersar_especiales').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+
+    $('#Nopenalizacion-form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'cancelLoteToPenalizacion',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function (data) {
+                if (data) {
+                    $('#Nopenalizacion-modal').modal("hide");
+                    $("#id_lote_cancelar").val("");
+                    $("#id_cliente_cancelar").val("");
+                    $("#comentario_rechazado").val("");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_dispersar_especiales').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+
 
 $("#form_NEODATA").submit( function(e) {
     $('#dispersar').prop('disabled', true);
@@ -561,7 +671,7 @@ $("#form_NEODATA").submit( function(e) {
                 if( data == 1 ){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                    $('#tabla_dispersar_especiales').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     function_totales();
                     $('#dispersar').prop('disabled', false);
@@ -569,7 +679,7 @@ $("#form_NEODATA").submit( function(e) {
                 }else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
-                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                    $('#tabla_dispersar_especiales').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -609,6 +719,133 @@ jQuery(document).ready(function(){
 $('.decimals').on('input', function () {
     this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
 });
+
+/**-------------------------------FUNCIONES----------------------------- */
+
+function replaceAll(text, busca, reemplaza) {
+    while (text.toString().indexOf(busca) != -1)
+        text = text.toString().replace(busca, reemplaza);
+    return text;
+}
+
+function Editar(i,precio,id_usuario,lengt){
+    //  alert(precio);
+      $('#modal_avisos .modal-body').html('');
+      let precioLote = parseFloat(precio);
+      let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
+      let nuevoPorce = replaceAll(nuevoPorce1, '%',''); 
+      let comision_total =parseFloat(precio) * (nuevoPorce/100); 
+      $('#comision_total_'+i).val(formatMoney(comision_total));
+     let sumaTotalPorcentajes = 0;
+     let sumaTotalDispersar = 0;
+     let sumaTotalComision = 0;
+      for (let m = 0; m < lengt; m++) {
+          sumaTotalPorcentajes = sumaTotalPorcentajes + parseFloat($('#porcentaje_'+m).val());
+          sumaTotalComision = parseFloat(sumaTotalComision) + parseFloat(replaceAll($('#comision_total_'+m).val(), ',',''));
+          sumaTotalDispersar = sumaTotalDispersar + parseFloat(replaceAll($('#comision_dar_'+m).val(), ',',''));
+      }
+      $('#porcentaje_abono').val(sumaTotalPorcentajes);
+      $('#total_comision').val(formatMoney(sumaTotalComision));
+      $('#pendiente').val(formatMoney(sumaTotalComision - sumaTotalDispersar));
+   
+  }
+
+  function DarComision(i,lengt,neodata){
+      let sumaTotalAbonar = 0;
+      let AbonadoNeodata = parseFloat(neodata);
+      let sumaTotalPorcentajes = 0;
+     let sumaTotalDispersar = 0;
+     let sumaTotalComision = 0;
+      for (let m = 0; m < lengt; m++) {
+          sumaTotalAbonar = sumaTotalAbonar + parseFloat($('#comision_dar_'+m).val());
+          sumaTotalPorcentajes = sumaTotalPorcentajes + parseFloat($('#porcentaje_'+m).val());
+          sumaTotalComision = parseFloat(sumaTotalComision) + parseFloat(replaceAll($('#comision_total_'+m).val(), ',',''));
+          sumaTotalDispersar = sumaTotalDispersar + parseFloat(replaceAll($('#comision_dar_'+m).val(), ',',''));
+      }
+      //COMPARAMOS SI LA SUMA DE LO DISPONIBLE A DISPERSAR ES MAYOR A LO APLICADO EN NEODATA
+      if(parseFloat(sumaTotalAbonar) > parseFloat(AbonadoNeodata)){
+          alerts.showNotification("top", "right", "La suma de lo disponible es mayor a lo aplicado en neodata", "warning");
+          document.getElementById('dispersar').disabled = true;
+         // $('#dispersar').prop('disabled', true);
+          //BLOQUER BOTON DE DISPERSAR
+      }else{
+          //SI LA SUMA ES MENOR A NEODATA, ENTONCES COMPARAR LA COMISION TOTAL CON LO DISPONIBLE A DISPERSAR
+          let Comision_Total = parseFloat(replaceAll($('#comision_total_'+i).val(), ',','')); 
+          let Comision_dar = $('#comision_dar_'+i).val();
+          if(parseFloat(Comision_dar) > parseFloat(Comision_Total)){
+              alerts.showNotification("top", "right", "El monto a dispersar es mayor a la comisión total", "warning");
+              document.getElementById('dispersar').disabled = true;
+             // $('#dispersar').prop('disabled', true);
+          }else{
+              //SI TODO ESTA BIEN CONTINUAMOS CON EL PROCESO
+              document.getElementById('dispersar').disabled = false;
+             // $('#dispersar').prop('disabled', false);
+              $('#comision_pendiente_'+i).val(formatMoney(parseFloat(Comision_Total) - parseFloat(Comision_dar)));
+              $('#abonado').val(formatMoney(sumaTotalAbonar));
+              $('#porcentaje_abono').val(sumaTotalPorcentajes);
+              $('#total_comision').val(formatMoney(sumaTotalComision));
+               $('#pendiente').val(formatMoney(sumaTotalComision - sumaTotalDispersar));
+          }
+      }
+  }
+  function Abonar(i,precioLote,Neodata,len){
+      /*console.log(i);
+      console.log(precioLote);
+      console.log(Neodata);*/
+      console.log(len);
+      let comision_actual = parseFloat(replaceAll($('#abono_nuevo_'+i).val(), ',',''));
+      let pagado = parseFloat(replaceAll($('#pagado_'+i).val(), ',',''));
+      let total_comision = parseFloat(replaceAll($('#comision_total_'+i).val(), ',',''));
+      let abonado = 0;
+      let comision_total=0;
+      let disponible = 0;
+
+      for (let m = 0; m < len; m++) {
+          console.log($('#comision_total_'+m).val());
+          console.log($('#pagado_'+m).val());
+          console.log($('#abono_nuevo_'+m).val());
+          comision_total =  comision_total + parseFloat(replaceAll($('#comision_total_'+m).val(), ',',''));
+       abonado = abonado + parseFloat(replaceAll($('#pagado_'+m).val(), ',',''));
+       disponible = disponible + parseFloat(replaceAll($('#abono_nuevo_'+m).val(), ',',''));
+      }
+
+
+      if((abonado + disponible) > parseFloat(Neodata) ){
+          alerts.showNotification("top", "right", "La suma de lo disponible mas lo abonado, es mayor  a lo aplicado en neodata", "warning");
+          document.getElementById('dispersar').disabled = true;
+
+
+      }else{
+
+          if((comision_actual + pagado) > total_comision ){   
+              alerts.showNotification("top", "right", "El monto a dispersar mas lo abonado es mayor a la comisión total", "warning");
+              document.getElementById('dispersar').disabled = true;
+
+          }else{
+              let pendiente = parseFloat(replaceAll($('#pendiente_'+i).val(), ',',''));
+
+              $('#pendiente_'+i).val(formatMoney(pendiente-comision_actual))
+              document.getElementById('dispersar').disabled = false;
+          }
+
+      }
+ 
+  }
+
+function validarPorcentaje(index, arrLength) {
+  const currentValue = parseFloat($(`#porcentaje_${index}`).val());
+  const limit = 20;
+  let accumulatedValue = currentValue;
+  for (let i = 0; i < arrLength; i++) {
+      if (index !== i) {
+          accumulatedValue += parseFloat($(`#porcentaje_${i}`).val());
+      }
+  }
+  if (accumulatedValue > limit) {
+      $(`#porcentaje_${index}`).val(0);
+      alerts.showNotification("top", "right", `El límite del porcentaje sumado debe ser ${limit}%`, "danger");
+  }
+}
 
 function SoloNumeros(evt){
     if(window.event){
@@ -664,7 +901,7 @@ $("#my_updatebandera_form").on('submit', function(e){
                 $('#myUpdateBanderaModal').modal("hide");
                 $("#id_pagoc").val("");
                 alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
-                $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                $('#tabla_dispersar_especiales').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
             }
@@ -742,20 +979,21 @@ function checkDecimal(decimal) {
 }
 
 $(document).on('click', '.update_bandera', function(e){
+    // alert($(this).attr("data-idpagoc"));
     id_pagoc = $(this).attr("data-idpagoc");
         nombreLote = $(this).attr("data-nombreLote");
         param = $(this).attr("data-param");
         $("#myUpdateBanderaModal .modal-body").html('');
         $("#myUpdateBanderaModal .modal-header").html('');
-        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
+        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a comisiones activas: <b>'+nombreLote+'</b></h4>');
         $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
         $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
-    $("#param").val(0);
+    $("#param").val(1);
 });
 
 
-$("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
+$("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
     $("#descripcion").val("");
     const idLote = $(this).val();
@@ -772,31 +1010,7 @@ $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
 
-function showDetailModal(idPlan) {
-    $('#planes-div').hide();
-    $.ajax({
-        url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            $('#plan-detalle-tabla-tbody').empty();
-            $('#title-plan').text(`Plan: ${data.descripcion}`);
-            $('#detalle-plan-modal').modal();
-            $('#detalle-tabla-div').hide();
-            const roles = data.comisiones;
-            roles.forEach(rol => {
-                if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#plan-detalle-tabla tbody').append('<tr>');
-                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append('</tr>');
-                }
-            });
-            $('#detalle-tabla-div').show();
-        }
-    });
-}
-
-
-
+ 
+ 
+   
+ 

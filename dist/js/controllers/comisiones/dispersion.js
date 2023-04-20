@@ -30,7 +30,7 @@ $(document).ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                titleAttr: 'Reporte de dispersión',
+                title: 'Reporte Comisiones Dispersion',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
@@ -66,8 +66,8 @@ $(document).ready(function () {
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            {data: 'idLote'},
             {data: 'nombreLote'},
+            {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
                 var labelTipoVenta;
@@ -916,7 +916,7 @@ function showDetailModal(idPlan) {
 $('#btn-detalle-plan').on('click', function () {
     $('#planes-div').show();
     $('#planes').empty().selectpicker('refresh');
-    $('#planes').append($('<option>').val(0).text('SELECCIONA UNA OPCIÓN')).selectpicker('refresh');
+    $('#planes').append($('<option disabled>').val(0).text('SELECCIONA UNA OPCIÓN')).selectpicker('refresh');
     $.ajax({
         url: `${url}Comisiones/getPlanesComisiones`,
         type: 'GET',
@@ -927,7 +927,8 @@ $('#btn-detalle-plan').on('click', function () {
                 const name = data[i].descripcion.toUpperCase();
                 $('#planes').append($('<option>').val(id).text(name));
             }
-            $('#title-plan').text('Planes de comisión');
+ 
+            $("#detalle-plan-modal .modal-header").append('<h4 class="modal-title">Planes de comisión</h4>');
             $('#planes').selectpicker('refresh');
             $('#detalle-plan-modal').modal();
             $('#detalle-tabla-div').hide();
