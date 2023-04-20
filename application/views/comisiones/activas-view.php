@@ -3,9 +3,7 @@
 <body class="">
     <div class="wrapper">
         <?php
-        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17"
-            || $this->session->userdata('id_rol') == "32" || $this->session->userdata('id_rol') == "8"
-            || $this->session->userdata('id_rol')=="70") //
+        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70") 
         {
             $datos = array();
             $datos = $datos4;
@@ -126,8 +124,8 @@
                                                         <th></th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
-                                                        <th>ID LOTE</th>
                                                         <th>LOTE</th>
+                                                        <th>ID LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>

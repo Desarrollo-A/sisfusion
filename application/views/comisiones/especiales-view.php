@@ -3,7 +3,7 @@
 <body class="">
     <div class="wrapper">
         <?php
-        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70")
+        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70") 
         {
             $datos = array();
             $datos = $datos4;
@@ -215,43 +215,7 @@
             </div>
         </div>
         <!-- modal -->
-
-        <div class="modal fade" id="detalle-plan-modal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12" id="planes-div">
-                                <div class="form-group">
-                                    <select class="selectpicker select-gral" id="planes" name="planes" data-style="btn" required>
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="detalle-tabla-div"
-                                 class="col-lg-12">
-                                <table class="table table-bordered"
-                                       id="plan-detalle-tabla">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">PUESTO</th>
-                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">% COMISIÓN</th>
-                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">% NEODATA</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="plan-detalle-tabla-tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer"></div>
-                </div>
-            </div>
-        </div>
+ 
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -264,8 +228,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
+                                    <h3 class="card-title center-align" >Dispersión especial</h3>
+                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta especial</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -274,7 +238,7 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Monto hoy: </h4>
                                                     <p class="category input-tot pl-1" id="monto_label">
-                                                        <?php $query = $this->db->query("SELECT SUM(monto) nuevo_general FROM (SELECT SUM(pci.abono_neodata) monto FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta NOT IN (7) GROUP BY u.id_usuario) as nuevo_general ;");
+                                                        <?php $query = $this->db->query("SELECT SUM(monto) nuevo_general FROM (SELECT SUM(pci.abono_neodata) monto FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta in (7) GROUP BY u.id_usuario) as nuevo_general;");
 
                                                         foreach ($query->result() as $row){
                                                             $number = ($row->nuevo_general) ? $row->nuevo_general : 0;
@@ -288,7 +252,7 @@
                                                     <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
                                                     <p class="category input-tot pl-1" id="pagos_label">
                                                      
-                                                        <?php $query = $this->db->query("SELECT SUM(pagos) nuevo_general FROM (SELECT  count(id_pago_i) pagos FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta NOT IN (7) GROUP BY u.id_usuario) as nuevo_general ;");
+                                                        <?php $query = $this->db->query("SELECT SUM(pagos) nuevo_general FROM (SELECT  count(id_pago_i) pagos FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta in (7) GROUP BY u.id_usuario) as nuevo_general ;");
                                                         foreach ($query->result() as $row){
                                                             $number = $row->nuevo_general;
                                                             echo '<B>'.$number,'</B>';
@@ -301,7 +265,7 @@
                                                     <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
                                                     <p class="category input-tot pl-1" id="lotes_label">
                                                     
-                                                    <?php $query = $this->db->query("SELECT SUM(lotes) nuevo_general FROM (SELECT  COUNT(DISTINCT(id_lote)) lotes FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta NOT IN (7) GROUP BY u.id_usuario) as nuevo_general ;");
+                                                    <?php $query = $this->db->query("SELECT SUM(lotes) nuevo_general FROM (SELECT  COUNT(DISTINCT(id_lote)) lotes FROM pago_comision_ind pci INNER JOIN comisiones c on c.id_comision = pci.id_comision INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) AND year(GetDate()) = year(pci.fecha_abono) AND Day(GetDate()) = Day(pci.fecha_abono) AND pci.estatus NOT IN (0) AND l.tipo_venta in (7) GROUP BY u.id_usuario) as nuevo_general ;");
 
                                                         foreach ($query->result() as $row) {
                                                             $number = $row->nuevo_general;
@@ -310,23 +274,13 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end text-center">
-                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> Reporte dispersión</a>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end text-center">
-                                                <button class="btn-gral-data"
-                                                   id="btn-detalle-plan"
-                                                   style="color:white; ">
-                                                    Planes
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
+                                            <table class="table-striped table-hover" id="tabla_dispersar_especiales" name="tabla_dispersar_especiales">
                                                 <thead>
                                                     <tr>
                                                         <th></th>
@@ -364,7 +318,7 @@
     var url2 = "<?=base_url()?>index.php/";
 
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/especiales.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
