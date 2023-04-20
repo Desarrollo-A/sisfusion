@@ -66,11 +66,38 @@ class Comisiones extends CI_Controller
       }
     }
 
-    public function updateBandera(){
-      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
-      echo json_encode($response);
+  public function updateBandera(){
+    $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
+    echo json_encode($response);
   }
-    
+
+  public function activas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/activas-view", $datos);
+  }
+
+  public function getDataActivasPago() {
+    $data['data'] = $this->Comisiones_model->getDataActivasPago()->result_array();
+    echo json_encode($data);
+  }
+
+
+  public function liquidadas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/liquidadas-view", $datos);
+  }
+
+  public function getDataLiquidadasPago() {
+    $data['data'] = $this->Comisiones_model->getDataLiquidadasPago()->result_array();
+    echo json_encode($data);
+  }
+  
   // dispersion-view complete-end
 
   public function usuariosIncidencias()
@@ -2633,19 +2660,7 @@ public function agregar_comisionvc(){
   }
   
 
-  public function historyDispersePaymentInNeodata()
-  {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/historial_liquidadas", $datos);
-  }
+
 
 public function getSettledCommissions(){
       $datos = array();
@@ -2965,31 +2980,7 @@ public function LiquidarLote(){
  
  }
 
- function activeCommissions()
-    {
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-        $this->load->view('template/header');
-        $this->load->view("ventas/active_commissions", $datos);
-    }
 
-    public function getActiveCommissions()
-    {
-        $datos = array();
-        $datos = $this->Comisiones_model->getActiveCommissions();
-        if ($datos != null) {
-            echo json_encode($datos);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
     public function getAllCommissions()
     {
