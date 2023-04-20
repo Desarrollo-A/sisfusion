@@ -6,7 +6,6 @@ if (!defined('BASEPATH')) {
 // use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-
 class Comisiones extends CI_Controller
 {
   private $gph;
@@ -35,6 +34,7 @@ class Comisiones extends CI_Controller
   }
 
    // dispersion-view complete
+
   public function dispersion() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
@@ -84,7 +84,6 @@ class Comisiones extends CI_Controller
     echo json_encode($data);
   }
 
-
   public function liquidadas() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
@@ -97,6 +96,20 @@ class Comisiones extends CI_Controller
     $data['data'] = $this->Comisiones_model->getDataLiquidadasPago()->result_array();
     echo json_encode($data);
   }
+
+  public function especiales() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/especiales-view", $datos);
+  }
+
+  public function getDataDispersionPagoEspecial() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPagoEspecial()->result_array();
+    echo json_encode($data);
+  }
+ 
   
   // dispersion-view complete-end
 
@@ -6339,39 +6352,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
 
-    public function dispersar_pago_especial()
-    {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/dispersar_pago_especial", $datos);
-    }
-    public function porcentajesEspecial($idCliente){
-      echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
-    }
-    public function getDataDispersionPagoEspecial($val = '')
-    {
-      //echo $val;
-      $datos = array();
-      if(empty($val)){
-        $datos = $this->Comisiones_model->getDataDispersionPagoEspecial();
-      }else{
-        $datos = $this->Comisiones_model->getDataDispersionPagoEspecial($val);
-      }
-      
-      if ($datos != null) {
-        echo json_encode($datos);
-      } else {
-        echo json_encode(array());
-      }
-    }
-
+ 
     /************************/
 
 
