@@ -40,15 +40,14 @@ class PaquetesCorrida_model extends CI_Model
         where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
         $query_superdicie
         $query_tipo_lote");
-
         $this->db->query("UPDATE  l 
-        SET l.id_descuento = '$cadena_lotes',usuario='$usuario'
-        FROM lotes l
-        INNER JOIN condominios c ON c.idCondominio=l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
-        WHERE r.idResidencial IN($desarrollos) AND l.idStatusLote IN (3, 2)
-        AND cl.fechaApartado BETWEEN '$inicio 00:00:00.000' AND '$fin 23:59:59.999'
+        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        inner join clientes cl on cl.id_cliente=l.idCliente
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
+        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
         $query_superdicie
         $query_tipo_lote"); 
     }
@@ -63,83 +62,19 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
-    public function getDescuentos($objDescuentos, $primeraCarga)
+    public function getDescuentos($tdescuento,$id_condicion,$eng_top,$apply)
     {
-        list($desTotal, $desEnganche, $desPrecioM2, $desBono, $desMSI) = $this->getDescuentosQueries();
-
-        if($primeraCarga){
-            $data = $this->db->query("$desTotal UNION ALL $desEnganche UNION ALL $desPrecioM2 UNION ALL $desBono UNION ALL $desMSI ORDER BY id_condicion, d.porcentaje");
-        }
-        else if( $type == 1 ) // total
-            $data = $this->db->query("$desTotal ORDER BY d.porcentaje");
-        else if( $type == 2) // Enganche
-            $data = $this->db->query("$desEnganche ORDER BY d.porcentaje");
-        else if( $type == 4) // Precio m2
-            $data = $this->db->query("$desPrecioM2 ORDER BY d.porcentaje");
-        else if( $type == 12) // Bono
-            $data = $this->db->query("$desBono ORDER BY d.porcentaje");
-        else if( $type == 13) // MSI
-            $data = $this->db->query("$desMSI ORDER BY d.porcentaje");
-
-        return $data;
+        return $this->db->query("SELECT c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,max(d.id_descuento) AS id_descuento,d.porcentaje 
+        FROM descuentos d
+		INNER JOIN condiciones c on c.id_condicion=d.id_condicion
+		WHERE d.id_tdescuento = $tdescuento 
+		AND d.id_condicion = $id_condicion 
+		AND d.eng_top = $eng_top 
+		AND d.apply = $apply
+		and d.inicio is null 
+        group by c.descripcion,d.id_tdescuento,d.inicio,d.fin,d.id_condicion,d.eng_top,d.apply,d.porcentaje 
+        order by d.porcentaje");
     }
-
-    public function getDescuentosQueries(){
-        $desTotal = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 1 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desEnganche = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 1 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desPrecioM2 = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 4 
-        AND d.eng_top = 0 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje ";
-
-        $desBono = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion = d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 12 
-        AND d.eng_top = 1 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje";
-
-        $desMSI = "SELECT c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-        WHERE d.id_tdescuento = 1 
-        AND d.id_condicion = 13 
-        AND d.eng_top = 1 
-        AND d.apply = 1
-        AND d.inicio IS NULL 
-        GROUP BY c.descripcion, d.id_tdescuento, d.inicio, d.fin, d.id_condicion, d.eng_top, d.apply, d.porcentaje";
-
-        return [$desTotal, $desEnganche, $desPrecioM2, $desBono, $desMSI];
-    }
-
     public function SaveNewDescuento($tdescuento,$id_condicion,$eng_top,$apply,$descuento){
       $response =  $this->db->query("INSERT INTO descuentos VALUES($tdescuento,NULL,NULL,$id_condicion,$descuento,$eng_top,$apply,NULL)"); 
         if (! $response ) {
@@ -255,7 +190,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
         $query_superdicie
         $query_tipo_lote
-        UNION 
+        UNION ALL
         SELECT DISTINCT(id_descuento) descuentos
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
@@ -277,35 +212,6 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         inner join condiciones c on c.id_condicion = d.id_condicion
         inner join tipos_condiciones tc on tc.id_tcondicion=c.id_tcondicion
         where r.id_paquete in ($id_paquete) and c.id_condicion=$id_tcondicion  order by r.prioridad asc")->result_array();
-    }
-    
-
-    public function getPaquetesDisponiblesyApart($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
-            $paquetes =  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
-                SELECT DISTINCT(id_descuento) descuentos
-                FROM lotes l
-                INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-                INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-                where l.idStatusLote = 1 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
-                $query_superdicie
-                $query_tipo_lote
-                ) t")->result_array();
-                if(count($paquetes) == 0){
-                    $paquetes =  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
-                        SELECT DISTINCT(id_descuento) descuentos
-                        FROM lotes l
-                        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
-                        INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
-                        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-                        where l.idStatusLote = 3 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
-                        $query_superdicie
-                        $query_tipo_lote
-                        ) t")->result_array();
-                }
-            return $paquetes;
-        
-
-        
     }
     
 

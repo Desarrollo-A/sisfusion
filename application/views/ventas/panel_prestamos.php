@@ -1,7 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<!-- <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/> -->
-<!-- <link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css"> -->
+<link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
 
 <style>
     .modal-backdrop{
@@ -43,100 +43,6 @@
 				</div>
 			</div>
 		</div>
-<!-- --- -->
-
-<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">clear</i>
-                </button>
-						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
-            </div>
-            <form >
-			<div class="form-group row">
-				<div class="col-md-4">
-					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
-					<input class="form-control input-gral"
-					onkeydown="return event.keyCode !== 69" maxlength="2" type="number" step="any" 
-					required  id="montoPagos" name="monto" min="1">
-				</div>
-				<div class="col-md-4">
-					<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
-					<input class="form-control input-gral" onkeydown="return event.keyCode !== 69"
-					 id="numeroPagos" required  type="number"  maxlength="2" name="numeroP" min="1">
-				</div>
-				<div class="col-md-4">
-					<label class="control-label">Pago</label>
-					<input class="form-control input-gral" 
-					onkeydown="return event.keyCode !== 69"  id="pagoEdit" required type="text" name="pago" min="1" readonly>
-				</div>
-				<div class="col-md-12" style="display:block;">
-					<input class="form-control input-gral" id="prestamoId" style="display:none;" required type="text" name="pago" readonly>
-				</div>
-				<div class="col-md-12">
-					<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
-					<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
-					<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
-				</div>	
-			</div>
-			
-            <div class="modal-footer">     
-					<button type="button"  class="btn btn-danger btn-simple " 
-							data-dismiss="modal" >Cerrar</button>	
-					<button  type="button" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- --- -->
-		<div class="modal fade" name="ModalEdits" id="ModalEdits" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
-					</div>
-						<div class="modal-body">
-							<div class="form-group row">
-								<div class="col-md-4">
-									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
-							
-									<input class="form-control input-gral" type="number" step="any" required  id="montoPagos" name="monto" min="1">
-								</div>
-								<div class="col-md-4">
-									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" id="numeroPagos" required  type="number" name="numeroP" min="1">
-								</div>
-								<div class="col-md-4">
-									<label class="label">Pago</label>
-									<input class="form-control input-gral" id="pagoEdit" required type="text" name="pago" min="1" readonly>
-								</div>
-								<div class="col-md-12" style="display:block;">
-									<input class="form-control input-gral" id="prestamoId" style="display:none;" required type="text" name="pago" readonly>
-								</div>
-								<div class="col-md-12">
-									<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
-									<label class="label">Comentario(<b class="text-danger">*</b>)</label>
-									<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
-								</div>	
-							</div>
-						</div>
-						<div class="footer-model" >
-                                <button type="button"  class="btn btn-danger btn-simple " 
-                                    data-dismiss="modal" >Cerrar
-                                </button>	
-							    <button type="submit" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar
-                                </button>
-						</div>
-				</div>
-			</div>
-		</div>
-
-
 		<div class="modal fade modal-alertas" name="miModal" id="miModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -147,15 +53,15 @@
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
 						<div class="form-group">
-								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="tipo" id="tipo" required data-live-search="true">
-								<option disabled default >SELECCIONA UNA OPCIÓN</option>
+								<label class="label">Tipo descuento (<b class="text-danger">*</b>)</label>
+								<select class="selectpicker" name="tipo" id="tipo" required>
+								<option value="">----Seleccionar-----</option>
 								</select>
 							</div> 
 							<div class="form-group">
-								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="roles" id="roles" required data-live-search="true">
-									<option disabled default >SELECCIONA UNA OPCIÓN</option>
+								<label class="label">Puesto del usuario(<b class="text-danger">*</b>)</label>
+								<select class="selectpicker" name="roles" id="roles" required>
+									<option value="">----Seleccionar-----</option>
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>
@@ -165,22 +71,22 @@
 							<div class="form-group" id="users"></div>
 							<div class="form-group row">
 								<div class="col-md-4">
-									<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
+									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
+									<input class="form-control" type="number" step="any" required onblur="verificar();" id="monto" name="monto">
 								</div>
 								<div class="col-md-4">
-									<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" id="numeroP" required onblur="verificar();" type="number"  min="1" name="numeroP">
+									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
+									<input class="form-control" id="numeroP" required onblur="verificar();" type="number" name="numeroP">
 								</div>
 								<div class="col-md-4">
-									<label class="control-label">Pago</label>
-									<input class="form-control input-gral" id="pago" required type="text"  min="1" name="pago" readonly>
+									<label class="label">Pago</label>
+									<input class="form-control" id="pago" required type="text" name="pago" readonly>
 								</div>
 							</div>
 							<div class="form-group">
-								<p></label><b id="texto" style="font-size:12px;"></b></p>
-								<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
-								<textarea id="comentario" name="comentario" required  class="form-control input-gral" rows="3"></textarea>
+								<p>Nota:</label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="label">Comentario(<b class="text-danger">*</b>)</label>
+								<textarea id="comentario" name="comentario" required  class="form-control" rows="3"></textarea>
 							</div>
 							<!-- <div class="form-group input-group">
 								<label class="input-group-btn">
@@ -190,12 +96,13 @@
 								</label>
 									<input type="text" class="form-control" readonly>
 							</div> -->
-							<div class="modal-footer">  
-									<button type="button"  class="btn btn-danger btn-simple " 
-											data-dismiss="modal" >Cancelar</button>	
-									<button  type="submit" id="btn_abonar" class="btn btn-gral-data ">Guardar</button>
-            				</div>
 
+							<div class="form-group">
+								<center>
+									<button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
+									<button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+								</center>
+							</div>
 						</div>
 					</form>
 				</div>

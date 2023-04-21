@@ -1296,7 +1296,7 @@ public function getStatusMktdPreventa(){
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
-            $data["id_subdirector"] = $this->session->userdata('id_lider');
+            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
             $data["id_regional_2"] = $this->session->userdata('id_regional_2');
         }
