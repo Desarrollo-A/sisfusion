@@ -148,14 +148,14 @@
 						<div class="modal-body">
 						<div class="form-group">
 								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="tipo" id="tipo" required>
-								<option value="">SELECCIONA UNA OPCIÓN</option>
+								<select class="selectpicker" name="tipo" id="tipo" required data-live-search="true">
+								<option disabled default >SELECCIONA UNA OPCIÓN</option>
 								</select>
 							</div> 
 							<div class="form-group">
 								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="roles" id="roles" required>
-									<option value="">SELECCIONA UNA OPCIÓN</option>
+								<select class="selectpicker" name="roles" id="roles" required data-live-search="true">
+									<option disabled default >SELECCIONA UNA OPCIÓN</option>
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>
