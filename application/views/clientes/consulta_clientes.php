@@ -203,22 +203,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script>
-
-    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
-                $('#clients-datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    idUser = <?= $this->session->userdata('id_usuario') ?> ;
-    typeTransaction = 1;
-</script>
-
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/consultaClientes.js"></script>

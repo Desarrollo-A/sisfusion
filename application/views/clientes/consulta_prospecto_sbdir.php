@@ -83,13 +83,17 @@
                                                 <th>CREACIÓN</th>
                                                 <th>VENCIMIENTO</th>
                                                 <?php
-                                                if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5)
-                                                {?>
-                                                    <th class="disabled-sorting text-right"
-                                                        style="font-family: inherit; font-size: 10px !important; color:white;">
-                                                        ACCIONES
-                                                    </th>
-                                                <?php } ?>
+                                                    if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
+                                                        <th>ACCIONES</th>
+                                                        <!-- <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 103px;">
+                                                            <input  type="text"
+                                                                    style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;"
+                                                                    class="textoshead" 
+                                                                    placeholder="ACCIONES">
+                                                        </th> -->
+                                                <?php
+                                                    }
+                                                ?>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -221,14 +225,14 @@
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/moment.min.js"></script>
 <script>
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    typeTransaction = 1;
-    general_url = "<?= base_url() ?>";
+    // userType = <?= $this->session->userdata('id_rol') ?> ;
+    // typeTransaction = 1;
+    // general_url = "<?= base_url() ?>";
 </script>
 
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-
+417
 <?php
     if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5)
     {

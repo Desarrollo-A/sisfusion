@@ -1,5 +1,14 @@
 $(document).ready(function() 
 {
+    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
+                $('#clients-datatable').DataTable().column(i).search(this.value).draw();
+            }
+        });
+    });
     $usersTable = $('#clients-datatable').DataTable({
         dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: '100%',
@@ -123,7 +132,7 @@ $(document).ready(function()
             },
             {
                 data: function(d) {
-                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && userType != 19 && userType != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && id_rol_general != 19 && id_rol_general != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                         return '';
                     } else { // ES EL ASESOR DEL EXPEDIENTE O ES UN GERENTE O SUBIDIRECTOR DE MKTD QUIEN CONSULTA
                         return '<center><button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;" rel="tooltip" data-placement="left" title="Ver información"><i class="fas fa-eye"></i></button></center>';
@@ -265,7 +274,6 @@ function cleanComments() {
 
 
 function fillTimeline(v, counter) {
-    console.log('SIN DATOS POR MOSTRAR');
     if(counter > 0){
         $("#comments-list").append('<li class="timeline-inverted">\n' +
             '    <div class="timeline-badge info"></div>\n' +
