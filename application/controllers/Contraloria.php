@@ -1,5 +1,5 @@
 <?php
-use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
+// use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
 
