@@ -368,15 +368,31 @@ class PaquetesCorrida extends CI_Controller
     }
     public function getAutorizaciones()
     {
+      $opcion = $this->input->post("opcion");
+      $anio = $this->input->post("anio");
+      $estatus = $this->input->post("estatus");
+      if($opcion == 1){
         echo json_encode(array("data" => $this->PaquetesCorrida_model->getAutorizaciones($this->id_rol)));
-
+      }else {
+        echo json_encode(array("data" => $this->PaquetesCorrida_model->getAutorizaciones($this->id_rol,$opcion,$anio,$estatus)));
+      }
     }
 
     public function avanceAutorizacion(){
+      $id_autorizacion = $this->input->post("id_autorizacion");
       $estatus = $this->input->post("estatus");
       $tipo = $this->input->post("tipo");
-      //$comentario = 
-      $this->PaquetesCorrida_model->avanceAutorizacion($this->id_rol);
+      $comentario = $tipo == 2 ? $this->input->post("comentario") : 0 ;
+      echo json_encode($this->PaquetesCorrida_model->avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$this->id_rol));
+    }
+
+    public function getHistorialAutorizacion(){
+      $id_autorizacion = $this->input->post("id_autorizacion");
+      echo json_encode($this->PaquetesCorrida_model->getHistorialAutorizacion($id_autorizacion));
+    }
+    public function getCatalogo(){
+      $id_catalogo = $this->input->post("id_catalogo");
+      echo json_encode($this->PaquetesCorrida_model->getCatalogo($id_catalogo));
     }
 
 }

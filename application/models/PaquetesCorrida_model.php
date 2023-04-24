@@ -265,18 +265,53 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                 }
             return $paquetes;   
     }
-    public function getAutorizaciones($id_rol){
-        $estatus = $id_rol == 17 ? '2,3,4' : '1,3,4';
-        return $this->db->query("SELECT aut.*,sd.nombre as sede,opc.nombre as tipoLote,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor
+    public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
+        $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
+        $estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus in(2,3,4)' : ' aut.estatus in(1,3,4)') : '';
+        return $this->db->query("SELECT aut.*,sd.nombre as sede,
+        (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
+        opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
+        (CASE WHEN aut.estatus=1 THEN 'lbl-sky' WHEN aut.estatus=2 THEN 'lbl-yellow' WHEN aut.estatus=3 THEN 'lbl-green' WHEN aut.estatus=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
+        (CASE WHEN aut.estatus_autorizacion = 1 THEN 'Autorizado' ELSE 'No autorizado' END) estatusAutorizacion,
+        (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-sky' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
+        (CASE WHEN aut.superficie=1 THEN 'Menos a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
         INNER JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
         INNER JOIN usuarios us ON us.id_usuario=aut.creado_por
-        WHERE aut.estatus in($estatus)")->result_array();
+        INNER JOIN opcs_x_cats opc2 ON  opc2.id_opcion=aut.estatus AND opc2.id_catalogo=90
+        WHERE $estatusWhere1 $estatusWhere2
+        ")->result_array();
     }
     public function saveAutorizacion($datos){
         var_dump($datos);
-        
+    }
+    public function avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$sesionado){
+            date_default_timezone_set('America/Mexico_City');
+            $hoy2 = date('Y-m-d H:i:s');
+            $datosAvance =  $this->db->query("SELECT * FROM avanceAutorizacion WHERE estatus=$estatus AND tipo=$tipo;")->result_array();
+            $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
+            
+            $comentario = $comentario == 0 ? $datosAvance[0]['comentario'] : $comentario;
+            $estatusRegistro = $tipo == 1 ? 1 : 2;
+            $estatusAutorizacion = $siguienteEstatus == 3 ? ',estatus_autorizacion=1' : '';
+            $resultado = $this->db->query("UPDATE autorizaciones_pventas SET estatus=$siguienteEstatus,modificado_por=$sesionado $estatusAutorizacion WHERE id_autorizacion=$id_autorizacion"); 
+            $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$sesionado,'$hoy2',$estatusRegistro,'$comentario')");
+            if ($resultado === FALSE) { 
+                return 0;
+            } else { 
+                return 1;
+            }
+    }
 
+    public function getHistorialAutorizacion($id_autorizacion){
+        return $this->db->query("SELECT ha.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) creadoPor 
+        FROM historial_autorizacionesPMSI ha
+        INNER JOIN usuarios u ON u.id_usuario=ha.id_usuario
+        WHERE idAutorizacion=$id_autorizacion AND tipo=1 
+        ORDER BY fecha_movimiento desc")->result_array();
+    }
+    public function getCatalogo($id_catalogo){
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=$id_catalogo")->result_array();
     }
 }
