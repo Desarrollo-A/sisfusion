@@ -152,8 +152,8 @@ class PaquetesCorrida extends CI_Controller
                         array_push($datosInsertar, $data_descuento);
                     }
                 }
-                if (isset($_POST[$i . "_2_ListaDescuentosM2_"])) {
-                    $descuentos = $_POST[$i . "_2_ListaDescuentosM2_"];
+                if (isset($_POST[$i . "_2_ListaDescuentosEfectivoporm_"])) {
+                    $descuentos = $_POST[$i . "_2_ListaDescuentosEfectivoporm_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
                         if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
                             $meses_s_i = 0;
@@ -285,7 +285,7 @@ class PaquetesCorrida extends CI_Controller
     } 
     else {
       $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
-      $lastRecords = $this->PaquetesCorrida_model->getDescuentos(0, $id_condicion);
+      $lastRecords = $this->PaquetesCorrida_model->getDescuentosYCondiciones(0, $id_condicion);
       
       echo(json_encode(array("status" => 402, "mensaje" => "Descuento almacenado correctamente", "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }
