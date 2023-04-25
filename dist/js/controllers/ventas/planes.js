@@ -64,14 +64,14 @@ function addDescuento(id_condicion, descripcion){
 
 $("input[data-type='currency']").on({
     keyup: function() {
-        let tipo_d = $('#tipo_d').val();
-            if(tipo_d == 12 || tipo_d == 4){
+        let id_condicion = $('#id_condicion').val();
+            if(id_condicion == 12 || id_condicion == 4){
                 formatCurrency($(this));
             }
     },
     blur: function() { 
-        let tipo_d = $('#tipo_d').val();
-        if(tipo_d == 12 || tipo_d == 4){
+        let id_condicion = $('#id_condicion').val();
+        if(id_condicion == 12 || id_condicion == 4){
             formatCurrency($(this), "blur");
         }
     }
