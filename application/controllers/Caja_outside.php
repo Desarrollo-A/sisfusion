@@ -1882,9 +1882,9 @@ class Caja_outside extends CI_Controller {
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;
-                        $arreglo['id_subdirector'] = $data->id_subdirector;
-                        $arreglo['id_regional'] = $data->id_regional;
-                        $arreglo['id_regional_2'] = $data->id_regional_2;
+                        $arreglo['id_subdirector'] = $data->asesores[0]->idSubdirector;
+                        $arreglo['id_regional'] = $data->asesores[0]->idRegional1;
+                        $arreglo['id_regional_2'] = $data->asesores[0]->idRegional2;
                         $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
