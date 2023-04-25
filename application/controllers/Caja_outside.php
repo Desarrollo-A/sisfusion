@@ -491,8 +491,8 @@ class Caja_outside extends CI_Controller {
 
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
-        $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
-
+       // $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
+ 
         if( $datosView->concepto == 'REUBICACIÓN'){
             if(ISSET( $datosView->fechaApartadoReubicacion)){
                 if( $datosView->fechaApartadoReubicacion == null || $datosView->fechaApartadoReubicacion == '' ){
@@ -575,9 +575,9 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'id_subdirector' => $data['lider'][0]['id_subdirector'],
-            'id_regional' => $data['lider'][0]['id_regional'],
-            'id_regional_2' => $data['lider'][0]['id_regional_2'],
+            'id_subdirector' => $datosView->id_subdirector,
+            'id_regional' => $datosView->id_regional,
+            'id_regional_2' => $datosView->id_regional_2,
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
@@ -1846,7 +1846,7 @@ class Caja_outside extends CI_Controller {
                     //$recibo_pago = "CONFPAGO".date('dmYHis');
                     $recibo_pago = "CONFPAGO" . date('dmYHis') . rand(0, 999);
 
-                    $dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
+                    //$dataLider = $this->caja_model_outside->getLider($data->asesores[0]->idGerente);
 
                     if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
@@ -1882,9 +1882,9 @@ class Caja_outside extends CI_Controller {
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;
-                        $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
-                        $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
+                        $arreglo['id_subdirector'] = $data->asesores[0]->idSubdirector;
+                        $arreglo['id_regional'] = $data->asesores[0]->idRegional1;
+                        $arreglo['id_regional_2'] = $data->asesores[0]->idRegional2;
                         $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
@@ -2216,7 +2216,7 @@ class Caja_outside extends CI_Controller {
     public function saveSalesPartner()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $dataLider = $this->caja_model_outside->getLider($data->id_gerente);
+       // $dataLider = $this->caja_model_outside->getLider($data->id_gerente);
 
         if ($data->id_coordinador == $data->id_asesor) {
             $voBoCoord = 0;
@@ -2232,15 +2232,15 @@ class Caja_outside extends CI_Controller {
             "id_asesor" => $data->id_asesor,
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
-            "id_subdirector" => $dataLider[0]['id_subdirector'],
+            "id_subdirector" => $data->id_subdirector,
 
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "creado_por" => $data->id_usuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
-            "id_regional" => $dataLider[0]['id_regional'],
-            "id_regional_2" => $dataLider[0]['id_regional_2']
+            "id_regional" => $data->id_regional,
+            "id_regional_2" => $data->id_regional_2
         );
 
         $clientInformation = $this->caja_model_outside->getClientInformation($data->id_cliente)->row();
@@ -2309,14 +2309,14 @@ class Caja_outside extends CI_Controller {
         $dataJson = json_decode(file_get_contents("php://input"));
         $id_cliente = $dataJson->id_cliente;
         if ($dataJson->id_gerente != null) {
-            $data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
+            //$data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
             $data = array(
                 "id_asesor" => $dataJson->id_asesor,
                 "id_coordinador" => $dataJson->id_coordinador == $dataJson->id_asesor ? 0 : $dataJson->id_coordinador,
                 "id_gerente" => $dataJson->id_gerente,
-                "id_subdirector" => $data['lider'][0]['id_subdirector'],
-                "id_regional" => $data['lider'][0]['id_regional'],
-                "id_regional_2" => $data['lider'][0]['id_regional_2'],
+                "id_subdirector" => $dataJson->id_subdirector,
+                "id_regional" => $dataJson->id_regional,
+                "id_regional_2" => $dataJson->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $dataJson->id_usuario
             );
@@ -2623,6 +2623,17 @@ class Caja_outside extends CI_Controller {
 
     public function getTipoLote() {
         echo json_encode($this->caja_model_outside->getTipoLote());
+    }
+
+    public function getAllSubdirector()
+    {
+        $datos["subdirector"] = $this->caja_model_outside->allSubdirector();
+        echo json_encode($datos);
+    }
+    public function allUserVentas()
+    {
+        $datos["usuariosVentas"] = $this->caja_model_outside->allUserVentas();
+        echo json_encode($datos);
     }
     
 }
