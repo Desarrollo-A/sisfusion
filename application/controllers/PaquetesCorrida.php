@@ -241,8 +241,9 @@ class PaquetesCorrida extends CI_Controller
           "fecha_modificacion" => $hoy2,
            "modificado_por" => $user_sesionado
         );
-        $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
-        //$this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
+        // $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
+        // $this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
+        $this->General_model->addRecord('autorizaciones_pventas',$dataInsertAutPventas);
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
             echo json_encode(0);

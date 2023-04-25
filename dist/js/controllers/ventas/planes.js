@@ -1,7 +1,53 @@
 let descuentosYCondiciones;
 var primeraCarga = 1;
+let id_paquete=0;
+let descripcion='';
+let id_descuento=0;
 
-const arr = [];
+$(document).ready(function() {
+    $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
+        $('[data-toggle="tooltip"]').tooltip()
+        var len = data.length;
+        $("#sede").append($('<option>').val("").text("SELECCIONA UNA OPCIÓN"));
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_sede']+','+data[i]['abreviacion'];
+            var name = data[i]['nombre'];
+            $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#sede").selectpicker('refresh');
+    }, 'json');
+
+    //Función para mandar parametros por defecto en filtros de fecha
+    setIniDatesXMonth("#fechainicio", "#fechafin");
+    //Función para mandar estatus vacio por defecto 
+    sinPlanesDiv();
+});
+
+$("#sede").change(function() {
+    $('#spiner-loader').removeClass('hide');
+    $('#residencial option').remove();
+    var parent = $(this).val();
+    var	datos = parent.split(',')
+    var	id_sede = datos[0];
+
+    $.post('getResidencialesList/'+id_sede, function(data) {
+        $('#spiner-loader').addClass('hide');
+        $("#residencial").append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
+        var len = data.length;
+        for( var i = 0; i<len; i++){
+            var name = data[i]['nombreResidencial']+' '+data[i]['descripcion'];
+            var id = data[i]['idResidencial'];
+            var descripcion = data[i]['descripcion'];
+            $("#residencial").append(`<option value='${id}'>${name}</option>`);
+        }   
+        if(len<=0){
+            $("#residencial").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#residencial").selectpicker('refresh');
+    }, 'json'); 
+});
+
+$("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
 
 function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -103,7 +149,7 @@ $("#addNewDesc").on('submit', function(e){
     });
 });
 
-
+//Fn para obtener las condiciones y descuentos que pertenecen a ellas (tablas condiciones en BD)
 function getDescuentosYCondiciones(primeraCarga, tipoCondicion){
     $('#spiner-loader').removeClass('hide');
 
@@ -126,6 +172,7 @@ function getDescuentosYCondiciones(primeraCarga, tipoCondicion){
     });
 }
 
+//Fn para construir las tablas según el número de condiciones existente, esto en la modal para ver condiciones
 async function construirTablas(){
     if(primeraCarga == 1){
         descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
@@ -199,52 +246,65 @@ async function construirTablas(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-var tr;
+function templateCard(index, objPlan = ''){
+    let value = `${objPlan != '' ? 'value="' + objPlan['descripcion'] + '"' : ''}`
+    $('#showPackage').append(`
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${index}">
+        <div class="cardPlan dataTables_scrollBody">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="title d-flex justify-center align-center">
+                            <h3 class="card-title">Plan</h3>
+                            <button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${index}" onclick="removeElementCard('card_${index}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <input type="text" class="inputPlan" required name="descripcion_${index}" id="descripcion_${index}" placeholder="Descripción del plan (*)" `+value+`>
+                        <div class="mt-1" id="checks_${index}">
+                            <div class="loadCard w-100">
+                                <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
+                            </div>
+                        </div>						
+                        <div class="form-group col-md-12" id="tipo_descuento_select_${index}" hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`);
+    $('[data-toggle="tooltip"]').tooltip();
+}
 
-$(document).ready(function() {
-    $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
-        $('[data-toggle="tooltip"]').tooltip()
-        var len = data.length;
-        $("#sede").append($('<option>').val("").text("SELECCIONA UNA OPCIÓN"));
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_sede']+','+data[i]['abreviacion'];
-            var name = data[i]['nombre'];
-            $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#sede").selectpicker('refresh');
-    }, 'json');
-    setIniDatesXMonth("#fechainicio", "#fechafin");
-    sinPlanesDiv();
-});
-
-$("#sede").change(function() {
-    $('#spiner-loader').removeClass('hide');
-    $('#residencial option').remove();
-    var parent = $(this).val();
-    var	datos = parent.split(',')
-    var	id_sede = datos[0];
-
-    $.post('getResidencialesList/'+id_sede, function(data) {
-        $('#spiner-loader').addClass('hide');
-        $("#residencial").append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
-        var len = data.length;
-        for( var i = 0; i<len; i++){
-            var name = data[i]['nombreResidencial']+' '+data[i]['descripcion'];
-            var id = data[i]['idResidencial'];
-            var descripcion = data[i]['descripcion'];
-            $("#residencial").append(`<option value='${id}'>${name}</option>`);
-        }   
-        if(len<=0){
-            $("#residencial").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#residencial").selectpicker('refresh');
-    }, 'json'); 
-});
-
-$("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
-var id_paquete=0;
-var descripcion='';
-var id_descuento=0;
+function templateSelectsByCard(indexNext, indexCondiciones, idCondicion, nombreCondicion){
+    $("#tipo_descuento_"+indexNext).append(`<option value='${idCondicion}'>${nombreCondicion}</option>`);
+    $("#checks_"+indexNext).append(`
+    <div class="row boxAllDiscounts">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="check__item" for="inlineCheckbox1">
+                <label>
+                    <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${indexCondiciones}" value="${idCondicion}" onclick="PrintSelectDesc2(this, '${nombreCondicion}', ${idCondicion}, ${indexCondiciones}, ${indexNext})">
+                    ${nombreCondicion}
+                    <span class="custom__check"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="boxDetailDiscount hidden">
+                <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${indexCondiciones}"></div>
+                <div class="container-fluid rowDetailDiscount hidden">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
+                    </div>
+                    <div class="container-flluid" id="listamsi_${indexNext}_${indexCondiciones}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`);
+}
 
 function SavePaquete(){
     let formData = new FormData(document.getElementById("form-paquetes"));
@@ -279,6 +339,50 @@ function SavePaquete(){
     });
 }
 
+async function ConsultarPlanes(){
+    $('#spiner-loader').removeClass('hide');
+    if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
+        ClearAll2();
+
+        if(primeraCarga == 1){
+            descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
+            descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
+            primeraCarga = 0;
+        }
+
+        $.post('getPaquetes',params, function(data) {
+            if( data.length >= 1){
+                //MOSTRAR TODOS LOS PLANES EXISTENTES
+                data[0].paquetes.shift();
+                let dataPaquetes = data[0].paquetes;
+                dataPaquetes.forEach(function (element, indexPaquetes) {
+                    var indexActual = document.getElementById('index');
+                    var indexNext = (document.getElementById('index').value - 1) + 2;
+                    indexActual.value = indexNext;
+                    var lenDescYCond = descuentosYCondiciones.length;
+                    templateCard(indexNext, element);
+
+                    $("#checks_"+indexNext).html('');
+                    $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
+                    
+
+                    llenarTemplateCard(indexNext, element['id_paquete'], lenDescYCond, indexPaquetes);
+                    validateNonePlans();
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
+            }
+            else{
+                alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
+            }
+        }, 'json');
+    }
+    else{
+        alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
+    }        
+}
+
 $("#form-paquetes").on('submit', function(e){ 
     e.preventDefault();
     $("#ModalAlert").modal();
@@ -304,123 +408,21 @@ function ClearAll(){
     $("#btn_save").addClass('d-none');
 }
 
-/**--------------------------FN PARA MEJORA DE CARGA DE PLANES, COSULTAR PLANES---------------------- */
-function ConsultarPlanes(){
-    console.log("consulta");
-$('#spiner-loader').removeClass('hide');
-debugger;
-
-if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-    let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
-    ClearAll2();
-
-    $.post('getPaquetes',params, function(data) {
-        console.log(data);
-        let countPlanes = data.length;
-        if(countPlanes >= 1){
-            //MOSTRAR TODOS LOS PLANES EXISTENTES
-            data[0].paquetes.unshift({});
-            let dataPaquetes = data[0].paquetes;
-            for (let index = 1; index < dataPaquetes.length; index++){
-                var indexActual = document.getElementById('index');
-                var indexNext = (document.getElementById('index').value - 1) + 2;
-                indexActual.value = indexNext;
-                $('#showPackage').append(`
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${indexNext}">
-                    <div class="cardPlan dataTables_scrollBody">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="title d-flex justify-center align-center">
-                                        <h3 class="card-title">Plan</h3>
-                                        <button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${indexNext}" onclick="removeElementCard('card_${indexNext}')"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <input type="text" class="inputPlan" required name="descripcion_${indexNext}" id="descripcion_${indexNext}" value="${dataPaquetes[index].descripcion}">
-                                    <div class="mt-1" id="checks_${indexNext}">
-                                        <div class="loadCard w-100">
-                                            <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
-                                        </div>
-                                    </div>						
-                                    <div class="form-group col-md-12" id="tipo_descuento_select_${indexNext}" hidden>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`);
-
-                llenarDiv(indexNext,dataPaquetes[index].id_paquete,dataPaquetes.length,index);
-                
-
-                validateNonePlans();
-
-                $('[data-toggle="tooltip"]').tooltip();
-                $('.popover-dismiss').popover({
-                    trigger: 'focus'
-                });
-        
-            
-            }
-        }
-        else{
-            alerts.showNotification("top", "right", "No se encontraron planes con los datos proporcionados", "warning");
-        }
-    }, 'json');
-
-    }
-    else{
-        alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
-    }
-            
-}
 
 // indexNext: Index general de planes; id_paquete: id_paquete; leng: No. total de paquetes encontrados según los parámetros iniciales; ifor: index de iteración del número de paquete 
-async function llenarDiv(indexNext,id_paquete,leng,ifor){
-    $.post('getTipoDescuento', function(data2) {
-        $("#checks_"+indexNext).html('');
-        $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
-        var len = data2.length;
+async function llenarTemplateCard(indexNext,id_paquete,leng,ifor){
+    descuentosYCondiciones.forEach(function (element, indexCondiciones) {
+        let idCondicion = element['condicion']['id_condicion'];
+        let nombreCondicion = element['condicion']['descripcion'];
         
-        for( var i = 0; i<len; i++){
-            var id = data2[i]['id_tcondicion'];
-            var descripcion = data2[i]['descripcion'];
-            $("#tipo_descuento_"+indexNext).append(`<option value='${id}'>${descripcion}</option>`);
-            $("#checks_"+indexNext).append(`
-            <div class="row boxAllDiscounts">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="check__item" for="inlineCheckbox1">
-                        <label>
-                            <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${i}" value="${id}" onclick="PrintSelectDesc(this, ${id},${i},${indexNext})">
-                            ${descripcion}
-                            <span class="custom__check"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="boxDetailDiscount hidden">
-                        <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${i}"></div>
-                        <div class="container-fluid rowDetailDiscount hidden">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
-                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
-                            </div>
-                            <div class="container-flluid" id="listamsi_${indexNext}_${i}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`);
-            llenarSelects(indexNext,id_paquete,i,id,leng,ifor);
-        }
+        templateSelectsByCard(indexNext, indexCondiciones, idCondicion, nombreCondicion);
+        // llenarSelects(indexNext,id_paquete,i,data2[i]['id_tcondicion'],leng,ifor);
+    });
 
-        if(len<=0){
-            $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        $("#tipo_descuento_"+indexNext).selectpicker('refresh');
-    }, 'json');               
+    if( descuentosYCondiciones.length <= 0 ){
+        $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+    }
+    $("#tipo_descuento_"+indexNext).selectpicker('refresh');             
 }
 
 // indexNext: Index general de planes; id_paquete: id_paquete; i: index de iteración de las condiciones; id: id_condicion; len: No. total de paquetes encontrados según los parámetros iniciales; ifor: index de iteración del número de paquete
@@ -444,98 +446,6 @@ async function llenarSelects(indexNext,id_paquete,i,id,len,ifor){
     })
 }
 
-/********************************/		
-function templateCard(index){
-    $('#showPackage').append(`
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="card_${index}">
-        <div class="cardPlan dataTables_scrollBody">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="title d-flex justify-center align-center">
-                            <h3 class="card-title">Plan</h3>
-                            <button type="button" class="btn-trash" data-toggle="tooltip" data-placement="left" title="Eliminar plan" id="btn_delete_${index}" onclick="removeElementCard('card_${index}')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <input type="text" class="inputPlan" required name="descripcion_${index}" id="descripcion_${index}" placeholder="Descripción del plan (*)">
-                        <div class="mt-1" id="checks_${index}">
-                            <div class="loadCard w-100">
-                                <img src= '`+general_base_url+`dist/img/loadingMini.gif' alt="Icono gráfica" class="w-30">
-                            </div>
-                        </div>						
-                        <div class="form-group col-md-12" id="tipo_descuento_select_${index}" hidden>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`);
-    $('[data-toggle="tooltip"]').tooltip();
-}
-
-async function GenerarCard(){
-    if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-        var indexActual = document.getElementById('index');
-        var indexNext = (document.getElementById('index').value - 1) + 2;
-        indexActual.value = indexNext;
-        
-        templateCard(indexNext);
-        if(primeraCarga == 1){
-            descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
-            descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
-            primeraCarga = 0;
-        }
-        
-        $("#checks_"+indexNext).html('');
-        $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
-        var len = descuentosYCondiciones.length;
-
-        descuentosYCondiciones.forEach(function (element, indexCondiciones) {
-            let idCondicion = element['condicion']['id_condicion'];
-            let nombreCondicion = element['condicion']['descripcion'];
-            //Quitar caracteres especiales a nombre de la condición
-            $("#tipo_descuento_"+indexNext).append(`<option value='${idCondicion}'>${nombreCondicion}</option>`);
-            $("#checks_"+indexNext).append(`
-            <div class="row boxAllDiscounts">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="check__item" for="inlineCheckbox1">
-                        <label>
-                            <input type="checkbox" class="default__check d-none" id="inlineCheckbox1_${indexNext}_${indexCondiciones}" value="${idCondicion}" onclick="PrintSelectDesc2(this, '${nombreCondicion}', ${idCondicion}, ${indexCondiciones}, ${indexNext})">
-                            ${nombreCondicion}
-                            <span class="custom__check"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="boxDetailDiscount hidden">
-                        <div class="w-100 mb-1" id="selectDescuentos_${indexNext}_${indexCondiciones}"></div>
-                        <div class="container-fluid rowDetailDiscount hidden">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
-                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pr-0"><p class="m-0 txtMSI">msi</p></div>
-                            </div>
-                            <div class="container-flluid" id="listamsi_${indexNext}_${indexCondiciones}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`);
-        });
-
-        if(len<=0){
-            $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-
-        $("#tipo_descuento_"+indexNext).selectpicker('refresh');
-        validateNonePlans();
-    }
-    else{
-        alerts.showNotification("top", "right", "Debe llenar todos los campos requeridos.", "warning");
-    }
-}
-
 function ValidarOrden(indexN,i){
     let seleccionado = $(`#orden_${indexN}_${i}`).val();	
     for (let m = 0; m < 4; m++) {
@@ -546,46 +456,6 @@ function ValidarOrden(indexN,i){
             }	
         }
     }
-}
-
-function validarMsi(indexN,i){
-    let valorIngresado = $(`#input_msi_${indexN}_${i}`).val();
-    if(valorIngresado < 1){
-        $(`#btn_save_${indexN}_${i}`).prop( "disabled", true );
-    }
-    else{
-        $(`#btn_save_${indexN}_${i}`).prop( "disabled", false );
-    }
-}
-
-function ModalMsi(indexN,i,select,id,text,pesos = 0){
-    const Modalbody = $('#ModalMsi .modal-body');
-    const Modalfooter = $('#ModalMsi .modal-footer');
-    Modalbody.html('');
-    Modalfooter.html('');
-    Modalbody.append(`
-    <h4>¿Este descuento tiene meses sin intereses?</h4>
-    <div class="row text-center">
-        <div class="col-md-12 text-center"></div>
-        <div class="col-md-10 text-center">
-            <div class="form-group text-center">
-                <input type="number" placeholder="Cantidad" onkeyup="validarMsi(${indexN},${i})" class="input-descuento" id="input_msi_${indexN}_${i}">
-            </div>
-        </div>
-    </div>`);
-
-    Modalbody.append(`
-    <div class="row text-center">
-        <div class="col-md-6">
-            <button class="btn btn-success btn-circle btn-lg" data-toggle="tooltip" data-placement="left" title="Agregar MSI"  disabled onclick="AddMsi(${indexN},${i},'${select}',${id},${text},${pesos});" name="disper_btn"  id="btn_save_${indexN}_${i}"><i class="fas fa-check"></i></button>
-        </div>
-        <div class="col-md-6">
-            <button class="btn btn-danger btn-circle btn-lg" data-toggle="tooltip" data-placement="right" title="No tiene MSI" data-dismiss="modal"><i class="fas fa-times"></i></button>
-        </div>
-    </div>`);
-
-    $("#ModalMsi").modal();
-    $('[data-toggle="tooltip"]').tooltip()
 }
 
 function llenar(e,indexGral,index,datos,id_select,id,leng,ifor){
@@ -646,8 +516,8 @@ function PrintSelectDesc2(e, nombreCondicion, idCondicion, indexCondiciones, ind
             dropdownCssClass: "custom-dropdown", 
             closeOnSelect : false, 
             placeholder : "SELECCIONA UNA OPCIÓN", 
-            tokenSeparators: [',', ' '], 
-            allow_single_deselect: false
+            // tokenSeparators: [',', ' '], 
+            // allow_single_deselect: false
         });
 
         //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
@@ -657,7 +527,6 @@ function PrintSelectDesc2(e, nombreCondicion, idCondicion, indexCondiciones, ind
             $element.detach();
             $(this).append($element);
             $(this).trigger("change");
-            console.log(idCondicion);
             if(idCondicion != 13){
                 let lblListaDescuentos = 'ListaDescuentos' + nombreCondicion + '_';
                 crearBoxDetailDescuentos(indexGral, indexCondiciones, `${lblListaDescuentos}`, $element[0].value, $element[0].label);
@@ -683,7 +552,7 @@ function PrintSelectDesc2(e, nombreCondicion, idCondicion, indexCondiciones, ind
         
         descuentosArray.forEach(element => {
             let porcentaje = element['porcentaje'];
-            let id_descuento = element['id_descuento'];
+            let id_descuento = `${idCondicion == 13 ? element['id_descuento'] +','+ element['porcentaje'] : element['id_descuento'] }`;
             
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${porcentaje}${idCondicion != 13 ? '%' : ''}</option>`);
         });
@@ -740,7 +609,6 @@ function removeElementCard(divNum) {
     $('#iddiv').val(divNum);
     $('#ModalRemove').modal('show');
 }
-crearBoxDetailDescuentos(indexGral, indexCondiciones, `${lblListaDescuentos}`, $element[0].value, $element[0].label);
 
 /* indexGral: Index general;  */
 function crearBoxDetailDescuentos(indexNext, indexCondiciones, select, id, text, pesos = 0){
