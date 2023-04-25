@@ -8969,14 +8969,7 @@ function descuentos_universidad($clave , $data){
         return $query->result();
     }
 
-   
-    public function getMotivosControversia()
-    {
-        $cmd = "SELECT * FROM opcs_x_cats wh
-        WHere id_catalogo = 88";
-        $query = $this->db->query($cmd);
-        return $query->result_array();   
-    }
+ 
 
     public function updatePrestamosEdit($clave, $data){
             try {
@@ -8988,6 +8981,13 @@ function descuentos_universidad($clave , $data){
             catch(Exception $e) {
                 return $e->getMessage();
             }     
+    }
+    public function getMotivosControversia()
+    {
+        $cmd = "SELECT * FROM opcs_x_cats wh
+        WHere id_catalogo = 88";
+        $query = $this->db->query($cmd);
+        return $query->result_array();   
     }
 
     // public function lotesPermitidos(){
