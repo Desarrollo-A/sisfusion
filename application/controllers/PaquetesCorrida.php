@@ -378,12 +378,12 @@ class PaquetesCorrida extends CI_Controller
       }
     }
 
-    public function avanceAutorizacion(){
+    public function avanceAutorizacion(){ 
       $id_autorizacion = $this->input->post("id_autorizacion");
       $estatus = $this->input->post("estatus");
       $tipo = $this->input->post("tipo");
       $comentario = $tipo == 2 ? $this->input->post("comentario") : 0 ;
-      echo json_encode($this->PaquetesCorrida_model->avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$this->id_rol));
+      echo json_encode($this->PaquetesCorrida_model->avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$this->session->userdata('id_usuario')));
     }
 
     public function getHistorialAutorizacion(){
