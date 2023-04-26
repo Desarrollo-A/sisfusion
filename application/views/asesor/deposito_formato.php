@@ -1,268 +1,292 @@
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
+<style>
+    
+.switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 25px;
+    border-radius: 20px;
+    background: #dfd9ea;
+    transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    vertical-align: middle;
+    cursor: pointer;
+}
+.switch::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: #fafafa;
+    border-radius: 50%;
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.switch:active::before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+}
+input:checked + .switch {
+    background: #72da67;
+}
+input:checked + .switch::before {
+    left: 27px;
+    background: #fff;
+}
+input:checked + .switch:active::before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+}
+    </style>
+
 <body onload="cargarInputs()" onsubmit="guardarInputs()">
 
 <div class="wrapper">
     <?php
-    //echo $onlyView;
-    /*-------------------------------------------------------*/
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    // $this->load->view('template/sidebar', $datos);
-
+        $datos = array();
+        $datos = $datos4;
+        $datos = $datos2;
+        $datos = $datos3;
+    ?>
+    <?php
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){
+            $readOnly = '';
+            $statsInput = '';
+            $html_action = '<form method="post" class="form-horizontal" action="'.base_url().'index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">';
+            $html_action_end = '</form>';
+        }
+        else{
+            $readOnly = 'readonly';
+            $statsInput = 'disabled';
+            $html_action = '';
+            $html_action_end = '';
+        }
+        
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834){
+            $readonlyNameToAsesor = 'readonly';
+        }
+        else{
+            $readonlyNameToAsesor='';
+        }    
     ?>
 
-
-<?php
-    if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752
-        || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 ||
-        $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 ||
-        $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0)
-    {
-        $readOnly = '';
-        $statsInput = '';
-        $html_action = '<form method="post" class="form-horizontal" action="'.base_url().'index.php/Asesor/editar_ds/" target="_blank" enctype="multipart/form-data">';
-        $html_action_end = '</form>';
-    }
-    else
-    {
-        $readOnly = 'readonly';
-        $statsInput = 'disabled';
-        $html_action = '';
-        $html_action_end = '';
-
-    }
-    if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752
-        || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834)
-    {
-        $readonlyNameToAsesor = 'readonly';
-    }
-    else
-    {
-        $readonlyNameToAsesor='';
-    }
-    /*print_r($cliente)*/
-    ?>
-
-<div class="container pt-5">
-    <div class="card">
-        <div class="container-fluid p-5">
-            <div class="row" id="encabezadoDS">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                    <img src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales" style="width:100%;align-self: center;"/>
+    <div class="container pt-5">
+        <div class="card">
+            <div class="container-fluid p-5">
+                <div class="row" id="encabezadoDS">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <img src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales" style="width:100%;align-self: center;"/>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <h3 class="m-0 mb-2">DEPÓSITO DE SERIEDAD
+                            <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
+                            <?php if ($this->session->userdata('id_rol') == 17) { ?>
+                                <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
+                            <?php }?>
+                        </h3>  
+                        <h6 class="m-0">Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?> </h6>
+                        <h6 class="m-0">Folio: <?php echo $cliente[0]->clave; ?></h6>
+                            <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
+                        <input type="hidden" name="id_cliente" id="id_cliente"  value="<?php echo $cliente[0]->id_cliente; ?>">
+                    </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                    <h3 class="m-0 mb-2">DEPÓSITO DE SERIEDAD
-                        <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
-                        <?php if ($this->session->userdata('id_rol') == 17) { ?>
-                            <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
-                        <?php }?>
-                    </h3>  
-                    <h6 class="m-0">Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?> </h6>
-                    <h6 class="m-0">Folio: <?php echo $cliente[0]->clave; ?></h6>
-                        <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
-                    <input type="hidden" name="id_cliente" id="id_cliente"  value="<?php echo $cliente[0]->id_cliente; ?>">
-                </div>
-            </div>
-            <div class="row pt-3" id="radioDS">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                    <h4 class="label-on-left">DESARROLLO</h4>
-                    <div class="container">
-                        <div class="radio_container">
-                            <input type="radio" name="radio" id="one" checked>
-                            <label for="one">QRO</label>
-                            <input type="radio" name="radio" id="two">
-                            <label for="two">LN</label>
-                            <input type="radio" name="radio" id="three">
-                            <label for="three">CLY</label>
-                            <input type="radio" name="radio" id="four">
-                            <label for="four">SLP</label>
-                            <input type="radio" name="radio" id="five">
-                            <label for="five">MER</label>
-                            <input type="radio" name="radio" id="six">
-                            <label for="six">SMA</SMAll></label>
-                            <input type="radio" name="radio" id="seven">
-                            <label for="seven">CNC</label>
+                <div class="row pt-3" id="radioDS">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <h4 class="label-on-left">DESARROLLO</h4>
+                        <div class="container">
+                            <div class="radio_container">
+                                <label for="one">QRO</label>
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
+                                <label for="two">LN</label>
+
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 9 || $cliente[0]->desarrollo == 10) { echo "checked=true"; } ?> value="3"/>
+                                <label for="three">CLY</label>
+
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 4 || $cliente[0]->desarrollo == 14 || $cliente[0]->desarrollo == 28 || $cliente[0]->desarrollo == 30) { echo "checked=true"; } ?> value="4"/>
+                                <label for="four">SLP</label>
+
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 12 || $cliente[0]->desarrollo == 17 || $cliente[0]->desarrollo == 25) { echo "checked=true"; } ?> value="5"/>
+                                <label for="five">MER</label>
+
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 23) { echo "checked=true"; } ?> value="5"/>
+                                <label for="six">SMA</label>
+                                
+                                <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27) { echo "checked=true"; } ?> value="5"/> 
+                                <label for="seven">CNC</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <h4 class="label-on-left">TIPO LOTE</h4>
+                        <div class="container">
+                            <div class="radio_container">
+                                <input type="radio" name="tipoLote_valor" onclick="return false;" id="tipoLote_valor" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipoLote == 0) { echo "checked=true"; } ?>>
+                                <label for="one1">HABITACIONAL</label>
+
+                                <input type="radio" name="tipoLote_valor" onclick="return false;" id="tipoLote_valor" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipoLote == 1) { echo "checked=true"; } ?>>
+                                <label for="two2">COMERCIAL</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                    <h4 class="label-on-left">TIPO LOTE</h4>
-                    <div class="container">
-                        <div class="radio_container">
-                            <input type="radio" name="lotHab" id="lotHab" checked>
-                            <label for="one1">HABITACIONAL</label>
-                            <input type="radio" name="lotCom" id="lotCom">
-                            <label for="two2">COMERCIAL</label>
+                <div class="row pt-3" id="checkDS">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4 class="label-on-left">PERSONA FÍSICA</h4>
+                        <div class="container boxChecks p-0">
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idOficial_pf == 1) {echo "checked";}?>>
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idDomicilio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idDomicilio_pf == 1) {echo "checked";}?>>
+                                    <span>COMPROBANTE DE DOMICILIO</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="actaMatrimonio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaMatrimonio_pf == 1) {echo "checked";}?>>
+                                    <span>ACTA DE MATRIMONIO</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row pt-3" id="checkDS">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <h4 class="label-on-left">PERSONA FÍSICA</h4>
-                    <div class="container boxChecks p-0">
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="nombre">
-                                <span>IDENTIFICACIÓN OFICIAL</span>
-                            </label>
-                        </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="apellido_paterno">
-                                <span>COMPROBANTE DE DOMICILIO</span>
-                            </label>
-                        </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
-                                <span>ACTA DE MATRIMONIO</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3" id="checkDS">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <h4 class="label-on-left">PERSONA MORAL</h4>
-                    <div class="container boxChecks p-0">
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
-                                <span>PODER</span>
-                            </label>
-                        </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
-                                <span>ACTA CONSTITUTIVA</span>
-                            </label>
-                        </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
-                            <label class="m-0 checkstyleDS">
-                                <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
-                                <span>IDE. OFICIAL APODERADO</span>
-                            </label>
+                <div class="row pt-3" id="checkDS">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4 class="label-on-left">PERSONA MORAL</h4>
+                        <div class="container boxChecks p-0">
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="poder_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->poder_pm == 1) {echo "checked";}?>>
+                                    <span>PODER</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="actaConstitutiva_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaConstitutiva_pm == 1) {echo "checked";}?>>
+                                    <span>ACTA CONSTITUTIVA</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
+                                    <span>IDE. OFICIAL APODERADO</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="row pt-3" id="boxFactura"> 
+                    <div class="col-md-2 checkbox checkbox-inline">
+                        <label>Factura</label>
+                        <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>
+                        <label class="switch" for="rfc_check"></label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="form-group label-floating">
+                            <label class="control-label" style="display:none;" name="regimenl" id="regimenl">
+                                RÉGIMEN FISCAL
+                            </label>
+                            <select name="regimenFiscal" id="regimenFiscal" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                            >
+                                <option value=""> SELECCIONA UNA OPCIÓN </option>
+                                <?php
+                                for($n=0; $n < count($datoFiscal) ; $n++){
+                                    if($datoFiscal[$n]['id_opcion'] == $cliente[0]->regimen_fac){
+                                        echo '<option value="'.$datoFiscal[$n]['id_opcion'].'" selected>'.$datoFiscal[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$datoFiscal[$n]['id_opcion'].'">'.$datoFiscal[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group label-floating">
+                                <label class="control-label" name="rfcl" id="rfcl" style="display:none;"> 
+                                    RFC
+                                </label> 
+                                <input type="text" pattern="[A-Za-z0-9]+" class="form-control" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
+                                onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group label-floating">
+                            <label class="control-label" style="display:none;" name="codigol" id="codigol">
+                                CÓDIGO POSTAL
+                            </label>
+                            <input type="number" class="form-control" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?>
+                                    onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
+                        </div>
+                    </div>    
+                </div>
+            
 
 
-            <div class="row pt-3" id="boxFactura"> 
-            <div class="col-md-2 checkbox checkbox-inline">
-                                    <label style="font-size: 0.9em;">
-                                        <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>FACTURA
+                <div class="row">
+                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <label class="col-sm-2 label-on-left">RESIDENCIA(<small style="color: red;">*</small>):</label>
+                        <div class="col-sm-10 checkbox-radios">
+                            <div class="col-md-6 checkbox-radios required">
+                                <div class="radio text-right">
+                                    <label style="  font-size: 0.9em;" id="label1">
+                                        <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_nc == 0) {
+                                                echo "checked=true";
+                                            }
+                                            ?>> NACIONAL
                                     </label>
                                 </div>
-
-                                <div class="col-md-2">
-                                    <div class="form-group label-floating">
-                                            <label class="control-label" name="rfcl" id="rfcl" style="font-size: 0.8em; display:none;"> 
-                                                RFC
-                                            </label>
-                                            <input type="text" pattern="[A-Za-z0-9]+" class="form-control" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
-                                                onKeyPress="if(this.value.length==13) return false;" style="font-size: 0.9em;" value="<?php echo $cliente[0]->rfc; ?>">           
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group label-floating">
-                                        <label class="control-label" style="font-size: 0.8em; display:none;" name="regimenl" id="regimenl">
-                                            RÉGIMEN FISCAL
-                                        </label>
-                                        <!-- <div id="boxRegimenF"> -->
-                                            <select name="regimenFiscal" id="regimenFiscal" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
-                                                style="font-size: 0.9em;">
-                                                <option value=""> SELECCIONA UNA OPCIÓN </option>
-                                                <?php
-                                                for($n=0; $n < count($regFis) ; $n++)
-                                                {
-                                                    if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac)
-                                                    {
-                                                        echo '<option value="'.$regFis[$n]['id_opcion'].'" selected>'.$regFis[$n]['nombre'].'</option>';
-                                                    }
-                                                    else{
-                                                        echo '<option value="'.$regFis[$n]['id_opcion'].'">'.$regFis[$n]['nombre'].'</option>';
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        <!-- </div>        -->
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group label-floating">
-                                        <label class="control-label" style="font-size: 0.8em; display:none;" name="codigol" id="codigol">
-                                            CÓDIGO POSTAL
-                                        </label>
-                                        <input type="number" class="form-control" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?>
-                                               onKeyPress="if(this.value.length==13) return false;" style="font-size: 0.9em;" value="<?php echo $cliente[0]->cp_fac; ?>">        
-                                    </div>
-                  
-                                </div>
-            </div>    
-            
-            <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <label class="col-sm-2 label-on-left">RESIDENCIA(<small style="color: red;">*</small>):</label>
-                    <div class="col-sm-10 checkbox-radios">
-                        <div class="col-md-6 checkbox-radios required">
-                            <div class="radio text-right">
-                                <label style="  font-size: 0.9em;" id="label1">
-                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?>
-                                        <?php if ($cliente[0]->tipo_nc == 0) {
-                                            echo "checked=true";
-                                        }
-                                        ?>> NACIONAL
-                                </label>
                             </div>
-                        </div>
 
-                        <div class="col-md-6 checkbox-radios required">
-                            <div class="radio text-left">
-                                <label style="font-size: 0.9em;" id="label2">
-                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
-                                        <?php if ($cliente[0]->tipo_nc == 1) {
-                                            echo "checked=true";
-                                        }
-                                        ?>> EXTRANJERO
-                                </label>
+                            <div class="col-md-6 checkbox-radios required">
+                                <div class="radio text-left">
+                                    <label id="label2">
+                                        <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_nc == 1) {
+                                                echo "checked=true";
+                                            }
+                                            ?>> EXTRANJERO
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                    <label class="col-sm-4 label-on-left">¿IMPRIME PAGARES?:</label>
-                    <div class="col-sm-8 checkbox-radios">
-                        <div class="col-md-3 checkbox-radios required">
-                            <div class="radio text-left">
-                                <label style="  font-size: 0.9em;">
-                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
-                                        <?php if ($cliente[0]->printPagare == 1) {
-                                            echo "checked=true";
-                                        }
-                                        ?>> SÍ
-                                </label>
+                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
+                        <label class="col-sm-4 label-on-left">¿IMPRIME PAGARES?:</label>
+                        <div class="col-sm-8 checkbox-radios">
+                            <div class="col-md-3 checkbox-radios required">
+                                <div class="radio text-left">
+                                    <label style="  font-size: 0.9em;">
+                                        <input type="radio" name="imprimePagare" id="imprimePagare" value="1" <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->printPagare == 1) {
+                                                echo "checked=true";
+                                            }
+                                            ?>> SÍ
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6 checkbox-radios required">
-                            <div class="radio text-left">
-                                <label style="font-size: 0.9em;">
-                                    <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
-                                        <?php if ($cliente[0]->printPagare == 0) {
-                                            echo "checked=true";
-                                        }
-                                        ?>> NO
-                                </label>
+                            <div class="col-md-6 checkbox-radios required">
+                                <div class="radio text-left">
+                                    <label>
+                                        <input type="radio" name="imprimePagare" id="imprimePagare" value="0" <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->printPagare == 0) {
+                                                echo "checked=true";
+                                            }
+                                            ?>> NO
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <div class="col col-xs-12 col-sm-12 col-md-offset-6 col-md-6 col-lg-offset-6 col-lg-6 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
                     <label class="col-sm-4 label-on-left">CARTA DOMICILIO CM (<small style="color: red;">*</small>):</label>
                     <div class="col-sm-8 checkbox-radios">
@@ -280,7 +304,7 @@
 
                         <div class="col-md-6 checkbox-radios required">
                             <div class="radio text-left">
-                                <label style="font-size: 0.9em;" id="labelNo2">
+                                <label id="labelNo2">
                                     <input type="radio" name="tipo_comprobante" id="tipo_comprobante2" value="2" <?php echo $statsInput; ?>
                                         <?php if ($cliente[0]->tipo_comprobanteD == 2) {
                                             echo "checked=true";
@@ -291,6 +315,103 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group label-floating">
+                        <label class="control-label label-gral" style="font-size: 0.8em;">
+                            NOMBRE
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="nombre" id="nombre" type="text" required="true" <?php echo $readOnly; ?> <?php echo $readonlyNameToAsesor;?> value="<?=$cliente[0]->nombre?>"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="font-size: 0.8em;">
+                            APELLIDO PATERNO
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="apellido_paterno" id="apellido_paterno" type="text" <?php echo $readOnly; ?> <?php echo $readonlyNameToAsesor;?> required="true" value="<?=$cliente[0]->apellido_paterno?>"/>
+                    </div>
+                </div>                               
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="font-size: 0.8em;">
+                            APELLIDO MATERNO
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="apellido_materno" id="apellido_materno" type="text" <?php echo $readOnly; ?><?php echo $readonlyNameToAsesor;?> required="true" value="<?=$cliente[0]->apellido_materno?>" style="font-size: 0.9em;"/>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="font-size: 0.8em;">
+                            TELEÉFONO CASA
+                        </label>
+                        <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>" style="font-size: 0.9em;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="control-label" style="font-size: 0.8em;">
+                                CELULAR
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" style="font-size: 0.9em;"/>
+                        </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="control-label" style="font-size: 0.8em;">
+                                EMAIL
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" name="correo" id="correo" type="email" <?php echo $readOnly; ?>value="<?=$cliente[0]->correo?>" style="font-size: 0.9em;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row"> 
+            <div class="col-md-4">
+                                <div class="form-group label-floating select-is-empty">
+                                    <label class="control-label" style="font-size: 0.8em;">
+                                        FECHA NACIMIENTO
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <input class="form-control input-gral" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?>
+                                           value="<?=$cliente[0]->fecha_nacimiento?>" style="font-size: 0.9em;"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group label-floating select-is-empty">
+                                    <label class="control-label" style="font-size: 0.8em; top:-29px;">
+                                        NACIONALIDAD
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral" style="font-size: 0.9em;"
+                                        <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
+                                        <?php
+                                        for($p=0; $p < count($nacionalidades) ; $p++)
+                                        {
+                                            if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad)
+                                            {
+                                                echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
+                                            }
+                                            else{
+                                                echo '<option value="'.$nacionalidades[$p]['id_opcion'].'">'.$nacionalidades[$p]['nombre'].'</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>                            
             </div>
         </div>
     </div>
@@ -771,44 +892,44 @@
 
             $("#modal_agregar .modal-body").append('<input class="form-control" name="idd" id="idd" type="hidden" value="<?=$cliente[0]->id_cliente?>">');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  NOMBRE (<small style="color: red;">*</small>) </label> <input class="form-control" name="nombre_nuevo" id="nombre_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  NOMBRE (<small style="color: red;">*</small>) </label> <input class="form-control" name="nombre_nuevo" id="nombre_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  APELLIDO PATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidop_nuevo" id="apellidop_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  APELLIDO PATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidop_nuevo" id="apellidop_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"> <label class="control-label" style="font-size: 0.8em;"> APELLIDO MATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidom_nuevo" id="apellidom_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"> <label class="control-label" style="font-size: 0.8em;"> APELLIDO MATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidom_nuevo" id="apellidom_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> EMAIL (<small style="color: red;">*</small>) </label> <input class="form-control" name="correo_nuevo" id="correo_nuevo" type="email" value="" style="font-size: 0.9em;"/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> EMAIL (<small style="color: red;">*</small>) </label> <input class="form-control" name="correo_nuevo" id="correo_nuevo" type="email" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> TELEÉFONO CASA</label><input class="form-control" name="telefono1_nuevo" id="telefono1_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="" style="font-size: 0.9em;"/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> TELEÉFONO CASA</label><input class="form-control" name="telefono1_nuevo" id="telefono1_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> CELULAR (<small style="color: red;">*</small>)</label><input class="form-control" name="telefono2_nuevo" id="telefono2_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="" style="font-size: 0.9em;"/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> CELULAR (<small style="color: red;">*</small>)</label><input class="form-control" name="telefono2_nuevo" id="telefono2_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value="" style="font-size: 0.9em;"/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" class="form-control" style="font-size: 0.9em;"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ORIGINARIO DE (<small style="color: red;">*</small>) </label> <input class="form-control" name="originario_nuevo" id="originario_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ORIGINARIO DE (<small style="color: red;">*</small>) </label> <input class="form-control" name="originario_nuevo" id="originario_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO PARTICULAR (<small style="color: red;">*</small>) </label> <input class="form-control" name="domicilio_particular_nuevo" id="domicilio_particular_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO PARTICULAR (<small style="color: red;">*</small>) </label> <input class="form-control" name="domicilio_particular_nuevo" id="domicilio_particular_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> ESTADO CIVIL (<small style="color: red;">*</small>)</label><select name="estadocivil_nuevo" id="estadocivil_nuevo" class="form-control" style="font-size: 0.9em;"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> ESTADO CIVIL (<small style="color: red;">*</small>)</label><select name="estadocivil_nuevo" id="estadocivil_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> RÉGIMEN </label><select name="regimen_nuevo" id="regimen_nuevo" class="form-control" style="font-size: 0.9em;"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> RÉGIMEN </label><select name="regimen_nuevo" id="regimen_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> NOMBRE DE CÓNYUGE (<small style="color: red;">*</small>) </label> <input class="form-control" name="conyuge_nuevo" id="conyuge_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> NOMBRE DE CÓNYUGE (<small style="color: red;">*</small>) </label> <input class="form-control" name="conyuge_nuevo" id="conyuge_nuevo" type="text" required value=""/> </div> </div>');
 
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> OCUPACIÓN (<small style="color: red;">*</small>) </label> <input class="form-control" name="ocupacion_nuevo" id="ocupacion_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> OCUPACIÓN (<small style="color: red;">*</small>) </label> <input class="form-control" name="ocupacion_nuevo" id="ocupacion_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> PUESTO (<small style="color: red;">*</small>) </label> <input class="form-control" name="puesto_nuevo" id="puesto_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> PUESTO (<small style="color: red;">*</small>) </label> <input class="form-control" name="puesto_nuevo" id="puesto_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EMPRESA EN LA QUE TRABAJA (<small style="color: red;">*</small>) </label> <input class="form-control" name="empresa_nuevo" id="empresa_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EMPRESA EN LA QUE TRABAJA (<small style="color: red;">*</small>) </label> <input class="form-control" name="empresa_nuevo" id="empresa_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ANTIGÜEDAD (<small style="color: red;">*</small>) </label> <input class="form-control" name="antiguedad_nuevo" id="antiguedad_nuevo" type="number" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ANTIGÜEDAD (<small style="color: red;">*</small>) </label> <input class="form-control" name="antiguedad_nuevo" id="antiguedad_nuevo" type="number" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EDAD AL MOMENTO DE FIRMA (<small style="color: red;">*</small>) </label> <input class="form-control" name="edad_firma_nuevo" id="edad_firma_nuevo" type="number" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EDAD AL MOMENTO DE FIRMA (<small style="color: red;">*</small>) </label> <input class="form-control" name="edad_firma_nuevo" id="edad_firma_nuevo" type="number" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO EMPRESA (<small style="color: red;">*</small>) </label> <input class="form-control" name="domempresa_nuevo" id="domempresa_nuevo" type="text" required value="" style="font-size: 0.9em;"/> </div> </div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO EMPRESA (<small style="color: red;">*</small>) </label> <input class="form-control" name="domempresa_nuevo" id="domempresa_nuevo" type="text" required value=""/> </div> </div>');
 
             $("#modal_agregar .modal-footer").append('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><div class="btn-group"><button type="submit" class="btn btn-success" style="margin-right: 20px;">GUARDAR</button><button type="button" class="btn btn-danger" onclick="close_agregar()">CANCELAR</button></div></div></div>');
             $("#modal_agregar").modal();
