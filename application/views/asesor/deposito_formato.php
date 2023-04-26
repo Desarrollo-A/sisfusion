@@ -182,54 +182,47 @@ input:checked + .switch:active::before {
                 </div>
 
                 <div class="row pt-3" id="boxFactura"> 
-                    <div class="col-md-2 checkbox checkbox-inline">
-                        <label>Factura</label>
+                    <div class="col-md-1 checkbox checkbox-inline">
+                        <h4 class="label-on-left">FACTURA</h4>
+                        <br>
                         <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>
                         <label class="switch" for="rfc_check"></label>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-7">
                         <div class="form-group label-floating">
-                            <label class="control-label" style="display:none;" name="regimenl" id="regimenl">
-                                RÉGIMEN FISCAL
-                            </label>
-                            <select name="regimenFiscal" id="regimenFiscal" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
-                            >
-                                <option value=""> SELECCIONA UNA OPCIÓN </option>
-                                <?php
-                                for($n=0; $n < count($datoFiscal) ; $n++){
-                                    if($datoFiscal[$n]['id_opcion'] == $cliente[0]->regimen_fac){
-                                        echo '<option value="'.$datoFiscal[$n]['id_opcion'].'" selected>'.$datoFiscal[$n]['nombre'].'</option>';
+                            <div class="d-none" name="regimenl" id="regimenl">
+                                <h4 class="label-on-left">RÉGIMEN FISCAL</h4>
+                                <select name="regimenFiscal" id="regimenFiscal" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                    <option> SELECCIONA UNA OPCIÓN </option>
+                                    <?php
+                                    for($n=0; $n < count($regFis) ; $n++){
+                                        if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac){
+                                            echo '<option value="'.$regFis[$n]['id_opcion'].'" selected>'.$regFis[$n]['nombre'].'</option>';
+                                        }
+                                        else{
+                                            echo '<option value="'.$regFis[$n]['id_opcion'].'">'.$regFis[$n]['nombre'].'</option>';
+                                        }
                                     }
-                                    else{
-                                        echo '<option value="'.$datoFiscal[$n]['id_opcion'].'">'.$datoFiscal[$n]['nombre'].'</option>';
-                                    }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group label-floating">
-                                <label class="control-label" name="rfcl" id="rfcl" style="display:none;"> 
-                                    RFC
-                                </label> 
-                                <input type="text" pattern="[A-Za-z0-9]+" class="form-control" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
-                                onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
+                        <div class="form-group">
+                            <h4 class="label-on-left" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
+                            <input type="text" pattern="[A-Za-z0-9]+" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
+                            onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group label-floating">
-                            <label class="control-label" style="display:none;" name="codigol" id="codigol">
-                                CÓDIGO POSTAL
-                            </label>
-                            <input type="number" class="form-control" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?>
-                                    onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
+                        <div class="form-group">
+                            <h4 class="label-on-left" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
+                            <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
                         </div>
                     </div>    
                 </div>
             
-
-
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <label class="col-sm-2 label-on-left">RESIDENCIA(<small style="color: red;">*</small>):</label>
@@ -318,8 +311,8 @@ input:checked + .switch:active::before {
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="form-group label-floating">
-                        <label class="control-label label-gral" style="font-size: 0.8em;">
+                    <div class="form-group m-0">
+                        <label class="label-gral">
                             NOMBRE
                             (<small style="color: red;">*</small>)
                         </label>
@@ -327,8 +320,8 @@ input:checked + .switch:active::before {
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="form-group label-floating">
-                        <label class="control-label" style="font-size: 0.8em;">
+                    <div class="form-group m-0">
+                        <label>
                             APELLIDO PATERNO
                             (<small style="color: red;">*</small>)
                         </label>
@@ -336,40 +329,42 @@ input:checked + .switch:active::before {
                     </div>
                 </div>                               
             </div>
+
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="form-group label-floating">
-                        <label class="control-label" style="font-size: 0.8em;">
+                    <div class="form-group m-0">    
+                        <label>
                             APELLIDO MATERNO
                             (<small style="color: red;">*</small>)
                         </label>
                         <input class="form-control input-gral" name="apellido_materno" id="apellido_materno" type="text" <?php echo $readOnly; ?><?php echo $readonlyNameToAsesor;?> required="true" value="<?=$cliente[0]->apellido_materno?>" style="font-size: 0.9em;"/>
-                    </div>
+                    </div>                   
                 </div>
 
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="form-group label-floating">
-                        <label class="control-label" style="font-size: 0.8em;">
+                    <div class="form-group m-0">                  
+                        <label>
                             TELEÉFONO CASA
                         </label>
                         <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>" style="font-size: 0.9em;"/>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group label-floating">
-                            <label class="control-label" style="font-size: 0.8em;">
-                                CELULAR
-                                (<small style="color: red;">*</small>)
-                            </label>
-                            <input class="form-control input-gral" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" style="font-size: 0.9em;"/>
-                        </div>
+                    <div class="form-group m-0">      
+                        <label>
+                            CELULAR
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" style="font-size: 0.9em;"/>
+                    </div>        
                 </div>
 
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group label-floating">
-                            <label class="control-label" style="font-size: 0.8em;">
+                    <div class="form-group m-0"> 
+                            <label>
                                 EMAIL
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -377,42 +372,120 @@ input:checked + .switch:active::before {
                     </div>
                 </div>
             </div>
+            
             <div class="row"> 
-            <div class="col-md-4">
-                                <div class="form-group label-floating select-is-empty">
-                                    <label class="control-label" style="font-size: 0.8em;">
-                                        FECHA NACIMIENTO
-                                        (<small style="color: red;">*</small>)
-                                    </label>
-                                    <input class="form-control input-gral" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?>
-                                           value="<?=$cliente[0]->fecha_nacimiento?>" style="font-size: 0.9em;"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group label-floating select-is-empty">
-                                    <label class="control-label" style="font-size: 0.8em; top:-29px;">
-                                        NACIONALIDAD
-                                        (<small style="color: red;">*</small>)
-                                    </label>
-                                    <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral" style="font-size: 0.9em;"
-                                        <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
-                                        <?php
-                                        for($p=0; $p < count($nacionalidades) ; $p++)
-                                        {
-                                            if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad)
-                                            {
-                                                echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
-                                            }
-                                            else{
-                                                echo '<option value="'.$nacionalidades[$p]['id_opcion'].'">'.$nacionalidades[$p]['nombre'].'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>                            
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0"> 
+                        <label>
+                            FECHA NACIMIENTO
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>" style="font-size: 0.9em;"/>
+                    <div>                    
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0">                 
+                        <label style="top:-29px;">
+                            NACIONALIDAD
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral" style="font-size: 0.9em;" <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
+                            <?php
+                            for($p=0; $p < count($nacionalidades) ; $p++)
+                            {
+                                if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad)
+                                {
+                                    echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$nacionalidades[$p]['id_opcion'].'">'.$nacionalidades[$p]['nombre'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>    
+                </div>                           
             </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0"> 
+                        <label>
+                            ORIGINARIO DE:
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>" style="font-size: 0.9em;"/>
+                    </div>     
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0"> 
+                        <label>
+                            ESTADO CIVIL
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <select name="estado_civil" id="estado_civil" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>style="font-size: 0.9em;">
+                            <option value=""> SELECCIONA UNA OPCIÓN </option>
+                            <?php
+                            for($n=0; $n < count($edoCivil) ; $n++)
+                            {
+                                if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil)
+                                {
+                                    echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$edoCivil[$n]['id_opcion'].'">'.$edoCivil[$n]['nombre'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            <div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0"> 
+                        <label class="control-label" style="font-size: 0.8em;">
+                            RÉGIMEN
+                        </label>
+                        <select name="regimen_matrimonial" id="regimen_matrimonial" class="selectpicker select-gral" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                                style="font-size: 0.9em;">
+                            <option value="5"> SELECCIONA UNA OPCIÓN </option>
+                            <?php
+                            for($n=0; $n < count($regMat) ; $n++)
+                            {
+                                if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial)
+                                {
+                                    echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$regMat[$n]['id_opcion'].'">'.$regMat[$n]['nombre'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    <div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group m-0"> 
+                        <label>
+                            NOMBRE DE CÓNYUGE
+                        </label>
+                        <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?>
+                                type="text" value="<?=$cliente[0]->nombre_conyuge?>" style="font-size: 0.9em;"/>
+                    <div>
+                </div>             
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="form-group m-0"> 
+                        <label>
+                            DOMICILIO PARTICULAR
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input class="form-control input-gral" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>" style="font-size: 0.9em;"/>
+                    </div>    
+                </div>                   
+            </div>                
         </div>
     </div>
 </div>
@@ -531,19 +604,6 @@ input:checked + .switch:active::before {
         });
     }
 
-//     $("#cantidad").on({
-//   "focus": function(event) {
-//     $(event.target).select();
-//   },
-//   "keyup": function(event) {
-//     $(event.target).val(function(index, value) {
-//       return value.replace(/\D/g, "")
-//         .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-//         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-//     });
-//   }
-// });
-
     function formatearNumero(numero) {
     return numero.toString().replace(/\D/g, "")
                     .replace(/([0-9])([0-9]{2})$/, '$1.$2')
@@ -551,22 +611,22 @@ input:checked + .switch:active::before {
     }
 
     function cargarInputs() {
-      var inputs = document.getElementsByTagName("input");
-      for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].name === "cantidad") {
-            inputs[i].value = formatearNumero(inputs[i].value);
-        }else if (inputs[i].name === "costom2f") {
-        	inputs[i].value = formatearNumero(inputs[i].value);
-        }else if (inputs[i].name === "costoM2") {
-            inputs[i].value = formatearNumero(inputs[i].value);
-        }else if (inputs[i].name === "sup"){
-            inputs[i].value = formatearNumero(inputs[i].value);
-        }else if (inputs[i].name === "importOferta"){
-            inputs[i].value = formatearNumero(inputs[i].value);
-        }else if (inputs[i].name === "saldoDeposito"){
-            inputs[i].value = formatearNumero(inputs[i].value);
+        var inputs = document.getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].name === "cantidad") {
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "costom2f") {
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "costoM2") {
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "sup"){
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "importOferta"){
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "saldoDeposito"){
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }
         }
-      }
     }
 
     function guardarInputs() {
@@ -631,80 +691,10 @@ input:checked + .switch:active::before {
 
 
 
-    //$.post("<?=base_url()?>index.php/Asesor/getNationality", function(data) {
-    //var len = data.length;
 
-    //for(var i = 0; i<len; i++){
-    //var id = data[i]['id_opcion'];
-    //var name = data[i]['nombre'];
-    /*var nat = "<?php $cliente[0]->nacionalidad ?>";*/
-    //var nat = "<?php ($cliente[0]->nacionalidad=="" || $cliente[0]->nacionalidad ==null) ? 0:  $cliente[0]->nacionalidad;?>";
-    // }
-    //$(".select-is-empty").removeClass("is-empty");
-    //$("#nacionalidad").select('refresh');
-    //}, 'json');
+    
 
 
-    /*$.post("<?=base_url()?>index.php/Asesor/getCivilStatus", function(data) {
-		var len = data.length;
-		for(var i = 0; i<len; i++){
-			var id = data[i]['id_opcion'];
-			var name = data[i]['nombre'];
-			var edoCivil =  "<?php ($cliente[0]->estado_civil=="" || $cliente[0]->estado_civil ==null) ? 0:  $cliente[0]->estado_civil;?>";
-
-			if(edoCivil==id){
-				$("#estado_civil").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-				$(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+name+'">');
-			}
-			else{
-				$("#estado_civil").append($('<option>').val(id).text(name.toUpperCase()));
-			}
-		}
-		$(".select-is-empty").removeClass("is-empty"); $("#estado_civil").select('refresh');
-	}, 'json');*/
-
-
-    //$.post("<?=base_url()?>index.php/Asesor/getMatrimonialRegime", function(data) {
-    //var len = data.length;
-    //for(var i = 0; i<len; i++){
-    //var id = data[i]['id_opcion'];
-    //var name = data[i]['nombre'];
-    /*var reg = "<?php ($cliente[0]->regimen_matrimonial=="" || $cliente[0]->regimen_matrimonial ==null) ? 0:  $cliente[0]->regimen_matrimonial;?>";
-				if(reg==id){
-					$("#regimen_matrimonial").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-					$('#regimen_nuevo').append($('<option selected=true>').val(id).text(name.toUpperCase()));
-					$(".datos_select").append('<input type="hidden" name="regimen_select" id="regimen_select" value="'+name+'">');
-				}
-				else{
-					$("#regimen_matrimonial").append($('<option>').val(id).text(name.toUpperCase()));
-				}*/
-    //}
-    //$(".select-is-empty").removeClass("is-empty"); $("#regimen_matrimonial").select('refresh');
-    //}, 'json');
-
-
-
-
-    //$.post("<?=base_url()?>index.php/Asesor/getParentesco", function(data) {
-    //var len = data.length;
-    //for(var i = 0; i<len; i++){
-    //var id = data[i]['id_opcion'];
-    //var name = data[i]['nombre'];
-    //var parent = "";
-
-    /*if(parent==id){
-        $("#parentesco2").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-        $("#parentesco1").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-        $(".datos_select").append('<input type="hidden" name="parentezco_select2" id="parentezco_select2" value="'+name+'">');
-
-    }
-    else{
-        $("#parentesco2").append($('<option>').val(id).text(name.toUpperCase()));
-        $("#parentesco1").append($('<option>').val(id).text(name.toUpperCase()));
-    }*/
-    //}
-    //$(".select-is-empty").removeClass("is-empty"); $("#parentesco2").select('refresh');
-    //}, 'json');
 
 
 
@@ -717,58 +707,6 @@ input:checked + .switch:active::before {
 <!--script of the page-->
 <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
     <script>
-
-
-
-        $(document).ready(function(){
-
-            /*$.post("<?=base_url()?>index.php/Asesor/getNationality", function(data) {
-					var len = data.length;
-
-					for(var i = 0; i<len; i++){
-						var id = data[i]['id_opcion'];
-						var name = data[i]['nombre'];
-						var nat = "<?php $cliente[0]->nacionalidad ?>";
-
-
-
-						if(nat==id){
-							$("#nacionalidad").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-							$(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+name+'">');
-						}
-						else{
-							$("#nacionalidad").append($('<option>').val(id).text(name.toUpperCase()));
-						}
-					}
-					$(".select-is-empty").removeClass("is-empty"); $("#nacionalidad").select('refresh');
-				}, 'json');*/
-
-
-
-            /*$.post(url + "Asesor/getCivilStatus", function(data) {
-                var len = data.length;
-                for(var i = 0; i<len; i++){
-                    var id = data[i]['id_opcion'];
-                    var name = data[i]['nombre'];
-                    var nat = <?=$cliente[0]->estado_civil?>;
-
-						if(nat==id){
-							$("#estado_civil").append($('<option selected=true>').val(id).text(name.toUpperCase()));
-							$(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+name+'">');
-						}
-						else{
-							$("#estado_civil").append($('<option>').val(id).text(name.toUpperCase()));
-						}
-					}
-					$(".select-is-empty").removeClass("is-empty"); $("#estado_civil").select('refresh');
-				}, 'json');*/
-        });
-
-
-
-
-
-
         $("#nacionalidad").change(function(){
             var valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
             $(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+valor_nacionalidad+'">');
@@ -779,10 +717,6 @@ input:checked + .switch:active::before {
             $(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+valor_estado_civil+'">');
         });
 
-        // $("#regimenFiscal").change(function(){
-        //     var valor_regimen_fiscal_civil = $('select[name="regimen_fiscal"] option:selected').text();
-        //     $(".datos_select").append('<input type="hidden" name="regimen_select" id="regimen_select" value="'+valor_regimen_fiscal+'">');
-        // });
 
         $("#regimen_matrimonial").change(function(){
             var valor_regimen = $('select[name="regimen_matrimonial"] option:selected').text();
@@ -803,7 +737,6 @@ input:checked + .switch:active::before {
         const campo1 = document.getElementById("rfc");
         const campo2 = document.getElementById("rfcl");
         const campo3 = document.getElementById("regimenl");
-        const campo4 = document.getElementById("regimenFiscal");
         const campo5 = document.getElementById("codigol");
         const campo6 = document.getElementById("cp_fac");
     
@@ -812,15 +745,13 @@ input:checked + .switch:active::before {
             if (checkbox.checked) {
                 campo1.style.display = "block";
                 campo2.style.display = "block";
-                campo3.style.display = "block";
-                campo4.style.display = "block";
+                campo3.classList.remove("d-none");
                 campo5.style.display = "block";
                 campo6.style.display = "block";
             } else {
                 campo1.style.display = "none";
                 campo2.style.display = "none";
-                campo3.style.display = "none";
-                campo4.style.display = "none";
+                campo3.classList.add("d-none");
                 campo5.style.display = "none";
                 campo6.style.display = "none";
             }
@@ -936,15 +867,6 @@ input:checked + .switch:active::before {
 
         });
 
-
-
-
-
-
-
-
-
-
         var id_valor_copropietario;
         $("#formulario_eliminar").submit( function(e) {
             e.preventDefault();
@@ -977,16 +899,12 @@ input:checked + .switch:active::before {
             }
         });
 
-
-
         // var id_valor_copropietario;
         $("#formulario_agregar").submit( function(e) {
             e.preventDefault();
         }).validate({
             submitHandler: function( form ) {
-
                 var data = new FormData( $(form)[0] );
-                // data.append("id_copropietario", id_valor_copropietario);
                 console.log(data);
                 $.ajax({
                     url: url + "Asesor/agregar_propietario",
@@ -1011,30 +929,14 @@ input:checked + .switch:active::before {
             }
         });
 
-
-
-
-
-
-
-
-        function close_eliminar()
-        {
+        function close_eliminar(){
             $("#modal_eliminar").modal('toggle');
         }
 
 
-        function close_agregar()
-        {
+        function close_agregar(){
             $("#modal_agregar").modal('toggle');
         }
-
-
-
-
-
-
-
     </script>
 <?php } ?>
 
@@ -1059,7 +961,5 @@ input:checked + .switch:active::before {
 
         $('#details_section').attr('open', '');
     });
-
-
 </script>
 </html>
