@@ -48,12 +48,17 @@
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>   
                     </div>
                     <form method="post" id="form_pagadas">
                         <div class="modal-body"></div>
+                        <div class="modal-footer">  
+            				</div>
                     </form>
+                
                 </div>
             </div>
         </div>
@@ -91,7 +96,9 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>   
                     </div>
                     <form method="post" id="form_empresa">
                         <div class="modal-body">
@@ -101,10 +108,10 @@
                             <h4>¿Esta seguro que desea agregar empresa?</h4>
                         </div>
                         <div class="modal-footer">
-                                <center>
-                                    <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
+                            <button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
+                            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+                        <!-- <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
+                            <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button> -->
                         </div>
                     </form>
                 </div>
@@ -305,14 +312,22 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal_avisitos" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade" id="modal_avisitos" style="overflow-y: scroll;" 
+        style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" style="font-size: 20px;top:20px;" class="close" data-dismiss="modal">  <i class="large material-icons">close</i></button>
+                    <div class="modal-header">
+                                           
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>    
+                    <h4 class="card-title"><b>Cambiar usuario</b></h4>
+                        <!-- <button type="button" style="font-size: 20px;top:20px;" class="close" data-dismiss="modal">  <i class="large material-icons">close</i></button> -->
                     </div>
                     <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
+                    <div class="modal-footer">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -424,14 +439,21 @@
                             </div>
                             <div class="form-group">
                                 <label class="label">Descripción</label>
-                                <textarea id="comentario3" name="comentario3" class="form-control" rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario3" name="comentario3" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <center>
-                                    <button type="submit" id="btn_inv" class="btn btn-primary">GUARDAR</button>
+                                    <button class="btn btn-primary">GUARDAR</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
                                 </center>
-                            </div>
+                            </div> -->
+                        </div>
+                        <div class="modal-footer">     
+                                <button type="button"   class="btn btn-danger btn-simple " 
+                                        data-dismiss="modal" >Cerrar</button>	
+
+                                <button  type="button"type="submit" id="btn_inv" 
+                                 class="btn btn-gral-data updatePrestamo">Aceptar</button>
                         </div>
                     </form>
                 </div>
@@ -467,12 +489,16 @@
                                 <textarea id="comentario4" name="comentario4" class="form-control" rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
-                                <center>
-                                    <button type="submit" id="btn_vc" class="btn btn-primary">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
+                              
                             </div>
                         </div>
+                        <div class="modal-footer">     
+                                <center>
+                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    <button type="submit" id="btn_vc" class="btn btn-gral-data">GUARDAR</button>
+                                </center>
+                           
+                       </div>
                     </form>
                 </div>
             </div>
@@ -503,12 +529,11 @@
                                 <label class="label">Subdirector</label>
                                 <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
                             </div>
-                            <div class="form-group">
-                                <center>
-                                    <button type="submit" id="btn_vcnew" class="btn btn-primary">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
-                            </div>
+                        </div>
+                        <div class="modal-footer">     
+                               
+                                <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                                <button type="submit" id="btn_vcnew" class="btn btn-gral-data">GUARDAR</button>
                         </div>
                     </form>
                 </div>
@@ -587,14 +612,6 @@
     <?php $this->load->view('template/footer');?>
         
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script > 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-    var rol  = "<?=$this->session->userdata('id_rol')?>";
-    var id_user  = "<?=$this->session->userdata('id_usuario')?>";
-
-    </script>
-
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/incidencia_by_lote.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
@@ -603,9 +620,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script>
-    
-
-        
-    </script>
 </body>
