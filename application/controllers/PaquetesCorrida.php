@@ -344,20 +344,22 @@ class PaquetesCorrida extends CI_Controller
     if (count($row) == 0) {
 
     } else if (count($row) == 1) {
-      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+      $dataPaquetes = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_paquete']);
+      $dataDescuentos = $this->PaquetesCorrida_model->getDescuentosByPlan($row[0]['id_paquete']);
     } else if (count($row) > 1) {
-      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_descuento']);
+      $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_paquete']);
     }
-    echo json_encode(array(array("paquetes" => $data)));
+    echo json_encode(array(array("paquetes" => $dataPaquetes,
+                                 "descuentos" => $dataDescuentos)));
   }
 
   public function getDescuentosByPlan()
   {
     $id_paquete = $this->input->post("id_paquete");
-    $id_tcondicion = $this->input->post("id_tcondicion");
-    $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete, $id_tcondicion);
+    $data = $this->PaquetesCorrida_model->getDescuentosByPlan($id_paquete);
     echo json_encode($data);
   }
+  
   public function Autorizaciones()
     {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/     
