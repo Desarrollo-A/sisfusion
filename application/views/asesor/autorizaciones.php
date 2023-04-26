@@ -153,7 +153,7 @@
 										<div class="active tab-pane" id="soli">
 											<h3 class="card-title center-align">Solicitud</h3>
 											<p class="center-align">
-												A través de este panel(Solicitud) podrás realizar lo siguiente:
+												A través de este panel(Solicitud) podrás realizar lo siguiente:<br>
 												1. Consulta de las solicitudes previas a su autorización.<br>
 												2. Envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
 													(seleccionar usuario según sea el caso) con una solicitud de autorización
@@ -181,7 +181,7 @@
 										<div class="tab-pane" id="aut">
 											<h3 class="card-title center-align">Autorizaciones</h3>
 											<p class="center-align">
-												A través de este panel(Autorizaciones) podrás realizar lo siguiente:
+												A través de este panel(Autorizaciones) podrás realizar lo siguiente:<br>
 												1. Consulta de las solicitudes autorizadas.<br>
 												2. Visualización de los estatus correspondientes por cada una de las autorizaciones en proceso.<br>
 												3. Descarga de información en formatos: PDF y XLSX.<br>
