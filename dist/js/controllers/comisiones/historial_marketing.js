@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $("#tabla_historialGral").prop("hidden", true);
     
-    $.post(url+"Contratacion/lista_proyecto_dos", function (data) {
+    $.post(url+"Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -17,7 +17,7 @@ residencial = $('#filtro33').val();
 param = $('#param').val();
 $("#filtro44").empty().selectpicker('refresh');
     $.ajax({
-        url: url+'Contratacion/lista_condominio_dos/'+residencial,
+        url: url+'Contratacion/lista_condominio/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
