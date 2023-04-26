@@ -233,7 +233,7 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
-		else if($id_usuario == 2815)
+		else if($id_usuario == 2815) // Brenda Sánchez solicita poder ver todas las donaciones
 			$filtroSede = "AND (l.ubicacion IN ('$id_sede') OR l.tipo_venta = 4)";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";

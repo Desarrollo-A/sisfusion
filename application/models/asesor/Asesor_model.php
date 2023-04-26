@@ -20,14 +20,15 @@ class Asesor_model extends CI_Model
                                 cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
                                 ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
                                 ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
-                                ds.costom2f FROM clientes cl  
+                                ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote 
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
                                 INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
                                 INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                                 LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad 
                                 LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil 
-                                LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial 
+                                LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial
+                                LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 88  
                                 WHERE cl.id_cliente = " . $id_cliente . " 
                                 AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19");
     }
@@ -441,7 +442,7 @@ class Asesor_model extends CI_Model
                                     ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, 
                                     cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, ds.costoM2, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, 
                                     ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, 
-                                    ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, ds.costom2f,  cl.lugar_prospeccion, ds.fecha_modificacion, ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD
+                                    ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, ds.costom2f,  cl.lugar_prospeccion, ds.fecha_modificacion, ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac
                                     FROM clientes cl 
                                     INNER JOIN lotes lot ON cl.idLote = lot.idLote  
                                     INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
@@ -1564,9 +1565,10 @@ class Asesor_model extends CI_Model
 
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26) AND id_opcion IN (1,4)
-        AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 88) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
+
+   
 
     public function getAsesores($idUsuario)
     {
