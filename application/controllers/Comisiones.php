@@ -34,8 +34,21 @@ class Comisiones extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-  public function lista_usuarios($rol,$forma_pago){
-    echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
+   // dispersion-view complete
+
+  public function dispersion() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $this->load->view('template/header');
+        $this->load->view("comisiones/dispersion-view", $datos);
+      }
+
+ 
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
   }
     
   public function descuentosCapitalHumano(){
@@ -66,6 +79,12 @@ public function getPuestosDescuentos(){
     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+  }
+  
+  public function activas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
     $this->load->view("ventas/dispersar_pago_neodata", $datos);

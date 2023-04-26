@@ -101,36 +101,27 @@
                                    name="statusLote"
                                    id="statusLote">
                             
-                            <div class="col-lg-12" id="planes-div">
+                            <!-- <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                </div>
+                            </div> -->
+                            <div class="col-lg-12" >
                                 <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
                                     <select class="selectpicker select-gral"
                                             id="motivo"
                                             name="motivo"
                                             data-style="btn"
                                             required>
-                                            <?php var_dump($controversias); ?>
+                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
                                             <?php foreach($controversias as $controversia){ ?>
-                                            
+
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
                                             <?php } ?>
                                     </select>
                                 </div>
                             </div>
-                            
-                            <!-- <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <input id="motivo"
-                                           name="motivo"
-                                           type="text"
-                                           class="form-control input-gral"
-                                           placeholder="Escriba un motivo corto..."
-                                           minlength="3"
-                                           maxlength="50"
-                                           required />
-                                </div>
-                            </div> -->
-
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
                                     <textarea class="form-control"
