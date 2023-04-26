@@ -813,24 +813,42 @@ class Asesor_model extends CI_Model
 
     public function get_autorizaciones () {
         /*id_autorizacion, autorizaciones.fecha_creacion,autorizaciones.autorizacion,*/
-        $query = $this->db->query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
-		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
-		MAX(autorizaciones.autorizacion) as autorizacion, 
-		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
-        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
-        autorizaciones.idLote
-		FROM autorizaciones 
-		inner join lotes on lotes.idLote = autorizaciones.idLote 
-		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
-		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
-		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
-		inner join usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
-		where autorizaciones.id_sol = " . $this->session->userdata('id_usuario') . " 
-		GROUP BY residencial.nombreResidencial, condominio.nombre, 
-		lotes.nombreLote, 
-		UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
-        UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)), 
-        autorizaciones.idLote");
+        $query = $this->db->query(
+            "SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+		            lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,
+                    MAX(id_autorizacion) as id_autorizacion,
+                    MAX(autorizaciones.fecha_creacion) as fecha_creacion,
+		            MAX(autorizaciones.autorizacion) as autorizacion, 
+                    UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
+                    UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
+                    autorizaciones.idLote,
+                    UPPER(CONCAT_WS(' ', cli.nombre, cli.apellido_paterno, cli.apellido_materno)) AS nombreCliente,
+                    UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) AS coordinador, 
+                    UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) AS gerente,
+                    UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) AS subdirector, 
+                    UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) AS regional
+            FROM autorizaciones
+            INNER JOIN lotes on lotes.idLote = autorizaciones.idLote 
+            INNER JOIN condominios as condominio on condominio.idCondominio = lotes.idCondominio 
+            INNER JOIN residenciales as residencial on residencial.idResidencial = condominio.idResidencial
+            INNER JOIN usuarios as users on autorizaciones.id_sol = users.id_usuario
+            INNER JOIN usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
+            INNER JOIN clientes as cli on autorizaciones.idCliente = cli.id_cliente
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cli.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cli.id_gerente
+		    LEFT JOIN usuarios u3 ON u3.id_usuario = cli.id_subdirector
+		    LEFT JOIN usuarios u4 ON u4.id_usuario = cli.id_regional
+            WHERE autorizaciones.id_sol = " . $this->session->userdata('id_usuario'). "
+            GROUP BY residencial.nombreResidencial, condominio.nombre, 
+                     lotes.nombreLote, 
+                     UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)), 
+                     UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)),
+                     UPPER(CONCAT_WS(' ', cli.nombre, cli.apellido_paterno, cli.apellido_materno)),
+                     UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)),
+                     UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
+                     UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
+                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
+                     autorizaciones.idLote");
         return $query->result();
     }
 
@@ -854,20 +872,38 @@ class Asesor_model extends CI_Model
             $filterInner = '';
         }
 
-        $query = $this->db->query("SELECT cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
-		lotes.idStatusContratacion, lotes.idMovimiento FROM clientes as cliente
-		INNER JOIN lotes ON cliente.idLote = lotes.idLote
-		INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
-		INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
-		INNER JOIN deposito_seriedad ON deposito_seriedad.id_cliente = cliente.id_cliente
-        $filterInner
-		WHERE cliente.status = 1 $filterByRol
-		GROUP BY lotes.idLote,
-		cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre, 
-		cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado,
-        lotes.idStatusContratacion, lotes.idMovimiento
-		ORDER BY cliente.fechaApartado DESC");
+        $query = $this->db->query(
+            "SELECT cliente.id_cliente, 
+                    nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
+		            cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, 
+                    cliente.autorizacion, cliente.fechaApartado,
+		            lotes.idStatusContratacion, lotes.idMovimiento,
+                    UPPER(CONCAT(cliente.nombre,' ',cliente.apellido_paterno, ' ',cliente.apellido_materno)) AS nombreCliente,
+                    UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) AS coordinador,
+                    UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) AS gerente,
+                    UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) AS subdirector, 
+                    UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) AS regional
+            FROM clientes as cliente
+            INNER JOIN lotes ON cliente.idLote = lotes.idLote
+            INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
+            INNER JOIN residenciales as residencial ON condominio.idResidencial = residencial.idResidencial
+            INNER JOIN deposito_seriedad ON deposito_seriedad.id_cliente = cliente.id_cliente
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cliente.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cliente.id_gerente
+		    LEFT JOIN usuarios u3 ON u3.id_usuario = cliente.id_subdirector
+		    LEFT JOIN usuarios u4 ON u4.id_usuario = cliente.id_regional
+            $filterInner
+            WHERE cliente.status = 1 $filterByRol
+            GROUP BY lotes.idLote,
+                     cliente.id_cliente, nombreLote, cliente.rfc, nombreResidencial, condominio.nombre, 
+                     cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, 
+                     cliente.autorizacion, cliente.fechaApartado, lotes.idStatusContratacion, lotes.idMovimiento,
+                     UPPER(CONCAT(cliente.nombre,' ',cliente.apellido_paterno, ' ',cliente.apellido_materno)),
+                     UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 
+                     UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
+                     UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 
+                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
+            ORDER BY cliente.fechaApartado DESC");
         return $query->result_array();
     }
 
@@ -946,17 +982,19 @@ class Asesor_model extends CI_Model
 
     public function get_auts_by_lote($idLote)
     {
-        $query = $this->db->query('SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
-		lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion, autorizaciones.fecha_creacion, 
-		users.usuario as sol, users1.usuario as aut, id_autorizacion, autorizaciones.idLote
-		FROM autorizaciones 
-		inner join lotes on lotes.idLote = autorizaciones.idLote 
-		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
-		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
-		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
-        inner join usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
-        inner join clientes as cl on cl.id_cliente = autorizaciones.idCliente
-		where cl.status = 1 AND autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . ' AND lotes.idLote=' . $idLote);
+        $query = $this->db->query(
+            'SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+		            lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
+                    autorizaciones.fecha_creacion, users.usuario as sol, 
+                    users1.usuario as aut, id_autorizacion, autorizaciones.idLote
+		    FROM autorizaciones 
+            INNER JOIN lotes on lotes.idLote = autorizaciones.idLote 
+            INNER JOIN condominios as condominio on condominio.idCondominio = lotes.idCondominio 
+            INNER JOIN residenciales as residencial on residencial.idResidencial = condominio.idResidencial
+            INNER JOIN usuarios as users on autorizaciones.id_sol = users.id_usuario
+            INNER JOIN usuarios as users1 on autorizaciones.id_aut = users1.id_usuario
+            INNER JOIN clientes as cl on cl.id_cliente = autorizaciones.idCliente
+            WHERE cl.status = 1 AND autorizaciones.id_sol = ' . $this->session->userdata('id_usuario') . ' AND lotes.idLote=' . $idLote);
 
         return $query->result_array();
     }

@@ -1,8 +1,7 @@
 function validateEmptyFields(){
     var miArray = [];
-    
     for (i = 0; i < $("#tamanocer").val(); i++) {
-        if ($("#comentario_"+i).val() == "") {
+        if ($("#comentario_"+i).val() == ""){
             $("#comentario_"+i).focus();
             toastr.error("Asegúrate de haber llenado todos los campos mínimos requeridos");
             miArray.push(0);
@@ -12,7 +11,7 @@ function validateEmptyFields(){
             miArray.push(1);
         }
     }
-    $('#btnSubmitEnviar').click();
+    $('#btnSubmitEnviar').submit();
 }
 
 $("#my_authorization_form").on('submit', function(e){
@@ -76,11 +75,19 @@ var getInfo2_3A = new Array(7);
 var getInfo2_7A = new Array(7);
 var aut;
 
-let titulos = [];
+let titulos_autorizaciones = [];
+let num_colum_autorizaciones = [];
 $('#addExp thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-    titulos.push(title);
+    $(this).html(`<input type="text" 
+                         class="textoshead"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}" 
+                         placeholder="${title}"
+                />`);
+    titulos_autorizaciones.push(title);
+    num_colum_autorizaciones.push(i);
     $( 'input', this ).on('keyup change', function () {
         if ($('#addExp').DataTable().column(i).search() !== this.value ) {
             $('#addExp').DataTable()
@@ -90,8 +97,11 @@ $('#addExp thead tr:eq(0) th').each( function (i) {
         }
     });
 });
+//Se elimina la columna de autorización (donde se encuentra el boton de vizualizar)
+num_colum_autorizaciones.pop();
 
 $(document).ready (function() {
+    /* Llenado de tabla para la tab de "AUTORIZACIONES" */
     var table;
     table = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -121,28 +131,10 @@ $(document).ready (function() {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0,1,2,3,4,5],
+                columns: num_colum_autorizaciones,
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO';
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                            case 3:
-                                return 'SOLICITA';
-                            break;
-                            case 4:
-                                return 'AUTORIZA';
-                            break;
-                            case 5:
-                                return 'AUTORIZACIÓN';
-                            break;
-                        }
+                        return ' '+titulos_autorizaciones[columnIdx] +' ';
                     }
                 }
             }
@@ -152,14 +144,12 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'Descargar archivo PDF',
+            orientation: 'landscape',
             exportOptions: {
-            columns: [0,1,2,3],
-            format: {
-                header:  function (d, columnIdx) {
-                    if(columnIdx == 0){
-                        return ' '+d +' ';
-                        }
-                            return ' '+titulos[columnIdx-1] +' ';
+                columns: num_colum_autorizaciones,
+                format: {
+                    header:  function (d, columnIdx) {
+                        return ' '+titulos_autorizaciones[columnIdx] +' ';
                     }
                 }
             }
@@ -178,11 +168,16 @@ $(document).ready (function() {
             { "data": "nombreResidencial" },
             { "data": "nombreCondominio" },
             { "data": "nombreLote" },
+            { "data": "nombreCliente"},
             { "data": "sol" },
+            { "data": "coordinador"},
+            { "data": "gerente"},
+            { "data": "subdirector"},
+            { "data": "regional"},
             { "data": "aut" },
             {
                 "data": function( d ){
-                    return "<center><a href='#' class='seeAuts btn-data btn-details-grey' data-id_autorizacion='"+d.id_autorizacion+"' data-idLote='"+d.idLote+"'><i class='fas fa-eye'></i></center>";
+                    return "<center><a href='#' class='seeAuts btn-data btn-blueMaderas' data-id_autorizacion='"+d.id_autorizacion+"' data-idLote='"+d.idLote+"'><i class='fas fa-eye'></i></center>";
                 }
             }
         ],
@@ -194,11 +189,19 @@ $(document).ready (function() {
     });
 });
 
-let titulo_2 = [];
+let titulos_solicitud = [];
+let num_colum_solicitud = [];
 $('#sol_aut thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-    titulo_2.push(title);
+    $(this).html(`<input type="text" 
+                         class="textoshead"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}" 
+                         placeholder="${title}"
+                  />`);
+    titulos_solicitud.push(title);
+    num_colum_solicitud.push(i);
     $( 'input', this ).on('keyup change', function () {
         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
             $('#sol_aut').DataTable()
@@ -208,11 +211,12 @@ $('#sol_aut thead tr:eq(0) th').each( function (i) {
         }
     });
 });
-////////////////////////////// TABLE SOL AUT ///////////////////////////////////
+//Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
+num_colum_solicitud.pop();
 
 $(document).ready (function() {
+    /* Llenado de tabla para la tab de "SOLICITUD" */
     var table2;
-
     table2 = $('#sol_aut').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -241,22 +245,10 @@ $(document).ready (function() {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0,1,2,3],
+                columns: num_colum_solicitud,
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO';
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                            case 3:
-                                return 'FECHA/HORA';
-                            break;
-                        }
+                        return ' '+titulos_solicitud[columnIdx] +' ';
                     }
                 }
             }
@@ -266,23 +258,12 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'Descargar archivo PDF',
+            orientation: 'landscape',
             exportOptions: {
-                columns: [0,1,2,3],
+                columns: num_colum_solicitud,
                 format: {
                     header:  function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO';
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                            case 3:
-                                return 'FECHA/HORA';
-                            break;
-                        }
+                        return ' '+titulos_solicitud[columnIdx] +' ';
                     }
                 }
             }
@@ -305,6 +286,21 @@ $(document).ready (function() {
         },
         { 
             "data": "nombreLote" 
+        },
+        {
+            "data": "nombreCliente"
+        },
+        {
+            "data": "coordinador"
+        },
+        {
+            "data": "gerente"
+        },
+        {
+            "data": "subdirector"
+        },
+        {
+            "data": "regional"
         },
         { 
             "data": "fechaApartado" 
