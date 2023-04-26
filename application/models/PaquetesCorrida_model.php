@@ -77,17 +77,17 @@ class PaquetesCorrida_model extends CI_Model
         foreach ($condiciones as $index => $valor) {
             $id_condicion = $valor['id_condicion'];
             $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
-            MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-            FROM descuentos d
-            INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
+        FROM descuentos d
+        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
             WHERE d.id_condicion = $id_condicion 
-            AND d.inicio IS NULL
+        AND d.inicio IS NULL
             GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
             if( ($index+1) != count($condiciones)) {
                 $queryFinal .= " UNION ALL ";
             }
         }
-        
+
         $data = $this->db->query("$queryFinal ORDER BY id_condicion, d.porcentaje")->result_array();
         $allArray = array();
         foreach ($condiciones as $indexC => $condicion) {
@@ -99,13 +99,13 @@ class PaquetesCorrida_model extends CI_Model
 
             $allArray[] = array("condicion" => $condicion, "data" => $arrayXCondicion, );
         }
-        
+
         return $allArray;
     }
 
     public function SaveNewDescuento($id_condicion,$descuento){
       $response =  $this->db->query("INSERT INTO descuentos VALUES(NULL,NULL,$id_condicion,$descuento,NULL)"); 
-      
+
         if (! $response ) {
             return $finalAnswer = 0;
         } else {
@@ -119,7 +119,7 @@ class PaquetesCorrida_model extends CI_Model
         return $this->db->query("SELECT c.descripcion,d.inicio,d.fin,d.id_condicion,max(d.id_descuento) AS id_descuento,d.porcentaje 
         FROM descuentos d
 		INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-		AND d.id_condicion = $id_condicion
+		AND d.id_condicion = $id_condicion 
         AND d.porcentaje=$descuento
 		and d.inicio is null 
         group by c.descripcion,d.inicio,d.fin,d.id_condicion,d.porcentaje 
@@ -192,7 +192,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                 'id_condominio' => $getPaquetesByName[$o]['condominio'],
                 'id_paquete' => $json,
                 'nombre' => $getPaquetesByName[$o]['descripcion'],
-                'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'], 
+                'fecha_inicio' =>  $getPaquetesByName[$o]['fecha_inicio'],
                 'fecha_fin' =>  $getPaquetesByName[$o]['fecha_fin'],
                 'estatus' => 1,
                 'creado_por' => $this->session->userdata('id_usuario'),
@@ -231,7 +231,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
 
     public function getPaquetesById($id_paquete){
         return  $this->db->query("SELECT * FROM paquetes WHERE id_paquete in($id_paquete)")->result_array();
-    }
+    } 
 
     public function getDescuentosByPlan($id_paquete){
         return  $this->db->query("SELECT r.*,d.*,c.descripcion FROM relaciones r 
@@ -263,7 +263,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                         $query_tipo_lote
                         ) t")->result_array();
                 }
-            return $paquetes;   
+            return $paquetes;
     }
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
         $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
@@ -277,20 +277,31 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         (CASE WHEN aut.superficie=1 THEN 'Menos a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
-        INNER JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
+        LEFT JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
         INNER JOIN usuarios us ON us.id_usuario=aut.creado_por
         INNER JOIN opcs_x_cats opc2 ON  opc2.id_opcion=aut.estatus AND opc2.id_catalogo=90
-        WHERE $estatusWhere1 $estatusWhere2
-        ")->result_array();
+        WHERE $estatusWhere1 $estatusWhere2")->result_array();
     }
     public function saveAutorizacion($datos){
-        var_dump($datos);
-        $id_autorizacion = $datos['id_autorizacion'];
-        $sesionado = $datos['creado_por'];
-        $hoy2 = $datos['fecha_creacion'];
+        $idResidencial = $datos['idResidencial'];
+        $fecha_inicio = $datos['fecha_inicio'];
+        $fecha_fin = $datos['fecha_fin'];
+        $id_sede = $datos['id_sede'];
+        $tipo_lote = $datos['tipo_lote'];
+        $superficie = $datos['superficie'];
+        $paquetes = $datos['paquetes'];
+        $estatus_autorizacion = $datos['estatus_autorizacion'];
+        $estatus = $datos['estatus'];
+        $fecha_creacion = $datos['fecha_creacion'];
+        $creado_por = $datos['creado_por'];
+        $fecha_modificacion = $datos['fecha_modificacion'];
+        $modificado_por = $datos['modificado_por'];
 
-        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$sesionado,'$hoy2',1,'AGREGÓ UNA NUEVA AUTORIZACIÓN')");
-
+        $this->db->query("INSERT INTO autorizaciones_pventas 
+        VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
+        $id_autorizacion = $this->db->insert_id();
+        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$creado_por ,'$fecha_creacion',1,'AGREGÓ UNA NUEVA AUTORIZACIÓN')");
+    
     }
     public function avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$sesionado){
             $this->db->trans_begin();
@@ -300,7 +311,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             INNER JOIN autorizaciones_pventas pv ON pv.estatus=a.estatus
             WHERE a.estatus=$estatus AND a.tipo=$tipo AND pv.id_autorizacion=$id_autorizacion")->result_array();
             $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
-            
+
             $comentario = $comentario == 0 ? $datosAvance[0]['comentario'] : $comentario;
             $estatusRegistro = $tipo == 1 ? 1 : 2;
             $estatusAutorizacion ='';

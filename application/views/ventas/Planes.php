@@ -282,14 +282,14 @@
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0">Superficie (<b class="text-danger">*</b>):</label>
-																		<div class="d-flex w-100">
-																			<div class="radio-container boxSuperficie w-100">
-																				<input type="radio" id="customRadio1" value="1" name="superficie" onclick="selectSuperficie(1)" onchange="validateAllInForm()">
-																				<label class="custom-control-label" for="customRadio1">Mayor a</label>
-																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)" onchange="validateAllInForm()">
-																				<label class="custom-control-label" for="customRadio2">Menor a</label>
-																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)" onchange="validateAllInForm()">
-																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>
+																		<div class="">
+																			<div class="radio-container boxSuperficie">
+																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio1">Menor a 200</label>
+																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio2">Mayor a 200</label>
+																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="validateAllInForm()">
+																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>	
 																				<input type="hidden" id="super" name="super" value="0">
 																			</div>
 																			<div id="printSuperficie"></div>
@@ -300,6 +300,7 @@
 																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
+																	<input type="hidden" value="1" name="accion" id="accion">
 																</div>
 															</div>
 														</div>

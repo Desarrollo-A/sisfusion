@@ -387,11 +387,12 @@ async function ConsultarPlanes(){
             if( data.length >= 1){
                 data[0].paquetes.shift();
                 let dataPaquetes = data[0].paquetes;
-                let dataDescuentosByPlan = data[0].paquetes;
-
-                
+                let dataDescuentosByPlan = data[0].descuentos;
+                console.log(dataDescuentosByPlan)               
                 
                 dataPaquetes.forEach(function (element, indexPaquetes) {
+                    let idPaquete = element.id_paquete;
+                    console.log(idPaquete)
                     var indexActual = document.getElementById('index');
                     var indexNext = (document.getElementById('index').value - 1) + 2;
                     indexActual.value = indexNext;
@@ -405,16 +406,25 @@ async function ConsultarPlanes(){
                     descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
                         let idCondicion = subelement['condicion']['id_condicion'];
                         let nombreCondicion = subelement['condicion']['descripcion'];
-                        
+                        console.log(idCondicion)
                         templateSelectsByCard(indexNext, indexCondicion, idCondicion, nombreCondicion);
                         // llenarSelects(indexNext, element['id_paquete'], nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes);
 
-                        dataDescuentosByPlan.forEach(function (elementData, indexData) {
-                            const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                            check.checked = true;
+                    let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete &&  elementD.id_condicion == idCondicion)
+                    console.log(existe)
+                    let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
+                    if(existe != undefined){
+                        const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
+                           check.checked = true; 
+                          PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
+ 
+                    }
+                      //  dataDescuentosByPlan.forEach(function (elementData, indexData) {
+                         //   const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
+                         //   check.checked = true;
 
-                            PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
-                        });                  
+                           //  PrintSelectDesc(indexNext, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
+                    //    });                  
                     });
                 
                     if( lenDesCon <= 0 ){
@@ -491,6 +501,10 @@ function ValidarOrden(indexN,i){
 }
 
 function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select, idCondicion, lenDesCon, indexPaquetes){
+    console.log('-----FUNCIÓN LLENAR---');
+    console.log(dataDescuentosByPlan)
+    console.log('idCondicion: '+idCondicion)
+    console.log('indexPaquetes: '+indexPaquetes)
     var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
     boxDetail.removeClass('hidden');
     let rowDetail = boxDetail.find( '.rowDetailDiscount');
@@ -504,8 +518,10 @@ function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select,
         rowDetail.removeClass('hidden');
     }
     let descuentosSelected = [];
+    dataDescuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_condicion == idCondicion);
     for (let m = 0; m < dataDescuentosByPlan.length; m++) {
         if(idCondicion != 13){
+            let id_descuento=
             crearBoxDetailDescuentos(indexGral, indexCondiciones, id_select, dataDescuentosByPlan[m].id_descuento, dataDescuentosByPlan[m].porcentaje, tipo);
             descuentosSelected.push(dataDescuentosByPlan[m].id_descuento);
                 if(dataDescuentosByPlan[m].msi_descuento != 0){
@@ -529,6 +545,7 @@ function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select,
 
 //Se introducen todas las opcines para cada uno de los select que pertenecen a un plan
 function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, indexGral, dataDescuentosByPlan=[], lenDesCon = 0, indexPaquetes = 0){
+    console.log(dataDescuentosByPlan);
     nombreCondicion = (nombreCondicion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
     var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
     boxDetail.removeClass('hidden');
@@ -536,6 +553,9 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
 
     //Si la condición en el plan ES checkeada
     if($(`#inlineCheckbox1_${indexGral}_${indexCondiciones}`).is(':checked')){
+        console.log('CHECKEADO')
+        console.log('indexGral: '+indexGral)
+        console.log('indexCondiciones: '+indexCondiciones)
         $(`#orden_${indexGral}_${indexCondiciones}`).prop( "disabled", false );
         
         $(`#selectDescuentos_${indexGral}_${indexCondiciones}`).append(`
@@ -585,7 +605,7 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
             let porcentaje = element['porcentaje'];
             let id_descuento = `${idCondicion == 13 ? element['id_descuento'] +','+ element['porcentaje'] : element['id_descuento'] }`;
             
-            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${porcentaje}${idCondicion != 13 ? '%' : ''}</option>`);
+            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${idCondicion == 4 || idCondicion == 12 ? '$'+formatMoney(porcentaje) : (idCondicion == 13 ? porcentaje : porcentaje + '%'  ) }</option>`);
         });
 
         if( dataDescuentosByPlan.length > 0 ){

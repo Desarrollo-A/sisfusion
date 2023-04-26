@@ -52,6 +52,7 @@ class PaquetesCorrida extends CI_Controller
     {
         $this->db->trans_begin();
         $index = $this->input->post("index");
+        $accion = $this->input->post("accion");
         $datos_sede = explode(",", $this->input->post("sede"));
         $id_sede = $datos_sede[0];
         $residenciales = $this->input->post("residencial[]");
@@ -239,11 +240,12 @@ class PaquetesCorrida extends CI_Controller
           "fecha_creacion" => $hoy2,
           "creado_por" => $user_sesionado,
           "fecha_modificacion" => $hoy2,
-           "modificado_por" => $user_sesionado
+           "modificado_por" => $user_sesionado,
+           "accion" => $accion
         );
-        // $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
+         $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
         // $this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
-        $this->General_model->addRecord('autorizaciones_pventas',$dataInsertAutPventas);
+        //$this->General_model->addRecord('autorizaciones_pventas',$dataInsertAutPventas);
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
             echo json_encode(0);
