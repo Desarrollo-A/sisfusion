@@ -209,7 +209,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     }
      
     public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
-        return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
+        return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_paquete FROM (
         SELECT DISTINCT(id_descuento) descuentos
         FROM lotes l
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
@@ -218,7 +218,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         $query_superdicie
         $query_tipo_lote
         UNION 
-        SELECT DISTINCT(id_descuento) descuentos
+        SELECT DISTINCT(id_descuento) id_paquete
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
@@ -233,11 +233,11 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         return  $this->db->query("SELECT * FROM paquetes WHERE id_paquete in($id_paquete)")->result_array();
     }
 
-    public function getDescuentosByPlan($id_paquete,$id_tcondicion){
+    public function getDescuentosByPlan($id_paquete){
         return  $this->db->query("SELECT r.*,d.*,c.descripcion FROM relaciones r 
         INNER JOIN descuentos d ON d.id_descuento=r.id_descuento
         INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
-        WHERE r.id_paquete IN ($id_paquete) AND c.id_condicion=$id_tcondicion ORDER BY r.prioridad ASC")->result_array();
+        WHERE r.id_paquete IN ($id_paquete) ORDER BY r.id_paquete, r.prioridad ASC")->result_array();
     }
     
 
