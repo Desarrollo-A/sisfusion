@@ -1445,4 +1445,17 @@
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = 27 AND estatus = 1")->result_array();
     }
 
+    public function allSubdirector()
+    {
+        return $this->db->query("SELECT u.id_usuario id_subdirector, 
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
+        WHERE u.id_rol IN (2) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
+    }
+    public function allUserVentas()
+    {
+        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,id_rol FROM usuarios 
+		WHERE id_rol IN (7, 9,3,2) AND estatus = 1 AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%'
+		order by id_rol")->result();
+    }
+
 }

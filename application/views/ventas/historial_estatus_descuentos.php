@@ -246,7 +246,7 @@
         $(document).ready(function() {
             $("#tabla_historialGral").prop("hidden", true);
             var url = "<?=base_url()?>/index.php/";
-            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto_dos", function (data) {
+            $.post("<?=base_url()?>index.php/Contratacion/lista_proyecto", function (data) {
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     var id = data[i]['idResidencial'];

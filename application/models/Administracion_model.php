@@ -86,24 +86,6 @@ class Administracion_model extends CI_Model {
 
 	}
 
-	   public function get_data_asignacion($idLote){
-		return $this->db->query("SELECT id_estado, id_desarrollo_n FROM lotes WHERE idLote = $idLote")->row();
-	  }
-
-	  public function get_edo_lote(){
-		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 44")->result_array();
-	  }
-
-	  public function get_des_lote(){
-		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 45")->result_array();
-	  }
-
-	  public function update_asignacion($idLote,$data){
-		$this->db->where("idLote",$idLote);
-		$this->db->update('lotes',$data);
-		return true;
-	 }
-
 	 public function getAssisGte($id_cliente){
         $query = $this->db->query("SELECT id_gerente FROM clientes WHERE id_cliente=".$id_cliente);
         $query = $query->row();
