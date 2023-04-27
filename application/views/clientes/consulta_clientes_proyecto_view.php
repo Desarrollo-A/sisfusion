@@ -31,11 +31,17 @@
                                 <h3 class="card-title center-align">Clientes por proyecto</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  data-live-search="true" title="Selecciona proyecto" data-size="7" required>
+                                                <select name="proyecto"
+                                                        id="proyecto" 
+                                                        class="selectpicker select-gral m-0"
+                                                        data-style="btn" 
+                                                        data-show-subtext="true" 
+                                                         data-live-search="true" 
+                                                         title="Selecciona una opción" 
+                                                         data-size="7" required>
                                                 </select>
                                             </div>
                                         </div>

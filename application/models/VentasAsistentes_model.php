@@ -95,13 +95,17 @@ class VentasAsistentes_model extends CI_Model {
    
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) { // MJ: ES CONTRALORÍA CORPORATIVA
+        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)// MJ: ES CONTRALORÍA CORPORATIVA
+        {
             $filtroUsuarioBR = '';
-            if($this->session->userdata('id_usuario') == 2815)
+            if($this->session->userdata('id_usuario') == 2815){
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else
+            }
+            else{
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
+            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
+
         }
         else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
@@ -111,8 +115,6 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-            else if ($id_sede == 10) 
-                $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
