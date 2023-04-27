@@ -21,10 +21,10 @@ class PaquetesCorrida extends CI_Controller
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
-
+ 
   public function Planes()
   {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/       
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/  
     $datos = $this->get_menu->get_menu_data($this->id_rol);
     $this->load->view('template/header');
     $this->load->view("ventas/Planes", $datos);
@@ -53,12 +53,11 @@ class PaquetesCorrida extends CI_Controller
         $this->db->trans_begin();
         $index = $this->input->post("index");
         $accion = $this->input->post("accion");
-        $datos_sede = explode(",", $this->input->post("sede"));
-        $id_sede = $datos_sede[0];
+        $datos_sede = $this->input->post("sede");
         $residenciales = $this->input->post("residencial[]");
         $superficie = $this->input->post("superficie");
-        $inicio = $this->input->post("inicio");
-        $fin = $this->input->post("fin");
+        $inicio = 0;//$this->input->post("inicio");
+        $fin = 0;//$this->input->post("fin");
         $query_superdicie = '';
         $query_tipo_lote = '';
         //Superficie
@@ -71,8 +70,8 @@ class PaquetesCorrida extends CI_Controller
             $query_superdicie = 'and sup < 200 ';
         } else if ($superficie == 2) { // Mayor a 200
             $query_superdicie = 'and sup >= 200 ';
-            $inicio = $this->input->post("fin");
-            $fin = $this->input->post("inicio");
+            $inicio =0;// $this->input->post("fin");
+            $fin = 0;//$this->input->post("inicio");
         } else if ($superficie == 3) { // Cualquiera
             $query_superdicie = '';
             $inicio = 0;
@@ -90,7 +89,7 @@ class PaquetesCorrida extends CI_Controller
             $query_tipo_lote = 'and c.tipo_lote = 0 ';
         } else if ($TipoLote == 1) { // Comercial
             $query_tipo_lote = 'and c.tipo_lote = 1 ';
-        } else if ($TipoLote == 3) { // Ambos
+        } else if ($TipoLote == 2) { // Ambos
             $query_tipo_lote = '';
         }
 
@@ -103,7 +102,7 @@ class PaquetesCorrida extends CI_Controller
             //VALIDAR SI EXISTE PAQUETE EN EL FORM
             if (isset($_POST["descripcion_" . $i])) {
                 $descripcion_paquete = $_POST["descripcion_" . $i];
-                $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'" . $datos_sede[1] . "','$desarrollos',$TipoLote,$inicio,$fin) ");
+                $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'" . $datos_sede . "','$desarrollos',$TipoLote,$inicio,$fin) ");
                 $id_paquete = $this->db->insert_id();
                 array_push($ArrPAquetes, $id_paquete);
                 //1.- DESCUENTO AL TOTAL
@@ -303,8 +302,8 @@ class PaquetesCorrida extends CI_Controller
     $desarrollos = implode(",", $residenciales);
     $superficie = $this->input->post("superficie");
     /***/
-    $inicio = $this->input->post("inicio");
-    $fin = $this->input->post("fin");
+    $inicio = 0;//$this->input->post("inicio");
+    $fin = 0;//$this->input->post("fin");
     $fechaInicio = $this->input->post("fechaInicio");
     $fechaFin = $this->input->post("fechaFin");
     $query_superdicie = '';
@@ -316,9 +315,9 @@ class PaquetesCorrida extends CI_Controller
      * 3.-Cualquiera
      */
     if ($superficie == 1) { //Mayor a
-      $query_superdicie = 'and sup >= ' . $fin . ' ';
+      $query_superdicie = 'and sup < 200 ';
     } else if ($superficie == 2) { // Menor a
-      $query_superdicie = 'and sup < ' . $fin . ' ';
+     $query_superdicie = 'and sup >= 200 ';
     } else if ($superficie == 3) { // Cualquiera
       $query_superdicie = '';
     }
@@ -331,12 +330,12 @@ class PaquetesCorrida extends CI_Controller
     */
     $ArrPAquetes = array();
     $TipoLote = $this->input->post("tipolote");
-    if ($TipoLote == 1) { //Habitacional
+    if ($TipoLote == 0) { //Habitacional
       $query_tipo_lote = 'and c.tipo_lote = 0 ';
-    } else if ($TipoLote == 2) { // Comercial
+    } else if ($TipoLote == 1) { // Comercial
       $query_tipo_lote = 'and c.tipo_lote = 1 ';
 
-    } else if ($TipoLote == 3) { // Ambos
+    } else if ($TipoLote == 2) { // Ambos
       $query_tipo_lote = '';
     }
 

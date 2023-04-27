@@ -207,7 +207,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             $this->PaquetesCorrida_model->insertBatch('paquetes_x_condominios',$datosInsertar_x_condominio);
         }
     }
-     
+   
     public function getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $fechaInicio, $fechaFin){
         return  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_paquete FROM (
         SELECT DISTINCT(id_descuento) descuentos
@@ -274,7 +274,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         (CASE WHEN aut.estatus=1 THEN 'lbl-sky' WHEN aut.estatus=2 THEN 'lbl-yellow' WHEN aut.estatus=3 THEN 'lbl-green' WHEN aut.estatus=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
         (CASE WHEN aut.estatus_autorizacion = 1 THEN 'Autorizado' ELSE 'No autorizado' END) estatusAutorizacion,
         (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-sky' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
-        (CASE WHEN aut.superficie=1 THEN 'Menos a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
+        (CASE WHEN aut.superficie=1 THEN 'Menor a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27

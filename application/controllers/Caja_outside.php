@@ -2323,6 +2323,9 @@ class Caja_outside extends CI_Controller {
                 "id_asesor" => $data->id_asesor,
                 "id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
                 "id_gerente" => $data->id_gerente,
+                "id_sudirector" => $data->id_sudirector,
+                "id_regional" => $data->id_regional,
+                "id_regional_2" => $data->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $data->id_usuario
             );

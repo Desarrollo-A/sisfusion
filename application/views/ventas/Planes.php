@@ -15,6 +15,7 @@
 		$datos = $datos2;
 		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
+		
 		?>
 
 		<div class="modal fade" id="ModalAlert" role="dialog">
@@ -223,15 +224,18 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
 						<ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active">
-								<a href="#nuevas-1" role="tab" data-toggle="tab">CARGAR PLAN</a>
+							<li class="active" id="li-aut">
+								<a href="#nuevas-1" role="tab" data-toggle="tab">AUTORIZACIONES</a>
+							</li>
+                            <li id="li-plan">
+								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
 							</li>
                         </ul>
 
 						<div class="card no-shadow m-0">
                             <div class="card-content p-0">
 								<div class="tab-content">
-									<div class="tab-pane active" id="nuevas-1">
+									<div class="tab-pane" id="nuevas-2">
 										<form id="form-paquetes" class="formulario">
 											<div class="container-fluid">
 												<div class="row">
@@ -254,10 +258,10 @@
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
+																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onchange="validateAllInForm()">
 																		</select>
 																	</div>
-																</div>
+																</div> 
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
@@ -269,11 +273,11 @@
 																	<div class="form-group">
 																		<label class="mb-0">Tipo de lote (<b class="text-danger">*</b>):</label>
 																		<div class="radio-container boxTipoLote">
-																			<input type="radio" id="customRadioInline1" value="1" name="tipoLote" onclick="validateAllInForm(1,1)">
+																			<input type="radio" id="customRadioInline1" value="0" name="tipoLote" onclick="validateAllInForm(0,1)">
 																			<label class="custom-control-label" for="customRadioInline1">Habitacional</label>
-																			<input type="radio" id="customRadioInline2" value="2" name="tipoLote" onclick="validateAllInForm(2,1)">
+																			<input type="radio" id="customRadioInline2" value="1" name="tipoLote" onclick="validateAllInForm(1,1)">
 																			<label class="custom-control-label" for="customRadioInline2">Comercial</label>
-																			<input type="radio" id="customRadioInline3" value="3" name="tipoLote" onclick="validateAllInForm(3,1)">
+																			<input type="radio" id="customRadioInline3" value="2" name="tipoLote" onclick="validateAllInForm(2,1)">
 																			<label class="custom-control-label" for="customRadioInline3">Ambos</label>	
 																			<input type="hidden" id="tipo_l" name="tipo_l" >
 																		</div>
@@ -284,11 +288,11 @@
 																		<label class="mb-0">Superficie (<b class="text-danger">*</b>):</label>
 																		<div class="">
 																			<div class="radio-container boxSuperficie">
-																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="validateAllInForm()">
+																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="selectSuperficie(1)">
 																				<label class="custom-control-label" for="customRadio1">Menor a 200</label>
-																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="validateAllInForm()">
+																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
 																				<label class="custom-control-label" for="customRadio2">Mayor a 200</label>
-																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="validateAllInForm()">
+																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>	
 																				<input type="hidden" id="super" name="super" value="0">
 																			</div>
@@ -314,6 +318,72 @@
 											</div>
 										</form>
 									</div>
+									<!------->
+									<div class="tab-pane active" id="nuevas-1">
+									<div class="toolbar">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
+                                                <div class="d-flex justify-between">
+                                                    <label class="label-gral">
+                                                        <span class="isRequired">*</span>Estatus autorización
+                                                    </label>                                                </div>
+                                                <select class="selectpicker select-gral m-0" id="estatusAut" name="estatusAut" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                                            </div>
+                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
+                                                <label class="label-gral"><span class="isRequired">*</span>Año</label>
+                                                <select class="selectpicker select-gral m-0" id="anio" name="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body">
+                                                    <?php
+                                                    setlocale(LC_ALL, 'es_ES');
+                                                    for ($i=2023; $i<=2026; $i++) {
+                                                        $yearName  = $i;
+                                                        echo '<option value="'.$i.'">'.$yearName.'</option>';
+                                                    } 
+                                                    ?>
+                                                    </select>
+                                            </div>
+                                            <div class="col-12 col-sm-1 col-md-1 col-lg-1">
+                                                <div class="container-fluid p-0">
+                                                    <div class="row">
+                                                        <div class="col-md-12 p-r">
+                                                            <div class="form-group d-flex">
+                                                                <button class="btn btn-dafult btn-round btn-fab" id="searchByEstatus">
+                                                                    <span class="material-icons update-dataTable">search</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br> 
+										<div class="material-datatables" id="box-autorizacionesPVentas">
+											<div class="form-group">
+													<table class="table-striped table-hover"
+														id="autorizacionesPVentas" name="autorizacionesPVentas">
+														<thead>
+															<tr>
+																<th>ID</th>
+																<th>SEDE</th>
+																<th>RESIDENCIAL</th>
+																<th>FECHA INICIO</th>
+																<th>FECHA FIN</th>
+																<th>TIPO LOTE</th>
+																<th>TIPO DE SUPERFICIE</th>
+																<th>ESTATUS AUTORIZACIÓN</th>
+																<th>ESTATUS</th>
+																<th>FECHA CREACIÓN</th>
+																<th>CREADO POR</th>
+																<th>ACCIONES</th>
+															</tr>
+														</thead>
+													</table>
+											</div>
+										</div>
+									</div> 
+									<!------->
 								</div>
 							</div>
 						</div>
@@ -334,4 +404,6 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/ventas/planes.js"></script>
+	<script src="<?= base_url() ?>dist/js/controllers/ventas/autorizacionesPVentas.js"></script>
+
 </body>

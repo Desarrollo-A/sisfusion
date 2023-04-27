@@ -11,7 +11,7 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
                 if(i == data.length -1) { //DESPUES DE LA ULTIMA OPCIÓN DE LOS ESTATUS, AGREGAR LA OPCIÓN "TODOS" PARA TRAER TODOS LOS ESTATUS
                     $("#estatusAut").append($('<option>').val(0).text('Todos'));
                 }
-        }
+        } 
         if (len <= 0) {
             $("#estatusAut").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
@@ -204,6 +204,36 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         return  botones;
     }
 
+    $(document).on('click', '#btnEditar', function (e) {
+        e.preventDefault();
+        var data = tablaAutorizacion.row($(this).parents('tr')).data();
+        console.log(data);
+        //$('#fechainicio').val(moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY'));
+        document.getElementById('fechainicio').value = data.fecha_inicio;// moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
+        document.getElementById('fechafin').value = data.fecha_fin;//moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
+       // $('#fechafin').val(moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY'));
+        $('#li-plan').addClass('active');
+        $('#li-aut').removeClass('active');
+        $('#nuevas-2').addClass('active');
+        $('#nuevas-1').removeClass('active');
+        //document.getElementById('sede').value = parseInt(data.id_sede);
+        $("#sede").selectpicker();
+        $('#sede').val(parseInt(data.id_sede)).trigger('change');
+        $("#sede").selectpicker('refresh');
+        let residencialesSelect = [];
+        let residenciales = data.idResidencial.split(',');
+        $("#residencial").selectpicker();
+        for (let m = 0; m < residenciales.length; m++) {
+            //residencialesSelect.push(residenciales[m]);
+            console.log(residenciales[m])
+            $(`#residencial`).val(residenciales[m]).trigger('change');
+        }
+        $("#residencial").selectpicker('refresh');
+
+    });
+    function cargarPlanes(){
+
+    }
     $(document).on('click', '#btnAvanzar', function () {
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
