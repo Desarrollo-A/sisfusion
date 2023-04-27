@@ -624,29 +624,6 @@
   color: #ffffff;
 }
 
-.buttons-youtube {
-  box-shadow: none;
-  padding: 7px 25px;
-  color: #FF0000;
-  background-color: #ffffff !important;
-  border: 1px solid #FF0000;
-  border-radius: 27px;
-  margin: 0;
-}
-
-.buttons-youtube i {
-  color: #FF0000;
-}
-
-.buttons-youtube:hover {
-  background-color: #FF0000 !important;
-  border: 1px solid #FF0000;
-}
-
-.buttons-youtube:hover i {
-  color: #ffffff;
-}
-
 /***/
 .buttons-general-dt {
   box-shadow: none;
@@ -1225,6 +1202,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1537,6 +1515,12 @@
 table.dataTable > thead > tr > th {
   padding: 0 !important;
   text-align: center;
+}
+
+.modal-xl {
+  overflow-y: auto;
+  width: 95%;
+  height: fit-content;
 }
 
 table {

@@ -806,7 +806,7 @@
                                                 <select  ng-model="inicioMensualidad" id="fechaInicioMensualidad"  class="selectList2 js-example-basic-single js-states form-control" ng-change="selectInicioM()"><!---->
                                                     <option>-SELECCIONA OPCIÓN-</option>
                                                     <option value="1">Día de fecha de apartado</option>
-                                                    <option value="2">Regla de apartado (tabla)</option>
+                                                    <option value="2" ng-selected="selected">Regla de apartado (tabla)</option>
                                                     <option value="3">Otro</option>
                                                 </select>
                                             </div>
@@ -1443,7 +1443,15 @@
                     offsetCnt.removeClass('col-md-offset-5');
                     offsetCnt.addClass('col-md-offset-2');
 
-                    var currentTime = new Date();
+
+
+                    var dateParts = $scope.fechaPM.split("-");
+
+                    var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+
+                    // var currentTime = new Date($scope.fechaApartado); //cuando no viene formateada la fecha
+                    var currentTime = dateObject;
                     var minDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), +1); //one day next before month
                     var maxDate =  new Date(currentTime.getFullYear(), currentTime.getMonth() +1, +0); // one day before next month
 
@@ -1463,6 +1471,7 @@
                     let btnSimular = angular.element(document.getElementById("btnSimular"));
                     btnSimular.removeClass("hide");
                     $compile( document.getElementById('customDate') )($scope);
+                    // console.log('inicia desde aqui', $scope.fechaApartado);
                 }else{
                     var cntFechaCustom  =  angular.element( document.getElementById("cnt-fechaCustom"));
                     var offsetCnt  =  angular.element( document.getElementById("offsetCnt"));
@@ -6168,7 +6177,6 @@
 
                         // console.log("response: ", response);
 
-
                         /*Reinicia los valores del arreglo que trae descuentos*/
                         descuentosAplicados=[];
                         $scope.selected = {};
@@ -7384,7 +7392,7 @@
                             function(paquetes){
                             });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+                        $scope.selectInicioM();
                     },
                     function (response) {
                     });
