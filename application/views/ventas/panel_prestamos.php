@@ -3,13 +3,6 @@
 <!-- <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/> -->
 <!-- <link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css"> -->
 
-<style>
-    .modal-backdrop{
-        z-index:9;
-    }
- 
-
-</style>
 <body>
 	<div class="wrapper">
 		<?php

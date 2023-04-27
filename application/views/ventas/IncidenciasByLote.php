@@ -30,21 +30,7 @@
         }
         ?>
 
-        <style>
-            .ase{
-                background: darkgrey;
-                border-radius: 10px;
-            }
-            .coor{
-                background: darkgrey;
-                border-radius: 10px;
-            }
-            .ger{
-                background: darkgrey;
-                border-radius: 10px;
-            }
-        </style>
-
+       
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">

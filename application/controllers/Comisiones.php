@@ -6434,10 +6434,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array('data' => $data));
     }
 
-      public function getStoppedCommissions()
+      public function comisionesDetenida()
     {
       $datos = array();
-      $datos = $this->Comisiones_model->getStoppedCommissions();
+      $datos = $this->Comisiones_model->comisiones_detenidas();
       if ($datos != null) {
         echo json_encode($datos);
       } else {
@@ -6447,7 +6447,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
  
     
-    public function viewDetenidas() {
+    public function detenidas() {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
