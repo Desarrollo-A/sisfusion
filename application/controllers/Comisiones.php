@@ -3,9 +3,8 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
+// use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
 
 class Comisiones extends CI_Controller
 {
@@ -34,38 +33,23 @@ class Comisiones extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-
    // dispersion-view complete
-  public function dispersion(){
 
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $datos = array();
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-     $salida = str_replace('' . base_url() . '', '', $val);
-     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-     $this->load->view('template/header');
-     $this->load->view("comisiones/dispersion-view", $datos);
+  public function dispersion() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $this->load->view('template/header');
+        $this->load->view("comisiones/dispersion-view", $datos);
+      }
+
  
-   }
-
-  public function getDataDispersionPago($val = ''){
-
-    $datos = array();
-    if(empty($val)){
-      $datos = $this->Comisiones_model->getDataDispersionPago();
-    }else{
-      $datos = $this->Comisiones_model->getDataDispersionPago($val);
-    }
-    
-    if ($datos != null) {
-      echo json_encode($datos);
-    } else {
-      echo json_encode(array());
-    }
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
   }
+
 
   public function getPlanesComisiones($val = ''){
 
@@ -82,7 +66,53 @@ class Comisiones extends CI_Controller
         echo json_encode(array());
       }
     }
-    
+
+  public function updateBandera(){
+    $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
+    echo json_encode($response);
+  }
+
+  public function activas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+    $this->load->view('template/header');
+    $this->load->view("comisiones/activas-view", $datos);
+  }
+
+  public function getDataActivasPago() {
+    $data['data'] = $this->Comisiones_model->getDataActivasPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function liquidadas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/liquidadas-view", $datos);
+  }
+
+  public function getDataLiquidadasPago() {
+    $data['data'] = $this->Comisiones_model->getDataLiquidadasPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function especiales() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/especiales-view", $datos);
+  }
+
+  public function getDataDispersionPagoEspecial() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPagoEspecial()->result_array();
+    echo json_encode($data);
+  }
+ 
+  
   // dispersion-view complete-end
 
   public function usuariosIncidencias()
@@ -2645,19 +2675,7 @@ public function agregar_comisionvc(){
   }
   
 
-  public function historyDispersePaymentInNeodata()
-  {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/historial_liquidadas", $datos);
-  }
+
 
 public function getSettledCommissions(){
       $datos = array();
@@ -2977,31 +2995,7 @@ public function LiquidarLote(){
  
  }
 
- function activeCommissions()
-    {
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-        $this->load->view('template/header');
-        $this->load->view("ventas/active_commissions", $datos);
-    }
 
-    public function getActiveCommissions()
-    {
-        $datos = array();
-        $datos = $this->Comisiones_model->getActiveCommissions();
-        if ($datos != null) {
-            echo json_encode($datos);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
     public function getAllCommissions()
     {
@@ -3087,11 +3081,7 @@ public function LiquidarLote(){
         }
     }
 
-    public function updateBandera(){
-         // echo($_POST['param']);
-        $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
-        echo json_encode($response);
-    }
+    
 
     public function asigno_region_uno($sol){
       $this->load->model("Comisiones_model");
@@ -6364,39 +6354,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
 
-    public function dispersar_pago_especial()
-    {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/dispersar_pago_especial", $datos);
-    }
-    public function porcentajesEspecial($idCliente){
-      echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
-    }
-    public function getDataDispersionPagoEspecial($val = '')
-    {
-      //echo $val;
-      $datos = array();
-      if(empty($val)){
-        $datos = $this->Comisiones_model->getDataDispersionPagoEspecial();
-      }else{
-        $datos = $this->Comisiones_model->getDataDispersionPagoEspecial($val);
-      }
-      
-      if ($datos != null) {
-        echo json_encode($datos);
-      } else {
-        echo json_encode(array());
-      }
-    }
-
+ 
     /************************/
 
 
@@ -7109,13 +7067,13 @@ for ($d=0; $d <count($dos) ; $d++) {
           $respuesta =  array(
             "response_code" => 200, 
             "response_type" => 'success',
-            "message" => "Prestamo actualizado");
+            "message" => "Préstamo actualizado");
 
         }else{
           $respuesta =  array(
             "response_code" => 400, 
             "response_type" => 'error',
-            "message" => "Prestamo no actualizado, inténtalo más tarde ");
+            "message" => "Préstamo no actualizado, inténtalo más tarde ");
 
         }
         echo json_encode ($respuesta);
