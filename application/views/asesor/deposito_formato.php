@@ -37,18 +37,18 @@
             <div class="container-fluid p-5">
                 <div class="row" id="encabezadoDS">
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                        <img src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales" style="width:100%;align-self: center;"/>
+                        <img  class="w-100" src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales"/>
                     </div>
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7">
-                        <h3 class="m-0 mb-2">DEPÓSITO DE SERIEDAD
+                        <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
                             <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
                             <?php if ($this->session->userdata('id_rol') == 17) { ?>
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
                             <?php }?>
                         </h3>  
-                        <h6 class="m-0">Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?> </h6>
-                        <h6 class="m-0">Folio: <?php echo $cliente[0]->clave; ?></h6>
-                            <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
+                        <h6 class="m-0">Última modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
+                        <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
+                        <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
                         <input type="hidden" name="id_cliente" id="id_cliente"  value="<?php echo $cliente[0]->id_cliente; ?>">
                     </div>
                 </div>
@@ -222,6 +222,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <h4 class="text-center pt-3">DATOS DEL TITULAR</h4>
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -258,7 +259,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">                  
                             <label>
-                                TELEÉFONO CASA
+                                TELÉFONO CASA
                             </label>
                             <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>"/>
                         </div>
@@ -281,31 +282,23 @@
                                 EMAIL
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <input class="form-control input-gral" name="correo" id="correo" type="email" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>" style="font-size: 0.9em;"/>
+                            <input class="form-control input-gral" name="correo" id="correo" type="email" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
-                            <label>
-                                FECHA NACIMIENTO
-                                (<small style="color: red;">*</small>)
-                            </label>
-                            <input class="form-control input-gral m-0" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
+                        <label>FECHA NACIMIENTO(<small style="color: red;">*</small>)</label>
+                        <input class="form-control input-gral m-0" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label style="top:-29px;">
-                                NACIONALIDAD
-                                (<small style="color: red;">*</small>)
-                            </label>
+                            <label style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
                             <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
                                 <?php
-                                for($p=0; $p < count($nacionalidades) ; $p++)
-                                {
-                                    if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad)
-                                    {
+                                for($p=0; $p < count($nacionalidades) ; $p++){
+                                    if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
                                         echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
                                     }
                                     else{
@@ -325,17 +318,12 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label>
-                                ESTADO CIVIL
-                                (<small style="color: red;">*</small>)
-                            </label>
+                            <label>ESTADO CIVIL(<small style="color: red;">*</small>)</label>
                             <select name="estado_civil" id="estado_civil" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <option value=""> SELECCIONA UNA OPCIÓN </option>
                                 <?php
-                                for($n=0; $n < count($edoCivil) ; $n++)
-                                {
-                                    if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil)
-                                    {
+                                for($n=0; $n < count($edoCivil) ; $n++){
+                                    if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil){
                                         echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
                                     }
                                     else{
@@ -351,16 +339,12 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label>
-                                RÉGIMEN
-                            </label>
+                            <label>RÉGIMEN</label>
                             <select name="regimen_matrimonial" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <option value="5"> SELECCIONA UNA OPCIÓN </option>
                                 <?php
-                                for($n=0; $n < count($regMat) ; $n++)
-                                {
-                                    if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial)
-                                    {
+                                for($n=0; $n < count($regMat) ; $n++){
+                                    if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
                                         echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
                                     }
                                     else{
@@ -373,9 +357,7 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                NOMBRE DE CÓNYUGE
-                            </label>
+                            <label>NOMBRE DE CÓNYUGE</label>
                             <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
                         </div>
                     </div>              
@@ -384,10 +366,7 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>
-                                DOMICILIO PARTICULAR
-                                (<small style="color: red;">*</small>)
-                            </label>
+                            <label>DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
@@ -396,20 +375,14 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                OCUPACIÓN
-                                (<small style="color: red;">*</small>)
-                            </label>
+                            <label>OCUPACIÓN(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                EMPRESA EN LA QUE TRABAJA
-                            </label>
-                            <input class="form-control input-gral" name="empresa" id="empresa" type="text" <?php echo $readOnly; ?>
-                                    value="<?=$cliente[0]->empresa?>"/>
+                            <label>EMPRESA EN LA QUE TRABAJA</label>
+                            <input class="form-control input-gral" name="empresa" id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
                         </div>
                     </div>
                 </div> 
@@ -417,18 +390,13 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                PUESTO
-                                (<small style="color: red;">*</small>)
-                            </label>
+                            <label>PUESTO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="puesto" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                ANTIGÜEDAD <small>(AÑOS)</small>
-                            </label>
+                            <label>ANTIGÜEDAD <small>(AÑOS)</small></label>
                             <input class="form-control input-gral" name="antiguedad" id="antiguedad" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->antiguedad?>"/>
                         </div>
                     </div>                
@@ -437,9 +405,7 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>
-                                DOMICILIO EMPRESA
-                            </label>
+                            <label>DOMICILIO EMPRESA</label>
                             <input class="form-control input-gral" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
                         </div>
                     </div>                
@@ -448,314 +414,269 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                EDAD AL MOMENTO DE FIRMA
-                                (<small style="color: red;">*</small>) <small>(AÑOS)</small>
-                            </label>
+                            <label>EDAD AL MOMENTO DE FIRMA(<small style="color: red;">*</small>) <small>(AÑOS)</small></label>
                             <input class="form-control input-gral" name="edadFirma" id="edadFirma" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->edadFirma?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>
-                                TELÉFONO EMPRESA
-                            </label>
+                            <label>TELÉFONO EMPRESA</label>
                             <input class="form-control input-gral" name="telefono_empresa" id="telefono_empresa" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?=$cliente[0]->telefono_empresa?>"/>
                         </div>
                     </div>            
                 </div>
 
-                <div class="container-fluid p-0">
-                    <summary><b>COPROPIETARIO(S):</b></summary>
-                        <?php $limite = $copropiedadTotal[0]->valor_propietarios;
-                            if($limite>0){
-                                for ($i = 0; $i < $limite; $i++) {
-                                    echo '  <center>
-                                                <b><label style="font-size: 1em; color:#0A548B;">PROPIETARIO ' . ($i + 1) . '</label></b>
-                                            </center>
-                                            <div class="row" id="container_coprops">
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>NOMBRE</label>
-                                                        <input readonly class="form-control" type="text" required="true" value="'.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno.'"/>
-                                                        <input id="id_cop[]" name="id_cop[]" type="hidden" value="'.$copropiedad[$i]->id_copropietario.'">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>TELEÉFONO CASA</label>
-                                                        <input  class="form-control" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>CELULAR</label>
-                                                        <input  class="form-control" name="telefono2_cop[]" id="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                            </div>
+            <?php 
+            $limite = $copropiedadTotal[0]->valor_propietarios;
+            if($limite>0){ echo '
+                <div class="container-fluid p-0" id="containerCopropietario">
+                    <h4 class="text-center pt-3">COPROPIETARIO (S)</h4>';
+                    for ($i = 0; $i < $limite; $i++) {
+                        echo '
+                    <h6 class="text-center">PROPIETARIO ' . ($i + 1) . '</h6>                    
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>NOMBRE</label>
+                                <input readonly class="form-control input-gral" type="text" required="true" value="'.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno.'"/>
+                                <input id="id_cop[]" name="id_cop[]" type="hidden" value="'.$copropiedad[$i]->id_copropietario.'">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>TELEÉFONO CASA</label>
+                                <input  class="form-control input-gral" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>CELULAR</label>
+                                <input  class="form-control input-gral" name="telefono2_cop[]" id="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                            </div>
+                        </div>
+                    </div>
 
-                                            <div class="row"> 
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>EMAIL</label>
-                                                        <input  class="form-control" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>           
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label>FECHA NACIMIENTO</label>
-                                                        <input  class="form-control" name="fnacimiento_cop[]" id="fnacimiento_cop[]" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label>NACIONALIDAD</label> 
-                                                        <select class="form-control" data-live-search="true" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>
-                                                        <!--$nacionalidades-->';
+                    <div class="row"> 
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>EMAIL</label>
+                                <input  class="form-control input-gral" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.'/>
+                            </div>
+                        </div>           
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating select-is-empty">
+                                <label>FECHA NACIMIENTO</label>
+                                <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating select-is-empty">
+                                <label>NACIONALIDAD</label> 
+                                <select class="selectpicker select-gral m-0" data-live-search="true" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>
+                                <!--$nacionalidades-->';
 
-                                                        for($n=0; $n < count($nacionalidades) ; $n++){
-                                                            if($nacionalidades[$n]['id_opcion'] == $copropiedad[$i]->nacionalidad_valor){
-                                                                echo '<option value="'.$nacionalidades[$n]['id_opcion'].'" selected>'.$nacionalidades[$n]['nombre'].'</option>';
-                                                            }
-                                                            else{
-                                                                echo '<option value="'.$nacionalidades[$n]['id_opcion'].'">'.$nacionalidades[$n]['nombre'].'</option>';
-                                                            }
-                                                        }
-                                                        echo'
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>    
+                                for($n=0; $n < count($nacionalidades) ; $n++){
+                                    if($nacionalidades[$n]['id_opcion'] == $copropiedad[$i]->nacionalidad_valor){
+                                        echo '<option value="'.$nacionalidades[$n]['id_opcion'].'" selected>'.$nacionalidades[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$nacionalidades[$n]['id_opcion'].'">'.$nacionalidades[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                echo'
+                                </select>
+                            </div>
+                        </div>
+                    </div>    
 
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                    <div class="form-group label-floating">
-                                                        <label>DOMICILIO PARTICULAR</label>
-                                                        <input  class="form-control" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group label-floating">
+                                <label>DOMICILIO PARTICULAR</label>
+                                <input  class="form-control input-gral" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                            </div>
+                        </div>
+                    </div>
 
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label> ORIGINARIO DE:</label>
-                                                        <input type="text" pattern="[A-Za-z ]+" class="form-control" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>        
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label>ESTADO CIVIL</label>
-                                                        <select class="form-control" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
-                                                                
-                                                            ';
-                                                        for($n=0; $n < count($edoCivil) ; $n++)
-                                                        {
-                                                            if($edoCivil[$n]['id_opcion'] == $copropiedad[$i]->estado_valor)
-                                                            {
-                                                                echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
-                                                            }
-                                                            else{
-                                                                echo '<option value="'.$edoCivil[$n]['id_opcion'].'">'.$edoCivil[$n]['nombre'].'</option>';
-                                                            }
-                                                        }
-                                                        echo'
-                                                        </select>
-                                                    </div>
-                                                </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label> ORIGINARIO DE:</label>
+                                <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                            </div>
+                        </div>        
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating select-is-empty">
+                                <label>ESTADO CIVIL</label>
+                                <select class="selectpicker select-gral m-0" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
+                                        
+                                ';
+                                for($n=0; $n < count($edoCivil) ; $n++)
+                                {
+                                    if($edoCivil[$n]['id_opcion'] == $copropiedad[$i]->estado_valor)
+                                    {
+                                        echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$edoCivil[$n]['id_opcion'].'">'.$edoCivil[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                echo'
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating select-is-empty">
+                                <label>RÉGIMEN</label>
+                                <select name="r_matrimonial_cop[]" data-live-search="true" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
+                                    for($n=0; $n < count($regMat) ; $n++){
+                                        if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor){
+                                            echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
+                                        }
+                                        else{
+                                            echo '<option value="'.$regMat[$n]['id_opcion'].'">'.$regMat[$n]['nombre'].'</option>';
+                                        }
+                                    }
+                                    echo'
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label>RÉGIMEN</label>
-                                                        <select name="r_matrimonial_cop[]" data-live-search="true" id="r_matrimonial_cop[]" class="form-control" style="font-size: 0.9em;" '.$statsInput.'>
-                                                        
-                                                            ';
-                                                            /*$regMat*/
-                                                            for($n=0; $n < count($regMat) ; $n++)
-                                                            {
-                                                                if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor)
-                                                                {
-                                                                    echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
-                                                                }
-                                                                else{
-                                                                    echo '<option value="'.$regMat[$n]['id_opcion'].'">'.$regMat[$n]['nombre'].'</option>';
-                                                                }
-                                                            }
-                                                            echo'
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>NOMBRE DE CÓNYUGE</label>
+                                <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="conyuge_cop[]" id="conyuge_cop[]" type="text" value="' . $copropiedad[$i]->conyuge . '" '.$statsInput.'/>
+                            </div>
+                        </div>
 
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>NOMBRE DE CÓNYUGE</label>
-                                                        <input type="text" pattern="[A-Za-z ]+" class="form-control" name="conyuge_cop[]" id="conyuge_cop[]" type="text" value="' . $copropiedad[$i]->conyuge . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>OCUPACIÓN</label>
+                                <input  class="form-control input-gral" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.'/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>PUESTO</label>
+                                <input  class="form-control input-gral" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.'/>
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>ANTIGÜEDAD <small style="font-size: 0.5em;"> (AÑOS)</small></label>
+                                <input  class="form-control input-gral" name="antiguedad_cop[]" id="antiguedad_cop[]" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->antiguedad . '" '.$statsInput.'/>
+                            </div>
+                        </div>
 
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>OCUPACIÓN</label>
-                                                        <input  class="form-control" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>PUESTO</label>
-                                                        <input  class="form-control" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div> 
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>
-                                                            ANTIGÜEDAD <small style="font-size: 0.7em;">(AÑOS)</small>
-                                                        </label>
-                                                        <input  class="form-control" name="antiguedad_cop[]" id="antiguedad_cop[]" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->antiguedad . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>EDAD FIRMA<small style="font-size: 0.5em;">(AÑOS)</small></label>
+                                <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.'/>
+                            </div>
+                        </div>
 
-                                                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>EDAD FIRMA<small style="font-size: 0.7em;">(AÑOS)</small></label>
-                                                        <input  class="form-control" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>EMPRESA LABORA</label>
+                                <input  class="form-control input-gral" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
+                            </div>
+                        </div>	
+                    </div>
 
-						                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                    <div class="form-group label-floating">
-                                                        <label>EMPRESA LABORA</label>
-                                                        <input  class="form-control" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>	
-                                            </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group label-floating">
+                                <label>DOMICILIO EMPRESA</label>
+                                <input  class="form-control input-gral" name="dom_emp_cop[]" id="dom_emp_cop[]" type="text" value="' . $copropiedad[$i]->direccion . '" '.$statsInput.'/>
+                            </div>
+                        </div>
+                    </div>
 
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                    <div class="form-group label-floating">
-                                                        <label>DOMICILIO EMPRESA</label>
-                                                        <input  class="form-control" name="dom_emp_cop[]" id="dom_emp_cop[]" type="text" value="' . $copropiedad[$i]->direccion . '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                    <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
-                                                        <label class="control-label" style="font-size: 0.8em;">
-                                                                VIVE EN CASA
-                                                            </label>
-                                                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                            <div class="col-md-2 checkbox-radios">
-                                                                <div class="radio">
-                                                                    <label style="font-size: 0.8em;">
-                                                                        <input type="radio" id="tipo_vivienda_cop'.$i.'[]" 
-                                                                                name="tipo_vivienda_cop'.$i.'" 
-                                                                                ';
+                    <div class="row" id="radioViv">
+                        <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                            <h4 class="label-on-left mb-0">VIVE EN CASA</h4>
+                            <div class="radioContainer">
+                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
                                             if ($copropiedad[$i]->tipo_vivienda == 1) {
                                                 echo "checked=true";
                                             }
-                                            echo '  value="1" style="font-size: 0.8em;" '.$statsInput.'/> PROPIA
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2 checkbox-radios">
-                                                                <div class="radio">
-                                                                    <label style="font-size: 0.8em;">
-                                                                        <input type="radio" id="tipo_vivienda_cop'.$i.'[]" 
-                                                                                name="tipo_vivienda_cop'.$i.'" 
-                                                                                ';
+                                            echo '  value="1" '.$statsInput.'/>
+                                            <label> PROPIA </label>
+                                       
+                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
                                             if ($copropiedad[$i]->tipo_vivienda == 2) {
                                                 echo "checked=true";
                                             }
-                                            echo '  value="2" style="font-size: 0.8em;" '.$statsInput.'/> RENTADA
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2 checkbox-radios">
-                                                                <div class="radio">
-                                                                    <label style="font-size: 0.8em;">
-                                                                        <input type="radio" id="tipo_vivienda_cop'.$i.'[]" 
-                                                                                name="tipo_vivienda_cop'.$i.'" 
-                                                                                ';
+                                            echo '  value="2" '.$statsInput.'/> 
+                                            <label> RENTADA </label>
+                                <div class="col-md-2 checkbox-radios">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
                                             if ($copropiedad[$i]->tipo_vivienda == 3) {
                                                 echo "checked=true";
                                             }
-                                            echo '  value="3" style="font-size: 0.8em;" '.$statsInput.'/> PAGÁNDOSE
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2 checkbox-radios">
-                                                                <div class="radio">
-                                                                    <label style="font-size: 0.8em;">
-                                                                        <input type="radio" id="tipo_vivienda_cop'.$i.'[]" 
-                                                                                name="tipo_vivienda_cop'.$i.'" 
-                                                                                ';
+                                            echo '  value="3" '.$statsInput.'/> PAGÁNDOSE
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 checkbox-radios">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
                                             if ($copropiedad[$i]->tipo_vivienda == 4) {
                                                 echo "checked=true";
                                             }
-                                            echo '  value="4" style="font-size: 0.8em;" '.$statsInput.'/> FAMILIAR
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2 checkbox-radios">
-                                                                <div class="radio">
-                                                                    <label style="font-size: 0.8em;">
-                                                                        <input type="radio" id="tipo_vivienda_cop'.$i.'[]" 
-                                                                                name="tipo_vivienda_cop'.$i.'" 
-                                                                                ';
+                                            echo '  value="4" '.$statsInput.'/> FAMILIAR
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 checkbox-radios">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
                                             if ($copropiedad[$i]->tipo_vivienda == 5) {
                                                 echo "checked=true";
                                             }
-                                            echo '  value="5" style="font-size: 0.8em;" '.$statsInput.'/> OTRO
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-                                                    </div>
-                                                    <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2">
-                                                        <label class="control-label" style="font-size: 0.8em;">
-                                                                RFC
-                                                            </label>
-                                                            <input class="form-control" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly
-                                                            value="'; echo $copropiedad[$i]->rfc; echo '" style="font-size: 0.9em;" '.$statsInput.'/>
-                                                            <input type="hidden" value="'.$limite.'" name="numOfCoprops">
-                                                    </div>
+                                            echo ' value="5" '.$statsInput.'/> OTRO
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                            <label>RFC</label>
+                            <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo '" style="font-size: 0.9em;" '.$statsInput.'/>
+                            <input type="hidden" value="'.$limite.'" name="numOfCoprops">
+                        </div>
+                    </div>';
+                    }
+                echo '</div>';
+                }
+                else{
+                echo 
+                `<center>
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                        <b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b>
+                    </div>
 
-                                                </div>';
-                                        }
-
-
-                                    }
-                                    else{
-
-                                        echo '<center>
-                                                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                                <b><label style="font-size: 1em; color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b>
-                                                </div>
-
-                                                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-
-                                                <button class="btn btn-primary btn-round btn-fab btn-fab-mini to-comment agregar_propietario hide" title="Agregar nuevo propietario" style="color:white;"><i class="material-icons">supervisor_account</i></button>
-                                                </div>
-
-                                                </center>
-                                                <div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><br></div></div>';
-
-
-
-
-                                    }
-
-
-                                    ?>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-round btn-fab btn-fab-mini to-comment agregar_propietario hide" title="Agregar nuevo propietario" style="color:white;"><i class="material-icons">supervisor_account</i></button>
+                    </div>
+                </center>`;
+                }
+                ?>
             </div>           
         </div>
     </div>
 </div>
 
-    <?php $this->load->view('template/footer_legend');?>
+    <!-- <?php $this->load->view('template/footer_legend');?> -->
 
 </div>
 <div id="mensaje"></div>
