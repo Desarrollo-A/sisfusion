@@ -72,31 +72,31 @@ $(document).ready(function () {
             { data: function (d) {
                 var labelTipoVenta;
                 if(d.tipo_venta == 1) {
-                    labelTipoVenta ='<span class="label" style="color:#78281F;background:#F5B7B1;">Particular</span>';
+                    labelTipoVenta ='<span class="label  lbl-orageYellow" >Particular</span>';
                 }else if(d.tipo_venta == 2) {
-                    labelTipoVenta ='<span class="label" style="color:#186A3B;background:#ABEBC6;">Normal</span>';
+                    labelTipoVenta ='<span class="label lbl-green" >Normal</span>';
                 }else if(d.tipo_venta == 7) {
-                    labelTipoVenta ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Especial</span>';
+                    labelTipoVenta ='<span class="label lbl-violetDeep" >Especial</span>';
                 }else{
-                    labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    labelTipoVenta ='<span class="label lbl-gray" >Sin Definir</span>';
                 }
                 return labelTipoVenta;
             }}, 
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
-                    labelCompartida ='<span class="label" style="color:#7D6608;background:#F9E79F;">Individual</span>';
+                    labelCompartida ='<span class="label lbl-yellow" >Individual</span>';
                 } else{
-                    labelCompartida ='<span class="label" style="color:#7E5109;background:#FAD7A0;">Compartida</span>';
+                    labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
                 }
                 return labelCompartida;
             }}, 
             { data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
+                    labelStatus ='<span class="label lbl-violetDeep"   >Contratado</span>';
                 }else {
-                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
+                    labelStatus ='<span class="label lbl-gray"><b>'+d.idStatusContratacion+'</b></span>';
                 }
                 return labelStatus;
             }},
