@@ -124,6 +124,8 @@ $(document).ready (function() {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
             } );
+            
+            $('[data-toggle="tooltip"]').tooltip();
         },
         buttons: [{
             extend: 'excelHtml5',
@@ -174,10 +176,22 @@ $(document).ready (function() {
             { "data": "gerente"},
             { "data": "subdirector"},
             { "data": "regional"},
+            { "data": "regional2"},
             { "data": "aut" },
             {
                 "data": function( d ){
-                    return "<center><a href='#' class='seeAuts btn-data btn-blueMaderas' data-id_autorizacion='"+d.id_autorizacion+"' data-idLote='"+d.idLote+"'><i class='fas fa-eye'></i></center>";
+                    acciones = `<center>
+                                    <a  href="#" 
+                                        class="btn-data btn-blueMaderas seeAuts"
+                                        data-id_autorizacion="${d.id_autorizacion}" 
+                                        data-idLote="${d.idLote}"
+                                        data-toggle="tooltip" 
+                                        data-placement="top"
+                                        title="Visualizar">
+                                        <i class='fas fa-eye'></i>
+                                    </a>
+                                </center>`;
+                    return '<div class="d-flex justify-center">'+acciones+'</div>';
                 }
             }
         ],
@@ -238,6 +252,8 @@ $(document).ready (function() {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
             } );
+            
+            $('[data-toggle="tooltip"]').tooltip();
         },
         buttons: [{
             extend: 'excelHtml5',
@@ -302,13 +318,29 @@ $(document).ready (function() {
         {
             "data": "regional"
         },
+        {
+            "data": "regional2"
+        },
         { 
             "data": "fechaApartado" 
         },
         {
             "data": function( d ){
                 if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
-                    aut = '<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" title="Solicitar Autorización"><i class="far fa-handshake"></i></a>';
+                    aut =
+                        `<a  href="#"
+                             class="btn-data btn-blueMaderas addAutorizacionAsesor"
+                             data-idCliente="${d.id_cliente}"
+                             data-nombreResidencial="${d.nombreResidencial}"
+                             data-nombreCondominio="${d.nombreCondominio}"
+                             data-nombreLote="${d.nombreLote}"
+                             data-idCondominio="${d.idCondominio}"
+                             data-idLote="${d.idLote}" 
+                             data-toggle="tooltip" 
+                             data-placement="top"
+                             title="ACCIONES">
+                            <i class="fas fa-redo"></i>
+                        </a>`;
                     return '<div class="d-flex justify-center">'+aut+'</div>';
                 }
                 else{
@@ -402,8 +434,11 @@ contador = 1;
 function agregarAutorizacion (){
     $("#autorizacionesExtra").append('<div id="cnt-'+contador+'"><hr><label>Observación: </label><br>' +
         '<a onclick="eliminaAutorizacion('+contador+')" style="float: right; color: red; cursor:pointer" title="Eliminar observación"><span class="material-icons">delete</span></a><br>' +
-        '<textarea type="text" name="comentario_' + contador + '" placeholder="comentario" ' +
-        'class="form-control" id="comentario_'+ contador +'" rows="3" style="width:100%;" maxlength="100" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea></div>');
+        '<textarea  type="text" name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
+        '           class="form-control input-gral" id="comentario_'+ contador +'" rows="3" '+
+        '           style="width:100%;" maxlength="100" '+
+        '           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">'+
+        '</textarea></div>');
     contador = contador + 1;
     $('#tamanocer').val(contador);
 

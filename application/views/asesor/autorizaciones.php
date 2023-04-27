@@ -73,12 +73,12 @@
 									class="selectpicker select-gral" 
 									data-style="btn btn-round" 
 									data-live-search="true"
-									title="Selecciona una opción" 
+									title="Selecciona una opción"
 									data-size="7">
 							</select>
 							<br><br>
 							<label>Observaciones: *</label>
-							<textarea	class="form-control text-gral"
+							<textarea	class="form-control input-gral"
 										id="comentario_0"
 										name="comentario_0"
 										rows="3"
@@ -99,16 +99,26 @@
 							<br>
 							<div id="autorizacionesExtra"></div>
 							<div id="functionAdd">
-								<a onclick="agregarAutorizacion()" style="float: right; color: black; cursor: pointer; " title="Agregar observación">
-									<span class="material-icons">add</span>
+								<a	class="btn-data btn-blueMaderas"
+									onclick="agregarAutorizacion()"
+									style="float: right; cursor: pointer;"
+									data-toggle="tooltip" 
+									data-placement="right"
+									title="Agregar observación">
+									<i class="fas">
+										<span class="material-icons">
+											note_add
+										</span>
+									</i>
 								</a>
+								<br>
 							</div>
 							<br>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
 							<a href="#" class="btn btn-primary finishS" style="margin: 0px;" onclick="return validateEmptyFields()" id="btnSubmit">
-									Enviar autorización
+									Enviar
 							</a>
 							<button type="submit" id="btnSubmitEnviar" class="btn btn-success hidden" data-dismiss="modal">
 							</button>
@@ -153,12 +163,12 @@
 										<div class="active tab-pane" id="soli">
 											<h3 class="card-title center-align">Solicitud</h3>
 											<p class="center-align">
-												A través de este panel(Solicitud) podrás realizar lo siguiente:<br>
-												1. Consulta de las solicitudes previas a su autorización.<br>
-												2. Envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
+												A través de este panel(Solicitud) podrás realizar lo siguiente;
+												consulta de las solicitudes previas a su autorización,
+												envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
 													(seleccionar usuario según sea el caso) con una solicitud de autorización
-													(dependiendo del estatus de la misma).<br>
-												3. Descarga de información en formatos: PDF y XLSX.
+													(dependiendo del estatus de la misma),
+												descarga de información en formatos: PDF y XLSX.
 											</p>
 											<table id="sol_aut" class="table-striped table-hover">
 												<thead>
@@ -171,6 +181,7 @@
 														<th>GERENTE</th>
 														<th>SUBDIRECTOR</th>
 														<th>DIRECTOR REGIONAL</th>
+														<th>DIRECTOR REGIONAL 2</th>
 														<th>FECHA APARTADO</th>
 														<th>ACCIONES</th>
 													</tr>
@@ -181,10 +192,10 @@
 										<div class="tab-pane" id="aut">
 											<h3 class="card-title center-align">Autorizaciones</h3>
 											<p class="center-align">
-												A través de este panel(Autorizaciones) podrás realizar lo siguiente:<br>
-												1. Consulta de las solicitudes autorizadas.<br>
-												2. Visualización de los estatus correspondientes por cada una de las autorizaciones en proceso.<br>
-												3. Descarga de información en formatos: PDF y XLSX.<br>
+												A través de este panel(Autorizaciones) podrás realizar lo siguiente;
+												consulta de las solicitudes autorizadas,
+												visualización de los estatus correspondientes por cada una de las autorizaciones en proceso,
+												descarga de información en formatos: PDF y XLSX.<br>
 											</p>
 											<table id="addExp" class="table-striped table-hover">
 												<thead>
@@ -193,13 +204,14 @@
 														<th>CONDOMINIO</th>
 														<th>LOTE</th>
 														<th>CLIENTE</th>
-														<th>SOLICITA</th>
+														<th>SOLICITANTE/ASESOR</th>
 														<th>COORDINADOR</th>
 														<th>GERENTE</th>
 														<th>SUBDIRECTOR</th>
 														<th>DIRECTOR REGIONAL</th>
+														<th>DIRECTOR REGIONAL 2</th>
 														<th>AUTORIZA</th>
-														<th>AUTORIZACIÓN</th>
+														<th>ACCIONES</th>
 													</tr>
 												</thead>
 												<tbody></tbody>

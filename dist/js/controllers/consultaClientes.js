@@ -1,16 +1,27 @@
 $(document).ready(function() 
 {
+    let titulos_encabezado = [];
+    let num_colum_encabezado = [];
     $('#clients-datatable thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+        titulos_encabezado.push(title);
+        num_colum_encabezado.push(i);
+        $(this).html(`<input type="text" 
+                             class="textoshead" 
+                             data-toggle="tooltip" 
+                             data-placement="top"
+                             title="${title}"
+                             placeholder="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();
             }
         });
     });
+    //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
+    num_colum_encabezado.pop();
     $usersTable = $('#clients-datatable').DataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [{
@@ -20,43 +31,10 @@ $(document).ready(function()
             titleAttr: 'Lista nuevos clientes',
             title:'Lista nuevos clientes',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'CLIENTE';
-                                break;
-                            case 1:
-                                return 'CORREO';
-                                break;
-                            case 2:
-                                return 'TELÉFONO';
-                            case 3:
-                                return 'LUGAR PROSPECCIÓN';
-                                break;
-                            case 4:
-                                return 'ASESOR';
-                                break;
-                            case 5:
-                                return 'COORDINADOR';
-                                break;
-                            case 6:
-                                return 'GERENTE';
-                                break;
-                            case 7:
-                                return 'SUBDIRECTOR';
-                                break;
-                            case 8:
-                                return 'DIRECTOR REGIONAL';
-                                break;
-                            case 9:
-                                return 'CREACIÓN';
-                                break;
-                            case 10:
-                                return 'FECHA CLIENTE';
-                                break;
-                        }
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
             }
@@ -135,7 +113,16 @@ $(document).ready(function()
                     if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && id_rol_general != 19 && id_rol_general != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                         return '';
                     } else { // ES EL ASESOR DEL EXPEDIENTE O ES UN GERENTE O SUBIDIRECTOR DE MKTD QUIEN CONSULTA
-                        return '<center><button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;" rel="tooltip" data-placement="left" title="Ver información"><i class="fas fa-eye"></i></button></center>';
+                        return `<center>
+                                    <button class="btn-data btn-blueMaderas see-information"
+                                            data-id-prospecto="${d.id_prospecto}" 
+                                            style="margin-right: 3px;" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top"
+                                            title="Ver información">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </center>`;
                     }
                 }
             }
@@ -145,6 +132,9 @@ $(document).ready(function()
             type: "POST",
             cache: false,
             data: function(d) {}
+        },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 

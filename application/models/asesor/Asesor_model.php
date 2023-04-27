@@ -817,16 +817,42 @@ class Asesor_model extends CI_Model
             "SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 		            lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,
                     MAX(id_autorizacion) as id_autorizacion,
-                    MAX(autorizaciones.fecha_creacion) as fecha_creacion,
+                    CONVERT(varchar, MAX(autorizaciones.fecha_creacion), 20) as fecha_creacion,
 		            MAX(autorizaciones.autorizacion) as autorizacion, 
                     UPPER(CONCAT(users.nombre, ' ', users.apellido_paterno, ' ', users.apellido_materno)) as sol, 
                     UPPER(CONCAT(users1.nombre, ' ', users1.apellido_paterno, ' ', users1.apellido_materno)) as aut,  
                     autorizaciones.idLote,
                     UPPER(CONCAT_WS(' ', cli.nombre, cli.apellido_paterno, cli.apellido_materno)) AS nombreCliente,
-                    UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) AS coordinador, 
-                    UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) AS gerente,
-                    UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) AS subdirector, 
-                    UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) AS regional
+                    CASE 
+                        WHEN u1.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE 
+                            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno))
+                    END AS coordinador, 
+                    CASE 
+                        WHEN u2.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE 
+                            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno))
+                    END AS gerente,
+                    CASE 
+                        WHEN u3.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) 
+                    END AS subdirector,
+                    CASE 
+                        WHEN u4.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
+                    END AS regional,
+                    CASE 
+                        WHEN u5.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno))
+                    END AS regional2
             FROM autorizaciones
             INNER JOIN lotes on lotes.idLote = autorizaciones.idLote 
             INNER JOIN condominios as condominio on condominio.idCondominio = lotes.idCondominio 
@@ -838,6 +864,7 @@ class Asesor_model extends CI_Model
             LEFT JOIN usuarios u2 ON u2.id_usuario = cli.id_gerente
 		    LEFT JOIN usuarios u3 ON u3.id_usuario = cli.id_subdirector
 		    LEFT JOIN usuarios u4 ON u4.id_usuario = cli.id_regional
+            LEFT JOIN usuarios u5 ON u5.id_usuario = cli.id_regional_2
             WHERE autorizaciones.id_sol = " . $this->session->userdata('id_usuario'). "
             GROUP BY residencial.nombreResidencial, condominio.nombre, 
                      lotes.nombreLote, 
@@ -848,6 +875,12 @@ class Asesor_model extends CI_Model
                      UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
                      UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)),
                      UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
+                     UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)),
+                     u1.id_usuario,
+                     u2.id_usuario,
+                     u3.id_usuario,
+                     u4.id_usuario,
+                     u5.id_usuario,
                      autorizaciones.idLote");
         return $query->result();
     }
@@ -876,13 +909,40 @@ class Asesor_model extends CI_Model
             "SELECT cliente.id_cliente, 
                     nombreLote, cliente.rfc, nombreResidencial, condominio.nombre as nombreCondominio, 
 		            cliente.status, cliente.id_asesor, condominio.idCondominio, lotes.idLote, 
-                    cliente.autorizacion, cliente.fechaApartado,
+                    cliente.autorizacion,
+                    CONVERT(varchar, cliente.fechaApartado, 20) as fechaApartado,
 		            lotes.idStatusContratacion, lotes.idMovimiento,
                     UPPER(CONCAT(cliente.nombre,' ',cliente.apellido_paterno, ' ',cliente.apellido_materno)) AS nombreCliente,
-                    UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) AS coordinador,
-                    UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) AS gerente,
-                    UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) AS subdirector, 
-                    UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) AS regional
+                    CASE 
+                        WHEN u1.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE 
+                            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno))
+                    END AS coordinador, 
+                    CASE 
+                        WHEN u2.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE 
+                            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno))
+                    END AS gerente,
+                    CASE 
+                        WHEN u3.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) 
+                    END AS subdirector,
+                    CASE 
+                        WHEN u4.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
+                    END AS regional,
+                    CASE 
+                        WHEN u5.id_usuario IS NULL THEN
+                            'SIN ESPECIFICAR'
+                        ELSE
+                            UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno))
+                    END AS regional2
             FROM clientes as cliente
             INNER JOIN lotes ON cliente.idLote = lotes.idLote
             INNER JOIN condominios as condominio ON lotes.idCondominio = condominio.idCondominio
@@ -892,6 +952,7 @@ class Asesor_model extends CI_Model
             LEFT JOIN usuarios u2 ON u2.id_usuario = cliente.id_gerente
 		    LEFT JOIN usuarios u3 ON u3.id_usuario = cliente.id_subdirector
 		    LEFT JOIN usuarios u4 ON u4.id_usuario = cliente.id_regional
+            LEFT JOIN usuarios u5 ON u5.id_usuario = cliente.id_regional_2
             $filterInner
             WHERE cliente.status = 1 $filterByRol
             GROUP BY lotes.idLote,
@@ -902,7 +963,13 @@ class Asesor_model extends CI_Model
                      UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)), 
                      UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)),
                      UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)), 
-                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
+                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)),
+                     UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)),
+                     u1.id_usuario,
+                     u2.id_usuario,
+                     u3.id_usuario,
+                     u4.id_usuario,
+                     u5.id_usuario
             ORDER BY cliente.fechaApartado DESC");
         return $query->result_array();
     }

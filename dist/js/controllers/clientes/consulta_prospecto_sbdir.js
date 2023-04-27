@@ -1,39 +1,33 @@
+let titulos_encabezado = [];
+let num_colum_encabezado = [];
 var typeTransaction = 1;
 $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
-    if(i!=10){
-        var title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
-                $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
+    var title = $(this).text();
+    titulos_encabezado.push(title);
+    num_colum_encabezado.push(i);
+    $(this).html(`<input    type="text"
+                            style=" background:#143860!important; color:white; border: 0; font-weight: 500;"
+                            class="textoshead"
+                            data-toggle="tooltip" 
+                            data-placement="top"
+                            title="${title}"
+                            placeholder="${title}"/>`);
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
+            $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
-$(document).ready(function () {
-    var subdir = '<?=$this->session->userdata("id_usuario")?>';
+//Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
+num_colum_encabezado.pop();
 
-    var url_interna;
-    /*primera carga*/
-    // <?php
-    // 	if($this->session->userdata('id_rol')==2)
-    // 	{?>
-    // 		var subdir = '<?=$this->session->userdata("id_usuario")?>';
-    // 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir/'+subdir;
-    // 	<?php
-    // }
-    // 	else{?>
-    // 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir_ASB/';
+$(document).ready(function () {
     
-    // <?php 
-    //}
-    //?>
-    //funcion para validar si tiene multirol
-   multirol();
-   
+    multirol();
+
     //gerente
-    
+
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
@@ -56,62 +50,66 @@ function multirol(){
 
 function createFilters(rol){
     if(rol == 59){
-        let div = '<div class="col-md-3 form-group"><div id="div1" class="form-group label-floating select-is-empty"><label class="control-label">SUBDIRECTOR</label></div></div>';
-        div += '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
-        div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
-        div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
-        var $selectSub = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'subdirector',
-            'name': 'subdirector',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el subdirector',
-        'selected': true,
-        'disabled': true
-    }));
-        var $selectGer = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'gerente',
-            'name': 'gerente',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el gerente',
-        'selected': true,
-        'disabled': true
-    }));
-        var $selectCoord = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'coordinador',
-            'name': 'coordinador',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el coordinador',
-        'selected': true,
-        'disabled': true
-    }));
-        var $selectAse = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'asesores',
-            'name': 'asesores',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el asesor',
-        'selected': true,
-        'disabled': true
-    }));
+        let div = `<div class="col-md-3 form-group">
+                        <div id="div1" class="form-group label-floating select-is-empty">
+                            <label class="control-label">SUBDIRECTOR</label>
+                        </div>
+                    </div>`;
+        div += `<div class="col-md-3 form-group">
+                    <div id="div2" class="form-group label-floating select-is-empty">
+                        <label class="control-label">GERENTE</label>
+                    </div>
+                </div>`;
+        div += `<div class="col-md-3 form-group">
+                    <div id="div3" class="form-group label-floating select-is-empty">
+                        <label class="control-label">COORDINADOR</label>
+                    </div>
+                </div>`;
+        div += `<div class="col-md-3 form-group">
+                    <div id="div4" class="form-group label-floating select-is-empty">
+                        <label class="control-label">ASESOR</label>
+                    </div>
+                </div>`;
+        var $selectSub = 
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'subdirector',
+                'name': 'subdirector',
+                'data-style':"btn btn-round",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
+        var $selectGer = 
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'gerente',
+                'name': 'gerente',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
+        var $selectCoord = 
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'coordinador',
+                'name': 'coordinador',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
+        var $selectAse =
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'asesores',
+                'name': 'asesores',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
         $('#filterContainer').append(div);
         $selectSub.appendTo('#div1').selectpicker('refresh');
         $selectGer.appendTo('#div2').selectpicker('refresh');
@@ -120,49 +118,52 @@ function createFilters(rol){
         // $option.appendTo('#asesores');
 
     }else if(2){ 
-        let div = '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
-        div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
-        div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
+        let div =   `<div class="col-md-4 form-group">
+                        <div id="div2" class="form-group label-floating select-is-empty">
+                            <label class="control-label">GERENTE</label>
+                        </div>
+                    </div>`;
+        div += `<div class="col-md-4 form-group">
+                    <div id="div3" class="form-group label-floating select-is-empty">
+                        <label class="control-label">COORDINADOR</label>
+                    </div>
+                </div>`;
+        div += `<div class="col-md-4 form-group">
+                    <div id="div4" class="form-group label-floating select-is-empty">
+                        <label class="control-label">ASESOR</label>
+                    </div>
+                </div>`;
         
-        var $selectGer = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'gerente',
-            'name': 'gerente',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el gerente',
-        'selected': true,
-        'disabled': true
-    }));
-        var $selectCoord = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'coordinador',
-            'name': 'coordinador',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el coordinador',
-        'selected': true,
-        'disabled': true
-    }));
-        var $selectAse = $('<select/>', {
-            'class':"selectpicker select-gral m-0",
-            'id': 'asesores',
-            'name': 'asesores',
-            'data-style':"btn",
-            'data-show-subtext':"true",
-            'data-live-search':"true"
-        }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el asesor',
-        'selected': true,
-        'disabled': true
-    }));
+        var $selectGer =
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'gerente',
+                'name': 'gerente',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
+        var $selectCoord =
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'coordinador',
+                'name': 'coordinador',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
+        var $selectAse =
+            $('<select/>', {
+                'class':"selectpicker select-gral m-0",
+                'id': 'asesores',
+                'name': 'asesores',
+                'data-style':"btn",
+                'data-show-subtext':"true",
+                'data-live-search':"true",
+                'title':"Selecciona una opción"
+            });
         $('#filterContainer').append(div);
         $selectGer.appendTo('#div2').selectpicker('refresh');
         $selectCoord.appendTo('#div3').selectpicker('refresh');
@@ -172,14 +173,6 @@ function createFilters(rol){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    // rol == 59 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
-    var $option = $('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el subdirector',
-        'selected': true,
-        'disabled': true
-    });
-    $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
         // console.log('users', data);
@@ -201,24 +194,7 @@ $(document).on('change', '#subdirector',function () {
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinador").empty().selectpicker('refresh');
    
-    $(`#gerente`).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el gerente',
-        'selected': true,
-        'disabled': true
-    }));
-    $(`#coordinador`).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el coordinador',
-        'selected': true,
-        'disabled': true
-    }));
-    $(`#asesores`).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el asesor',
-        'selected': true,
-        'disabled': true
-    }));
+   
     $("#coordinador").selectpicker('refresh');
     $("#asesores").selectpicker('refresh');
 
@@ -252,18 +228,6 @@ $(document).on('change','#gerente', function () {
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
    
-    $(`#coordinador`).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el coordinador',
-        'selected': true,
-        'disabled': true
-    }));
-    $(`#asesores`).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el asesor',
-        'selected': true,
-        'disabled': true
-    }));
     $("#asesores").selectpicker('refresh');
 
     $.post(general_base_url + 'index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
@@ -297,13 +261,6 @@ $(document).on('change', '#coordinador', function () {
 
     //gerente
     $("#asesores").empty().selectpicker('refresh');
-    var $option = $('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el coordinador',
-        'selected': true,
-        'disabled': true
-    });
-    $(`#asesores`).append($option);
     $.post(general_base_url + 'index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -365,7 +322,7 @@ $(document).on("click", "#searchByDateRange", function () {
 function updateTable(url, typeTransaction, beginDate, endDate, where)
 {
     var prospectsTable = $('#prospects-datatable_dir').dataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -378,37 +335,10 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             titleAttr: 'Listado general de prospectos',
             title:"Listado general de prospectos",
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'ESTADO';
-                                break;
-                            case 1:
-                                return 'ETAPA';
-                                break;
-                            case 2:
-                                return 'PROSPECTO';
-                            case 3:
-                                return 'ASESOR';
-                                break;
-                            case 4:
-                                return 'COORDINADOR';
-                                break;
-                            case 5:
-                                return 'GERENTE';
-                                break;
-                            case 6:
-                                return 'LP';
-                                break;
-                            case 7:
-                                return 'CREACIÓN';
-                                break;
-                            case 8:
-                                return 'VENCIMIENTO';
-                                break;
-                        }
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
             }
@@ -487,7 +417,18 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                         if(id_rol_general != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                             return '';
                         } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
-                            return '<button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;"><i class="material-icons">remove_red_eye</i></button>';
+                            return `<center>
+                                        <button class="btn-data btn-blueMaderas see-information" 
+                                                data-id-prospecto="${d.id_prospecto}"
+                                                style="margin-right: 3px;"
+                                                data-toggle="tooltip" 
+                                                data-placement="top"
+                                                title="Ver información">
+                                            <i class="material-icons">
+                                                remove_red_eye
+                                            </i>
+                                        </button>
+                                    </center>`;
                         }
                     }
                 }
@@ -504,23 +445,11 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                 "endDate": endDate,
                 "where": where
             }
+        },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
-    })/*.yadcf(
-        [
-            {
-                column_number: 6,
-                filter_container_id: 'external_filter_container7',
-                filter_type: 'range_date',
-                datepicker_type: 'bootstrap-datetimepicker',
-                filter_default_label: ['Desde', 'Hasta'],
-                date_format: 'YYYY-MM-DD',
-                filter_plugin_options: {
-                    format: 'YYYY-MM-DD',
-                    showClear: true,
-                }
-            },
-        ]
-    )*/
+    });
 }
 
 
