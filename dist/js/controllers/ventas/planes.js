@@ -5,9 +5,8 @@ $(document).ready(function() {
     $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
         $('[data-toggle="tooltip"]').tooltip()
         var len = data.length;
-        $("#sede").append($('<option>').val("").text("SELECCIONA UNA OPCIÓN"));
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_sede']+','+data[i]['abreviacion'];
+            var id = data[i]['id_sede'];
             var name = data[i]['nombre'];
             $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
         }
@@ -23,9 +22,9 @@ $(document).ready(function() {
 $("#sede").change(function() {
     $('#spiner-loader').removeClass('hide');
     $('#residencial option').remove();
-    var parent = $(this).val();
-    var	datos = parent.split(',')
-    var	id_sede = datos[0];
+    var	id_sede = $(this).val();
+
+     
 
     $.post('getResidencialesList/'+id_sede, function(data) {
         $('#spiner-loader').addClass('hide');
@@ -385,13 +384,14 @@ async function ConsultarPlanes(){
 
         $.post('getPaquetes',params, function(data) {
             if( data.length >= 1){
-                data[0].paquetes.shift();
+                //data[0].paquetes.shift();
                 let dataPaquetes = data[0].paquetes;
-                let dataDescuentosByPlan = data[0].paquetes;
-
-                
+                let dataDescuentosByPlan = data[0].descuentos;
+                console.log(dataDescuentosByPlan)               
                 
                 dataPaquetes.forEach(function (element, indexPaquetes) {
+                    let idPaquete = element.id_paquete;
+                    console.log(idPaquete)
                     var indexActual = document.getElementById('index');
                     var indexNext = (document.getElementById('index').value - 1) + 2;
                     indexActual.value = indexNext;
@@ -405,16 +405,25 @@ async function ConsultarPlanes(){
                     descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
                         let idCondicion = subelement['condicion']['id_condicion'];
                         let nombreCondicion = subelement['condicion']['descripcion'];
-                        
+                        console.log(idCondicion)
                         templateSelectsByCard(indexNext, indexCondicion, idCondicion, nombreCondicion);
                         // llenarSelects(indexNext, element['id_paquete'], nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes);
 
-                        dataDescuentosByPlan.forEach(function (elementData, indexData) {
-                            const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                            check.checked = true;
+                    let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete &&  elementD.id_condicion == idCondicion)
+                    console.log(existe)
+                    let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
+                    if(existe != undefined){
+                        const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
+                           check.checked = true; 
+                          PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
+ 
+                    }
+                      //  dataDescuentosByPlan.forEach(function (elementData, indexData) {
+                         //   const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
+                         //   check.checked = true;
 
-                            PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
-                        });                  
+                           //  PrintSelectDesc(indexNext, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
+                    //    });                  
                     });
                 
                     if( lenDesCon <= 0 ){
@@ -491,6 +500,10 @@ function ValidarOrden(indexN,i){
 }
 
 function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select, idCondicion, lenDesCon, indexPaquetes){
+    console.log('-----FUNCIÓN LLENAR---');
+    console.log(dataDescuentosByPlan)
+    console.log('idCondicion: '+idCondicion)
+    console.log('indexPaquetes: '+indexPaquetes)
     var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
     boxDetail.removeClass('hidden');
     let rowDetail = boxDetail.find( '.rowDetailDiscount');
@@ -504,9 +517,17 @@ function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select,
         rowDetail.removeClass('hidden');
     }
     let descuentosSelected = [];
+    dataDescuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_condicion == idCondicion);
+    dataDescuentosByPlan = dataDescuentosByPlan.sort();
+    console.log('---LLENADO---');
+    console.log(dataDescuentosByPlan);
+    console.log('---LLENADO---');
+
     for (let m = 0; m < dataDescuentosByPlan.length; m++) {
         if(idCondicion != 13){
+            let id_descuento=
             crearBoxDetailDescuentos(indexGral, indexCondiciones, id_select, dataDescuentosByPlan[m].id_descuento, dataDescuentosByPlan[m].porcentaje, tipo);
+            console.log('PORCENTAJE :'+dataDescuentosByPlan[m].porcentaje)
             descuentosSelected.push(dataDescuentosByPlan[m].id_descuento);
                 if(dataDescuentosByPlan[m].msi_descuento != 0){
                     var miCheckbox = document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msiC`);
@@ -529,13 +550,18 @@ function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select,
 
 //Se introducen todas las opcines para cada uno de los select que pertenecen a un plan
 function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, indexGral, dataDescuentosByPlan=[], lenDesCon = 0, indexPaquetes = 0){
+    console.log(dataDescuentosByPlan);
     nombreCondicion = (nombreCondicion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
     var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
     boxDetail.removeClass('hidden');
     let rowDetail = boxDetail.find( '.rowDetailDiscount');
+    let descuentosArray = descuentosYCondiciones[indexCondiciones]['data'];
 
     //Si la condición en el plan ES checkeada
     if($(`#inlineCheckbox1_${indexGral}_${indexCondiciones}`).is(':checked')){
+        console.log('CHECKEADO')
+        console.log('indexGral: '+indexGral)
+        console.log('indexCondiciones: '+indexCondiciones)
         $(`#orden_${indexGral}_${indexCondiciones}`).prop( "disabled", false );
         
         $(`#selectDescuentos_${indexGral}_${indexCondiciones}`).append(`
@@ -543,13 +569,43 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
             <select id="ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}" required name="${indexGral}_${indexCondiciones}_ListaDescuentos${nombreCondicion}_[]" multiple class="form-control" data-live-search="true">
         </div>`);
 
-        //Propiedades que asignaremos a los select
-        $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
-            containerCssClass: "select-gral", 
-            dropdownCssClass: "custom-dropdown", 
-            closeOnSelect : false, 
-            placeholder : "SELECCIONA UNA OPCIÓN"
+                //Propiedades que asignaremos a los select
+                $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+                    allow_single_deselect: false,
+                    containerCssClass: "select-gral",
+                    dropdownCssClass: "custom-dropdown",
+                    tags: false, 
+                    tokenSeparators: [',', ' '], 
+                    closeOnSelect : false,
+                    placeholder : "SELECCIONA UNA OPCIÓN",
+                    allowHtml: true, 
+                    allowClear: true});
+        
+        descuentosArray.forEach(element => {
+            let porcentaje = element['porcentaje'];
+            let id_descuento = `${idCondicion == 13 ? element['id_descuento'] +','+ element['porcentaje'] : element['id_descuento'] }`;
+            
+            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${idCondicion == 4 || idCondicion == 12 ? '$'+formatMoney(porcentaje) : (idCondicion == 13 ? porcentaje : porcentaje + '%'  ) }</option>`);
         });
+        if( descuentosArray.length <= 0){
+            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+
+        if( dataDescuentosByPlan.length > 0 ){
+            llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, `ListaDescuentos${nombreCondicion}_`, idCondicion, lenDesCon, indexPaquetes);
+        }
+
+                //Propiedades que asignaremos a los select
+                $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+                    allow_single_deselect: false,
+                    containerCssClass: "select-gral",
+                    dropdownCssClass: "custom-dropdown",
+                    tags: false, 
+                    tokenSeparators: [',', ' '], 
+                    closeOnSelect : false,
+                    placeholder : "SELECCIONA UNA OPCIÓN",
+                    allowHtml: true, 
+                    allowClear: true});
 
         //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
         $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
@@ -561,9 +617,10 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
             if(idCondicion != 13){
                 let lblListaDescuentos = 'ListaDescuentos' + nombreCondicion + '_';
                 crearBoxDetailDescuentos(indexGral, indexCondiciones, `${lblListaDescuentos}`, $element[0].value, $element[0].label);
-                rowDetail.removeClass('hidden');
             } 
+            rowDetail.removeClass('hidden');
         });
+        $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
 
         //Acciones que se ejecutaran cuando DESselecciona un descuento de una condición
         $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:unselecting", function (evt){
@@ -579,24 +636,6 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
             }
         });
 
-        let descuentosArray = descuentosYCondiciones[indexCondiciones]['data'];
-        
-        descuentosArray.forEach(element => {
-            let porcentaje = element['porcentaje'];
-            let id_descuento = `${idCondicion == 13 ? element['id_descuento'] +','+ element['porcentaje'] : element['id_descuento'] }`;
-            
-            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${porcentaje}${idCondicion != 13 ? '%' : ''}</option>`);
-        });
-
-        if( dataDescuentosByPlan.length > 0 ){
-            llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, `ListaDescuentos${nombreCondicion}_`, idCondicion, lenDesCon, indexPaquetes);
-        }
-
-        $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
-        
-        if( descuentosArray.length <= 0){
-            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
     }
     else{
         boxDetail.addClass('hidden');
@@ -613,7 +652,8 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
 function selectSuperficie(tipoSup){
     $('#super').val(tipoSup);
     document.getElementById("printSuperficie").innerHTML ='';
-    if(tipoSup == 1){
+    validateAllInForm();
+  /*  if(tipoSup == 1){
         $('#printSuperficie').append(`
             <input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" id="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
             <input type="hidden" class="form-control" value="0" name="inicio">`);
@@ -627,7 +667,7 @@ function selectSuperficie(tipoSup){
         $('#printSuperficie').append(`
             <input type="hidden" class="form-control" name="inicio" value="0">
             <input type="hidden" class="form-control" name="fin" id="fin" value="0">`);
-    }
+    }*/
     $('[data-toggle="tooltip"]').tooltip();
 }
 

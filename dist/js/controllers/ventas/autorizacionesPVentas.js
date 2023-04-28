@@ -1,5 +1,5 @@
 
-$(document).ready(function(){ 
+$(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS DE ESTATUS */
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -8,32 +8,29 @@ $(document).ready(function(){
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) {
+                if(i == data.length -1) { //DESPUES DE LA ULTIMA OPCIÓN DE LOS ESTATUS, AGREGAR LA OPCIÓN "TODOS" PARA TRAER TODOS LOS ESTATUS
                     $("#estatusAut").append($('<option>').val(0).text('Todos'));
                 }
-        }
+        } 
         if (len <= 0) {
             $("#estatusAut").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#estatusAut").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
-    }, 'json');
+    }, 'json'); 
 });
 
     let titulos = [];
     $('#autorizacionesPVentas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-
         $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
-
             if (tablaAutorizacion.column(i).search() !== this.value) {
                 tablaAutorizacion
                     .column(i)
                     .search(this.value)
                     .draw();
-
                 var index = tablaAutorizacion.rows({
                     selected: true,
                     search: 'applied'
@@ -94,13 +91,15 @@ $(document).ready(function(){
         {  
             "width": "10%",
             "data": function( d ){
-                return `<p class="m-0"><b>${d.fecha_inicio}</b></p>`;
+                let fecha_inicio = moment(d.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
+                return `<p class="m-0"><b>${fecha_inicio}</b></p>`;
             }
         },
         {
             "width": "15%",
             "data": function( d ){
-                return `<p class="m-0"><b>${d.fecha_fin}</b></p>`;
+                let fecha_fin = moment(d.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
+                return `<p class="m-0"><b>${fecha_fin}</b></p>`;
             }
         },
         {
@@ -112,36 +111,32 @@ $(document).ready(function(){
         {  
             "width": "5%",
             "data": function( d ){
-                    return `<p class="m-0">${d.tipoSuperficie}</p>`;
-                
+                    return `<p class="m-0">${d.tipoSuperficie}</p>`;  
             }
         },
         {
             "width": "5%",
             "data": function( d ){
-                    return `<p class="m-0"><span class="label ${d.colorAutorizacion}">${d.estatusAutorizacion}</span></p>`;
-                
+                    return `<p class="m-0"><span class="label ${d.colorAutorizacion}">${d.estatusAutorizacion}</span></p>`;  
             }
         },
         {  
             "width": "5%",
             "data": function( d ){
                 return `<p class="m-0"><span class="label ${d.colorEstatus}">${d.estatusA}</span></p>`;
-            
         }
         },
         {
             "width": "5%",
             "data": function( d ){
-                return `<p class="m-0">${d.fecha_creacion.split('.')[0]}</p>`;
-            
+               let fecha_creacion = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+                return `<p class="m-0">${fecha_creacion}</p>`;
         }
         },
         {  
             "width": "5%",
             "data": function( d ){
                 return `<p class="m-0">${d.creadoPor}</p>`;
-            
              }
         },
         {  
@@ -175,7 +170,6 @@ $(document).ready(function(){
                 }
                 botones += `<button data-idAutorizacion="${d.id_autorizacion}" id="btnHistorial" class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Historial"><i class="fas fa-info"></i></button>`; ;
                 return '<div class="d-flex justify-center">' + botones + '<div>';
-            
              }
         }],
         columnDefs: [{}],
@@ -189,7 +183,6 @@ $(document).ready(function(){
                 "estatus":estatus
             }
         },
-
         order: [
             [1, 'asc']
         ]
@@ -197,24 +190,55 @@ $(document).ready(function(){
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus){
-    let botones = '';
-    /**Permisos
-     * 1.- vista
-     * 2.- Editar
-     * 3.- Avanzar
-     * */
-        if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
-        if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
-        if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
-        if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-trash"></i></button>`;  }
-      return  botones;
+        let botones = '';
+        /**Permisos
+         * 1.- vista
+         * 2.- Editar
+         * 3.- Avanzar
+         * 4.- Rechazar
+         * */
+            if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
+            if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
+            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
+            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-trash"></i></button>`;  }
+        return  botones;
     }
 
+    $(document).on('click', '#btnEditar', function (e) {
+        e.preventDefault();
+        var data = tablaAutorizacion.row($(this).parents('tr')).data();
+        console.log(data);
+        //$('#fechainicio').val(moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY'));
+        document.getElementById('fechainicio').value = data.fecha_inicio;// moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
+        document.getElementById('fechafin').value = data.fecha_fin;//moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
+       // $('#fechafin').val(moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY'));
+        $('#li-plan').addClass('active');
+        $('#li-aut').removeClass('active');
+        $('#nuevas-2').addClass('active');
+        $('#nuevas-1').removeClass('active');
+        //document.getElementById('sede').value = parseInt(data.id_sede);
+        $("#sede").selectpicker();
+        $('#sede').val(parseInt(data.id_sede)).trigger('change');
+        $("#sede").selectpicker('refresh');
+        let residencialesSelect = [];
+        let residenciales = data.idResidencial.split(',');
+        $("#residencial").selectpicker();
+        for (let m = 0; m < residenciales.length; m++) {
+            //residencialesSelect.push(residenciales[m]);
+            console.log(residenciales[m])
+            $(`#residencial`).val(residenciales[m]).trigger('change');
+        }
+        $("#residencial").selectpicker('refresh');
+
+    });
+    function cargarPlanes(){
+
+    }
     $(document).on('click', '#btnAvanzar', function () {
-        var data = tablaAutorizacion.row($(this).parents('tr')).data();    
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
+         tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
         document.getElementById('titleAvance').innerHTML = tipo == 1 ? 'Avanzar autorización' : 'Rechazar autorización';
         $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
@@ -226,6 +250,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     
     $(document).on('submit', '#avanceAutorizacion', function (e) {
         e.preventDefault();
+        let tipo = $('#tipo').val();
         let data = new FormData($(this)[0]);
         $('#spiner-loader').removeClass('hide');
         $.ajax({
@@ -238,10 +263,10 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             success: function (response) {
                 if (response == 1) {
                     $("#avanzarAut").modal("hide");
+                    tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "Oops, Estatus actualizado", "success");
-                    tablaAutorizacion.ajax.reload(null,false);
-                    
+                    alerts.showNotification("top", "right", "Estatus actualizado", "success");
+                    tablaAutorizacion.ajax.reload(null,false);    
                 }
             }, error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -249,7 +274,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             }
         });
     });
-
 
     $(document).on('click', '#searchByEstatus', function () { 
         if($('#estatusAut').val() == '' || $('#anio').val() == ''){
@@ -259,19 +283,14 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let anio = $('#anio').val();
             ConsultarTabla(2,anio,estatus);
         }
-
     });
 
-
     $(document).on('click', '#btnHistorial', function () {
-        var data = tablaAutorizacion.row($(this).parents('tr')).data();    
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         document.getElementById('historialAut').innerHTML = '';
-        //historialAut
             $.post('getHistorialAutorizacion', {
                 id_autorizacion: idAutorizacion
             }, function (data) {      
-                console.log(data)  
                 var len = data.length;
                 for (var i = 0; i < len; i++) {
                     let estatus=data[i]['estatus'];
@@ -280,13 +299,13 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                         <div class="d-flex mb-2">
                             <div class="w-10 d-flex justify-center align-center">
                                 <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: ${estatus == 1 ? '#28B46318' : '#c0131318' }">
-                                    <i class="fas fa-check fs-2" style="color: ${estatus == 1 ? '#28B463' : '#c01313'} "></i>
+                                    <i class="fas ${estatus == 1 ? 'fa-check' : 'fa-close' } fs-2" style="color: ${estatus == 1 ? '#28B463' : '#c01313'} "></i>
                                 </span>
                             </div>
                             <div class="w-90">
                                 <b>${data[i]['creadoPor']}</b>
                                 ${estatus == 1 ? '' : '<p class="m-0" style="font-size:12px">'+comentario+'</p>' }
-                                <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${data[i]['fecha_movimiento'].split('.')[0]}</p>
+                                <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(data[i]['fecha_movimiento'].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
                             </div>
                         </div>`)
                 }

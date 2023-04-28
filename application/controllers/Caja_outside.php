@@ -530,6 +530,9 @@ class Caja_outside extends CI_Controller {
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
+            'id_subdirector' => $datosView->id_subdirector,
+            'id_regional' => $datosView->id_regional,
+            'id_regional_2' => $datosView->id_regional_2,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -1154,6 +1157,9 @@ class Caja_outside extends CI_Controller {
             $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
             $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
             $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+            $arreglo["id_subdirector"] = $value->idSubdirector;
+            $arreglo["id_regional"] = $value->idRegional;
+            $arreglo["id_regional_2"] = $value->idRegional2;
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
@@ -1585,6 +1591,9 @@ class Caja_outside extends CI_Controller {
                         $arreglo_asesores["id_gerente"] = $value->idGerente;
                         $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 && $value->idAsesor != 6626 ? 0 : $value->idCoordinador;
                         $arreglo_asesores["id_asesor"] = $value->idAsesor;
+                        $arreglo_asesores["id_subdirector"] = $value->idSubdirector;
+                        $arreglo_asesores["id_regional"] = $value->idRegional;
+                        $arreglo_asesores["id_regional_2"] = $value->idRegional2;
                         $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
                         $arreglo_asesores["estatus"] = 1;
                         $arreglo_asesores["creado_por"] = $data->id_usuario;
@@ -2314,6 +2323,9 @@ class Caja_outside extends CI_Controller {
                 "id_asesor" => $data->id_asesor,
                 "id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
                 "id_gerente" => $data->id_gerente,
+                "id_sudirector" => $data->id_sudirector,
+                "id_regional" => $data->id_regional,
+                "id_regional_2" => $data->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $data->id_usuario
             );

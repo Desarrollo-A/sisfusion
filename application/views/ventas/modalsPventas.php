@@ -10,7 +10,7 @@
 
 <!--------> 
 <div class="modal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" id="">
+        <div class="modal-dialog" >
             <div class="modal-content">
                 <div class="modal-head pt-1 text-center">
                     <h3>Historial</h3>
@@ -30,7 +30,7 @@
 </div>
 
 <div class="modal fade" id="avanzarAut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog" id="modalAutorizacion">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
