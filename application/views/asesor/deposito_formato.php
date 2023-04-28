@@ -672,6 +672,9 @@
                 }
                 ?>
                 <h4 class="text-center pt-3">DATOS GENERALES</h4>
+                <div class="row">
+                    
+                </div>
             </div>           
         </div>
     </div>
