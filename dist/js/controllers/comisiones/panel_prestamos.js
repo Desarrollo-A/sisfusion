@@ -602,22 +602,20 @@ function formatMoney( n ) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
-
 $("#roles").change(function() {
     var parent = $(this).val();
     document.getElementById("users").innerHTML ='';
-
     $('#users').append(` 
     <label class="label">Usuario</label>   
     <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
     </select>
     `);
     $.post('getUsuariosRol/'+parent+'/1', function(data) {
-        $("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
+        $("#usuarioid").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"))
         var len = data.length;
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
-            var name = data[i]['name_user'];
+            var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
             $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
         }
 
