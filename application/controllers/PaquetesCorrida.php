@@ -56,6 +56,7 @@ class PaquetesCorrida extends CI_Controller
         $datos_sede = $this->input->post("sede");
         $residenciales = $this->input->post("residencial[]");
         $superficie = $this->input->post("superficie");
+        $idAutorizacion = $this->input->post("idSolicitudAut");
         $inicio = 0;//$this->input->post("inicio");
         $fin = 0;//$this->input->post("fin");
         $query_superdicie = '';
@@ -222,6 +223,7 @@ class PaquetesCorrida extends CI_Controller
         $this->PaquetesCorrida_model->insertBatch('relaciones', $datosInsertar);
         $cadena_lotes = implode(",", $ArrPAquetes);
         $datosInsertar_x_condominio = array();
+        // validar si se ocupa
         $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos, $query_superdicie, $query_tipo_lote, $superficie, $inicio, $fin);
         $user_sesionado = $this->session->userdata('id_usuario');
         //ESTE INSERT ES EL QUE SE HACIA ANTERIORMENTE, AUN NO SE ELIMINA YA SE OCUPARA PARA EL
@@ -240,7 +242,8 @@ class PaquetesCorrida extends CI_Controller
           "creado_por" => $user_sesionado,
           "fecha_modificacion" => $hoy2,
            "modificado_por" => $user_sesionado,
-           "accion" => $accion
+           "accion" => $accion, 
+           "idAutorizacion" => $idAutorizacion
         );
          $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
         // $this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
@@ -295,7 +298,8 @@ class PaquetesCorrida extends CI_Controller
 
   public function getPaquetes()
   {
-    $index = $this->input->post("index");
+    $accion = $this->input->post("accion");
+    $paquetes = $this->input->post("paquetes");
     $datos_sede = explode(",", $this->input->post("sede"));
     $id_sede = $datos_sede[0];
     $residenciales = $this->input->post("residencial[]");
@@ -339,8 +343,7 @@ class PaquetesCorrida extends CI_Controller
       $query_tipo_lote = '';
     }
 
-    $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
-
+    $row = $accion == 1 ? $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin) : array(array('id_paquete' => $paquetes)) ;
     $data = array();
     if (count($row) == 0) {
 

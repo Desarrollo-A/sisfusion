@@ -24,9 +24,7 @@ $("#sede").change(function() {
     $('#residencial option').remove();
     var	id_sede = $(this).val();
 
-     
-
-    $.post('getResidencialesList/'+id_sede, function(data) {
+    $.post('getResidencialesList/'+id_sede,{async: true}, function(data) {
         $('#spiner-loader').addClass('hide');
         $("#residencial").append($('<option disabled>').val("default").text("SELECCIONA UNA OPCIÓN"));
         var len = data.length;
@@ -353,6 +351,7 @@ function SavePaquete(){
             $('#ModalAlert .btnSave').prop('disabled', false);
             $('#ModalAlert .btnSave').css("opacity","1");
             if(data == 1){
+                tablaAutorizacion.ajax.reload();
                 ClearAll();
                 alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
             }else{
@@ -373,7 +372,16 @@ function SavePaquete(){
 async function ConsultarPlanes(){
     $('#spiner-loader').removeClass('hide');
     if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
-        let params = {'sede':$('#sede').val(),'residencial':$('#residencial').val(),'superficie':$('#super').val(),'fin':$('#fin').val(),'tipolote':$('#tipo_l').val(),'fechaInicio':$('#fechainicio').val(),'fechaFin':$('#fechafin').val()};
+        let params = {
+            'sede':$('#sede').val(),
+            'residencial':$('#residencial').val(),
+            'superficie':$('#super').val(),
+            'fin':$('#fin').val(),
+            'tipolote':$('#tipo_l').val(),
+            'fechaInicio':$('#fechainicio').val(),
+            'fechaFin':$('#fechafin').val(),
+            'paquetes':$('#paquetes').val(),
+            'accion':$('#accion').val()};
         ClearAll2();
 
         if(primeraCarga == 1){

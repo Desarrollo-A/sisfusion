@@ -248,7 +248,7 @@
 															<div class="row">
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
 																	<div class="form-group">
-																		<label class="mb-0" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
+																		<label class="mb-0" for="">Rango fechas (<b class="text-danger">*</b>)</label>
 																		<div class="d-flex">
 																			<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true" onchange="validateAllInForm()">
 																			<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true" onchange="validateAllInForm()">
@@ -305,6 +305,8 @@
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
 																	<input type="hidden" value="1" name="accion" id="accion">
+																	<input type="hidden" name="idSolicitudAut" id="idSolicitudAut">
+																	<input type="hidden" name="paquetes" id="paquetes">
 																</div>
 															</div>
 														</div>
@@ -384,6 +386,8 @@
 										</div>
 									</div> 
 									<!------->
+									<?php include 'modalsPVentas.php' ?>
+
 								</div>
 							</div>
 						</div>

@@ -206,12 +206,18 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
     $(document).on('click', '#btnEditar', function (e) {
         e.preventDefault();
+        $('#spiner-loader').removeClass('hide');
+       // window.scrollTo(0, 0)
+
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
         console.log(data);
         //$('#fechainicio').val(moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY'));
         document.getElementById('fechainicio').value = data.fecha_inicio;// moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
         document.getElementById('fechafin').value = data.fecha_fin;//moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
        // $('#fechafin').val(moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY'));
+       document.getElementById('accion').value = 2;
+       document.getElementById('idSolicitudAut').value = data.id_autorizacion;
+       document.getElementById('paquetes').value = data.paquetes;
         $('#li-plan').addClass('active');
         $('#li-aut').removeClass('active');
         $('#nuevas-2').addClass('active');
@@ -221,15 +227,44 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#sede').val(parseInt(data.id_sede)).trigger('change');
         $("#sede").selectpicker('refresh');
         let residencialesSelect = [];
-        let residenciales = data.idResidencial.split(',');
         $("#residencial").selectpicker();
+        let residenciales = data.idResidencial.split(',');
         for (let m = 0; m < residenciales.length; m++) {
-            //residencialesSelect.push(residenciales[m]);
-            console.log(residenciales[m])
-            $(`#residencial`).val(residenciales[m]).trigger('change');
+            residencialesSelect.push(residenciales[m]);
         }
-        $("#residencial").selectpicker('refresh');
+        setTimeout(() => {
+            $(`#residencial`).val(residencialesSelect).trigger('change');
+        }, 1000);
 
+        $("#residencial").selectpicker('refresh');
+       
+        var radios = document.getElementsByName('tipoLote');
+        console.log(radios)
+        for (var j = 0; j < radios.length; j++) {
+            console.log(radios[j].value)
+            if (radios[j].value == data.tipo_lote) {
+              radios[j].checked = true;
+            break;
+             }
+         }
+         validateAllInForm(data.tipo_lote,1);
+         var radios = document.getElementsByName('superficie');
+        console.log(radios)
+        for (var j = 0; j < radios.length; j++) {
+            console.log(radios[j].value)
+            if (radios[j].value == data.superficie) {
+              radios[j].checked = true;
+            break;
+             }
+         }
+         selectSuperficie(data.superficie);
+         const scroll=document.querySelector(".ps-scrollbar-y-rail");
+         scroll.scrollTop=0;
+         $('#btn_consultar').prop('disabled', true);
+         setTimeout(() => {
+            ConsultarPlanes();
+        }, 1000);
+         $('#spiner-loader').addClass('hide');
     });
     function cargarPlanes(){
 
@@ -304,7 +339,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                             </div>
                             <div class="w-90">
                                 <b>${data[i]['creadoPor']}</b>
-                                ${estatus == 1 ? '' : '<p class="m-0" style="font-size:12px">'+comentario+'</p>' }
+                                <p class="m-0" style="font-size:12px">${comentario}</p> 
                                 <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(data[i]['fecha_movimiento'].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
                             </div>
                         </div>`)

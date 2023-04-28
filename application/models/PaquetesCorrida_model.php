@@ -166,7 +166,6 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         GROUP BY fecha_inicio, fecha_fin)");
         
         foreach ($queryRes->result() as  $valor) {
-  
         array_push($stack, array('condominio' => $valor->condominio, 'paquetes' => $valor->paquetes, 'fecha_inicio' => $valor->fecha_inicio, 'fecha_fin' => $valor->fecha_fin, 'descripcion' => $valor->descripcion));
   
     }
@@ -297,10 +296,19 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         $fecha_modificacion = $datos['fecha_modificacion'];
         $modificado_por = $datos['modificado_por'];
 
-        $this->db->query("INSERT INTO autorizaciones_pventas 
-        VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
-        $id_autorizacion = $this->db->insert_id();
-        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$creado_por ,'$fecha_creacion',1,'AGREGÓ UNA NUEVA AUTORIZACIÓN')");
+        $comentario = $datos['accion'] == 1 ? 'AGREGÓ UNA NUEVA AUTORIZACIÓN DE PLANES' : 'ACTUALIZÓ LA AUTORIZACIÓN DE PLANES';
+        if($datos['accion'] == 1){
+            $this->db->query("INSERT INTO autorizaciones_pventas 
+            VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
+            $id_autorizacion = $this->db->insert_id();
+        }else{
+            $id_autorizacion = $datos['idAutorizacion'];
+            $this->db->query("UPDATE autorizaciones_pventas SET 
+            idResidencial='$idResidencial',fecha_inicio='$fecha_inicio',fecha_fin='$fecha_fin',id_sede=$id_sede,tipo_lote=$tipo_lote,superficie=$superficie,paquetes='$paquetes',fecha_modificacion='$fecha_modificacion',modificado_por=$modificado_por WHERE id_autorizacion=$id_autorizacion");            
+        }
+
+
+        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$creado_por ,'$fecha_creacion',1,'$comentario')");
     
     }
     public function avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$sesionado){
