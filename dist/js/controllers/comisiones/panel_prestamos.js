@@ -62,11 +62,11 @@ $("#form_prestamos").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_prestamos"));
 
 
-    // let uploadedDocument = $("#evidencia")[0].files[0];
-    //let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
+    let uploadedDocument = $("#evidencia")[0].files[0];
+    let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
-   // if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
-   // else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
+    else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
     $.ajax({
         url: 'savePrestamo',
         data: formData, 
@@ -230,7 +230,6 @@ $("#tabla_prestamos").ready( function(){
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
-        scrollX: true,
         language: {
             url: url+"/static/spanishLoader_v2.json",
             paginate: {
@@ -238,7 +237,6 @@ $("#tabla_prestamos").ready( function(){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        scrollX: true,
         destroy: true,
         ordering: false,
         columns: [
@@ -371,19 +369,18 @@ $("#tabla_prestamos").ready( function(){
             "orderable": false,
             "data": function( d ){
                 var botonesModal = ''; 
+   
                 botonesModal +=  `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
+
                 if(d.evidencia != null ){
-                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;       
-                }
-                if(d.id_prestamo2 == null && d.estatus == 1){
-              
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-             
-                }
-                if (d.estatus == 1 && d.total_pagado == null ){
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
+                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;    
                 }
 
+                if(d.id_prestamo2 == null && d.estatus == 1){
+                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+                }
+
+             
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }
         }],
@@ -404,11 +401,11 @@ $("#tabla_prestamos").ready( function(){
             Modalbody.html('');
             Modalfooter.html('');
 
-            Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
-                Modalfooter.append(`
-                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
-			                        `);
+            Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
+                   
+                `);
+
+                Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="disper_btn"  id="dispersar" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
 
             //console.log(data);
             $("#myModalDelete").modal();
@@ -416,141 +413,6 @@ $("#tabla_prestamos").ready( function(){
 
         //});
     });
-
-
-    $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
-        const idPrestamo = $(this).val();
-        const prestamoId = $(this).attr("data-idPrestamo");
-        const montoPagos = $(this).attr("data-individual");
-        const nombreUsuario = $(this).attr("data-name");
-        const numeroPagos = $(this).attr("data-npagos");
-        const pagoEdit = $(this).attr("data-monto");
-        const comentario = $(this).attr("data-comentario");
-        
-    //	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
-            // const Modalbody = $('#ModalEdit .modal-body');
-            // const Modalfooter = $('#ModalEdit .modal-footer');
-            
-            document.getElementById("montoPagos").value = '';
-            document.getElementById("numeroPagos").value = '';
-            document.getElementById("pagoEdit").value = '';
-            document.getElementById("informacionText").value = '';
-            document.getElementById("prestamoId").value = '';
-             
-            // descuento = Math.round(descuento);
-            // pago_mensual = Math.round(pago_mensual);
-            // cantidad_de_pagos = descuento / pago_mensual;
-
-            document.getElementById("montoPagos").value = pagoEdit ;
-            document.getElementById("numeroPagos").value = numeroPagos;
-            document.getElementById("pagoEdit").value = montoPagos;
-            document.getElementById("informacionText").value = comentario;
-            document.getElementById("prestamoId").value = prestamoId;
-
-            // const montoPagos = $(this).val  
-            // Modalbody.html('');
-            // Modalfooter.html('');
-                // Modalfooter.append(`<div class="row"><div class="col-md-3"></div><div class="col-md-3"><input type="submit" class="btn btn-success" name="cambiar_prestamo"  id="cambiar_prestamo" value="Aceptar"></div><div class="col-md-3"><input type="button" class="btn btn-danger" data-dismiss="modal" value="CANCELAR"></div></div>`);
-
-            //console.log(data);
-            $("#ModalEdit").modal();
-        //	$('#tabla_prestamos').DataTable().ajax.reload(null, false);
-
-        //});
-    });
-    $(document).on("click", ".updatePrestamo", function () {
-
-        pagoEdit    =  document.getElementById("montoPagos").value  ;
-        numeroPagos = document.getElementById("numeroPagos").value  ;
-        montoPagos  = document.getElementById("pagoEdit").value ;
-        comentario  = document.getElementById("informacionText").value  ;
-        prestamoId  = document.getElementById("prestamoId").value ;
-        bandera_request = comentario == '' ? false : true;
-    if(pagoEdit != '' &&  numeroPagos != '' &&  montoPagos != '' &&  comentario != '' && prestamoId != ''  && bandera_request  )
-    {
-        if(pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0){
-            $.ajax({
-                url : 'updatePrestamos',
-                type : 'POST',
-                dataType: "json",
-                data: {
-                "pagoEdit"           : pagoEdit, 
-                "numeroPagos"        : numeroPagos, 
-                "montoPagos"         : montoPagos,
-                "comentario"         : comentario,
-                "prestamoId"         : prestamoId,
-                  }, 
-        
-                  success: function(data) {
-                   
-                    alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-
-                    $('#tabla_prestamos').DataTable().ajax.reload(null, false );
-                    
-                    // toastr[response.response_type](response.message);
-                    $('#ModalEdit').modal('toggle');
-                },              
-                error : (a, b, c) => {
-                    alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
-                }
-            });
-
-        }else{
-            alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "error");
-        }
-          
-    }else{
-             alerts.showNotification("top", "right", "Es necesario revisar que no se tenga valores vacios.", "error");
-        }
-    });
-
-    // $(document).on('input', '.montoPagos', function(){
-    $('#montoPagos').change(function () {
-        const bandera = true ;
-        Monto = document.getElementById("montoPagos").value ;
-        numeroPagos = document.getElementById("numeroPagos").value ;
-        mensualidades = document.getElementById("pagoEdit").value ;
-        comentario = document.getElementById("informacionText").value ;
-        if(numeroPagos == null || numeroPagos == '' ){
-            bandera = false;
-        }
-        if(Monto == null || Monto == ''){
-            
-            bandera = false;
-        }
-        if(bandera){
-            NuevasMensualidades = Monto / numeroPagos;
-            document.getElementById("pagoEdit").value = Math.trunc( NuevasMensualidades);
-        }else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
-                     
-        }        
-    });
-    $('#numeroPagos').change(function () {
-        const bandera = true ;
-        Monto = document.getElementById("montoPagos").value ;
-        numeroPagos = document.getElementById("numeroPagos").value ;
-        mensualidades = document.getElementById("pagoEdit").value ;
-        comentario = document.getElementById("informacionText").value ;
-        
-        if(numeroPagos == null || numeroPagos == '' ){
-            bandera = false;
-        }
-        if(Monto == null || Monto == ''){
-            
-            bandera = false;
-        }
-        if(bandera){
-            NuevasMensualidades = Monto / numeroPagos;
-            document.getElementById("pagoEdit").value = Math.trunc( NuevasMensualidades);
-        }else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
-                     
-        }        
-    });
-
-
-
 
     $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
         $('#spiner-loader').removeClass('hide');
@@ -740,22 +602,20 @@ function formatMoney( n ) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
-
 $("#roles").change(function() {
     var parent = $(this).val();
     document.getElementById("users").innerHTML ='';
-
     $('#users').append(` 
     <label class="label">Usuario</label>   
     <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
     </select>
     `);
     $.post('getUsuariosRol/'+parent+'/1', function(data) {
-        $("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
+        $("#usuarioid").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"))
         var len = data.length;
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
-            var name = data[i]['name_user'];
+            var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
             $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
         }
 

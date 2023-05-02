@@ -274,9 +274,9 @@ $("#tabla_dispersar_comisiones").ready( function(){
             "width": "8%",
             "data": function( d ){
                 var lblStatss;
-                if(d.date_final == null ) {
+                if(d.fecha_modificacion == null ) {
                  
-                    lblStatss ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
+                    lblStatss ='<span class="label label-gray" style="background:#AFAFB0;" >No definida</span>';
                     // lblStatss ='<span class="label label-info">'+d.fecha_modificacion+'</span>';
                 }else {
 
@@ -293,19 +293,14 @@ $("#tabla_dispersar_comisiones").ready( function(){
             "width": "8%",
             "data": function( d ){
                 var lblStats;
-                lblStats = '<span class="label label-gray" style="color:gray;">'+d.date_neodata+'</span>';
-                if(d.date_neodata <= '2021-01-01' || d.date_neodata == null ) {
-                    lblStats ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
+                if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
+                    lblStats = '';
                 }else if (d.registro_comision == 8){
                     lblStats = '<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
                 }
-                else if(d.date_neodata != null ) {
+                else {
                     lblStats = '<span class="label label-info">'+d.date_neodata+'</span>';
-                }else{
-                    lblStats ='<span class="label label-gray" style="background:#AFAFB0;" > No definida</span>';
                 }
-
-               //   lblStats = '<span class="label label-gray" style="color:gray;">'+d.date_neodata+'</span>';
                 return lblStats;
             }
         },
@@ -433,7 +428,7 @@ $("#tabla_dispersar_comisiones").ready( function(){
         }
     });
     $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
-         
+            alert('KADJKASD JA DIDF KOAHFIANF A ');
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
 

@@ -150,7 +150,6 @@
         return $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
     }
     public function getPlanCorrida($id_corrida) {
-        //$query = $this->db->query("SELECT id_cd, fecha, pago, capital, interes, total, saldo, id_corrida FROM corrida_dump WHERE id_corrida = ".$id_corrida."");
         $query = $this->db->query("SELECT corrida_dump FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
         return $query->result_array();
     }
@@ -159,16 +158,13 @@
     /*modificada by MJ*/
     public function getDescuentos()
     {
-        $query = $this->db->query('SELECT descuentos.porcentaje, relaciones.id_paquete, relaciones.prioridad, descuentos.apply, descuentos.id_condicion, 
-            relaciones.id_descuento,  relaciones.msi_descuento FROM [relaciones] inner join [descuentos] on relaciones.id_descuento = descuentos.id_descuento order by prioridad');
+        $query = $this->db->query('SELECT de.porcentaje, re.id_paquete, re.prioridad, co.apply, de.id_condicion, re.id_descuento, re.msi_descuento 
+        FROM relaciones re
+        INNER JOIN descuentos de ON re.id_descuento = de.id_descuento 
+        INNER JOIN condiciones co ON co.id_condicion = de.id_condicion
+        ORDER BY prioridad');
         return $query->result_array();
     }
-    /*public function getDescuentos(){
-        $query = $this->db-> query('SELECT descuentos.porcentaje, relaciones.id_paquete, relaciones.prioridad, descuentos.apply, descuentos.id_condicion, relaciones.id_descuento, relaciones.msi_descuento FROM [relaciones] inner join [descuentos] on relaciones.id_descuento = descuentos.id_descuento order by prioridad');
-
-    return $query->result_array();
-}*/
-
 
     public function insertCf($dato){
         $this->db->insert('corridas_financieras',$dato);
@@ -314,10 +310,11 @@
         return $this->db->query("SELECT detalle_paquete FROM corridas_x_lotes WHERE id_cxl IN ($cxl) AND estatus = 1")->row();
     }
     public function getDescById($id_descuento){
-        //$query = $this->db->query("SELECT * FROM descuentos WHERE id_descuento=".$id_descuento);
-        $query = $this->db->query("SELECT descuentos.*, relaciones.id_paquete, relaciones.prioridad, relaciones.id_descuento, 
-            relaciones.msi_descuento FROM [relaciones] inner join [descuentos] on relaciones.id_descuento = descuentos.id_descuento 
-            WHERE descuentos.id_descuento=".$id_descuento." order by prioridad");
+        $query = $this->db->query("SELECT des.*, re.id_paquete, re.prioridad, re.id_descuento, re.msi_descuento, c.eng_top, c.apply, c.tdescuento 
+        FROM relaciones re
+        INNER JOIN descuentos des ON re.id_descuento = des.id_descuento
+        INNER JOIN condiciones c ON c.id_condicion = des.id_condicion 
+        WHERE des.id_descuento=".$id_descuento." ORDER BY prioridad");
         return $query->row();
     }
     public function getPaqById($id_paquete){

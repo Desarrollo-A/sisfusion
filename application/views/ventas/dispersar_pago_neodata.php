@@ -34,7 +34,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button"class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reporte dispersión</h4>
+                        <h4 class="modal-title">Reporte dispersion</h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <input type="date" name="fecha1" id="fecha1" class="form-control">
@@ -100,21 +100,28 @@
                                    <input type="hidden"
                                    name="statusLote"
                                    id="statusLote">
-
-                            <div class="col-lg-12">
+                            
+                            <!-- <div class="col-lg-12">
                                 <div class="form-group is-empty">
-                                    <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <input id="motivo"
-                                           name="motivo"
-                                           type="text"
-                                           class="form-control input-gral"
-                                           placeholder="Escriba un motivo corto..."
-                                           minlength="3"
-                                           maxlength="50"
-                                           required />
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                </div>
+                            </div> -->
+                            <div class="col-lg-12" >
+                                <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <select class="selectpicker select-gral"
+                                            id="motivo"
+                                            name="motivo"
+                                            data-style="btn"
+                                            required>
+                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                            <?php foreach($controversias as $controversia){ ?>
+
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            <?php } ?>
+                                    </select>
                                 </div>
                             </div>
-
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
                                     <textarea class="form-control"
@@ -417,7 +424,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
+                                    <p class="card-title pl-1">Lotes nuevos sin dispersar, con saldo disponible en neodata y recesiones con la nueva venta.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -482,7 +489,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
+                                                        <th>ID</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
@@ -493,7 +500,7 @@
                                                         <th>PLAN VENTA</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>MÁS</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -516,7 +523,7 @@
     var url2 = "<?=base_url()?>index.php/";
 
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/despersar_pago_neodata.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

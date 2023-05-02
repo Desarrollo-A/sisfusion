@@ -2,14 +2,12 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php //include 'sidebarParams_prospectsList.php'
-        /*-------------------------------------------------------*/
+        <?php 
         $datos = array();
         $datos = $datos4;
         $datos = $datos2;
         $datos = $datos3;  
         $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
         ?>
 
         <div class="content boxContent">
@@ -45,28 +43,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <div class="material-datatables">
-                                        <table id="prospects-datatable" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <!--<th>ESTADO</th>-->
-                                                    <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                    <th>CREACIÓN</th>
-                                                    <!--<th>VENCIMIENTO</th>-->
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                        <?php include 'common_modals.php' ?>
-                                    </div>
+                                <div class="material-datatables">
+                                    <table id="prospects-datatable" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ETAPA</th>
+                                                <th>PROSPECTO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>CREACIÓN</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <?php include 'common_modals.php' ?>
                                 </div>
                             </div>
                         </div>
@@ -89,11 +83,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script>
-        userType = <?= $this->session->userdata('id_rol') ?> ;
-        idUser = <?= $this->session->userdata('id_usuario') ?> ;
-        typeTransaction = 1;
-    </script>
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
     <script src="<?=base_url()?>dist/js/moment.min.js"></script>

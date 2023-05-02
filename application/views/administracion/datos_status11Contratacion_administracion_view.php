@@ -103,13 +103,34 @@
 											<option value="0">Selecciona una opción</option>
 											<option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
 											<option value="Cheque rebotado">Cheque rebotado</option>
-											<option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>
+											<option value="Rechazo por falta de dinero">Rechazo por falta dinero</option>
+											<option value="Pago American Express">Pago American Express</option>
 											<option value="Otro">Otro</option>
 										</select>
 										<div id="valida_otro" style="display:none">
 											<br>
 											<label>Observaciones:</label>
 											<textarea class="form-control input-gral" id="observaciones" rows="3" style="text-align:center"></textarea>
+										</div>
+										<div id="descripcion_pae" style="display:none">
+											<br>
+											<label>Observaciones:</label>
+											<textarea class="form-control input-gral" id="observacionesPae" rows="3" style="text-align:center"></textarea>
+										</div>
+										<div id="descripcion_rfd" style="display:none">
+											<br>
+											<label>Observaciones:</label>
+											<textarea class="form-control input-gral" id="observacionesRfd" rows="3" style="text-align:center"></textarea>
+										</div>
+										<div id="descripcion_cr" style="display:none">
+											<br>
+											<label>Observaciones:</label>
+											<textarea class="form-control input-gral" id="observacionesCr" rows="3" style="text-align:center"></textarea>
+										</div>
+										<div id="descripcion_trb" style="display:none">
+											<br>
+											<label>Observaciones:</label>
+											<textarea class="form-control input-gral" id="observacionesTrb" rows="3" style="text-align:center"></textarea>
 										</div>
 									</div>
 								</div>
@@ -157,7 +178,6 @@
 														<th>FECHA VENC</th>
 														<th>DÍAS TRANSC</th>
 														<th>ESTATUS ACTUAL</th>
-														<th>UBICACIÓN</th>
 														<th></th>
 													</tr>
 												</thead>
@@ -184,18 +204,19 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+	
+	<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 	<script>
 		var url = "<?=base_url()?>";
 		var url2 = "<?=base_url()?>index.php/";
 		var getInfo1 = new Array(7);
 		var getInfo3 = new Array(6);
 
-		let titulos = [];
+
 		$("#tabla_ingresar_11").ready( function(){
 			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
 				if(i != 0 ){
 					var title = $(this).text();
-					titulos.push(title);
 					$(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
 					$( 'input', this ).on('keyup change', function () {
 						if (tabla_9.column(i).search() !== this.value ) {
@@ -205,6 +226,15 @@
 							.draw();
 						}
 					} );
+				}
+			});
+
+			let titulos = [];
+			$('#tabla_ingresar_11 thead tr:eq(0) th').each( function (i) {
+				if( i!=0 ){
+				var title = $(this).text();
+
+				titulos.push(title);
 				}
 			});
 
@@ -219,13 +249,46 @@
 					exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                         format: {
-							header: function (d, columnIdx) {
-								if (columnIdx == 0) {
-									return ' ' + d + ' ';
-								}
-								return ' ' + titulos[columnIdx - 1] + ' ';
-							}
-						}
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 1:
+                                        return "TIPO DE VENTA";
+                                        break;
+                                    case 2:
+                                        return "PROYECTO"
+                                    case 3:
+                                        return "CONDOMINIO";
+                                        break;
+                                    case 4:
+                                        return "LOTE";
+                                        break;
+                                    case 5:
+                                        return "GERENTE";
+                                        break;
+                                    case 6:
+                                        return "CLIENTE";
+                                        break;
+                                    case 7:
+                                        return "TOTAL NETO";
+                                        break;
+                                    case 8:
+                                        return "FECHA REALIZADO";
+                                        break;
+                                    case 9:
+                                        return "FECHA VENC";
+                                        break;
+                                    case 10:
+                                        return "DÍAS TRANSC";
+                                        break;
+                                    case 11:
+                                        return "ESTATUS ACTUAL";
+                                        break;
+									case 12:
+                                    	return "MÁS";
+                                        break;
+                                }
+                            }
+                        }
                     }
 				}],
 				pagingType: "full_numbers",
@@ -248,7 +311,33 @@
 				},
 				{
 					"data": function( d ){
-						return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+						var lblStats;
+						if(d.tipo_venta==1) {
+							lblStats ='<span class="label label-danger">Venta Particular</span>';
+						}
+						else if(d.tipo_venta==2) {
+							lblStats ='<span class="label label-success">Venta normal</span>';
+						}
+						else if(d.tipo_venta==3) {
+							lblStats ='<span class="label label-warning">Bono</span>';
+						}
+						else if(d.tipo_venta==4) {
+							lblStats ='<span class="label label-primary">Donación</span>';
+						}
+						else if(d.tipo_venta==5) {
+							lblStats ='<span class="label label-info">Intercambio</span>';
+						}
+						else if(d.tipo_venta==6) {
+							lblStats ='<span class="label label-secondary">Reubicación</span>';
+						}
+						else if(d.tipo_venta==7) {
+							lblStats ='<span class="label label-secondary">Venta especial</span>';
+						}
+						else if(d.tipo_venta== null) {
+							lblStats ='<span class="label label-info"></span>';
+						}
+
+						return lblStats;
 					}
 				},
 				{
@@ -285,8 +374,7 @@
 				{
 					"width": "6%",
 					"data": function( d ){
-						var a = (d.totalNeto == null || d.totalNeto == .00) ? formatMoney(0) : formatMoney(d.totalNeto);
-						return '<p class="m-0">' + a + '</p>';
+						return '<p class="m-0">$ ' + formatMoney(d.totalNeto) + '</p>';
 					}
 				},
 				{
@@ -358,11 +446,6 @@
 					"data": function( d ){
 						return '<p class="m-0">'+d.descripcion+'</p>';
 
-					}
-				},
-				{
-					"data": function( d ){
-						return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
 					}
 				},
 				{ 
@@ -565,12 +648,31 @@
 	$(document).on('click', '#save3', function(e) {
 		e.preventDefault();
 		var comentario = $("#comentario3").val();
-		if(comentario != 'Otro'){
-			var comentario = $("#comentario3").val();
-			var validaComent = ($("#comentario3").val() == 0) ? 0 : 1;
-		} else {
-			var comentario = $("#observaciones").val();
+		if(comentario == 'Otro'){
+			var comentario1 = $("#comentario3").val();
+			var comentario2 = $("#observaciones").val();
 			var validaComent = ($("#observaciones").val().length == 0) ? 0 : 1;
+			var comentario = comentario2;
+		} else if (comentario == 'Pago American Express') {
+			var comentario1 = $("#comentario3").val();
+			var comentario2 = $("#observacionesPae").val();
+			var validaComent = ($("#observacionesPae").val().length == 0) ? 0 : 1;
+			var comentario = comentario1 + ' - ' +  comentario2;
+		}else if (comentario == 'Rechazo por falta de dinero') {
+			var comentario1 = $("#comentario3").val();
+			var comentario2 = $("#observacionesRfd").val();
+			var validaComent = ($("#observacionesRfd").val().length == 0) ? 0 : 1;
+			var comentario = comentario1 + ' - ' +  comentario2;
+		}else if (comentario == 'Cheque rebotado') {
+			var comentario1 = $("#comentario3").val();
+			var comentario2 = $("#observacionesCr").val();
+			var validaComent = ($("#observacionesCr").val().length == 0) ? 0 : 1;
+			var comentario = comentario1 + ' - ' +  comentario2;
+		}else if (comentario == 'Transferencia no reflejada en Banco') {
+			var comentario1 = $("#comentario3").val();
+			var comentario2 = $("#observacionesTrb").val();
+			var validaComent = ($("#observacionesTrb").val().length == 0) ? 0 : 1;
+			var comentario = comentario1 + ' - ' +  comentario2;
 		}
 
 	var dataExp3 = new FormData();
@@ -600,7 +702,6 @@
 				type: 'POST', 
 				success: function(data){
 				response = JSON.parse(data);
-
 					if(response.message == 'OK') {
 						$('#save3').prop('disabled', false);
 						$('#rechReg').modal('hide');
@@ -635,14 +736,44 @@
 		
 
 		$('#comentario3').change(function() {
-			if(document.getElementById('comentario3').value == "Otro") {
+			if(document.getElementById('comentario3').value == "Otro" ) {
 				document.getElementById('valida_otro').style.display='block';
 			} else {
 				document.getElementById('valida_otro').style.display='none';
 			}
 		}); 
+		
+		$('#comentario3').change(function() {
+			if(document.getElementById('comentario3').value == "Pago American Express") {
+				document.getElementById('descripcion_pae').style.display='block';
+			} else {
+				document.getElementById('descripcion_pae').style.display='none';
+			}
+		}); 
 
+		$('#comentario3').change(function() {
+			if(document.getElementById('comentario3').value == "Rechazo por falta de dinero") {
+				document.getElementById('descripcion_rfd').style.display='block';
+			} else {
+				document.getElementById('descripcion_rfd').style.display='none';
+			}
+		}); 
 
+		$('#comentario3').change(function() {
+			if(document.getElementById('comentario3').value == "Cheque rebotado") {
+				document.getElementById('descripcion_cr').style.display='block';
+			} else {
+				document.getElementById('descripcion_cr').style.display='none';
+			}
+		}); 
+
+		$('#comentario3').change(function() {
+			if(document.getElementById('comentario3').value == "Transferencia no reflejada en Banco") {
+				document.getElementById('descripcion_trb').style.display='block';
+			} else {
+				document.getElementById('descripcion_trb').style.display='none';
+			}
+		}); 
 
 		jQuery('#editReg').on('hidden.bs.modal', function (e) {
 		jQuery(this).removeData('bs.modal');
@@ -677,12 +808,6 @@
 			alerts.showNotification("top", "left", "Solo Numeros.", "danger");
 		return false;
 		}
-	}
-
-
-
-	function formatMoney(number) {
-		return '$'+ number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
         // Jquery Dependency
