@@ -112,7 +112,6 @@ class Corrida extends CI_Controller {
 //        print_r($objDatos->telefono);
 //        exit;
 
-
 		$arreglo =array();
 		$arreglo["nombre"]= $objDatos->nombre;
 		$arreglo["id_lote"]= $idLote;
@@ -148,7 +147,32 @@ class Corrida extends CI_Controller {
         $arreglo["tipo_casa"]= $objDatos->tipo_casa;
         $arreglo["id_cliente"]= $objDatos->id_cliente;
         $arreglo["created_by"]= $this->session->userdata('id_usuario');
+        //generar rama para subir la autorizacion de fecha inicio mensualidad
+        $tipoIM = $objDatos->tipoIM;
+        $arreglo["tipoPM"] = $tipoIM;
+        $arreglo["fechaInicioPM"] = $objDatos->customDate;
 
+        if($tipoIM == 3){
+            $verifica = $this->Corrida_model->revisaFIFCDOC($idLote,  $objDatos->id_cliente);
+            if(count($verifica) == 0){
+                $data_insert = array(
+                    'movimiento' => 'AUTORIZACIÓN CAMBIO FECHA CF',
+                    'expediente' => null,
+                    'modificado' => date('Y-m-d H:i:s'),
+                    'status'     => 1,
+                    'idCliente'  => $objDatos->id_cliente,
+                    'idCondominio' => $objDatos->condominio,
+                    'idLote' => $idLote,
+                    'idUser' => $this->session->userdata('id_usuario'),
+                    'tipo_documento' => 0,
+                    'id_autorizacion' => 0,
+                    'tipo_doc' => 31,
+                    'estatus_validacion' => 0
+                );
+
+                $this->General_model->addRecord('historial_documento', $data_insert);
+            }
+        }
         /*
         echo 'asesor:<br>';
         print_r($id_asesor);
