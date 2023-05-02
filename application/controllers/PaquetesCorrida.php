@@ -296,8 +296,9 @@ class PaquetesCorrida extends CI_Controller
   public function getPaquetes()
   {
     $index = $this->input->post("index");
-    $datos_sede = explode(",", $this->input->post("sede"));
-    $id_sede = $datos_sede[0];
+    $accion = $this->input->post("accion");
+    $paquetes = $this->input->post("paquetes");
+    $id_sede = $this->input->post("sede");  
     $residenciales = $this->input->post("residencial[]");
     $desarrollos = implode(",", $residenciales);
     $superficie = $this->input->post("superficie");
@@ -339,7 +340,7 @@ class PaquetesCorrida extends CI_Controller
       $query_tipo_lote = '';
     }
 
-    $row = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin);
+    $row = $accion == 1 ? $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote, $query_superdicie, $desarrollos, $fechaInicio, $fechaFin) : array(array('id_paquete' => $paquetes)) ;
 
     $data = array();
     if (count($row) == 0) {
