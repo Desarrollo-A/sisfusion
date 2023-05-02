@@ -1488,11 +1488,18 @@
   transition: 0.3s;
 }
 
-#mainBoxDS #containerCopropietario {
+#mainBoxDS #containerCopropietario, #mainBoxDS #containerReferencia {
   background-color: #f0f8ff9e;
   border-radius: 15px;
   padding: 0 18px !important;
   margin-top: 30px;
+}
+
+#mainBoxDS #ofertanteInput input {
+  padding: 0;
+  text-align: center;
+  height: 27px;
+  font-size: 12px;
 }
 
 #mainBoxDS #radioViv .radioContainer {
@@ -1524,6 +1531,13 @@
   background-color: #0a548b;
   color: #ffffff;
   transition: 0.3s;
+}
+
+#mainBoxDS #observaciones textarea {
+  background-image: none;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background-color: #eee;
 }
 
 #mainBoxDS #checkDS .boxChecks {
