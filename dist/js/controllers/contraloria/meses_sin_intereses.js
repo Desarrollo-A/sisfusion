@@ -11,7 +11,7 @@ $(document).ready (function() {
     if(id_rol_general==17 || id_rol_general==70){
         button_excel = [
             {
-                className: 'btn buttons-excel',
+                className: 'btn buttons-excel color-letter',
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'CSV',
@@ -21,7 +21,7 @@ $(document).ready (function() {
     else{
         button_excel = [
             {
-                className: 'btn buttons-excel',
+                className: 'btn buttons-excel color-letter',
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'CSV',
@@ -155,7 +155,6 @@ $(document).ready (function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-        console.log('triggered');
     });
 
     $('input[type=radio][name=modoSubida]').change(function() {
@@ -367,16 +366,13 @@ function changeCondominio(){
 function changeLote(){
     $('#filtro4').empty();
     $('#filtro4').selectpicker('refresh');
-    console.log('se deben cargar los condominios');
     var idProyecto = $('#filtro3').val();
-    console.log('idProyecto', idProyecto);
     $.ajax({
         url: general_base_url+'General/getCondominiosList',
         type: 'post',
         dataType: 'json',
         data: {"idResidencial": idProyecto},
         success: function(data) {
-            console.log('success', data);
             data.map((element, index)=>{
                 $("#filtro4").append($('<option data-nombre="'+element.nombre+'">').val(element.idCondominio).text(element.nombre));
                 $("#filtro4").selectpicker('refresh');
@@ -388,7 +384,6 @@ function changeLote(){
     });
 }
 function loadLotes(){
-    console.log('load lotes');
     var idCondominio = $('#filtro4').val();
     var data = new Array();
     //1: busqueda por proyecto
@@ -405,7 +400,7 @@ function loadTable(dataVariable){
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: 'auto',
         buttons: [{
-            className: 'btn buttons-excel',
+            className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
             extend: 'csvHtml5',
             titleAttr: 'CSV',
