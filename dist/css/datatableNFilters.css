@@ -1348,6 +1348,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1660,6 +1661,12 @@
 table.dataTable > thead > tr > th {
   padding: 0 !important;
   text-align: center;
+}
+
+.modal-xl {
+  overflow-y: auto;
+  width: 95%;
+  height: fit-content;
 }
 
 table {

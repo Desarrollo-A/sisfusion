@@ -412,7 +412,7 @@
 
     public function getDocsByType($typeOfPersona)
     {
-        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1");
+        $query = $this->db-> query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1 AND id_opcion NOT IN(30)");
         /*$this->db->select('*');
         $this->db->where('id_catalogo', $typeOfPersona);
         $query= $this->db->get("opcs_x_cats");*/

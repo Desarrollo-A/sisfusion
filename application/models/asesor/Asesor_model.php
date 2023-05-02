@@ -314,7 +314,7 @@ class Asesor_model extends CI_Model
         if ($this->session->userdata('id_rol') == 6) {
 
 
-            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, con.msni, 
+            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni,  
             descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
@@ -1897,6 +1897,12 @@ class Asesor_model extends CI_Model
     }
     function getTipoVenta($idLote){
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
+        return $query->result_array();
+    }
+    function getInicioMensualidadAut($idLote, $id_cliente){
+        $query = $this->db->query("SELECT * FROM corridas_financieras cf
+        INNER JOIN historial_documento hd ON hd.idLote = cf.id_lote
+        WHERE cf.id_lote=".$idLote." AND cf.id_cliente=".$id_cliente." AND hd.tipo_doc=31");
         return $query->result_array();
     }
 }
