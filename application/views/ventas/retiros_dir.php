@@ -201,7 +201,7 @@
         var tr;
 
         var id_user_session = "<?=$this->session->userdata('id_usuario')?>"
-        var id_user = "<?=$this->session->userdata('id_usuario')?>" == 1875 ? 2 : "<?=$this->session->userdata('id_usuario')?>";
+        7
         
         function formatMoney( n ) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -711,7 +711,7 @@
                     type: 'POST', // For jQuery < 1.9
                     success: function(data){
                         if( data = 1 ){
-                            $("#modal_nuevas").modal('toggle' );
+                            $("#modal_nuevas").modal('toggle');
                             alerts.showNotification("top", "right", "Se aplicó el descuento correctamente", "success");
                             setTimeout(function() {
                                 tabla_nuevas.ajax.reload();

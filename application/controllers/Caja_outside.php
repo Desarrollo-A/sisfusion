@@ -1140,12 +1140,12 @@ class Caja_outside extends CI_Controller {
                 $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
             }
 
-            $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
-            $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
-            $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
-            $arreglo["id_subdirector"] = $value->idSubdirector;
-            $arreglo["id_regional"] = $value->idRegional;
-            $arreglo["id_regional_2"] = $value->idRegional2;
+            $arreglo["id_gerente"] = $data->id_gerente;
+            $arreglo["id_coordinador"] = $data->id_coordinador;
+            $arreglo["id_asesor"] = $data->id_asesor;
+            $arreglo["id_subdirector"] = $data->id_subdirector;
+            $arreglo["id_regional"] = $data->id_regional;
+            $arreglo["id_regional_2"] = $data->id_regional_2;
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
@@ -1855,9 +1855,9 @@ class Caja_outside extends CI_Controller {
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;
-                        $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
-                        $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
+                        $arreglo['id_subdirector'] = $data->asesores[0]->idSubdirector;
+                        $arreglo['id_regional'] = $data->asesores[0]->idRegional1;
+                        $arreglo['id_regional_2'] = $data->asesores[0]->idRegional2;
                         $arreglo['estructura'] = in_array($data->asesores[0]->idGerente, array(12135, 6661)) ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
