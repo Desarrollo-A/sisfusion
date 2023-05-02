@@ -269,7 +269,7 @@ class PaquetesCorrida extends CI_Controller
     $primeraCarga = $this->input->post("primeraCarga");
     $tipoCondicion = $this->input->post("tipoCondicion");
 
-    echo json_encode($this->PaquetesCorrida_model->getDescuentosYCondiciones($primeraCarga, $tipoCondicion));
+    echo json_encode($this->PaquetesCorrida_model->getDescuentosYCondiciones($primeraCarga, $tipoCondicion),JSON_NUMERIC_CHECK);
   }
 
   public function SaveNewDescuento(){

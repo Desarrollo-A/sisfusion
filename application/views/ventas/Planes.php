@@ -386,7 +386,7 @@
 										</div>
 									</div> 
 									<!------->
-									<?php include 'modalsPVentas.php' ?>
+									<?php include 'modalsPventas.php' ?>
 
 								</div>
 							</div>
