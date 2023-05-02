@@ -1,15 +1,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
-
     <div class="wrapper ">
         <?php
-            if (in_array($this->session->userdata('id_rol'), array(17,4,5,6)))
+            if (in_array($this->session->userdata('id_rol'), array(17,5)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         ?>
-
         <div class="modal fade" id="detailComisionistaModal" tabindex="-1" role="dialog" aria-labelledby="detailComisionistaLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
@@ -26,7 +24,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -104,12 +101,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div><!--main-panel close-->
-
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

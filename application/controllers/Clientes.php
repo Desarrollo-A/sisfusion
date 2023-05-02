@@ -210,9 +210,9 @@ public function getStatusMktdPreventa(){
     }
     public function consultProspects_sbdir()
     {
- /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
- $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
- /*-------------------------------------------------------------------------------*/
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("clientes/consulta_prospecto_sbdir",$datos);
     }

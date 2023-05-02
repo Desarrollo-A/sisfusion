@@ -34,8 +34,21 @@ class Comisiones extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-  public function lista_usuarios($rol,$forma_pago){
-    echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
+   // dispersion-view complete
+
+  public function dispersion() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $this->load->view('template/header');
+        $this->load->view("comisiones/dispersion-view", $datos);
+      }
+
+ 
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
   }
     
   public function descuentosCapitalHumano(){
@@ -66,6 +79,12 @@ public function getPuestosDescuentos(){
     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+  }
+  
+  public function activas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
     $this->load->view("ventas/dispersar_pago_neodata", $datos);
@@ -2988,7 +3007,6 @@ public function LiquidarLote(){
         $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $salida = str_replace('' . base_url() . '', '', $val);
         $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
         $this->load->view('template/header');
         $this->load->view("ventas/active_commissions", $datos);
     }
@@ -6529,10 +6547,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array('data' => $data));
     }
 
-      public function getStoppedCommissions()
+      public function comisionesDetenida()
     {
       $datos = array();
-      $datos = $this->Comisiones_model->getStoppedCommissions();
+      $datos = $this->Comisiones_model->comisiones_detenidas();
       if ($datos != null) {
         echo json_encode($datos);
       } else {
@@ -6542,7 +6560,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
  
     
-    public function viewDetenidas() {
+    public function detenidas() {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();

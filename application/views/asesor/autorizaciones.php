@@ -1,5 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/><link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" type="text/css"/>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
 		<?php
@@ -66,11 +68,26 @@
 						</div>
 						<div class="modal-body">
 							<label>Autoriza: </label><br>
-							<select name="id_aut" id="dirAutoriza" class="selectpicker select-gral" data-style="btn btn-round" title="TIPO USUARIO" data-size="7">
-							</select><br><br><br>
+							<select name="id_aut"
+									id="dirAutoriza" 
+									class="selectpicker select-gral" 
+									data-style="btn btn-round" 
+									data-live-search="true"
+									title="Selecciona una opción"
+									data-size="7">
+							</select>
+							<br><br>
 							<label>Observaciones: *</label>
-							<textarea class="form-control" id="comentario_0" name="comentario_0" rows="3" style="width:100%;"
-									placeholder="Ingresa tu comentario" maxlength="100" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+							<textarea	class="form-control input-gral"
+										id="comentario_0"
+										name="comentario_0"
+										rows="3"
+										style="width:100%;"
+										placeholder="Ingresa tu comentario" 
+										maxlength="100"
+										oninput="if(this.value.length > this.maxLength) 
+										this.value = this.value.slice(0, this.maxLength);">
+							</textarea>
 							<input type="hidden" id="tamanocer" name="tamanocer" value="1" style="color: black">
 							<input type="hidden" name="idCliente" id="idCliente">
 							<input type="hidden" name="idLote" id="idLote">
@@ -82,16 +99,30 @@
 							<br>
 							<div id="autorizacionesExtra"></div>
 							<div id="functionAdd">
-								<a onclick="agregarAutorizacion()" style="float: right; color: black; cursor: pointer; " title="Agregar observación">
-									<span class="material-icons">add</span>
+								<a	class="btn-data btn-blueMaderas"
+									onclick="agregarAutorizacion()"
+									style="float: right; cursor: pointer;"
+									data-toggle="tooltip" 
+									data-placement="right"
+									title="Agregar observación">
+									<i class="fas">
+										<span class="material-icons">
+											note_add
+										</span>
+									</i>
 								</a>
+								<br>
 							</div>
 							<br>
 						</div>
 						<div class="modal-footer">
-							<a href="#" class="btn btn-primary" onclick="return validateEmptyFields()" id="btnSubmit"> Enviar autorización</a>
-							<button type="submit" id="btnSubmitEnviar" class="btn btn-success hide"> Enviar autorización</button>
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+							<a href="#" class="btn btn-primary finishS" style="margin: 0px;" onclick="return validateEmptyFields()" id="btnSubmit">
+									Enviar
+							</a>
+							<button type="submit" id="btnSubmitEnviar" class="btn btn-success hidden" data-dismiss="modal">
+							</button>
+							
 						</div>
 					</form>
 				</div>
@@ -110,7 +141,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary btn-simple" data-dismiss="modal">Aceptar</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-primary finishS" data-dismiss="modal">Aceptar</button>
 					</div>
 				</div>
 			</div>
@@ -121,7 +153,7 @@
 				<div class="row">
 					<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<ul class="nav nav-tabs nav-tabs-cm">
-							<li class="active"><a href="#soli" data-toggle="tab">Solicitud</a></li>
+							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();">Solicitud</a></li>
 							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();">Autorizaciones</a></li>
 						</ul>
 						<div class="card no-shadow m-0">
@@ -130,13 +162,27 @@
                                     <div class="tab-content p-2">
 										<div class="active tab-pane" id="soli">
 											<h3 class="card-title center-align">Solicitud</h3>
+											<p class="center-align">
+												A través de este panel(Solicitud) podrás realizar lo siguiente;
+												consulta de las solicitudes previas a su autorización,
+												envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
+													(seleccionar usuario según sea el caso) con una solicitud de autorización
+													(dependiendo del estatus de la misma),
+												descarga de información en formatos: PDF y XLSX.
+											</p>
 											<table id="sol_aut" class="table-striped table-hover">
 												<thead>
 													<tr>
 														<th>PROYECTO</th>
 														<th>CONDOMINIO</th>
 														<th>LOTE</th>
-														<th>FECHA/HORA</th>
+														<th>CLIENTE</th>
+														<th>COORDINADOR</th>
+														<th>GERENTE</th>
+														<th>SUBDIRECTOR</th>
+														<th>DIRECTOR REGIONAL</th>
+														<th>DIRECTOR REGIONAL 2</th>
+														<th>FECHA APARTADO</th>
 														<th>ACCIONES</th>
 													</tr>
 												</thead>
@@ -145,15 +191,27 @@
 										</div>
 										<div class="tab-pane" id="aut">
 											<h3 class="card-title center-align">Autorizaciones</h3>
+											<p class="center-align">
+												A través de este panel(Autorizaciones) podrás realizar lo siguiente;
+												consulta de las solicitudes autorizadas,
+												visualización de los estatus correspondientes por cada una de las autorizaciones en proceso,
+												descarga de información en formatos: PDF y XLSX.<br>
+											</p>
 											<table id="addExp" class="table-striped table-hover">
 												<thead>
 													<tr>
 														<th>PROYECTO</th>
 														<th>CONDOMINIO</th>
 														<th>LOTE</th>
-														<th>SOLICITA</th>
+														<th>CLIENTE</th>
+														<th>SOLICITANTE/ASESOR</th>
+														<th>COORDINADOR</th>
+														<th>GERENTE</th>
+														<th>SUBDIRECTOR</th>
+														<th>DIRECTOR REGIONAL</th>
+														<th>DIRECTOR REGIONAL 2</th>
 														<th>AUTORIZA</th>
-														<th>AUTORIZACIÓN</th>
+														<th>ACCIONES</th>
 													</tr>
 												</thead>
 												<tbody></tbody>
@@ -180,5 +238,6 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/intro.js/5.1.0/intro.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/asesores/autorizaciones.js"></script>
 </body>

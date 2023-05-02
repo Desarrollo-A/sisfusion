@@ -28,7 +28,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
                                FROM prestamos_aut pa
                                JOIN usuarios u ON u.id_usuario = pa.id_usuario
                                JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                               JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
+                               JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
                                JOIN comisiones c ON c.id_comision = pci.id_comision
                                WHERE pa.id_prestamo = ".$id_prestamo."
                                group by pa.id_prestamo")->result_array();
@@ -53,7 +53,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $data = $this->db->query("SELECT p.*,opc.nombre 
     FROM prestamos_aut p 
     INNER JOIN opcs_x_cats opc ON opc.id_opcion=p.tipo AND opc.id_catalogo=23 
-    WHERE p.estatus=1 
+    WHERE p.estatus=1
     ORDER BY monto ASC")->result_array();
     for ($m=0; $m <count($data); $m++){
         $pagoMensual = $data[$m]['pago_individual'] + $data[$m]['pendiente'];

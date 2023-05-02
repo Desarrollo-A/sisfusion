@@ -34,25 +34,25 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="control-label">Personalidad jurídica</label>
-                                                <input id="legal-personality-lbl" type="text" class="form-control" disabled>
+                                                <input id="legal-personality-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="control-label">Nacionalidad</label>
-                                                <input id="nationality-lbl" type="text" class="form-control" disabled>
+                                                <input id="nationality-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="control-label">CURP</label>
-                                                <input id="curp-lbl" type="text" class="form-control" disabled>
+                                                <input id="curp-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="control-label">RFC</label>
-                                                <input id="rfc-lbl" type="text" class="form-control" disabled>
+                                                <input id="rfc-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -60,19 +60,19 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="control-label">Nombre / Razón social</label>
-                                                <input id="name-lbl" type="text" class="form-control" disabled>
+                                                <input id="name-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label class="control-label">Correo electrónico</label>
-                                                <input id="email-lbl" type="text" class="form-control" disabled>
+                                                <input id="email-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label class="control-label">Teléfono</label>
-                                                <input id="phone-number-lbl" type="text" class="form-control" disabled>
+                                                <input id="phone-number-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -80,13 +80,13 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="control-label">¿Cómo nos contactaste?</label>
-                                                <input id="prospecting-place-lbl" type="text" class="form-control" disabled>
+                                                <input id="prospecting-place-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="control-label">Plaza de venta</label>
-                                                <input id="sales-plaza-lbl" type="text" class="form-control" disabled>
+                                                <input id="sales-plaza-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -94,19 +94,19 @@
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label class="control-label">Asesor</label>
-                                                <input id="asesor-lbl" type="text" class="form-control" disabled>
+                                                <input id="asesor-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label class="control-label">Coordinador</label>
-                                                <input id="coordinador-lbl" type="text" class="form-control" disabled>
+                                                <input id="coordinador-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label class="control-label">Gerente</label>
-                                                <input id="gerente-lbl" type="text" class="form-control" disabled>
+                                                <input id="gerente-lbl" type="text" class="form-control input-gral" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -141,8 +141,8 @@
                         <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
                     </div>
                 </div>
             </div>
@@ -203,23 +203,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script>
-
-    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
-                $('#clients-datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
-
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    idUser = <?= $this->session->userdata('id_usuario') ?> ;
-    typeTransaction = 1;
-</script>
-
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/consultaClientes.js"></script>

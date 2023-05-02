@@ -227,5 +227,11 @@ function getAsesoresList() {
     });
 }
 
-
-
+function formatMoney( n ) {
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        maximumFractionDigits: 4,
+        currency: 'MXN'
+    });
+    return formatter.format(n);
+}
