@@ -71,27 +71,47 @@ class Comisiones extends CI_Controller
     echo json_encode($response);
   }
 
-  // ------------------------------------------------------PASO 1 CONTRALORIA----------------------------------------
-  public function dispersar_pago_neodata()
-  {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-  }
-  
   public function activas() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
-    $this->load->view("ventas/dispersar_pago_neodata", $datos);
+    $this->load->view("comisiones/activas-view", $datos);
   }
+
+  public function getDataActivasPago() {
+    $data['data'] = $this->Comisiones_model->getDataActivasPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function liquidadas() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/liquidadas-view", $datos);
+  }
+
+  public function getDataLiquidadasPago() {
+    $data['data'] = $this->Comisiones_model->getDataLiquidadasPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function especiales() {
+    if ($this->session->userdata('id_rol') == FALSE)
+    redirect(base_url());
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $this->load->view('template/header');
+    $this->load->view("comisiones/especiales-view", $datos);
+  }
+
+  public function getDataDispersionPagoEspecial() {
+    $data['data'] = $this->Comisiones_model->getDataDispersionPagoEspecial()->result_array();
+    echo json_encode($data);
+  }
+ 
+  
+  // dispersion-view complete-end
 
   public function usuariosIncidencias()
   {
@@ -734,7 +754,7 @@ function update_estatus(){
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;
+    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;
 
       if( $consulta_comisiones->num_rows() > 0 ){
 
@@ -1233,7 +1253,7 @@ function update_estatus(){
 
     $validar_user = $this->session->userdata('id_usuario');
     $validar_sede = $this->session->userdata('id_sede');
-    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'dd-MM-yyyy hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
+    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
     date_default_timezone_set('America/Mexico_City');       
     $fecha_actual = strtotime($obtenerFechaSql);
       //fecha inicio
@@ -2653,19 +2673,7 @@ public function agregar_comisionvc(){
   }
   
 
-  public function historyDispersePaymentInNeodata()
-  {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/historial_liquidadas", $datos);
-  }
+
 
 public function getSettledCommissions(){
       $datos = array();
@@ -2985,30 +2993,7 @@ public function LiquidarLote(){
  
  }
 
- function activeCommissions()
-    {
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $this->load->view('template/header');
-        $this->load->view("ventas/active_commissions", $datos);
-    }
 
-    public function getActiveCommissions()
-    {
-        $datos = array();
-        $datos = $this->Comisiones_model->getActiveCommissions();
-        if ($datos != null) {
-            echo json_encode($datos);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
     public function getAllCommissions()
     {
@@ -3094,11 +3079,7 @@ public function LiquidarLote(){
         }
     }
 
-    public function updateBandera(){
-         // echo($_POST['param']);
-        $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
-        echo json_encode($response);
-    }
+    
 
     public function asigno_region_uno($sol){
       $this->load->model("Comisiones_model");
@@ -3903,12 +3884,17 @@ echo json_encode($respuesta);
 
 public function descuentos_contraloria()
   {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    /*-------------------------------------------------------------------------------*/
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $datos = array();
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $salida = str_replace('' . base_url() . '', '', $val);
+    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
     $this->load->view("ventas/descuentos", $datos);
-  } 
+  }
   public function descuentos_contra()
   {
 
@@ -5545,69 +5531,15 @@ public function getAsesoresBaja() {
   exit;
 }
 
-/*public function CederComisiones(){
+public function CederComisiones(){
+
   $idAsesorOld = $this->input->post('asesorold');
   $rol = $this->input->post('roles2');
   $newUsuario = $this->input->post('usuarioid2');
   $comentario= $this->input->post('comentario');
-  $respuesta = $this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol);
-
-  if($respuesta !== 0 && !empty($respuesta) && !is_null($respuesta)){
-
-    $datos_etiquetas = null;
-    
-    $datos_correo[] = array();
-    
-    $informacionUsuariosComentario = null;
-
-    $correos_entregar = array();
-
-    foreach($respuesta as $indice => $valor){
-
-      foreach ($valor as $subIndice =>  $informacionCorreo) {
-
-        if($indice === 'usuarioAnterior'){
-          $informacionUsuariosComentario .= 'El ' . $informacionCorreo['rol'] . ' ' . $informacionCorreo['nombre'] . ' cedió sus comisiones al ';
-        }elseif($indice === 'usuarioActual'){
-          $informacionUsuariosComentario .= $informacionCorreo['rol']." ".$informacionCorreo['nombre'];
-        }elseif($indice === 'infoCedida'){
-          $informacionCorreo['com_total']= '$ '.number_format($informacionCorreo['com_total'], 2);
-          $informacionCorreo['tope']= '$ '.number_format($informacionCorreo['tope'], 2);
-          $informacionCorreo['resto']= '$ '.number_format($informacionCorreo['resto'], 2);
-          $datos_correo[$subIndice] = $informacionCorreo;
-        }
-
-      }
-
-    }
-
-    array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-
-    $comentario = $informacionUsuariosComentario . '.<br>A continuación se muestran los comentarios correspondientes a este proceso de "Cesión de comisiones": <br>' . $comentario;
-    
-    $elementos_correo = array("setFrom" => Elementos_Correo_Ceder_Comisiones::SET_FROM_EMAIL,
-                              "Subject" => Elementos_Correo_Ceder_Comisiones::ASUNTO_CORREO_TABLA_CEDER_COMISIONES);
-
-    $comentario_general = Elementos_Correo_Ceder_Comisiones::EMAIL_CEDER_COMISIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-    $datos_encabezados_tabla = Elementos_Correo_Ceder_Comisiones::ETIQUETAS_ENCABEZADO_TABLA_CEDER_COMISIONES;
-
-
-    $plantilla_correo = new plantilla_dinamica_correo;
-    
-
-    $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,                                                             $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-    if($envio_correo){
-      $data['message_email'] = 'OK';
-      $data['respuesta'] = 1;
-    }else{
-      $data['message_email'] = 'ERROR';
-      $data['respuesta'] = $envio_correo;
-    }
-  }else{
-    $data['respuesta'] = 0;
-  }
-  echo json_encode($data['respuesta']);
-}*/
+   $respuesta = array($this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol));
+  echo json_encode($respuesta[0]);
+}
 
 public function datosLotesaCeder($id_usuario){
 
@@ -6500,10 +6432,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array('data' => $data));
     }
 
-      public function comisionesDetenida()
+      public function getStoppedCommissions()
     {
       $datos = array();
-      $datos = $this->Comisiones_model->comisiones_detenidas();
+      $datos = $this->Comisiones_model->getStoppedCommissions();
       if ($datos != null) {
         echo json_encode($datos);
       } else {
@@ -6513,7 +6445,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
  
     
-    public function detenidas() {
+    public function viewDetenidas() {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
@@ -6683,15 +6615,11 @@ for ($d=0; $d <count($dos) ; $d++) {
         echo json_encode($data);
     }
 
-    public function findAllPlanes()
-    {
-        $data = $this->Comisiones_model->findAllPlanes();
-        echo json_encode($data);
-    }
+    
 
-    public function findPlanDetailById($idPlan)
+    public function getDetallePlanesComisiones($idPlan)
     {
-        $data = $this->Comisiones_model->findPlanDetailById($idPlan);
+        $data = $this->Comisiones_model->getDetallePlanesComisiones($idPlan);
         $info = array();
         $info['id_plan'] = $data->id_plan;
         $info['descripcion'] = $data->descripcion;
@@ -6774,7 +6702,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function changeLoteToStopped()
     {
-        // var_dump($_POST['motivo']);
+
         $response = $this->Comisiones_model
             ->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
                 'pago_comision', $_POST['motivo']);
