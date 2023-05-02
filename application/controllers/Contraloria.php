@@ -3477,7 +3477,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
     function todasAutorizacionesMSI(){
 	    $data = $this->Contraloria_model->todasAutorizacionesMSI();
         if($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -3657,19 +3657,19 @@ public function editar_registro_lote_contraloria_proceceso15(){
         $insert_historial = array();
         $update_lotes = array();
 
-
+        $fecha_insercion = date('Y-M-d H:i:s');
         if($modo == 1){
             $data_actualizar = array(
                 "estatus_autorizacion" => $estatus_autorizacion,
                 "comentario" => $comentario,
-                "fecha_modificacion" => date('Y-M-d H:i:s'),
+                "fecha_modificacion" => $fecha_insercion,
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
             $data_historial = array(
                 "idAutorizacion"        => $id_autorizacion,
                 "tipo"                  => 2,
                 "id_usuario"            => $this->session->userdata('id_usuario'),
-                "fecha_movimiento"      => date('Y-m-d H:i:s'),
+                "fecha_movimiento"      => $fecha_insercion,
                 "estatus"               => 1,
                 "comentario"            => $comentario,
                 "estatus_autorizacion"  => $estatus_autorizacion
@@ -3692,18 +3692,19 @@ public function editar_registro_lote_contraloria_proceceso15(){
         elseif($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
+            $fecha_insercion = date('Y-m-d H:i:s');
             foreach($arrayAutorizaciones as $id_aut){
                 $data_actualizar = array(
                     "estatus_autorizacion" => $estatus_autorizacion,
                     "comentario" => $comentario,
-                    "fecha_modificacion" => date('Y-M-d H:i:s'),
+                    "fecha_modificacion" => $fecha_insercion,
                     "modificado_por" => $this->session->userdata('id_usuario')
                 );
                 $data_historial = array(
                     "idAutorizacion"        => $id_aut,
                     "tipo"                  => 2,
                     "id_usuario"            => $this->session->userdata('id_usuario'),
-                    "fecha_movimiento"      => date('Y-m-d H:i:s'),
+                    "fecha_movimiento"      => $fecha_insercion,
                     "estatus"               => 1,
                     "comentario"            => $comentario,
                     "estatus_autorizacion"  => $estatus_autorizacion
