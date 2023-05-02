@@ -3,8 +3,8 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-// use application\helpers\email\comisiones\Elementos_Correo_Ceder_Comisiones;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 
 class Comisiones extends CI_Controller
 {
@@ -17,8 +17,8 @@ class Comisiones extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
-    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'phpmailer_lib'));
-    $this->load->helper(array('url', 'form', 'email/comisiones/elementos_correo', 'email/plantilla_dinamica_correo'));
+    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+    $this->load->helper(array('url', 'form'));
     $this->load->database('default');
     $this->jwt_actions->authorize('7396', $_SERVER['HTTP_HOST']);
     $this->validateSession();
@@ -33,22 +33,22 @@ class Comisiones extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-   // dispersion-view complete
+  // dispersion-view complete
 
   public function dispersion() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("comisiones/dispersion-view", $datos);
-      }
+    $this->load->view('template/header');
+    $this->load->view("comisiones/dispersion-view", $datos);
+  }
 
- 
+
   public function getDataDispersionPago() {
     $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
     echo json_encode($data);
-  }
-
+    }
+    
 
   public function getPlanesComisiones($val = ''){
 
@@ -65,7 +65,7 @@ class Comisiones extends CI_Controller
         echo json_encode(array());
       }
     }
-
+    
   public function updateBandera(){
     $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
     echo json_encode($response);
@@ -144,7 +144,7 @@ class Comisiones extends CI_Controller
 
 
 
-    
+  
   public function getDataDispersionPago2()
   {
     $datos = array();
@@ -261,7 +261,7 @@ class Comisiones extends CI_Controller
       $respuesta = $this->Comisiones_model->pagos_codigo_postal($this->session->userdata('id_usuario'))->result_array();
       echo json_encode($respuesta);
     }
-      
+    
     function aprobar_comision(){
       $id_pago= $_POST['id_pago'];
       $id_comision = $_POST['id_comision'];
@@ -395,7 +395,7 @@ class Comisiones extends CI_Controller
     
     
     // ------------------------------------------------------****************----------------------------------------
-   
+  
 
   // ------------------------------------------------------HISTORIAL GENERAL CONTRALORIA----------------------------------------
   public function historial_comisiones()
@@ -935,7 +935,7 @@ function update_estatus(){
     $this->load->model("Comisiones_model");
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-    
+   
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
         $id_user_Vl = $this->session->userdata('id_usuario');
@@ -1612,11 +1612,11 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       $validar_user = $this->session->userdata('id_usuario');
       $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
 
-      date_default_timezone_set('America/Mexico_City');       
+      date_default_timezone_set('America/Mexico_City');    
       $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
       $fecha_actual = strtotime($obtenerFechaSql);
 
-      //fecha inicio
+       //fecha inicio
       $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
       $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
       $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
@@ -2700,7 +2700,7 @@ public function porcentajes2($idLote){
   echo json_encode($this->Comisiones_model->porcentajes2($idLote)->result_array(), JSON_NUMERIC_CHECK);
 }
  
-
+ 
 
    public function revision_xml()
     {
@@ -3228,7 +3228,7 @@ public function LiquidarLote(){
       }
 
     }
-
+ 
     public function revision_especial()
     {
       //Moficiaciones para revisiones especiales
@@ -3310,17 +3310,17 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-    //  public function retiros_resguardo()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   $this->load->view('template/header');
-    //   $this->load->view("ventas/retiros_dir", $datos);
-    // }
+     public function retiros_resguardo()
+    {
+      $datos = array();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+      $this->load->view("ventas/retiros_dir", $datos);
+    }
 
      public function historial_retiros()
     {
@@ -3364,7 +3364,7 @@ public function LiquidarLote(){
       $tipo = $this->input->post("tipo");
       $idUsu = intval($this->session->userdata('id_usuario')); 
       $pesos = str_replace(",", "", $monto);
-      
+
       $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
      
       // if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
@@ -3375,12 +3375,12 @@ public function LiquidarLote(){
       // $ruta = "static/documentos/evidencia_prestamo_auto/";
 
       // if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
-            if(empty($dato)){
+      if(empty($dato)){
               $pesos=str_replace("$", "", $monto);
-              $comas =str_replace(",", "", $pesos);
-              $pago = $comas;
+        $comas =str_replace(",", "", $pesos);
+        $pago = $comas;
               $pagoCorresp = $pago / $NumeroPagos;
-              $pagoCorresReal = $pagoCorresp;
+        $pagoCorresReal = $pagoCorresp;
               $insertArray = array(
                 'id_usuario'      => $IdUsuario,
                 'monto'           => $pago,
@@ -3398,16 +3398,16 @@ public function LiquidarLote(){
                                 );
               $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
               echo json_encode($respuesta);
-            }else{
+      }else{
               $respuesta = 3;
               echo json_encode($respuesta);
-            }
+      }
       // }else{
       //   $respuesta = 4;
       //   echo json_encode($respuesta);
       // }
       // }
-    
+
     }
 
 
@@ -3811,14 +3811,14 @@ public function LiquidarLote(){
   }
   public function getPrestamos()
   {
-    
+        
    $res["data"] = $this->Comisiones_model->getPrestamos()->result_array();
 
-    echo json_encode($res);
-  }
-  public function getPrestamosXporUsuario(){
-    
-    $res["data"] = $this->Comisiones_model->getPrestamosXporUsuario()->result_array();
+   echo json_encode($res);
+ }
+ public function getPrestamosXporUsuario(){
+   
+   $res["data"] = $this->Comisiones_model->getPrestamosXporUsuario()->result_array();
 
     echo json_encode($res);
   }
@@ -4209,11 +4209,11 @@ public function saveDescuentoch()
         echo json_encode( $this->Comisiones_model->getDescuentosCapital( $this->input->post("id_usuario") ) );
     }
 
-    // public function getRetiros($user,$opc)
-    // {
-    //   $res["data"] = $this->Comisiones_model->getRetiros($user,$opc)->result_array();
-    //   echo json_encode($res);
-    // }
+    public function getRetiros($user,$opc)
+    {
+      $res["data"] = $this->Comisiones_model->getRetiros($user,$opc)->result_array();
+      echo json_encode($res);
+    }
 
     public function getHistorialDescuentos($proyecto,$condominio)
     {
@@ -4985,10 +4985,10 @@ public function SavePrecioLoteMKTD(){
   
   }
   
-  // public function getHistoriRetiros($id)
-  //     {
-  //         echo json_encode($this->Comisiones_model->getHistoriRetiros($id)->result_array());
-  //     }
+  public function getHistoriRetiros($id)
+      {
+          echo json_encode($this->Comisiones_model->getHistoriRetiros($id)->result_array());
+      }
   
   
   
@@ -5832,123 +5832,123 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 {
   echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismktd,$IdResidencial),JSON_NUMERIC_CHECK);
 }
-
  
-public function InsertNeo(){
-  $lote_1 =  $this->input->post("idLote");
-  $bonificacion =  $this->input->post("bonificacion");
-  $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
-  if(sizeof($responses) > 0 && $responses[0]['bandera'] != 0) {
-    $respuesta[0] = 2;
-} else {
 
-        $disparador =  $this->input->post("id_disparador");
-        if($disparador == '1' || $disparador == 1){
-            $lote_1 =  $this->input->post("idLote");
-            $pending_1 =  $this->input->post("pending");
-            $abono_nuevo = $this->input->post("abono_nuevo[]");
-            $rol = $this->input->post("rol[]");
-            $id_comision = $this->input->post("id_comision[]");
-            $pago = $this->input->post("pago_neo");
-            $suma = 0;
-            $replace = [",","$"];
-            for($i=0;$i<sizeof($id_comision);$i++){
-              $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-              $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
-              }
-            for($i=0;$i<sizeof($abono_nuevo);$i++){
-              $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-              $suma = $suma + $var_n ;
-            }
-            $resta = $pending_1 - $pago;
-              $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-            $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
-          }else if($disparador == '0' || $disparador == 0){
-            $replace = [",","$"];
-            $id_usuario = $this->input->post("id_usuario[]");
-            $comision_total = $this->input->post("comision_total[]");
-            $porcentaje = $this->input->post("porcentaje[]");
-            $id_rol = $this->input->post("id_rol[]");
-            $comision_abonada = $this->input->post("comision_abonada[]");
-            $comision_pendiente = $this->input->post("comision_pendiente[]");
-            $comision_dar = $this->input->post("comision_dar[]");
+     public function InsertNeo(){
+      $lote_1 =  $this->input->post("idLote");
+      $bonificacion =  $this->input->post("bonificacion");
+      $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
+      if(sizeof($responses) > 0 && $responses[0]['bandera'] != 0) {
+        $respuesta[0] = 2;
+    } else {
+    
+            $disparador =  $this->input->post("id_disparador");
+            if($disparador == '1' || $disparador == 1){
+                $lote_1 =  $this->input->post("idLote");
+                $pending_1 =  $this->input->post("pending");
+                $abono_nuevo = $this->input->post("abono_nuevo[]");
+                $rol = $this->input->post("rol[]");
+                $id_comision = $this->input->post("id_comision[]");
+                $pago = $this->input->post("pago_neo");
+                $suma = 0;
+                $replace = [",","$"];
+                for($i=0;$i<sizeof($id_comision);$i++){
+                  $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+                  $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $rol[$i], $var_n, $pago);
+                  }
+                for($i=0;$i<sizeof($abono_nuevo);$i++){
+                  $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+                  $suma = $suma + $var_n ;
+                }
+                $resta = $pending_1 - $pago;
+                  $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+                $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+              }else if($disparador == '0' || $disparador == 0){
+                $replace = [",","$"];
+                $id_usuario = $this->input->post("id_usuario[]");
+                $comision_total = $this->input->post("comision_total[]");
+                $porcentaje = $this->input->post("porcentaje[]");
+                $id_rol = $this->input->post("id_rol[]");
+                $comision_abonada = $this->input->post("comision_abonada[]");
+                $comision_pendiente = $this->input->post("comision_pendiente[]");
+                $comision_dar = $this->input->post("comision_dar[]");
+    
+                $pago_neo = $this->input->post("pago_neo");
+                $porcentaje_abono = $this->input->post("porcentaje_abono");
+                $abonado = $this->input->post("abonado");
+                $total_comision = $this->input->post("total_comision");
+                $pendiente = $this->input->post("pendiente");
+                $idCliente = $this->input->post("idCliente");
+    
+                $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
+                $lugar_p = $this->input->post('lugar_p');
+                $totalNeto2 = $this->input->post('totalNeto2');
 
-            $pago_neo = $this->input->post("pago_neo");
-            $porcentaje_abono = $this->input->post("porcentaje_abono");
-            $abonado = $this->input->post("abonado");
-            $total_comision = $this->input->post("total_comision");
-            $pendiente = $this->input->post("pendiente");
-            $idCliente = $this->input->post("idCliente");
-
-            $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
-            $lugar_p = $this->input->post('lugar_p');
-            $totalNeto2 = $this->input->post('totalNeto2');
-
-            $banderita = 0;
-            $PorcentajeAsumar=0;
-            // 1.- validar tipo venta
-            if($tipo_venta_insert <= 6 || $tipo_venta_insert == 11 || $tipo_venta_insert == 13){
-              if($porcentaje_abono < 8){
-                $PorcentajeAsumar = 8 - $porcentaje_abono;
-                $banderita=1;
-                $porcentaje_abono =8;
-              }
-            }
-            
-            $pivote=0;
-
-            for ($i=0; $i <count($id_usuario) ; $i++) { 
-
-              if($banderita == 1 && $id_rol[$i] == 45){
-                $banderita=0;
-
+                $banderita = 0;
+                $PorcentajeAsumar=0;
+                // 1.- validar tipo venta
+                if($tipo_venta_insert <= 6 || $tipo_venta_insert == 11 || $tipo_venta_insert == 13){
+                  if($porcentaje_abono < 8){
+                    $PorcentajeAsumar = 8 - $porcentaje_abono;
+                    $banderita=1;
+                    $porcentaje_abono =8;
+                  }
+                }
                 
-                $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
-                $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
-               
-              }
+                $pivote=0;
+    
+                for ($i=0; $i <count($id_usuario) ; $i++) { 
 
-              if($id_rol[$i] == 1){
-                $pivote=str_replace($replace,"",$comision_total[$i]);
-              }
+                  if($banderita == 1 && $id_rol[$i] == 45){
+                    $banderita=0;
 
-              $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
-            
-            }
-            $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-            $respuesta =  $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
-
-                  if($banderita == 1){
-                    $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
-                     $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
-
+                    
+                    $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
+                    $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
+                   
                   }
 
+                  if($id_rol[$i] == 1){
+                    $pivote=str_replace($replace,"",$comision_total[$i]);
+                  }
+
+                  $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
+                
+                }
+                $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+                $respuesta =  $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
+    
+                      if($banderita == 1){
+                        $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
+                         $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
+
+                      }
+
+                 
+              }
+
+
+              $validatePenalization = $this->Comisiones_model->validatePenalization($lote_1)->result_array();
+
+              if(sizeof($validatePenalization) > 0 ) {
+
+                $respuesta =  $this->InsertPena($lote_1);
+
+              }else{
+                $respuesta = true;
+              }
+
+              // $respuesta =  $this->InsertPena($lote_1);
              
-          }
+              // validar si aplica penalización
 
+    
+    
+    }
+    echo json_encode( $respuesta );
+    }
 
-          $validatePenalization = $this->Comisiones_model->validatePenalization($lote_1)->result_array();
-
-          if(sizeof($validatePenalization) > 0 ) {
-
-            $respuesta =  $this->InsertPena($lote_1);
-
-          }else{
-            $respuesta = true;
-          }
-
-          // $respuesta =  $this->InsertPena($lote_1);
-         
-          // validar si aplica penalización
-
-
-
-}
-echo json_encode( $respuesta );
-}
-
-
+  
     public function porcentajes($cliente,$tipoVenta){
       echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipoVenta)->result_array(),JSON_NUMERIC_CHECK);
     }
@@ -6352,7 +6352,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
 
- 
+
     /************************/
 
 
@@ -6392,18 +6392,18 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
     function conglomerado_descuentos(){
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $this->load->view('template/header');
-        $this->load->view("ventas/conglomerado", $datos);
-    }
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $datos = array();
+      $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+      $this->load->view("ventas/conglomerado", $datos);
+  }
 
     function fusionAcLi(){
         $data['data']= $this->Comisiones_model->fusionAcLi();
@@ -6832,32 +6832,32 @@ for ($d=0; $d <count($dos) ; $d++) {
   }
 
 
-    public function UpdateDescuent(){
-            $id_descuento       = $this->input->post('id_descuento');
-            $monto              = $this->input->post('monto');
-            $pago_individual    = $this->input->post('pago_individual');
-            $comentario         = 'Descuento aplicado';
-            $pagos_activos         =  $this->input->post('pagos_activos');
-                                $arr_update = array(                      
-                                    "pagos_activos"   => $pagos_activos,
-                                    "monto"           =>  $monto,
-                                    "pago_individual" =>  $pago_individual,
-                                    "detalles"      =>  $comentario
-                                          );
-            $update = $this->Comisiones_model->descuentos_universidad($id_descuento,$arr_update);                           
-            if($update){
-              $d=  array(
-                "response_code" => 200, 
-                "response_type" => 'success',
-                "message" => "Descuento actualizado satisfactoriamente");
-            }else{
-              $d=  array(
-                "response_code" => 400, 
-                "response_type" => 'error',
-                "message" => "Descuento no actualizado, intentalo más tarde");
-            }
-            echo json_encode ($d);
-          } 
+  public function UpdateDescuent(){
+    $id_descuento       = $this->input->post('id_descuento');
+    $monto              = $this->input->post('monto');
+    $pago_individual    = $this->input->post('pago_individual');
+    $comentario         = 'Descuento aplicado';
+    $pagos_activos         =  $this->input->post('pagos_activos');
+                        $arr_update = array(                      
+                            "pagos_activos"   => $pagos_activos,
+                            "monto"           =>  $monto,
+                            "pago_individual" =>  $pago_individual,
+                            "detalles"      =>  $comentario
+                                  );
+    $update = $this->Comisiones_model->descuentos_universidad($id_descuento,$arr_update);                           
+    if($update){
+      $d=  array(
+        "response_code" => 200, 
+        "response_type" => 'success',
+        "message" => "Descuento actualizado satisfactoriamente");
+    }else{
+      $d=  array(
+        "response_code" => 400, 
+        "response_type" => 'error',
+        "message" => "Descuento no actualizado, intentalo más tarde");
+    }
+    echo json_encode ($d);
+  }  
 
 
 
@@ -6912,7 +6912,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       }
     }
 
-    public function insertCertificacion(){
+      public function insertCertificacion(){
       $id_descuento       = $this->input->post('id_descuento');
       $monto              = $this->input->post('monto');
       $pago_individual    = $this->input->post('pago_individual');
@@ -6934,14 +6934,14 @@ for ($d=0; $d <count($dos) ; $d++) {
       $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
-      $fecha_modificacion = $fechaSeleccionada.' '.$complemento; 
+      $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
       if($banderaSoloEstatus != 'false' ){
         // var_dump('entrando a 1 ');
         $arr_update = array( 
           "estatus_certificacion" => $estatus_certificacion,          
         );
-      
-    
+        
+
       }else{
         // var_dump('entrando a 2');
         if($estatus === '1'){
@@ -6980,7 +6980,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         }else {
           // if del estatus
               // aqui entra cuando no es baja
-          //  if del estatus es el tipo de filtrado
+      //  if del estatus es el tipo de filtrado
          
           $arr_update = array(    
             
@@ -6995,7 +6995,7 @@ for ($d=0; $d <count($dos) ; $d++) {
             $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
             // $estatus = 5;  
             $arr_update["pagos_activos"] = $pagos_activos ;
-            $arr_update["fecha_modificacion"] = $fecha_modificacion; 
+            $arr_update["fecha_modificacion"] = $fecha_modificacion;
           }
           else  if($banderaPagosActivos == 2){
             $pagos_activos = 0;
@@ -7072,31 +7072,31 @@ for ($d=0; $d <count($dos) ; $d++) {
             "response_code" => 400, 
             "response_type" => 'error',
             "message" => "Préstamo no actualizado, inténtalo más tarde ");
-
-        }
+    
+    }
         echo json_encode ($respuesta);
-            
-    }
-   
-    public function lista_usuarios($rol,$forma_pago){
-      echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
-    }
-      
-    public function descuentosCapitalHumano(){
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-        $this->load->view('template/header');
-        $this->load->view("ventas/add_descuento", $datos);
-      }
+
+}
+
+public function lista_usuarios($rol,$forma_pago){
+  echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
+}
   
-  public function getPuestosDescuentos(){
-    echo json_encode($this->Comisiones_model->getPuestosDescuentos()->result_array());
+public function descuentosCapitalHumano(){
+  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $datos = array();
+    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $salida = str_replace('' . base_url() . '', '', $val);
+    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $this->load->view('template/header');
+    $this->load->view("ventas/add_descuento", $datos);
   }
-  
+
+public function getPuestosDescuentos(){
+echo json_encode($this->Comisiones_model->getPuestosDescuentos()->result_array());
+}
+
 }
