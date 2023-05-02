@@ -1806,10 +1806,7 @@
                         $scope.add =arreglo;*/
 
 ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
-
                     });
-
-
                     // enganche = parseFloat(cantidadEnganche);
 
                     enganche = (b * (porcentajeDeEnganche / 100));
@@ -1820,12 +1817,6 @@
                         porcentaje1 = (item.porcentaje / 100);
                         porcentaje2 = (enganche * porcentaje1);
                         descEng = porcentaje2;
-                        console.log('porcentaje2', porcentaje2);
-                        console.log('descEng', descEng);
-                        console.log('item.porcentaj', item.porcentaje);
-                        console.log('enganche', enganche);
-                        console.log('porcentajeDeEnganche', porcentajeDeEnganche);
-                        // console.log('element', element);
 
                         ////////////////////PORCENTAJE TOPADO A $20,000////////////////////////////////
                         if (item.eng_top == 1) {
@@ -1934,19 +1925,6 @@
                             // d = (tot - porcentaje2);
                             e = b/supLote;
                             c -=  porcentaje2;
-                            // c = e - c;
-
-
-
-                            // c -= 52.63;
-                            // console.log("a: ", a);
-                            // console.log("b: ", b);
-                            // console.log("d: ", d);
-                            // console.log("porcentaje1: ", porcentaje1);
-                            // console.log("porcentaje2: ", porcentaje2);
-                            // console.log("e: ", e);
-                            // console.log("c: ", c);
-                            // console.log("tot: ", a/supLote);
                         }else{
                             // console.log('logica normal');
                             a +=  porcentaje2;
@@ -1966,7 +1944,6 @@
                             msiExtra: item.msi_descuento
                         });
                         $scope.decFin =arreglo;
-                        // console.log($scope.decFin);
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
 
@@ -1977,9 +1954,6 @@
                         r1 = (r1 - $scope.apartado);
                     }
                 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 var ini;
                 var ini2;

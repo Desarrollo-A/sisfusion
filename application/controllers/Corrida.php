@@ -24,8 +24,6 @@ class Corrida extends CI_Controller {
 	public function descuentos() {
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$idLote = $objDatos->lote;
-		/*print_r($idLote);
-		exit;*/
 		$paquetes = $this->Corrida_model->getPaquetes($idLote);
 		$response = $this->Corrida_model->getDescuentos();
 		for( $i = 0; $i < count($paquetes); $i++ ){
