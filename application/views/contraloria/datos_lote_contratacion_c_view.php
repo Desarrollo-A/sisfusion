@@ -31,29 +31,47 @@
                                         <div class="col-md-4 form-group">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">PROYECTO</label>
-                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="Selecciona proyecto"
-                                                        data-size="7" data-live-search="true" required>
+                                                <select name="proyecto"
+                                                        id="proyecto" 
+                                                        class="selectpicker select-gral m-0"
+                                                        data-style="btn"
+                                                        data-show-subtext="true"
+                                                        title="Selecciona una opción"
+                                                        data-size="7"
+                                                        data-live-search="true"
+                                                        required>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4 form-group">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">CONDOMINIO</label>
-                                                <select name="condominio" id="condominio" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="Selecciona condominio"
-                                                        data-size="7" data-live-search="true" required>
-                                                    <option disabled selected>- SELECCIONA CONDOMINIO -</option>
+                                                <select name="condominio"
+                                                        id="condominio" 
+                                                        class="selectpicker select-gral m-0"                                                             
+                                                        data-style="btn btn-second"
+                                                        data-show-subtext="true"
+                                                        data-live-search="true"
+                                                        title="Selecciona una opción"
+                                                        data-size="7" 
+                                                        data-live-search="true"
+                                                        required>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4 form-group">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">ESTATUS</label>
-                                                <select name="estatus" id="estatus" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="Selecciona estatus"
-                                                        data-size="7" data-live-search="true" required>
-                                                    <option disabled selected>- SELECCIONA ESTATUS -</option>
+                                                <select name="estatus"
+                                                        id="estatus"
+                                                        class="selectpicker select-gral m-0"                                                             
+                                                        data-style="btn btn-second"
+                                                        data-show-subtext="true"
+                                                        data-live-search="true"
+                                                        title="Selecciona una opción"
+                                                        data-size="7"
+                                                        data-live-search="true"
+                                                        required>
                                                 </select>
                                             </div>
                                         </div>
@@ -81,7 +99,7 @@
                                             <th>SUBDIRECTOR</th>
                                             <th>DIRECTOR REGIONAL</th>
                                             <th>ESTATUS</th>
-                                            <th>FECHA.AP</th>
+                                            <th>FECHA DE APARTADO</th>
                                             <th>COMENTARIO</th>
                                             <th>LUGAR PROSPECCIÓN</th>
                                             <th>FECHA APERTURA</th>
@@ -546,33 +564,43 @@
 
                                                             <div class="col-md-4 form-group">
                                                                 <label for="proyecto">Proyecto: </label>
-                                                                <select name="proyecto" id="proyecto" class="selectpicker"
-                                                                        data-style="btn btn-second" data-show-subtext="true"
+                                                                <select name="proyecto"
+                                                                        id="proyecto"
+                                                                        class="selectpicker select-gral m-0"                                                             
+                                                                        data-style="btn btn-second"
+                                                                        data-show-subtext="true"
                                                                         data-live-search="true"
-                                                                        title="--SELECCIONA PROYECTO--" data-size="7"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7"
                                                                         multiple max required>
                                                                 </select>
                                                             </div>
 
                                                             <div class="col-md-4 form-group">
                                                                 <label for="condominio">Condominio: </label>
-                                                                <select name="condominio" id="condominio"
-                                                                        class="selectpicker" data-style="btn btn-second"
-                                                                        data-show-subtext="true" data-live-search="true"
-                                                                        title="" data-size="7" required>
-                                                                    <option disabled selected>- SELECCIONA CONDOMINIO -
-                                                                    </option>
+                                                                <select name="condominio"
+                                                                        id="condominio"
+                                                                        class="selectpicker select-gral m-0"                                                             
+                                                                        data-style="btn btn-second"
+                                                                        data-show-subtext="true"
+                                                                        data-live-search="true"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7" 
+                                                                        required>
                                                                 </select>
                                                             </div>
 
                                                             <div class="col-md-4 form-group">
                                                                 <label for="estatus">Estatus: </label>
-                                                                <select name="estatus" id="estatus" class="selectpicker"
-                                                                        data-style="btn btn-second" data-show-subtext="true"
-                                                                        data-live-search="true" title="" data-size="7"
+                                                                <select name="estatus"
+                                                                        id="estatus"
+                                                                        class="selectpicker select-gral m-0"                                                             
+                                                                        data-style="btn btn-second"
+                                                                        data-show-subtext="true"
+                                                                        data-live-search="true"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7"
                                                                         required>
-                                                                    <option disabled selected>- SELECCIONA ESTATUS -
-                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -595,29 +623,29 @@
 
                                     <thead>
                                         <tr>
-                                            <th style="font-size: .9em;">PROYECTO</th>
-                                            <th style="font-size: .9em;">CONDOMINIO</th>
-                                            <th style="font-size: .9em;">LOTE</th>
-                                            <th style="font-size: .9em;">SUP</th>
-                                            <th style="font-size: .9em;">M2</th>
-                                            <th style="font-size: .9em;">PRECIO LISTA</th>
-                                            <th style="font-size: .9em;">TOTAL CON DESCUENTOS</th>
-                                            <th style="font-size: .9em;">REFERENCIA</th>
-                                            <th style="font-size: .9em;">MSNI</th>
-                                            <th style="font-size: .9em;">ASESOR</th>
-                                            <th style="font-size: .9em;">COORDINADOR</th>
-                                            <th style="font-size: .9em;">GERENTE</th>
-                                            <th style="font-size: .9em;">SUBDIRECTOR</th>
-                                            <th style="font-size: .9em;">DIRECTOR REGIONAL</th>
-                                            <th style="font-size: .9em;">ESTATUS</th>
-                                            <th style="font-size: .9em;">FECHA.AP</th>      
-                                            <th style="font-size: .9em;">COMENTARIO</th>
-                                            <th style="font-size: .9em;">LUGAR PROSPECCIÓN</th>
-                                            <th style="font-size: .9em;">FECHA APERTURA</th>
-                                            <th style="font-size: .9em;">FECHA VAL. ENGANCHE</th>
-											<th style="font-size: .9em;">CANTIDAD ENGANCHE PAGADO</th>
-                                            <th style="font-size: .9em;">UBICACIÓN</th>
-                                            <th style="font-size: .9em;">ACCIONES</th>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>SUP</th>
+                                            <th>M2</th>
+                                            <th>PRECIO LISTA</th>
+                                            <th>TOTAL CON DESCUENTOS</th>
+                                            <th>REFERENCIA</th>
+                                            <th>MSNI</th>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>ESTATUS</th>
+                                            <th>FECHA DE APARTADO</th>      
+                                            <th>COMENTARIO</th>
+                                            <th>LUGAR PROSPECCIÓN</th>
+                                            <th>FECHA APERTURA</th>
+                                            <th>FECHA VAL. ENGANCHE</th>
+											<th>CANTIDAD ENGANCHE PAGADO</th>
+                                            <th>UBICACIÓN</th>
+                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>
