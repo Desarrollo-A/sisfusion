@@ -566,9 +566,6 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
@@ -2208,11 +2205,10 @@ class Caja_outside extends CI_Controller {
             "id_asesor" => $data->id_asesor,
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
-            "id_subdirector" => $data->id_subdirector,
-
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "creado_por" => $data->id_usuario,
+            "id_subdirector" => $data->id_subdirector,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
             "id_regional" => $data->id_regional,
@@ -2287,14 +2283,14 @@ class Caja_outside extends CI_Controller {
         if ($dataJson->id_gerente != null) {
             //$data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
             $data = array(
-                "id_asesor" => $data->id_asesor,
-                "id_coordinador" => $data->id_coordinador == $data->id_asesor ? 0 : $data->id_coordinador,
-                "id_gerente" => $data->id_gerente,
-                "id_sudirector" => $data->id_sudirector,
-                "id_regional" => $data->id_regional,
-                "id_regional_2" => $data->id_regional_2,
+                "id_asesor" => $dataJson->id_asesor,
+                "id_coordinador" => $dataJson->id_coordinador == $dataJson->id_asesor ? 0 : $dataJson->id_coordinador,
+                "id_gerente" => $dataJson->id_gerente,
+                "id_subdirector" => $dataJson->id_subdirector,
+                "id_regional" => $dataJson->id_regional,
+                "id_regional_2" => $dataJson->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $data->id_usuario
+                "modificado_por" => $dataJson->id_usuario_que_modifica
             );
             $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
 
