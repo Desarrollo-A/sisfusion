@@ -3,7 +3,7 @@
 class Caja_outside extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model'));
+        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -278,23 +278,11 @@ class Caja_outside extends CI_Controller {
 
         }
         else if ($data->accion == 3) {
-            $inicio = date("Y-m-01");
-            $fin = date("Y-m-t");
-            //$datosCondominio = $this->caja_model_aoutside->getDatosCondominio($data->idCondominio);
-                    if($data->tipo_lote == 1 ){ //1 - Comercial
-                        //si el condominio es comercial solo consultar sin importar la superficie
-                        $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, $inicio, $fin);
-                        $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
-                    }else{ //0 - Habitacional
-                        $paquetesMenores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup < 200",$data->id_proy, $inicio, $fin);
-                        $paquetesMayores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup > 200",$data->id_proy, $inicio, $fin);
-                        $datos["descuentoHabMenores"] = count($paquetesMenores200) == 0 ? NULL : $paquetesMenores200[0]['id_descuento'];
-                        $datos["descuentoHabMayores"] = count($paquetesMayores200) == 0 ? NULL : $paquetesMayores200[0]['id_descuento'];
-                    }
+
             foreach ($data->lotes as $value) {
 
                 $datos["idCondominio"] = $data->idCondominio;
-                $datos["tipo_lote"] = $data->tipo_lote;
+
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
                 $datos["activeLE"] = $data->activeLE;
@@ -530,6 +518,9 @@ class Caja_outside extends CI_Controller {
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
+            'id_subdirector' => $datosView->id_subdirector,
+            'id_regional' => $datosView->id_regional,
+            'id_regional_2' => $datosView->id_regional_2,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -575,9 +566,6 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
             'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
@@ -1155,6 +1143,9 @@ class Caja_outside extends CI_Controller {
             $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
             $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
             $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+            $arreglo["id_subdirector"] = $value->idSubdirector;
+            $arreglo["id_regional"] = $value->idRegional;
+            $arreglo["id_regional_2"] = $value->idRegional2;
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
@@ -1586,6 +1577,9 @@ class Caja_outside extends CI_Controller {
                         $arreglo_asesores["id_gerente"] = $value->idGerente;
                         $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 && $value->idAsesor != 6626 ? 0 : $value->idCoordinador;
                         $arreglo_asesores["id_asesor"] = $value->idAsesor;
+                        $arreglo_asesores["id_subdirector"] = $value->idSubdirector;
+                        $arreglo_asesores["id_regional"] = $value->idRegional;
+                        $arreglo_asesores["id_regional_2"] = $value->idRegional2;
                         $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
                         $arreglo_asesores["estatus"] = 1;
                         $arreglo_asesores["creado_por"] = $data->id_usuario;
@@ -1686,29 +1680,10 @@ class Caja_outside extends CI_Controller {
             8  BLOQUEADO
             9  CONTRATADO POR INTERCAMBIO
             10 APARTADO CASAS
-            11 DONACIÓN 
+            11 DONACIÓN
             12 INTERCAMBIO ESCRITURADO
         */
-        $inicio = date("Y-m-01");
-        $fin = date("Y-m-t");
         $getCurrentLoteStatus = $this->caja_model_outside->validateCurrentLoteStatus($idLote)->row();
-        var_dump($getCurrentLoteStatus);
-        $descuentos = NULL;
-        $query_tipo_lote = "AND c.tipo_lote =".$getCurrentLoteStatus->tipo_lote;
-        $query_superdicie = $getCurrentLoteStatus->sup < 200 ?  "AND sup < 200" : "AND sup >= 200";
-        $desarrollos = $getCurrentLoteStatus->idResidencial;
-        $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $inicio, $fin);
-        var_dump($getPaquetesDescuentos);
-        echo count($getPaquetesDescuentos);
-        if(count($getPaquetesDescuentos) == 0){
-            $descuentos = NULL;
-        }else{
-            $descuentos = $getPaquetesDescuentos[0]['id_descuento'];
-        }
-        /*
-        1.- consultar lotes < 200
-        2.- consultar lotes >= 200
-        */
         if ($getCurrentLoteStatus->idStatusLote == 2 || $getCurrentLoteStatus->idStatusLote == 3 || $getCurrentLoteStatus->idStatusLote == 99) {
             if ($getCurrentLoteStatus->idStatusLote == 2)
                 echo json_encode(array("message" => "Acción no válida. El lote actualmente se encuentra CONTRATADO."), JSON_UNESCAPED_UNICODE);
@@ -1751,13 +1726,11 @@ class Caja_outside extends CI_Controller {
                         $response['message'] = 'No se ha podido modificar el estatus, verifica la acción o vuelve a intentarlo.';
                         echo json_encode($response);
                     }
-                } else if ($idStatusLote == 1) {  
-                    //LIBERACIÓN DE LOTE        
+                } else if ($idStatusLote == 1) {          
                     $arreglo["idAsesor"] = NULL;
                     $arreglo["idAsesor2"] = NULL;
                     $arreglo["observacionContratoUrgente"] = NULL;
                     $arreglo["motivo_change_status"] = $motivo_change_status;
-                    $arreglo['id_descuento'] = $descuentos;
                 } else if ($idStatusLote == 2) {
                     $arreglo["motivo_change_status"] = $motivo_change_status;
                 } 
@@ -2232,11 +2205,10 @@ class Caja_outside extends CI_Controller {
             "id_asesor" => $data->id_asesor,
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
-            "id_subdirector" => $data->id_subdirector,
-
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "creado_por" => $data->id_usuario,
+            "id_subdirector" => $data->id_subdirector,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
             "id_regional" => $data->id_regional,
@@ -2314,25 +2286,27 @@ class Caja_outside extends CI_Controller {
                 "id_asesor" => $dataJson->id_asesor,
                 "id_coordinador" => $dataJson->id_coordinador == $dataJson->id_asesor ? 0 : $dataJson->id_coordinador,
                 "id_gerente" => $dataJson->id_gerente,
-                "id_subdirector" => $data['lider'][0]['id_subdirector'] == NULL ? 0 : $data['lider'][0]['id_subdirector'],
-                "id_regional" => $data['lider'][0]['id_regional'] == NULL ? 0 : $data['lider'][0]['id_regional'],
-                "id_regional_2" => $data['lider'][0]['id_regional_2'] == NULL ? 0: $data['lider'][0]['id_regional_2'],
+                "id_subdirector" => $dataJson->id_subdirector,
+                "id_regional" => $dataJson->id_regional,
+                "id_regional_2" => $dataJson->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $dataJson->id_usuario
+                "modificado_por" => $dataJson->id_usuario_que_modifica
             );
             $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
+
             if ($res == 1) {
                 $response['message'] = 'SUCCESS';
                 echo json_encode($response);
-            }
-            else {
+            } else {
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
+
         } else {
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
+
     }
 
 

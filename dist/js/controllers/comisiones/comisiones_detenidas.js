@@ -94,9 +94,9 @@ $('#comisiones-detenidas-table').ready(function () {
                 'width': '8%',
                 data: function( d ){
                     if (d.idStatusContratacion === 15) {
-                        return '<span class="label lbl-sky">Contratado</span>';
+                        return '<span class="label lbl-violetDeep">Contratado</span>';
                     } else {
-                        return '<p class="m-0 lbl-sky"><b>'+d.idStatusContratacion+'</b></p>';
+                        return '<p class="m-0 lbl-violetDeep"><b>'+d.idStatusContratacion+'</b></p>';
                     }
                 }
             },
@@ -144,7 +144,7 @@ $('#comisiones-detenidas-table').ready(function () {
             "targets": 0
         }],
         ajax: {
-            'url': general_base_url+'Comisiones/getStoppedCommissions',
+            'url': general_base_url+'Comisiones/comisionesDetenida',
             'dataSrc': '',
             'type': 'GET',
             cache: false,

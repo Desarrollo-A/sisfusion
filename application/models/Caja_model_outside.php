@@ -211,13 +211,9 @@
         }
 
     }
-    public function getDatosCondominio($idCondominio){
-       return $this->db->query("SELECT * FROM condominios WHERE idCondominio=$idCondominio")->result_array();
-    }
+
 
     public function aplicaLiberacion($datos){
-       $descuentos=NULL;
-       var_dump($datos);
         $query = $this->db-> query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = ".$datos['idCondominio']." and nombreLote = '".$datos['nombreLote']."' and status = 1");
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
@@ -238,16 +234,8 @@
                 }
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
-            $this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
+            //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
-           
-           /**PAQUETES CF */
-                  if($datos['tipo_lote'] == 1 ){ //1 - Comercial
-                    //si el condominio es comercial solo consultar sin importar la superficie
-                   $descuentos=$datos['descuentosComerciales'];
-                  }else{ //0 - Habitacional
-                          $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
-                 }
             /**----------------------------------------------- */
             $data_l = array(
             'nombreLote'=> $datos['nombreLote'],
@@ -297,7 +285,6 @@
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
                     registro_comision = 8,
-                    id_descuento='$descuentos',
                     tipo_venta = $tv, 
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
@@ -319,7 +306,6 @@
                     fechaRL = null, 
                     registro_comision = 8,
                     tipo_venta = null, 
-                    id_descuento='$descuentos',
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                     observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
@@ -426,7 +412,7 @@
 
     public function getDocsByType($typeOfPersona)
     {
-        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1");
+        $query = $this->db-> query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1 AND id_opcion NOT IN(30)");
         /*$this->db->select('*');
         $this->db->where('id_catalogo', $typeOfPersona);
         $query= $this->db->get("opcs_x_cats");*/
@@ -1399,19 +1385,17 @@
         return $this->db->query("SELECT id_vcompartida, id_cliente, id_asesor, id_coordinador, id_gerente FROM ventas_compartidas WHERE id_cliente = $id_cliente AND estatus = 1");
     }
 
-    public function getLider($id_gerente) {
-        return $this->db->query("SELECT us.id_lider as id_subdirector, 
-		(CASE 
+    public function getLider($id_gerente){
+        return $this->db->query("SELECT id_lider as id_subdirector, 
+        (CASE 
         WHEN us.id_lider = 7092 THEN 3 
         WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609 OR us.id_lider = 690) THEN 607 
-		WHEN us.id_lider = 692 THEN u0.id_lider
+        --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
         ELSE 0 END) id_regional,
-		CASE 
-		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
-		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
+		CASE us.id_sede WHEN '11' 
+		THEN (CASE us.id_lider WHEN 5 THEN 607 ELSE 5 END)
 		ELSE 0 END id_regional_2
         FROM usuarios us
-        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 
@@ -1448,12 +1432,10 @@
     }
 
     public function validateCurrentLoteStatus($idLote){
-        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote,con.tipo_lote,re.idResidencial,lo.sup, 
+        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote, 
         UPPER(sc.nombreStatus) nombreStatusContratacion, st.nombre nombreStatusLote FROM lotes lo
         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
-        LEFT JOIN condominios con ON con.idCondominio=lo.idCondominio
-        LEFT JOIN residenciales re ON re.idResidencial=con.idResidencial
         WHERE lo.idLote IN ($idLote)");
     }
 

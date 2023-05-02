@@ -818,7 +818,6 @@ class Asesor extends CI_Controller
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
-        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -3643,7 +3642,7 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $_POST['comentario_' . $n]
             );
-            $dataInsert = 1;//$this->Asesor_model->insertAutorizacion($data);
+            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
             $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
             $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
         }
@@ -3759,15 +3758,23 @@ class Asesor extends CI_Controller
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
+        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
+
+
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         }
         else if($validacion) {
             $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
+        }
+        else if(count($validacionIM)>0){
+            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+                $data['message'] = 'MISSING_AUTFI';
+                echo json_encode($data);
+            }
         }
         else {
             date_default_timezone_set('America/Mexico_City');
@@ -4150,10 +4157,11 @@ class Asesor extends CI_Controller
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
-        if (in_array($id_rol, array(13, 32, 17, 70)))
+        if ($this->session->userdata('id_rol') == 32) {
             $documentsNumber = 3;
-        else
-            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+        } else {
+            $documentsNumber = 4;
+        }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
         $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
