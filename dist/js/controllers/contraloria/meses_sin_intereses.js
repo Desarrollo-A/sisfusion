@@ -521,7 +521,7 @@ function loadTableVAUT(data){
     }
     else{
         button_excel = [{
-            className: 'btn buttons-excel',
+            className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
             extend: 'csvHtml5',
             titleAttr: 'CSV',
