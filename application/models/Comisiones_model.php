@@ -48,7 +48,7 @@ public function getDataActivasPago($val = '') {
             AND l.registro_comision in (1) AND pc.bandera in (1, 5, 55) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
             
             ORDER BY l.idLote");
-            return $query->result();
+            return $query;
         }
 
   
@@ -317,7 +317,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
     }
 
 
-public function getDataDispersionPago($val = '') {
+    public function getDataDispersionPago() {
 
         $this->db->query("SET LANGUAGE Español;");
 
@@ -2624,7 +2624,7 @@ function update_pago_dispersion($suma, $ideLote, $pago){
 
 
 
-public function getSettledCommissions($val = '') {
+public function getDataLiquidadasPago($val = '') {
     ini_set('memory_limit', -1);
      
     $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
@@ -2660,9 +2660,8 @@ public function getSettledCommissions($val = '') {
     LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
     WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
     AND l.registro_comision in (7) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
-
     ORDER BY l.idLote");
-        return $query->result();
+        return $query ;
     }
     
 public function validateSettledCommissions($idlote){
@@ -3458,15 +3457,13 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-        function updateBandera($id_pagoc, $param) {
+    function updateBandera($id_pagoc, $param) {
         // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param.", fecha_modificacion = GETDATE() WHERE id_lote IN (".$id_pagoc.")");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
 
         if($param == 55){
           $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
-
-        
 
         if (! $response ) {
             return $finalAnswer = 0;
@@ -4751,9 +4748,16 @@ function TieneAbonos($id){
                 }
             
 
-                function insertar_prestamos($usuarioid,$monto,$numeroP,$comentario,$pago,$tipo){
-                    $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo) VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
-                    if (! $respuesta ) {
+                function insertar_prestamos($insertArray){
+
+
+                    $this->db->insert('prestamos_aut', $insertArray);
+                 
+                    // $respuesta = $this->db->query("INSERT INTO prestamos_aut(id_usuario,monto,num_pagos,pago_individual,comentario,estatus,pendiente,creado_por,fecha_creacion,modificado_por,fecha_modificacion,tipo)
+                    //  VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
+                    $afftectedRows = $this->db->affected_rows();
+                    
+                    if ( $afftectedRows == 0  ) {
                         return 0;
                         } else {
                         return 1;
@@ -7915,6 +7919,8 @@ function porcentajesEspecial($idCliente){
 
 return $query->result();
 }
+
+
 public function getDataDispersionPagoEspecial($val = '') {
      $filtro = '';
      if(empty($val)){
@@ -8048,7 +8054,7 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
 
-    public function comisiones_detenidas()
+    public function getStoppedCommissions()
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
@@ -8912,13 +8918,6 @@ public function getDataDispersionPagoEspecial($val = '') {
             catch(Exception $e) {
                 return $e->getMessage();
             }     
-    }
-    public function getMotivosControversia()
-    {
-        $cmd = "SELECT * FROM opcs_x_cats wh
-        WHere id_catalogo = 88";
-        $query = $this->db->query($cmd);
-        return $query->result_array();   
     }
 
     
