@@ -145,16 +145,7 @@ $(document).ready(function () {
                             if(d.fecha_modificacion != null ) {
                                 RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                             }
-            
-                            BtnStats += `
-                                    <button href="#"
-                                        value="${d.idLote}"
-                                        data-value="${d.nombreLote}"
-                                        class="btn-data btn-blueMaderas btn-detener btn-warning"
-                                        title="Detener">
-                                        <i class="material-icons">block</i>
-                                    </button>
-                                `;
+    
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -196,19 +187,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
-            $("#motivo").val("");
-            $("#descripcion").val("");
-            const idLote = $(this).val();
-            const nombreLote = $(this).attr("data-value");
-            const statusLote = $(this).attr("data-statusLote");
-            $('#id-lote-detenido').val(idLote);
-            $('#statusLote').val(statusLote);
-            $("#detenciones-modal .modal-header").html("");
-            $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-            $("#detenciones-modal").modal();
-        });
-
     $("#tabla_dispersar_especiales tbody").on('click', '.btn-penalizacion', function () {
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -244,7 +222,7 @@ $(document).ready(function () {
         
         
     
-    $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
+    $("#tabla_dispersar_especiales tbody").on("click", ".verify_neodata", async function(){ 
         
         subdirector = $(this).attr("data-subdirector");
         if(subdirector == 0){
@@ -254,7 +232,7 @@ $(document).ready(function () {
             $("#modal_NEODATA .modal-body").html("");
             $("#modal_NEODATA .modal-footer").html("");
             var tr = $(this).closest('tr');
-            var row = tabla_1.row( tr );
+            var row = $('#tabla_dispersar_especiales').DataTable().row(tr);
             idLote = $(this).val();
             let cadena = '';
             registro_status = $(this).attr("data-value");
@@ -1006,6 +984,30 @@ var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
 
  
- 
+ function showDetailModal(idPlan) {
+    $('#planes-div').hide();
+    $.ajax({
+        url: `${url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('#plan-detalle-tabla-tbody').empty();
+            $('#title-plan').text(`Plan: ${data.descripcion}`);
+            $('#detalle-plan-modal').modal();
+            $('#detalle-tabla-div').hide();
+            const roles = data.comisiones;
+            roles.forEach(rol => {
+                if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
+                    $('#plan-detalle-tabla tbody').append('<tr>');
+                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
+                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
+                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
+                    $('#plan-detalle-tabla tbody').append('</tr>');
+                }
+            });
+            $('#detalle-tabla-div').show();
+        }
+    });
+}
    
  

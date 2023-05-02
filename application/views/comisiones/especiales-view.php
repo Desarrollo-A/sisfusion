@@ -27,6 +27,44 @@
         </style>
 
         <!-- Modals -->
+
+        <div class="modal fade" id="detalle-plan-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12" id="planes-div">
+                                <div class="form-group">
+                                    <select class="selectpicker select-gral" id="planes" name="planes" data-style="btn" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="detalle-tabla-div"
+                                 class="col-lg-12">
+                                <table class="table table-bordered"
+                                       id="plan-detalle-tabla">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">PUESTO</th>
+                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">% COMISIÓN</th>
+                                            <th scope="col" style="color:white; text-align: center; font-weight: bold;">% NEODATA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="plan-detalle-tabla-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">

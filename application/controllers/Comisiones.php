@@ -3310,17 +3310,17 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-     public function retiros_resguardo()
-    {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/retiros_dir", $datos);
-    }
+    //  public function retiros_resguardo()
+    // {
+    //   $datos = array();
+    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    //   $salida = str_replace('' . base_url() . '', '', $val);
+    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    //   $this->load->view('template/header');
+    //   $this->load->view("ventas/retiros_dir", $datos);
+    // }
 
      public function historial_retiros()
     {
@@ -4209,11 +4209,11 @@ public function saveDescuentoch()
         echo json_encode( $this->Comisiones_model->getDescuentosCapital( $this->input->post("id_usuario") ) );
     }
 
-    public function getRetiros($user,$opc)
-    {
-      $res["data"] = $this->Comisiones_model->getRetiros($user,$opc)->result_array();
-      echo json_encode($res);
-    }
+    // public function getRetiros($user,$opc)
+    // {
+    //   $res["data"] = $this->Comisiones_model->getRetiros($user,$opc)->result_array();
+    //   echo json_encode($res);
+    // }
 
     public function getHistorialDescuentos($proyecto,$condominio)
     {
@@ -4985,10 +4985,10 @@ public function SavePrecioLoteMKTD(){
   
   }
   
-  public function getHistoriRetiros($id)
-      {
-          echo json_encode($this->Comisiones_model->getHistoriRetiros($id)->result_array());
-      }
+  // public function getHistoriRetiros($id)
+  //     {
+  //         echo json_encode($this->Comisiones_model->getHistoriRetiros($id)->result_array());
+  //     }
   
   
   
@@ -7078,5 +7078,25 @@ for ($d=0; $d <count($dos) ; $d++) {
             
     }
    
-
+    public function lista_usuarios($rol,$forma_pago){
+      echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
+    }
+      
+    public function descuentosCapitalHumano(){
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+        $datos = array();
+        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $salida = str_replace('' . base_url() . '', '', $val);
+        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+        $this->load->view('template/header');
+        $this->load->view("ventas/add_descuento", $datos);
+      }
+  
+  public function getPuestosDescuentos(){
+    echo json_encode($this->Comisiones_model->getPuestosDescuentos()->result_array());
+  }
+  
 }
