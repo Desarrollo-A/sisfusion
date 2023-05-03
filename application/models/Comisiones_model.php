@@ -8059,13 +8059,14 @@ public function getDataDispersionPagoEspecial($val = '') {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario
-
+        ,oxc.nombre as motivoOpc
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
