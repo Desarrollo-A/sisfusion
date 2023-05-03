@@ -144,7 +144,7 @@ $('#comisiones-detenidas-table').ready(function () {
             "targets": 0
         }],
         ajax: {
-            'url': general_base_url+'Comisiones/comisionesDetenida',
+            'url': general_base_url+'Comisiones/getStoppedCommissions',
             'dataSrc': '',
             'type': 'GET',
             cache: false,
