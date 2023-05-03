@@ -55,11 +55,11 @@
                 <!-- encabezados -->
                 <div class="row pt-2" id="radioDS">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <h4 class="label-on-left mb-0">DESARROLLO</h4>
+                        <h6 class="label-on-left mb-0">DESARROLLO</h6>
                         <div class="radio_container">
                         <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
                             <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
-                            $cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/>
+                            $cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
                             <label for="two">LN</label>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <!-- radios 1 -->
-                <div class="row pt-2" id="checkDS">
+                <div class="row pt-1" id="checkDS">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h4 class="label-on-left m-0">PERSONA FÍSICA</h4>
                         <div class="container boxChecks p-0">
@@ -118,9 +118,9 @@
                     </div>
                 </div>
                 <!-- radios 2 -->
-                <div class="row pt-2" id="checkDS">
+                <div class="row pt-1" id="checkDS">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <h4 class="label-on-left mb-0">PERSONA MORAL</h4>
+                        <h4 class="label-on-left m-0">PERSONA MORAL</h4>
                         <div class="container boxChecks p-0">
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
@@ -144,8 +144,8 @@
                     </div>
                 </div>
                 <!-- radios 3 -->
-                <div class="row aligned-row pt-2" id="boxFactura"> 
-                    <div class="col-md-1 checkbox checkbox-inline">
+                <div class="row aligned-row pt-1" id="boxFactura"> 
+                    <div class="col-md-1 checkbox checkbox-inline m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0">FACTURA</h4>
                             <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>
@@ -155,7 +155,7 @@
                     <div class="col-md-7">
                         <div class="form-group label-floating">
                             <div class="d-none" name="regimenl" id="regimenl">
-                                <h4 class="label-on-left mb-0">RÉGIMEN FISCAL</h4>
+                                <h4 class="label-on-left m-0">RÉGIMEN FISCAL</h4>
                                 <select name="regimenFiscal" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                     <option> SELECCIONA UNA OPCIÓN </option>
                                     <?php
@@ -174,22 +174,22 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <h4 class="label-on-left mb-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
+                            <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
                             <input type="text" pattern="[A-Za-z0-9]+" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
                             onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <h4 class="label-on-left mb-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
+                            <h4 class="label-on-left m-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
                             <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
                         </div>
                     </div>    
                 </div>
                 <!-- row factura -->
-                <div class="row pt-2">
+                <div class="row pt-1">
                     <div class="col-sm-6 checkbox-radios" id="radioDS">
-                        <h4 class="label-on-left mb-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
+                        <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
                         <div class="radio_container">
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 0) { echo "checked=true"; } ?>>
                             <label for="tipoNc_valor1">HABITACIONAL</label>
@@ -199,7 +199,7 @@
                         </div>
                     </div>
                     <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 boxCustomRadio <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
-                        <h4 class="label-on-left mb-0">¿IMPRIME PAGARES?</h4>
+                        <h4 class="label-on-left m-0">¿IMPRIME PAGARES?</h4>
                         <div class="d-flex">
                             <div class="w-50 mt-1">
                                 <input class="customRadio imprimePagare" type="radio" name="imprimePagare" id="imprimePagare1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
@@ -212,7 +212,7 @@
                         </div>
                     </div>
                     <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
-                        <h4 class="label-on-left mb-0">CARTA DOMICILIO CM (<small style="color: red;">*</small>)</h4>
+                        <h4 class="label-on-left m-0">CARTA DOMICILIO CM (<small style="color: red;">*</small>)</h4>
                         <div class="d-flex">
                             <div class="w-50 mt-1">
                                 <input class="customRadio tipo_comprobante" type="radio" name="tipo_comprobante" id="tipo_comprobante1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
@@ -230,7 +230,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
-                            <label class="label-gral">
+                            <label class="label-on-left m-0">
                                 NOMBRE
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -239,7 +239,7 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
-                            <label>
+                            <label class="label-on-left m-0">
                                 APELLIDO PATERNO
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -248,10 +248,10 @@
                     </div>                               
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">    
-                            <label>
+                            <label class="label-on-left m-0">
                                 APELLIDO MATERNO
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -261,7 +261,7 @@
 
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">                  
-                            <label>
+                            <label class="label-on-left m-0">
                                 TELÉFONO CASA
                             </label>
                             <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>"/>
@@ -269,10 +269,10 @@
                     </div>
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">      
-                            <label>
+                            <label class="label-on-left m-0">
                                 CELULAR
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -281,7 +281,7 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
-                            <label>
+                            <label class="label-on-left m-0">
                                 EMAIL
                                 (<small style="color: red;">*</small>)
                             </label>
@@ -290,14 +290,14 @@
                     </div>
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
-                        <label>FECHA NACIMIENTO(<small style="color: red;">*</small>)</label>
+                        <label class="label-on-left m-0">FECHA NACIMIENTO(<small style="color: red;">*</small>)</label>
                         <input class="form-control input-gral m-0" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
+                            <label style="top:-29px;" class="label-on-left m-0">NACIONALIDAD(<small style="color: red;">*</small>)</label>
                             <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
                                 <?php
                                 for($p=0; $p < count($nacionalidades) ; $p++){
@@ -314,14 +314,14 @@
                     </div>                        
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <label>ORIGINARIO DE: (<small style="color: red;">*</small>)</label>
+                        <label class="label-on-left m-0">ORIGINARIO DE: (<small style="color: red;">*</small>)</label>
                         <input type="text" pattern="[A-Za-z ]+" class="form-control m-0 input-gral" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label>ESTADO CIVIL(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">ESTADO CIVIL(<small style="color: red;">*</small>)</label>
                             <select name="estado_civil" id="estado_civil" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <option value=""> SELECCIONA UNA OPCIÓN </option>
                                 <?php
@@ -339,10 +339,10 @@
                     </div>
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label>RÉGIMEN</label>
+                            <label class="label-on-left m-0">RÉGIMEN</label>
                             <select name="regimen_matrimonial" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <option value="5"> SELECCIONA UNA OPCIÓN </option>
                                 <?php
@@ -360,70 +360,70 @@
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>NOMBRE DE CÓNYUGE</label>
+                            <label class="label-on-left m-0">NOMBRE DE CÓNYUGE</label>
                             <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
                         </div>
                     </div>              
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>OCUPACIÓN(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">OCUPACIÓN(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>EMPRESA EN LA QUE TRABAJA</label>
+                            <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
                             <input class="form-control input-gral" name="empresa" id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
                         </div>
                     </div>
                 </div> 
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>PUESTO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">PUESTO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="puesto" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>ANTIGÜEDAD <small>(AÑOS)</small></label>
+                            <label class="label-on-left m-0">ANTIGÜEDAD <small>(AÑOS)</small></label>
                             <input class="form-control input-gral" name="antiguedad" id="antiguedad" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->antiguedad?>"/>
                         </div>
                     </div>                
                 </div>
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>DOMICILIO EMPRESA</label>
+                            <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
                             <input class="form-control input-gral" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
                         </div>
                     </div>                
                 </div>  
 
-                <div class="row pb-1">
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>EDAD AL MOMENTO DE FIRMA(<small style="color: red;">*</small>) <small>(AÑOS)</small></label>
+                            <label class="label-on-left m-0">EDAD AL MOMENTO DE FIRMA(<small style="color: red;">*</small>) <small>(AÑOS)</small></label>
                             <input class="form-control input-gral" name="edadFirma" id="edadFirma" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->edadFirma?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>TELÉFONO EMPRESA</label>
+                            <label class="label-on-left m-0">TELÉFONO EMPRESA</label>
                             <input class="form-control input-gral" name="telefono_empresa" id="telefono_empresa" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?=$cliente[0]->telefono_empresa?>"/>
                         </div>
                     </div>            
@@ -440,20 +440,20 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>NOMBRE</label>
+                                <label class="label-on-left">NOMBRE</label>
                                 <input readonly class="form-control input-gral" type="text" required="true" value="'.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno.'"/>
                                 <input id="id_cop[]" name="id_cop[]" type="hidden" value="'.$copropiedad[$i]->id_copropietario.'">
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>TELEÉFONO CASA</label>
+                                <label class="label-on-left">TELEÉFONO CASA</label>
                                 <input  class="form-control input-gral" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>CELULAR</label>
+                                <label class="label-on-left">CELULAR</label>
                                 <input  class="form-control input-gral" name="telefono2_cop[]" id="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>
@@ -462,19 +462,19 @@
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>EMAIL</label>
+                                <label class="label-on-left">EMAIL</label>
                                 <input  class="form-control input-gral" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.'/>
                             </div>
                         </div>           
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label>FECHA NACIMIENTO</label>
+                                <label class="label-on-left">FECHA NACIMIENTO</label>
                                 <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label>NACIONALIDAD</label> 
+                                <label class="label-on-left">NACIONALIDAD</label> 
                                 <select class="selectpicker select-gral m-0" data-live-search="true" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>
                                 <!--$nacionalidades-->';
 
@@ -495,7 +495,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group label-floating">
-                                <label>DOMICILIO PARTICULAR</label>
+                                <label class="label-on-left">DOMICILIO PARTICULAR</label>
                                 <input  class="form-control input-gral" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>
@@ -504,13 +504,13 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label> ORIGINARIO DE:</label>
+                                <label class="label-on-left"> ORIGINARIO DE</label>
                                 <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>        
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label>ESTADO CIVIL</label>
+                                <label class="label-on-left">ESTADO CIVIL</label>
                                 <select class="selectpicker select-gral m-0" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
                                         
                                 ';
@@ -530,7 +530,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label>RÉGIMEN</label>
+                                <label class="label-on-left">RÉGIMEN</label>
                                 <select name="r_matrimonial_cop[]" data-live-search="true" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
                                     for($n=0; $n < count($regMat) ; $n++){
                                         if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor){
@@ -549,20 +549,20 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>NOMBRE DE CÓNYUGE</label>
+                                <label class="label-on-left">NOMBRE DE CÓNYUGE</label>
                                 <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="conyuge_cop[]" id="conyuge_cop[]" type="text" value="' . $copropiedad[$i]->conyuge . '" '.$statsInput.'/>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>OCUPACIÓN</label>
+                                <label class="label-on-left">OCUPACIÓN</label>
                                 <input  class="form-control input-gral" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>PUESTO</label>
+                                <label class="label-on-left">PUESTO</label>
                                 <input  class="form-control input-gral" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.'/>
                             </div>
                         </div> 
@@ -571,21 +571,21 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>ANTIGÜEDAD <small style="font-size: 0.5em;"> (AÑOS)</small></label>
+                                <label class="label-on-left">ANTIGÜEDAD <small style="font-size: 0.5em;"> (AÑOS)</small></label>
                                 <input  class="form-control input-gral" name="antiguedad_cop[]" id="antiguedad_cop[]" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->antiguedad . '" '.$statsInput.'/>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>EDAD FIRMA<small style="font-size: 0.5em;">(AÑOS)</small></label>
+                                <label class="label-on-left">EDAD FIRMA<small style="font-size: 0.5em;">(AÑOS)</small></label>
                                 <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.'/>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label>EMPRESA LABORA</label>
+                                <label class="label-on-left">EMPRESA LABORA</label>
                                 <input  class="form-control input-gral" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
                             </div>
                         </div>	
@@ -594,7 +594,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group label-floating">
-                                <label>DOMICILIO EMPRESA</label>
+                                <label class="label-on-left">DOMICILIO EMPRESA</label>
                                 <input  class="form-control input-gral" name="dom_emp_cop[]" id="dom_emp_cop[]" type="text" value="' . $copropiedad[$i]->direccion . '" '.$statsInput.'/>
                             </div>
                         </div>
@@ -605,8 +605,8 @@
                                 <h4>Select vivienda</h4>
                             </div>  
                             <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-                                <label>RFC</label>
-                                <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo '" style="font-size: 0.9em;" '.$statsInput.'/>
+                                <label class="label-on-left">RFC</label>
+                                <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo ' '.$statsInput.'/>
                                 <input type="hidden" value="'.$limite.'" name="numOfCoprops">
                             </div>
                     </div>';
@@ -630,24 +630,17 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>EL SR(A):(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">EL SR(A):(<small style="color: red;">*</small>)</label>
                             <?php
 
                             $limite = $copropiedadTotal[0]->valor_propietarios;
-
-                            /*print_r($limite);*/
                             if($limite>0){
-
-                                /*print_r($copropiedad);*/
-                                /*echo '<br>';
-                                print_r($regMat);*/
                                 $copropsNames = '';
                                 for ($i = 0; $i < $limite; $i++) {
                                     $copropsNames .= ' / '.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno;
                                 }
                             }
-                            else
-                            {
+                            else{
                                 $copropsNames = '';
                             }
                             ?>
@@ -658,13 +651,13 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>SE COMPROMETE A ADQUIRIR EL LOTE No.</label>
+                            <label class="label-on-left">SE COMPROMETE A ADQUIRIR EL LOTE No.</label>
                             <input class="form-control input-gral" name="nombreLote" id="nombreLote" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->nombreLote?>" readonly="readonly"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label>EN EL CLÚSTER</label>
+                            <label class="label-on-left">EN EL CLÚSTER</label>
                             <input class="form-control input-gral" name="nombreCondominio" id="nombreCondominio" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->nombreCondominio?>" readonly="readonly"/>
                         </div>
                     </div>
@@ -672,19 +665,19 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>DE SUP. APROXIMADA</label>
+                            <label class="label-on-left">DE SUP. APROXIMADA</label>
                             <input class="form-control input-gral" name="sup" id="sup" type="text" required="true" <?php echo $readOnly; ?> value="<?=$cliente[0]->sup?>" readonly="readonly"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>No. REFERENCIA DE PAGO</label>
+                            <label class="label-on-left">No. REFERENCIA DE PAGO</label>
                             <input class="form-control input-gral" name="referencia" id="referencia" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->referencia?>" readonly="readonly"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>COSTO POR M<sup>2</sup> LISTA </label>
+                            <label class="label-on-left">COSTO POR M<sup>2</sup> LISTA </label>
                             <?php
                             $read='';
                             $valor='';
@@ -700,19 +693,19 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="costom2f" id="costom2f" oninput="this.value = formatearNumero(this.value)"  <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>UNA VEZ QUE SEA AUTORIZADO EL PROYECTO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->nombreResidencial?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>EN EL MUNICIPIO DE:(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">EN EL MUNICIPIO DE:(<small style="color: red;">*</small>)</label>
                             <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
                         </div>
                     </div>            
@@ -720,20 +713,20 @@
                 <div class="row pb-2">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label>LA UBICACIÓN DE LOTE PUEDE VARIAR DEBIDO A AJUSTES DEL PROYECTO</label>
+                            <label class="label-on-left">LA UBICACIÓN DE LOTE PUEDE VARIAR DEBIDO A AJUSTES DEL PROYECTO</label>
                         </div>
                     </div>
                 </div>
                 <div class="row pd-1">
                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                         <div class="form-group label-floating">
-                            <label>IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group label-floating">
-                            <label>IMPORTE EN LETRA(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left">IMPORTE EN LETRA(<small style="color: red;">*</small>)</label>
                             <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
                         </div>
                     </div>
