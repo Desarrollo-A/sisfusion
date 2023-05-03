@@ -14,7 +14,7 @@ $(document).ready (function() {
                 className: 'btn buttons-excel color-letter',
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
-                titleAttr: 'CSV',
+                titleAttr: 'DESCARGAR',
                 title:'Autorizaciones'
             }]
     }
@@ -24,7 +24,7 @@ $(document).ready (function() {
                 className: 'btn buttons-excel color-letter',
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
-                titleAttr: 'CSV',
+                titleAttr: 'DESCARGAR',
                 title:'Autorizaciones'
             },
             {
@@ -157,7 +157,7 @@ $(document).ready (function() {
         input.trigger('fileselect', [numFiles, label]);
     });
 
-    $('input[type=radio][name=modoSubida]').change(function() {
+    $('input[type=radio][name=modoSubida]').change(function(e) {
         if (this.value == 1) {
             flagTipoUploadMeses=1;
             //se queda asi ta cual
@@ -170,6 +170,8 @@ $(document).ready (function() {
             $('#filtro4').selectpicker('refresh');
             $('#tabla_msni').DataTable().clear().destroy();
             $('#typeTransaction').val(this.value);
+
+            $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
         }
         else if (this.value == 0) {
             flagTipoUploadMeses=0;
@@ -182,6 +184,7 @@ $(document).ready (function() {
             $('#tabla_msni').DataTable().clear().destroy();
             $('#typeTransaction').val(this.value);
 
+            $('.anclaClass').attr('placeholder', 'ID LOTE');
         }
     });
 });
@@ -233,7 +236,12 @@ function validateExtension(extension, allowedExtensions) {
 }
 $('#tabla_msni thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+    if(i == 0){//para cambiar el nombre dinamicamente del header de ID
+        $(this).html('<input type="text" class="textoshead anclaClass"  placeholder="'+title+'"/>' );
+    }else{
+        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+
+    }
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_msni').DataTable().column(i).search() !== this.value ){
             $('#tabla_msni').DataTable()
@@ -243,17 +251,50 @@ $('#tabla_msni thead tr:eq(0) th').each( function (i) {
         }
     });
 });
+function lettersOnly()
+{
+    var charCode = event.keyCode;
+
+    if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 8)
+
+        return true;
+    else
+        return false;
+}
+
 $('#tabla_aut thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_aut').DataTable().column(i).search() !== this.value ){
-            $('#tabla_aut').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+
+    if(i<=3){
+        let attributo_input;
+        switch(i){
+            case 0:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+            case 1:
+                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                break;
+            case 2:
+                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                break;
+            case 3:
+                attributo_input = "onkeypress=\"return event.charCode >= 45 && event.charCode <= 57\"";
+                break;
         }
-    });
+        let title = $(this).text();
+        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_aut').DataTable().column(i).search() !== this.value ){
+                $('#tabla_aut').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    }else{
+        let title = $(this).text();
+        $(this).html('<span class="textoshead">'+title+'</span>' );
+    }
+
 });
 
 
@@ -403,7 +444,7 @@ function loadTable(dataVariable){
             className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
             extend: 'csvHtml5',
-            titleAttr: 'CSV',
+            titleAttr: 'DESCARGAR PLANTILLA',
             title:dataVariable['tituloArchivo'],
             exportOptions: {
                 columns: [0, 1, 2],

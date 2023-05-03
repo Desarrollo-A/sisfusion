@@ -17,7 +17,6 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <center><h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3></center>
                 </div>
                 <div class="modal-body">
@@ -134,7 +133,7 @@
                                                 <th>COMENTARIO</th>
                                                 <th>ESTATUS AUTORIZACIÓN</th>
                                                 <th>ÚLT. MODIFICACIÓN</th>
-                                                <th></th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                             </thead>
                                         </table>
@@ -158,7 +157,7 @@
                                                 <div class="container-fluid p-0">
                                                     <div class="row aligned-row d-flex align-end">
                                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                            <label style="font-size: small">Elije el modo para subir los meses sin interés:</label>
+                                                            <label style="font-size: small">Elige el modo para subir los meses sin interés:</label>
                                                         </div>
                                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 pb-3">
                                                             <div class="radio_container w-100">
@@ -188,7 +187,7 @@
                                                             <label class="m-0" for="filtro4">Condominio</label>
                                                             <select name="filtro4" id="filtro4" class="selectpicker select-gral mb-0"
                                                                     data-show-subtext="true" data-live-search="true"  data-style="btn"
-                                                                    title="Selecciona Proyecto" data-size="4" required onChange="loadLotes()">
+                                                                    title="Selecciona Condominio" data-size="4" required onChange="loadLotes()">
                                                             </select>
                                                         </div>
                                                         <input id="typeTransaction" type="hidden" value="1">
@@ -205,7 +204,7 @@
                                                         <table class="table-striped table-hover" id="tabla_msni" name="tabla_msni_name">
                                                             <thead>
                                                             <tr>
-                                                                <th>ID</th>
+                                                                <th>ID CONDOMINIO</th>
                                                                 <th>NOMBRE</th>
                                                                 <th>MSNI</th>
                                                             </tr>
