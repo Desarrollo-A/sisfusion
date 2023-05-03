@@ -57,6 +57,9 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <h4 class="label-on-left mb-0">DESARROLLO</h4>
                         <div class="radio_container">
+                        <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
+                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
+                            $cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33) {echo "checked=true";} ?>  value="1" style="font-size: 0.9em;"/>
                             <label for="one">QRO</label>
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
                             <label for="two">LN</label>
@@ -597,63 +600,15 @@
                         </div>
                     </div>
 
-                    <div class="row" id="radioViv">
-                        <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9">
-                            <h4 class="label-on-left mb-0">VIVE EN CASA</h4>
-                            <div class="radioContainer">
-                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
-                                            if ($copropiedad[$i]->tipo_vivienda == 1) {
-                                                echo "checked=true";
-                                            }
-                                            echo '  value="1" '.$statsInput.'/>
-                                            <label> PROPIA </label>
-                                       
-                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
-                                            if ($copropiedad[$i]->tipo_vivienda == 2) {
-                                                echo "checked=true";
-                                            }
-                                            echo '  value="2" '.$statsInput.'/> 
-                                            <label> RENTADA </label>
-                                <div class="col-md-2 checkbox-radios">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
-                                            if ($copropiedad[$i]->tipo_vivienda == 3) {
-                                                echo "checked=true";
-                                            }
-                                            echo '  value="3" '.$statsInput.'/> PAGÁNDOSE
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 checkbox-radios">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
-                                            if ($copropiedad[$i]->tipo_vivienda == 4) {
-                                                echo "checked=true";
-                                            }
-                                            echo '  value="4" '.$statsInput.'/> FAMILIAR
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 checkbox-radios">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'" ';
-                                            if ($copropiedad[$i]->tipo_vivienda == 5) {
-                                                echo "checked=true";
-                                            }
-                                            echo ' value="5" '.$statsInput.'/> OTRO
-                                        </label>
-                                    </div>
-                                </div>
+                    <div class="row" id="radioDS">
+                            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10"> 
+                                <h4>Select vivienda</h4>
+                            </div>  
+                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                <label>RFC</label>
+                                <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo '" style="font-size: 0.9em;" '.$statsInput.'/>
+                                <input type="hidden" value="'.$limite.'" name="numOfCoprops">
                             </div>
-                        </div>
-                        <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2">
-                            <label>RFC</label>
-                            <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo '" style="font-size: 0.9em;" '.$statsInput.'/>
-                            <input type="hidden" value="'.$limite.'" name="numOfCoprops">
-                        </div>
                     </div>';
                     }
                 echo '</div>';
@@ -672,8 +627,465 @@
                 }
                 ?>
                 <h4 class="text-center pt-3">DATOS GENERALES</h4>
+                <div class="row pb-1">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group label-floating">
+                            <label>EL SR(A):(<small style="color: red;">*</small>)</label>
+                            <?php
+
+                            $limite = $copropiedadTotal[0]->valor_propietarios;
+
+                            /*print_r($limite);*/
+                            if($limite>0){
+
+                                /*print_r($copropiedad);*/
+                                /*echo '<br>';
+                                print_r($regMat);*/
+                                $copropsNames = '';
+                                for ($i = 0; $i < $limite; $i++) {
+                                    $copropsNames .= ' / '.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno;
+                                }
+                            }
+                            else
+                            {
+                                $copropsNames = '';
+                            }
+                            ?>
+                            <input class="form-control input-gral" name="" id="" type="text" readonly required="true" <?php echo $readOnly; ?> value="<?=$cliente[0]->nombre?>  <?=$cliente[0]->apellido_paterno?> <?=$cliente[0]->apellido_materno?> <?=$copropsNames?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-1">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>SE COMPROMETE A ADQUIRIR EL LOTE No.</label>
+                            <input class="form-control input-gral" name="nombreLote" id="nombreLote" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->nombreLote?>" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>EN EL CLÚSTER</label>
+                            <input class="form-control input-gral" name="nombreCondominio" id="nombreCondominio" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->nombreCondominio?>" readonly="readonly"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-1">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>DE SUP. APROXIMADA</label>
+                            <input class="form-control input-gral" name="sup" id="sup" type="text" required="true" <?php echo $readOnly; ?> value="<?=$cliente[0]->sup?>" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>No. REFERENCIA DE PAGO</label>
+                            <input class="form-control input-gral" name="referencia" id="referencia" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->referencia?>" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>COSTO POR M<sup>2</sup> LISTA </label>
+                            <?php
+                            $read='';
+                            $valor='';
+                            $des_val='';
+                            if($cliente[0]->desarrollo == 17){$read=''; $valor=$cliente[0]->costoM2_casas;$des_val=1;}
+                            else{$read ='readonly="readonly"';$valor=$cliente[0]->precio;$des_val=0;}
+                            ?>
+                            <input class="form-control input-gral" name="costoM2" id="costoM2" type="text" <?php echo $readOnly; ?> required="true" value="<?php echo $valor;?>" <?php echo $read;?>/>
+                            <input type="hidden" name="des_hide" value="<?php echo $des_val;?>">
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
-                    
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="costom2f" id="costom2f" oninput="this.value = formatearNumero(this.value)"  <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>UNA VEZ QUE SEA AUTORIZADO EL PROYECTO(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->nombreResidencial?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group label-floating">
+                            <label>EN EL MUNICIPIO DE:(<small style="color: red;">*</small>)</label>
+                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
+                        </div>
+                    </div>            
+                </div>
+                <div class="row pb-2">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group label-floating">
+                            <label>LA UBICACIÓN DE LOTE PUEDE VARIAR DEBIDO A AJUSTES DEL PROYECTO</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pd-1">
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <div class="form-group label-floating">
+                            <label>IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group label-floating">
+                            <label>IMPORTE EN LETRA(<small style="color: red;">*</small>)</label>
+                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-3" id="ofertanteInput">
+                    <div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="row form-inline">
+                            <div class="col">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $ (<b><span style="color: red;">*</span></b>)
+                                        <input class="form-control p-0" name="cantidad" id="cantidad" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?>
+                                                type="text" required="true" value="<?=$cliente[0]->cantidad?>"/>
+                                        (<input class="form-control p-0" name="letraCantidad" <?php echo $readOnly; ?>
+                                                id="letraCantidad" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
+                                         misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo. El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-1">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>SALDO DE DEPÓSITO</label>
+                            <input class="form-control input-gral" name="saldoDeposito" id="saldoDeposito" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->saldoDeposito?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>APORTACIÓN MENSUAL(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="aportMensualOfer" <?php echo $readOnly; ?> id="aportMensualOfer" type="number" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-1">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>FECHA 1° APORTACIÓN(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="fecha1erAport" <?php echo $readOnly; ?> id="fecha1erAport" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>PLAZO(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="plazo" id="plazo" <?php echo $readOnly; ?> type="number" step="any" required="true" value="<?=$cliente[0]->plazo?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-2">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>FECHA LIQUIDACIÓN DE DEPÓSITO(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="fechaLiquidaDepo" <?php echo $readOnly; ?> id="fechaLiquidaDepo" type="date"  value="<?=$cliente[0]->fechaLiquidaDepo?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label>FECHA 2° APORTACIÓN(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>type="date" required="true" value="<?=$cliente[0]->fecha2daAport?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pd-2">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
+                        <label style="font-size: 0.7em;">
+                            Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.<BR>Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
+                        </label>
+                    </div>
+                </div>
+                <div class="row pb-2">
+                    <div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="row form-inline">
+                            <div class="col">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
+                                    <label>En el Municipio de
+                                        (<small style="color: red;">*</small>)
+                                        <input class="form-control" name="municipio2" id="municipio2"
+                                            <?php echo $readOnly; ?>
+                                                type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, a
+                                        (<small style="color: red;">*</small>)
+                                        <input class="form-control" name="dia" id="dia" <?php echo $readOnly; ?>
+                                                type="number" required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
+                                        (<small style="color: red;">*</small>)
+                                        <input class="form-control" name="mes" id="mes" <?php echo $readOnly; ?>
+                                                type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, del año
+                                        (<small style="color: red;">*</small>)
+                                        <input class="form-control" name="anio" id="anio" <?php echo $readOnly; ?>
+                                                type="number" required="true" value="<?=$cliente[0]->anio?>" style="text-align: center;"/>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                            <div class="form-group label-floating">
+                                <?php
+
+                                $limite = $copropiedadTotal[0]->valor_propietarios;
+                                if($limite>0){
+                                    $copropsNames = '';
+                                    for ($i = 0; $i < $limite; $i++) {
+                                        $copropsNames .= ' / '.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno;
+                                    }
+                                }
+                                else
+                                {
+                                    $copropsNames = '';
+                                }
+                                ?>
+                                <style>
+                                    #inpPropCoprpNs
+                                    {
+                                        text-transform: uppercase;
+                                    }
+                                </style>
+                                <input class="form-control" id="inpPropCoprpNs" type="text" required="true" <?php echo $readOnly; ?>
+                                        readonly value="<?=$cliente[0]->nombre?>  <?=$cliente[0]->apellido_paterno?> <?=$cliente[0]->apellido_materno?> <?php echo $copropsNames;?>" style="font-size: 0.9em; text-align: center;"/>
+                            </div>
+                            <label>Nombre y Firma <b> Ofertante (*)</b></label><label>Acepto que se realice una verificación de mis datos, en los teléfonos y correos que proporciono para el otorgamiento del crédito.
+                            </label>
+                    </div>
+                </div>
+                <div class="row pb-1" id="containerReferencia">
+                    <h4 class="text-center pt-3">REFERENCIAS PERSONALES</h4>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>NOMBRE(<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
+                                <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>PARENTESCO(<small style="color: red;">*</small>)</label>
+                                <select name="parentesco1" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                    <option value=""> SELECCIONA UNA OPCIÓN </option>
+                                    <?php
+                                    for($p=0; $p < count($parentescos) ; $p++)
+                                    {
+                                        if($parentescos[$p]['id_opcion'] == $referencias[0]->parentesco)
+                                        {
+                                            echo '<option value="'.$parentescos[$p]['id_opcion'].'" selected>'.$parentescos[$p]['nombre'].'</option>';
+                                        }
+                                        else
+                                        {
+                                            echo '<option value="'.$parentescos[$p]['id_opcion'].'">'.$parentescos[$p]['nombre'].'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>TELÉFONO(<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>NOMBRE(<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="nombre2" <?php echo $readOnly; ?>
+                                        id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
+                                <input name="id_referencia2" <?php echo $readOnly; ?>
+                                        id="id_referencia2" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[1]->id_referencia?>"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating select-is-empty">
+                                <label>PARENTESCO(<small style="color: red;">*</small>)</label>
+                                <select name="parentesco2" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                    <option value=""> SELECCIONA UNA OPCIÓN </option>
+                                    <?php
+                                    for($p=0; $p < count($parentescos) ; $p++)
+                                    {
+                                        if($parentescos[$p]['id_opcion'] == $referencias[1]->parentesco)
+                                        {
+                                            echo '<option value="'.$parentescos[$p]['id_opcion'].'" selected>'.$parentescos[$p]['nombre'].'</option>';
+                                        }
+                                        else
+                                        {
+                                            echo '<option value="'.$parentescos[$p]['id_opcion'].'">'.$parentescos[$p]['nombre'].'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label>TELÉFONO(<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
+                            </div>
+                        </div>
+                    </div>           
+                </div>
+                <div class="row">
+                <?php
+                if(count($asesor2) > 0){
+                    $asesoresVC = '';
+                    $coordGerVC = '';
+                    for($vc = 0; $vc < count($asesor2); $vc++)
+                    {
+                        if($asesor2[0]->id_usuario=='' || $asesor[0]->id_usuario == null)
+                        {
+                            $asesoresVC = '';
+                            $coordGerVC = '';
+                        }
+                        else
+                        {
+                            $coordFinal =($asesor[0]->nombreCoordinador == $asesor2[0]->nombreCoordinador) ? '':$asesor2[0]->nombreCoordinador;
+                            $gerenteFinal = ($asesor[0]->nombreGerente == $asesor2[0]->nombreGerente)?'':$asesor2[0]->nombreGerente;
+
+                            $coordinador = ($asesor2[0]->nombreCoordinador =='')?'':' - '.$coordFinal.', ';
+                            $gerente 	 = ($asesor2[0]->nombreGerente ==  ''  )?'':$gerenteFinal;
+
+                            ($asesor2[0]->nombreAsesor=='') ? $asesoresVC .='' : $asesoresVC .= ' - '.$asesor2[$vc]->nombreAsesor;
+
+                            ($asesor2[0]->nombreCoordinador=='' AND $asesor2[0]->nombreGerente=='') ? $coordGerVC .= '' : $coordGerVC .= $coordinador.$gerente;
+                        }
+                    }
+
+                }
+                else
+                {
+                    $asesoresVC = '';
+                    $coordGerVC = '';
+                }
+
+
+                /*coord gerente asesor normal*/
+                $coordGerenteVN = '';
+                if($asesor[0]->nombreCoordinador==' ')
+                {
+
+                    $coordinadorVN = '';
+                }
+                else
+                {
+                    $coordinadorVN = '- '.$asesor[0]->nombreCoordinador.', ';
+                }
+                if($asesor[0]->nombreGerente=='')
+                {
+                    $gerenteVN = '';
+                }
+                else
+                {
+                    $gerenteVN = $asesor[0]->nombreGerente;
+                }
+                $coordGerenteVN = $coordinadorVN.$gerenteVN;
+
+                ?>
+                </div>
+                <div class="row pt-3" id="observaciones">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group label-floating">
+                            <label>OBSERVACIONES(<small style="color: red;">*</small>)</label>
+                            <textarea class="form-control" <?php echo $readOnly; ?> id="observacion" name="observacion"><?php echo $cliente[0]->observacion; ?></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-4">
+                    <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">
+                            <div class="form-group label-floating">
+                                <input class="form-control" <?php echo $readOnly; ?> name="asesor_datos" id="asesor_datos" type="text" required="true" value="<?=$asesor[0]->nombreAsesor?><?=$asesoresVC?>" style="text-align: center;"/>
+                            </div>
+                            <label class="control-label">Nombre y Firma <b> Asesor (*)</b></label>
+                    </div>
+
+                    <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">      
+                            <div class="form-group label-floating">
+                                <input class="form-control m-0" <?php echo $readOnly; ?>
+                                        type="text" name="gerente_datos" id="gerente_datos" required="true"
+                                        value="<?=$asesor[0]->nombreCoordinador?>, <?=$asesor[0]->nombreGerente?> <?=$coordGerVC?>" style="text-align: center;"/>
+                            </div>
+                            <label class="control-label">Nombre y Firma <b> Autorización de operación (*)</b></label>
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <label>EMAIL ASESOR</label>
+                                <input name="correo_asesor" <?php echo $readOnly; ?>
+                                        id="correo_asesor" type="text" class="form-control input-gral" value="<?=$asesor[0]->correo?>" >
+                    </div>
+                    <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">
+                        <div class="input-group">
+                            <section>
+                                <div>
+                                    <div class="togglebutton">
+                                        <label>
+                                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_usuario') == 2752  || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
+                                                <input id="pdfOK" name="pdfOK" type="checkbox"/><b style="color: #0A548B">ENVIAR A CLIENTE VÍA EMAIL</b>
+                                            <?php } ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class ="col-md-6">
+                        <!--<div class="col-md-10" align="left">
+                                <div class="togglebutton">
+                                    <label>
+                                        <input id="especificar" name="especificar"
+                                                type="checkbox" <?php if ($cliente[0]->lugar_prospeccion == 12) {
+                            echo "checked";
+                        } ?> <?php echo $statsInput; ?>/> <b style="color: #0A548B">CLUB MADERAS</b>
+                                    </label>
+                                </div>
+                            </div>-->
+                        <div class="col-sm-12 checkbox-radios" style="text-align: left;padding: 0px;visibility: hidden">
+                            <div class="col-md-4 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.9em;">
+                                        <input type="radio" id="especificar"  name="especificar"  <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->lugar_prospeccion == 6 ) { echo "checked=true"; } ?>  value="6" style="font-size: 0.9em;"/> Marketing Digital
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.9em;">
+                                        <input type="radio" id="especificar"  name="especificar"  <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->lugar_prospeccion == 12 ) {echo "checked=true";} ?>  value="12" style="font-size: 0.9em;"/> Club Maderas
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="text-center">
+                        <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 ||
+                            $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 ||
+                            $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 ||
+                            $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){?>
+                            <button type="submit" name="guardarC" class="btn btn-primary btn-fill" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
+                        <?php } else{?>
+
+                            <a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>" target="_blank" class="btn btn-primary">IMPRIMIR DEPOSITO SERIEDAD</a>
+                        <?php }?>
+                    </div>  
                 </div>
             </div>           
         </div>
@@ -761,6 +1173,15 @@
 
         }
     }
+
+    function resizeInput() {
+    $(this).attr('size', $(this).val().length);
+    }
+
+    $('input[name="letraCantidad"]')
+        .keyup(resizeInput)
+        .each(resizeInput);
+
     function checkResidencia(){
         let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
         console.log('valor', valor);

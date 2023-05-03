@@ -141,11 +141,20 @@
             }
         }
     }
-    #containerCopropietario{
+    #containerCopropietario, #containerReferencia{
         background-color: #f0f8ff9e;
         border-radius: 15px;
         padding: 0 18px!important;
         margin-top: 30px;
+    }
+
+    #ofertanteInput{
+        input{
+        padding: 0;
+        text-align: center;
+        height: 27px;
+        font-size: 12px;
+        }
     }
 
     #radioViv{
@@ -172,6 +181,15 @@
                 color: $white;
                 transition: 0.3s;
             }
+        }
+    }
+
+    #observaciones{
+        textarea{
+            background-image: none;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            background-color: #eee; 
         }
     }
     
