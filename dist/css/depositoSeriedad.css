@@ -1335,6 +1335,10 @@
   margin: 0 3px;
 }
 
+#mainBoxDS .label-on-left {
+  font-size: 10px;
+}
+
 #mainBoxDS .form-group {
   margin: 0 !important;
 }
@@ -1463,7 +1467,7 @@
   color: #96843D;
 }
 
-#mainBoxDS #radioDS .radio_container {
+#mainBoxDS #radioDS .radio_container, #mainBoxDS #viviendaDS .radio_container {
   background-color: #eeeeee;
   width: 100%;
   border-radius: 27px;
@@ -1471,24 +1475,24 @@
   padding: 5px !important;
 }
 
-#mainBoxDS #radioDS .radio_container input[type="radio"] {
+#mainBoxDS #radioDS .radio_container input[type="radio"], #mainBoxDS #viviendaDS .radio_container input[type="radio"] {
   appearance: none;
   display: none;
 }
 
-#mainBoxDS #radioDS .radio_container label {
+#mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label {
   width: 50%;
   transition: linear 0.3s;
   font-weight: 100;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
-  #mainBoxDS #radioDS .radio_container label {
+  #mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label {
     width: 100% !important;
   }
 }
 
-#mainBoxDS #radioDS .radio_container input[type="radio"]:checked + label {
+#mainBoxDS #radioDS .radio_container input[type="radio"]:checked + label, #mainBoxDS #viviendaDS .radio_container input[type="radio"]:checked + label {
   background-color: #0a548b;
   color: #ffffff;
   transition: 0.3s;
@@ -1569,6 +1573,7 @@
   overflow: hidden;
   transition: linear 0.3s;
   margin: 0;
+  font-weight: 100;
 }
 
 #mainBoxDS #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
@@ -1601,4 +1606,8 @@
 
 #mainBoxDS #boxFactura .boxOnOff .switch-label {
   cursor: pointer;
+}
+
+#mainBoxDS #ofertanteInput .form-group {
+  padding: 0 !important;
 }

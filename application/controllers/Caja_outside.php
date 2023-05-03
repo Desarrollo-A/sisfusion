@@ -566,7 +566,6 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'flag_compartida' =>$datosView->flag_compartida,
             'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
             'fechaAlta' => date('Y-m-d H:i:s'),

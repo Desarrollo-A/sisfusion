@@ -1702,6 +1702,22 @@ table thead tr th input::placeholder {
   color: #ffffff;
 }
 
+table thead tr th span {
+  margin: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 300;
+  font-size: 10px !important;
+  background-color: #143860;
+  text-transform: uppercase;
+}
+
+table thead tr th span::placeholder {
+  color: #ffffff;
+}
+
 table .toggle-subTable {
   color: #96843D;
   border-radius: 27px;
