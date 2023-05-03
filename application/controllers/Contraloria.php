@@ -2954,7 +2954,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                         'idAutorizacion' => $last_id,
                         'tipo' => 2, //tipo de historial es hacia MSI en la tabla de opcs_x_cats cuando el catalogo=91
                         'id_usuario' => $this->session->userdata('id_usuario'),
-                        'fecha_movimiento' => $fecha_creacion),
+                        'fecha_movimiento' => $fecha_creacion,
                         'estatus' => 1,
                         'comentario' => 'SE SUBE AUTORIZACIÓN',
                         'estatus_autorizacion' => 1
