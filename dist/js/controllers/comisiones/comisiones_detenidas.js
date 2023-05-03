@@ -96,7 +96,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     if (d.idStatusContratacion === 15) {
                         return '<span class="label lbl-violetDeep" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
                     } else {
-                        return '<p class="m-0 lbl-violetDeep" style="color:#512E5F;background:#D7BDE2;"><b>'+d.idStatusContratacion+'</b></p>';
+                        return '<p class="m-0 "><b>'+d.idStatusContratacion+'</b></p>';
                     }
                 }
             },
