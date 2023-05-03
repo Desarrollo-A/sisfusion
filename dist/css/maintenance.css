@@ -940,19 +940,19 @@
 }
 
 .lbl-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ffd129;
+  background-color: #ddaf07;
   color: #ffffff !important;
 }
 

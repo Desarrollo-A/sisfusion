@@ -940,19 +940,19 @@
 }
 
 .lbl-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ffd129;
+  background-color: #ddaf07;
   color: #ffffff !important;
 }
 
@@ -1027,44 +1027,6 @@
   background-color: #4e4e4e;
   color: #ffffff;
 }
-/*Classes created by: Dante Aldair
-----------------------------------*/
-.lbl-blueNCS{
-  color: #0089B7;
-  border: none;
-  background-color: #0089B718;
-}
-
-.lbl-darkCyan{
-  color: #30ada1;
-  border: none;
-  background-color: #30ada118;
-}
-
-.lbl-brightBlue{
-  color: #4a30dd;
-  border: none;
-  background-color: #4a30dd18;
-}
-
-.lbl-verySoftBlue{
-  color: #AED6F1;
-  border: none;
-  background-color: #AED6F118;
-}
-
-.lbl-veryDarkBlue{
-  color: #1B4F72;
-  border: none;
-  background-color: #1B4F7218;
-}
-
-.lbl-veryDarkRed{
-  color: #641E16;
-  border: none;
-  background-color: #641E1618;
-}
-/*--------------------------------*/
 
 /* Btns acción dentro de datatable */
 /* Etiquetas */
