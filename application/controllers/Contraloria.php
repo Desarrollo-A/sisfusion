@@ -2931,7 +2931,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
 //                        array_push($array_update, $array_push);
 //                    }
 
-
+                    $fecha_creacion = date('Y-m-d H:i:s');
                      $insert_aut = array(
                         //id_autorizacion: AUTO_INCREMENT
                         "idResidencial" => $idResidencial, //NO ACEPTA NULOS
@@ -2941,9 +2941,9 @@ public function editar_registro_lote_contraloria_proceceso15(){
                         "comentario" => 'SE SUBE AUTORIZACIÓN',
                         "estatus_autorizacion" => 1,
                         "estatus" => 1,
-                        "fecha_creacion" => date('Y-m-d H:i:s'),
+                        "fecha_creacion" => $fecha_creacion,
                         "creado_por" => $this->session->userdata('id_usuario'),
-                        "fecha_modificacion" => date('Y-m-d H:i:s'),
+                        "fecha_modificacion" => $fecha_creacion,
                         "modificado_por" => $this->session->userdata('id_usuario')
                     );
                     $resultado = $this->General_model->addRecord('autorizaciones_msi', $insert_aut);
@@ -2954,7 +2954,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                         'idAutorizacion' => $last_id,
                         'tipo' => 2, //tipo de historial es hacia MSI en la tabla de opcs_x_cats cuando el catalogo=91
                         'id_usuario' => $this->session->userdata('id_usuario'),
-                        'fecha_movimiento' => date('Y-m-d H:i:s'),
+                        'fecha_movimiento' => $fecha_creacion),
                         'estatus' => 1,
                         'comentario' => 'SE SUBE AUTORIZACIÓN',
                         'estatus_autorizacion' => 1
@@ -2991,7 +2991,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                 $array_diferentes = json_encode($array_diferentes, JSON_UNESCAPED_SLASHES);
                 $condominioValue = ($typeTranscation == 1) ? '' : '';
 
-
+                $fecha_creacion = date('Y-m-d H:i:s');
                 $insert_aut = array(
                     //id_autorizacion: AUTO_INCREMENT
                     "idResidencial" => $idResidencial, //NO ACEPTA NULOS
@@ -3001,9 +3001,9 @@ public function editar_registro_lote_contraloria_proceceso15(){
                     "comentario" => 'SE SUBE AUTORIZACION',
                     "estatus_autorizacion" => 1,
                     "estatus" => 1,
-                    "fecha_creacion" => date('Y-m-d H:i:s'),
+                    "fecha_creacion" => $fecha_creacion,
                     "creado_por" => $this->session->userdata('id_usuario'),
-                    "fecha_modificacion" => date('Y-m-d H:i:s'),
+                    "fecha_modificacion" => $fecha_creacion,
                     "modificado_por" => $this->session->userdata('id_usuario')
                 );
                 $resultado = $this->General_model->addRecord('autorizaciones_msi', $insert_aut);
@@ -3014,7 +3014,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                     'idAutorizacion' => $last_id,
                     'tipo' => 2, //tipo de historial es hacia MSI en la tabla de opcs_x_cats cuando el catalogo=91
                     'id_usuario' => $this->session->userdata('id_usuario'),
-                    'fecha_movimiento' => date('Y-m-d H:i:s'),
+                    'fecha_movimiento' => $fecha_creacion,
                     'estatus' => 1,
                     'comentario' => 'SE SUBE AUTORIZACION',
                     'estatus_autorizacion' => 1
@@ -3600,11 +3600,11 @@ public function editar_registro_lote_contraloria_proceceso15(){
             }
 
             $array_diferentes = json_encode($array_diferentes, JSON_UNESCAPED_SLASHES);
-
+            $fecha_creacion = date('Y-M-d H:i:s');
             $data_actualizar = array(
                 "lote"=>$array_diferentes,
                 "comentario" => "Se actualizaron los MSI el:".date('Y-M-d H:i:s'),
-                "fecha_modificacion" => date('Y-M-d H:i:s'),
+                "fecha_modificacion" => $fecha_creacion,
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
             $table = 'autorizaciones_msi';
