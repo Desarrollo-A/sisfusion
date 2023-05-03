@@ -169,7 +169,7 @@ table tfoot tr th {
                                                 <select id="idResidencial" name="idResidencial"
                                                     class="selectpicker select-gral" data-style="btn"
                                                     data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un proyecto" data-size="7" size="5" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" size="5" required>
                                                 </select>
                                             </div>
                                         </div>
@@ -180,7 +180,7 @@ table tfoot tr th {
                                                 <select name="idCondominioInventario" id="idCondominioInventario"
                                                     class="selectpicker select-gral" data-style="btn"
                                                     data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un condominio" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                 </select>
                                             </div>
                                         </div>
@@ -190,7 +190,7 @@ table tfoot tr th {
                                                 <label class="m-0" for="idEstatus">Estatus</label>
                                                 <select name="idEstatus" id="idEstatus" class="selectpicker select-gral"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un estatus" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                 </select>
                                             </div>
                                         </div>
