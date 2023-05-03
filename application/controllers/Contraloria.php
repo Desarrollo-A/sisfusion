@@ -2938,7 +2938,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                         "idCondominio" => $result->ID, //NO ACEPTA NULOS
                         "lote" => null,
                         "msi" => $result->MSNI,
-                        "comentario" => 'SE SUBE AUTORIZACION',
+                        "comentario" => 'SE SUBE AUTORIZACIÓN',
                         "estatus_autorizacion" => 1,
                         "estatus" => 1,
                         "fecha_creacion" => date('Y-m-d H:i:s'),
@@ -2956,7 +2956,7 @@ public function editar_registro_lote_contraloria_proceceso15(){
                         'id_usuario' => $this->session->userdata('id_usuario'),
                         'fecha_movimiento' => date('Y-m-d H:i:s'),
                         'estatus' => 1,
-                        'comentario' => 'SE SUBE AUTORIZACION',
+                        'comentario' => 'SE SUBE AUTORIZACIÓN',
                         'estatus_autorizacion' => 1
                     );
                     $resultado_historial = $this->General_model->addRecord('historial_autorizacionesPMSI', $insert_ha);
