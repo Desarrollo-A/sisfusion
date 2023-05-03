@@ -509,8 +509,12 @@ function getStatusMktdPreventa(){
         $and = "AND ((pr.lugar_prospeccion != 6) OR (pr.fecha_creacion > '2022-01-19 23:59:59.999' AND pr.lugar_prospeccion = 6))";
         if ($id_rol == 3) // MJ: GERENTE
             $where = "pr.id_gerente = $id_usuario";
-        else if ($id_rol == 6) // MJ: ASISTENTE DE GERENTE
-            $where = "pr.id_gerente = $id_lider";
+        else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
+            if ($id_usuario == 10795)
+                $where = "pr.id_gerente IN($id_lider, 671, 700, 654) AND pr.id_sede = 12";
+            else
+                $where = "pr.id_gerente = $id_lider";
+        }
         else if ($id_rol == 9) // MJ: COORDINADOR
             $where = "(pr.id_asesor = $id_usuario OR pr.id_coordinador = $id_usuario)";
         else if ($id_rol == 7) { // MJ: ASESOR

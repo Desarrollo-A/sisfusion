@@ -518,6 +518,9 @@ class Caja_outside extends CI_Controller {
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
+            'id_subdirector' => $datosView->id_subdirector,
+            'id_regional' => $datosView->id_regional,
+            'id_regional_2' => $datosView->id_regional_2,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -563,11 +566,7 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
-            'flag_compartida' =>$datosView->flag_compartida,
-            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
+            'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
             'fechaAlta' => date('Y-m-d H:i:s'),
             'id_cliente_reubicacion' => isset( $datosView->id_cliente_reubicacion ) ? $datosView->id_cliente_reubicacion : null
@@ -1140,9 +1139,12 @@ class Caja_outside extends CI_Controller {
                 $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
             }
 
-            $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
-            $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
-            $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+            $arreglo["id_gerente"] = $data->id_gerente;
+            $arreglo["id_coordinador"] = $data->id_coordinador;
+            $arreglo["id_asesor"] = $data->id_asesor;
+            $arreglo["id_subdirector"] = $data->id_subdirector;
+            $arreglo["id_regional"] = $data->id_regional;
+            $arreglo["id_regional_2"] = $data->id_regional_2;
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
@@ -1574,6 +1576,9 @@ class Caja_outside extends CI_Controller {
                         $arreglo_asesores["id_gerente"] = $value->idGerente;
                         $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 && $value->idAsesor != 6626 ? 0 : $value->idCoordinador;
                         $arreglo_asesores["id_asesor"] = $value->idAsesor;
+                        $arreglo_asesores["id_subdirector"] = $value->idSubdirector;
+                        $arreglo_asesores["id_regional"] = $value->idRegional;
+                        $arreglo_asesores["id_regional_2"] = $value->idRegional2;
                         $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
                         $arreglo_asesores["estatus"] = 1;
                         $arreglo_asesores["creado_por"] = $data->id_usuario;
@@ -1852,7 +1857,7 @@ class Caja_outside extends CI_Controller {
                         $arreglo['id_subdirector'] = $data->asesores[0]->idSubdirector;
                         $arreglo['id_regional'] = $data->asesores[0]->idRegional1;
                         $arreglo['id_regional_2'] = $data->asesores[0]->idRegional2;
-                        $arreglo['estructura'] = $data->asesores[0]->idGerente == 6661 ? 1 : 0;
+                        $arreglo['estructura'] = in_array($data->asesores[0]->idGerente, array(12135, 6661)) ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
                         $fechaAccion = date("Y-m-d H:i:s");
@@ -2199,11 +2204,10 @@ class Caja_outside extends CI_Controller {
             "id_asesor" => $data->id_asesor,
             "id_coordinador" => $voBoCoord,
             "id_gerente" => $data->id_gerente,
-            "id_subdirector" => $data->id_subdirector,
-
             "estatus" => 1,
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "creado_por" => $data->id_usuario,
+            "id_subdirector" => $data->id_subdirector,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $data->id_usuario,
             "id_regional" => $data->id_regional,
@@ -2285,7 +2289,7 @@ class Caja_outside extends CI_Controller {
                 "id_regional" => $dataJson->id_regional,
                 "id_regional_2" => $dataJson->id_regional_2,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $data->id_usuario
+                "modificado_por" => $dataJson->id_usuario_que_modifica
             );
             $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
 

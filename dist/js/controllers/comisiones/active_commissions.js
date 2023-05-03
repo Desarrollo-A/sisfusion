@@ -284,7 +284,7 @@ $("#tabla_ingresar_9").ready(function () {
             "targets": 0
         }],
         ajax: {
-            "url": url+'/Comisiones/getActiveCommissions',
+            "url": url+'/getDataActivasPago',
             "dataSrc": "",
             "type": "POST",
             cache: false,

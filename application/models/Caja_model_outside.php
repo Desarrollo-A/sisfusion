@@ -350,10 +350,27 @@
 
     public function allAsesor()
     {
-        return $this->db->query("SELECT u.id_usuario id_asesor, 
-        CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 
-        u.gerente_id id_gerente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre FROM usuarios u 
-        WHERE u.id_rol IN (7, 9) AND u.estatus = 1 AND ISNULL(u.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u.correo, '') NOT LIKE '%test_%'")->result();
+        return $this->db->query("SELECT u0.id_usuario as id_asesor, 
+		u0.id_lider as id_coordinador, 
+		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
+		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
+		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
+		WHEN u3.id_usuario = 7092 THEN 3 
+		WHEN u3.id_usuario = 9471 THEN 607 
+		WHEN u3.id_usuario = 681 THEN 607 
+		WHEN u3.id_usuario = 609 THEN 607  
+		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 0 ELSE 0 END END) id_regional,
+		CASE 
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN 7092
+		ELSE 0 END id_regional_2,
+		CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) nombre
+		FROM usuarios u0
+		LEFT JOIN usuarios u1 ON u1.id_usuario = u0.id_lider -- COORDINADOR
+		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
+		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
+        WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332)")->result();
     }
 
 
@@ -395,7 +412,7 @@
 
     public function getDocsByType($typeOfPersona)
     {
-        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1");
+        $query = $this->db-> query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1 AND id_opcion NOT IN(30)");
         /*$this->db->select('*');
         $this->db->where('id_catalogo', $typeOfPersona);
         $query= $this->db->get("opcs_x_cats");*/
@@ -1435,9 +1452,14 @@
     }
     public function allUserVentas()
     {
-        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,id_rol FROM usuarios 
-		WHERE id_rol IN (7, 9,3,2) AND estatus = 1 AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%'
-		order by id_rol")->result();
+        return $this->db->query("(SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+        (CASE WHEN id_usuario IN(6482, 5, 7092) THEN 3 ELSE id_rol END) id_rol
+        FROM usuarios 
+        WHERE id_rol in(2,3,7,9) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')
+        UNION 
+        (SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,id_rol
+        FROM usuarios 
+        WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
     }
 
 }
