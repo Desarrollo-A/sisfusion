@@ -26,40 +26,27 @@
             }
         </style>
 
-
-<!-- <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <div class="modal fade modal-alertas" id="autorizar-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-red"></div>
-                    <form method="post" id="form_aplicar">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
-
-
-        <div class="modal fade" id="modal_nuevas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="form_aplicar" name="form_aplicar" method="post">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
                     </div>
-                        <div class="modal-body" style="text-align: center;"></div>
+                    <form method="post" class="row" id="autorizar_form" autocomplete="off">
+                        <div class="modal-body">
+                        </div>
+
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Registrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
                         </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
-
-
+ 
         <div class="modal fade" id="seeInformationModalRetiros" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -115,25 +102,25 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Total resguardo:</h4>
-                                                    <p class="input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totalResguardo" id="totalResguardo">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Ingresos extras:</h4>
-                                                    <p class="input-tot pl-1" name="totalx" id="totalx">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totalExtras" id="totalExtras">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Saldo disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totalpv3" id="totalp3">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totalDisponible" id="totalDisponible">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Descuentos aplicados:</h4>
-                                                    <p class="input-tot pl-1" name="totalpv2" id="totalp2">$0.00</p>
+                                                    <p class="input-tot pl-1" name="totalAplicados" id="totalAplicados">$0.00</p>
                                                 </div>
                                             </div>
                                         </div>

@@ -311,6 +311,21 @@ table{
                     color: $white;
                 }
             }
+            span{
+                margin: 4px;
+                border: 1px solid transparent;
+                border-radius: 5px;
+                color: $white;
+                text-align: center;
+                font-weight: 300;
+                font-size: 10px!important;
+                background-color: $blueIndigoDeep;
+                text-transform: uppercase;
+                &::placeholder{
+                    color: $white;
+                }
+            }
+
         }
     }
     .toggle-subTable{

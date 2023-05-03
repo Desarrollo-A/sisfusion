@@ -27,8 +27,6 @@ class Resguardos extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-   // resguardos-view complete
-
   public function retiros() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
@@ -48,112 +46,55 @@ class Resguardos extends CI_Controller
       echo json_encode($this->Resguardos_model->getListaRetiros($id)->result_array());
   }
 
-
+  public function actualizarRetiro(){
+  
+    $opcion =  $this->input->post("opcion");
+    $id = $this->input->post("id_descuento");
+    $data = [];
+    if($opcion == 'Autorizar'){
+      $data = ['estatus' => 2];
+    }elseif($opcion == 'Borrar'){
+      $motivo =  $this->input->post("motivodelete");
+      $data = ['estatus' => 3,
+              'motivodel' => $motivo];
+    }elseif($opcion == 'Rechazar'){
+      $motivo =  $this->input->post("motivodelete");
+      $data = ['estatus' => 4,
+              'motivodel' => $motivo];
+    }elseif($opcion == 'Actualizar'){
+      $monto =  $this->input->post("monto");
+      $concepto = $this->input->post("conceptos");
+      $estado = $this->input->post("estatus");
  
-  // public function getDataDispersionPago() {
-  //   $data['data'] = $this->Resguardos_model->getDataDispersionPago()->result_array();
-  //   echo json_encode($data);
-  // }
-
-
-  // public function getPlanesResguardos($val = ''){
-
-  //     $data = array();
-  //     if(empty($val)){
-  //       $data = $this->Resguardos_model->getPlanesResguardos();
-  //     }else{
-  //       $data = $this->Resguardos_model->getPlanesResguardos($val);
-  //     }
-      
-  //     if ($data != null) {
-  //       echo json_encode($data);
-  //     } else {
-  //       echo json_encode(array());
-  //     }
-  //   }
-
-
-
-
-
-    // public function resguardos()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   $this->load->view('template/header');
-    //   $this->load->view("ventas/revision_resguardo", $datos);
-    // }
- 
-    // public function getDatosResguardoContraloria($user,$condominio){
-    //   $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$condominio)->result_array();
-    //  for( $i = 0; $i < count($dat); $i++ ){
-    //      $dat[$i]['pa'] = 0;
-    //  }
-    //  echo json_encode( array( "data" => $dat));
-    // }
-
-
-
-    //  public function retiros()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   $this->load->view('template/header');
-    //   $this->load->view("ventas/retiros", $datos);
-    // }
- 
-    // public function getDatosRetirosContraloria($proyecto,$condominio){
-    //   $dat =  $this->Comisiones_model->getDatosRetirosContraloria($proyecto,$condominio)->result_array();
-    //  for( $i = 0; $i < count($dat); $i++ ){
-    //      $dat[$i]['pa'] = 0;
-    //  }
-    //  echo json_encode( array( "data" => $dat));
-    // }
-
-    //  public function retiros_resguardo()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   $this->load->view('template/header');
-    //   $this->load->view("ventas/retiros_dir", $datos);
-    // }
-
-    //  public function historial_retiros()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   $this->load->view('template/header');
-    //   $this->load->view("ventas/retiros_historial", $datos);
-    // }
- 
-    // public function getDatoshistorialResguardoContraloria($proyecto,$condominio){
-    //   $dat =  $this->Comisiones_model->getDatoshistorialResguardoContraloria($proyecto,$condominio)->result_array();
-    //  for( $i = 0; $i < count($dat); $i++ ){
-    //      $dat[$i]['pa'] = 0;
-    //  }
-    //  echo json_encode( array( "data" => $dat));
-    // }
-
-
-
-
+      $data = ['monto' => $monto,
+                'conceptos' => $concepto,
+                'estatus' => $estado];
+    }
+    
+    $respuesta =  $this->Resguardos_model->actualizarRetiro($data,$id,$opcion);
+    echo json_encode($respuesta);
+  }
+  
+  public function getDisponibleResguardoP($user,$opc = ''){
+    if($opc == ''){
+      $datos = $this->Resguardos_model->getDisponibleResguardo($user)->result_array();
+      $extras = $this->Resguardos_model->getDisponibleExtras($user)->result_array();
+      $suma =$datos[0]['suma'];
+    }else{
+      $datos = $this->Resguardos_model->getDisponibleResguardo($user)->result_array();
+      $suma =($datos[0]['suma']);
+    }
+    echo json_encode($suma);
+  }
+  
+  public function getDisponibleResguardo($user){
+    $datos = $this->Resguardos_model->getDisponibleResguardo($user)->result_array();
+    $extras = $this->Resguardos_model->getDisponibleExtras($user)->result_array();
+    $pagado = $this->Resguardos_model->getAplicadoResguardo($user)->result_array();
+    $disponible = ($datos[0]['suma'] + $extras[0]['extras']) - $pagado[0]['aplicado'];
+    echo json_encode($disponible);
   }
 
+
+}
  
-   // resguardos-view end
