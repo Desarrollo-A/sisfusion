@@ -125,7 +125,7 @@
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="poder_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->poder_pm == 1) {echo "checked";}?>>
-                                    <span>PODER</span>
+                                    <span>CARTA PODER</span>
                                 </label>
                             </div>
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
@@ -156,8 +156,8 @@
                         <div class="form-group label-floating">
                             <div class="d-none" name="regimenl" id="regimenl">
                                 <h4 class="label-on-left mb-0">RÉGIMEN FISCAL</h4>
-                                <select name="regimenFiscal" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                    <option> SELECCIONA UNA OPCIÓN </option>
+                                <select name="regimenFiscal" placeholder="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                    <!-- <option> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($n=0; $n < count($regFis) ; $n++){
                                         if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac){
@@ -203,11 +203,11 @@
                         <div class="d-flex">
                             <div class="w-50 mt-1">
                                 <input class="customRadio imprimePagare" type="radio" name="imprimePagare" id="imprimePagare1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
-                                <label for="imprimePagare1">Sí</label>
+                                <label for="imprimePagare1">SÍ</label>
                             </div>
                             <div class="w-50 mt-1">
                                 <input class="customRadio imprimePagare" type="radio" name="imprimePagare" id="imprimePagare2" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 0) { echo "checked=true"; } ?>>
-                                <label for="imprimePagare2">No</label>
+                                <label for="imprimePagare2">NO</label>
                             </div>
                         </div>
                     </div>
@@ -282,7 +282,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
                             <label>
-                                EMAIL
+                                CORREO ELECTRÓNICO
                                 (<small style="color: red;">*</small>)
                             </label>
                             <input class="form-control input-gral" name="correo" id="correo" type="email" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
@@ -298,7 +298,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
                             <label style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
-                            <select name="nacionalidad" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>><option value=""> SELECCIONA UNA OPCIÓN </option>
+                            <select name="nacionalidad" placeholder="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                 for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
@@ -322,8 +322,8 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
                             <label>ESTADO CIVIL(<small style="color: red;">*</small>)</label>
-                            <select name="estado_civil" id="estado_civil" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                <option value=""> SELECCIONA UNA OPCIÓN </option>
+                            <select name="estado_civil" id="estado_civil" placeholder="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($edoCivil) ; $n++){
                                     if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil){
@@ -342,9 +342,9 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label>RÉGIMEN</label>
-                            <select name="regimen_matrimonial" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                <option value="5"> SELECCIONA UNA OPCIÓN </option>
+                            <label>RÉGIMEN MATRIMONIAL</label>
+                            <select name="regimen_matrimonial" placeholder="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <!-- <option value="5"> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($regMat) ; $n++){
                                     if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
@@ -600,9 +600,25 @@
                         </div>
                     </div>
 
-                    <div class="row" id="radioDS">
+                    <div class="row pb-3" id="viviendaDS">
                             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10"> 
-                                <h4>Select vivienda</h4>
+                            <label>VIVE EN CASA</label>
+                                <div class="radio_container">
+                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"'; if ($copropiedad[$i]->tipo_vivienda == 1) { echo "checked=true"; } echo '  value="1" '.$statsInput.'/> 
+                                    <label>PROPIA</label>
+                                    
+                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 2) { echo "checked=true"; } echo '  value="2" '.$statsInput.'/>
+                                    <label >RENTADA</label>
+                        
+                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 3) { echo "checked=true"; } echo '  value="3" '.$statsInput.'/>
+                                    <label>PAGÁNDOSE</label>
+                        
+                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 4) { echo "checked=true"; } echo '  value="4" style="font-size: 0.8em;" '.$statsInput.'/>
+                                    <label>FAMILIAR</label>
+                        
+                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 5) { echo "checked=true"; } echo '  value="5" style="font-size: 0.8em;" '.$statsInput.'/>
+                                    <label>OTRO</label>
+                                </div>
                             </div>  
                             <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                 <label>RFC</label>
@@ -672,13 +688,13 @@
                 <div class="row pb-1">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>DE SUP. APROXIMADA</label>
+                            <label>SUPERFICIE</label>
                             <input class="form-control input-gral" name="sup" id="sup" type="text" required="true" <?php echo $readOnly; ?> value="<?=$cliente[0]->sup?>" readonly="readonly"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label>No. REFERENCIA DE PAGO</label>
+                            <label>REFERENCIA</label>
                             <input class="form-control input-gral" name="referencia" id="referencia" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->referencia?>" readonly="readonly"/>
                         </div>
                     </div>
@@ -728,7 +744,7 @@
                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                         <div class="form-group label-floating">
                             <label>IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
+                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="$<?=$cliente[0]->importOferta?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
@@ -873,8 +889,8 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label>PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco1" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
-                                    <option value=""> SELECCIONA UNA OPCIÓN </option>
+                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                    <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -911,8 +927,8 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
                                 <label>PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco2" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
-                                    <option value=""> SELECCIONA UNA OPCIÓN </option>
+                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                    <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -1448,15 +1464,15 @@
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ORIGINARIO DE (<small style="color: red;">*</small>) </label> <input class="form-control" name="originario_nuevo" id="originario_nuevo" type="text" required value=""/> </div> </div>');
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO PARTICULAR (<small style="color: red;">*</small>) </label> <input class="form-control" name="domicilio_particular_nuevo" id="domicilio_particular_nuevo" type="text" required value=""/> </div> </div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> ESTADO CIVIL (<small style="color: red;">*</small>)</label><select name="estadocivil_nuevo" id="estadocivil_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> ESTADO CIVIL (<small style="color: red;">*</small>)</label><select name="estadocivil_nuevo" id="estadocivil_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> RÉGIMEN </label><select name="regimen_nuevo" id="regimen_nuevo" class="form-control"><option value="">- Selecciona opción -</option></select></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> RÉGIMEN </label><select name="regimen_nuevo" id="regimen_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></div></div>');
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> NOMBRE DE CÓNYUGE (<small style="color: red;">*</small>) </label> <input class="form-control" name="conyuge_nuevo" id="conyuge_nuevo" type="text" required value=""/> </div> </div>');
 
