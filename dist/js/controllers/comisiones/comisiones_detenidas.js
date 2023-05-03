@@ -70,11 +70,11 @@ $('#comisiones-detenidas-table').ready(function () {
                 "width": "8%",
                 "data": function( d ){
                     if (d.tipo_venta == 1) {
-                        return '<span class="label lbl-warning">Venta Particular</span>';
+                        return '<span class="label lbl-warning" style="color:#78281F;background:#F5B7B1;" >Venta Particular</span>';
                     }else if (d.tipo_venta == 2) {
-                        return '<span class="label lbl-green">Venta normal</span>';
+                        return '<span class="label lbl-green" style="color:#186A3B;background:#ABEBC6;">Venta normal</span>';
                     } else if (d.tipo_venta == 7) {
-                        return '<span class="label lbl-orangeYellow">Venta especial</span>';
+                        return '<span class="label lbl-orangeYellow" style="color:#626567;background:#E5E7E9;">Venta especial</span>';
                     } else {
                         return '';
                     }
@@ -84,9 +84,9 @@ $('#comisiones-detenidas-table').ready(function () {
                 'width': '8%',
                 data: function( d ){
                     if (d.compartida === null) {
-                        return '<span class="label lbl-orangeYellow" >Individual</span>';
+                        return '<span class="label lbl-orangeYellow"  style="color:#7D6608;background:#F9E79F;">Individual</span>';
                     } else {
-                        return '<span class="label lbl-warning">Compartida</span>';
+                        return '<span class="label lbl-warning" style="color:#7E5109;background:#FAD7A0;" >Compartida</span>';
                     }
                 }
             },
@@ -94,9 +94,9 @@ $('#comisiones-detenidas-table').ready(function () {
                 'width': '8%',
                 data: function( d ){
                     if (d.idStatusContratacion === 15) {
-                        return '<span class="label lbl-violetDeep">Contratado</span>';
+                        return '<span class="label lbl-violetDeep" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
                     } else {
-                        return '<p class="m-0 lbl-violetDeep"><b>'+d.idStatusContratacion+'</b></p>';
+                        return '<p class="m-0 lbl-violetDeep" style="color:#512E5F;background:#D7BDE2;"><b>'+d.idStatusContratacion+'</b></p>';
                     }
                 }
             },
