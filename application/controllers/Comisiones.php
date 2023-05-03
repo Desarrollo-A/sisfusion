@@ -6448,7 +6448,7 @@ for ($d=0; $d <count($dos) ; $d++) {
 
  
     
-    public function viewDetenidas() {
+    public function detenidas() {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
