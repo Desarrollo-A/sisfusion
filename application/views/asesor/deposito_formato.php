@@ -884,7 +884,7 @@
                                         <input class="form-control" name="dia" id="dia" <?php echo $readOnly; ?>
                                                 type="number" required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" name="mes" id="mes" <?php echo $readOnly; ?>
+                                        <input class="form-control" name="mes" min="1" max="12" id="mes" <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, del año
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control" name="anio" id="anio" <?php echo $readOnly; ?>
