@@ -30,10 +30,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
+                                                        <th>ID LOTE</th>
+                                                        <!-- <th>CLIENTE</th> -->
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>EST. CONTRATACIÓN</th>

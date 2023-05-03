@@ -62,10 +62,10 @@ $('#comisiones-detenidas-table').ready(function () {
                     </div>
                 `
             },
-            { data:'idLote'},
             {data:'nombreResidencial'},
             {data:'nombreCondominio'},
             {data: 'nombreLote' },
+            { data:'idLote'},
             {
                 "width": "8%",
                 "data": function( d ){
