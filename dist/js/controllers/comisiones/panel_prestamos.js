@@ -374,16 +374,12 @@ $("#tabla_prestamos").ready( function(){
 
                 if(d.evidencia != null ){
                 botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;    
-                
                 }
 
                 if(d.id_prestamo2 == null && d.estatus == 1){
-              
                 botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-             
                 }
-                
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-pen-nib"></i></button>`;
+
              
                return  '<div class="d-flex justify-center">' + botonesModal + '<div>';          
             }

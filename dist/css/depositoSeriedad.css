@@ -621,6 +621,10 @@
   color: #209E63;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-excel:hover {
   background-color: #209E63 !important;
 }
@@ -860,6 +864,12 @@
   background-color: #8E6C8818;
 }
 
+.btn-violetChin {
+  color: #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
+}
+
 .btn-violetChin:hover {
   background-color: #8E6C88;
   color: #ffffff;
@@ -934,19 +944,19 @@
 }
 
 .lbl-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ffd129;
+  background-color: #ddaf07;
   color: #ffffff !important;
 }
 
@@ -1318,6 +1328,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1327,6 +1338,10 @@
 .isRequired {
   color: #EA4335;
   margin: 0 3px;
+}
+
+#mainBoxDS .label-on-left {
+  font-size: 10px;
 }
 
 #mainBoxDS .form-group {
@@ -1563,6 +1578,7 @@
   overflow: hidden;
   transition: linear 0.3s;
   margin: 0;
+  font-weight: 100;
 }
 
 #mainBoxDS #checkDS .boxChecks .checkstyleDS span:nth-child(2) {

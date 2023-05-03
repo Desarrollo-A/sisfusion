@@ -860,6 +860,12 @@
   background-color: #8E6C8818;
 }
 
+.btn-violetChin {
+  color: #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
+}
+
 .btn-violetChin:hover {
   background-color: #8E6C88;
   color: #ffffff;
@@ -934,19 +940,19 @@
 }
 
 .lbl-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ffd129;
+  background-color: #ddaf07;
   color: #ffffff !important;
 }
 
@@ -1318,6 +1324,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {

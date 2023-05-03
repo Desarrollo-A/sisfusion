@@ -101,6 +101,11 @@
                                    name="statusLote"
                                    id="statusLote">
                             
+                            <!-- <div class="col-lg-12">
+                                <div class="form-group is-empty">
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                </div>
+                            </div> -->
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label label-gral">Motivo</label>
@@ -109,28 +114,14 @@
                                             name="motivo"
                                             data-style="btn"
                                             required>
+                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
                                             <?php foreach($controversias as $controversia){ ?>
-                                            
+
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
                                             <?php } ?>
                                     </select>
                                 </div>
                             </div>
-                            
-                            <!-- <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <input id="motivo"
-                                           name="motivo"
-                                           type="text"
-                                           class="form-control input-gral"
-                                           placeholder="Escriba un motivo corto..."
-                                           minlength="3"
-                                           maxlength="50"
-                                           required />
-                                </div>
-                            </div> -->
-
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
                                     <textarea class="form-control"
@@ -532,7 +523,7 @@
     var url2 = "<?=base_url()?>index.php/";
 
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersar_pago_neodata.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/despersar_pago_neodata.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

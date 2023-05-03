@@ -15,8 +15,22 @@
 		$datos = $datos2;
 		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
-		
 		?>
+
+		<div class="modal" tabindex="-1"  id="viewPlansModal" role="dialog">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="previewBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div class="modal fade" id="ModalAlert" role="dialog">
 			<div class="modal-dialog modal-sm">
@@ -235,6 +249,63 @@
 						<div class="card no-shadow m-0">
                             <div class="card-content p-0">
 								<div class="tab-content">
+									<!------->
+									<div class="tab-pane active" id="nuevas-1">
+										<div class="toolbar">
+											<div class="container-fluid">
+												<div class="row aligned-row">
+													<div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
+														<div class="d-flex justify-between">
+															<label class="label-gral">
+																<span class="isRequired">*</span>Estatus autorización
+															</label>                                                </div>
+														<select class="selectpicker select-gral m-0" id="estatusAut" name="estatusAut" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+													</div>
+													<div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
+														<label class="label-gral"><span class="isRequired">*</span>Año</label>
+														<select class="selectpicker select-gral m-0" id="anio" name="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body">
+															<?php
+															setlocale(LC_ALL, 'es_ES');
+															for ($i=2023; $i<=2026; $i++) {
+																$yearName  = $i;
+																echo '<option value="'.$i.'">'.$yearName.'</option>';
+															} 
+															?>
+															</select>
+													</div>
+													<div class="col-12 col-sm-1 col-md-1 col-lg-1 d-flex align-end p-0">
+														<button class="btn-data btn-gray m-0 d-flex align-center justify-center" id="searchByEstatus">
+															<i class="fas fa-search fa-xs"></i>
+														</button>
+													</div>
+												</div>
+											</div>
+                                		</div>
+                                		<br> 
+										<div class="material-datatables" id="box-autorizacionesPVentas">
+											<div class="form-group">
+												<table class="table-striped table-hover"
+													id="autorizacionesPVentas" name="autorizacionesPVentas">
+													<thead>
+														<tr>
+															<th>ID</th>
+															<th>SEDE</th>
+															<th>RESIDENCIAL</th>
+															<th>FECHA INICIO</th>
+															<th>FECHA FIN</th>
+															<th>TIPO LOTE</th>
+															<th>TIPO DE SUPERFICIE</th>
+															<th>ESTATUS AUTORIZACIÓN</th>
+															<th>ESTATUS</th>
+															<th>FECHA CREACIÓN</th>
+															<th>CREADO POR</th>
+															<th>ACCIONES</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+										</div>
+									</div> 
 									<div class="tab-pane" id="nuevas-2">
 										<form id="form-paquetes" class="formulario">
 											<div class="container-fluid">
@@ -248,7 +319,7 @@
 															<div class="row">
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">          
 																	<div class="form-group">
-																		<label class="mb-0" for="sede">Rango fechas (<b class="text-danger">*</b>)</label>
+																		<label class="mb-0" for="">Rango fechas (<b class="text-danger">*</b>)</label>
 																		<div class="d-flex">
 																			<input class="form-control dates" name="fechainicio" id="fechainicio" type="date" required="true" onchange="validateAllInForm()">
 																			<input class="form-control dates" name="fechafin" id="fechafin" type="date" required="true" onchange="validateAllInForm()">
@@ -305,85 +376,21 @@
 																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
 																	<input type="hidden" value="1" name="accion" id="accion">
+																	<input type="hidden" name="idSolicitudAut" id="idSolicitudAut">
+																	<input type="hidden" name="paquetes" id="paquetes">
 																</div>
 															</div>
 														</div>
 													</div>
 													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 mt-2">
 														<p class="m-0 d-none leyendItems">Plan(es) añadido(s) (<span class="items"></span>)</p>
-														<div class="row dataTables_scrollBody" id="showPackage">
-														</div>
+														<div class="row dataTables_scrollBody" id="showPackage"></div>
 													</div>
 												</div>
 											</div>
 										</form>
 									</div>
-									<!------->
-									<div class="tab-pane active" id="nuevas-1">
-									<div class="toolbar">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
-                                                <div class="d-flex justify-between">
-                                                    <label class="label-gral">
-                                                        <span class="isRequired">*</span>Estatus autorización
-                                                    </label>                                                </div>
-                                                <select class="selectpicker select-gral m-0" id="estatusAut" name="estatusAut" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
-                                            </div>
-                                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
-                                                <label class="label-gral"><span class="isRequired">*</span>Año</label>
-                                                <select class="selectpicker select-gral m-0" id="anio" name="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body">
-                                                    <?php
-                                                    setlocale(LC_ALL, 'es_ES');
-                                                    for ($i=2023; $i<=2026; $i++) {
-                                                        $yearName  = $i;
-                                                        echo '<option value="'.$i.'">'.$yearName.'</option>';
-                                                    } 
-                                                    ?>
-                                                    </select>
-                                            </div>
-                                            <div class="col-12 col-sm-1 col-md-1 col-lg-1">
-                                                <div class="container-fluid p-0">
-                                                    <div class="row">
-                                                        <div class="col-md-12 p-r">
-                                                            <div class="form-group d-flex">
-                                                                <button class="btn btn-dafult btn-round btn-fab" id="searchByEstatus">
-                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br> 
-										<div class="material-datatables" id="box-autorizacionesPVentas">
-											<div class="form-group">
-													<table class="table-striped table-hover"
-														id="autorizacionesPVentas" name="autorizacionesPVentas">
-														<thead>
-															<tr>
-																<th>ID</th>
-																<th>SEDE</th>
-																<th>RESIDENCIAL</th>
-																<th>FECHA INICIO</th>
-																<th>FECHA FIN</th>
-																<th>TIPO LOTE</th>
-																<th>TIPO DE SUPERFICIE</th>
-																<th>ESTATUS AUTORIZACIÓN</th>
-																<th>ESTATUS</th>
-																<th>FECHA CREACIÓN</th>
-																<th>CREADO POR</th>
-																<th>ACCIONES</th>
-															</tr>
-														</thead>
-													</table>
-											</div>
-										</div>
-									</div> 
-									<!------->
+									<?php include 'modalsPventas.php' ?>
 								</div>
 							</div>
 						</div>
@@ -403,7 +410,5 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-	<script src="<?=base_url()?>dist/js/controllers/ventas/planes.js"></script>
-	<script src="<?= base_url() ?>dist/js/controllers/ventas/autorizacionesPVentas.js"></script>
-
+	<script src="<?=base_url()?>dist/js/controllers/ventas/autorizacionesPlanes.js"></script>
 </body>

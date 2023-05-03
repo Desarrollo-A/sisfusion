@@ -186,7 +186,7 @@ $redGoogle          : #EA4335;
 $jellyBean          : #df5a5a;
 $orangeYellow       : #ff9800;
 $orangeLight        : #f8aa4b;
-$yellow             : #ffd129;
+$yellow             : #ddaf07;
 $brown              : #6E2C00;
 $greenExcel         : #209E63;
 $green              : #28B463;
@@ -203,8 +203,11 @@ $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
 $sunny              : #F9F871;
+$darkCyan           : #30ada1;
+$brightBlue         : #4a30dd;
+$verySoftBlue       : #AED6F1;
+$veryDarkBlue       : #1B4F72;
 /* END vrbls coloress */
-
 
 /* size devices */
 $smartphone         : "(min-device-width : 320px) and (max-device-width : 480px)";
@@ -508,6 +511,11 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #8E6C8818;
 }
+.btn-violetChin{
+    color:$violetChin;
+    border: none;
+    background-color: #8E6C8818;
+}
 .btn-violetChin:hover {
     background-color: $violetChin;
     color: $white;
@@ -571,12 +579,12 @@ $tv                 : "(min-width: 1280px)";
 .lbl-yellow{
     color: $yellow;
     border: none;
-    background-color: #ffd12918;
+    background-color: #ddaf0718;
 }
 .btn-yellow{
     color: $yellow;
     border: none;
-    background-color: #ffd12918;
+    background-color: #ddaf0718;
 }
 .btn-yellow:hover {
     background-color: $yellow;
@@ -641,6 +649,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: $grayOxford;
     color: $white; 
 }
+
 /* Btns acción dentro de datatable */
 
 /* Etiquetas */

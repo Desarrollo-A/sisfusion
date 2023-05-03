@@ -3671,7 +3671,7 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $_POST['comentario_' . $n]
             );
-            $dataInsert = 1;//$this->Asesor_model->insertAutorizacion($data);
+            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
             $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
             $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
         }

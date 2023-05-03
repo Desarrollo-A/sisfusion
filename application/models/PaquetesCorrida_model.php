@@ -43,15 +43,14 @@ class PaquetesCorrida_model extends CI_Model
         where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
         $query_superdicie
         $query_tipo_lote");
-
         $this->db->query("UPDATE  l 
-        SET l.id_descuento = '$cadena_lotes',usuario='$usuario'
-        FROM lotes l
-        INNER JOIN condominios c ON c.idCondominio=l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial=c.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
-        WHERE r.idResidencial IN($desarrollos) AND l.idStatusLote IN (3, 2)
-        AND cl.fechaApartado BETWEEN '$inicio 00:00:00.000' AND '$fin 23:59:59.999'
+        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
+        from lotes l
+        inner join condominios c on c.idCondominio=l.idCondominio 
+        inner join residenciales r on r.idResidencial=c.idResidencial
+        inner join clientes cl on cl.id_cliente=l.idCliente
+        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
+        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
         $query_superdicie
         $query_tipo_lote"); 
     }
@@ -166,14 +165,12 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         GROUP BY fecha_inicio, fecha_fin)");
         
         foreach ($queryRes->result() as  $valor) {
-  
         array_push($stack, array('condominio' => $valor->condominio, 'paquetes' => $valor->paquetes, 'fecha_inicio' => $valor->fecha_inicio, 'fecha_fin' => $valor->fecha_fin, 'descripcion' => $valor->descripcion));
   
     }
   }
   $getPaquetesByName = $stack;
   
-//   print_r( $getPaquetesByName);
   $datosInsertar_x_condominio = array();
   for ($o=0; $o <count($getPaquetesByName) ; $o++) {
     $json = array();
@@ -273,7 +270,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
         (CASE WHEN aut.estatus=1 THEN 'lbl-sky' WHEN aut.estatus=2 THEN 'lbl-yellow' WHEN aut.estatus=3 THEN 'lbl-green' WHEN aut.estatus=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
         (CASE WHEN aut.estatus_autorizacion = 1 THEN 'Autorizado' ELSE 'No autorizado' END) estatusAutorizacion,
-        (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-sky' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
+        (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-warning' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
         (CASE WHEN aut.superficie=1 THEN 'Menor a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
@@ -297,10 +294,19 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         $fecha_modificacion = $datos['fecha_modificacion'];
         $modificado_por = $datos['modificado_por'];
 
-        $this->db->query("INSERT INTO autorizaciones_pventas 
-        VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
-        $id_autorizacion = $this->db->insert_id();
-        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$creado_por ,'$fecha_creacion',1,'AGREGÓ UNA NUEVA AUTORIZACIÓN')");
+        $comentario = $datos['accion'] == 1 ? 'Agregó una nueva autorización' : 'Actualizó la autorización de planes';
+        if($datos['accion'] == 1){
+            $this->db->query("INSERT INTO autorizaciones_pventas 
+            VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
+            $id_autorizacion = $this->db->insert_id();
+        }else{
+            $id_autorizacion = $datos['idAutorizacion'];
+            $this->db->query("UPDATE autorizaciones_pventas SET 
+            idResidencial='$idResidencial',fecha_inicio='$fecha_inicio',fecha_fin='$fecha_fin',id_sede=$id_sede,tipo_lote=$tipo_lote,superficie=$superficie,paquetes='$paquetes',fecha_modificacion='$fecha_modificacion',modificado_por=$modificado_por WHERE id_autorizacion=$id_autorizacion");            
+        }
+
+
+        $this->db->query("INSERT INTO historial_autorizacionesPMSI values($id_autorizacion,1,$creado_por ,'$fecha_creacion',1,'$comentario')");
     
     }
     public function avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$sesionado){
@@ -337,7 +343,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         FROM historial_autorizacionesPMSI ha
         INNER JOIN usuarios u ON u.id_usuario=ha.id_usuario
         WHERE idAutorizacion=$id_autorizacion AND tipo=1 
-        ORDER BY fecha_movimiento desc")->result_array();
+        ORDER BY fecha_movimiento DESC")->result_array();
     }
     public function getCatalogo($id_catalogo){ 
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=$id_catalogo")->result_array();

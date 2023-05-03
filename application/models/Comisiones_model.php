@@ -2762,9 +2762,7 @@ public function getSettledCommissions($val = '') {
      
     $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
     CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.tipo_venta, 
-    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,  
-    convert(nvarchar, pc.fecha_modificacion, 6) date_final,
-    convert(nvarchar, pc.fecha_neodata, 6) date_neodata,         
+    vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente,        l.tipo_venta,          
     CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
     CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
     CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
@@ -8181,7 +8179,7 @@ return $query->result();
     }
 
 
-    public function getStoppedCommissions()
+    public function comisiones_detenidas()
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
@@ -8194,8 +8192,7 @@ return $query->result();
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
-        WHERE l.idStatusContratacion = 15 
-		AND	hl.motivo = 2 
+        WHERE  l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
         AND l.tipo_venta IS NOT NULL 
@@ -9027,7 +9024,19 @@ function descuentos_universidad($clave , $data){
         return $query->result();
     }
 
-   
+ 
+
+    public function updatePrestamosEdit($clave, $data){
+            try {
+                $this->db->where('id_prestamo', $clave);
+                $this->db->update('prestamos_aut', $data);
+                $afftectedRows = $this->db->affected_rows();
+                return $afftectedRows > 0 ? TRUE : FALSE ;
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }     
+    }
     public function getMotivosControversia()
     {
         $cmd = "SELECT * FROM opcs_x_cats wh
