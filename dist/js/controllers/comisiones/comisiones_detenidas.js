@@ -36,13 +36,8 @@ $('#comisiones-detenidas-table').ready(function () {
         }],
         pagingType: 'full_numbers',
         fixedHeader: true,
-        scrollX: true,
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
         language: {
-            url: general_base_url+'/static/spanishLoader_v2.json',
+            url: baseUrl+'/static/spanishLoader_v2.json',
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -62,18 +57,38 @@ $('#comisiones-detenidas-table').ready(function () {
                     </div>
                 `
             },
-            {data:'nombreResidencial'},
-            {data:'nombreCondominio'},
-            {data: 'nombreLote' },
-            { data:'idLote'},
+            {
+                'width': '8%',
+                'data': function( d ) {
+                    return '<p class="m-0"><b>'+d.idLote+'</b></p>';
+                }
+            },
+            {
+                'width': '9%',
+                'data': function( d ){
+                    return '<p class="m-0">'+d.nombreResidencial+'</p>';
+                }
+            },
+            {
+                "width": "10%",
+                "data": function( d ){
+                    return '<p class="m-0">'+(d.nombreCondominio).toUpperCase()+'</p>';
+                }
+            },
+            {
+                'width': '15%',
+                'data': function( d ){
+                    return '<p class="m-0">'+d.nombreLote+'</p>';
+                }
+            },
             {
                 data: function (d) {
                     if (d.tipo_venta == 1) {
-                        return '<span class="label lbl-warning" style="color:#78281F;background:#F5B7B1;" >Venta Particular</span>';
+                        return '<span class="label label-danger">Venta Particular</span>';
                     }else if (d.tipo_venta == 2) {
-                        return '<span class="label lbl-green" style="color:#186A3B;background:#ABEBC6;">Venta normal</span>';
+                        return '<span class="label label-success">Venta normal</span>';
                     } else if (d.tipo_venta == 7) {
-                        return '<span class="label lbl-orangeYellow" style="color:#626567;background:#E5E7E9;">Venta especial</span>';
+                        return '<span class="label label-warning">Venta especial</span>';
                     } else {
                         return '';
                     }
@@ -82,9 +97,9 @@ $('#comisiones-detenidas-table').ready(function () {
             {
                 data: function( d ){
                     if (d.compartida === null) {
-                        return '<span class="label lbl-orangeYellow"  style="color:#7D6608;background:#F9E79F;">Individual</span>';
+                        return '<span class="label label-warning" style="background:#E5D141;">Individual</span>';
                     } else {
-                        return '<span class="label lbl-warning" style="color:#7E5109;background:#FAD7A0;" >Compartida</span>';
+                        return '<span class="label label-warning">Compartida</span>';
                     }
                 }
             },
@@ -133,15 +148,13 @@ $('#comisiones-detenidas-table').ready(function () {
             {
                 data: function (d) {
                         let motivo ;
-                        let color ;
                         if(d.motivo == 1 || d.motivo == 2 || d.motivo == 3){
-                            if(d.motivo == 1){  color  = 'lbl-azure';}else if(d.motivo == 2){  color  = 'lbl-brown';}
                             motivo = d.motivoOpc;
                         }else  {
-                            color = 'lbl-azure';
                             motivo = d.motivo;
                         }
-                    return '<span class="label '+color+'">'+motivo+'</span>';
+
+                    return '<p class="m-0"><b>'+motivo+'</b></p>';
                 }
             },
             {
@@ -169,7 +182,7 @@ $('#comisiones-detenidas-table').ready(function () {
             searchable: false
         }],
         ajax: {
-            'url': general_base_url+'Comisiones/getStoppedCommissions',
+            'url': urlIndex+'Comisiones/getStoppedCommissions',
             'dataSrc': '',
             'type': 'GET',
             cache: false,

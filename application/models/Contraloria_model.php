@@ -233,7 +233,7 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
-		else if($id_usuario == 2815) // Brenda Sánchez solicita poder ver todas las donaciones
+		else if($id_usuario == 2815)
 			$filtroSede = "AND (l.ubicacion IN ('$id_sede') OR l.tipo_venta = 4)";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
@@ -1092,58 +1092,4 @@ class Contraloria_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
         return $query->result_array();
     }
-
-
-
-    //modelos autorizacion MSI
-    function todasAutorizacionesMSI(){
-        $estatus_permitido = '';
-        $rol_actual = $this->session->userdata('id_rol');
-
-        switch($rol_actual){
-            case 5:
-                $estatus_permitido='1, 3, 4';
-                break;
-            case 17:
-                $estatus_permitido='2,3';
-                break;
-            case 70:
-                $estatus_permitido='2,3';
-
-        }
-        $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
-        CAST(au.comentario AS VARCHAR(MAX)) comentario, op.nombre as estatus_autorizacion,  
-        au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por,--, op.color
-        au.estatus_autorizacion as estatus_id
-        FROM autorizaciones_msi au 
-        INNER JOIN opcs_x_cats op ON op.id_opcion = au.estatus_autorizacion 
-        WHERE op.id_catalogo=90 AND au.estatus_autorizacion IN (".$estatus_permitido.")
-        GROUP BY au.idResidencial, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0'), CAST(au.comentario AS VARCHAR(MAX)), au.estatus_autorizacion, 
-        au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0')");
-
-
-        return $query->result_array();
-    }
-    function getAutVis($id_autorizacion){
-        $query = $this->db->query("SELECT * FROM autorizaciones_msi au 
-                                INNER JOIN condominios c ON au.idCondominio=c.idCondominio WHERE id_autorizacion=".$id_autorizacion);
-        return $query->result_array();
-    }
-    function getHistorialAutorizacionMSI($id_autorizacion){
-        $query = $this->db->query("SELECT hamsi.*, CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as creadoPor, 
-        hamsi.estatus_autorizacion, cond.nombre
-        FROM historial_autorizacionesPMSI hamsi
-        INNER JOIN autorizaciones_msi au ON au.id_autorizacion = hamsi.idAutorizacion
-        INNER JOIN usuarios u ON u.id_usuario = hamsi.id_usuario
-        INNER JOIN condominios cond ON cond.idCondominio = au.idCondominio
-        WHERE idAutorizacion=".$id_autorizacion);
-        return $query->result_array();
-    }
-    function getLotesByResCond($idCondominio){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idCondominio=$idCondominio");
-        return $query->result_array();
-    }
-
 }

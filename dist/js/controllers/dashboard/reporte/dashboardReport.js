@@ -1325,36 +1325,33 @@ function fillTableReport(dataObject) {
                                         return 'Lote'
                                         break;
                                     case 3:
-                                        return 'Superficie'
-                                        break;    
-                                    case 4:
                                         return 'Precio de lista';
                                         break;
-                                    case 5:
+                                    case 4:
                                         return 'Precio con desc';
                                         break;
-                                    case 6:
+                                    case 5:
                                         return 'Casa';
                                         break;
-                                    case 7:
+                                    case 6:
                                         return 'Cliente';
                                         break;
-                                    case 8:
+                                    case 7:
                                         return 'Asesor';
                                         break;
-                                    case 9:
+                                    case 8:
                                         return 'Coordinador';
                                         break;
-                                    case 10:
+                                    case 9:
                                         return 'Gerente';
                                         break;
-                                    case 11:
+                                    case 10:
                                         return 'Subdirector';
                                         break;
-                                    case 12:
+                                    case 11:
                                         return 'Director regional';
                                         break;
-                                    case 13:
+                                    case 12:
                                         return 'Fecha de apartado';
                                         break;
                                     case 13:
@@ -1415,11 +1412,6 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.nombreLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.sup;
                     }
                 },
                 {
@@ -1512,7 +1504,7 @@ function fillTableReport(dataObject) {
                             return 'Apartado por reubicación';
                         }
                         else{
-                            return 'Estándar';
+                            return 'Estandar';
                         }
                     }
                 }
@@ -1675,11 +1667,6 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         return d.nombreLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.sup;
                     }
                 },
                 {

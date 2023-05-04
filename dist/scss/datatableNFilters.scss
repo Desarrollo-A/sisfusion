@@ -242,7 +242,7 @@
             }
         }
     }
-
+        
     .bootstrap-select {
         width: 100% !important;
     }
@@ -258,16 +258,10 @@
         -moz-box-shadow: none;
         -webkit-box-shadow: none;
     }
-
 }
 table.dataTable > thead > tr > th{
     padding: 0!important;
     text-align: center;
-}
-.modal-xl{
-    overflow-y: auto;
-    width: 95%;
-    height: fit-content;
 }
 table{
     border: none;
@@ -311,21 +305,6 @@ table{
                     color: $white;
                 }
             }
-            span{
-                margin: 4px;
-                border: 1px solid transparent;
-                border-radius: 5px;
-                color: $white;
-                text-align: center;
-                font-weight: 300;
-                font-size: 10px!important;
-                background-color: $blueIndigoDeep;
-                text-transform: uppercase;
-                &::placeholder{
-                    color: $white;
-                }
-            }
-
         }
     }
     .toggle-subTable{
