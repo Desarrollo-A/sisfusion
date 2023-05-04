@@ -38,11 +38,9 @@ class Comisiones extends CI_Controller
   public function dispersion() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
-        
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-        $this->load->view('template/header');
-        $this->load->view("comisiones/dispersion-view", $datos);
+    $this->load->view('template/header');
+    $this->load->view("comisiones/dispersion-view", $datos);
   }
 
 
@@ -77,9 +75,8 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
-    $this->load->view("ventas/active_commissions", $datos);
+    $this->load->view("comisiones/activas-view", $datos);
   }
 
   public function getDataActivasPago() {
@@ -6377,8 +6374,9 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
  
-    
-    public function viewDetenidas() {
+    // anterio viewDetenidas
+
+    public function detenidas() {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
       $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();

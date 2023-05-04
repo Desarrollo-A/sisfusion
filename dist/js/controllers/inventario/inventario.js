@@ -17,7 +17,7 @@ $(document).on('change', "#sedes", function () {
 });
 
 $('#tabla_inventario_contraloria thead tr:eq(0) th').each( function (i) {
-    if(i!=21){
+    if(i!=17){
         var title = $(this).text();
         $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
@@ -125,7 +125,7 @@ function fillTableInventario(sede) {
 		bInfo: true,
 		searching: true,
 		paging: true,
-		ordering: false,
+		ordering: true,
 		fixedColumns: true,
 		columnDefs: [{
                 defaultContent: "",
@@ -335,12 +335,10 @@ function fillTableInventario(sede) {
 			"data": function(d){
 				
 			    libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label label-warning";">Lib. Contraloría</span> <center><p><p>' : '';
-				valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#'+d.background_sl+'; color:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
-				'<center><span class="label label-danger" style="background:#'+d.background_sl+'; color:#'+d.color+';">'+d.descripcion_estatus+'</span> <p><p> <span class="label label-warning";">'+d.tipo_venta+'</span> <center>';
-				console.log(d.background_sl);
-				console.log(d.color);
-				return valTV + libContraloria;
+				valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
+				'<center><span class="label label-danger" style="background:#'+d.color+';">'+d.descripcion_estatus+'</span> <p><p> <span class="label label-warning";">'+d.tipo_venta+'</span> <center>';
 
+				return valTV + libContraloria;
 			}
 		},
 		{

@@ -11,38 +11,73 @@
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
         <!-- Modals -->
-        <div class="modal fade" id="addDeleteFileModal" data-keyboard="false" data-backdrop="static">
+        <!-- modal  INSERT FILE-->
+        <div class="modal fade" id="addFile">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <div class="modal-body text-center">
-                        <h5 id="mainLabelText"></h5>
-                        <p id="secondaryLabelDetail"></p>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">
-                            <div class="hide" id="selectFileSection">
-                                <div class="file-gph">
-                                    <input class="d-none" type="file" id="fileElm">
-                                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                    <label class="upload-btn m-0" for="fileElm">
-                                        <span>Seleccionar</span>
-                                        <i class="fas fa-folder-open"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="text" class="hide" id="idLoteValue">
-                        <input type="text" class="hide" id="idDocumento">
-                        <input type="text" class="hide" id="tipoDocumento">
-                        <input type="text" class="hide" id="nombreDocumento">
-                        <input type="text" class="hide" id="accion">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <center>
+                            <h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3>
+                        </center>
                     </div>
-                    <div class="modal-footer mt-2">
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label class="input-group-btn">
+                                <span class="btn btn-primary btn-file">
+                                    Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente"
+                                        style="display: none;">
+                                </span>
+                            </label>
+                            <input type="text" class="form-control" id="txtexp" readonly>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="sendFile" class="btn btn-primary"><span
+                                class="material-icons">send</span> Guardar documento </button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- modal INSERT-->
+
+        <!--modal que pregunta cuando se esta borrando un archivo-->
+        <div class="modal fade" id="cuestionDelete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <center>
+                            <h3 class="modal-title">¡Eliminar archivo!</h3>
+                        </center>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row centered center-align">
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                    <h1 class="modal-title"> <i class="fa fa-exclamation-triangle fa-2x"
+                                            aria-hidden="true"></i></h1>
+                                </div>
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
+                                    <h4 class="modal-title">¿Está seguro de querer eliminar definivamente este archivo
+                                        (<b><span class="tipoA"></span></b>)? </h4>
+                                    <h5 class="modal-title"><i> Esta acción no se puede deshacer.</i> </h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <br><br>
+                        <button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--termina el modal de cuestion-->
+
         <!-- autorizaciones-->
         <div class="modal fade" id="verAutorizacionesAsesor">
             <div class="modal-dialog">
@@ -69,7 +104,9 @@
                 </div>
             </div>
         </div>
-        <!-- Modals -->
+        <!-- autorizaciones end-->
+        <!-- END Modals -->
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -118,7 +155,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--        Here you can write extra buttons/accions for the toolbar              -->
+                                    <!--        Here you can write extra buttons/actions for the toolbar              -->
                                 </div>
                                 <div class="table-responsive">
                                     <table id="tableDoct" class="table-striped table-hover">
@@ -166,6 +203,5 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
 </body>

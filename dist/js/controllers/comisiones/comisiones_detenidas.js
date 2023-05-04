@@ -3,13 +3,13 @@ $('#comisiones-detenidas-table').ready(function () {
     let titulos = [];
 
     $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0 && i !== 9) {
+        if (i !== 0 && i !== 12) {
             const title = $(this).text();
             titulos.push(title);
-
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (comisionesDetenidasTabla.column(i).search() !== this.value) {
+
                     comisionesDetenidasTabla.column(i).search(this.value).draw();
                 }
             });
@@ -18,7 +18,7 @@ $('#comisiones-detenidas-table').ready(function () {
 
     let comisionesDetenidasTabla = $('#comisiones-detenidas-table').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: 'auto',
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: "<i class='fa fa-file-excel-o' aria-hidden='true'></i>",
@@ -26,7 +26,7 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx - 1] + ' ';
@@ -52,7 +52,7 @@ $('#comisiones-detenidas-table').ready(function () {
         ordering: false,
         columns: [
             {
-                'width': '3%',
+               
                 'className': 'details-control',
                 'orderable': false,
                 'data' : null,
@@ -67,8 +67,7 @@ $('#comisiones-detenidas-table').ready(function () {
             {data: 'nombreLote' },
             { data:'idLote'},
             {
-                "width": "8%",
-                "data": function( d ){
+                data: function (d) {
                     if (d.tipo_venta == 1) {
                         return '<span class="label lbl-warning" style="color:#78281F;background:#F5B7B1;" >Venta Particular</span>';
                     }else if (d.tipo_venta == 2) {
@@ -81,7 +80,6 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
             },
             {
-                'width': '8%',
                 data: function( d ){
                     if (d.compartida === null) {
                         return '<span class="label lbl-orangeYellow"  style="color:#7D6608;background:#F9E79F;">Individual</span>';
@@ -90,18 +88,15 @@ $('#comisiones-detenidas-table').ready(function () {
                     }
                 }
             },
-            {
-                'width': '8%',
-                data: function( d ){
-                    var labelStatus;
-                    if (d.idStatusContratacion === 15) {
-                        labelStatus = '<span class="label lbl-violetDeep" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
-                    } else {
-                        labelStatus = '<p class="m-0 "><b>'+d.idStatusContratacion+'</b></p>';
-                    }
-                    return labelStatus;
+            { data: function (d) {
+                var labelStatus;
+                if(d.idStatusContratacion == 15) {
+                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
+                }else {
+                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
-            },
+                return labelStatus;
+            }},
             { data: function (d) {
                 var labelEstatus;
                 if(d.totalNeto2 == null) {
@@ -136,9 +131,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 return fechaNeodata+rescisionLote;
             }},
             {
-                'width': '15%',
-                'orderable': false,
-                'data': function (d) {
+                data: function (d) {
                         let motivo ;
                         let color ;
                         if(d.motivo == 1 || d.motivo == 2 || d.motivo == 3){
@@ -152,9 +145,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
             },
             {
-                'width': '8%',
-                'orderable': false,
-                'data': function (d) {
+                data: function (d) {
                     if(id_rol_general != 63 && id_rol_general != 4){
 
                         return `
@@ -174,9 +165,8 @@ $('#comisiones-detenidas-table').ready(function () {
             }
         ],
         columnDefs: [{
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
+            visible: false,
+            searchable: false
         }],
         ajax: {
             'url': general_base_url+'Comisiones/getStoppedCommissions',

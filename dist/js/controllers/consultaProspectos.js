@@ -1,4 +1,3 @@
-typeTransaction = 1;
 $(document).ready(function() {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
@@ -10,13 +9,7 @@ $(document).ready(function() {
     $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         if (i != 9){
-            $(this).html(`<input    type="text"
-                                    class="textoshead"
-                                    data-toggle="tooltip" 
-                                    data-placement="top"
-                                    title="${title}" 
-                                    placeholder="${title}"/>`
-                        );
+            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
                     $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
@@ -74,15 +67,11 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    if(d.nombre_lp == '' || d.nombre_lp === null ){
-                        return 'SIN ESPECIFICAR';
-                    }else{
-                        if (d.nombre_lp == 'MKTD Dragon')
-                            id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
-                        else
-                            id_dragon = '';
-                        return d.nombre_lp + id_dragon;
-                    }
+                    if (d.nombre_lp == 'MKTD Dragon')
+                        id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
+                    else
+                        id_dragon = '';
+                    return d.nombre_lp + id_dragon;
                 }
             },
             {
@@ -93,8 +82,8 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (typeTransaction == 0) { // Marketing
-                        if (id_rol_general == "18" || id_rol_general == "19" || id_rol_general == "20") { // Array de roles permitidos para reasignar
-                            id_rol_general == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto +'" rel="tooltip" data-placement="left" title="Remover MKTD de este prospecto"><i class="fas fa-trash"></i></button>' : change_buttons = '';
+                        if (userType == "18" || userType == "19" || userType == "20") { // Array de roles permitidos para reasignar
+                            userType == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto +'" rel="tooltip" data-placement="left" title="Remover MKTD de este prospecto"><i class="fas fa-trash"></i></button>' : change_buttons = '';
                             if (d.estatus == 1) { // IS ACTIVE
                                 var actions = '';
                                 var group_buttons = '';
@@ -102,35 +91,10 @@ $(document).ready(function() {
                                     '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '"  rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                     '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
-                                actions += '<button class="desplegable btn-data btn-blueMaderas" '+
-                                                    'id="btn_' + d.id_prospecto + '" '+
-                                                    'data-toggle="tooltip"'+
-                                                    'data-placement="top" '+
-                                                    'title="Desplegar opciones'+
-                                                    'onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); ">'+
-                                                '<i class="fas fa-chevron-up"></i>'+
-                                            '</button>';
-                                actions += '<div class= "hide boxSBtns" '+
-                                                        'id="cnt_' + d.id_prospecto + '">' 
-                                                + group_buttons + 
-                                                '<br>'+
-                                                '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
-                                                                '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+
-                                                         'class="btn-data btn-blueMaderas">'+
-                                                         'data-toggle="tooltip"'+
-                                                         'data-placement="top" '+
-                                                         'title="Cerrar opciones"'+
-                                                    '<i class="fas fa-chevron-down"></i>'+
-                                                '</button>'+
-                                            '</div>';
-                                actions += '<button class="btn-data btn-blueMaderas update-status" '+
-                                                    'data-id-prospecto="' + d.id_prospecto + '" '+
-                                                    'data-telefono="'+d.telefono+'" '+
-                                                    'data-telefono2="'+d.telefono2+'" '+
-                                                    'data-toggle="tooltip"'+ 
-                                                    'data-placement="top"'+
-                                                    'title="Actualizar estatus">'+
-                                                '<i class="fas fa-redo"></i>' + change_buttons;
+
+                                actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
+                                actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
+                                actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>' + change_buttons;
                                 return '<center>'+actions+'<center>';
                             } else { // IS NOT ACTIVE
                                 var actions = '';
@@ -142,54 +106,27 @@ $(document).ready(function() {
                             }
                         }
                     } else if (typeTransaction == 1) { // Ventas
-                        if (id_rol_general != "19") { // Subdirecctor MKTD puede ver listado todos los prospectos pero no tiene ninguna acción sobre ellos
-                            if (id_rol_general == "3" || id_rol_general == "6") { // Array de roles permitidos para reasignar
+                        if (userType != "19") { // Subdirecctor MKTD puede ver listado todos los prospectos pero no tiene ninguna acción sobre ellos
+                            if (userType == "3" || userType == "6") { // Array de roles permitidos para reasignar
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                             '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
-                                        actions += '<button class=  "desplegable btn-data btn-blueMaderas" '+
-                                                            'id="btn_' + d.id_prospecto + '" '+
-                                                            'onclick="javascript: $(this).addClass(\'hide\');'+
-                                                                    '$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); ">'+
-                                                            'data-toggle="tooltip"'+
-                                                            'data-placement="top" '+
-                                                            'title="Desplegar opciones'+
-                                                        '<i class="fas fa-chevron-up"></i>'+
-                                                    '</button>';
-                                        actions += '<div    class="hide boxSBtns" '+
-                                                            'id="cnt_' + d.id_prospecto + '">' 
-                                                        + group_buttons + 
-                                                        '<br>'+
-                                                        '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
-                                                                         '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');"'+
-                                                                 'class="btn-data btn-blueMaderas">'+
-                                                                 'data-toggle="tooltip"'+
-                                                                 'data-placement="top" '+
-                                                                 'title="Cerrar opciones"'+
-                                                            '<i class="fas fa-chevron-down"></i>'+
-                                                        '</button>'+
-                                                    '</div>';
-                                        actions += '<button class="btn-data btn-blueMaderas update-status" '+
-                                                            'data-id-prospecto="' + d.id_prospecto + '" '+
-                                                            'data-telefono="'+d.telefono+'" '+
-                                                            'data-telefono2="'+d.telefono2+'" '+
-                                                            'data-toggle="tooltip"'+
-                                                            'data-placement="top" '+
-                                                            'title="Actualizar estatus">'+
-                                                        '<i class="fas fa-redo"></i>';
+                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
+                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
+                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
@@ -197,108 +134,40 @@ $(document).ready(function() {
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
                                             '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
 
-                                        actions += '<button class="desplegable btn-data btn-blueMaderas" '+
-                                                            'id="btn_' + d.id_prospecto + '" '+
-                                                            'data-toggle="tooltip"'+
-                                                            'data-placement="top" '+
-                                                            'title="Desplegar opciones"'+
-                                                            'onclick="javascript: $(this).addClass(\'hide\');'+
-                                                                    '$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+
-                                                        '<i class="fas fa-chevron-up"></i>'+
-                                                    '</button>';
-                                        actions += '<div    class="hide boxSBtns" '+
-                                                            'id="cnt_' + d.id_prospecto + '">'
-                                                        + group_buttons + 
-                                                        '<br>'+
-                                                        '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
-                                                                         '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); "'+
-                                                                 'class="btn-data btn-blueMaderas"'+
-                                                                 'data-toggle="tooltip"'+
-                                                                 'data-placement="right" '+
-                                                                 'title="Cerrar opciones">"'+
-                                                            '<i class="fas fa-chevron-down"></i>'+
-                                                        '</button>'+
-                                                    '</div>';
+                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
+                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
                                     }
+
                                     return '<center>'+actions+'</center>';
                                 }
                             } else {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>';
-                                        actions += '<button class="desplegable btn-data btn-blueMaderas" '+
-                                                            'id="btn_' + d.id_prospecto + '" '+
-                                                            'data-toggle="tooltip"'+
-                                                            'data-placement="top" '+
-                                                            'title="Desplegar opciones"'+
-                                                            'onclick="javascript: $(this).addClass(\'hide\');'+
-                                                                     '$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+
-                                                        '<i class="fas fa-chevron-up"></i>'+
-                                                    '</button>';
-                                        actions += '<div    class="hide boxSBtns" '+
-                                                            'id="cnt_' + d.id_prospecto + '">' 
-                                                        + group_buttons + 
-                                                        '<br>'+
-                                                        '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
-                                                                         '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');"'+
-                                                                 'class="btn-data btn-blueMaderas"'+
-                                                                 'data-toggle="tooltip"'+
-                                                                 'data-placement="top" '+
-                                                                 'title="Cerrar opciones"'+'>'+
-                                                            '<i class="fas fa-chevron-down"></i>'+
-                                                        '</button>'+
-                                                    '</div>';
-                                        actions += '<button class="btn-data btn-blueMaderas update-status"'+
-                                                            'data-id-prospecto="' + d.id_prospecto + '" '+
-                                                            'data-telefono="'+d.telefono+'" '+
-                                                            'data-telefono2="'+d.telefono2+'" '+
-                                                            'data-toggle="tooltip"'+
-                                                            'data-placement="top" '+
-                                                            'title="Actualizar estatus">'+
-                                                        '<i class="fas fa-redo"></i>';
+                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
+                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
+                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" rel="tooltip" data-placement="left" title="Ver información">remove_red_eye</i></button>';
-                                        actions += '<button class="desplegable btn-blueMaderas" '+
-                                                            'id="btn_' + d.id_prospecto + '" '+
-                                                            'onclick="javascript: $(this).addClass(\'hide\');'+
-                                                                    '$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+
-                                                        '<i class="fas fa-chevron-up"></i>'+
-                                                    '</button>';
-                                        actions += '<div    class="hide boxSBtns" '+
-                                                            'id="cnt_' + d.id_prospecto + '">' 
-                                                        + group_buttons + ''+
-                                                        '<br>'+
-                                                        '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
-                                                                        '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+
-                                                                 'class="btn-data btn-blueMaderas">'+
-                                                            '<i class="fas fa-chevron-down"></i>'+
-                                                        '</button>'+
-                                                    '</div>';
+                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
+                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
                                         if (d.vigencia >= 0) {
-                                            actions += '<button class="btn-data btn-blueMaderas update-validity" '+
-                                                                'data-id-prospecto="' + d.id_prospecto + '" '+
-                                                                'rel="tooltip" '+
-                                                                'data-placement="left"'+
-                                                                'data-toggle="tooltip"'+
-                                                                'data-placement="top" '+
-                                                                'title="Renovar vigencia">'+
-                                                            '<i class="fas fa-history"></i>'+
-                                                        '</button>';
+                                            actions += '<button class="btn-data btn-deepGray update-validity" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Renovar vigencia"><i class="fas fa-history"></i></button>';
                                         }
                                     }
                                     return '<center>'+actions+'</center>';
@@ -339,9 +208,6 @@ $(document).ready(function() {
                     "endDate": endDate,
                     "where": where
                 }
-            },
-            initComplete: function () {
-                $('[data-toggle="tooltip"]').tooltip();
             }
         });
 
@@ -1084,27 +950,6 @@ $(document).on('click', '.edit-information', function(e) {
     owner = $(this).attr("data-owner");
     $.getJSON("getProspectInformation/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
-            console.log(v);
-            /*Llenado de campos en automatico */
-                //Nacionalidad
-                $("#nationality option[value="+v.nacionalidad+"]").attr("selected", true);
-                $("#nationality").selectpicker("refresh");
-                //Personalidad Juridica
-                $("#legal_personality option[value="+v.personalidad_juridica+"]").attr("selected", true);
-                $("#legal_personality").selectpicker("refresh");
-                //Estado civil
-                $("#civil_status option[value="+v.estado_civil+"]").attr("selected", true);
-                $("#civil_status").selectpicker("refresh");
-                //Regimen Matrimonial
-                $("#matrimonial_regime option[value="+v.regimen_matrimonial+"]").attr("selected", true);
-                $("#matrimonial_regime").selectpicker("refresh");
-                //Lugar de Prospeccion
-                $("#prospecting_place option[value="+v.lugar_prospeccion+"]").attr("selected", true);
-                $("#prospecting_place").selectpicker("refresh");
-                //Plaza de venta
-                $("#sales_plaza option[value="+v.plaza_venta+"]").attr("selected", true);
-                $("#sales_plaza").selectpicker("refresh");
-                
             $("#myEditModal").modal();
             fillFields(v, 0);
             validateEmptyFields(v, 1);
@@ -1208,13 +1053,13 @@ $(document).on('click', '.see-information', function(e) {
 
 $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
-    if (id_rol_general == 3 || id_rol_general == 6) { // Gerente & asistente de ventas
+    if (userType == 3 || userType == 6) { // Gerente & asistente de ventas
         $("#myReAsignModalVentas").modal();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
-    } else if (id_rol_general == 19) { // Subdirector MKTD
+    } else if (userType == 19) { // Subdirector MKTD
         $("#myReAsignModalSubMktd").modal();
         $("#id_prospecto_re_asign_sm").val(id_prospecto);
-    } else if (id_rol_general == 20) { // Gerente MKTD
+    } else if (userType == 20) { // Gerente MKTD
         $("#myReAsignModalGerMktd").modal();
         $("#id_prospecto_re_asign_gm").val(id_prospecto);
     }
