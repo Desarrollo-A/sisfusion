@@ -142,7 +142,7 @@
 
     }
     
-	public function getdp_DS($lotes){
+	public function getdp_DS($lotes) {
         return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
 		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellapellidoPaternoido_paterno, ' ', cl.apellidoMaterno)) nombreCliente,
 		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
@@ -4810,7 +4810,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
@@ -4847,7 +4847,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		WHERE $where $extraWhere")->result_array();
 	}
 	
-	public function getdp($lotes, $cliente = ''){
+	public function getdp($lotes, $cliente = '') {
 	    $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
@@ -4893,7 +4893,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
@@ -4937,7 +4937,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol == 54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
@@ -4979,7 +4979,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol == 54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }

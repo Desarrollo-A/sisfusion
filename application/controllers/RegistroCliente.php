@@ -8141,7 +8141,7 @@ class RegistroCliente extends CI_Controller {
 	}
 
 
-  public function expedientesWS($lotes,$cliente = '') {
+  public function expedientesWS($lotes, $cliente = '') {
     $query = $this->registrolote_modelo->getdp($lotes,$cliente);
     if(count($query) <= 0)
       $query = $this->registrolote_modelo->getdp_DS($lotes);
