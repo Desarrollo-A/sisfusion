@@ -171,7 +171,6 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
   }
   $getPaquetesByName = $stack;
   
-//   print_r( $getPaquetesByName);
   $datosInsertar_x_condominio = array();
   for ($o=0; $o <count($getPaquetesByName) ; $o++) {
     $json = array();
@@ -271,7 +270,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
         (CASE WHEN aut.estatus=1 THEN 'lbl-sky' WHEN aut.estatus=2 THEN 'lbl-yellow' WHEN aut.estatus=3 THEN 'lbl-green' WHEN aut.estatus=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
         (CASE WHEN aut.estatus_autorizacion = 1 THEN 'Autorizado' ELSE 'No autorizado' END) estatusAutorizacion,
-        (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-sky' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
+        (CASE WHEN aut.estatus_autorizacion=0 THEN 'lbl-warning' WHEN aut.estatus_autorizacion=1 THEN 'lbl-green' ELSE 'lbl-gray' END) colorAutorizacion,
         (CASE WHEN aut.superficie=1 THEN 'Menor a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
@@ -302,7 +301,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         $fecha_modificacion = $datos['fecha_modificacion'];
         $modificado_por = $datos['modificado_por'];
 
-        $comentario = $datos['accion'] == 1 ? 'AGREGÓ UNA NUEVA AUTORIZACIÓN DE PLANES' : 'ACTUALIZÓ LA AUTORIZACIÓN DE PLANES';
+        $comentario = $datos['accion'] == 1 ? 'Agregó una nueva autorización' : 'Actualizó la autorización de planes';
         if($datos['accion'] == 1){
             $this->db->query("INSERT INTO autorizaciones_pventas 
             VALUES('$idResidencial','$fecha_inicio','$fecha_fin',$id_sede,$tipo_lote,$superficie,'$paquetes',$estatus_autorizacion,$estatus,'$fecha_creacion',$creado_por,'$fecha_modificacion',$modificado_por)");
@@ -351,7 +350,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         FROM historial_autorizacionesPMSI ha
         INNER JOIN usuarios u ON u.id_usuario=ha.id_usuario
         WHERE idAutorizacion=$id_autorizacion AND tipo=1 
-        ORDER BY fecha_movimiento desc")->result_array();
+        ORDER BY fecha_movimiento DESC")->result_array();
     }
     public function getCatalogo($id_catalogo){ 
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=$id_catalogo")->result_array();

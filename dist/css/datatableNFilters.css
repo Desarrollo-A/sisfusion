@@ -108,6 +108,10 @@
   padding: 40px;
 }
 
+.p-5 {
+  padding: 50px;
+}
+
 .pr-0 {
   padding-right: 0 !important;
 }
@@ -162,6 +166,10 @@
 
 .pt-4 {
   padding-top: 40px !important;
+}
+
+.pt-5 {
+  padding-top: 50px;
 }
 
 .pb-1 {
@@ -613,6 +621,10 @@
   color: #209E63;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-excel:hover {
   background-color: #209E63 !important;
 }
@@ -852,6 +864,12 @@
   background-color: #8E6C8818;
 }
 
+.btn-violetChin {
+  color: #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
+}
+
 .btn-violetChin:hover {
   background-color: #8E6C88;
   color: #ffffff;
@@ -926,19 +944,19 @@
 }
 
 .lbl-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow {
-  color: #ffd129;
+  color: #ddaf07;
   border: none;
-  background-color: #ffd12918;
+  background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ffd129;
+  background-color: #ddaf07;
   color: #ffffff !important;
 }
 
@@ -1013,44 +1031,6 @@
   background-color: #4e4e4e;
   color: #ffffff;
 }
-/*Classes created by: Dante Aldair
-----------------------------------*/
-.lbl-blueNCS{
-  color: #0089B7;
-  border: none;
-  background-color: #0089B718;
-}
-
-.lbl-darkCyan{
-  color: #30ada1;
-  border: none;
-  background-color: #30ada118;
-}
-
-.lbl-brightBlue{
-  color: #4a30dd;
-  border: none;
-  background-color: #4a30dd18;
-}
-
-.lbl-verySoftBlue{
-  color: #AED6F1;
-  border: none;
-  background-color: #AED6F118;
-}
-
-.lbl-veryDarkBlue{
-  color: #1B4F72;
-  border: none;
-  background-color: #1B4F7218;
-}
-
-.lbl-veryDarkRed{
-  color: #641E16;
-  border: none;
-  background-color: #641E1618;
-}
-/*--------------------------------*/
 
 /* Btns acción dentro de datatable */
 /* Etiquetas */
@@ -1348,6 +1328,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1662,6 +1643,12 @@ table.dataTable > thead > tr > th {
   text-align: center;
 }
 
+.modal-xl {
+  overflow-y: auto;
+  width: 95%;
+  height: fit-content;
+}
+
 table {
   border: none;
   text-align: center;
@@ -1712,6 +1699,22 @@ table thead tr th input:focus {
 }
 
 table thead tr th input::placeholder {
+  color: #ffffff;
+}
+
+table thead tr th span {
+  margin: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 300;
+  font-size: 10px !important;
+  background-color: #143860;
+  text-transform: uppercase;
+}
+
+table thead tr th span::placeholder {
   color: #ffffff;
 }
 

@@ -8,7 +8,7 @@ class login_model extends CI_Model {
 		parent::__construct();
 	}
 
-	public function login_user($username,$password) {
+	public function login_user($username, $password) {
 		$new_pass = encriptar($password);
 		return $this->db->query("SELECT u.id_usuario, u.id_lider, (CASE u.id_lider WHEN 832 THEN 832 ELSE us.id_lider END) id_lider_2, 
 		CASE WHEN us.id_rol = 3 THEN u.id_lider ELSE ge.id_usuario END id_lider_3, 

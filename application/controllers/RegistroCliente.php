@@ -8023,107 +8023,6 @@ class RegistroCliente extends CI_Controller {
         }
     }
 
-    function getLotesAsesorTest($condominio,$residencial) {
-        $data['lotes'] = $this->registrolote_modelo->getLotesAsesor($condominio,$residencial);
-
-        if(count($data['lotes'])<=0)
-        {
-            $data['lotes'][0]['idLote'] = 0;
-            $data['lotes'][0]['nombreLote'] = 'SIN LOTES PARA ESTE ASESOR';
-            echo json_encode($data['lotes']);
-        }
-        else{
-            // echo json_encode($data['lotes']);
-            if($this->session->userdata('id_rol') == 5 || /*$this->session->userdata('id_rol') == 6 ||*/ $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 7)
-            {
-                for($k=0; $k < count($data['lotes']); $k++)
-                {
-                    if($data['lotes'][$k]['venta_compartida'] == 2)
-                    {
-                        $data2[$k] = $data['lotes'][$k];
-                    }
-                }
-
-
-                $data2 = array_values($data2);
-                $longitud = count($data['lotes']);
-                // print_r($longitud);
-                // exit;
-                $falgRepeat=0;
-                for($k=0; $k < $longitud; $k++)
-                {
-                    for($t=0; $t < count($data2); $t++){
-                        if($data['lotes'][$k]['idLote'] == $data2[$t]['idLote'] && $data['lotes'][$k]['venta_compartida'] == 2)//
-                        {
-                            $falgRepeat = $falgRepeat + 1;
-                        }
-                        if($falgRepeat>1){
-                            unset($data['lotes'][$k]);
-                        }else{
-                            $array_final[$k] = $data['lotes'][$k];
-                        }
-
-                        /*if($data['lotes'][$k]['idLote'] == $data2[$t]['idLote'] && $data['lotes'][$k]['venta_compartida'] == 2)
-                        {
-                            unset($data['lotes'][$k]);
-                        }
-                        else
-                        {
-                            $array_final[$k] = $data['lotes'][$k];
-                        }*/
-                    }
-
-                }
-
-                /*print_r(json_encode($data['lotes']));
-                echo '<br>';
-                print_r($data2);
-                exit;*/
-
-
-                $array_filtrado=array();
-                $flag = 0;
-                foreach($data['lotes'] as $key => $result){
-                    // print_r($result['idLote']);
-                    // echo '<br>';
-                    if(count($data2)>0){
-                        foreach($data2 as $key2 => $result2){
-                            if($result['idLote'] == $result2['idLote']){
-                                // print_r($result2);
-                                // echo '<br>';
-                                if($flag==0){
-                                    // echo '>';
-                                    // print_r($result);
-                                    // echo '<br>';
-                                    array_push($array_filtrado, $result);
-                                }
-                                $flag = $flag + 1;
-                            }else{
-                                array_push($array_filtrado, $result);
-                                // print_r($result);
-                                // echo '<br>';
-
-                            }
-
-                        }
-
-                    }else{
-                        array_push($array_filtrado, $result);
-                    }
-                }
-                // print_r(json_encode($array_filtrado));
-                // exit;
-
-                $data['lotes'] = array_values($array_filtrado);
-                echo json_encode($data['lotes']);
-            }
-            else
-            {
-                echo json_encode($data['lotes']);
-            }
-        }
-    }
-
 
 	public function addFileAsesor(){
 
@@ -8137,6 +8036,7 @@ class RegistroCliente extends CI_Controller {
 		$expediente_file= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
+
 
 
 
@@ -8163,8 +8063,14 @@ class RegistroCliente extends CI_Controller {
 
 
             if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
+                $carpeta = '';
+                if($tipodoc==31){
+                    $carpeta = 'autFechainicio';
+                }else{
+                    $carpeta = 'expediente';
+                }
+                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$carpeta."/".$expediente.'.'.$fileExt);
 
-                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$expediente.'.'.$fileExt);
                 $validaMove = $move == FALSE ? 0 : 1;
 
                 if ($validaMove == 1) {
@@ -8184,7 +8090,7 @@ class RegistroCliente extends CI_Controller {
                     echo json_encode($response);
 
                 } else if ($validaMove == 0){
-                    $response['message'] = 'ERROR';
+                    $response['message'] = 'ERROR 1';
                     echo json_encode($response);
                 } else {
                     $response['message'] = 'ERROR';
@@ -8204,15 +8110,22 @@ class RegistroCliente extends CI_Controller {
 	public function deleteFile(){
 
 		$idDocumento=$this->input->post('idDocumento');
+        $id_tipoDoc = $this->input->post('id_tipoDoc');
 
 		$data=array();
 		$data["expediente"]= NULL;
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=0;
 
+            $carpeta = '';
+            if($id_tipoDoc == 31){
+                $carpeta = 'autFechainicio';
+            }else{
+                $carpeta = 'expediente';
+            }
 
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/expediente/".$nombreExp->expediente;
+		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 
 		if(file_exists($file)){

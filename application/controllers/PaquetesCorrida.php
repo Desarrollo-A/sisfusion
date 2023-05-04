@@ -351,8 +351,7 @@ class PaquetesCorrida extends CI_Controller
     } else if (count($row) > 1) {
       $data = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_paquete']);
     }
-    echo json_encode(array(array("paquetes" => $dataPaquetes,
-                                 "descuentos" => $dataDescuentos)));
+    echo json_encode(array(array("paquetes" => $dataPaquetes, "descuentos" => $dataDescuentos)));
   }
 
   public function getDescuentosByPlan()
