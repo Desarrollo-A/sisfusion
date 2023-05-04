@@ -2358,18 +2358,24 @@ class Asesor extends CI_Controller
         $tipo_vivienda = $this->input->post('tipo_vivienda');
 
         $costoM2 = str_replace(',','',$this->input->post('costoM2'));
+        $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
+        $costom2f = str_replace('$','', $costom2f);
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
 
         $importOferta = str_replace(',','',$this->input->post('importOferta'));
+        $importOferta = str_replace('$','', $importOferta);
         $letraImport = $this->input->post('letraImport');
 
         $cantidad = str_replace(',','',$this->input->post('cantidad'));
+        $cantidad = str_replace('$','', $cantidad);
         $letraCantidad = $this->input->post('letraCantidad');
 
         $saldoDeposito = str_replace(',','',$this->input->post('saldoDeposito'));
+        $saldoDeposito = str_replace('$','', $saldoDeposito);
         $aportMensualOfer = $this->input->post('aportMensualOfer');
+        $aportMensualOfer = str_replace('$','', $aportMensualOfer);
         $fecha1erAport = $this->input->post('fecha1erAport');
         $plazo = $this->input->post('plazo');
         $fechaLiquidaDepo = $this->input->post('fechaLiquidaDepo');
@@ -2392,6 +2398,7 @@ class Asesor extends CI_Controller
         $nombreLote = $this->input->post('nombreLote');
         $nombreCondominio = $this->input->post('nombreCondominio');
         $sup = str_replace(',','',$this->input->post('sup'));
+        $sup = str_replace('$','', $sup);
         $referencia = $this->input->post('referencia');
 
         $id_referencia1 = $this->input->post('id_referencia1');
