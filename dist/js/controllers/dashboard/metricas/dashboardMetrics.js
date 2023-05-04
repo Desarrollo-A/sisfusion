@@ -1014,7 +1014,6 @@ function buildTableLugarProspeccion(data){
 }
 
 function buildTableMedio(data){
-    debugger;
     $('#tablemedio thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');

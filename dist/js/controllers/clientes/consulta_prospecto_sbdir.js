@@ -1,33 +1,38 @@
-let titulos_encabezado = [];
-let num_colum_encabezado = [];
-var typeTransaction = 1;
 $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulos_encabezado.push(title);
-    num_colum_encabezado.push(i);
-    $(this).html(`<input    type="text"
-                            style=" background:#143860!important; color:white; border: 0; font-weight: 500;"
-                            class="textoshead"
-                            data-toggle="tooltip" 
-                            data-placement="top"
-                            title="${title}"
-                            placeholder="${title}"/>`);
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
-            $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-        }
-    });
+    if(i!=9){
+        var title = $(this).text();
+        $(this).html('<input type="text" style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
+                $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
+            }
+        });
+    }
 });
 
-//Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
-num_colum_encabezado.pop();
-
 $(document).ready(function () {
+    var subdir = '<?=$this->session->userdata("id_usuario")?>';
+
+    var url_interna;
+    /*primera carga*/
+    // <?php
+    // 	if($this->session->userdata('id_rol')==2)
+    // 	{?>
+    // 		var subdir = '<?=$this->session->userdata("id_usuario")?>';
+    // 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir/'+subdir;
+    // 	<?php
+    // }
+    // 	else{?>
+    // 		 url_interna = '<?=base_url()?>index.php/Clientes/getGerentesBySubdir_ASB/';
     
-    multirol();
-
+    // <?php 
+    //}
+    //?>
+    //funcion para validar si tiene multirol
+   multirol();
+   
     //gerente
-
+    
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
@@ -50,66 +55,62 @@ function multirol(){
 
 function createFilters(rol){
     if(rol == 59){
-        let div = `<div class="col-md-3 form-group">
-                        <div id="div1" class="form-group label-floating select-is-empty">
-                            <label class="control-label">SUBDIRECTOR</label>
-                        </div>
-                    </div>`;
-        div += `<div class="col-md-3 form-group">
-                    <div id="div2" class="form-group label-floating select-is-empty">
-                        <label class="control-label">GERENTE</label>
-                    </div>
-                </div>`;
-        div += `<div class="col-md-3 form-group">
-                    <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">COORDINADOR</label>
-                    </div>
-                </div>`;
-        div += `<div class="col-md-3 form-group">
-                    <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">ASESOR</label>
-                    </div>
-                </div>`;
-        var $selectSub = 
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'subdirector',
-                'name': 'subdirector',
-                'data-style':"btn btn-round",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
-        var $selectGer = 
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'gerente',
-                'name': 'gerente',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
-        var $selectCoord = 
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'coordinador',
-                'name': 'coordinador',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
-        var $selectAse =
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'asesores',
-                'name': 'asesores',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
+        let div = '<div class="col-md-3 form-group"><div id="div1" class="form-group label-floating select-is-empty"><label class="control-label">SUBDIRECTOR</label></div></div>';
+        div += '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
+        div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
+        div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
+        var $selectSub = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'subdirector',
+            'name': 'subdirector',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el subdirector',
+        'selected': true,
+        'disabled': true
+    }));
+        var $selectGer = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'gerente',
+            'name': 'gerente',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el gerente',
+        'selected': true,
+        'disabled': true
+    }));
+        var $selectCoord = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'coordinador',
+            'name': 'coordinador',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el coordinador',
+        'selected': true,
+        'disabled': true
+    }));
+        var $selectAse = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'asesores',
+            'name': 'asesores',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el asesor',
+        'selected': true,
+        'disabled': true
+    }));
         $('#filterContainer').append(div);
         $selectSub.appendTo('#div1').selectpicker('refresh');
         $selectGer.appendTo('#div2').selectpicker('refresh');
@@ -118,52 +119,49 @@ function createFilters(rol){
         // $option.appendTo('#asesores');
 
     }else if(2){ 
-        let div =   `<div class="col-md-4 form-group">
-                        <div id="div2" class="form-group label-floating select-is-empty">
-                            <label class="control-label">GERENTE</label>
-                        </div>
-                    </div>`;
-        div += `<div class="col-md-4 form-group">
-                    <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">COORDINADOR</label>
-                    </div>
-                </div>`;
-        div += `<div class="col-md-4 form-group">
-                    <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">ASESOR</label>
-                    </div>
-                </div>`;
+        let div = '<div class="col-md-3 form-group"><div id="div2" class="form-group label-floating select-is-empty"><label class="control-label">GERENTE</label></div></div>';
+        div += '<div class="col-md-3 form-group"><div id="div3" class="form-group label-floating select-is-empty"><label class="control-label">COORDINADOR</label></div></div>';
+        div += '<div class="col-md-3 form-group"><div id="div4" class="form-group label-floating select-is-empty"><label class="control-label">ASESOR</label></div></div>';
         
-        var $selectGer =
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'gerente',
-                'name': 'gerente',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
-        var $selectCoord =
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'coordinador',
-                'name': 'coordinador',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
-        var $selectAse =
-            $('<select/>', {
-                'class':"selectpicker select-gral m-0",
-                'id': 'asesores',
-                'name': 'asesores',
-                'data-style':"btn",
-                'data-show-subtext':"true",
-                'data-live-search':"true",
-                'title':"Selecciona una opción"
-            });
+        var $selectGer = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'gerente',
+            'name': 'gerente',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el gerente',
+        'selected': true,
+        'disabled': true
+    }));
+        var $selectCoord = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'coordinador',
+            'name': 'coordinador',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el coordinador',
+        'selected': true,
+        'disabled': true
+    }));
+        var $selectAse = $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'asesores',
+            'name': 'asesores',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true"
+        }).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el asesor',
+        'selected': true,
+        'disabled': true
+    }));
         $('#filterContainer').append(div);
         $selectGer.appendTo('#div2').selectpicker('refresh');
         $selectCoord.appendTo('#div3').selectpicker('refresh');
@@ -173,6 +171,14 @@ function createFilters(rol){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
+    // rol == 59 ? `Clientes/getGerentesBySubdir/${idUsuario}` : `General`
+    var $option = $('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el subdirector',
+        'selected': true,
+        'disabled': true
+    });
+    $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
         // console.log('users', data);
@@ -194,11 +200,28 @@ $(document).on('change', '#subdirector',function () {
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinador").empty().selectpicker('refresh');
    
-   
+    $(`#gerente`).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el gerente',
+        'selected': true,
+        'disabled': true
+    }));
+    $(`#coordinador`).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el coordinador',
+        'selected': true,
+        'disabled': true
+    }));
+    $(`#asesores`).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el asesor',
+        'selected': true,
+        'disabled': true
+    }));
     $("#coordinador").selectpicker('refresh');
     $("#asesores").selectpicker('refresh');
 
-    $.post(general_base_url + 'index.php/Clientes/getGrsBySub/' + subdirector, function (data) {
+    $.post(general_url + 'index.php/Clientes/getGrsBySub/' + subdirector, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -212,7 +235,7 @@ $(document).on('change', '#subdirector',function () {
     }, 'json');
 
     /**/ //carga tabla
-    var url =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/' + subdirector;
+    var url =general_url + 'index.php/Clientes/getProspectsListBySubdirector/' + subdirector;
     /*console.log("TypeTRans: " + typeTransaction);
     updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
@@ -228,9 +251,21 @@ $(document).on('change','#gerente', function () {
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
    
+    $(`#coordinador`).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el coordinador',
+        'selected': true,
+        'disabled': true
+    }));
+    $(`#asesores`).append($('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el asesor',
+        'selected': true,
+        'disabled': true
+    }));
     $("#asesores").selectpicker('refresh');
 
-    $.post(general_base_url + 'index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
+    $.post(general_url + 'index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -248,7 +283,7 @@ $(document).on('change','#gerente', function () {
 
 
     /**///carga tabla
-    var url = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
+    var url = general_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     /*console.log("TypeTRans: " + typeTransaction);
     updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
@@ -261,7 +296,14 @@ $(document).on('change', '#coordinador', function () {
 
     //gerente
     $("#asesores").empty().selectpicker('refresh');
-    $.post(general_base_url + 'index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
+    var $option = $('<option/>',{
+        'value': 'default',
+        'text': 'Selecciona el coordinador',
+        'selected': true,
+        'disabled': true
+    });
+    $(`#asesores`).append($option);
+    $.post(general_url + 'index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -278,7 +320,7 @@ $(document).on('change', '#coordinador', function () {
 
 
     /**///carga tabla
-    var url = general_base_url + 'index.php/Clientes/getProspectsListByCoord/'+coordinador;
+    var url = general_url + 'index.php/Clientes/getProspectsListByCoord/'+coordinador;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -290,7 +332,7 @@ $(document).on('change', '#asesores',function () {
     var asesor = $("#asesores").val();
 
     /**///carga tabla
-    var url = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;
+    var url = general_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -308,11 +350,11 @@ $(document).on("click", "#searchByDateRange", function () {
     var asesor = $("#asesores").val();
 
     if(gerente != '' && coordinador == '' && asesor==''){
-        url_interno = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
+        url_interno = general_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     }else if(gerente != '' && coordinador != '' && asesor == ''){
-        url_interno = general_base_url + 'index.php/Clientes/getProspectsListByCoord/' + coordinador;
+        url_interno = general_url + 'index.php/Clientes/getProspectsListByCoord/' + coordinador;
     }else if(gerente != '' && coordinador != '' && asesor != ''){
-        url_interno = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' + asesor;
+        url_interno = general_url + 'index.php/Clientes/getProspectsListByAsesor/' + asesor;
     }
     // console.log(url_interno);
     updateTable(url_interno, 3, finalBeginDate, finalEndDate, 0);/**/
@@ -322,7 +364,7 @@ $(document).on("click", "#searchByDateRange", function () {
 function updateTable(url, typeTransaction, beginDate, endDate, where)
 {
     var prospectsTable = $('#prospects-datatable_dir').dataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -335,16 +377,43 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             titleAttr: 'Listado general de prospectos',
             title:"Listado general de prospectos",
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        switch (columnIdx) {
+                            case 0:
+                                return 'ESTADO';
+                                break;
+                            case 1:
+                                return 'ETAPA';
+                                break;
+                            case 2:
+                                return 'PROSPECTO';
+                            case 3:
+                                return 'ASESOR';
+                                break;
+                            case 4:
+                                return 'COORDINADOR';
+                                break;
+                            case 5:
+                                return 'GERENTE';
+                                break;
+                            case 6:
+                                return 'LP';
+                                break;
+                            case 7:
+                                return 'CREACIÓN';
+                                break;
+                            case 8:
+                                return 'VENCIMIENTO';
+                                break;
+                        }
                     }
                 }
             }
         }],
         language: {
-            url: general_base_url + 'static/spanishLoader_v2.json',
+            url: general_url + 'static/spanishLoader_v2.json',
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -355,33 +424,28 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
         columns: [
             { data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">Vigente</span><center>';
+                    return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
                 } else {
-                    return '<center><span class="label lbl-veryDarkRed">Sin vigencia</span><center>';
+                    return '<center><span class="label label-danger" style="background:#E74C3C">Sin vigencia</span><center>';
                 }
             }
             },
-            {
-                data: function (d) {
-                    if(d.estatus_particular == 1) { // DESCARTADO
-                        b = '<center><span class="label lbl-warning">Descartado</span><center>';
-                    } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
-                        b = '<center><span class="label lbl-brown">Interesado sin cita</span><center>';
-                    } else if (d.estatus_particular == 3){ // CON CITA
-                        b = '<center><span class="label lbl-darkCyan">Con cita</span><center>';
-                    } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
-                        b = '<center><span class="label lbl-brightBlue">Sin especificar</span><center>';
-                    } else if (d.estatus_particular == 5){ // PAUSADO
-                        b = '<center><span class="label lbl-violetBoots">Pausado</span><center>';
-                    } else if (d.estatus_particular == 6){ // PREVENTA
-                        b = '<center><span class="label lbl-azure">Preventa</span><center>';
-                    } else if (d.estatus_particular == 7){ // CLIENTE
-                        b = '<span class="label lbl-green">Cliente</span>';
-                    }else{ // CLIENTE
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
-                    }
-                    return b;
+            { data: function (d) {
+                if(d.estatus_particular == 1) { // DESCARTADO
+                    b = '<center><span class="label" style="background:#E74C3C">Descartado</span><center>';
+                } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
+                    b = '<center><span class="label" style="background:#B7950B">Interesado sin cita</span><center>';
+                } else if (d.estatus_particular == 3){ // CON CITA
+                    b = '<center><span class="label" style="background:#27AE60">Con cita</span><center>';
+                } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
+                    b = '<center><span class="label" style="background:#5D6D7E">Sin especificar</span><center>';
+                } else if (d.estatus_particular == 5){ // PAUSADO
+                    b = '<center><span class="label" style="background:#2E86C1">Pausado</span><center>';
+                } else if (d.estatus_particular == 6){ // PREVENTA
+                    b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
                 }
+                return b;
+            }
             },
             { data: function (d) {
                     return d.nombre;
@@ -413,22 +477,11 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             }
             ,
             { data: function (d) {
-                    if(id_rol_general == 2 || id_rol_general == 5){
-                        if(id_rol_general != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                    if(userType == 2 || userType == 5){
+                        if(userType != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                             return '';
                         } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
-                            return `<center>
-                                        <button class="btn-data btn-blueMaderas see-information" 
-                                                data-id-prospecto="${d.id_prospecto}"
-                                                style="margin-right: 3px;"
-                                                data-toggle="tooltip" 
-                                                data-placement="top"
-                                                title="Ver información">
-                                            <i class="material-icons">
-                                                remove_red_eye
-                                            </i>
-                                        </button>
-                                    </center>`;
+                            return '<button class="btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto + '" style="margin-right: 3px;"><i class="material-icons">remove_red_eye</i></button>';
                         }
                     }
                 }
@@ -445,11 +498,23 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                 "endDate": endDate,
                 "where": where
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
         }
-    });
+    })/*.yadcf(
+        [
+            {
+                column_number: 6,
+                filter_container_id: 'external_filter_container7',
+                filter_type: 'range_date',
+                datepicker_type: 'bootstrap-datetimepicker',
+                filter_default_label: ['Desde', 'Hasta'],
+                date_format: 'YYYY-MM-DD',
+                filter_plugin_options: {
+                    format: 'YYYY-MM-DD',
+                    showClear: true,
+                }
+            },
+        ]
+    )*/
 }
 
 

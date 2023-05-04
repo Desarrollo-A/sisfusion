@@ -79,21 +79,17 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>LP</th>
                                                 <th>CREACIÓN</th>
                                                 <th>VENCIMIENTO</th>
                                                 <?php
-                                                    if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
-                                                        <th>ACCIONES</th>
-                                                        <!-- <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 103px;">
-                                                            <input  type="text"
-                                                                    style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;"
-                                                                    class="textoshead" 
-                                                                    placeholder="ACCIONES">
-                                                        </th> -->
-                                                <?php
-                                                    }
-                                                ?>
+                                                if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5)
+                                                {?>
+                                                    <th class="disabled-sorting text-right"
+                                                        style="font-family: inherit; font-size: 10px !important; color:white;">
+                                                        ACCIONES
+                                                    </th>
+                                                <?php } ?>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -123,33 +119,21 @@
 									</div>
 									<div class="card-content">
 										<div class="row">
-											<h4 class="card-title">Listado general de prospectossas</h4>
+											<h4 class="card-title">Listado general de prospectos</h4>
 											<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 												<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<select name="gerente" 
-                                                            id="gerente"
-                                                            class="selectpicker select-gral" 
-															data-style="btn btn-round"
-                                                            title="Selecciona una opción"
-                                                            data-size="7">
+													<select name="gerente" id="gerente" class="selectpicker"
+															data-style="btn " title="GERENTE" data-size="7">
 													</select>
 												</div>
 												<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<select name="coordinador"
-                                                            id="coordinador"
-                                                            class="selectpicker select-gral" 
-															data-style="btn btn-round"
-                                                            title="Selecciona una opción"
-                                                            data-size="7">
+													<select name="coordinador" id="coordinador" class="selectpicker"
+															data-style="btn " title="COORDINADOR" data-size="7">
 													</select>
 												</div>
 												<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<select name="asesores"
-                                                            id="asesores"
-                                                            class="selectpicker select-gral" 
-															data-style="btn btn-round"
-                                                            title="Selecciona una opción"
-                                                            data-size="7">
+													<select name="asesores" id="asesores" class="selectpicker"
+															data-style="btn " title="ASESOR" data-size="7">
 													</select>
 												</div>
 											</div>
@@ -184,7 +168,7 @@
 															<th class="disabled-sorting text-right"><center>Asesor</center></th>
 															<th class="disabled-sorting text-right"><center>Coordinador</center></th>
                                                             <th class="disabled-sorting text-right"><center>Gerente</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Lugar de prospección</center></th>
+                                                            <th class="disabled-sorting text-right"><center>LP</center></th>
 															<th class="disabled-sorting text-right"><center>Creación</center></th>
 															<th class="disabled-sorting text-right"><center>Vencimiento</center></th>
 															<?php
@@ -217,6 +201,8 @@
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </div><!--main-panel close-->
+</body>
+
 <?php $this->load->view('template/footer');?>
 
 <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -234,9 +220,15 @@
 <!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/moment.min.js"></script>
+<script>
+    userType = <?= $this->session->userdata('id_rol') ?> ;
+    typeTransaction = 1;
+    general_url = "<?= base_url() ?>";
+</script>
 
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
+
 <?php
     if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5)
     {
@@ -249,4 +241,3 @@
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 
 <script src="<?=base_url()?>dist/js/controllers/clientes/consulta_prospecto_sbdir.js"></script>
-</body>
