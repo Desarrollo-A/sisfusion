@@ -266,7 +266,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
         $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
         $estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus in(2,3,4)' : ' aut.estatus in(1,3,4)') : '';
-        return $this->db->query("SELECT aut.*,sd.nombre as sede,
+        return $this->db->query("SELECT aut.*,sd.nombre as sede,STRING_AGG((CONVERT(VARCHAR(MAX), RE.descripcion)), ',') nombreResidencial,
         (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
         (CASE WHEN aut.estatus=1 THEN 'lbl-sky' WHEN aut.estatus=2 THEN 'lbl-yellow' WHEN aut.estatus=3 THEN 'lbl-green' WHEN aut.estatus=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
@@ -278,7 +278,14 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
         INNER JOIN usuarios us ON us.id_usuario=aut.creado_por
         INNER JOIN opcs_x_cats opc2 ON  opc2.id_opcion=aut.estatus AND opc2.id_catalogo=90
-        WHERE $estatusWhere1 $estatusWhere2")->result_array();
+		LEFT JOIN
+        (SELECT value, id_autorizacion FROM autorizaciones_pventas A0
+         CROSS APPLY STRING_SPLIT(A0.idResidencial, ',') 
+         GROUP BY id_autorizacion, value) A2 ON A2.id_autorizacion = aut.id_autorizacion
+         LEFT JOIN residenciales RE ON RE.idResidencial IN (CAST(A2.value AS INT))
+        WHERE $estatusWhere1 $estatusWhere2
+        GROUP BY aut.id_autorizacion, aut.idResidencial,aut.fecha_inicio,aut.fecha_fin,aut.id_sede,aut.tipo_lote,aut.superficie,aut.paquetes,aut.estatus,aut.fecha_creacion,aut.modificado_por,
+         opc.id_opcion,opc2.nombre,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno),aut.estatus_autorizacion,aut.creado_por,aut.fecha_modificacion,sd.nombre")->result_array();
     }
     public function saveAutorizacion($datos){
         $idResidencial = $datos['idResidencial'];

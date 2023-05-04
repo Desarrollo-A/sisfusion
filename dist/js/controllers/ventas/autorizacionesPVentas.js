@@ -85,7 +85,14 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
         {  
             "width": "10%",
             "data": function( d ){
-                return `<p class="m-0">${d.idResidencial}</p>`;
+                let residencial = d.nombreResidencial.split(',');
+                console.log(residencial)
+                let imprimir = '';
+                for (let m = 0; m < residencial.length; m++) {
+                    imprimir += `<p><span class="label lbl-sky">${residencial[m]}</span></p>`;
+                }
+                
+                return imprimir;
             }
         },
         {  
@@ -264,11 +271,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
          setTimeout(() => {
             ConsultarPlanes();
         }, 1000);
-         $('#spiner-loader').addClass('hide');
     });
-    function cargarPlanes(){
-
-    }
+   
     $(document).on('click', '#btnAvanzar', function () {
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
@@ -347,3 +351,119 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             }, 'json');
         $("#modalHistorial").modal();
     });
+
+
+
+    $(document).on('click', '#btnVer', function () {
+        $('#spiner-loader').removeClass('hide');
+        let idAutorizacion = $(this).attr('data-idAutorizacion');
+        var data = tablaAutorizacion.row($(this).parents('tr')).data();
+        let paquetes = data.paquetes;
+        let residenciales = data.nombreResidencial.split(',');
+        let fecha_inicio = moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
+        let fecha_fin = moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
+        let params = {'paquetes': data.paquetes};
+        document.getElementById('contentView').innerHTML = '';  
+
+        $('#contentView').append(`
+        <span>Fecha inicio:</span><span class="label lbl-sky">${fecha_inicio}</span> <span>Fecha fin:</span><span class="label lbl-sky">${fecha_fin}</span><br>
+        <span>Sede:</span><span class="label lbl-sky">${data.sede}</span>
+        <span>Residencial(es):</span>${residenciales.map(function (element) { return `<span class="label lbl-sky">${element}</span>` })}
+        <span>Tipo lote:</span><span class="label lbl-sky">${data.tipoLote}</span>
+        <span>Superficie:</span><span class="label lbl-sky">${data.tipoSuperficie}</span>
+        <div class="row" >
+            <div class="col-lg-12" id="cards">
+   
+            </div>
+        </div>
+        `);
+        
+        let tiposDescuentos = descuentosYCondiciones;
+        $.post('paquetesView',params, function(data) {
+            data = JSON.parse(data);
+            let dataPaquetes = data[0].paquetes;
+            let dataDescuentosByPlan = data[0].descuentos;
+           // tiposDescuentos = JSON.parse(descuentosYCondiciones);
+            console.log(data);
+            for (let m = 0; m < dataPaquetes.length; m++) {
+                console.log(dataPaquetes,tiposDescuentos);
+                let idPaquete = dataPaquetes[m].id_paquete;
+                console.log(idPaquete)
+                let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete)
+                let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
+                    if(existe != undefined){
+                        crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
+                    }
+               /* for (let o = 0; o < tiposDescuentos.length; o++) {   
+                    console.log(tiposDescuentos[o]);
+                    console.log(tiposDescuentos[o].condicion.id_condicion);
+                 
+                        
+                        
+                    }  */
+            }
+
+
+        });
+
+        $("#modalView").modal();
+        $('#spiner-loader').addClass('hide');
+
+    });
+
+    function crearDivs(dataPaquete,tiposDescuentos,descuentosPorPlan){
+        console.log('--------------')
+        console.log(dataPaquete);
+        console.log(tiposDescuentos);
+        console.log(descuentosPorPlan);
+        console.log('--------------')
+        $('#cards').append(`
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="box">  
+                        <h2><span class="label lbl-violetChin">${dataPaquete.descripcion}</span></h2>
+                        <span>
+                            <ul id="descuentosP_${dataPaquete.id_paquete}">
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        for (let m = 0; m < tiposDescuentos.length; m++) {
+            $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
+                <li>${tiposDescuentos[m].condicion.descripcion}</li>
+                <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}"></div>
+            `);
+            let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
+            console.log(tiposDescuentos[m].condicion);
+            if(existe != undefined){
+                let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
+                console.log('descuentosByPlan');
+console.log(descuentosByPlan);
+                for (let o = 0; o < descuentosByPlan.length; o++) {
+                    if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
+                        let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
+                        $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
+                           <span class="label lbl-green">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? '+'+descuentosByPlan[o].msi_descuento+'%' : '')}</span>
+                `);
+                    }
+                    
+                }
+
+                //llenar(dataPaquete.id_paquete,tiposDescuentos[m].condicion.id_condicion,existe)
+                console.log('---SI HAY-----')
+                console.log(existe);
+                console.log('---SI HAY-----')
+                  
+
+             }
+
+                   
+        }
+    }
+
+
+
+    

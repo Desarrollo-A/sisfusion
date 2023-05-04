@@ -1,5 +1,6 @@
 let descuentosYCondiciones;
 var primeraCarga = 1;
+llenarTipoDescuentos();
 
 $(document).ready(function() {
     $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
@@ -17,8 +18,12 @@ $(document).ready(function() {
     setIniDatesXMonth("#fechainicio", "#fechafin");
     //Función para mandar estatus vacio por defecto 
     sinPlanesDiv();
-});
 
+});
+async function llenarTipoDescuentos(){
+    descuentosYCondiciones = await getDescuentosYCondiciones(1, 0);
+    descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
+   }
 $("#sede").change(function() {
     $('#spiner-loader').removeClass('hide');
     $('#residencial option').remove();
@@ -370,7 +375,7 @@ function SavePaquete(){
 
 //Fn para consultar los planes de ventas existente según parametros seleccionados
 async function ConsultarPlanes(){
-    $('#spiner-loader').removeClass('hide');
+    $('#paquetes').val() == '' ? $('#spiner-loader').removeClass('hide'): '';
     if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
         let params = {
             'sede':$('#sede').val(),
@@ -424,6 +429,9 @@ async function ConsultarPlanes(){
                         const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
                            check.checked = true; 
                           PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
+                          if(indexPaquetes == dataPaquetes.length -1){
+                            $('#spiner-loader').addClass('hide');
+                        }
  
                     }
                       //  dataDescuentosByPlan.forEach(function (elementData, indexData) {
@@ -440,6 +448,7 @@ async function ConsultarPlanes(){
 
                     $("#tipo_descuento_"+indexNext).selectpicker('refresh');    
                     validateNonePlans();
+
                 });
             }
             else{
