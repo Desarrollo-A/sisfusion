@@ -612,5 +612,11 @@
         return $query->row();
     }
 
+    function revisaFIFCDOC($idLote, $idCliente){//revisa si ya existe la rama en caso de que ya hayan guardado anteriormente para la
+                            //autorizacion de la fecha de inicio
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$idCliente." AND idLote=".$idLote." AND tipo_doc=31");
+        return $query->result_array();
+    }
+
 
 }

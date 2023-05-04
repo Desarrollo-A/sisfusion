@@ -515,12 +515,9 @@ class Caja_outside extends CI_Controller {
         }
 
         $dataInsertCliente = array(
-            'id_asesor' => $datosView->id_asesor,
+            'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
             'id_coordinador' => $voBoCoord,
-            'id_gerente' => $datosView->id_gerente,
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
+            'id_gerente' => $datosView->id_gerente,/*$data['prospecto'][0]['id_gerente']*/
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -566,7 +563,9 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'flag_compartida' =>$datosView->flag_compartida,
+            'id_subdirector' => $data['lider'][0]['id_subdirector'],
+            'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
             'fechaAlta' => date('Y-m-d H:i:s'),
@@ -1140,12 +1139,12 @@ class Caja_outside extends CI_Controller {
                 $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
             }
 
-            $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
-            $arreglo["id_coordinador"] = $data->asesores[0]->idCoordinador;
-            $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
-            $arreglo["id_subdirector"] = $value->idSubdirector;
-            $arreglo["id_regional"] = $value->idRegional;
-            $arreglo["id_regional_2"] = $value->idRegional2;
+            $arreglo["id_gerente"] = $data->id_gerente;
+            $arreglo["id_coordinador"] = $data->id_coordinador;
+            $arreglo["id_asesor"] = $data->id_asesor;
+            $arreglo["id_subdirector"] = $data->id_subdirector;
+            $arreglo["id_regional"] = $data->id_regional;
+            $arreglo["id_regional_2"] = $data->id_regional_2;
             $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
             $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
             $arreglo["id_sede"] = $data->id_sede;
@@ -1855,9 +1854,9 @@ class Caja_outside extends CI_Controller {
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;
-                        $arreglo['id_subdirector'] = $dataLider[0]['id_subdirector'];
-                        $arreglo['id_regional'] = $dataLider[0]['id_regional'];
-                        $arreglo['id_regional_2'] = $dataLider[0]['id_regional_2'];
+                        $arreglo['id_subdirector'] = $data->asesores[0]->idSubdirector;
+                        $arreglo['id_regional'] = $data->asesores[0]->idRegional1;
+                        $arreglo['id_regional_2'] = $data->asesores[0]->idRegional2;
                         $arreglo['estructura'] = in_array($data->asesores[0]->idGerente, array(12135, 6661)) ? 1 : 0;
 
                         //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA

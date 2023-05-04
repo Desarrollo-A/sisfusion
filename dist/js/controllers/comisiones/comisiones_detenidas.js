@@ -3,10 +3,9 @@ $('#comisiones-detenidas-table').ready(function () {
     let titulos = [];
 
     $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0 && i !== 9) {
+        if (i !== 0 && i !== 12) {
             const title = $(this).text();
             titulos.push(title);
-
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (comisionesDetenidasTabla.column(i).search() !== this.value) {
@@ -18,7 +17,7 @@ $('#comisiones-detenidas-table').ready(function () {
 
     let comisionesDetenidasTabla = $('#comisiones-detenidas-table').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: 'auto',
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: "<i class='fa fa-file-excel-o' aria-hidden='true'></i>",
@@ -26,7 +25,7 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx - 1] + ' ';
@@ -52,7 +51,7 @@ $('#comisiones-detenidas-table').ready(function () {
         ordering: false,
         columns: [
             {
-                'width': '3%',
+               
                 'className': 'details-control',
                 'orderable': false,
                 'data' : null,
@@ -62,53 +61,81 @@ $('#comisiones-detenidas-table').ready(function () {
                     </div>
                 `
             },
-            { data:'idLote'},
             {data:'nombreResidencial'},
             {data:'nombreCondominio'},
             {data: 'nombreLote' },
+            { data:'idLote'},
             {
-                "width": "8%",
-                "data": function( d ){
+                data: function (d) {
                     if (d.tipo_venta == 1) {
-                        return '<span class="label lbl-warning">Venta Particular</span>';
+                        return '<span class="label lbl-warning" style="color:#78281F;background:#F5B7B1;" >Venta Particular</span>';
                     }else if (d.tipo_venta == 2) {
-                        return '<span class="label lbl-green">Venta normal</span>';
+                        return '<span class="label lbl-green" style="color:#186A3B;background:#ABEBC6;">Venta normal</span>';
                     } else if (d.tipo_venta == 7) {
-                        return '<span class="label lbl-orangeYellow">Venta especial</span>';
+                        return '<span class="label lbl-orangeYellow" style="color:#626567;background:#E5E7E9;">Venta especial</span>';
                     } else {
                         return '';
                     }
                 }
             },
             {
-                'width': '8%',
                 data: function( d ){
                     if (d.compartida === null) {
-                        return '<span class="label lbl-orangeYellow" >Individual</span>';
+                        return '<span class="label lbl-orangeYellow"  style="color:#7D6608;background:#F9E79F;">Individual</span>';
                     } else {
-                        return '<span class="label lbl-warning">Compartida</span>';
+                        return '<span class="label lbl-warning" style="color:#7E5109;background:#FAD7A0;" >Compartida</span>';
                     }
                 }
             },
-            {
-                'width': '8%',
-                data: function( d ){
-                    if (d.idStatusContratacion === 15) {
-                        return '<span class="label lbl-violetDeep">Contratado</span>';
-                    } else {
-                        return '<p class="m-0 lbl-violetDeep"><b>'+d.idStatusContratacion+'</b></p>';
-                    }
+            { data: function (d) {
+                var labelStatus;
+                if(d.idStatusContratacion == 15) {
+                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
+                }else {
+                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
-            },
+                return labelStatus;
+            }},
+            { data: function (d) {
+                var labelEstatus;
+                if(d.totalNeto2 == null) {
+                    labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
+                }else if(d.registro_comision == 2){
+                    labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                }else {
+                    labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                }
+                return labelEstatus;
+            }},
+            { data: function (d) {
+                var fechaSistema;
+                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
+                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                }else {
+                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
+                }
+                return fechaSistema;
+            }},
+            { data: function (d) {
+                var fechaNeodata;
+                var rescisionLote;
+                fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
+                rescisionLote = '';
+                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
+                    fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                } 
+                if (d.registro_comision == 8){
+                    rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
+                }
+                return fechaNeodata+rescisionLote;
+            }},
             {
-                'width': '15%',
-                'orderable': false,
-                'data': function (d) {
+                data: function (d) {
                         let motivo ;
                         let color ;
                         if(d.motivo == 1 || d.motivo == 2 || d.motivo == 3){
+                            if(d.motivo == 1){  color  = 'lbl-azure';}else if(d.motivo == 2){  color  = 'lbl-brown';}
                             motivo = d.motivoOpc;
-                            color  = 'lbl-gray';
                         }else  {
                             color = 'lbl-azure';
                             motivo = d.motivo;
@@ -117,9 +144,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
             },
             {
-                'width': '8%',
-                'orderable': false,
-                'data': function (d) {
+                data: function (d) {
                     if(id_rol_general != 63 && id_rol_general != 4){
 
                         return `
@@ -139,12 +164,11 @@ $('#comisiones-detenidas-table').ready(function () {
             }
         ],
         columnDefs: [{
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
+            visible: false,
+            searchable: false
         }],
         ajax: {
-            'url': general_base_url+'Comisiones/comisionesDetenida',
+            'url': general_base_url+'Comisiones/getStoppedCommissions',
             'dataSrc': '',
             'type': 'GET',
             cache: false,

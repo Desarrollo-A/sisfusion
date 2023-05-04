@@ -308,6 +308,9 @@ $tv                 : "(min-width: 1280px)";
 .buttons-excel i {
     color: $greenExcel;
 }
+.color-letter{
+    color: $greenExcel;
+}
 .buttons-excel:hover {
     background-color: $greenExcel !important;
 }
@@ -922,6 +925,7 @@ $tv                 : "(min-width: 1280px)";
     border-radius: 27px !important;
     background-image: none !important;
     padding-left: 20px;
+    border:none;
     ::placeholder{
         margin-left: 20px;
     }

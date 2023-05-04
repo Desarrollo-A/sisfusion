@@ -95,34 +95,35 @@ class VentasAsistentes_model extends CI_Model {
    
 	public function registroStatusContratacion8 () {
         $id_sede = $this->session->userdata('id_sede');
-        if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)// MJ: ES CONTRALORÍA CORPORATIVA
-        {
+        $id_rol = $this->session->userdata('id_rol');
+        $id_usuario = $this->session->userdata('id_usuario');
+        if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($this->session->userdata('id_usuario') == 2815){
+            if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            }
-            else{
+            else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
-            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
-
         }
-        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+        else if (in_array($id_rol, array(54, 63))) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
         else { // MJ: ES VENTAS
-            $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
-            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+            else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
+            else if ($id_sede == 10) 
+                $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             $filtroGerente = "";
-            if ($this->session->userdata('id_usuario') == 6831) {
+            if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                 $filtroGerente = "AND cl.id_gerente = 690";
                 $filtroSede = "";
-            }
+            } else if (in_array($id_usuario, array(7097, 7096, 10924))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
+            
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
@@ -244,23 +245,24 @@ class VentasAsistentes_model extends CI_Model {
 		return $query->row();
 	}
 	
-
     public function registroStatusContratacion14 () {
-        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70){ // MJ: ES CONTRALORÍA CORPORATIVA
+        $id_rol = $this->session->userdata('id_rol');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $id_sede = $this->session->userdata('id_sede');
+        if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($this->session->userdata('id_usuario') == 2815)
+            if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;
         }
-        else if ($this->session->userdata('id_rol') == 54 || $this->session->userdata('id_rol') == 63)  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+        else if (in_array($id_rol, array(54, 63)))  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
         else { // MJ: ES VENTAS
-            $id_sede = $this->session->userdata('id_sede');
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
-            else if ($id_sede == 10 && $this->session->userdata('id_usuario') == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
+            else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
             else if ($id_sede == 10) 
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
@@ -268,11 +270,12 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             $filtroGerente = "";
-            if ($this->session->userdata('id_usuario') == 6831) {
+            if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                 $filtroGerente = "AND cl.id_gerente = 690";
                 $filtroSede = "";
-            }
-
+            } else if (in_array($id_usuario, array(7097, 7096, 10924))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
+            
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
@@ -303,8 +306,7 @@ class VentasAsistentes_model extends CI_Model {
         ORDER BY l.nombreLote");
 		return $query->result();
 	}
-
-
+    
 	public function validateSt14($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
