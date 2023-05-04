@@ -3313,19 +3313,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-     public function retiros_resguardo()
-    {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("ventas/retiros_dir", $datos);
-    }
-
-     public function historial_retiros()
+      public function historial_retiros()
     {
       $datos = array();
       $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
@@ -3337,7 +3325,7 @@ public function LiquidarLote(){
       $this->load->view("ventas/retiros_historial", $datos);
     }
  
-    public function getDatoshistorialResguardoContraloria($proyecto,$condominio){
+      public function getDatoshistorialResguardoContraloria($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatoshistorialResguardoContraloria($proyecto,$condominio)->result_array();
      for( $i = 0; $i < count($dat); $i++ ){
          $dat[$i]['pa'] = 0;
@@ -3345,11 +3333,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-
-
- 
-
-      /**--------------------------------------BONOS---------------------------------------- */
+       /**--------------------------------------BONOS---------------------------------------- */
      
      
 
@@ -4931,62 +4915,8 @@ public function SavePrecioLoteMKTD(){
     
     }
   
-    public function getDisponbleResguardoP($user,$opc = ''){
-      if($opc == ''){
-        $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
-        $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
-        //$suma =($datos[0]['suma']+$extras[0]['extras']);
-        $suma =$datos[0]['suma'];
-      }else{
-        $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
-       // $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
-       $suma =($datos[0]['suma']);
-      }
-      
-      
-      echo json_encode($suma);
-    }
-  public function getDisponbleResguardo($user){
-    $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
-    $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
-    $pagado = $this->Comisiones_model->getAplicadoResguardo($user)->result_array();
-    $disponible = ($datos[0]['suma'] + $extras[0]['extras']) - $pagado[0]['aplicado'];
-    echo json_encode($disponible);
-  }
-  public function UpdateRetiro(){
   
-    $opcion =  $this->input->post("opcion");
-    $id = $this->input->post("id_descuento");
-    $data = [];
-    if($opcion == 'Autorizar'){
-      $data = ['estatus' => 2];
-    }elseif($opcion == 'Borrar'){
-      $motivo =  $this->input->post("motivodelete");
-      $data = ['estatus' => 3,
-              'motivodel' => $motivo];
-    }elseif($opcion == 'Rechazar'){
-      $motivo =  $this->input->post("motivodelete");
-      $data = ['estatus' => 4,
-              'motivodel' => $motivo];
-    }elseif($opcion == 'Actualizar'){
-      $monto =  $this->input->post("monto");
-      $concepto = $this->input->post("conceptos");
-      $estado = $this->input->post("estatus");
-      // $estatus = 1;
-      // if($estado == 67){
-      //   $estatus == 67;
-      // }
-      
-      $data = ['monto' => $monto,
-                'conceptos' => $concepto,
-                'estatus' => $estado];
-    }
-    // echo $this->input->post("id_bono");
   
-    $respuesta =  $this->Comisiones_model->UpdateRetiro($data,$id,$opcion);
-  echo json_encode($respuesta);
-  
-  }
   
   public function getHistoriRetiros($id)
       {

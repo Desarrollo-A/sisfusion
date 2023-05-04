@@ -59,7 +59,7 @@
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                            <button type="submit" id="updateBandera" class="btn btn-primary">Aceptar</button>
                         </div>
                         </div>
                     </form>
@@ -108,7 +108,7 @@
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                            <button type="submit" id="detenerLote" class="btn btn-primary">Aceptar</button>
                         </div>
                         </div>
                     </form>

@@ -1,6 +1,9 @@
 @import "_base";
 
 #mainBoxDS{
+    .label-on-left{
+        font-size: 10px;
+    }
     .form-group{
         margin: 0!important;
     }
@@ -115,8 +118,8 @@
         }
     }
     
-    #radioDS{
-        .radio_container {
+    #radioDS, #viviendaDS{
+        .radio_container{
             background-color: $platinumLight;
             width: 100%;
             border-radius: 27px;
@@ -213,6 +216,7 @@
                     overflow: hidden;
                     transition: linear 0.3s;
                     margin: 0;
+                    font-weight: 100;
                 }
                 span:nth-child(2){
                     margin: 0 3px;
@@ -244,6 +248,11 @@
             .switch-label{
               cursor: pointer;
             }
+        }
+    }
+    #ofertanteInput, .firmas{
+        .form-group{
+            padding: 0!important;
         }
     }
 }

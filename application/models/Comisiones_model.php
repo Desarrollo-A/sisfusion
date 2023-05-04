@@ -5374,18 +5374,8 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
  
     /**--------------------------------------------------------- */
       /**----------resguardos-------------------------------------- */
-      function getDisponbleResguardo($user) {
-        $query = $this->db->query("select SUM(abono_neodata) as suma from pago_comision_ind where id_usuario=$user and estatus=3 and id_comision not in(select id_comision from comisiones where estatus=0)");
-        return $query;
-    }
-    function getDisponbleExtras($user) {
-        $query = $this->db->query("select SUM(monto) as extras from resguardo_conceptos where id_usuario=$user and estatus in(67)");
-        return $query;
-    }
-    function getAplicadoResguardo($user) {
-        $query = $this->db->query("select SUM(monto) as aplicado from resguardo_conceptos where id_usuario=$user and estatus in(1,2)");
-        return $query;
-    }
+      
+   
     function getRetiros($user,$opc){
        $query = '';
         if($opc == 2){
@@ -5412,39 +5402,7 @@ $estatus = 67;
         return 1;
         }
 }
-function UpdateRetiro($datos,$id,$opcion){
 
-    $motivo = '';
-    if($opcion == 'Borrar' ||  $opcion == 'Rechazar' ){
-$motivo = $datos['motivodel'];
-        $datos = ['estatus' => $datos['estatus']];
-    }
-
-    //echo $datos['monto'];
-    $comentario = '';
-    $respuesta = $this->db->update("resguardo_conceptos", $datos, " id_rc = $id");
-    if($opcion == 'Autorizar'){
-        $comentario = 'SE AUTORIZÓ ESTE RETIRO';
-       
-      }elseif($opcion == 'Borrar'){
-        $comentario = 'SE ELIMINÓ ESTE RETIRO, MOTIVO: '.$motivo;
-
-      }elseif($opcion == 'Rechazar'){
-        $comentario = 'SE RECHAZÓ ESTE RETIRO, MOTIVO: '.$motivo;
-
-      }elseif($opcion == 'Actualizar'){
-        $comentario = 'SE ACTUALIZÓ RETIRO POR MOTIVO DE: '.$datos["conceptos"].' POR LA CANTIDAD DE: '.$datos["monto"].' ';
-
-      }
-   // $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 12,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 100 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
-    $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
-
-    if (! $respuesta ) {
-    return 0;
-    } else {
-    return 1;
-    }
-    }
 
 
     function getHistoriRetiros($id) {
@@ -8058,7 +8016,10 @@ public function getDataDispersionPagoEspecial($val = '') {
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
-        hl.motivo, hl.comentario
+        hl.motivo, hl.comentario,l.totalNeto2, l.registro_comision, 
+        convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema,
+        convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata,
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion
         ,oxc.nombre as motivoOpc
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
@@ -8066,6 +8027,8 @@ public function getDataDispersionPagoEspecial($val = '') {
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
