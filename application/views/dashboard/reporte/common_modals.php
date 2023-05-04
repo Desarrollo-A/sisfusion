@@ -195,7 +195,6 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
-                        <th>Superficie</th>
                         <th>Precio de lista</th>
                         <th>Precio con desc</th>
                         <th>Casa</th>
@@ -244,7 +243,6 @@
                         <th>Proyecto</th>
                         <th>Condominio</th>
                         <th>Lote</th>
-                        <th>Superficie</th>
                         <th>Precio de lista</th>
                         <th>Precio con desc</th>
                         <th>Casa</th>

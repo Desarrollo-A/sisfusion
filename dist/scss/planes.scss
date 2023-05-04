@@ -73,10 +73,14 @@
         }
       }
       #fechainicio{
+        padding: 0;
         border-radius: 27px 0 0 27px;
+        padding-left: 8px;
       }
-      #fechafin{        
+      #fechafin{
+        padding: 0;
         border-radius: 0 27px 27px 0;
+        padding-right: 8px;
       }
       .dates{
         background-image: none;
@@ -84,9 +88,6 @@
         text-align: center;
         color: $deepGray;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 0;
       }
       .radio-container {
         display: flex;
@@ -397,4 +398,26 @@
   @media #{$smartphone}, #{$tablets}{
     height: auto!important;
   }
+}
+.dataTables_scrollBody::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: transparent;
+}
+/* El background del scroll (border)*/
+.dataTables_scrollBody::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+}
+/* Color de la barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: $platinumScroll;
+}
+/* Color del HOVER de barra de desplazamiento */
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
+  background-color: $deepGray;
+}
+.btn-azure:hover span a{
+  color: $white!important;
 }

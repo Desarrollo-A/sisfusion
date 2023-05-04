@@ -408,6 +408,7 @@ function  fillCommissionTableWithoutPayment2(proyecto,condominio){
                     }
                 }],
             "ajax": {
+                // "url": "<?=base_url()?>index.php/Comisiones/getdescuentos/"+proyecto+"/"+condominio,
                 "url": url2 + "Comisiones/getHistorialDescuentos/"+proyecto+"/"+condominio,
                 "type": "POST",
                 cache: false,

@@ -51,7 +51,7 @@ class Asesor extends CI_Controller
     {
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
 
-        // print_r($datos);
+        print_r($datos);
     }
 
     public function deposito_seriedad_ds($idCliente, $onlyView)
@@ -358,13 +358,6 @@ class Asesor extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("asesor/consulta_prospectos", $datos);
     }
-    // Este es el query padre de todos los select
-    // public function allSelectCatalogo()
-    // {
-    //     $data['data'] = $this->Asesor_model->getCatalogoSelect()->result_array();
-    //     echo json_encode($data);
-    //     // echo json_encode($this->Asesor_model->getCatalogoSelect()->result_array());
-    // }
 
     public function consultStatistics()
     {
@@ -495,14 +488,13 @@ class Asesor extends CI_Controller
             "fecha_nacimiento" => $_POST['date_birth'],
             "estado_civil" => $_POST['civil_status'],
             "regimen_matrimonial" => $_POST['matrimonial_regime'],
-            "regimenFiscal" => $_POST['regimen_fac'],
             "conyuge" => $_POST['spouce'],
             "calle" => $_POST['street_name'],
             "numero" => $_POST['ext_number'],
             "colonia" => $_POST['suburb'],
             "municipio" => $_POST['town'],
             "estado" => $_POST['state'],
-            "codigo_fac" => $_POST['cp_fac'],
+            "codigo_postal" => $_POST['postal_code'],
             "tipo_vivienda" => $_POST['lives_at_home'],
             "ocupacion" => $_POST['occupation'],
             "empresa" => $_POST['company'],
@@ -826,6 +818,7 @@ class Asesor extends CI_Controller
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
+        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -1200,7 +1193,7 @@ class Asesor extends CI_Controller
     public function getInfoTest($id_cliente)
     {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        // print_r(json_encode($datos));
+        print_r(json_encode($datos));
     }
 
     public function deposito_seriedad($id_cliente, $onlyView)
@@ -1236,6 +1229,8 @@ class Asesor extends CI_Controller
             $datos["asesor"][0] = (object)$aray1;
         }
         $datos["asesor2"] = $this->Asesor_model->selectDSAsesorCompartido($id_cliente);
+
+
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
 
@@ -1245,7 +1240,6 @@ class Asesor extends CI_Controller
         $arrayobj2 = new ArrayObject();
         $arrayobj3 = new ArrayObject();
         $arrayobj4 = new ArrayObject();
-        $arrayobj5 = new ArrayObject();
 
         for ($i = 0; $i < count($catalogs); $i++) {
             if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
@@ -1256,15 +1250,12 @@ class Asesor extends CI_Controller
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
                 $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
         }
 
         $datos["nacionalidades"] = $arrayobj1;
         $datos["edoCivil"] = $arrayobj2;
         $datos["regMat"] = $arrayobj3;
         $datos["parentescos"] = $arrayobj4;
-        $datos["regFis"] = $arrayobj5;
 
 
         $datos['onlyView'] = $onlyView;
@@ -1293,6 +1284,8 @@ class Asesor extends CI_Controller
     {
         setlocale(LC_MONETARY, 'en_US.UTF-8');
         $informacion_cliente = $this->Asesor_model->getinfoCliente($id_cliente);
+        /*print_r($informacion_cliente->row());
+        exit;*/
         $informacion_referencias = $this->Asesor_model->getinfoReferencias($id_cliente);
         $informacion_copropietarios = $this->Asesor_model->getinfoCopropietario($id_cliente);
 
@@ -1311,13 +1304,13 @@ class Asesor extends CI_Controller
                 $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
+            /*else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
+                $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));*/
         }
         $nacionalidades = $arrayobj1;
         $edoCivil = $arrayobj2;
         $regMat = $arrayobj3;
-        $regFiscal = $arrayobj4;
+        // $regFiscal = $arrayobj4;
 
         $asesor = $this->Asesor_model->selectDSAsesor($id_cliente);
 
@@ -1654,23 +1647,15 @@ class Asesor extends CI_Controller
             <td width="27%">' . $id_poder . '</td>
             <td width="29%" colspan="2">' . $id_apoderado . '</td>
             </tr>
-            ';
-            
-            if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null){
-            $html .= '<tr>
-            <th colspan="3">
-            <h5><p style="font-size:9px;"><strong>DATOS FACTURACIÓN:</strong></p></h5>
-            </th>
-            </tr>
+
             <tr>
-                <td width="20%"><b>RFC:</b> ' . $informacion_cliente->row()->rfc . '</td>
-                <td width="50%"><b>RÉGIMEN FISCAL:</b> ' . $informacion_cliente->row()->reg_nom . '</td>
-                <td width="30%"><b>CODIGO POSTAL:</b> ' . $informacion_cliente->row()->cp_fac . '</td>
-                <td width="29%" colspan="2"></td>
-            </tr>';
-             }
-            
-            $html .= '</table>
+            <td width="19%"></td>
+            <td width="23%"><b>RFC:</b> ' . $informacion_cliente->row()->rfc . '</td>
+            <td width="27%"></td>
+            <td width="29%" colspan="2"></td>
+            </tr>
+
+            </table>
             </td>
             </tr>
 
@@ -2218,7 +2203,6 @@ class Asesor extends CI_Controller
 
         $array17 = $this->input->post("id_cop[]");
         $array19 = $this->input->post("rfc_cop[]");
-        $array20 = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
 
         $cm = (empty($this->input->post('especificar'))) ? '11' : $this->input->post('especificar');
@@ -2281,12 +2265,6 @@ class Asesor extends CI_Controller
         $nacionalidades2 = $arrayobj1;
         $edoCivil = $arrayobj2;
         $regMat = $arrayobj3;
-    
-
-        /*$nacionalidades2 = $this->Asesor_model->getNationality()->result_array();
-            $edoCivil = $this->Asesor_model->getCivilStatus()->result_array();
-            $regMat= $this->Asesor_model->getMatrimonialRegime()->result_array();*/
-
 
         for ($n = 0; $n < count($nacionalidades2); $n++) {
             if ($nacionalidades2[$n]['id_opcion'] == $nac_select) {
@@ -2298,11 +2276,6 @@ class Asesor extends CI_Controller
                 $est_vic = $edoCivil[$n]['nombre'];
             }
         }
-        // for ($n = 0; $n < count($regFiscal); $n++) {
-        //     if ($regFiscal[$n]['id_opcion'] == $ecivil_select) {
-        //         $est_vic = $regFiscal[$n]['nombre'];
-        //     }
-        // }
         for ($c = 0; $c < count($regMat); $c++) {
             if ($regMat[$c]['id_opcion'] == $regimen_select) {
                 $reg_ses = $regMat[$c]['nombre'];
@@ -2333,9 +2306,7 @@ class Asesor extends CI_Controller
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
         $originario = $this->input->post('originario');
-        $regimen_fac = $this->input->post('regimenFiscal');
-        $cp_fac = $this->input->post('cp_fac');
-        
+
         $estado_civil = $this->input->post('estado_civil');
         $nombre_conyuge = $this->input->post('nombre_conyuge');
         $regimen_matrimonial = $this->input->post('regimen_matrimonial');
@@ -2353,18 +2324,18 @@ class Asesor extends CI_Controller
 
         $tipo_vivienda = $this->input->post('tipo_vivienda');
 
-        $costoM2 = str_replace(',','',$this->input->post('costoM2'));
-        $costom2f = str_replace(',','',$this->input->post('costom2f'));
+        $costoM2 = $this->input->post('costoM2');
+        $costom2f = $this->input->post('costom2f');
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
 
-        $importOferta = str_replace(',','',$this->input->post('importOferta'));
+        $importOferta = $this->input->post('importOferta');
         $letraImport = $this->input->post('letraImport');
 
-        $cantidad = str_replace(',','',$this->input->post('cantidad'));
+        $cantidad = $this->input->post('cantidad');
         $letraCantidad = $this->input->post('letraCantidad');
 
-        $saldoDeposito = str_replace(',','',$this->input->post('saldoDeposito'));
+        $saldoDeposito = $this->input->post('saldoDeposito');
         $aportMensualOfer = $this->input->post('aportMensualOfer');
         $fecha1erAport = $this->input->post('fecha1erAport');
         $plazo = $this->input->post('plazo');
@@ -2387,7 +2358,7 @@ class Asesor extends CI_Controller
 
         $nombreLote = $this->input->post('nombreLote');
         $nombreCondominio = $this->input->post('nombreCondominio');
-        $sup = str_replace(',','',$this->input->post('sup'));
+        $sup = $this->input->post('sup');
         $referencia = $this->input->post('referencia');
 
         $id_referencia1 = $this->input->post('id_referencia1');
@@ -2472,8 +2443,6 @@ class Asesor extends CI_Controller
         $arreglo_cliente["rfc"] = $rfc;
         $arreglo_cliente["fecha_nacimiento"] = $fecha_nacimiento;
         $arreglo_cliente["nacionalidad"] = $nacionalidad;
-        $arreglo_cliente["regimen_fac"] = $regimen_fac;
-        $arreglo_cliente["cp_fac"] = $cp_fac;
         $arreglo_cliente["originario_de"] = $originario;
         $arreglo_cliente["estado_civil"] = $estado_civil;
         $arreglo_cliente["nombre_conyuge"] = $nombre_conyuge;
@@ -2990,7 +2959,6 @@ class Asesor extends CI_Controller
             $nacionalidades = $this->Asesor_model->getNationality()->result_array();
             $edoCivil = $this->Asesor_model->getCivilStatus()->result_array();
             $regMat = $this->Asesor_model->getMatrimonialRegime()->result_array();
-            $regFiscal = $this->Asesor_model->getFiscalRegime()-result_array();
             $parentescos = $this->Asesor_model->getParentesco()->result_array();
             if ($limite > 0) {
                 $coprops_ds = '';
@@ -3667,7 +3635,7 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $_POST['comentario_' . $n]
             );
-            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
+            $dataInsert = 1;//$this->Asesor_model->insertAutorizacion($data);
             $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
             $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
         }
@@ -3783,23 +3751,15 @@ class Asesor extends CI_Controller
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
-        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
-
-
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
+
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
         }
         else if($validacion) {
             $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
-        }
-        else if(count($validacionIM)>0){
-            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['message'] = 'MISSING_AUTFI';
-                echo json_encode($data);
-            }
         }
         else {
             date_default_timezone_set('America/Mexico_City');
@@ -4182,11 +4142,10 @@ class Asesor extends CI_Controller
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
-        if ($this->session->userdata('id_rol') == 32) {
+        if (in_array($id_rol, array(13, 32, 17, 70)))
             $documentsNumber = 3;
-        } else {
-            $documentsNumber = 4;
-        }
+        else
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
         $dataBackTest = $this->Asesor_model->getWstatus1($idLote);

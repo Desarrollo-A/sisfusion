@@ -139,7 +139,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                         info += '<b>Plaza venta:</b> '+d.plaza_venta+'<br>';
                         info += '<b>Nacionalidad:</b> '+d.nacionalidad+'<br>';
 
-
                         return info;
                     }
                 },
@@ -191,7 +190,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                 dataType: 'json',
                 beforeSend: function(){
                     $('#modal_loader_assign').modal();
-
                 },
                 success: function(data) {
                     if (data.cliente_update == 'OK' && data.prospecto_update=='OK') {

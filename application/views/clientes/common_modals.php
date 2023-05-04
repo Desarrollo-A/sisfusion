@@ -245,13 +245,7 @@
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-curp">
                                     <label class="control-label">CURP</label>
-                                    <input  id="curp" 
-                                            name="curp"
-                                            type="text"
-                                            class="form-control input-gral"
-                                            minlength="18"
-                                            maxlength="18"
-                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                    <input id="curp" name="curp" type="text" class="form-control input-gral" minlength="18" maxlength="18" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-3">
