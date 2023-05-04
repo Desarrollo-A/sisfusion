@@ -253,6 +253,11 @@ class Asesor_model extends CI_Model
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 19 AND estatus = 1 ORDER BY nombre");
     }
 
+    function getFiscalRegime()
+    {
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 88 AND estatus = 1 ORDER BY nombre");
+    }
+
     function getState()
     {
         return $this->db->query("SELECT id_estado, nombre FROM estados ORDER BY nombre");

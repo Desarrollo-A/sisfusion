@@ -113,7 +113,459 @@
                             <?php }?>
                         </h4>
 
-                        <h4 align="right"> <label>Fecha última modificación: <?php echo $cliente[0]->fecha_modificacion;?></label> </h4>
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 9 || $cliente[0]->desarrollo == 10) { echo "checked=true"; } ?> value="3"/>
+                            <label for="three">CLY</label>
+
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 4 || $cliente[0]->desarrollo == 14 || $cliente[0]->desarrollo == 28 || $cliente[0]->desarrollo == 30) { echo "checked=true"; } ?> value="4"/>
+                            <label for="four">SLP</label>
+
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 12 || $cliente[0]->desarrollo == 17 || $cliente[0]->desarrollo == 25) { echo "checked=true"; } ?> value="5"/>
+                            <label for="five">MER</label>
+
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 23) { echo "checked=true"; } ?> value="5"/>
+                            <label for="six">SMA</label>
+                            
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27) { echo "checked=true"; } ?> value="5"/> 
+                            <label for="seven">CNC</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                        <h4 class="label-on-left mb-0">TIPO LOTE</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="tipoLote_valor" onclick="return false;" id="tipoLote_valor" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipoLote == 0) { echo "checked=true"; } ?>>
+                            <label for="one1">HABITACIONAL</label>
+
+                            <input type="radio" name="tipoLote_valor" onclick="return false;" id="tipoLote_valor" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipoLote == 1) { echo "checked=true"; } ?>>
+                            <label for="two2">COMERCIAL</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- radios 1 -->
+                <div class="row pt-1" id="checkDS">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4 class="label-on-left m-0">PERSONA FÍSICA</h4>
+                        <div class="container boxChecks p-0">
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idOficial_pf == 1) {echo "checked";}?>>
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idDomicilio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idDomicilio_pf == 1) {echo "checked";}?>>
+                                    <span>COMPROBANTE DE DOMICILIO</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="actaMatrimonio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaMatrimonio_pf == 1) {echo "checked";}?>>
+                                    <span>ACTA DE MATRIMONIO</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- radios 2 -->
+                <div class="row pt-1" id="checkDS">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h4 class="label-on-left m-0">PERSONA MORAL</h4>
+                        <div class="container boxChecks p-0">
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="poder_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->poder_pm == 1) {echo "checked";}?>>
+                                    <span>CARTA PODER</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="actaConstitutiva_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaConstitutiva_pm == 1) {echo "checked";}?>>
+                                    <span>ACTA CONSTITUTIVA</span>
+                                </label>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
+                                    <span>IDE. OFICIAL APODERADO</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- radios 3 -->
+                <div class="row aligned-row pt-1" id="boxFactura"> 
+                    <div class="col-md-1 checkbox checkbox-inline pt-0 m-0">
+                        <div class="pb-1">
+                            <h4 class="label-on-left m-0">FACTURA</h4>
+                            <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>
+                            <label class="switch" for="rfc_check"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="form-group label-floating">
+                            <div class="d-none" name="regimenl" id="regimenl">
+                                <h4 class="label-on-left m-0">RÉGIMEN FISCAL</h4>
+                                <select name="regimenFiscal" placeholder="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                    <!-- <option> SELECCIONA UNA OPCIÓN </option> -->
+                                    <?php
+                                    for($n=0; $n < count($regFis) ; $n++){
+                                        if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac){
+                                            echo '<option value="'.$regFis[$n]['id_opcion'].'" selected>'.$regFis[$n]['nombre'].'</option>';
+                                        }
+                                        else{
+                                            echo '<option value="'.$regFis[$n]['id_opcion'].'">'.$regFis[$n]['nombre'].'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
+                            <input type="text" pattern="[A-Za-z0-9]+" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
+                            onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <h4 class="label-on-left m-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
+                            <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
+                        </div>
+                    </div>    
+                </div>
+                <!-- row factura -->
+                <div class="row pt-1">
+                    <div class="col-sm-6 checkbox-radios" id="radioDS">
+                        <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 0) { echo "checked=true"; } ?>>
+                            <label for="tipoNc_valor1">HABITACIONAL</label>
+
+                            <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 1) { echo "checked=true"; } ?>> 
+                            <label for="tipoNc_valor2">EXTRANJERO</label>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 boxCustomRadio <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="pagarePart">
+                        <h4 class="label-on-left m-0">¿IMPRIME PAGARES?</h4>
+                        <div class="d-flex">
+                            <div class="w-50 mt-1">
+                                <input class="customRadio imprimePagare" type="radio" name="imprimePagare" id="imprimePagare1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
+                                <label for="imprimePagare1">SÍ</label>
+                            </div>
+                            <div class="w-50 mt-1">
+                                <input class="customRadio imprimePagare" type="radio" name="imprimePagare" id="imprimePagare2" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 0) { echo "checked=true"; } ?>>
+                                <label for="imprimePagare2">NO</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 <?php echo ($cliente[0]->tipo_nc == 1) ?  '':  'hide'; ?>" id="domicilioCarta">
+                        <h4 class="label-on-left m-0">CARTA DOMICILIO CM (<small style="color: red;">*</small>)</h4>
+                        <div class="d-flex">
+                            <div class="w-50 mt-1">
+                                <input class="customRadio tipo_comprobante" type="radio" name="tipo_comprobante" id="tipo_comprobante1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
+                                <label for="tipo_comprobante1">Sí</label>
+                            </div>
+                            <div class="w-50 mt-1">
+                                <input class="customRadio tipo_comprobante" type="radio" name="tipo_comprobante" id="tipo_comprobante2" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 0) { echo "checked=true"; } ?>>
+                                <label for="tipo_comprobante2">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4 class="text-center pt-3">DATOS DEL TITULAR</h4>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                                NOMBRE
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" name="nombre" id="nombre" type="text" required="true" <?php echo $readOnly; ?> <?php echo $readonlyNameToAsesor;?> value="<?=$cliente[0]->nombre?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                                APELLIDO PATERNO
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" name="apellido_paterno" id="apellido_paterno" type="text" <?php echo $readOnly; ?> <?php echo $readonlyNameToAsesor;?> required="true" value="<?=$cliente[0]->apellido_paterno?>"/>
+                        </div>
+                    </div>                               
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">    
+                            <label class="label-on-left m-0">
+                                APELLIDO MATERNO
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" name="apellido_materno" id="apellido_materno" type="text" <?php echo $readOnly; ?><?php echo $readonlyNameToAsesor;?> required="true" value="<?=$cliente[0]->apellido_materno?>"/>
+                        </div>                   
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">                  
+                            <label class="label-on-left m-0">
+                                TELÉFONO CASA
+                            </label>
+                            <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">      
+                            <label class="label-on-left m-0">
+                                CELULAR
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" required="true" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" />
+                        </div>        
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                                CORREO ELECTRÓNICO
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <input class="form-control input-gral" required="true" name="correo" id="correo" type="email" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
+                        <label class="label-on-left m-0">FECHA NACIMIENTO(<small style="color: red;">*</small>)</label>
+                        <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating select-is-empty">
+                            <label class="label-on-left m-0" style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
+                            <select name="nacionalidad" required="true" placeholder="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <?php
+                                for($p=0; $p < count($nacionalidades) ; $p++){
+                                    if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
+                                        echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$nacionalidades[$p]['id_opcion'].'">'.$nacionalidades[$p]['nombre'].'</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>                        
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">ORIGINARIO DE: (<small style="color: red;">*</small>)</label>
+                        <input type="text" pattern="[A-Za-z ]+" required="true" class="form-control m-0 input-gral" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating select-is-empty">
+                            <label class="label-on-left m-0">ESTADO CIVIL(<small style="color: red;">*</small>)</label>
+                            <select name="estado_civil" id="estado_civil" required="true" placeholder="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
+                                <?php
+                                for($n=0; $n < count($edoCivil) ; $n++){
+                                    if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil){
+                                        echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$edoCivil[$n]['id_opcion'].'">'.$edoCivil[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating select-is-empty">
+                            <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
+                            <select name="regimen_matrimonial" placeholder="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <!-- <option value="5"> SELECCIONA UNA OPCIÓN </option> -->
+                                <?php
+                                for($n=0; $n < count($regMat) ; $n++){
+                                    if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
+                                        echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$regMat[$n]['id_opcion'].'">'.$regMat[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">NOMBRE DE CÓNYUGE</label>
+                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
+                        </div>
+                    </div>              
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
+                        </div>
+                    </div>               
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">OCUPACIÓN(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
+                            <input class="form-control input-gral" name="empresa"  id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">PUESTO(<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">ANTIGÜEDAD <small>(AÑOS)</small></label>
+                            <input class="form-control input-gral" name="antiguedad" id="antiguedad" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->antiguedad?>"/>
+                        </div>
+                    </div>                
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
+                            <input class="form-control input-gral" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
+                        </div>
+                    </div>                
+                </div>  
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">EDAD AL MOMENTO DE FIRMA(<small style="color: red;">*</small>) <small>(AÑOS)</small></label>
+                            <input class="form-control input-gral" name="edadFirma" id="edadFirma" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->edadFirma?>"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating">
+                            <label class="label-on-left m-0">TELÉFONO EMPRESA</label>
+                            <input class="form-control input-gral" name="telefono_empresa" id="telefono_empresa" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?=$cliente[0]->telefono_empresa?>"/>
+                        </div>
+                    </div>            
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-md-2 checkbox-radios">
+                                <div class="radio"  style="color: gray;">
+                                    VIVE EN CASA:
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?>
+                                               name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) {
+                                            echo "checked=true";
+                                        }
+                                        ?>  value="1" style="font-size: 0.8em;"/> PROPIA
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?>
+                                               required <?php if ($cliente[0]->tipo_vivienda == 2) {
+                                            echo "checked=true";
+                                        }
+                                        ?>  value="2" style="font-size: 0.8em;"/> RENTADA
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 3) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="3" style="font-size: 0.8em;"/> PAGÁNDOSE
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 4) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="4" style="font-size: 0.8em;"/> FAMILIAR
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 5) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="5" style="font-size: 0.8em;"/> OTRO
+                                    </label>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 checkbox-radios">
+                        <div class="radio"  style="color: gray;">
+                            VIVE EN CASA:
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 checkbox-radios required">
+                        <div class="radio">
+                            <label style="font-size: 0.8em;">
+                                <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?>
+                                        name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) {
+                                    echo "checked=true";
+                                }
+                                ?>  value="1" style="font-size: 0.8em;"/> PROPIA
+                            </label>
+                        </div>
+                    </div>
 
 
                         <div class="row">
