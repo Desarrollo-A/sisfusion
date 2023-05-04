@@ -35,34 +35,20 @@ class Contratacion extends CI_Controller
         $this->load->view('template/footer');
     }
 
-    public function lista_proyecto()
-    {
+    public function lista_proyecto() {
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_proyecto_lista()->result_array());
     }
-    public function lista_condominio($proyecto)
-    {
+    
+    public function lista_condominio($proyecto) {
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_condominio_lista($proyecto)->result_array());
     }
 
- 
-
-     public function lista_proyecto_dos()
-    {
-        echo json_encode($this->Contratacion_model->get_proyecto_lista_dos()->result_array());
-    }
-
- public function lista_condominio_dos($proyecto)
-    {
-        echo json_encode($this->Contratacion_model->get_condominio_lista_dos($proyecto)->result_array());
-    }
-
-    public function lista_lotes($condominio){
+    public function lista_lotes($condominio) {
       echo json_encode($this->Contratacion_model->get_lote_lista($condominio)->result_array());
     }
-    public function lista_estatus()
-    {
+    public function lista_estatus() {
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_estatus_lote()->result_array());
     }

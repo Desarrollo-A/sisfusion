@@ -579,7 +579,7 @@ class Caja_outside extends CI_Controller {
             'id_regional' => $data['lider'][0]['id_regional'],
             'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'flag_compartida' =>$datosView->flag_compartida,
-            'estructura' => $datosView->id_gerente == 6661 ? 1 : 0,
+            $arreglo['estructura'] = in_array($data->asesores[0]->idGerente, array(12135, 6661)) ? 1 : 0;
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
             'fechaAlta' => date('Y-m-d H:i:s'),
             'id_cliente_reubicacion' => isset( $datosView->id_cliente_reubicacion ) ? $datosView->id_cliente_reubicacion : null
