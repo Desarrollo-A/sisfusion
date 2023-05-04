@@ -515,9 +515,12 @@ class Caja_outside extends CI_Controller {
         }
 
         $dataInsertCliente = array(
-            'id_asesor' => $datosView->id_asesor,/* $data['prospecto'][0]['id_asesor']*/
+            'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
-            'id_gerente' => $datosView->id_gerente,/*$data['prospecto'][0]['id_gerente']*/
+            'id_gerente' => $datosView->id_gerente,
+            'id_subdirector' => $datosView->id_subdirector,
+            'id_regional' => $datosView->id_regional,
+            'id_regional_2' => $datosView->id_regional_2,
             'id_sede' => $data['prospecto'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -563,9 +566,6 @@ class Caja_outside extends CI_Controller {
             'creado_por' => 1,
             'id_prospecto' => $id_prospecto,
             'fecha_modificacion' => date('Y-m-d H:i:s'),
-            'id_subdirector' => $data['lider'][0]['id_subdirector'],
-            'id_regional' => $data['lider'][0]['id_regional'],
-            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'estructura' => in_array($datosView->id_gerente, array(12135, 6661)) ? 1 : 0,
             'apartadoXReubicacion' => ( $datosView->concepto == 'REUBICACIÓN') ? '1' : '0',
             'fechaAlta' => date('Y-m-d H:i:s'),
