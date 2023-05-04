@@ -38,9 +38,11 @@ class Comisiones extends CI_Controller
   public function dispersion() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
+        
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    $this->load->view('template/header');
-    $this->load->view("comisiones/dispersion-view", $datos);
+        $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $this->load->view('template/header');
+        $this->load->view("comisiones/dispersion-view", $datos);
   }
 
 
@@ -75,8 +77,9 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
-    $this->load->view("comisiones/activas-view", $datos);
+    $this->load->view("ventas/active_commissions", $datos);
   }
 
   public function getDataActivasPago() {
