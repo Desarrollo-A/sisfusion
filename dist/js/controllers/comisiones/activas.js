@@ -72,31 +72,31 @@ $(document).ready(function () {
             { data: function (d) {
                 var labelTipoVenta;
                 if(d.tipo_venta == 1) {
-                    labelTipoVenta ='<span class="label  lbl-orageYellow" >Particular</span>';
+                    labelTipoVenta ='<span class="label" style="color:#78281F;background:#F5B7B1;">Particular</span>';
                 }else if(d.tipo_venta == 2) {
-                    labelTipoVenta ='<span class="label lbl-green" >Normal</span>';
+                    labelTipoVenta ='<span class="label" style="color:#186A3B;background:#ABEBC6;">Normal</span>';
                 }else if(d.tipo_venta == 7) {
-                    labelTipoVenta ='<span class="label lbl-violetDeep" >Especial</span>';
+                    labelTipoVenta ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Especial</span>';
                 }else{
-                    labelTipoVenta ='<span class="label lbl-gray" >Sin Definir</span>';
+                    labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 }
                 return labelTipoVenta;
             }}, 
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
-                    labelCompartida ='<span class="label lbl-yellow" >Individual</span>';
+                    labelCompartida ='<span class="label" style="color:#7D6608;background:#F9E79F;">Individual</span>';
                 } else{
-                    labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
+                    labelCompartida ='<span class="label" style="color:#7E5109;background:#FAD7A0;">Compartida</span>';
                 }
                 return labelCompartida;
             }}, 
             { data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label lbl-violetDeep"   >Contratado</span>';
+                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
                 }else {
-                    labelStatus ='<span class="label lbl-gray"><b>'+d.idStatusContratacion+'</b></span>';
+                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
                 return labelStatus;
             }},
@@ -113,7 +113,7 @@ $(document).ready(function () {
             }},
             { data: function (d) {
                 var fechaSistema;
-                if(d.fecha_sistema == null ) {
+                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
                     fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 }else {
                     fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
@@ -125,7 +125,7 @@ $(document).ready(function () {
                 var rescisionLote;
                 fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
                 rescisionLote = '';
-                if(d.fecha_neodata <= '01 JAN 21' || d.fecha_neodata == null ) {
+                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
                     fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 } 
                 if (d.registro_comision == 8){

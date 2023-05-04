@@ -242,7 +242,7 @@
             }
         }
     }
-
+        
     .bootstrap-select {
         width: 100% !important;
     }
@@ -258,16 +258,10 @@
         -moz-box-shadow: none;
         -webkit-box-shadow: none;
     }
-
 }
 table.dataTable > thead > tr > th{
     padding: 0!important;
     text-align: center;
-}
-.modal-xl{
-    overflow-y: auto;
-    width: 95%;
-    height: fit-content;
 }
 table{
     border: none;

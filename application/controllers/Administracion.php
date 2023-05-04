@@ -103,6 +103,7 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			$dataPer[$i]['descripcion']=$data[$i]->descripcion;
 			$dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
 			$dataPer[$i]['vl']=$data[$i]->vl;
+			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 			$horaInicio = date("08:00:00");
 			$horaFin = date("16:00:00");
 			$arregloFechas = array();  
@@ -576,6 +577,36 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
         echo json_encode($data);
     }
  
+	public function get_edo_lote(){
+        $data = $this->Administracion_model->get_edo_lote();
+        echo json_encode($data);
+    }
+ 
+	public function get_des_lote(){
+        $data = $this->Administracion_model->get_des_lote();
+        echo json_encode($data);
+	}
+	
+
+	public function update_asignacion(){
+		$idLote=$this->input->post('idLote');	 
+		$id_desarrollo=$this->input->post('id_desarrollo');
+		$id_estado=$this->input->post('id_estado');	 
+		
+		$data=array();
+		$data["id_desarrollo_n"]=$id_desarrollo;
+		$data["id_estado"]=$id_estado;
+		
+		if ($this->Administracion_model->update_asignacion($idLote,$data) == TRUE){ 
+			$data['message'] = 'OK';
+			echo json_encode($data);
+		}else{
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
+		}
+
+    }
+
     public function status11Validado(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
