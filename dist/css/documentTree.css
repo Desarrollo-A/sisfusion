@@ -589,6 +589,10 @@
   margin: 0;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-pdf i {
   color: #f44336;
 }
@@ -1310,6 +1314,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {

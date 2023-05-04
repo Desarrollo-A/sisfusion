@@ -589,6 +589,10 @@
   margin: 0;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-pdf i {
   color: #f44336;
 }
@@ -1013,38 +1017,6 @@
   background-color: #4e4e4e;
   color: #ffffff;
 }
-/*Classes created by: Dante Aldair
-----------------------------------*/
-.lbl-blueNCS{
-  color: #0089B7;
-  border: none;
-  background-color: #0089B718;
-}
-
-.lbl-darkCyan{
-  color: #30ada1;
-  border: none;
-  background-color: #30ada118;
-}
-
-.lbl-brightBlue{
-  color: #4a30dd;
-  border: none;
-  background-color: #4a30dd18;
-}
-
-.lbl-verySoftBlue{
-  color: #AED6F1;
-  border: none;
-  background-color: #AED6F118;
-}
-
-.lbl-veryDarkBlue{
-  color: #1B4F72;
-  border: none;
-  background-color: #1B4F7218;
-}
-/*--------------------------------*/
 
 /* Btns acción dentro de datatable */
 /* Etiquetas */
@@ -1342,6 +1314,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1654,6 +1627,12 @@
 table.dataTable > thead > tr > th {
   padding: 0 !important;
   text-align: center;
+}
+
+.modal-xl {
+  overflow-y: auto;
+  width: 95%;
+  height: fit-content;
 }
 
 table {

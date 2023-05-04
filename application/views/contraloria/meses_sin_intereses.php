@@ -72,7 +72,6 @@
         <div class="modal-dialog ">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <center><h3 class="modal-title" id="myModalLabel">HISTORIAL</h3></center>
                 </div>
                 <div class="modal-body" style="height: 550px;overflow-x: auto;">
@@ -91,7 +90,6 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <center><h3 class="modal-title" id="tittleModal"></h3><h5 id="leyendaAdv"></h5></center>
                 </div>
                 <div class="modal-body">
@@ -114,33 +112,33 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-box fa-2x"></i>
+                    <div class="card">
+                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title center-align" >Meses sin intereses</h3>
+                            <div class="toolbar">
+                                <div class="container-fluid p-0"></div>
                             </div>
-                            <div class="card-content">
-                                <h3 class="card-title center-align" >Meses sin intereses</h3>
-                                <div class="toolbar">
-                                    <div class="container-fluid p-0"></div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_aut" name="tabla_aut_name">
-                                            <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>COMENTARIO</th>
-                                                <th>ESTATUS AUTORIZACIÓN</th>
-                                                <th>ÚLT. MODIFICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                            <div class="material-datatables">
+                                <div class="form-group">
+                                    <table class="table-striped table-hover" id="tabla_aut" name="tabla_aut_name">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>COMENTARIO</th>
+                                            <th>ESTATUS AUTORIZACIÓN</th>
+                                            <th>ÚLT. MODIFICACIÓN</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
 
                 <div class="modal fade " id="subirMeses" data-backdrop="static" data-keyboard="false">
@@ -205,7 +203,7 @@
                                                             <tr>
                                                                 <th>ID CONDOMINIO</th>
                                                                 <th>NOMBRE</th>
-                                                                <th>MSNI</th>
+                                                                <th>MSI</th>
                                                             </tr>
                                                             </thead>
                                                         </table>
@@ -218,7 +216,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-<!--                                <button type="button" id="guardar" class="btn btn-primary">Registrar</button>-->
+                                <!--                                <button type="button" id="guardar" class="btn btn-primary">Registrar</button>-->
                             </div>
                         </div>
                     </div>
