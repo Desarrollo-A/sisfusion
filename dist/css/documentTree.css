@@ -613,10 +613,6 @@
   color: #209E63;
 }
 
-.color-letter {
-  color: #209E63;
-}
-
 .buttons-excel:hover {
   background-color: #209E63 !important;
 }
@@ -1314,7 +1310,6 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
-  border: none;
 }
 
 .input-gral ::placeholder {

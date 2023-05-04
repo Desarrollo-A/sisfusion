@@ -1,23 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
-    table thead tr th {
-        padding: 0px !important;
-        color:#fff;
-        font-weight: lighter;
-        font-size: 0.8em;
-    }
-    tfoot tr{
-        background: #143860;
-    }
-    table tfoot tr th{
-        padding: 0px !important;
-        color:#fff;
-        font-weight: lighter;
-        font-size: 1.3em;
-        text-align: center;
-    }
-</style>
+
 <body class="">
 <div class="wrapper">
 
@@ -209,14 +192,6 @@
                 fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, fechaFin, dates);
         }
     );
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-
-        // These options are needed to round to whole numbers if that's what you want.
-        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    });
 
     function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, fechaFin, dates) {
         generalDataTableNeoData = $('#tableLotificacionNeodata').dataTable({
@@ -290,8 +265,7 @@
                                         return "CON INTERESES";
                                         break;
                                 }
-                            },
-
+                            }
                         }
                     }
                 }
@@ -315,52 +289,52 @@
             columns: [
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.codcliente);
+                        return d.codcliente;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.Cuenta2170);
+                        return d.Cuenta2170;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.Cuenta1150);
+                        return d.Cuenta1150;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.Vivienda);
+                        return d.Vivienda;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.Contrato);
+                        return d.Contrato;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.cliente);
+                        return d.cliente;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.superficie);
+                        return d.superficie;
                     }
                 },
                 {
                     data: function (d) {
-                       return '<p>$ '+formatMoney(d.precioventa)+'</p>';
+                        return '<p>'+formatMoney((d.precioventa).slice(0, -2))+'</p>';
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.fecha_contrato);
+                        return d.fecha_contrato;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.freconocimiento);
+                        return d.freconocimiento;
                     }
                 },
                 {
@@ -370,42 +344,42 @@
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.intermediariocte);
+                        return d.intermediariocte;
                     }
                 },
                 {
                     data: function (d) {
-                        return '<p>$ '+formatMoney(d.monto2170)+'</p>';
+                        return '<p>'+formatMoney(d.monto2170)+'</p>';
                     }
                 },
                 {
                     data: function (d) {
-                        return '<p>$ '+formatMoney(d.monto1150)+'</p>';
+                        return '<p>'+formatMoney(d.monto1150)+'</p>';
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.montoorden);
+                        return d.montoorden;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.escrituraind);
+                        return d.escrituraind;
                     }
                 },
                 {
                     data: function (d) {
-                        return myFunctions.validateEmptyField(d.fescritura);
+                        return d.fescritura;
                     }
                 },
                 {
                     data: function (d) {
-                        return '<p>$ '+formatMoney(d.totcontrato)+'</p>';
+                        return '<p>'+formatMoney(d.totcontrato)+'</p>';
                     }
                 },
                 {
                     data: function (d) {
-                        return '<p>$ '+formatMoney(d.totcontratoint)+'</p>';
+                        return '<p>'+formatMoney(d.totcontratoint)+'</p>';
                     }
                 }
             ],
@@ -429,16 +403,9 @@
         });
     }
 
-    function formatMoney( n ) {
-        var c = isNaN(c = Math.abs(c)) ? 2 : c,
-            d = d == undefined ? "." : d,
-            t = t == undefined ? "," : t,
-            s = n < 0 ? "-" : "",
-            i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-            j = (j = i.length) > 3 ? j % 3 : 0;
-
-        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-    };
+    function formatMoney(number) {
+        return '$'+ number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     $(document).on('change', "#empresas", function () {
         getProyectosList($(this).val());
