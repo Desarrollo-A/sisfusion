@@ -571,11 +571,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		}
 	}
 	
-	public function get_data_asignacion($idLote){
-        $data = $this->Administracion_model->get_data_asignacion($idLote);
-        echo json_encode($data);
-    }
- 
     public function status11Validado(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
