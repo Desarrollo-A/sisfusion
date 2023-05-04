@@ -139,7 +139,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                         info += '<b>Plaza venta:</b> '+d.plaza_venta+'<br>';
                         info += '<b>Nacionalidad:</b> '+d.nacionalidad+'<br>';
 
-
                         return info;
                     }
                 },
@@ -191,7 +190,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                 dataType: 'json',
                 beforeSend: function(){
                     $('#modal_loader_assign').modal();
-
                 },
                 success: function(data) {
                     if (data.cliente_update == 'OK' && data.prospecto_update=='OK') {
@@ -665,9 +663,9 @@ function fillDataTable(id_condominio) {
                         url_to_go  = general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0';
                     }
                     if (d.dsType == 1){
-                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
+                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
                     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                        buttonst += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
+                        buttonst += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
 
                     return '<div class="d-flex justify-center">'+buttonst+'</div>';
