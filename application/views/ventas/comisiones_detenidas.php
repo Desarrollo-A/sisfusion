@@ -37,7 +37,7 @@
                                                         <!-- <th>CLIENTE</th> -->
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
-                                                        <th>EST. CONTRATACIÓN</th>
+                                                        <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>

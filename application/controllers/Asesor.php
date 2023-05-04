@@ -1317,7 +1317,7 @@ class Asesor extends CI_Controller
         $nacionalidades = $arrayobj1;
         $edoCivil = $arrayobj2;
         $regMat = $arrayobj3;
-        // $regFiscal = $arrayobj4;
+        $regFiscal = $arrayobj4;
 
         $asesor = $this->Asesor_model->selectDSAsesor($id_cliente);
 
@@ -2283,6 +2283,11 @@ class Asesor extends CI_Controller
         $regMat = $arrayobj3;
     
 
+        /*$nacionalidades2 = $this->Asesor_model->getNationality()->result_array();
+            $edoCivil = $this->Asesor_model->getCivilStatus()->result_array();
+            $regMat= $this->Asesor_model->getMatrimonialRegime()->result_array();*/
+
+
         for ($n = 0; $n < count($nacionalidades2); $n++) {
             if ($nacionalidades2[$n]['id_opcion'] == $nac_select) {
                 $nac_select_II = $nacionalidades2[$n]['nombre'];
@@ -2293,6 +2298,11 @@ class Asesor extends CI_Controller
                 $est_vic = $edoCivil[$n]['nombre'];
             }
         }
+        // for ($n = 0; $n < count($regFiscal); $n++) {
+        //     if ($regFiscal[$n]['id_opcion'] == $ecivil_select) {
+        //         $est_vic = $regFiscal[$n]['nombre'];
+        //     }
+        // }
         for ($c = 0; $c < count($regMat); $c++) {
             if ($regMat[$c]['id_opcion'] == $regimen_select) {
                 $reg_ses = $regMat[$c]['nombre'];
@@ -3095,6 +3105,13 @@ class Asesor extends CI_Controller
                     $html .= '</b></td>
 
                         <td><label>RFC: </label><br><b>' . $array19[$i] . '</b></td>
+                        <td><label>Régimen Fiscal: </label><br><b>';
+                        for ($n = 0; $n < count($regFiscal); $n++) {
+                        if ($regFiscal[$n]['id_opcion'] == $array20[$i]) {
+                            $html .= $regFiscal[$n]['nombre'];
+                        }
+                    }
+                    $html .= '</b></td>
                     </tr>
                     </table>';
                 }

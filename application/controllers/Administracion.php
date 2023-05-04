@@ -22,38 +22,14 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 	}
 
 
-	public function index()
-	{
-		if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '11' && $this->session->userdata('id_rol') != '34' 
-			&& $this->session->userdata('id_rol') != '23' && $this->session->userdata('id_rol') != '35' 
-			&& $this->session->userdata('id_rol') != '26' && $this->session->userdata('id_rol') != '41' 
-			&& $this->session->userdata('id_rol') != '39' && $this->session->userdata('id_rol') != '31' 
-			&& $this->session->userdata('id_rol') != '49' && $this->session->userdata('id_rol') != '50' 
-			&& $this->session->userdata('id_rol') != '40' && $this->session->userdata('id_rol') != '54' 
-			&& $this->session->userdata('id_rol') != '58' &&
-            $this->session->userdata('id_rol') != '10' && $this->session->userdata('id_rol') != '18' &&
-            $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' &&
-            $this->session->userdata('id_rol') != '21' && $this->session->userdata('id_rol') != '28' &&
-            $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '25' &&
-            $this->session->userdata('id_rol') != '25' && $this->session->userdata('id_rol') != '27' &&
-            $this->session->userdata('id_rol') != '30' && $this->session->userdata('id_rol') != '36' &&
-            $this->session->userdata('id_rol') != '22' && $this->session->userdata('id_rol') != '53' &&
-            $this->session->userdata('id_rol') != '8' && $this->session->userdata('id_rol') != '23' &&
-            $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
-			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
-			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
-			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
-			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83' && $this->session->userdata('id_rol') != '84'
-        ) {
+	public function index() {
+		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' , '39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
+		'21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' , 
+		'76', '77' , '78', '79' , '80', '81' , '82', '83' , '84'))) {
 			redirect(base_url() . 'login');
 		}
-
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-		// $this->load->view('administracion/inicio_administracion_view',$datos);
 		$this->load->view('template/home',$datos);
 		$this->load->view('template/footer');
 	}
@@ -111,9 +87,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 			$time = date('H:i:s', $hoy_strtotime2);
-			
-
-
 
 			if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
 				$dataPer[$i]['fechaVenc2'] = 'N/A';
@@ -571,11 +544,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		}
 	}
 	
-	public function get_data_asignacion($idLote){
-        $data = $this->Administracion_model->get_data_asignacion($idLote);
-        echo json_encode($data);
-    }
- 
     public function status11Validado(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
