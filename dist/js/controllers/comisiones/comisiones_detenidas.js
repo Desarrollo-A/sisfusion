@@ -3,12 +3,13 @@ $('#comisiones-detenidas-table').ready(function () {
     let titulos = [];
 
     $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0 ) {
+        if (i !== 0 && i !== 12) {
             const title = $(this).text();
             titulos.push(title);
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (comisionesDetenidasTabla.column(i).search() !== this.value) {
+
                     comisionesDetenidasTabla.column(i).search(this.value).draw();
                 }
             });
