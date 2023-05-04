@@ -15,7 +15,21 @@ $(document).ready (function() {
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
-                title:'Autorizaciones'
+                title:'Autorizaciones',
+                columns: [0, 1, 2, 3],
+                format: {
+                    header:  function (d, columnIdx) {
+                        if(columnIdx == 0){
+                            return 'ID';
+                        }else if(columnIdx == 1){
+                            return 'COMENTARIO';
+                        }else if(columnIdx == 2){
+                            return 'ESTATUS AUT';
+                        }else if(columnIdx == 3){
+                            return 'MODIFICADO';
+                        }
+                    }
+                }
             }]
     }
     else{
@@ -25,7 +39,27 @@ $(document).ready (function() {
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
-                title:'Autorizaciones'
+                title:'Autorizaciones',
+                columns: [0, 1, 2, 3],
+                exportOptions: {
+                    format: {
+                        header:  function (d, columnIdx) {
+                            if(columnIdx == 0){
+                                return 'ID';
+                            }else if(columnIdx == 1){
+                                return 'COMENTARIO';
+                            }else if(columnIdx == 2){
+                                return 'ESTATUS AUT';
+                            }else if(columnIdx == 3){
+                                return 'MODIFICADO';
+                            }else if(columnIdx == 4){
+                                return '';
+                            }
+
+                        }
+                    }
+                }
+
             },
             {
                 className: 'btn btn-azure subir-msi',
@@ -237,9 +271,25 @@ function validateExtension(extension, allowedExtensions) {
 $('#tabla_msni thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     if(i == 0){//para cambiar el nombre dinamicamente del header de ID
-        $(this).html('<input type="text" class="textoshead anclaClass"  placeholder="'+title+'"/>' );
+        let attributo_input;
+        switch (i) {
+            case 0:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+        }
+
+        $(this).html('<input type="text" class="textoshead anclaClass" '+attributo_input+' placeholder="'+title+'"/>' );
     }else{
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        let attributo_input;
+        switch (i) {
+            case 1:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 122\"";
+                break;
+            case 2:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+        }
+        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
 
     }
     $( 'input', this ).on('keyup change', function () {
@@ -263,25 +313,33 @@ function lettersOnly()
 }
 
 $('#tabla_aut thead tr:eq(0) th').each( function (i) {
-
+    let title;
+    let spanText;
     if(i<=3){
+
         let attributo_input;
         switch(i){
             case 0:
-                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                attributo_input = "return event.charCode >= 48 && event.charCode <= 57";
                 break;
             case 1:
-                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                attributo_input = "return lettersOnly(event)";
                 break;
             case 2:
-                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                attributo_input = "return lettersOnly(event)";
                 break;
             case 3:
-                attributo_input = "onkeypress=\"return event.charCode >= 45 && event.charCode <= 57\"";
+                attributo_input = "return event.charCode >= 45 && event.charCode <= 57";
                 break;
         }
-        let title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        if(i==3){
+            title = 'MODIFICADO';
+        }else{
+            title = $(this)[0].textContent;
+        }
+        spanText = '<span class="textoshead hide"  placeholder="'+title+'">'+title+'</span>';
+
+        $(this).html('<input type="text" class="textoshead " placeholder="'+title+'" onkeypress="'+attributo_input+'" /> ' + spanText );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_aut').DataTable().column(i).search() !== this.value ){
                 $('#tabla_aut').DataTable()
@@ -292,7 +350,7 @@ $('#tabla_aut thead tr:eq(0) th').each( function (i) {
         });
     }else{
         let title = $(this).text();
-        $(this).html('<span class="textoshead">'+title+'</span>' );
+        $(this).html('<span class="textoshead" placeholder="'+title+'"></span>' );
     }
 
 });
@@ -522,50 +580,52 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
      * 3.- Avanzar
      * 4.- Rechazar
      **/
-     if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
-     if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
-     if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzar" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
-     if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazar" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
-     return  botones;
- }
+    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
+    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
+    if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzar" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
+    if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazar" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
+    return  botones;
+}
 
- $(document).on('click', '.btnVer', function(e){
-     let data = [];
-     data["tb"] = 2;
-     let id_aut = $(this).attr('data-idautorizacion');
+$(document).on('click', '.btnVer', function(e){
+    let data = [];
+    data["tb"] = 2;
+    let id_aut = $(this).attr('data-idautorizacion');
 
-     let arr = id_aut.split(' ');
-     if(arr.length <= 1){
-         let id = parseInt(id_aut[0]);
-         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
-         data['edit'] = 0;
-     }else if(arr.length > 1){
-         // let id = 'residencial';
-         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
-         data['edit'] = 0;
-     }
+    let arr = id_aut.split(' ');
+    if(arr.length <= 1){
+        let id = parseInt(id_aut[0]);
+        data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
+        data['edit'] = 0;
+    }else if(arr.length > 1){
+        // let id = 'residencial';
+        data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
+        data['edit'] = 0;
+    }
 
-     // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
+    // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
     // data['edit'] = 0;                                                //ORIGINAL
-     loadTableVAUT(data);
-     $('#cambiosGuardaMSI').removeClass('hide');
-     $('#cambiosGuardaMSI').addClass('hide');
-     $('#verAut').modal('show'); /**/
- });
+    loadTableVAUT(data);
+    $('#cambiosGuardaMSI').removeClass('hide');
+    $('#cambiosGuardaMSI').addClass('hide');
+    $('#verAut').modal('show'); /**/
+});
 
 function loadTableVAUT(data){
     let button_excel = '';
+    let dom;
 
     if(data['edit'] == 1){
         button_excel = [{}]
-
+        dom =  't' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
     }
     else{
+        dom = 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
         button_excel = [{
             className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
             extend: 'csvHtml5',
-            titleAttr: 'CSV',
+            titleAttr: 'DESCARGAR PLANTILLA',
             title:'MSI pendietes de autorización',
             exportOptions: {
                 columns: [0, 1, 2],
@@ -578,7 +638,7 @@ function loadTableVAUT(data){
                             } else if(columnIdx == 1){
                                 return 'CONDOMINIO';
                             }else if(columnIdx == 2){
-                                return 'MSNI';
+                                return 'MSI';
                             }
                         }else if(dataVariable['tb']==2){
                             if(columnIdx == 0){
@@ -586,7 +646,7 @@ function loadTableVAUT(data){
                             }else if(columnIdx == 1){
                                 return 'LOTE';
                             }else if(columnIdx == 2){
-                                return 'MSNI';
+                                return 'MSI';
                             }
                         }
 
@@ -598,7 +658,7 @@ function loadTableVAUT(data){
     }
 
     tablaMsiVisualizar = $('#tabla_msni_visualizacion').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: dom,
         width: 'auto',
         buttons: button_excel,
         ajax: {
@@ -633,7 +693,7 @@ function loadTableVAUT(data){
                 data: function(d){
                     let action_return = '';
                     if(id_rol_general==5 && data['edit'] == 1){
-                        action_return = '<input type="text" class="form-control" name="msi" value="'+d.msi+'">';
+                        action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
                     }else{
                         action_return = d.msi;
                     }
@@ -643,6 +703,36 @@ function loadTableVAUT(data){
         ]
     })
 }
+
+$('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
+    if(i<=3){
+        let attributo_input;
+        switch(i){
+            case 0:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+            case 1:
+                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                break;
+            case 2:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+        }
+        let title = $(this).text();
+        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_msni_visualizacion').DataTable().column(i).search() !== this.value ){
+                $('#tabla_msni_visualizacion').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    }else{
+        let title = $(this).text();
+        $(this).html('<span class="textoshead">'+title+'</span>' );
+    }
+
+});
 
 $(document).on('click', '.btnHistorial', function () {
     let idAutorizacion = $(this).attr('data-idautorizacion');
@@ -703,7 +793,7 @@ $(document).on('click', '.btnHistorial', function () {
             contenido_acordeon = ' <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">' +
                 '                        <div class="panel-group" id="accordion">' +
                 '                            <div class="panel panel-default">';
-                for (var i = 0; i < len; i++) {
+            for (var i = 0; i < len; i++) {
 
                 let estatus=data[i]['estatus_autorizacion'];
                 let comentario = data[i]['comentario'];
@@ -726,17 +816,17 @@ $(document).on('click', '.btnHistorial', function () {
                                 <div id="historial`+idHistorial+`" class="panel-collapse collapse ">
 `;
 
-                    data_historial.map((element, index)=>{
-                        if(element.estatus_autorizacion==1 || element.estatus_autorizacion==2 || element.estatus_autorizacion==3){
-                            icono_show = 'fa-check';
-                            color_icono= '#28B463';
-                            bg_color = '#28B46318';
-                        }else{
-                            icono_show = 'fa-close';
-                            color_icono= '#c01313';
-                            bg_color = '#c0131318';
-                        }
-                        contenido_acordeon += `
+                data_historial.map((element, index)=>{
+                    if(element.estatus_autorizacion==1 || element.estatus_autorizacion==2 || element.estatus_autorizacion==3){
+                        icono_show = 'fa-check';
+                        color_icono= '#28B463';
+                        bg_color = '#28B46318';
+                    }else{
+                        icono_show = 'fa-close';
+                        color_icono= '#c01313';
+                        bg_color = '#c0131318';
+                    }
+                    contenido_acordeon += `
                                    
                                         <div class="panel-body">
                                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -756,9 +846,9 @@ $(document).on('click', '.btnHistorial', function () {
                                         </div>
                                 
                     `;
-                    });
-                    contenido_acordeon +=`</div>`;
-                }
+                });
+                contenido_acordeon +=`</div>`;
+            }
             contenido_acordeon += `
                             </div>
                         </div>
@@ -834,7 +924,7 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
                 data = JSON.parse(data);
                 if(data.message == 'OK'){
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right",'Se actualizado correctamente', "success");
+                    alerts.showNotification("top", "right",'Se actualizó correctamente', "success");
                     $('#verAut').modal('hide');
                 }else if(data.message == 'ERROR'){
                     $('#spiner-loader').addClass('hide');
@@ -872,7 +962,7 @@ function createArrayEvents(params){
         if(flagJump == 0){
             flagJump = 3;
             // if(objAttr[1]!=0){
-                array.push(obj);
+            array.push(obj);
             // }
             tempArray = [];
             obj = {};
@@ -901,7 +991,7 @@ $(document).on('click', '.btnAvanzar', function(){
     if(id_rol_general==17 || id_rol_general==70){//revisar si es contraloria
         dataUpdateGeneral[1] = 3; //estatus de autorizacion a actualizar
         $('#tittleModal').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdv').text('Al aceptar actualizaras los meses intereses autorizados');
+        $('#leyendaAdv').text('Al aceptar se renovarán los MSI autorizados');
     }else{
         dataUpdateGeneral[1] = 2; //estatus de autorizacion a actualizar
         $('#tittleModal').text('Avanzar autorización');

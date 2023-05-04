@@ -8117,15 +8117,15 @@ class RegistroCliente extends CI_Controller {
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=0;
 
-            $carpeta = '';
-            if($id_tipoDoc == 31){
-                $carpeta = 'autFechainicio';
-            }else{
-                $carpeta = 'expediente';
-            }
+        $carpeta = '';
+        if($id_tipoDoc == 31){
+            $carpeta = 'autFechainicio';
+        }else{
+            $carpeta = 'expediente';
+        }
 
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
+        $file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 
 		if(file_exists($file)){
