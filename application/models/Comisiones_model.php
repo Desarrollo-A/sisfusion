@@ -8016,7 +8016,10 @@ public function getDataDispersionPagoEspecial($val = '') {
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
-        hl.motivo, hl.comentario
+        hl.motivo, hl.comentario,l.totalNeto2, l.registro_comision, 
+        convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema,
+        convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata,
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion
         ,oxc.nombre as motivoOpc
         FROM lotes l 
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
@@ -8024,6 +8027,8 @@ public function getDataDispersionPagoEspecial($val = '') {
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+        LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 

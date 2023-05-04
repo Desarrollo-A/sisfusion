@@ -38,6 +38,9 @@
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>EST. CONTRATACIÓN</th>
+                                                        <th>PLAN VENTA</th>
+                                                        <th>FEC. SISTEMA</th> 
+                                                        <th>FEC. NEODATA</th>
                                                         <th>MOTIVO</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
