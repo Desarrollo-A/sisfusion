@@ -9,7 +9,6 @@ $('#comisiones-detenidas-table').ready(function () {
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (comisionesDetenidasTabla.column(i).search() !== this.value) {
-
                     comisionesDetenidasTabla.column(i).search(this.value).draw();
                 }
             });

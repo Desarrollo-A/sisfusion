@@ -1,3 +1,4 @@
+typeTransaction = 1;
 $(document).ready(function() {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
@@ -9,7 +10,13 @@ $(document).ready(function() {
     $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         if (i != 9){
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html(`<input    type="text"
+                                    class="textoshead"
+                                    data-toggle="tooltip" 
+                                    data-placement="top"
+                                    title="${title}" 
+                                    placeholder="${title}"/>`
+                        );
             $('input', this).on('keyup change', function () {
                 if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
                     $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
@@ -26,27 +33,27 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                        b = '<span class="label lbl-warning">Descartado</span>';
+                        b = '<span class="label" style="background:#E6B0AA; color:#641E16">Descartado</span>';
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                        b = '<span class="label lbl-brown" >Interesado sin cita</span>';
+                        b = '<span class="label" style="background:#ABEBC6; color:#186A3B">Interesado sin cita</span>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<span class="label lbl-darkCyan">Con cita</span>';
+                        b = '<span class="label" style="background:#F9E79F; color:#7D6608">Con cita</span>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<span class="label lbl-brightBlue">Sin especificar</span>';
+                        b = '<span class="label" style="background:#ABB2B9; color:#17202A">Sin especificar</span>';
                     else if (d.estatus_particular == 5) // PAUSADO
-                        b = '<span class="label lbl-violetBoots">Pausado</span>';
+                        b = '<span class="label" style="background:#FAD7A0; color:#7E5109">Pausado</span>';
                     else if (d.estatus_particular == 6) // PREVENTA
-                        b = '<span class="label lbl-azure">Preventa</span>';
+                        b = '<span class="label" style="background:#D7BDE2; color:#512E5F">Preventa</span>';
                     else if (d.estatus_particular == 7) // CLIENTE
-                        b = '<span class="label lbl-green">Cliente</span>';
+                        b = '<span class="label" style="background:#A3E4D7; color:#0E6251">Cliente</span>';
                     else // CLIENTE
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
+                        b = '<span class="label" style="background:#ABB2B9; color:#17202A">Sin especificar</span>';
                     return b;
                 }
             },
             {
                 data: function(d) {
-                    elemento = d.nombre + '<br>' +'<span class="label lbl-blueNCS" >'+ d.id_prospecto +'</span>';
+                    elemento = `${d.nombre}<br><span class="label" style="background:#AED6F1; color:#1B4F72">${d.id_prospecto}</span>`;
                     return elemento;
                 }
             },
@@ -67,11 +74,15 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    if (d.nombre_lp == 'MKTD Dragon')
-                        id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
-                    else
-                        id_dragon = '';
-                    return d.nombre_lp + id_dragon;
+                    if(d.nombre_lp == '' || d.nombre_lp === null ){
+                        return 'SIN ESPECIFICAR';
+                    }else{
+                        if (d.nombre_lp == 'MKTD Dragon')
+                            id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
+                        else
+                            id_dragon = '';
+                        return d.nombre_lp + id_dragon;
+                    }
                 }
             },
             {
@@ -82,19 +93,25 @@ $(document).ready(function() {
             {
                 data: function(d) {
                     if (typeTransaction == 0) { // Marketing
-                        if (userType == "18" || userType == "19" || userType == "20") { // Array de roles permitidos para reasignar
-                            userType == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto +'" rel="tooltip" data-placement="left" title="Remover MKTD de este prospecto"><i class="fas fa-trash"></i></button>' : change_buttons = '';
+                        if (id_rol_general == "18" || id_rol_general == "19" || id_rol_general == "20") { // Array de roles permitidos para reasignar
+                            id_rol_general == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto +'" rel="tooltip" data-placement="left" title="Remover MKTD de este prospecto"><i class="fas fa-trash"></i></button>' : change_buttons = '';
                             if (d.estatus == 1) { // IS ACTIVE
                                 var actions = '';
                                 var group_buttons = '';
                                 group_buttons += '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                     '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '"  rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
-                                    '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
-
-                                actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
-                                actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>' + change_buttons;
+                                    '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
+                                actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Cerrar opciones"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+                                actions += '<button class="btn-data btn-acidGreen update-status" '+
+                                                    'data-id-prospecto="' + d.id_prospecto + '" '+
+                                                    'data-telefono="'+d.telefono+'" '+
+                                                    'data-telefono2="'+d.telefono2+'" '+
+                                                    'data-toggle="tooltip"'+ 
+                                                    'data-placement="top"'+
+                                                    'title="Actualizar estatus">'+
+                                                '<i class="fas fa-redo"></i>' + change_buttons;
                                 return '<center>'+actions+'<center>';
                             } else { // IS NOT ACTIVE
                                 var actions = '';
@@ -106,68 +123,106 @@ $(document).ready(function() {
                             }
                         }
                     } else if (typeTransaction == 1) { // Ventas
-                        if (userType != "19") { // Subdirecctor MKTD puede ver listado todos los prospectos pero no tiene ninguna acción sobre ellos
-                            if (userType == "3" || userType == "6") { // Array de roles permitidos para reasignar
+                        if (id_rol_general != "19") { // Subdirecctor MKTD puede ver listado todos los prospectos pero no tiene ninguna acción sobre ellos
+                            if (id_rol_general == "3" || id_rol_general == "6") { // Array de roles permitidos para reasignar
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
-                                            '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
-                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
-                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
+                                            '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
+                                        
+                                        actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                        actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Cerrar opciones"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+
+                                        actions += '<button class="btn-data btn-acidGreen update-status" '+
+                                                            'data-id-prospecto="' + d.id_prospecto + '" '+
+                                                            'data-telefono="'+d.telefono+'" '+
+                                                            'data-telefono2="'+d.telefono2+'" '+
+                                                            'data-toggle="tooltip"'+
+                                                            'data-placement="top" '+
+                                                            'title="Actualizar estatus">'+
+                                                        '<i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>' +
-                                            '<button class="btn-data btn-violetChin re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
+                                            '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Re - asignar"><i class="fab fa-rev"></i></button>';
 
-                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
-                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
+                                        actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                        actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Cerrar opciones"> <i class="fas fa-chevron-down"></i> </button> </div>`;
                                     }
-
                                     return '<center>'+actions+'</center>';
                                 }
                             } else {
                                 if (d.estatus == 1) {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
+                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar información"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ver información"><i class="far fa-eye"></i></button>';
-                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
-                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
-                                        actions += '<button class="btn-data btn-gray update-status" data-id-prospecto="' + d.id_prospecto + '" data-telefono="'+d.telefono+'" data-telefono2="'+d.telefono2+'" title="Actualizar estatus"><i class="fas fa-redo"></i>';
+                                        actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                        actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Cerrar opciones"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+
+                                        actions += '<button class="btn-data btn-acidGreen update-status"'+
+                                                            'data-id-prospecto="' + d.id_prospecto + '" '+
+                                                            'data-telefono="'+d.telefono+'" '+
+                                                            'data-telefono2="'+d.telefono2+'" '+
+                                                            'data-toggle="tooltip"'+
+                                                            'data-placement="top" '+
+                                                            'title="Actualizar estatus">'+
+                                                        '<i class="fas fa-redo"></i>';
                                     }
                                     return '<center>'+actions+'</center>';
                                 } else {
                                     var actions = '';
                                     var group_buttons = '';
-                                    if (idUser != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                    if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                                         actions = '';
                                     } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Ingresar comentario"><i class="far fa-comments"></i></button>' +
                                             '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" rel="tooltip" data-placement="left" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                             '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" rel="tooltip" data-placement="left" title="Ver información">remove_red_eye</i></button>';
-                                        actions += '<button class="desplegable btn-data btn-deepGray" id="btn_' + d.id_prospecto + '" onclick="javascript: $(this).addClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\'); "><i class="fas fa-chevron-up"></i></button>';
-                                        actions += '<div class="hide boxSBtns" id="cnt_' + d.id_prospecto + '">' + group_buttons + '<br><button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\'); " class="btn-data btn-deepGray"><i class="fas fa-chevron-down"></i></button></div>';
+                                        actions += '<button class="desplegable btn-blueMaderas" '+
+                                                            'id="btn_' + d.id_prospecto + '" '+
+                                                            'onclick="javascript: $(this).addClass(\'hide\');'+
+                                                                    '$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+
+                                                        '<i class="fas fa-chevron-up"></i>'+
+                                                    '</button>';
+                                        actions += '<div    class="hide boxSBtns" '+
+                                                            'id="cnt_' + d.id_prospecto + '">' 
+                                                        + group_buttons + ''+
+                                                        '<br>'+
+                                                        '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+
+                                                                        '$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+
+                                                                 'class="btn-data btn-blueMaderas">'+
+                                                            '<i class="fas fa-chevron-down"></i>'+
+                                                        '</button>'+
+                                                    '</div>';
                                         if (d.vigencia >= 0) {
-                                            actions += '<button class="btn-data btn-deepGray update-validity" data-id-prospecto="' + d.id_prospecto + '" rel="tooltip" data-placement="left" title="Renovar vigencia"><i class="fas fa-history"></i></button>';
+                                            actions += '<button class="btn-data btn-acidGreen update-validity" '+
+                                                                'data-id-prospecto="' + d.id_prospecto + '" '+
+                                                                'rel="tooltip" '+
+                                                                'data-placement="left"'+
+                                                                'data-toggle="tooltip"'+
+                                                                'data-placement="top" '+
+                                                                'title="Renovar vigencia">'+
+                                                            '<i class="fas fa-history"></i>'+
+                                                        '</button>';
                                         }
                                     }
                                     return '<center>'+actions+'</center>';
@@ -208,6 +263,9 @@ $(document).ready(function() {
                     "endDate": endDate,
                     "where": where
                 }
+            },
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip();
             }
         });
 
@@ -950,6 +1008,26 @@ $(document).on('click', '.edit-information', function(e) {
     owner = $(this).attr("data-owner");
     $.getJSON("getProspectInformation/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
+            /*Llenado de campos en automatico */
+                //Nacionalidad
+                $("#nationality option[value="+v.nacionalidad+"]").attr("selected", true);
+                $("#nationality").selectpicker("refresh");
+                //Personalidad Juridica
+                $("#legal_personality option[value="+v.personalidad_juridica+"]").attr("selected", true);
+                $("#legal_personality").selectpicker("refresh");
+                //Estado civil
+                $("#civil_status option[value="+v.estado_civil+"]").attr("selected", true);
+                $("#civil_status").selectpicker("refresh");
+                //Regimen Matrimonial
+                $("#matrimonial_regime option[value="+v.regimen_matrimonial+"]").attr("selected", true);
+                $("#matrimonial_regime").selectpicker("refresh");
+                //Lugar de Prospeccion
+                $("#prospecting_place option[value="+v.lugar_prospeccion+"]").attr("selected", true);
+                $("#prospecting_place").selectpicker("refresh");
+                //Plaza de venta
+                $("#sales_plaza option[value="+v.plaza_venta+"]").attr("selected", true);
+                $("#sales_plaza").selectpicker("refresh");
+                
             $("#myEditModal").modal();
             fillFields(v, 0);
             validateEmptyFields(v, 1);
@@ -1053,13 +1131,13 @@ $(document).on('click', '.see-information', function(e) {
 
 $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
-    if (userType == 3 || userType == 6) { // Gerente & asistente de ventas
+    if (id_rol_general == 3 || id_rol_general == 6) { // Gerente & asistente de ventas
         $("#myReAsignModalVentas").modal();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
-    } else if (userType == 19) { // Subdirector MKTD
+    } else if (id_rol_general == 19) { // Subdirector MKTD
         $("#myReAsignModalSubMktd").modal();
         $("#id_prospecto_re_asign_sm").val(id_prospecto);
-    } else if (userType == 20) { // Gerente MKTD
+    } else if (id_rol_general == 20) { // Gerente MKTD
         $("#myReAsignModalGerMktd").modal();
         $("#id_prospecto_re_asign_gm").val(id_prospecto);
     }
@@ -1091,7 +1169,7 @@ $("#my_update_status_form").on('submit', function(e) {
             // Actions before send post
             //document.getElementById("finishS").disabled = true;
         },
-        success: function(data) {            
+        success: function(data) {
             if (data == 1) { // SUCCESS RESPONSE
                 //document.getElementById("finishS").disabled = false;
                 $('#myUpdateStatusModal').modal("hide");
@@ -1238,44 +1316,44 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
     });
 });
 
-    function compareDates(fecha_creacion){
-        var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
-        return isBefore;
-    }
+function compareDates(fecha_creacion){
+    var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
+    return isBefore;
+}
 
-    document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target));
-        if(gapi.auth2.getAuthInstance().isSignedIn.get()){
-            let inserted = await insertEventGoogle(data);
-            data['idGoogle'] = inserted;
+document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    if(gapi.auth2.getAuthInstance().isSignedIn.get()){
+        let inserted = await insertEventGoogle(data);
+        data['idGoogle'] = inserted;
+    }
+    data['estatus_particular'] = $('#estatus_particular').val();
+    data['id_prospecto_estatus_particular'] = $("#id_prospecto_estatus_particular").val();
+    $.ajax({
+        type: 'POST',
+        url: '../Calendar/insertRecordatorio',
+        data: JSON.stringify(data),
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function(data) {
+            $('#spiner-loader').addClass('hide');
+            $('#myUpdateStatusModal').modal("hide");
+            $('#agendaInsert').modal("hide");
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
+            $('#agendaInsert').modal('toggle');
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
-        data['estatus_particular'] = $('#estatus_particular').val();
-        data['id_prospecto_estatus_particular'] = $("#id_prospecto_estatus_particular").val();
-        $.ajax({
-            type: 'POST',
-            url: '../Calendar/insertRecordatorio',
-            data: JSON.stringify(data),
-            contentType: false,
-            cache: false,
-            processData: false,
-            beforeSend: function() {
-                $('#spiner-loader').removeClass('hide');
-            },
-            success: function(data) {
-                $('#spiner-loader').addClass('hide');
-                $('#myUpdateStatusModal').modal("hide");
-                $('#agendaInsert').modal("hide");
-                data = JSON.parse(data);
-                alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-                $('#agendaInsert').modal('toggle');
-            },
-            error: function() {
-                $('#spiner-loader').addClass('hide');
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            }
-        });
     });
+});
 
 function getStatusRecordatorio(){
     $.post('../Calendar/getStatusRecordatorio', function(data) {
@@ -1332,7 +1410,6 @@ function getOfficeAddresses(){
       $("#id_direccion").selectpicker('refresh');
     }, 'json');
 }
-
 function cleanModal(){
     $('#evtTitle').val('');
     $("#prospecto option:selected").prop("selected", false);

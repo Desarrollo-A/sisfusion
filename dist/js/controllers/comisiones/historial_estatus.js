@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $("#tabla_historialGral").prop("hidden", true);
 
-    $.post(url+"Contratacion/lista_proyecto_dos", function (data) {
+    $.post(url+"Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
