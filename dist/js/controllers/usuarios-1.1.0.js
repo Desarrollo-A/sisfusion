@@ -3,8 +3,9 @@ $(document).ready( function() {
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 16) // PAYMENT METHOD SELECT
+            if (data[i]['id_catalogo'] == 16){ // PAYMENT METHOD SELECT
                 $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            }
             if (data[i]['id_catalogo'] == 1) // MEMBER TYPE SELECT
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 0) // HEADQUARTER SELECT
@@ -666,7 +667,7 @@ function fillFields (v) {
     $("#member_type").val(v.id_rol);
     let rol_asignado = v.id_rol;
 
-    if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607))
+    if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607 || v.id_usuario == 4 ))
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");

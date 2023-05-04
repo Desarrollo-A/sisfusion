@@ -30,10 +30,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
+                                                        <th>ID LOTE</th>
+                                                        <!-- <th>CLIENTE</th> -->
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
@@ -60,12 +61,7 @@
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script>
-        const baseUrl = '<?=base_url()?>';
-        const urlIndex = baseUrl;
-        let rol  = "<?=$this->session->userdata('id_rol')?>";
 
-    </script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/comisiones_detenidas.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
