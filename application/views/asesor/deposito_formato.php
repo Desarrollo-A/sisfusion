@@ -428,6 +428,76 @@
                         </div>
                     </div>            
                 </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-md-2 checkbox-radios">
+                                <div class="radio"  style="color: gray;">
+                                    VIVE EN CASA:
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?>
+                                               name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) {
+                                            echo "checked=true";
+                                        }
+                                        ?>  value="1" style="font-size: 0.8em;"/> PROPIA
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?>
+                                               required <?php if ($cliente[0]->tipo_vivienda == 2) {
+                                            echo "checked=true";
+                                        }
+                                        ?>  value="2" style="font-size: 0.8em;"/> RENTADA
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 3) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="3" style="font-size: 0.8em;"/> PAGÁNDOSE
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 4) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="4" style="font-size: 0.8em;"/> FAMILIAR
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 checkbox-radios required">
+                                <div class="radio">
+                                    <label style="font-size: 0.8em;">
+                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
+                                            <?php if ($cliente[0]->tipo_vivienda == 5) {
+                                                echo "checked=true";
+                                            }
+                                            ?>  value="5" style="font-size: 0.8em;"/> OTRO
+                                    </label>
+                                </div>
+                            </div>
+                    </div>
+                </div>
 
             <?php 
             $limite = $copropiedadTotal[0]->valor_propietarios;

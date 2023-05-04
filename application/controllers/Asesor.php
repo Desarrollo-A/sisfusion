@@ -2222,7 +2222,7 @@ class Asesor extends CI_Controller
 
         $array17 = $this->input->post("id_cop[]");
         $array19 = $this->input->post("rfc_cop[]");
-        // $array20 = $this->input->post("regimen_fac[]");
+        $array20 = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
 
         $cm = (empty($this->input->post('especificar'))) ? '11' : $this->input->post('especificar');
@@ -3109,6 +3109,13 @@ class Asesor extends CI_Controller
                     $html .= '</b></td>
 
                         <td><label>RFC: </label><br><b>' . $array19[$i] . '</b></td>
+                        <td><label>Régimen Fiscal: </label><br><b>';
+                        for ($n = 0; $n < count($regFiscal); $n++) {
+                        if ($regFiscal[$n]['id_opcion'] == $array20[$i]) {
+                            $html .= $regFiscal[$n]['nombre'];
+                        }
+                    }
+                    $html .= '</b></td>
                     </tr>
                     </table>';
                 }
