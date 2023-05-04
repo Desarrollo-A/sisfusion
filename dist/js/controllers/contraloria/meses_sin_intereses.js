@@ -15,7 +15,21 @@ $(document).ready (function() {
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
-                title:'Autorizaciones'
+                title:'Autorizaciones',
+                columns: [0, 1, 2, 3],
+                format: {
+                    header:  function (d, columnIdx) {
+                            if(columnIdx == 0){
+                                return 'ID';
+                            }else if(columnIdx == 1){
+                                return 'COMENTARIO';
+                            }else if(columnIdx == 2){
+                                return 'ESTATUS AUT';
+                            }else if(columnIdx == 3){
+                                return 'MODIFICADO';
+                            }
+                    }
+                }
             }]
     }
     else{
@@ -25,7 +39,27 @@ $(document).ready (function() {
                 text: 'DESCARGAR',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
-                title:'Autorizaciones'
+                title:'Autorizaciones',
+                columns: [0, 1, 2, 3],
+                exportOptions: {
+                    format: {
+                        header:  function (d, columnIdx) {
+                            if(columnIdx == 0){
+                                return 'ID';
+                            }else if(columnIdx == 1){
+                                return 'COMENTARIO';
+                            }else if(columnIdx == 2){
+                                return 'ESTATUS AUT';
+                            }else if(columnIdx == 3){
+                                return 'MODIFICADO';
+                            }else if(columnIdx == 4){
+                                return '';
+                            }
+
+                        }
+                    }
+                }
+
             },
             {
                 className: 'btn btn-azure subir-msi',
@@ -35,7 +69,7 @@ $(document).ready (function() {
 
     }
     tablaAut = $('#tabla_aut').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
         width: '100%',
         scrollX: true,
         buttons: button_excel,
@@ -237,9 +271,25 @@ function validateExtension(extension, allowedExtensions) {
 $('#tabla_msni thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     if(i == 0){//para cambiar el nombre dinamicamente del header de ID
-        $(this).html('<input type="text" class="textoshead anclaClass"  placeholder="'+title+'"/>' );
+            let attributo_input;
+            switch (i) {
+                case 0:
+                    attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                    break;
+            }
+
+        $(this).html('<input type="text" class="textoshead anclaClass" '+attributo_input+' placeholder="'+title+'"/>' );
     }else{
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        let attributo_input;
+        switch (i) {
+            case 1:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 122\"";
+                break;
+            case 2:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+        }
+        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
 
     }
     $( 'input', this ).on('keyup change', function () {
@@ -263,25 +313,33 @@ function lettersOnly()
 }
 
 $('#tabla_aut thead tr:eq(0) th').each( function (i) {
-
+    let title;
+    let spanText;
     if(i<=3){
+
         let attributo_input;
         switch(i){
             case 0:
-                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                attributo_input = "return event.charCode >= 48 && event.charCode <= 57";
                 break;
             case 1:
-                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                attributo_input = "return lettersOnly(event)";
                 break;
             case 2:
-                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                attributo_input = "return lettersOnly(event)";
                 break;
             case 3:
-                attributo_input = "onkeypress=\"return event.charCode >= 45 && event.charCode <= 57\"";
+                attributo_input = "return event.charCode >= 45 && event.charCode <= 57";
                 break;
         }
-        let title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        if(i==3){
+            title = 'MODIFICADO';
+        }else{
+            title = $(this)[0].textContent;
+        }
+        spanText = '<span class="textoshead hide"  placeholder="'+title+'">'+title+'</span>';
+
+        $(this).html('<input type="text" class="textoshead " placeholder="'+title+'" onkeypress="'+attributo_input+'" /> ' + spanText );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_aut').DataTable().column(i).search() !== this.value ){
                 $('#tabla_aut').DataTable()
@@ -292,7 +350,7 @@ $('#tabla_aut thead tr:eq(0) th').each( function (i) {
         });
     }else{
         let title = $(this).text();
-        $(this).html('<span class="textoshead">'+title+'</span>' );
+        $(this).html('<span class="textoshead" placeholder="'+title+'">'+title+'</span>' );
     }
 
 });
@@ -555,17 +613,19 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
 function loadTableVAUT(data){
     let button_excel = '';
+    let dom;
 
     if(data['edit'] == 1){
         button_excel = [{}]
-
+        dom =  't' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
     }
     else{
+        dom = 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
         button_excel = [{
             className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
             extend: 'csvHtml5',
-            titleAttr: 'CSV',
+            titleAttr: 'DESCARGAR PLANTILLA',
             title:'MSI pendietes de autorización',
             exportOptions: {
                 columns: [0, 1, 2],
@@ -578,7 +638,7 @@ function loadTableVAUT(data){
                             } else if(columnIdx == 1){
                                 return 'CONDOMINIO';
                             }else if(columnIdx == 2){
-                                return 'MSNI';
+                                return 'MSI';
                             }
                         }else if(dataVariable['tb']==2){
                             if(columnIdx == 0){
@@ -586,7 +646,7 @@ function loadTableVAUT(data){
                             }else if(columnIdx == 1){
                                 return 'LOTE';
                             }else if(columnIdx == 2){
-                                return 'MSNI';
+                                return 'MSI';
                             }
                         }
 
@@ -598,7 +658,7 @@ function loadTableVAUT(data){
     }
 
     tablaMsiVisualizar = $('#tabla_msni_visualizacion').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: dom,
         width: 'auto',
         buttons: button_excel,
         ajax: {
@@ -633,7 +693,7 @@ function loadTableVAUT(data){
                 data: function(d){
                     let action_return = '';
                     if(id_rol_general==5 && data['edit'] == 1){
-                        action_return = '<input type="text" class="form-control" name="msi" value="'+d.msi+'">';
+                        action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
                     }else{
                         action_return = d.msi;
                     }
@@ -643,6 +703,36 @@ function loadTableVAUT(data){
         ]
     })
 }
+
+$('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
+    if(i<=3){
+        let attributo_input;
+        switch(i){
+            case 0:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                break;
+            case 1:
+                attributo_input = 'onkeypress="return lettersOnly(event)"';
+                break;
+            case 2:
+                attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+        }
+        let title = $(this).text();
+        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_msni_visualizacion').DataTable().column(i).search() !== this.value ){
+                $('#tabla_msni_visualizacion').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    }else{
+        let title = $(this).text();
+        $(this).html('<span class="textoshead">'+title+'</span>' );
+    }
+
+});
 
 $(document).on('click', '.btnHistorial', function () {
     let idAutorizacion = $(this).attr('data-idautorizacion');
@@ -834,7 +924,7 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
                 data = JSON.parse(data);
                 if(data.message == 'OK'){
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right",'Se actualizado correctamente', "success");
+                    alerts.showNotification("top", "right",'Se actualizó correctamente', "success");
                     $('#verAut').modal('hide');
                 }else if(data.message == 'ERROR'){
                     $('#spiner-loader').addClass('hide');

@@ -42,7 +42,6 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <center><h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3></center>
                 </div>
                 <form name="cambiosMSIF" id="cambiosMSIF" method="post">
@@ -54,7 +53,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>NOMBRE</th>
-                                        <th>MSNI</th>
+                                        <th>MSI</th>
                                     </tr>
                                     </thead>
                                 </table>
