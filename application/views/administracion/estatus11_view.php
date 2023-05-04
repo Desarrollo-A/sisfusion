@@ -103,34 +103,13 @@
 											<option value="0">Selecciona una opción</option>
 											<option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
 											<option value="Cheque rebotado">Cheque rebotado</option>
-											<option value="Rechazo por falta de dinero">Rechazo por falta dinero</option>
-											<option value="Pago American Express">Pago American Express</option>
+											<option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>
 											<option value="Otro">Otro</option>
 										</select>
 										<div id="valida_otro" style="display:none">
 											<br>
 											<label>Observaciones:</label>
 											<textarea class="form-control input-gral" id="observaciones" rows="3" style="text-align:center"></textarea>
-										</div>
-										<div id="descripcion_pae" style="display:none">
-											<br>
-											<label>Observaciones:</label>
-											<textarea class="form-control input-gral" id="observacionesPae" rows="3" style="text-align:center"></textarea>
-										</div>
-										<div id="descripcion_rfd" style="display:none">
-											<br>
-											<label>Observaciones:</label>
-											<textarea class="form-control input-gral" id="observacionesRfd" rows="3" style="text-align:center"></textarea>
-										</div>
-										<div id="descripcion_cr" style="display:none">
-											<br>
-											<label>Observaciones:</label>
-											<textarea class="form-control input-gral" id="observacionesCr" rows="3" style="text-align:center"></textarea>
-										</div>
-										<div id="descripcion_trb" style="display:none">
-											<br>
-											<label>Observaciones:</label>
-											<textarea class="form-control input-gral" id="observacionesTrb" rows="3" style="text-align:center"></textarea>
 										</div>
 									</div>
 								</div>
@@ -178,6 +157,7 @@
 														<th>FECHA VENC</th>
 														<th>DÍAS TRANSC</th>
 														<th>ESTATUS ACTUAL</th>
+														<th>UBICACIÓN</th>
 														<th></th>
 													</tr>
 												</thead>
@@ -204,5 +184,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-	<script src="<?=base_url()?>dist/js/controllers/administracion/datosStatus11ContratacionAdministracionView.js"></script>
+	<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+	<script src="<?= base_url() ?>dist/js/controllers/administracion/estatus11.js"></script>
+
 </body>
