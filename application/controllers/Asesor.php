@@ -3105,6 +3105,13 @@ class Asesor extends CI_Controller
                     $html .= '</b></td>
 
                         <td><label>RFC: </label><br><b>' . $array19[$i] . '</b></td>
+                        <td><label>Régimen Fiscal: </label><br><b>';
+                        for ($n = 0; $n < count($regFiscal); $n++) {
+                        if ($regFiscal[$n]['id_opcion'] == $array20[$i]) {
+                            $html .= $regFiscal[$n]['nombre'];
+                        }
+                    }
+                    $html .= '</b></td>
                     </tr>
                     </table>';
                 }
