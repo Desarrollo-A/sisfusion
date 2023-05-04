@@ -1,4 +1,4 @@
-var idlote_global = 0;
+ idlote_global = 0;
 
 var getInfo1 = new Array(7);
 var getInfo2 = new Array(7);

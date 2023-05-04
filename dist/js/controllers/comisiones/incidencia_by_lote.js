@@ -1,16 +1,15 @@
+var rol  = "<?=$this->session->userdata('id_rol')?>";
+var id_user  = "<?=$this->session->userdata('id_usuario')?>";
 
-
-var urlimg = url+"/img/";
-
+var urlimg = general_base_url+"/img/";
 var idLote = 0;
-
 
 
 $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
 
-$.post(url+"Comisiones/getAsesoresBaja", function(data) {
+$.post(general_base_url+"Comisiones/getAsesoresBaja", function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_usuario'];
@@ -30,23 +29,23 @@ function selectOpcion(id_cliente,idLote){
     $("#usuarioid4").selectpicker("refresh");
 
     if(parent == 1){
-        $.getJSON( url + "Comisiones/getUserInventario/"+id_cliente).done( function( data ){
+        $.getJSON( general_base_url + "Comisiones/getUserInventario/"+id_cliente).done( function( data ){
 
             $('#miModalInventario .invent').html('');
             $('#miModalInventario .invent').append(`
             <h5>Usuarios titulares registrados</h5>
             <div class="row">
-            <div class="col-md-4" id="ase">
-            <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
-            <b><p style="font-size:12px;">Asesor</b></p>
+            <div class="col-md-4" id="ase2">
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
+            <b><label class="control-label" >Asesor</b></label>
             </div>
-            <div class="col-md-4" id="coor">
-            <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
-            <b><p style="font-size:12px;">Coordinador</b></p>
+            <div class="col-md-4" id="coor2">
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
+            <b><label class="control-label" >Coordinador</b></label>
             </div>
-            <div class="col-md-4" id="ger">
-            <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
-            <b><p style="font-size:12px;">Gerente</b></p>
+            <div class="col-md-4" id="ger2">
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
+            <b><label class="control-label" >Gerente</b></label>
             </div>
             </div>
             <input type="hidden" value="${data.id_asesor}" id="asesor" name="asesor">
@@ -65,7 +64,7 @@ function selectOpcion(id_cliente,idLote){
         //VENTA COMPARTIDA
         let id_asesor=0;
 
-        $.getJSON( url + "Comisiones/getUserVC/"+id_cliente).done( function( data ){
+        $.getJSON( general_base_url + "Comisiones/getUserVC/"+id_cliente).done( function( data ){
             $('#miModalVcNew .vcnew').html('');
             let cuantos = data.length;
             if(cuantos == 0){
@@ -473,7 +472,7 @@ function saveTipo(id){
         formData.append("tipo", tipo);
         formData.append("id", id);
         $.ajax({
-            url: url+'Comisiones/saveTipoVenta',
+            url: general_base_url+'Comisiones/saveTipoVenta',
             data: formData,
             cache: false,
             contentType: false,
@@ -505,7 +504,7 @@ function SaveAjusteRegre(i,por,total){
     let id_comision = $('#id_comision_'+i).val();
     let id_usuario = $('#id_usuario_'+i).val();
     let id_lote = $('#idLote').val();
-    let porcentaje = por;
+    let porcentaje = por; 
     let comision_total = total;
     let datos = {
         'id_comision':id_comision,
@@ -521,7 +520,7 @@ function SaveAjusteRegre(i,por,total){
     formData.append("porcentaje", porcentaje);
     formData.append("comision_total", comision_total);
     $.ajax({
-        url: url+'Comisiones/SaveAjuste/'+1,
+        url: general_base_url+'Comisiones/SaveAjuste/'+1,
         data: formData,
         cache: false,
         contentType: false,
@@ -584,7 +583,7 @@ function Editar(i,precio,id_usuario){
     if(parseFloat(abonado) > parseFloat(comisionTotal)){
         $('#comision_total_'+i).val(formatMoney(comisionTotal));
         $.ajax({
-            url: url+'Comisiones/getPagosByComision/'+id_comision,
+            url: general_base_url+'Comisiones/getPagosByComision/'+id_comision,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -659,7 +658,7 @@ function SaveAjuste(i){
     formData.append("porcentaje", porcentaje);
     formData.append("comision_total", comision_total);
     $.ajax({
-        url: url+'Comisiones/SaveAjuste',
+        url: general_base_url+'Comisiones/SaveAjuste',
         data: formData,
         cache: false,
         contentType: false,
@@ -678,7 +677,7 @@ $('#filtro44').change(function(ruta){
     conodominio = $('#filtro44').val();
     $("#filtro55").empty().selectpicker('refresh');
     $.ajax({
-        url: url+'Comisiones/lista_lote/'+conodominio,
+        url: general_base_url+'Comisiones/lista_lote/'+conodominio,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -698,7 +697,7 @@ $('#filtro55').change(function(ruta){
     infolote = $('#filtro55').val();
     datos = infolote.split(',');
     idLote = datos[0];
-    $.post(url+"Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
+    $.post(general_base_url+"Comisiones/getComisionesLoteSelected/"+idLote, function (data) {
         if( data.length < 1){
             document.getElementById('msj').innerHTML = '';
             document.getElementById('btn-aceptar').disabled  = false;
@@ -728,21 +727,27 @@ $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
    if(idLote != '' ){
     tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
-        dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
+        buttons: [],
         ajax:{
-            "url": url+'Comisiones/getInCommissions/'+idLote,
+            "url": general_base_url+'Comisiones/getInCommissions/'+idLote,
             "dataSrc": ""
         },
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
-            url: url+"/static/spanishLoader_v2.json",
+            url: general_base_url+"/static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        scrollX: true,
         destroy: true,
         ordering: false,
         columns: [{
@@ -783,13 +788,13 @@ $(".find_doc").click( function() {
             "data": function( d ){
                 var lblType;
                 if(d.tipo_venta==1) {
-                    lblType ='<span class="label label-danger">Venta Particular</span>';
+                    lblType ='<span class="label lbl-warning">Venta Particular</span>';
                 }
                 else if(d.tipo_venta==2) {
-                    lblType ='<span class="label label-success">Venta normal</span>';
+                    lblType ='<span class="label lbl-green">Venta normal</span>';
                 }
                 else{
-                    lblType ='<span class="label label-warning">SIN TIPO Venta</span>';
+                    lblType ='<span class="label lbl-yellow">SIN TIPO Venta</span>';
                 }
                 return lblType;
             }
@@ -799,9 +804,9 @@ $(".find_doc").click( function() {
             "data": function( d ){
                 var lblStats;
                 if(d.compartida==null) {
-                    lblStats ='<span class="label label-warning" style="background:#E5D141;">Individual</span>';
+                    lblStats ='<span class="label lbl-yellow" >Individual</span>';
                 }else {
-                    lblStats ='<span class="label label-warning">Compartida</span>';
+                    lblStats ='<span class="label lbl-orangeYellow">Compartida</span>';
                 }
                 return lblStats;
             }
@@ -811,7 +816,7 @@ $(".find_doc").click( function() {
             "data": function( d ){
                 var lblStats;
                 if(d.idStatusContratacion==15){
-                    lblStats ='<span class="label label-success" style="background:#9E9CD5;">Contratado</span>';
+                    lblStats ='<span class="label lbl-violetChin" >Contratado</span>';
                 }
                 else {
                     lblStats ='<p><b>'+d.idStatusContratacion+'</b></p>';  
@@ -829,16 +834,16 @@ $(".find_doc").click( function() {
                 else {
                     switch(d.lugar_prospeccion){
                         case '6':
-                            lblStats ='<span class="label" style="background:#B4A269;">MARKETING DIGÍTAL</span>';
+                            lblStats ='<span class="label lbl-azure">MARKETING DIGÍTAL</span>';
                         break;
                         case '12':
-                            lblStats ='<span class="label" style="background:#00548C;">CLUB MADERAS</span>';
+                            lblStats ='<span class="label lbl-violetDeed" >CLUB MADERAS</span>';
                         break;
                         case '25':
-                            lblStats ='<span class="label" style="background:#0860BA;">IGNACIO GREENHAM</span>';
+                            lblStats ='<span class="label lbl-sky" >IGNACIO GREENHAM</span>';
                         break;
                         case '26':
-                            lblStats ='<span class="label" style="background:#0860BA;">COREANO VLOGS</span>';
+                            lblStats ='<span class="label lbl-gray" >COREANO VLOGS</span>';
                         break;
                         default:
                             lblStats ='';
@@ -855,18 +860,18 @@ $(".find_doc").click( function() {
                 var lblStats = '';
                 switch(d.registro_comision){
                     case '7':
-                        lblStats ='<span class="label" style="background:red;">LIQUIDADA</span>';
+                        lblStats ='<span class="label lbl-warning" >LIQUIDADA</span>';
                     break;
                     
                     case '1':
-                        lblStats ='<span class="label" style="background:blue;">COMISIÓN ACTIVA</span>';
+                        lblStats ='<span class="label lbl-sky" >COMISIÓN ACTIVA</span>';
                     break;
                     case '8':
-                        lblStats ='<span class="label" style="color:#0860BA;">NUEVA, rescisión</span>';
+                        lblStats ='<span class="label lbl-blueMaderas" >NUEVA, rescisión</span>';
                     break;
 
                     case '0':
-                        lblStats ='<span class="label" style="color:#0860BA;">NUEVA, sin dispersar</span>';
+                        lblStats ='<span class="label lbl-blueMaderas" >NUEVA, sin dispersar</span>';
                     break;
 
                     default:
@@ -930,18 +935,18 @@ $(".find_doc").click( function() {
         if(precioAnt == 'null'){
             precioAnt=0;
         }
-
         $("#modal_pagadas .modal-body").html("");
+        $("#modal_pagadas .modal-footer").html("");
 
         $("#modal_pagadas .modal-body").append('<h4 class="modal-title">Cambiar precio del lote <b>'+row.data().nombreLote+'</b></h4><br><em>Precio actual: $<b>'+formatMoney(precioAnt)+'</b></em>');
         $("#modal_pagadas .modal-body").append('<input type="hidden" name="idLote" id="idLote" readonly="true" value="'+idLote+'"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="'+precioAnt+'">');
         $("#modal_pagadas .modal-body").append(`<div class="form-group">
-        <label>Nuevo precio</label>
-        <input type="text" name="precioL" onblur="verificar(${precioAnt})" required id="precioL" class="form-control">
+        <label class="control-label" >Nuevo precio</label>
+        <input type="text" name="precioL" onblur="verificar(${precioAnt})" required id="precioL" class="form-control input-gral">
         <p id="msj" style="color:red;"></p>
         </div>`);
 
-        $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" disabled style="background:#003d82;" id="btn-save" class="btn btn-success" value="GUARDAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+        $("#modal_pagadas .modal-footer").append('<button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button> <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>');
         $("#modal_pagadas").modal();
     });
     
@@ -988,16 +993,18 @@ $(".find_doc").click( function() {
         }
         else{ 
             $("#modal_avisitos .modal-body").html('');
-
+            $('#modal_avisitos .modal-footer').html('');
             $('#modal_avisitos .modal-body').append(`
             <div class="form-group">
-            <label>Seleccione una opción</label>
-            <select class="form-control" name="opcion" onchange="selectOpcion(${id_cliente},${idLote})" id="opcion" >
-            <option value="">--Seleccionar---</option>
+            <label class="control-label">Seleccione una opción</label>
+            <select class="form-control input-gral" name="opcion" 
+            onchange="selectOpcion(${id_cliente},${idLote})" id="opcion" >
+            <option  default >SELECCIONA UNA OPCIÓN</option>
             <option value="1">Cliente</option>
             <option value="2">Venta compartida</option>
             </select>
-            </div>`);
+            </div> ` );
+
 
             $("#modal_avisitos").modal();
         }                      
@@ -1041,17 +1048,17 @@ $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
         
-        $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
+        $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
             if(data.length > 0){
                 switch (data[0].Marca) {
                     case 0:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                     case 1:
                         if(registro_status==0 || registro_status==8){//COMISION NUEVA
                         }
                         else if(registro_status==1){
-                            $.getJSON( url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
+                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
                                 let total0 = parseFloat((data[0].Aplicado));
                                 let total = 0;
 
@@ -1072,7 +1079,7 @@ $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
                                 }
 
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> <i>'+row.data().nombreLote+'</i></b></h3></div></div><br>');
-                                $.getJSON( url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
                                     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-2"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-3">ACCIONES</div></div>');
                                 
                                     let contador=0;
@@ -1209,25 +1216,25 @@ $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
                         }        
                     break;
                     case 2:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                     case 3:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No tiene vivienda, si hay referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No tiene vivienda, si hay referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                     case 4:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No hay pagos aplicados a esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No hay pagos aplicados a esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                     case 5:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Referencia duplicada de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Referencia duplicada de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                     default:
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Sin localizar.</b></h4><br><h5>Revisar con sistemas: '+row.data().nombreLote+'.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Sin localizar.</b></h4><br><h5>Revisar con sistemas: '+row.data().nombreLote+'.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                         
                     break;
                 }
             }
             else{
-                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             }
         });
 
@@ -1508,7 +1515,7 @@ $(document).on('click', '#save_asignacion', function(e) {
     if (id_desarrollo != null) {
         $('#save_asignacion').prop('disabled', true);
         $.ajax({
-            url : url+'Administracion/update_asignacion/',
+            url : general_base_url+'Administracion/update_asignacion/',
             data: data_asignacion,
             cache: false,
             contentType: false,
@@ -1585,7 +1592,7 @@ $("#form_pagadas").submit(function(e) {;
         var data = new FormData($(form)[0]);
 
         $.ajax({
-            url: url + "Comisiones/CambiarPrecioLote",
+            url: general_base_url + "Comisiones/CambiarPrecioLote",
             data: data,
             cache: false,
             contentType: false,
@@ -1698,7 +1705,7 @@ function VlidarNuevos(i,usuario){
     $('#modal_quitar .modal-header').html(''); 
     $('#modal_quitar .modal-body').html(''); 
     $('#modal_quitar .modal-footer').html(''); 
-    $.getJSON(url + "Comisiones/verPagos/" + i + '/' + usuario).done(function(data) {
+    $.getJSON(general_base_url + "Comisiones/verPagos/" + i + '/' + usuario).done(function(data) {
         if(data.length < 1){
             $('#modal_quitar .modal-body').append(`SIN PAGOS NUEVOS`);
         }
@@ -1746,7 +1753,7 @@ console.log($('#comentario_topaT_'+i).val());
     var dataPost = "comentario=" + comentario;
 
     $.ajax({
-        url: url+'Comisiones/ToparComision/'+id_comision+'/'+idLote,
+        url: general_base_url+'Comisiones/ToparComision/'+id_comision+'/'+idLote,
         data: dataPost,
 type: 'POST',
 dataType: 'html',
@@ -1819,7 +1826,7 @@ function GuardarPago(i){
 
     $.ajax({
         method: 'POST',
-        url: url+'Comisiones/GuardarPago/'+id_comision,
+        url: general_base_url+'Comisiones/GuardarPago/'+id_comision,
         data: formData,
         processData: false,
         contentType: false,
@@ -1853,7 +1860,7 @@ function QuitarPago(i){
     formData.append("dato", "valor");
     $.ajax({
         method: 'POST',
-        url: url+'Comisiones/QuitarPago/'+id_comision,
+        url: general_base_url+'Comisiones/QuitarPago/'+id_comision,
         data: formData,
         processData: false,
         contentType: false,
@@ -1947,7 +1954,7 @@ console.log(parseFloat(nuevoPorce));
     if(parseFloat(abonado) > parseFloat(comisionTotal)){
         $('#comision_total_'+i).val(formatMoney(comisionTotal));
         $.ajax({
-            url: url+'Comisiones/getPagosByComision/'+id_comision,
+            url: general_base_url+'Comisiones/getPagosByComision/'+id_comision,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -2024,7 +2031,7 @@ function SaveAjuste(i){
     formData.append("comision_total", comision_total);
 
     $.ajax({
-        url: url+'Comisiones/SaveAjuste',
+        url: general_base_url+'Comisiones/SaveAjuste',
         data: formData,
         cache: false,
         contentType: false,
