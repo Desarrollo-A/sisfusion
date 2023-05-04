@@ -428,77 +428,7 @@
                         </div>
                     </div>            
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-md-2 checkbox-radios">
-                                <div class="radio"  style="color: gray;">
-                                    VIVE EN CASA:
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.8em;">
-                                        <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?>
-                                               name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) {
-                                            echo "checked=true";
-                                        }
-                                        ?>  value="1" style="font-size: 0.8em;"/> PROPIA
-                                    </label>
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-2 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.8em;">
-                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?>
-                                               required <?php if ($cliente[0]->tipo_vivienda == 2) {
-                                            echo "checked=true";
-                                        }
-                                        ?>  value="2" style="font-size: 0.8em;"/> RENTADA
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.8em;">
-                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                            <?php if ($cliente[0]->tipo_vivienda == 3) {
-                                                echo "checked=true";
-                                            }
-                                            ?>  value="3" style="font-size: 0.8em;"/> PAGÁNDOSE
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.8em;">
-                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                            <?php if ($cliente[0]->tipo_vivienda == 4) {
-                                                echo "checked=true";
-                                            }
-                                            ?>  value="4" style="font-size: 0.8em;"/> FAMILIAR
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.8em;">
-                                        <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                            <?php if ($cliente[0]->tipo_vivienda == 5) {
-                                                echo "checked=true";
-                                            }
-                                            ?>  value="5" style="font-size: 0.8em;"/> OTRO
-                                    </label>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-
+            
                 <div class="row">
                     <div class="col-md-2 checkbox-radios">
                         <div class="radio"  style="color: gray;">
@@ -1002,15 +932,15 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" required="true" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
-                                <input name="id_referencia1" required="true" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
+                                <label class="label-on-left m-0">NOMBRE</label>
+                                <input class="form-control input-gral" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
+                                <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco1" required="true" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0">PARENTESCO</label>
+                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -1030,25 +960,25 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" required="true" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
+                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
                             </div>
                         </div>
                     </div>
                     <div class="row pb-3">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" required="true" name="nombre2" <?php echo $readOnly; ?>
+                                <label class="label-on-left m-0">NOMBRE</label>
+                                <input class="form-control input-gral" name="nombre2" <?php echo $readOnly; ?>
                                         id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
-                                <input name="id_referencia2" required="true" <?php echo $readOnly; ?>
+                                <input name="id_referencia2" <?php echo $readOnly; ?>
                                         id="id_referencia2" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[1]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label class="label-on-left m-0">PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco2" required="true" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0">PARENTESCO</label>
+                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -1067,8 +997,8 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" required="true" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
+                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
                             </div>
                         </div>
                     </div>           
