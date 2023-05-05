@@ -1,3 +1,6 @@
+let descuentosYCondiciones;
+var primeraCarga = 1;
+llenarTipoDescuentos();
 
 $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS DE ESTATUS */
     $.post('getCatalogo', {
@@ -27,10 +30,7 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
         $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
             if (tablaAutorizacion.column(i).search() !== this.value) {
-                tablaAutorizacion
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                tablaAutorizacion.column(i).search(this.value).draw();
                 var index = tablaAutorizacion.rows({
                     selected: true,
                     search: 'applied'
@@ -86,7 +86,7 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
             "width": "10%",
             "data": function( d ){
                 let residencial = d.nombreResidencial.split(',');
-                console.log(residencial)
+                
                 let imprimir = '';
                 for (let m = 0; m < residencial.length; m++) {
                     imprimir += `<p><span class="label lbl-sky">${residencial[m]}</span></p>`;
@@ -214,22 +214,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $(document).on('click', '#btnEditar', function (e) {
         e.preventDefault();
         $('#spiner-loader').removeClass('hide');
-       // window.scrollTo(0, 0)
 
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
-        console.log(data);
-        //$('#fechainicio').val(moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY'));
-        document.getElementById('fechainicio').value = data.fecha_inicio;// moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
-        document.getElementById('fechafin').value = data.fecha_fin;//moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
-       // $('#fechafin').val(moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY'));
-       document.getElementById('accion').value = 2;
-       document.getElementById('idSolicitudAut').value = data.id_autorizacion;
-       document.getElementById('paquetes').value = data.paquetes;
+        document.getElementById('fechainicio').value = data.fecha_inicio;
+        document.getElementById('fechafin').value = data.fecha_fin;
+        document.getElementById('accion').value = 2;
+        document.getElementById('idSolicitudAut').value = data.id_autorizacion;
+        document.getElementById('paquetes').value = data.paquetes;
         $('#li-plan').addClass('active');
         $('#li-aut').removeClass('active');
         $('#nuevas-2').addClass('active');
         $('#nuevas-1').removeClass('active');
-        //document.getElementById('sede').value = parseInt(data.id_sede);
         $("#sede").selectpicker();
         $('#sede').val(parseInt(data.id_sede)).trigger('change');
         $("#sede").selectpicker('refresh');
@@ -239,36 +234,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         for (let m = 0; m < residenciales.length; m++) {
             residencialesSelect.push(residenciales[m]);
         }
+
         setTimeout(() => {
             $(`#residencial`).val(residencialesSelect).trigger('change');
         }, 1000);
 
         $("#residencial").selectpicker('refresh');
-       
         var radios = document.getElementsByName('tipoLote');
-        console.log(radios)
+
         for (var j = 0; j < radios.length; j++) {
-            console.log(radios[j].value)
             if (radios[j].value == data.tipo_lote) {
-              radios[j].checked = true;
-            break;
-             }
-         }
-         validateAllInForm(data.tipo_lote,1);
-         var radios = document.getElementsByName('superficie');
-        console.log(radios)
+            radios[j].checked = true;
+                break;
+            }
+        }
+        validateAllInForm(data.tipo_lote,1);
+        var radios = document.getElementsByName('superficie');
+        
         for (var j = 0; j < radios.length; j++) {
-            console.log(radios[j].value)
             if (radios[j].value == data.superficie) {
-              radios[j].checked = true;
-            break;
-             }
-         }
-         selectSuperficie(data.superficie);
-         const scroll=document.querySelector(".ps-scrollbar-y-rail");
-         scroll.scrollTop=0;
-         $('#btn_consultar').prop('disabled', true);
-         setTimeout(() => {
+                radios[j].checked = true;
+                break;
+            }
+        }
+        selectSuperficie(data.superficie);
+        const scroll=document.querySelector(".ps-scrollbar-y-rail");
+        scroll.scrollTop=0;
+        $('#btn_consultar').prop('disabled', true);
+        setTimeout(() => {
             ConsultarPlanes();
         }, 1000);
     });
@@ -356,9 +349,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
     $(document).on('click', '#btnVer', function () {
         $('#spiner-loader').removeClass('hide');
-        let idAutorizacion = $(this).attr('data-idAutorizacion');
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
-        let paquetes = data.paquetes;
         let residenciales = data.nombreResidencial.split(',');
         let fecha_inicio = moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
         let fecha_fin = moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
@@ -366,15 +357,15 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         document.getElementById('contentView').innerHTML = '';  
 
         $('#contentView').append(`
-        <span>Fecha inicio:</span><span class="label lbl-sky">${fecha_inicio}</span> <span>Fecha fin:</span><span class="label lbl-sky">${fecha_fin}</span><br>
-        <span>Sede:</span><span class="label lbl-sky">${data.sede}</span>
-        <span>Residencial(es):</span>${residenciales.map(function (element) { return `<span class="label lbl-sky">${element}</span>` })}
-        <span>Tipo lote:</span><span class="label lbl-sky">${data.tipoLote}</span>
-        <span>Superficie:</span><span class="label lbl-sky">${data.tipoSuperficie}</span>
-        <div class="row" >
-            <div class="col-lg-12" id="cards">
-   
-            </div>
+        <div style="line-height: 15px">
+            <p class="m-0"><small style="font-size:10px">Rango de fechas: </small>${fecha_inicio} - ${fecha_fin}</p>
+            <p class="m-0"><small style="font-size:10px">Sede: </small>${data.sede}</p>
+            <p class="m-0"><small style="font-size:10px">Residencial(es): </small>${residenciales.map(function (element) { return `${element} </p>`})}
+            <p class="m-0"><small style="font-size:10px">Tipo lote: </small>${data.tipoLote}</p>
+            <p class="m-0"><small style="font-size:10px">Superficie: </small>${data.tipoSuperficie}</p>
+        </div>
+        <div class="row scroll-styles" style="height: 420px; overflow: auto">
+            <div class="col-lg-12" id="cards" style="padding: 0 40px"></div>
         </div>
         `);
         
@@ -383,90 +374,54 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             data = JSON.parse(data);
             let dataPaquetes = data[0].paquetes;
             let dataDescuentosByPlan = data[0].descuentos;
-           // tiposDescuentos = JSON.parse(descuentosYCondiciones);
-            console.log(data);
             for (let m = 0; m < dataPaquetes.length; m++) {
-                console.log(dataPaquetes,tiposDescuentos);
                 let idPaquete = dataPaquetes[m].id_paquete;
-                console.log(idPaquete)
                 let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete)
                 let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
-                    if(existe != undefined){
-                        crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
-                    }
-               /* for (let o = 0; o < tiposDescuentos.length; o++) {   
-                    console.log(tiposDescuentos[o]);
-                    console.log(tiposDescuentos[o].condicion.id_condicion);
-                 
-                        
-                        
-                    }  */
+                if(existe != undefined){
+                    crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
+                }
             }
-
-
         });
 
         $("#modalView").modal();
         $('#spiner-loader').addClass('hide');
-
     });
 
     function crearDivs(dataPaquete,tiposDescuentos,descuentosPorPlan){
-        console.log('--------------')
-        console.log(dataPaquete);
-        console.log(tiposDescuentos);
-        console.log(descuentosPorPlan);
-        console.log('--------------')
         $('#cards').append(`
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="box">  
-                        <h2><span class="label lbl-violetChin">${dataPaquete.descripcion}</span></h2>
-                        <span>
-                            <ul id="descuentosP_${dataPaquete.id_paquete}">
-                            </ul>
-                        </span>
-                    </div>
+            <div class="card mb-0" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; border: 1px solid #eaeaea;">
+                <div class="box"> 
+                    <h6 class="overflow-text" style="color: #4e4e4e; border-bottom: 1px solid #eaeaea; padding: 10px 10px 5px 10px; margin-top: 0; border-radius: 5px 5px 0 0;" data-toggle="tooltip" data-placement="right" title="${dataPaquete.descripcion}"><b>${dataPaquete.descripcion}</b></h6>
+                    <span>
+                        <div style="padding-bottom: 15px" id="descuentosP_${dataPaquete.id_paquete}">
+                        </div>
+                    </span>
                 </div>
             </div>
         `);
 
         for (let m = 0; m < tiposDescuentos.length; m++) {
-            $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
-                <li>${tiposDescuentos[m].condicion.descripcion}</li>
+            
+            let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
+            
+            if(existe != undefined){
+                $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
+                <p class="m-0">${tiposDescuentos[m].condicion.descripcion}</p>
                 <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}"></div>
             `);
-            let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
-            console.log(tiposDescuentos[m].condicion);
-            if(existe != undefined){
                 let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
-                console.log('descuentosByPlan');
-console.log(descuentosByPlan);
                 for (let o = 0; o < descuentosByPlan.length; o++) {
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
                         $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
-                           <span class="label lbl-green">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>
-                `);
+                           <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
                     }
-                    
                 }
-
-                //llenar(dataPaquete.id_paquete,tiposDescuentos[m].condicion.id_condicion,existe)
-                console.log('---SI HAY-----')
-                console.log(existe);
-                console.log('---SI HAY-----')
-                  
-
-             }
-
-                   
+            }       
         }
+        $('[data-toggle="tooltip"]').tooltip()
     }
-
-    let descuentosYCondiciones;
-    var primeraCarga = 1;
-    llenarTipoDescuentos();
     
     $(document).ready(function() {
         $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
@@ -484,12 +439,13 @@ console.log(descuentosByPlan);
         setIniDatesXMonth("#fechainicio", "#fechafin");
         //Función para mandar estatus vacio por defecto 
         sinPlanesDiv();
-    
     });
+
     async function llenarTipoDescuentos(){
         descuentosYCondiciones = await getDescuentosYCondiciones(1, 0);
         descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
-       }
+    }
+
     $("#sede").change(function() {
         $('#spiner-loader').removeClass('hide');
         $('#residencial option').remove();
@@ -525,9 +481,9 @@ console.log(descuentosByPlan);
     $("input[data-type='currency']").on({
         keyup: function() {
             let id_condicion = $('#id_condicion').val();
-                if(id_condicion == 12 || id_condicion == 4){
-                    formatCurrency($(this));
-                }
+            if(id_condicion == 12 || id_condicion == 4){
+                formatCurrency($(this));
+            }
         },
         blur: function() { 
             let id_condicion = $('#id_condicion').val();
@@ -571,7 +527,6 @@ console.log(descuentosByPlan);
     //Fn para obtener las condiciones y descuentos que pertenecen a ellas (tablas condiciones en BD)
     function getDescuentosYCondiciones(primeraCarga, tipoCondicion){
         $('#spiner-loader').removeClass('hide');
-    
         return new Promise ((resolve, reject) => {   
             $.ajax({
                 type: "POST",
@@ -863,14 +818,13 @@ console.log(descuentosByPlan);
     
             $.post('getPaquetes',params, function(data) {
                 if( data.length >= 1){
-                    //data[0].paquetes.shift();
                     let dataPaquetes = data[0].paquetes;
                     let dataDescuentosByPlan = data[0].descuentos;
-                    console.log(dataDescuentosByPlan)               
+                    
                     
                     dataPaquetes.forEach(function (element, indexPaquetes) {
                         let idPaquete = element.id_paquete;
-                        console.log(idPaquete)
+                        
                         var indexActual = document.getElementById('index');
                         var indexNext = (document.getElementById('index').value - 1) + 2;
                         indexActual.value = indexNext;
@@ -884,28 +838,18 @@ console.log(descuentosByPlan);
                         descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
                             let idCondicion = subelement['condicion']['id_condicion'];
                             let nombreCondicion = subelement['condicion']['descripcion'];
-                            console.log(idCondicion)
+                            
                             templateSelectsByCard(indexNext, indexCondicion, idCondicion, nombreCondicion);
-                            // llenarSelects(indexNext, element['id_paquete'], nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes);
-    
-                        let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete &&  elementD.id_condicion == idCondicion)
-                        console.log(existe)
-                        let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
-                        if(existe != undefined){
-                            const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                               check.checked = true; 
-                              PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
-                              if(indexPaquetes == dataPaquetes.length -1){
-                                $('#spiner-loader').addClass('hide');
-                            }
-     
-                        }
-                          //  dataDescuentosByPlan.forEach(function (elementData, indexData) {
-                             //   const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                             //   check.checked = true;
-    
-                               //  PrintSelectDesc(indexNext, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
-                        //    });                  
+                            let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete &&  elementD.id_condicion == idCondicion);
+                            let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
+                            if(existe != undefined){
+                                const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
+                                check.checked = true; 
+                                PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
+                                if(indexPaquetes == dataPaquetes.length -1){
+                                    $('#spiner-loader').addClass('hide');
+                                }
+                            }                  
                         });
                     
                         if( lenDesCon <= 0 ){
@@ -914,7 +858,6 @@ console.log(descuentosByPlan);
     
                         $("#tipo_descuento_"+indexNext).selectpicker('refresh');    
                         validateNonePlans();
-    
                     });
                 }
                 else{
@@ -952,24 +895,6 @@ console.log(descuentosByPlan);
         $("#btn_save").addClass('d-none');
     }
     
-    // async function llenarSelects(indexNext, id_paquete, nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes){
-    //     let params = { 'id_paquete': id_paquete, 'id_tcondicion': idCondicion }
-    //     $.ajax({
-    //         async: true,
-    //         url: 'getDescuentosByPlan',
-    //         type: 'POST',
-    //         data: params,
-    //         success: function (data) {
-    //             dataDescuentosByPlan = JSON.parse(data);
-    //             if(dataDescuentosByPlan.length > 0){
-    //                 const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-    //                 check.checked = true;
-    //                 PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, dataDescuentosByPlan, lenDesCon, indexPaquetes);
-    //             }
-    //         },
-    //     })
-    // }
-    
     function ValidarOrden(indexN,i){
         let seleccionado = $(`#orden_${indexN}_${i}`).val();	
         for (let m = 0; m < 4; m++) {
@@ -983,10 +908,6 @@ console.log(descuentosByPlan);
     }
     
     function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select, idCondicion, lenDesCon, indexPaquetes){
-        console.log('-----FUNCIÓN LLENAR---');
-        console.log(dataDescuentosByPlan)
-        console.log('idCondicion: '+idCondicion)
-        console.log('indexPaquetes: '+indexPaquetes)
         var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
         boxDetail.removeClass('hidden');
         let rowDetail = boxDetail.find( '.rowDetailDiscount');
@@ -1002,22 +923,18 @@ console.log(descuentosByPlan);
         let descuentosSelected = [];
         dataDescuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_condicion == idCondicion);
         dataDescuentosByPlan = dataDescuentosByPlan.sort();
-        console.log('---LLENADO---');
-        console.log(dataDescuentosByPlan);
-        console.log('---LLENADO---');
     
         for (let m = 0; m < dataDescuentosByPlan.length; m++) {
             if(idCondicion != 13){
-                let id_descuento=
                 crearBoxDetailDescuentos(indexGral, indexCondiciones, id_select, dataDescuentosByPlan[m].id_descuento, dataDescuentosByPlan[m].porcentaje, tipo);
-                console.log('PORCENTAJE :'+dataDescuentosByPlan[m].porcentaje)
+                
                 descuentosSelected.push(dataDescuentosByPlan[m].id_descuento);
-                    if(dataDescuentosByPlan[m].msi_descuento != 0){
-                        var miCheckbox = document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msiC`);
-                        miCheckbox.checked = true;
-                        document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msi`).removeAttribute("readonly");
-                        $(`#${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msi`).val(dataDescuentosByPlan[m].msi_descuento);
-                    }
+                if(dataDescuentosByPlan[m].msi_descuento != 0){
+                    var miCheckbox = document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msiC`);
+                    miCheckbox.checked = true;
+                    document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msi`).removeAttribute("readonly");
+                    $(`#${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msi`).val(dataDescuentosByPlan[m].msi_descuento);
+                }
             }
             else{
                 descuentosSelected.push(dataDescuentosByPlan[m].id_descuento+','+parseInt(dataDescuentosByPlan[m].porcentaje));
@@ -1033,7 +950,7 @@ console.log(descuentosByPlan);
     
     //Se introducen todas las opcines para cada uno de los select que pertenecen a un plan
     function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, indexGral, dataDescuentosByPlan=[], lenDesCon = 0, indexPaquetes = 0){
-        console.log(dataDescuentosByPlan);
+        
         nombreCondicion = (nombreCondicion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
         var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
         boxDetail.removeClass('hidden');
@@ -1042,27 +959,24 @@ console.log(descuentosByPlan);
     
         //Si la condición en el plan ES checkeada
         if($(`#inlineCheckbox1_${indexGral}_${indexCondiciones}`).is(':checked')){
-            console.log('CHECKEADO')
-            console.log('indexGral: '+indexGral)
-            console.log('indexCondiciones: '+indexCondiciones)
             $(`#orden_${indexGral}_${indexCondiciones}`).prop( "disabled", false );
-            
             $(`#selectDescuentos_${indexGral}_${indexCondiciones}`).append(`
             <div class="w-100 d-flex justify-center align-center">
                 <select id="ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}" required name="${indexGral}_${indexCondiciones}_ListaDescuentos${nombreCondicion}_[]" multiple class="form-control" data-live-search="true">
             </div>`);
     
-                    //Propiedades que asignaremos a los select
-                    $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
-                        allow_single_deselect: false,
-                        containerCssClass: "select-gral",
-                        dropdownCssClass: "custom-dropdown",
-                        tags: false, 
-                        tokenSeparators: [',', ' '], 
-                        closeOnSelect : false,
-                        placeholder : "SELECCIONA UNA OPCIÓN",
-                        allowHtml: true, 
-                        allowClear: true});
+            //Propiedades que asignaremos a los select
+            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+                allow_single_deselect: false,
+                containerCssClass: "select-gral",
+                dropdownCssClass: "custom-dropdown",
+                tags: false, 
+                tokenSeparators: [',', ' '], 
+                closeOnSelect : false,
+                placeholder : "SELECCIONA UNA OPCIÓN",
+                allowHtml: true, 
+                allowClear: true
+            });
             
             descuentosArray.forEach(element => {
                 let porcentaje = element['porcentaje'];
@@ -1070,25 +984,26 @@ console.log(descuentosByPlan);
                 
                 $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${idCondicion == 4 || idCondicion == 12 ? '$'+formatMoney(porcentaje) : (idCondicion == 13 ? porcentaje : porcentaje + '%'  ) }</option>`);
             });
+
             if( descuentosArray.length <= 0){
                 $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             }
-    
             if( dataDescuentosByPlan.length > 0 ){
                 llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, `ListaDescuentos${nombreCondicion}_`, idCondicion, lenDesCon, indexPaquetes);
             }
     
-                    //Propiedades que asignaremos a los select
-                    $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
-                        allow_single_deselect: false,
-                        containerCssClass: "select-gral",
-                        dropdownCssClass: "custom-dropdown",
-                        tags: false, 
-                        tokenSeparators: [',', ' '], 
-                        closeOnSelect : false,
-                        placeholder : "SELECCIONA UNA OPCIÓN",
-                        allowHtml: true, 
-                        allowClear: true});
+            //Propiedades que asignaremos a los select
+            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+                allow_single_deselect: false,
+                containerCssClass: "select-gral",
+                dropdownCssClass: "custom-dropdown",
+                tags: false, 
+                tokenSeparators: [',', ' '], 
+                closeOnSelect : false,
+                placeholder : "SELECCIONA UNA OPCIÓN",
+                allowHtml: true, 
+                allowClear: true
+            });
     
             //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
@@ -1103,6 +1018,7 @@ console.log(descuentosByPlan);
                 } 
                 rowDetail.removeClass('hidden');
             });
+
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
     
             //Acciones que se ejecutaran cuando DESselecciona un descuento de una condición
@@ -1118,7 +1034,6 @@ console.log(descuentosByPlan);
                     document.getElementById(`${indexGral}_${$element[0].value}_span`).outerHTML = "";
                 }
             });
-    
         }
         else{
             boxDetail.addClass('hidden');
@@ -1136,21 +1051,6 @@ console.log(descuentosByPlan);
         $('#super').val(tipoSup);
         document.getElementById("printSuperficie").innerHTML ='';
         validateAllInForm();
-      /*  if(tipoSup == 1){
-            $('#printSuperficie').append(`
-                <input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" id="fin" placeholder="Mayor a" data-toggle="tooltip" data-placement="top" title="Mayor que 200">
-                <input type="hidden" class="form-control" value="0" name="inicio">`);
-        }
-        else if(tipoSup == 2){
-            $('#printSuperficie').append(`
-                <input type="number" class="form-control input-gral p-0 text-center h-100" name="fin" id="fin" placeholder="Menor a" data-toggle="tooltip" data-placement="top" title="Menor que 199.99">
-                <input type="hidden" class="form-control" value="0" name="inicio">`);
-        }
-        else if(tipoSup == 3){
-            $('#printSuperficie').append(`
-                <input type="hidden" class="form-control" name="inicio" value="0">
-                <input type="hidden" class="form-control" name="fin" id="fin" value="0">`);
-        }*/
         $('[data-toggle="tooltip"]').tooltip();
     }
     

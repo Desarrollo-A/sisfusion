@@ -15,25 +15,10 @@
 		?>
 
 		<div class="modal fade" id="modalView" role="dialog">
-			<div class="modal-dialog modal-lg">
+			<div class="modal-dialog" style="width: 500px">
 				<div class="modal-content text-center">
-					<div class="modal-header">
-						<h5>Planes</h5>
-					</div>
 					<div class="container-fluid">
-						<div id="contentView">
-
-						</div>
-						<div class="row mb-1 mt-1">
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								
-							</div>
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								
-								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar
-								</button>
-							</div>
-						</div>
+						<div id="contentView" class="pt-2"></div>
 					</div>
 				</div>
 			</div>
