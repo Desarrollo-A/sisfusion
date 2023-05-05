@@ -18,7 +18,7 @@ $.post(general_base_url+"Comisiones/getAsesoresBaja", function(data) {
     }
     $("#asesorold").selectpicker('refresh');
 }, 'json');
- 
+
 function selectOpcion(id_cliente,idLote){
     var parent = $('#opcion').val();
     $('#modal_avisitos').modal('hide');
@@ -86,7 +86,7 @@ function selectOpcion(id_cliente,idLote){
                 <input type="hidden" id="id_cliente" value="${id_cliente}" name="id_cliente" >`);
 
                 $('#usuarioid5 option').remove(); 
-                $.post('getUsuariosRol3/'+7, function(data) {
+                $.post('Comisiones/getUsuariosRol3/'+7, function(data) {
                     $("#usuarioid5").append($('<option>').val("0").text("Seleccione una opción"));
                     var len = data.length;
                     for( var i = 0; i<len; i++){
@@ -105,7 +105,7 @@ function selectOpcion(id_cliente,idLote){
                     var parent = $(this).val();
                     let id_l = parent.split(',');
                     console.log(id_l);
-                    $.post('getLideres/'+id_l[1], function(data) {
+                    $.post('Comisiones/getLideres/'+id_l[1], function(data) {
                         $('#usuarioid6 option').remove(); 
                         $('#usuarioid7 option').remove(); 
                         $('#usuarioid8 option').remove(); 
@@ -191,7 +191,7 @@ $("#asesorold").change(function() {
     $("#info").removeAttr('style');
     document.getElementById('info').innerHTML='Cargando...';
     var parent = $(this).val();
-    $.post('datosLotesaCeder/'+parent, function(data) {
+    $.post('Comisiones/datosLotesaCeder/'+parent, function(data) {
         document.getElementById('info').innerHTML='';
         var len = data[0].length;
         if(len ==0 ){
@@ -235,7 +235,7 @@ $("#asesorold").change(function() {
 $("#roles2").change(function() {
     var parent = $(this).val();
     $('#usuarioid2 option').remove(); 
-    $.post('getUsuariosRol3/'+parent, function(data) {
+    $.post('Comisiones/getUsuariosRol3/'+parent, function(data) {
         $("#usuarioid2").append($('<option>').val("0").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -287,7 +287,7 @@ $("#roles3").change(function() {
     document.getElementById('UserSelect').innerHTML = '<em>Usuario a cambiar: <b>'+nameUser+'</b></em>';
     
     $('#usuarioid3 option').remove(); 
-    $.post('getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post('Comisiones/getUsuariosByrol/'+parent+'/'+user, function(data) {
         $("#usuarioid3").append($('<option>').val("0").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -399,7 +399,7 @@ $("#rolesvc").change(function() {
     }
 
     $('#usuarioid4 option').remove(); 
-    $.post('getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post('Comisiones/getUsuariosByrol/'+parent+'/'+user, function(data) {
         $("#usuarioid4").append($('<option>').val("0").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -731,7 +731,7 @@ $(".find_doc").click( function() {
         width: 'auto',
         buttons: [],
         ajax:{
-            "url": general_base_url+'Comisiones/getInCommissions/'+idLote,
+            "url": general_base_url+'incidencias/getInCommissions/'+idLote,
             "dataSrc": ""
         },
         pagingType: "full_numbers",
@@ -750,73 +750,40 @@ $(".find_doc").click( function() {
         scrollX: true,
         destroy: true,
         ordering: false,
-        columns: [{
-            "width": "3%",
-            "data": function( d ){
-                var lblStats;
-                lblStats ='<p class="m-0"><b>'+d.idLote+'</b></p>';
-                return lblStats;
-            }
-        },
-        {
-            "width": "5%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreResidencial+'</p>';
-            }
-        },
-        {
-            "width": "8%",
-            "data": function( d ){
-                return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
-            }
-        },
-        {
-            "width": "11%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreLote+'</p>';
-
-            }
-        }, 
-        {
-            "width": "11%",
-            "data": function( d ){
-                return '<p class="m-0"><b>'+d.nombre_cliente+'</b></p>';
-            }
-        }, 
-        {
-            "width": "8%",
-            "data": function( d ){
+        columns: [ 
+        {data: 'nombreResidencial'},
+        {data: 'nombreCondominio'},
+        {data: 'nombreLote'},
+        {data: 'idLote'}, 
+        {data: 'nombre_cliente'}, 
+        {data: function( d ){
                 var lblType;
                 if(d.tipo_venta==1) {
-                    lblType ='<span class="label lbl-warning">Venta Particular</span>';
+                    lblType ='<span class="label label-danger">Venta Particular</span>';
                 }
                 else if(d.tipo_venta==2) {
-                    lblType ='<span class="label lbl-green">Venta normal</span>';
+                    lblType ='<span class="label label-success">Venta normal</span>';
                 }
                 else{
-                    lblType ='<span class="label lbl-yellow">SIN TIPO Venta</span>';
+                    lblType ='<span class="label label-warning">SIN TIPO Venta</span>';
                 }
                 return lblType;
             }
         }, 
-        {
-            "width": "8%",
-            "data": function( d ){
+        {data: function( d ){
                 var lblStats;
                 if(d.compartida==null) {
-                    lblStats ='<span class="label lbl-yellow" >Individual</span>';
+                    lblStats ='<span class="label label-yellow" style="background:#E5D141;" >Individual</span>';
                 }else {
-                    lblStats ='<span class="label lbl-orangeYellow">Compartida</span>';
+                    lblStats ='<span class="label label-warning">Compartida</span>';
                 }
                 return lblStats;
             }
         },
-        {
-            "width": "8%",
-            "data": function( d ){
+        {data: function( d ){
                 var lblStats;
                 if(d.idStatusContratacion==15){
-                    lblStats ='<span class="label lbl-violetChin" >Contratado</span>';
+                    lblStats ='<span class="label label-success" style="background:#9E9CD5;" >Contratado</span>';
                 }
                 else {
                     lblStats ='<p><b>'+d.idStatusContratacion+'</b></p>';  
@@ -824,6 +791,40 @@ $(".find_doc").click( function() {
                 return lblStats;
             }
         },
+        // 
+        { data: function (d) {
+            var labelEstatus;
+            if(d.totalNeto2 == null) {
+                labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
+            }else if(d.registro_comision == 2){
+                labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+            }else {
+                labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+            }
+            return labelEstatus;
+        }},{ data: function (d) {
+            var fechaSistema;
+            if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
+                fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+            }else {
+                fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
+            }
+            return fechaSistema;
+        }},
+        { data: function (d) {
+            var fechaNeodata;
+            var rescisionLote;
+            fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
+            rescisionLote = '';
+            if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
+                fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+            } 
+            if (d.registro_comision == 8){
+                rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
+            }
+            return fechaNeodata+rescisionLote;
+        }},
+        // 
         {
             "width": "8%",
             "data": function( d ){
@@ -834,16 +835,16 @@ $(".find_doc").click( function() {
                 else {
                     switch(d.lugar_prospeccion){
                         case '6':
-                            lblStats ='<span class="label lbl-azure">MARKETING DIGÍTAL</span>';
+                            lblStats ='<span class="label " style="background:#B4A269;">MARKETING DIGÍTAL</span>';
                         break;
                         case '12':
-                            lblStats ='<span class="label lbl-violetDeed" >CLUB MADERAS</span>';
+                            lblStats ='<span class="label " style="background:#00548C;">CLUB MADERAS</span>';
                         break;
                         case '25':
-                            lblStats ='<span class="label lbl-sky" >IGNACIO GREENHAM</span>';
+                            lblStats ='<span class="label " style="background:#0860BA;">IGNACIO GREENHAM</span>';
                         break;
                         case '26':
-                            lblStats ='<span class="label lbl-gray" >COREANO VLOGS</span>';
+                            lblStats ='<span class="label " style="background:#0860BA;">COREANO VLOGS</span>';
                         break;
                         default:
                             lblStats ='';
@@ -860,18 +861,18 @@ $(".find_doc").click( function() {
                 var lblStats = '';
                 switch(d.registro_comision){
                     case '7':
-                        lblStats ='<span class="label lbl-warning" >LIQUIDADA</span>';
+                        lblStats ='<span class="label lbl-warning" style="background:red;" >LIQUIDADA</span>';
                     break;
                     
                     case '1':
-                        lblStats ='<span class="label lbl-sky" >COMISIÓN ACTIVA</span>';
+                        lblStats ='<span class="label lbl-sky" style="background:blue;">COMISIÓN ACTIVA</span>';
                     break;
                     case '8':
-                        lblStats ='<span class="label lbl-blueMaderas" >NUEVA, rescisión</span>';
+                        lblStats ='<span class="label lbl-blueMaderas" style="color:#0860BA;">NUEVA, rescisión</span>';
                     break;
 
                     case '0':
-                        lblStats ='<span class="label lbl-blueMaderas" >NUEVA, sin dispersar</span>';
+                        lblStats ='<span class="label lbl-blueMaderas" style="color:#0860BA;">NUEVA, sin dispersar</span>';
                     break;
 
                     default:
@@ -1562,7 +1563,7 @@ $("#my_updatebandera_form").on('submit', function(e){
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: 'updateBandera',
+        url: general_base_url+'Comisiones/updateBandera',
         data: new FormData(this),
         contentType: false,
         cache: false,
@@ -2052,7 +2053,7 @@ $("#form_ceder").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_ceder"));
     formData.append("dato", "valor");
     $.ajax({
-        url: 'CederComisiones',
+        url: general_base_url+'Comisiones/CederComisiones',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2094,7 +2095,7 @@ $("#form_inventario").on('submit', function(e){
 
     let formData = new FormData(document.getElementById("form_inventario"));
     $.ajax({
-        url: 'UpdateInventarioClient',
+        url: general_base_url+'Comisiones/UpdateInventarioClient',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2140,7 +2141,7 @@ $("#form_vc").on('submit', function(e){
 
     let formData = new FormData(document.getElementById("form_vc"));
     $.ajax({
-        url: 'UpdateVcUser',
+        url: general_base_url+'Comisiones/UpdateVcUser',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2185,7 +2186,7 @@ $("#form_vcNew").on('submit', function(e){
 if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8').val() != 0){
     let formData = new FormData(document.getElementById("form_vcNew"));
     $.ajax({
-        url: 'AddVentaCompartida',
+        url: general_base_url+'Comisiones/AddVentaCompartida',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2240,7 +2241,7 @@ $("#form_empresa").on('submit', function(e){
 
     let formData = new FormData(document.getElementById("form_empresa"));
     $.ajax({
-        url: 'AddEmpresa',
+        url: general_base_url+'Comisiones/AddEmpresa',
         data: formData,
         method: 'POST',
         contentType: false,
