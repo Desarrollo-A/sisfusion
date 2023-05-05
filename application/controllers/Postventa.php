@@ -2335,12 +2335,12 @@ function saveNotaria(){
         {
             if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
                 if (trim($email) != ''){
-                    $mail->addAddress('programador.analista8@ciudadmaderas.com');//$email
+                    $mail->addAddress($email);//$email
                 }
             }
 
             if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-                $mail->addAddress('programador.analista8@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
+                $mail->addAddress('analista.comercial@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
             }
         }
 

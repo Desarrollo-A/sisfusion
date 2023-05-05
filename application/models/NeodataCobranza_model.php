@@ -9,5 +9,4 @@ class NeodataCobranza_model extends CI_Model {
     public function getInformation() {
         return $this->cobranza->query("EXEC [crm].[sp_getLotesCobranza]");
     }
-
 }

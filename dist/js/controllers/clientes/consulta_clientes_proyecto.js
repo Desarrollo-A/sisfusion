@@ -24,9 +24,17 @@ $(document).on('change','#proyecto', function() {
 });
 
 function getClientsByProyect(id_proyecto){
+    let titulos_encabezado = [];
+    let num_colum_encabezado = [];
     $('#tabla_clientes thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+        titulos_encabezado.push(title);
+        num_colum_encabezado.push(i);
+        $(this).html(`<input class="textoshead"
+                             data-toggle="tooltip" 
+                             data-placement="top"
+                             title="${title}"
+                             placeholder="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_clientes').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
@@ -36,14 +44,16 @@ function getClientsByProyect(id_proyecto){
 
     $('#tabla_clientes').DataTable({
         destroy: true,
-        ajax:
-            {
-                url: 'getClientsByProyect/'+id_proyecto,
-                dataSrc: "",
-                type: "POST",
-                cache: false
-            },
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        ajax:{
+            url: 'getClientsByProyect/'+id_proyecto,
+            dataSrc: "",
+            type: "POST",
+            cache: false
+        },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        },
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "auto",
         ordering: false,
         pagingType: "full_numbers",
@@ -58,44 +68,10 @@ function getClientsByProyect(id_proyecto){
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8 , 9, 10],
+                columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO'
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'ID LOTE';
-                                break;
-                            case 3:
-                                return 'ESTATUS CONTRATACION';
-                                break;
-                            case 4:
-                                return 'ESTATUS LOTE';
-                                break;
-                            case 5:
-                                return 'NOMBRE COMPLETO';
-                                break;
-                            case 6:
-                                return 'FECHA APARTADO';
-                                break;
-                            case 7:
-                                return 'PERSONALIDAD JURIDICA';
-                                break;
-                            case 8:
-                                return 'FECHA NACIMIENTO';
-                                break;
-                            case 9:
-                                return 'EDAD';
-                                break;
-                            case 10:
-                                return 'OCUPACION';
-                                break;
-                        }
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
             }

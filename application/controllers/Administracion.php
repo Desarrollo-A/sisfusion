@@ -79,7 +79,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			$dataPer[$i]['descripcion']=$data[$i]->descripcion;
 			$dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
 			$dataPer[$i]['vl']=$data[$i]->vl;
-			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 			$horaInicio = date("08:00:00");
 			$horaFin = date("16:00:00");
 			$arregloFechas = array();  

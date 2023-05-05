@@ -39,15 +39,16 @@ class Contratacion extends CI_Controller
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_proyecto_lista()->result_array());
     }
-    
+
     public function lista_condominio($proyecto) {
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_condominio_lista($proyecto)->result_array());
     }
 
-    public function lista_lotes($condominio) {
+    public function lista_lotes($condominio){
       echo json_encode($this->Contratacion_model->get_lote_lista($condominio)->result_array());
     }
+
     public function lista_estatus() {
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->get_estatus_lote()->result_array());
@@ -55,13 +56,11 @@ class Contratacion extends CI_Controller
 
     public function get_inventario($estatus, $condominio, $proyecto) {
 		$this->validateSession();
-
 		$data = $this->Contratacion_model->getInventarioData($estatus, $condominio, $proyecto);
-		if($data!=null){
+		if($data!=null)
             print_r(json_encode($data));
-        }else{
+        else
 		    print_r(json_encode(array()));
-        }
 		exit;
     }
 
@@ -147,28 +146,22 @@ class Contratacion extends CI_Controller
 		}
 	}
 
-    public function getCoSallingAdvisers($idLote)
-    {
-        $this->validateSession();
+    public function getCoSallingAdvisers($idLote) {
         // ME TRAIGO EL ID DEL CLIENTEE
         $data = $this->Contratacion_model->getClient($idLote)->result_array();
         // EVALUO QUE EL ID DEL CLIENTE NO SEA 0 O NULO, EN ESE CASO YA NO VOY BUSCO EN VENTAS COMPARTIDAS
-        if ($data[0]['idCliente'] != NULL && $data[0]['idCliente'] != 0) {
+        if ($data[0]['idCliente'] != NULL && $data[0]['idCliente'] != 0)
             $finalAnswer = $this->Contratacion_model->getCoSallingAdvisers($data[0]['idCliente']);
-        } else { // BUSCO VENTAS COMPARTIDAS ACTIVAS
+        else // BUSCO VENTAS COMPARTIDAS ACTIVAS
             $finalAnswer = array();
-        }
 
-        if ($finalAnswer != null) {
+        if ($finalAnswer != null)
             echo json_encode($finalAnswer);
-        } else {
+        else 
             echo json_encode(array());
-        }
     }
 
-    public function getClauses($idLote)
-    {
-        $this->validateSession();
+    public function getClauses($idLote) {
         echo json_encode($this->Contratacion_model->getClauses($idLote)->result_array());
     }
 

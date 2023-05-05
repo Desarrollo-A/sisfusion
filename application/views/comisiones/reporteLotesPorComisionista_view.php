@@ -206,10 +206,11 @@
                                                         <th>ESTATUS COMISIÓN</th>
                                                         <th>PRECIO FINAL</th>
                                                         <th>PORCENTAJE COMISIÓN</th>
+                                                        <th>PAGO CLIENTE</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>TOTAL ABONADO</th>
                                                         <th>TOTAL PAGADO</th>
-                                                        <th>ROL</th>
+                                                        <th>LUGAR PROSPECCIÓN</th>
                                                     </tr>
                                                 </thead>
                                             </table>
