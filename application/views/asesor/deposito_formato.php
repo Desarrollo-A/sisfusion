@@ -175,7 +175,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
-                            <input type="text" pattern="[A-Za-z0-9]+" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
+                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
                             onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
@@ -292,7 +292,7 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
-                        <label class="label-on-left m-0">FECHA NACIMIENTO(<small style="color: red;">*</small>)</label>
+                        <label class="label-on-left m-0">FECHA DE NACIMIENTO(<small style="color: red;">*</small>)</label>
                         <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -428,7 +428,7 @@
                         </div>
                     </div>            
                 </div>
-
+            
                 <div class="row">
                     <div class="col-md-2 checkbox-radios">
                         <div class="radio"  style="color: gray;">
@@ -537,7 +537,7 @@
                         </div>           
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label class="label-on-left m-0">FECHA NACIMIENTO</label>
+                                <label class="label-on-left m-0">FECHA DE NACIMIENTO</label>
                                 <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
                             </div>
                         </div>
@@ -647,14 +647,14 @@
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">EDAD FIRMA<small style="font-size: 0.5em;">(AÑOS)</small></label>
+                                <label class="label-on-left m-0">EDAD FIRMA<small style="font-size: 0.5em;"> (AÑOS)</small></label>
                                 <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.'/>
-                            </div>
+                            </div> 
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">EMPRESA LABORA</label>
+                                <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
                                 <input  class="form-control input-gral" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
                             </div>
                         </div>	
@@ -801,7 +801,7 @@
                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="$<?=$cliente[0]->importOferta?>"/>
+                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
@@ -822,41 +822,39 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">SALDO DE DEPÓSITO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="saldoDeposito" id="saldoDeposito" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->saldoDeposito?>"/>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">APORTACIÓN MENSUAL(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="aportMensualOfer" <?php echo $readOnly; ?> id="aportMensualOfer" type="number" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
+                            <input class="form-control input-gral" name="aportMensualOfer" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> id="aportMensualOfer" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA 1° APORTACIÓN(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="fecha1erAport" <?php echo $readOnly; ?> id="fecha1erAport" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>"/>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">PLAZO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="plazo" id="plazo" <?php echo $readOnly; ?> type="number" step="any" required="true" value="<?=$cliente[0]->plazo?>"/>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA LIQUIDACIÓN DE DEPÓSITO(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" required="true" name="fechaLiquidaDepo" <?php echo $readOnly; ?> id="fechaLiquidaDepo" type="date"  value="<?=$cliente[0]->fechaLiquidaDepo?>"/>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA 2° APORTACIÓN(<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>type="date" required="true" value="<?=$cliente[0]->fecha2daAport?>"/>
@@ -881,14 +879,13 @@
                                             <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, a
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" name="dia" id="dia" <?php echo $readOnly; ?>
-                                                type="number" required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
+                                        <input min="1" max="31" class="form-control" oninput="validarDia(this)" name="dia" id="dia" <?php echo $readOnly; ?>
+                                                 required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control" name="mes" min="1" max="12" id="mes" <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, del año
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" name="anio" id="anio" <?php echo $readOnly; ?>
-                                                type="number" required="true" value="<?=$cliente[0]->anio?>" style="text-align: center;"/>
+                                        <input class="form-control" name="anio" id="anio" min="2015" max="2023"<?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->anio?>" style="text-align: center;"/>
                                     </label>
                                 </div>
                             </div>
@@ -932,15 +929,15 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" required="true" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
-                                <input name="id_referencia1" required="true" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
+                                <label class="label-on-left m-0">NOMBRE</label>
+                                <input class="form-control input-gral" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
+                                <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco1" required="true" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0">PARENTESCO</label>
+                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -960,25 +957,25 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" required="true" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
+                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
                             </div>
                         </div>
                     </div>
                     <div class="row pb-3">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" required="true" name="nombre2" <?php echo $readOnly; ?>
+                                <label class="label-on-left m-0">NOMBRE</label>
+                                <input class="form-control input-gral" name="nombre2" <?php echo $readOnly; ?>
                                         id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
-                                <input name="id_referencia2" required="true" <?php echo $readOnly; ?>
+                                <input name="id_referencia2" <?php echo $readOnly; ?>
                                         id="id_referencia2" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[1]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label class="label-on-left m-0">PARENTESCO(<small style="color: red;">*</small>)</label>
-                                <select name="parentesco2" required="true" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0">PARENTESCO</label>
+                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -997,8 +994,8 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" required="true" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
+                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
                             </div>
                         </div>
                     </div>           
@@ -1223,6 +1220,26 @@
         .keyup(resizeInput)
         .each(resizeInput);
 
+    function estaEnRango(valor, minimo = 1, maximo = 31) {
+    return valor >= minimo && valor <= maximo;
+    }
+
+    function validarDia(input) {
+    const valor = parseInt(input.value);
+    if (!estaEnRango(valor)) {
+        input.value = '';
+        alerts.showNotification('top', 'right', 'El día debe estar dentro del rango del 1 al 31.', 'warning');
+    }
+    }
+
+    function validarRFC(input) {
+    const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
+    if (!regex.test(input.value)) {
+        alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
+        
+    }
+    }
+
     function checkResidencia(){
         let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
         console.log('valor', valor);
@@ -1257,7 +1274,7 @@
     }
 
     function formatearNumero(numero) {
-    return numero.toString().replace(/\D/g, "")
+    return "$ " + numero.toString().replace(/\D/g, "")
                     .replace(/([0-9])([0-9]{2})$/, '$1.$2')
                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
     }
@@ -1276,6 +1293,8 @@
             }else if (inputs[i].name === "importOferta"){
                 inputs[i].value = formatearNumero(inputs[i].value);
             }else if (inputs[i].name === "saldoDeposito"){
+                inputs[i].value = formatearNumero(inputs[i].value);
+            }else if (inputs[i].name === "aportMensualOfer"){
                 inputs[i].value = formatearNumero(inputs[i].value);
             }
         }
@@ -1467,7 +1486,7 @@
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> CELULAR (<small style="color: red;">*</small>)</label><input class="form-control" name="telefono2_nuevo" id="telefono2_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value=""/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value=""/></div></div>');
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
 
