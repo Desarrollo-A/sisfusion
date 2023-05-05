@@ -234,11 +234,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
 	}
 
-	public function registroStatus11ContratacionAdministracion() {
-		$this->load->view('template/header');
-		$this->load->view('administracion/datos_status11Contratacion_administracion_view');
-	}
-
 	public function editar_registro_lote_administracion_proceceso11(){
 		$idLote=$this->input->post('idLote');	
 		$idCondominio=$this->input->post('idCondominio');
@@ -427,114 +422,52 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			}
 					
 	}
-	public function editar_registro_loteRechazo_administracion_proceceso11(){
-
-		$idLote=$this->input->post('idLote');	 
-		$idCondominio=$this->input->post('idCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idCliente=$this->input->post('idCliente');
-		$comentario=$this->input->post('comentario');
-		$user=$this->input->post('user');
-		$perfil=$this->input->post('perfil'); 
-		$modificado=date("Y-m-d H:i:s");
 	
-
-		$arreglo=array(); 
-		$arreglo["idStatusContratacion"]= 7;
-		$arreglo["idMovimiento"]=66; 
-		$arreglo["comentario"]=$comentario;
-		$arreglo["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo["perfil"]=$this->session->userdata('id_rol');
-		$arreglo["modificado"]=date("Y-m-d H:i:s");
-		$arreglo["fechaVenc"]=date("Y-m-d H:i:s");
+	public function editar_registro_loteRechazo_administracion_proceceso11() {
+		$idLote = $this->input->post('idLote');	 
+		$idCondominio = $this->input->post('idCondominio');
+		$nombreLote = $this->input->post('nombreLote');
+		$idCliente = $this->input->post('idCliente');
+		$comentario = $this->input->post('comentario');
+		$observaciones = $this->input->post('observaciones');
+		$user = $this->input->post('user');
+		$perfil = $this->input->post('perfil'); 
+		$modificado = date("Y-m-d H:i:s");
+		$arreglo = array(); 
+		$arreglo["idStatusContratacion"] = 7;
+		$arreglo["idMovimiento"] = 66; 
+		$arreglo["comentario"] = $comentario . ' - ' . $observaciones;
+		$arreglo["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo["perfil"] = $this->session->userdata('id_rol');
+		$arreglo["modificado"] = date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"] = date("Y-m-d H:i:s");
 		$arreglo["status8Flag"] = 0;
-	
 		$arreglo2=array();
-		$arreglo2["idStatusContratacion"]=7;
-		$arreglo2["idMovimiento"]=66;
-		$arreglo2["nombreLote"]=$nombreLote;
-		$arreglo2["comentario"]=$comentario;
-		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo2["perfil"]=$this->session->userdata('id_rol');
-		$arreglo2["modificado"]=date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"]= $modificado;
-		$arreglo2["idLote"]= $idLote;  
-		$arreglo2["idCondominio"]= $idCondominio;          
-		$arreglo2["idCliente"]= $idCliente;
-
-
-		$nombre = $this->session->userdata('nombre');
-		$apellido_paterno = $this->session->userdata('apellido_paterno');
-		$apellido_materno = $this->session->userdata('apellido_materno');
-
-		$nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
-
-		$data_send = $this->Administracion_model->getInfoToMail($idCliente, $idLote);
-
-		$data_ag = $this->Administracion_model->getAssisGte($idCliente);
-		
-		/*************************************************************************************
-		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-		 ************************************************************************************/
-		$correos_entregar = array();
-		// if(count($data_ag)>0){
-		// 	foreach ($data_ag as $item=>$value){
-		// 		array_push($correos_entregar, $value['correo']);
-		// 	}
-		// }
-
-		$datos_etiquetas =array(
-			'comentario' => $comentario,
-			'id_cliente' => $idCliente,
-			'id_lote' => $idLote
-		);
-
-		$datos_correo[0] = array(
-			"nombreResidencial"	=> $data_send->nombreResidencial,
-			"nombreCondominio"	=> $data_send->nombreCondominio,
-			"nombreLote"		=> $data_send->nombreLote,
-			"nombreCliente"		=> $data_send->nombreCliente,
-			"nombreRechaza"		=> $nombre_rechazador,
-			"fechaApartado"		=> $data_send->fechaApartado,
-			"fechaRechazo"		=> $modificado,
-		);
-
-		#PROVICIONAL TESTING
-		array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-		//$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
-
-		$elementos_correo = array(	"setFrom" => Elementos_Correos_Admin::SET_FROM_EMAIL,
-									"Subject" => Elementos_Correos_Admin::ASUNTO_CORREO_TABLA_RECHAZO_ADMIN_PROC_11. ' ' .$comentario);
-
-		$comentario_general = Elementos_Correos_Admin::EMAIL_RECHAZO_ADMIN_PROC_11.'<br><br>'. $comentario;
-		$datos_encabezados_tabla = Elementos_Correos_Admin::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_ADMIN_PROC_11;
-
-		$plantilla_correo = new plantilla_dinamica_correo;
-		/********************************************************************************************************************************************/
-		
+		$arreglo2["idStatusContratacion"] = 7;
+		$arreglo2["idMovimiento"] = 66;
+		$arreglo2["nombreLote"] = $nombreLote;
+		$arreglo2["comentario"] = $comentario . ' - ' . $observaciones;
+		$arreglo2["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo2["perfil"] = $this->session->userdata('id_rol');
+		$arreglo2["modificado"] = date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"] = $modificado;
+		$arreglo2["idLote"] = $idLote;  
+		$arreglo2["idCondominio"] = $idCondominio;          
+		$arreglo2["idCliente"] = $idCliente;   
 		$validate = $this->Administracion_model->validateSt11($idLote);
-
-		if($validate == 1){
-		if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-			$data['message'] = 'OK';
-			$data_enviar_mail = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-																		$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-			if ($data_enviar_mail > 0) {
-				$data['status_msg'] = 'Correo enviado correctamente';
-			} else {
-				$data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
-			}
-			echo json_encode($data);
-
-			}else{
+		if($validate == 1) {
+			if ($this->Administracion_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE){ 
+				$data['message'] = 'OK';
+				echo json_encode($data);
+			}else {
 				$data['message'] = 'ERROR';
 				echo json_encode($data);
 			}
-		}else {
+		} else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
 		}
-	}
+   }
 
 	public function validateSession()
 	{
