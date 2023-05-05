@@ -11,22 +11,29 @@
 	<div class="wrapper">
 		<?php
 		$datos = array();
-		$datos = $datos4;
-		$datos = $datos2;
-		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
 		?>
 
-		<div class="modal" tabindex="-1"  id="viewPlansModal" role="dialog">
-			<div class="modal-dialog modal-md" role="document">
-				<div class="modal-content">
+		<div class="modal fade" id="modalView" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content text-center">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-						</button>
+						<h5>Planes</h5>
 					</div>
-					<div class="modal-body">
-						<div class="previewBody"></div>
+					<div class="container-fluid">
+						<div id="contentView">
+
+						</div>
+						<div class="row mb-1 mt-1">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
