@@ -293,7 +293,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
                         <label class="label-on-left m-0">FECHA DE NACIMIENTO(<small style="color: red;">*</small>)</label>
-                        <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
+                        <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" onkeydown="return false" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
@@ -538,7 +538,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
                                 <label class="label-on-left m-0">FECHA DE NACIMIENTO</label>
-                                <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" onkeydown="return false" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -837,7 +837,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA 1° APORTACIÓN(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="fecha1erAport" <?php echo $readOnly; ?> id="fecha1erAport" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>"/>
+                            <input class="form-control input-gral" name="fecha1erAport" <?php echo $readOnly; ?> id="fecha1erAport" onkeydown="return false" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>"/>
                         </div>
                     </div>
                 </div>
@@ -851,13 +851,13 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA LIQUIDACIÓN DE DEPÓSITO(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" required="true" name="fechaLiquidaDepo" <?php echo $readOnly; ?> id="fechaLiquidaDepo" type="date"  value="<?=$cliente[0]->fechaLiquidaDepo?>"/>
+                            <input class="form-control input-gral" required="true" name="fechaLiquidaDepo" <?php echo $readOnly; ?> id="fechaLiquidaDepo" type="date" onkeydown="return false" value="<?=$cliente[0]->fechaLiquidaDepo?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">FECHA 2° APORTACIÓN(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>type="date" required="true" value="<?=$cliente[0]->fecha2daAport?>"/>
+                            <input class="form-control input-gral" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>type="date" onkeydown="return false" required="true" value="<?=$cliente[0]->fecha2daAport?>"/>
                         </div>
                     </div>
                 </div>
@@ -1486,7 +1486,7 @@
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> CELULAR (<small style="color: red;">*</small>)</label><input class="form-control" name="telefono2_nuevo" id="telefono2_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
 
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" type="date" value=""/></div></div>');
+            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" onkeydown="return false" type="date" value=""/></div></div>');
 
             $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
 

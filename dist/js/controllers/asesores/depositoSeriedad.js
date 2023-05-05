@@ -578,6 +578,7 @@ function fillDataTable(id_condominio) {
             },
             {
                 "data": function( d ){
+                    // $('[data-toggle="tooltip"]').tooltip();
                     var atributo_button ='';
                     var buttonst;
                     var tipo_comprobanteD = d.tipo_comprobanteD;
@@ -665,7 +666,7 @@ function fillDataTable(id_condominio) {
                         url_to_go  = general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0';
                     }
                     if (d.dsType == 1){
-                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" title= "Depósitooooo de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
                     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
                         buttonst += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
                     }

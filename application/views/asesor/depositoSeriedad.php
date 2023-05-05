@@ -198,7 +198,7 @@
                                             <th>COORDINADOR</th>
                                             <th>GERENTE</th>
                                             <th>SUBDIRECTOR</th>
-                                            <th>REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL</th>
                                             <th>FECHA APARTADO</th>
                                             <th>FECHA VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
