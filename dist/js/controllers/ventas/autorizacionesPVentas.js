@@ -446,11 +446,12 @@ console.log(descuentosByPlan);
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
                         $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
-                           <span class="label lbl-green">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? '+'+descuentosByPlan[o].msi_descuento+'%' : '')}</span>
+                           <span class="label lbl-green">${porcentaje}WER ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? '+ '+descuentosByPlan[o].msi_descuento+' MSI' : '')}</span>
                 `);
                     }
                     
                 }
+
 
                 //llenar(dataPaquete.id_paquete,tiposDescuentos[m].condicion.id_condicion,existe)
                 console.log('---SI HAY-----')
@@ -466,4 +467,4 @@ console.log(descuentosByPlan);
 
 
 
-    
+    console.log("perrito");
