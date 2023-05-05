@@ -86,7 +86,6 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
             "width": "10%",
             "data": function( d ){
                 let residencial = d.nombreResidencial.split(',');
-                console.log(residencial)
                 let imprimir = '';
                 for (let m = 0; m < residencial.length; m++) {
                     imprimir += `<p><span class="label lbl-sky">${residencial[m]}</span></p>`;
@@ -217,7 +216,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
        // window.scrollTo(0, 0)
 
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
-        console.log(data);
         //$('#fechainicio').val(moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY'));
         document.getElementById('fechainicio').value = data.fecha_inicio;// moment(data.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
         document.getElementById('fechafin').value = data.fecha_fin;//moment(data.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
@@ -246,9 +244,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $("#residencial").selectpicker('refresh');
        
         var radios = document.getElementsByName('tipoLote');
-        console.log(radios)
         for (var j = 0; j < radios.length; j++) {
-            console.log(radios[j].value)
             if (radios[j].value == data.tipo_lote) {
               radios[j].checked = true;
             break;
@@ -256,9 +252,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
          }
          validateAllInForm(data.tipo_lote,1);
          var radios = document.getElementsByName('superficie');
-        console.log(radios)
         for (var j = 0; j < radios.length; j++) {
-            console.log(radios[j].value)
             if (radios[j].value == data.superficie) {
               radios[j].checked = true;
             break;
@@ -384,11 +378,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let dataPaquetes = data[0].paquetes;
             let dataDescuentosByPlan = data[0].descuentos;
            // tiposDescuentos = JSON.parse(descuentosYCondiciones);
-            console.log(data);
             for (let m = 0; m < dataPaquetes.length; m++) {
-                console.log(dataPaquetes,tiposDescuentos);
                 let idPaquete = dataPaquetes[m].id_paquete;
-                console.log(idPaquete)
                 let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete)
                 let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
                     if(existe != undefined){
@@ -412,11 +403,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     });
 
     function crearDivs(dataPaquete,tiposDescuentos,descuentosPorPlan){
-        console.log('--------------')
-        console.log(dataPaquete);
-        console.log(tiposDescuentos);
-        console.log(descuentosPorPlan);
-        console.log('--------------')
         $('#cards').append(`
             <div class="col-lg-6">
                 <div class="card">
@@ -437,11 +423,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}"></div>
             `);
             let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
-            console.log(tiposDescuentos[m].condicion);
             if(existe != undefined){
                 let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
-                console.log('descuentosByPlan');
-console.log(descuentosByPlan);
                 for (let o = 0; o < descuentosByPlan.length; o++) {
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
@@ -450,14 +433,7 @@ console.log(descuentosByPlan);
                 `);
                     }
                     
-                }
-
-                //llenar(dataPaquete.id_paquete,tiposDescuentos[m].condicion.id_condicion,existe)
-                console.log('---SI HAY-----')
-                console.log(existe);
-                console.log('---SI HAY-----')
-                  
-
+                }             
              }
 
                    
@@ -866,11 +842,9 @@ console.log(descuentosByPlan);
                     //data[0].paquetes.shift();
                     let dataPaquetes = data[0].paquetes;
                     let dataDescuentosByPlan = data[0].descuentos;
-                    console.log(dataDescuentosByPlan)               
                     
                     dataPaquetes.forEach(function (element, indexPaquetes) {
                         let idPaquete = element.id_paquete;
-                        console.log(idPaquete)
                         var indexActual = document.getElementById('index');
                         var indexNext = (document.getElementById('index').value - 1) + 2;
                         indexActual.value = indexNext;
@@ -884,12 +858,10 @@ console.log(descuentosByPlan);
                         descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
                             let idCondicion = subelement['condicion']['id_condicion'];
                             let nombreCondicion = subelement['condicion']['descripcion'];
-                            console.log(idCondicion)
                             templateSelectsByCard(indexNext, indexCondicion, idCondicion, nombreCondicion);
                             // llenarSelects(indexNext, element['id_paquete'], nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes);
     
                         let existe = dataDescuentosByPlan.find(elementD => elementD.id_paquete == idPaquete &&  elementD.id_condicion == idCondicion)
-                        console.log(existe)
                         let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
                         if(existe != undefined){
                             const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
@@ -983,10 +955,6 @@ console.log(descuentosByPlan);
     }
     
     function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select, idCondicion, lenDesCon, indexPaquetes){
-        console.log('-----FUNCIÓN LLENAR---');
-        console.log(dataDescuentosByPlan)
-        console.log('idCondicion: '+idCondicion)
-        console.log('indexPaquetes: '+indexPaquetes)
         var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
         boxDetail.removeClass('hidden');
         let rowDetail = boxDetail.find( '.rowDetailDiscount');
@@ -1002,15 +970,11 @@ console.log(descuentosByPlan);
         let descuentosSelected = [];
         dataDescuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_condicion == idCondicion);
         dataDescuentosByPlan = dataDescuentosByPlan.sort();
-        console.log('---LLENADO---');
-        console.log(dataDescuentosByPlan);
-        console.log('---LLENADO---');
     
         for (let m = 0; m < dataDescuentosByPlan.length; m++) {
             if(idCondicion != 13){
                 let id_descuento=
                 crearBoxDetailDescuentos(indexGral, indexCondiciones, id_select, dataDescuentosByPlan[m].id_descuento, dataDescuentosByPlan[m].porcentaje, tipo);
-                console.log('PORCENTAJE :'+dataDescuentosByPlan[m].porcentaje)
                 descuentosSelected.push(dataDescuentosByPlan[m].id_descuento);
                     if(dataDescuentosByPlan[m].msi_descuento != 0){
                         var miCheckbox = document.getElementById(`${indexGral}_${dataDescuentosByPlan[m].id_descuento}_msiC`);
@@ -1030,10 +994,30 @@ console.log(descuentosByPlan);
             $('#spiner-loader').addClass('hide');
         }
     }
+
+    function selectItem(target, id) { // refactored this a bit, don't pay attention to this being a function
+        var option = $(target).children('[value='+id+']');
+        option.detach();
+        $(target).append(option).change();
+      } 
+      
+      function customPreSelect() {
+        let items = $('#selected_items').val().split(',');
+        $("select").val('').change();
+        initSelect(items);
+      }
+      
+      function initSelect(items) { // pre-select items
+        items.forEach(item => { // iterate through array of items that need to be pre-selected
+          let value = $('select option[value='+item+']').text(); // get items inner text
+          $('select option[value='+item+']').remove(); // remove current item from DOM
+          $('select').append(new Option(value, item, true, true)); // append it, making it selected by default
+        });
+      }
+ 
     
     //Se introducen todas las opcines para cada uno de los select que pertenecen a un plan
     function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, indexGral, dataDescuentosByPlan=[], lenDesCon = 0, indexPaquetes = 0){
-        console.log(dataDescuentosByPlan);
         nombreCondicion = (nombreCondicion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
         var boxDetail = $(e).closest('.boxAllDiscounts' ).find('.boxDetailDiscount');
         boxDetail.removeClass('hidden');
@@ -1042,34 +1026,50 @@ console.log(descuentosByPlan);
     
         //Si la condición en el plan ES checkeada
         if($(`#inlineCheckbox1_${indexGral}_${indexCondiciones}`).is(':checked')){
-            console.log('CHECKEADO')
-            console.log('indexGral: '+indexGral)
-            console.log('indexCondiciones: '+indexCondiciones)
             $(`#orden_${indexGral}_${indexCondiciones}`).prop( "disabled", false );
             
             $(`#selectDescuentos_${indexGral}_${indexCondiciones}`).append(`
             <div class="w-100 d-flex justify-center align-center">
                 <select id="ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}" required name="${indexGral}_${indexCondiciones}_ListaDescuentos${nombreCondicion}_[]" multiple class="form-control" data-live-search="true">
             </div>`);
-    
-                    //Propiedades que asignaremos a los select
-                    $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
-                        allow_single_deselect: false,
-                        containerCssClass: "select-gral",
-                        dropdownCssClass: "custom-dropdown",
-                        tags: false, 
-                        tokenSeparators: [',', ' '], 
-                        closeOnSelect : false,
-                        placeholder : "SELECCIONA UNA OPCIÓN",
-                        allowHtml: true, 
-                        allowClear: true});
-            
+
+    //Propiedades que asignaremos a los select
+    $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+        allow_single_deselect: false,
+        containerCssClass: "select-gral",
+        dropdownCssClass: "custom-dropdown",
+        tags: false, 
+        tokenSeparators: [',', ' '], 
+        closeOnSelect : false,
+        placeholder : "SELECCIONA UNA OPCIÓN",
+        allowHtml: true, 
+        allowClear: true});
+             //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
+             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
+                selectItem(evt.target, evt.params.data.element);
+                /*    let element = evt.params.data.element;
+                let $element = $(element);
+                $element.detach();
+                $(this).append($element);
+                $(this).trigger("change");*/
+                if(idCondicion != 13){
+                    let lblListaDescuentos = 'ListaDescuentos' + nombreCondicion + '_';
+                    crearBoxDetailDescuentos(indexGral, indexCondiciones, `${lblListaDescuentos}`, $element[0].value, $element[0].label);
+                } 
+                rowDetail.removeClass('hidden');
+            });
+
+
             descuentosArray.forEach(element => {
                 let porcentaje = element['porcentaje'];
                 let id_descuento = `${idCondicion == 13 ? element['id_descuento'] +','+ element['porcentaje'] : element['id_descuento'] }`;
                 
                 $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${idCondicion == 4 || idCondicion == 12 ? '$'+formatMoney(porcentaje) : (idCondicion == 13 ? porcentaje : porcentaje + '%'  ) }</option>`);
             });
+
+
+                    
+                    //$(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
             if( descuentosArray.length <= 0){
                 $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
             }
@@ -1078,33 +1078,10 @@ console.log(descuentosByPlan);
                 llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, `ListaDescuentos${nombreCondicion}_`, idCondicion, lenDesCon, indexPaquetes);
             }
     
-                    //Propiedades que asignaremos a los select
-                    $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
-                        allow_single_deselect: false,
-                        containerCssClass: "select-gral",
-                        dropdownCssClass: "custom-dropdown",
-                        tags: false, 
-                        tokenSeparators: [',', ' '], 
-                        closeOnSelect : false,
-                        placeholder : "SELECCIONA UNA OPCIÓN",
-                        allowHtml: true, 
-                        allowClear: true});
+
     
-            //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
-            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
-                let element = evt.params.data.element;
-                let $element = $(element);
-                $element.detach();
-                $(this).append($element);
-                $(this).trigger("change");
-                if(idCondicion != 13){
-                    let lblListaDescuentos = 'ListaDescuentos' + nombreCondicion + '_';
-                    crearBoxDetailDescuentos(indexGral, indexCondiciones, `${lblListaDescuentos}`, $element[0].value, $element[0].label);
-                } 
-                rowDetail.removeClass('hidden');
-            });
-            $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
-    
+  
+
             //Acciones que se ejecutaran cuando DESselecciona un descuento de una condición
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:unselecting", function (evt){
                 let element = evt.params.args.data.element;
