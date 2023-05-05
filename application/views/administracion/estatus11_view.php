@@ -114,6 +114,7 @@
                                             <option value="Cheque rebotado">Cheque rebotado</option>
                                             <option value="Rechazo por falta de dinero">Rechazo por falta de dinero
                                             </option>
+                                            <option value="Pago American Express">Pago American Express</option>
                                             <option value="Otro">Otro</option>
                                         </select>
                                         <div id="valida_otro">
