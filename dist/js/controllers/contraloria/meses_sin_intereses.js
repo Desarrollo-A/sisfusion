@@ -17,16 +17,21 @@ $(document).ready (function() {
                 titleAttr: 'DESCARGAR',
                 title:'Autorizaciones',
                 columns: [0, 1, 2, 3],
-                format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return 'ID';
-                        }else if(columnIdx == 1){
-                            return 'COMENTARIO';
-                        }else if(columnIdx == 2){
-                            return 'ESTATUS AUT';
-                        }else if(columnIdx == 3){
-                            return 'MODIFICADO';
+                exportOptions: {
+                    format: {
+                        header:  function (d, columnIdx) {
+                            if(columnIdx == 0){
+                                return 'ID';
+                            }else if(columnIdx == 1){
+                                return 'COMENTARIO';
+                            }else if(columnIdx == 2){
+                                return 'ESTATUS AUT';
+                            }else if(columnIdx == 3){
+                                return 'MODIFICADO';
+                            }else if(columnIdx == 4){
+                                return '';
+                            }
+
                         }
                     }
                 }
@@ -69,7 +74,7 @@ $(document).ready (function() {
 
     }
     tablaAut = $('#tabla_aut').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: button_excel,
@@ -350,7 +355,7 @@ $('#tabla_aut thead tr:eq(0) th').each( function (i) {
         });
     }else{
         let title = $(this).text();
-        $(this).html('<span class="textoshead" placeholder="'+title+'"></span>' );
+        $(this).html('<span class="textoshead" placeholder="'+title+'">'+title+'</span>' );
     }
 
 });
@@ -496,7 +501,7 @@ function loadLotes(){
 }
 function loadTable(dataVariable){
     tablaMsi = $('#tabla_msni').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
         buttons: [{
             className: 'btn buttons-excel color-letter',
@@ -591,16 +596,20 @@ $(document).on('click', '.btnVer', function(e){
     let data = [];
     data["tb"] = 2;
     let id_aut = $(this).attr('data-idautorizacion');
+    // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
+
 
     let arr = id_aut.split(' ');
     if(arr.length <= 1){
         let id = parseInt(id_aut[0]);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 0;
+        $('.anclaClass2').attr('placeholder', 'ID LOTE');
     }else if(arr.length > 1){
         // let id = 'residencial';
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 0;
+        $('.anclaClass2').attr('placeholder', 'ID CONDOMINIO');
     }
 
     // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
@@ -617,10 +626,10 @@ function loadTableVAUT(data){
 
     if(data['edit'] == 1){
         button_excel = [{}]
-        dom =  't' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
+        dom =  't' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>";
     }
     else{
-        dom = 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>";
+        dom = 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>";
         button_excel = [{
             className: 'btn buttons-excel color-letter',
             text: 'DESCARGAR PLANTILLA',
@@ -632,7 +641,7 @@ function loadTableVAUT(data){
                 format: {
                     header:  function (d, columnIdx) {
 
-                        if(dataVariable['tb']==1){
+                        if(data['tb']==1){
                             if(columnIdx == 0) {
                                 return 'ID';
                             } else if(columnIdx == 1){
@@ -640,7 +649,7 @@ function loadTableVAUT(data){
                             }else if(columnIdx == 2){
                                 return 'MSI';
                             }
-                        }else if(dataVariable['tb']==2){
+                        }else if(data['tb']==2){
                             if(columnIdx == 0){
                                 return 'ID';
                             }else if(columnIdx == 1){
@@ -707,18 +716,22 @@ function loadTableVAUT(data){
 $('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
     if(i<=3){
         let attributo_input;
+        let classTogle;
         switch(i){
             case 0:
                 attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                classTogle = 'anclaClass2';
                 break;
             case 1:
                 attributo_input = 'onkeypress="return lettersOnly(event)"';
+                classTogle = '';
                 break;
             case 2:
                 attributo_input = "onkeypress=\"return event.charCode >= 48 && event.charCode <= 57\"";
+                classTogle = '';
         }
         let title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" '+attributo_input+' placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" class="textoshead '+classTogle+'" '+attributo_input+' placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_msni_visualizacion').DataTable().column(i).search() !== this.value ){
                 $('#tabla_msni_visualizacion').DataTable()
