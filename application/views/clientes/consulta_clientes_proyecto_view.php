@@ -3,8 +3,10 @@
 <body class="">
     <div class="wrapper ">
         <?php
-            switch ($this->session->userdata('id_rol')) {
-                case '18':
+        
+            switch ($this->session->userdata('id_usuario')) {
+                case '1980':
+                case '7097':
                     // code...
                     $datos = array();
                     $datos = $datos4;
@@ -33,16 +35,6 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Proyecto</label>
-                                                <select name="proyecto"
-                                                        id="proyecto" 
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" 
-                                                        data-show-subtext="true" 
-                                                         data-live-search="true" 
-                                                         title="Selecciona una opción" 
-                                                         data-size="7" required>
-                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -57,11 +49,8 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>ID LOTE</th>
-                                                    <th>ESTATUS CONTRATACIÓN</th>
-                                                    <th>ESTATUS LOTE</th>
                                                     <th>NOMBRE COMPLETO</th>
                                                     <th>FECHA APARTADO</th>
-                                                    <th>PERSONALIDAD JURÍDICA</th>
                                                     <th>FECHA NACIMIENTO</th>
                                                     <th>EDAD</th>
                                                     <th>OCUPACIÓN</th>
