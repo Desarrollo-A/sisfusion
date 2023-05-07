@@ -2998,14 +2998,12 @@ public function getStatusMktdPreventa(){
         $this->load->view('clientes/consulta_clientes_proyecto_view', $datos);
     }
 
-    public function getClientsByProyect()
-    {
+    public function getClientsByProyect() {
         $data = $this->Clientes_model->getClientsByProyect($this->session->userdata('id_lider'));
-        if($data != null) {
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 }
 

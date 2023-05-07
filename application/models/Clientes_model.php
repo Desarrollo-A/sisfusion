@@ -4262,8 +4262,8 @@ function getStatusMktdPreventa(){
 
     public function getClientsByProyect($id_lider){
         $where = ($id_lider == 0 || is_null($id_lider))
-                 ? ''
-                 : 'AND (cli.id_subdirector = '.$id_lider.' OR cli.id_regional = '.$id_lider.' OR cli.id_gerente = '.$id_lider.' OR cli.id_gerente = '.$id_lider.')';
+                 ? ""
+                 : "AND (cli.id_subdirector = $id_lider OR cli.id_regional = $id_lider OR cli.id_gerente = $id_lider OR cli.id_gerente = $id_lider)";
         $query = $this->db->query(
             "SELECT res.nombreResidencial AS proyecto, con.nombre AS nombre_condominio, lot.nombreLote, sc.nombreStatus AS StatusContratacion, sl.nombre AS StatusLote,
                     CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombre_completo, CONVERT(VARCHAR, cli.fechaApartado, 20) AS fechaApartado,
