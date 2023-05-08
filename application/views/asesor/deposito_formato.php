@@ -429,74 +429,31 @@
                     </div>            
                 </div>
             
-                <div class="row">
-                    <div class="col-md-2 checkbox-radios">
-                        <div class="radio"  style="color: gray;">
-                            VIVE EN CASA:
-                        </div>
+                <div class="row" id="viviendaDSP">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+                        <label class="label-on-left m-0">VIVE EN CASA</label>
+                            <div class="radio_container">
+                                <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?> name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1" style="font-size: 0.8em;"/>
+                                <label>PROPIA</label>
+                                    
+                                
+                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 2) { echo "checked=true"; } ?>  value="2" style="font-size: 0.8em;"/> 
+                                <label>RENTADA</label>    
+                    
+                                
+                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 3) { echo "checked=true"; } ?>  value="3" style="font-size: 0.8em;"/> 
+                                <label>PAGÁNDOSE</label>
+                    
+                                
+                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 4) { echo "checked=true"; } ?>  value="4" style="font-size: 0.8em;"/> 
+                                <label>FAMILIAR</label>
+                    
+                                
+                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 5) { echo "checked=true"; } ?>  value="5" style="font-size: 0.8em;"/>
+                                <label> OTRO </label>
+                            </div>
+                        </div>                      
                     </div>
-
-                    <div class="col-md-2 checkbox-radios required">
-                        <div class="radio">
-                            <label style="font-size: 0.8em;">
-                                <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?>
-                                        name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) {
-                                    echo "checked=true";
-                                }
-                                ?>  value="1" style="font-size: 0.8em;"/> PROPIA
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-2 checkbox-radios required">
-                        <div class="radio">
-                            <label style="font-size: 0.8em;">
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?>
-                                        required <?php if ($cliente[0]->tipo_vivienda == 2) {
-                                    echo "checked=true";
-                                }
-                                ?>  value="2" style="font-size: 0.8em;"/> RENTADA
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 checkbox-radios required">
-                        <div class="radio">
-                            <label style="font-size: 0.8em;">
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                    <?php if ($cliente[0]->tipo_vivienda == 3) {
-                                        echo "checked=true";
-                                    }
-                                    ?>  value="3" style="font-size: 0.8em;"/> PAGÁNDOSE
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 checkbox-radios required">
-                        <div class="radio">
-                            <label style="font-size: 0.8em;">
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                    <?php if ($cliente[0]->tipo_vivienda == 4) {
-                                        echo "checked=true";
-                                    }
-                                    ?>  value="4" style="font-size: 0.8em;"/> FAMILIAR
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 checkbox-radios required">
-                        <div class="radio">
-                            <label style="font-size: 0.8em;">
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" required <?php echo $statsInput; ?>
-                                    <?php if ($cliente[0]->tipo_vivienda == 5) {
-                                        echo "checked=true";
-                                    }
-                                    ?>  value="5" style="font-size: 0.8em;"/> OTRO
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
             <?php 
             $limite = $copropiedadTotal[0]->valor_propietarios;
@@ -937,7 +894,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" data-live-search="true" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -975,7 +932,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" data-live-search="true" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
