@@ -23,7 +23,7 @@ class Incidencias extends CI_Controller
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
     $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
-    $this->validateSession();
+    $this->validateSession(); 
    }
    public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
