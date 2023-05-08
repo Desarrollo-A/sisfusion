@@ -1,8 +1,3 @@
-var rol  = "<?=$this->session->userdata('id_rol')?>";
-var id_user  = "<?=$this->session->userdata('id_usuario')?>";
-
-var urlimg = general_base_url+"/img/";
-var idLote = 0;
 
 
 $("#modal_avisos").draggable({
@@ -186,6 +181,12 @@ function selectOpcion(id_cliente,idLote){
         }); 
     }
 }
+var rol  = id_rol_general;
+var id_user  = id_usuario_general;
+
+
+var idLote = 0;
+
     
 $("#asesorold").change(function() {
     $("#info").removeAttr('style');
