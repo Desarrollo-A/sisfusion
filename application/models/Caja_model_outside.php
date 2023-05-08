@@ -372,7 +372,7 @@
 		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332)")->result();
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595)")->result();
     }
 
 

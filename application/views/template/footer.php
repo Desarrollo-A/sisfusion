@@ -59,14 +59,11 @@
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
 		<?php
-            /*if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9
-                || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 3)
-            {
+            if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 ||$this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 4){
                 if ($this->session->userdata('no_show_modal_info')==0) {
                     echo '$("#avisoNovedades").modal("toggle");';
                 }
-            }*/
-
+            }
          ?>
 	});
 

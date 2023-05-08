@@ -398,5 +398,13 @@ class PaquetesCorrida extends CI_Controller
       $id_catalogo = $this->input->post("id_catalogo");
       echo json_encode($this->PaquetesCorrida_model->getCatalogo($id_catalogo));
     }
+    public function paquetesView(){
+     $row = array(array('id_paquete' => $this->input->post("paquetes")));
+      $dataPaquetes = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_paquete']);
+      $dataDescuentos = $this->PaquetesCorrida_model->getDescuentosByPlan($row[0]['id_paquete']);
+
+      echo json_encode(array(array("paquetes" => $dataPaquetes,
+      "descuentos" => $dataDescuentos)));
+    }
 
 }

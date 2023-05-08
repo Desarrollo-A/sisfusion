@@ -11,22 +11,14 @@
 	<div class="wrapper">
 		<?php
 		$datos = array();
-		$datos = $datos4;
-		$datos = $datos2;
-		$datos = $datos3;
 		$this->load->view('template/sidebar', $datos);
 		?>
 
-		<div class="modal" tabindex="-1"  id="viewPlansModal" role="dialog">
-			<div class="modal-dialog modal-md" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="previewBody"></div>
+		<div class="modal fade" id="modalView" role="dialog">
+			<div class="modal-dialog" style="width: 500px">
+				<div class="modal-content text-center">
+					<div class="container-fluid">
+						<div id="contentView" class="pt-2"></div>
 					</div>
 				</div>
 			</div>
