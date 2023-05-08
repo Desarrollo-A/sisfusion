@@ -10,6 +10,12 @@
     input{
         height: 41px;
     }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        width: 18px;
+        height: 18px;
+        margin-right: 20px;
+        opacity: 0.8;
+    }
     .switch {
         position: relative;
         width: 100%;
@@ -89,6 +95,31 @@
         -webkit-transform: scale(0);
         transform: scale(0);
     }
+
+    .radio_container{
+        background-color: $platinumLight;
+        width: 100%;
+        border-radius: 27px;
+        box-shadow: none;
+        padding: 5px!important;
+        input[type="radio"] {
+            appearance: none;
+            display: none;
+        }
+        label {
+            width: 50%;
+            transition: linear 0.3s;
+            font-weight: 100;
+            @media #{$smartphone}{
+                width: 100%!important;
+            }
+        }
+        input[type="radio"]:checked + label {
+            background-color: $blueMaderas;
+            color: $white;
+            transition: 0.3s;
+        }
+    }
     
     #encabezadoDS{
         h6{
@@ -118,32 +149,6 @@
         }
     }
     
-    #radioDS, #viviendaDS{
-        .radio_container{
-            background-color: $platinumLight;
-            width: 100%;
-            border-radius: 27px;
-            box-shadow: none;
-            padding: 5px!important;
-            input[type="radio"] {
-                appearance: none;
-                display: none;
-            }
-            label {
-                width: 50%;
-                transition: linear 0.3s;
-                font-weight: 100;
-                @media #{$smartphone}{
-                    width: 100%!important;
-                }
-            }
-            input[type="radio"]:checked + label {
-                background-color: $blueMaderas;
-                color: $white;
-                transition: 0.3s;
-            }
-        }
-    }
     #containerCopropietario, #containerReferencia{
         background-color: #f0f8ff9e;
         border-radius: 15px;
@@ -157,33 +162,6 @@
         text-align: center;
         height: 27px;
         font-size: 12px;
-        }
-    }
-
-    #radioViv{
-        .radioContainer {
-            background-color: $platinumLight;
-            width: 100%;
-            border-radius: 27px;
-            box-shadow: none;
-            padding: 5px!important;
-            input[type="radio"] {
-                appearance: none;
-                display: none;
-            }
-            label {
-                width: 50%;
-                transition: linear 0.3s;
-                font-weight: 100;
-                @media #{$smartphone}{
-                    width: 100%!important;
-                }
-            }
-            input[type="radio"]:checked + label {
-                background-color: $blueMaderas;
-                color: $white;
-                transition: 0.3s;
-            }
         }
     }
 
@@ -229,9 +207,16 @@
                     display: none;
                 }
                 input:checked + span{
-                    background-color: $blueMaderas;
-                    color: $white;
                     transition: 0.3s;
+                    font-weight: 400;
+                    color: $blueMaderas;
+                }
+                input:checked + span:before{
+                    font-family: FontAwesome !important;
+                    content: "\f00c";
+                    color: $blueMaderas;
+                    font-size: 18px;
+                    margin-right: 5px;
                 }
             }
         }
