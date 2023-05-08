@@ -156,7 +156,7 @@
                         <div class="form-group label-floating">
                             <div class="d-none" name="regimenl" id="regimenl">
                                 <h4 class="label-on-left m-0">RÉGIMEN FISCAL</h4>
-                                <select name="regimenFiscal" placeholder="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <select name="regimenFiscal" title="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                     <!-- <option> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     for($n=0; $n < count($regFis) ; $n++){
@@ -175,7 +175,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
-                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
+                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
                             onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
@@ -285,7 +285,7 @@
                                 CORREO ELECTRÓNICO
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <input class="form-control input-gral" required="true" name="correo" id="correo" type="email" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
+                            <input class="form-control input-gral" required="true" name="correo" id="correo" type="email" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
                         </div>
                     </div>
                 </div>
@@ -298,9 +298,9 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
                             <label class="label-on-left m-0" style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
-                            <select name="nacionalidad" required="true" placeholder="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
-                                for($p=0; $p < count($nacionalidades) ; $p++){
+                                                                for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
                                         echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
                                     }
@@ -317,12 +317,12 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">ORIGINARIO DE: (<small style="color: red;">*</small>)</label>
-                        <input type="text" pattern="[A-Za-z ]+" required="true" class="form-control m-0 input-gral" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
+                        <input type="text" pattern="[A-Za-z ]+" required="true" class="form-control m-0 input-gral" oninput="this.value = this.value.toUpperCase()" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
                             <label class="label-on-left m-0">ESTADO CIVIL(<small style="color: red;">*</small>)</label>
-                            <select name="estado_civil" id="estado_civil" required="true" placeholder="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($edoCivil) ; $n++){
@@ -343,7 +343,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
                             <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
-                            <select name="regimen_matrimonial" placeholder="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <!-- <option value="5"> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($regMat) ; $n++){
@@ -361,7 +361,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">NOMBRE DE CÓNYUGE</label>
-                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
+                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
                         </div>
                     </div>              
                 </div>
@@ -370,7 +370,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
+                            <input class="form-control input-gral" required="true" name="domicilio_particular" oninput="this.value = this.value.toUpperCase()" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
                 </div>
@@ -379,13 +379,13 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OCUPACIÓN(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
+                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
-                            <input class="form-control input-gral" name="empresa"  id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
+                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" oninput="this.value = this.value.toUpperCase()" name="empresa"  id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
                         </div>
                     </div>
                 </div> 
@@ -394,7 +394,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">PUESTO(<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
+                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -409,7 +409,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
-                            <input class="form-control input-gral" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
+                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
                         </div>
                     </div>                
                 </div>  
@@ -749,7 +749,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">EN EL MUNICIPIO DE:(<small style="color: red;">*</small>)</label>
-                            <input type="text" pattern="[A-Za-z ]+" required="true" class="form-control input-gral" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
+                            <input type="text" pattern="[A-Za-z ]+" oninput="this.value = this.value.toUpperCase()" required="true" class="form-control input-gral" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
                         </div>
                     </div>            
                 </div>
@@ -764,7 +764,7 @@
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">IMPORTE EN LETRA(<small style="color: red;">*</small>)</label>
-                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
+                            <input type="text" pattern="[A-Za-z ]+" oninput="this.value = this.value.toUpperCase()" class="form-control input-gral" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
                         </div>
                     </div>
                 </div>
@@ -773,7 +773,7 @@
                         <label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $ (<b><span style="color: red;">*</span></b>)
                             <input class="form-control p-0" name="cantidad" id="cantidad" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->cantidad?>"/>
 
-                            (<input class="form-control p-0" name="letraCantidad" <?php echo $readOnly; ?> id="letraCantidad" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
+                            (<input class="form-control p-0" name="letraCantidad" <?php echo $readOnly; ?> id="letraCantidad" oninput="this.value = this.value.toUpperCase()" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
                             misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo. El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma.
                         </label>
                     </div>
@@ -832,7 +832,7 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
                                     <label class="label-on-left m-0">En el Municipio de
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" required="true" name="municipio2" id="municipio2"
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" required="true" name="municipio2" id="municipio2"
                                             <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, a
                                         (<small style="color: red;">*</small>)
@@ -887,20 +887,22 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">NOMBRE</label>
-                                <input class="form-control input-gral" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
-                                <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
+                                <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
+                                <input name="id_referencia1" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco1" placeholder="SELECCIONA UNA OPCIÓN" data-live-search="true" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
+                                    
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
                                         if($parentescos[$p]['id_opcion'] == $referencias[0]->parentesco)
                                         {
+                                            echo $parentescos[$p]['id_opcion'];
                                             echo '<option value="'.$parentescos[$p]['id_opcion'].'" selected>'.$parentescos[$p]['nombre'].'</option>';
                                         }
                                         else
@@ -923,16 +925,16 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">NOMBRE</label>
-                                <input class="form-control input-gral" name="nombre2" <?php echo $readOnly; ?>
+                                <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre2" <?php echo $readOnly; ?>
                                         id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
-                                <input name="id_referencia2" <?php echo $readOnly; ?>
+                                <input name="id_referencia2" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?>
                                         id="id_referencia2" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[1]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco2" placeholder="SELECCIONA UNA OPCIÓN" data-live-search="true" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco2" title="SELECCIONA UNA OPCIÓN" data-live-search="true" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -1244,8 +1246,6 @@
             }else if (inputs[i].name === "costom2f") {
                 inputs[i].value = formatearNumero(inputs[i].value);
             }else if (inputs[i].name === "costoM2") {
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "sup"){
                 inputs[i].value = formatearNumero(inputs[i].value);
             }else if (inputs[i].name === "importOferta"){
                 inputs[i].value = formatearNumero(inputs[i].value);
