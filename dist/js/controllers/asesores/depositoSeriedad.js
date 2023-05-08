@@ -75,7 +75,6 @@ $("#tabla_deposito_seriedad").ready( function(){
         $('#nom_cliente').html('');
         $('#id_cliente_asignar').val(0);
         var $itself = $(this);
-        console.log($itself.attr('data-idCliente'));
         var id_cliente = $itself.attr('data-idCliente');
         var nombre_cliente = $itself.attr('data-nomCliente');
         $('#nom_cliente').append(nombre_cliente);
@@ -241,7 +240,6 @@ $("#tabla_deposito_seriedad").ready( function(){
 
 $(document).on("click", ".getInfo2", function (e) {
     e.preventDefault();
-    console.log("in");
     getInfo2A[0] = $(this).attr("data-idCliente");
     getInfo2A[1] = $(this).attr("data-nombreResidencial");
     getInfo2A[2] = $(this).attr("data-nombreCondominio");
@@ -1298,4 +1296,7 @@ jQuery(document).ready(function(){
         jQuery(this).find('#comentario8').val('');
     })
 })
-$('[data-toggle="tooltip"]').tooltip();
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+});
