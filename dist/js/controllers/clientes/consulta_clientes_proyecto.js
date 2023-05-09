@@ -71,16 +71,15 @@ $( document ).ready(function() {
                     }
                 },
                 {
-                    "data": function (d) {
-                        if (d.edad == null || d.edad == 'null') {
-                            return '<center>'+ d.edadFirma+'<p><p> <span class="label label-danger" style="background:#00bcd41f; color:#00bcd4">Edad de firma</span> </center>';
-                        }else{
+                    data: function (d) {
+                        if (d.edad == null || d.edad == 'null')
+                            return 'SIN ESPECIFICAR';
+                        else
                             return d.edad;
-                        }
                     }
                 },
                 {
-                    "data": function (d) {
+                    data: function (d) {
                         return (d.ocupacion == null || d.ocupacion == '') ? 'SIN ESPECIFICAR' : d.ocupacion;
                     }
                 }
