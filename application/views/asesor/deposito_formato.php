@@ -329,7 +329,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">ORIGINARIO DE (<small style="color: red;">*</small>)</label>
-                        <input type="text" pattern="[A-Za-z ]+" required="true" class="form-control m-0 input-gral" oninput="this.value = this.value.toUpperCase()" name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty overflow-hidden">
@@ -371,7 +371,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">NOMBRE DE CÓNYUGE</label>
-                            <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
+                            <input type="text"  class="form-control input-gral letrasCaracteres"  name="nombre_conyuge" id="nombre_conyuge" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->nombre_conyuge?>"/>
                         </div>
                     </div>              
                 </div>
@@ -380,7 +380,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO PARTICULAR (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" required="true" name="domicilio_particular" oninput="this.value = this.value.toUpperCase()" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
+                            <input class="form-control input-gral letrasNumeros" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
                 </div>
@@ -389,13 +389,13 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OCUPACIÓN (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
+                            <input class="form-control input-gral letrasCaracteres" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
-                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" oninput="this.value = this.value.toUpperCase()" name="empresa"  id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
+                            <input class="form-control input-gral letrasCaracteres" name="empresa"  id="empresa" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->empresa?>"/>
                         </div>
                     </div>
                 </div> 
@@ -404,7 +404,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">PUESTO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
+                            <input class="form-control input-gral letrasCaracteres" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -419,7 +419,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
-                            <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
+                            <input class="form-control input-gral letrasNumeros" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
                         </div>
                     </div>                
                 </div>  
@@ -527,7 +527,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">DOMICILIO PARTICULAR</label>
-                                <input  class="form-control input-gral" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral letrasNumeros" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>
                     </div>
@@ -536,7 +536,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0"> ORIGINARIO DE</label>
-                                <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" '.$statsInput.'/>
+                                <input type="text" class="form-control input-gral letrasCaracteres" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.'/>
                             </div>
                         </div>        
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -581,20 +581,20 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">NOMBRE DE CÓNYUGE</label>
-                                <input type="text" pattern="[A-Za-z ]+" class="form-control input-gral" name="conyuge_cop[]" id="conyuge_cop[]" type="text" value="' . $copropiedad[$i]->conyuge . '" '.$statsInput.'/>
+                                <input type="text" class="form-control input-gral letrasCaracteres" name="conyuge_cop[]" id="conyuge_cop[]" type="text" value="' . $copropiedad[$i]->conyuge . '" '.$statsInput.'/>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">OCUPACIÓN</label>
-                                <input  class="form-control input-gral" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral letrasCaracteres" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">PUESTO</label>
-                                <input  class="form-control input-gral" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral letrasCaracteres" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.'/>
                             </div>
                         </div> 
                     </div>
@@ -617,7 +617,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
-                                <input  class="form-control input-gral" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral letrasCaracteres" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
                             </div>
                         </div>	
                     </div>
@@ -626,7 +626,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
-                                <input  class="form-control input-gral" name="dom_emp_cop[]" id="dom_emp_cop[]" type="text" value="' . $copropiedad[$i]->direccion . '" '.$statsInput.'/>
+                                <input  class="form-control input-gral letrasNumeros" name="dom_emp_cop[]" id="dom_emp_cop[]" type="text" value="' . $copropiedad[$i]->direccion . '" '.$statsInput.'/>
                             </div>
                         </div>
                     </div>
@@ -653,7 +653,7 @@
                             </div>  
                             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                 <label class="label-on-left m-0">RFC</label>
-                                <input class="form-control input-gral" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo ' '.$statsInput.'"/>
+                                <input class="form-control input-gral" onblur="validarRFC(this)" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo ' '.$statsInput.'"/>
                                 <input type="hidden" value="'.$limite.'" name="numOfCoprops">
                             </div>
                     </div>';
@@ -750,7 +750,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">EN EL MUNICIPIO DE (<small style="color: red;">*</small>)</label>
-                            <input type="text" pattern="[A-Za-z ]+" oninput="this.value = this.value.toUpperCase()" required="true" class="form-control input-gral" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
+                            <input type="text" class="form-control input-gral letrasCaracteres" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
                         </div>
                     </div>            
                 </div>
@@ -765,7 +765,7 @@
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">IMPORTE EN LETRA (<small style="color: red;">*</small>)</label>
-                            <input type="text" pattern="[A-Za-z ]+" oninput="this.value = this.value.toUpperCase()" class="form-control input-gral" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
+                            <input type="text" class="form-control input-gral letrasNumeros" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
                         </div>
                     </div>
                 </div>
@@ -774,7 +774,7 @@
                         <label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $ (<b><span style="color: red;">*</span></b>)
                             <input class="form-control p-0" name="cantidad" id="cantidad" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->cantidad?>"/>
 
-                            (<input class="form-control p-0" name="letraCantidad" <?php echo $readOnly; ?> id="letraCantidad" oninput="this.value = this.value.toUpperCase()" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
+                            (<input class="form-control p-0 letrasNumeros" name="letraCantidad" <?php echo $readOnly; ?> id="letraCantidad" oninput="this.value = this.value.toUpperCase()" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
                             misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo. El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma.
                         </label>
                     </div>
@@ -833,14 +833,14 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
                                     <label class="label-on-left m-0">En el Municipio de
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" required="true" name="municipio2" id="municipio2"
+                                        <input class="form-control letrasCaracteres" required="true" name="municipio2" id="municipio2"
                                             <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, a
                                         (<small style="color: red;">*</small>)
                                         <input min="1" max="31" class="form-control" oninput="validarDia(this)" name="dia" id="dia" <?php echo $readOnly; ?>
                                                  required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
                                         (<small style="color: red;">*</small>)
-                                        <input class="form-control" name="mes" min="1" max="12" id="mes" <?php echo $readOnly; ?>
+                                        <input class="form-control letrasCaracteres" name="mes" min="1" max="12" id="mes" <?php echo $readOnly; ?>
                                                 type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, del año
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control" name="anio" id="anio" min="2015" max="2023"<?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->anio?>" style="text-align: center;"/>
@@ -888,8 +888,8 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">NOMBRE</label>
-                                <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
-                                <input name="id_referencia1" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
+                                <input class="form-control input-gral letrasCaracteres" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
+                                <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -924,9 +924,9 @@
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">NOMBRE</label>
-                                <input class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="nombre2" <?php echo $readOnly; ?>
+                                <input class="form-control input-gral letrasCaracteres" name="nombre2" <?php echo $readOnly; ?>
                                         id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
-                                <input name="id_referencia2" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?>
+                                <input name="id_referencia2" <?php echo $readOnly; ?>
                                         id="id_referencia2" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[1]->id_referencia?>"/>
                             </div>
                         </div>
@@ -1012,7 +1012,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
-                            <textarea class="form-control pr-2 pl-2" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
+                            <textarea class="form-control pr-2 pl-2 espaciosOff" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -1245,6 +1245,45 @@
         }
       }
     }
+
+    // function validarLetras(event) {
+    // const input = event.target;
+    // const regex = /[^a-zA-Z]/g;
+    // input.value = input.value.replace(regex, '');
+    // }
+
+    // function mayus(e) {
+    // e.value = e.value.toUpperCase();
+    // }
+
+    $( ".letrasCaracteres" ).on( "focusout", function(){
+        const input = event.target;
+        input.value = input.value.trim();
+    });
+    
+    $( ".letrasCaracteres" ).on( "keyup", function() {
+        const input = event.target;
+        const regex = /[^a-zA-Z ñÑáéíóúÁÉÍÓÚüÜ.,-]/g;
+        input.value = input.value.replace(regex, '').toUpperCase();
+    });
+
+    $( ".letrasNumeros" ).on( "focusout", function(){
+        const input = event.target;
+        input.value = input.value.trim();
+    });
+
+    $( ".letrasNumeros" ).on( "keyup", function() {
+        const input = event.target;
+        const regex = /[^a-zA-Z 0-9@#&_.-]/g;
+        input.value = input.value.replace(regex, '').toUpperCase();
+    });
+
+    $( ".espaciosOff" ).on( "focusout", function(){
+        const input = event.target;
+        input.value = input.value.trim();
+    });
+
+
 
     function historialCampoHtml(data) {
         let html = '<h3>Historial de movimientos</h3>';
