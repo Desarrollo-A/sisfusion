@@ -56,6 +56,17 @@
             </div>
             <form >
 			<div class="form-group row">
+				<div class="col-md-12">
+					<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
+					<select class="selectpicker select-gral " name="tipoD" id="tipoD" 
+					 required data-live-search="true">
+					<option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                            <?php foreach($descuentos as $descuento){ ?>
+
+                                                <option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
+                                            <?php } ?>
+					</select>
+				</div> 
 				<div class="col-md-4">
 					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
 					<input class="form-control input-gral"
@@ -102,6 +113,12 @@
 					</div>
 						<div class="modal-body">
 							<div class="form-group row">
+								
+								<!-- <div class="col-md-12">
+									<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
+									<select class="selectpicker" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+									</select>
+								</div>  -->
 								<div class="col-md-4">
 									<label class="label">Monto prestado (<b class="text-danger">*</b>)</label>
 							
@@ -109,7 +126,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" id="numeroPagos" required  type="number" name="numeroP" min="1">
+									<input class="form-control input-gral" id="numeroPagoss" required  type="number" name="numeroP" min="1">
 								</div>
 								<div class="col-md-4">
 									<label class="label">Pago</label>
@@ -121,7 +138,7 @@
 								<div class="col-md-12">
 									<!-- <p>Nota:</label><b id="texto" style="font-size:12px;"></b></p> -->
 									<label class="label">Comentario(<b class="text-danger">*</b>)</label>
-									<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
+									<textarea id="informacionText1" name="informacionText1" class="form-control input-gral" rows="3"></textarea>
 								</div>	
 							</div>
 						</div>
@@ -148,12 +165,12 @@
 						<div class="modal-body">
 						<div class="form-group">
 								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+								<select class="selectpicker select-gral" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
 								</select>
 							</div> 
 							<div class="form-group">
 								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
-								<select class="selectpicker" name="roles" id="roles" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+								<select class="selectpicker select-gral" name="roles" id="roles" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>

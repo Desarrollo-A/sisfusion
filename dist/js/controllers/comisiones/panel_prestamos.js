@@ -1,14 +1,18 @@
 var totaPen = 0;
 var tr;
 $(document).ready(function () {
+
+
     $.post(general_base_url + "/Comisiones/lista_estatus_descuentos", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));
+          
         }
         $("#tipo").selectpicker('refresh');
+
     }, 'json');
 });
 
@@ -362,7 +366,10 @@ $("#tabla_prestamos").ready(function () {
 
                     }
                     if (d.estatus == 1 && d.total_pagado == null) {
-                        botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
+                        botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" 
+                        data-comentario="${d.comentario}" data-individual="${d.pago_individual}" 
+                        data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
                     }
 
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -388,7 +395,7 @@ $("#tabla_prestamos").ready(function () {
         Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
         Modalfooter.append(`
                 <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
+				<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
 			                        `);
 
         //console.log(data);
@@ -407,6 +414,8 @@ $("#tabla_prestamos").ready(function () {
         const numeroPagos = $(this).attr("data-npagos");
         const pagoEdit = $(this).attr("data-monto");
         const comentario = $(this).attr("data-comentario");
+        const tipo = $(this).attr("data-tipo");
+        const id_tipo = $(this).attr("data-idtipo");
 
         //	$.getJSON(`${url}Comisiones/BorrarPrestamo/${idPrestamo}`).done(function (data) { 
         // const Modalbody = $('#ModalEdit .modal-body');
@@ -421,12 +430,28 @@ $("#tabla_prestamos").ready(function () {
         // descuento = Math.round(descuento);
         // pago_mensual = Math.round(pago_mensual);
         // cantidad_de_pagos = descuento / pago_mensual;
-
+        // $("#tipoD").append($('<option>').val(id_tipo).text(tipo));
+        $("#tipoD").val(id_tipo).selectpicker('refresh');
+        // $("#tipoD").selectpicker('refresh');
+        console.log('tipoD');
+        console.log(id_tipo);
+        
         document.getElementById("montoPagos").value = pagoEdit;
         document.getElementById("numeroPagos").value = numeroPagos;
         document.getElementById("pagoEdit").value = montoPagos;
         document.getElementById("informacionText").value = comentario;
         document.getElementById("prestamoId").value = prestamoId;
+        
+        console.log('pagoedit');
+        console.log(pagoEdit);
+        console.log('numero pagos');
+        console.log(numeroPagos);
+        console.log('montopagos');
+        console.log(montoPagos);
+        console.log('comentario');
+        console.log(comentario);
+        console.log('prestamo');
+        console.log(prestamoId);
 
         // const montoPagos = $(this).val  
         // Modalbody.html('');
@@ -446,21 +471,23 @@ $("#tabla_prestamos").ready(function () {
         pagoEdit = document.getElementById("pagoEdit").value;
         comentario = document.getElementById("informacionText").value;
         prestamoId = document.getElementById("prestamoId").value;
+        tipoD      = document.getElementById("tipoD").value;
         bandera_request = comentario == '' ? false : true;
         pagoEdit = pagoEdit.replace(/,/g, "");
-        montoPagos = pagoEdit.replace(/,/g, "");
-        numeroPagos = pagoEdit.replace(/,/g, "");
+        montoPagos = montoPagos.replace(/,/g, "");
+        numeroPagos = numeroPagos.replace(/,/g, "");
   
         if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
             if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
-                console.log(pagoEdit)
-                console.log(pagoEdit)
-                console.log(pagoEdit)
+                console.log(tipoD)
+                console.log(tipoD)
+                console.log(tipoD)
                 $.ajax({
                     url: 'updatePrestamos',
                     type: 'POST',
                     dataType: "json",
                     data: {
+                        "tipoD":    tipoD,
                         "pagoEdit": parseInt(pagoEdit),
                         "numeroPagos": parseInt(numeroPagos),
                         "montoPagos": parseInt(montoPagos),

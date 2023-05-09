@@ -6277,6 +6277,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
       $salida = str_replace('' . base_url() . '', '', $val);
       $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $datos["descuentos"] =  $this->Comisiones_model->lista_estatus_descuentos()->result_array();
       $this->load->view('template/header');
       $this->load->view("ventas/panel_prestamos", $datos);
     }
@@ -6858,31 +6859,30 @@ for ($d=0; $d <count($dos) ; $d++) {
       $Numero_pagos   = $this->input->post('numeroPagos');
       $montoPagos     = $this->input->post('montoPagos');
       $comentario     = $this->input->post('comentario');
-      $id_prestamo    =  $this->input->post('prestamoId');
-   
+      $id_prestamo    = $this->input->post('prestamoId');
+      $tipoD          = $this->input->post('tipoD');
 
           $arr_update = array( 
-                            "monto"                 =>  $pagoEdit,
-                            "num_pagos"             =>  $Numero_pagos,
-                            "pago_individual"       =>  $montoPagos,
-                            "comentario"           =>  $comentario,
-                            );
-                            
+                  "monto"                 =>  $pagoEdit,
+                  "num_pagos"             =>  $Numero_pagos,
+                  "pago_individual"       =>  $montoPagos,
+                  "comentario"            =>  $comentario,
+                  "modificado_por"        => 1,
+                  "tipo"                  => $tipoD, 
+                  );
+
         $update = $this->Comisiones_model->updatePrestamosEdit($id_prestamo  , $arr_update);
-        
         if($update){
           $respuesta =  array(
             "response_code" => 200, 
             "response_type" => 'success',
             "message" => "Préstamo actualizado");
-
         }else{
           $respuesta =  array(
             "response_code" => 400, 
             "response_type" => 'error',
             "message" => "Préstamo no actualizado, inténtalo más tarde ");
-    
-    }
+          }
         echo json_encode ($respuesta);
 
 }

@@ -8350,9 +8350,12 @@ public function getDataDispersionPagoEspecial($val = '') {
     public function updatePrestamosEdit($clave, $data){
             try {
                 $this->db->where('id_prestamo', $clave);
-                $this->db->update('prestamos_aut', $data);
-                $afftectedRows = $this->db->affected_rows();
-                return $afftectedRows > 0 ? TRUE : FALSE ;
+                if($this->db->update('prestamos_aut', $data))
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }               
             }
             catch(Exception $e) {
                 return $e->getMessage();
