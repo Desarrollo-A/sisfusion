@@ -30,7 +30,7 @@ class Kel_XML extends CI_Controller
       }
 
 
-          $facturas_disponibles = array(); ;
+          $facturas_disponibles = array();  
 
                   $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) from facturas fa
                   INNER JOIN pago_comision_ind pci ON fa.id_comision = pci.id_pago_i
