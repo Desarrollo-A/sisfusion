@@ -2,8 +2,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <body onload="cargarInputs()" onsubmit="guardarInputs()">
-
 <div class="wrapper">
+    <style>
+        
+    </style>
     <?php
         $datos = array();
         $datos = $datos4;
@@ -31,23 +33,31 @@
             $readonlyNameToAsesor='';
         }    
     ?>
-    <div class="container pt-5" id="mainBoxDS">
+    <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            
-            <div class="container-fluid p-5">
+            <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){?>
+                <section id="sectionBtns">
+                    <button type="submit" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
+                </section>
+            <?php } else{?>
+                <section id="sectionBtns">
+                    <a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>" target="_blank" class="btn btnAction">IMPRIMIR DEPÓSITO</a>
+                </section>
+            <?php }?>
+            <div class="container-fluid" id="mainContainer">
                 <div class="row" id="encabezadoDS">
-                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                    <div class="col-12 col-sm-6 col-md-5 col-lg-5">
                         <img  class="w-100" src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales"/>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+                    <div class="col-12 col-sm-6 col-md-7 col-lg-7">
                         <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
                             <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
                             <?php if ($this->session->userdata('id_rol') == 17) { ?>
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
                             <?php }?>
                         </h3>  
-                        <h6 class="m-0">Última modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
+                        <h6 class="m-0">Modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
                         <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
                         <input type="hidden" name="id_cliente" id="id_cliente"  value="<?php echo $cliente[0]->id_cliente; ?>">
@@ -58,7 +68,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <h6 class="label-on-left mb-0">DESARROLLO</h6>
                         <div class="radio_container">
-                        <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
                             <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
                             $cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
@@ -97,19 +107,19 @@
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h4 class="label-on-left m-0">PERSONA FÍSICA</h4>
                         <div class="container boxChecks p-0">
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="idOficial_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idOficial_pf == 1) {echo "checked";}?>>
                                     <span>IDENTIFICACIÓN OFICIAL</span>
                                 </label>
                             </div>
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="idDomicilio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idDomicilio_pf == 1) {echo "checked";}?>>
                                     <span>COMPROBANTE DE DOMICILIO</span>
                                 </label>
                             </div>
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="actaMatrimonio_pf" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaMatrimonio_pf == 1) {echo "checked";}?>>
                                     <span>ACTA DE MATRIMONIO</span>
@@ -123,19 +133,19 @@
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h4 class="label-on-left m-0">PERSONA MORAL</h4>
                         <div class="container boxChecks p-0">
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="poder_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->poder_pm == 1) {echo "checked";}?>>
                                     <span>CARTA PODER</span>
                                 </label>
                             </div>
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input type="checkbox" name="actaConstitutiva_pm" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->actaConstitutiva_pm == 1) {echo "checked";}?>>
                                     <span>ACTA CONSTITUTIVA</span>
                                 </label>
                             </div>
-                            <div class="col-4 col-sm-4 col-md-4 col-lg-4 p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
                                 <label class="m-0 checkstyleDS">
                                     <input  type="checkbox" class="nombre" name="checks" value="apellido_materno">
                                     <span>IDE. OFICIAL APODERADO</span>
@@ -145,20 +155,20 @@
                     </div>
                 </div>
                 <!-- radios 3 -->
-                <div class="row aligned-row pt-1" id="boxFactura"> 
-                    <div class="col-md-1 checkbox checkbox-inline pt-0 m-0">
+                <div class="row pt-1" id="boxFactura"> 
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0">FACTURA</h4>
                             <input type="checkbox" name="rfc_check" id="rfc_check" <?php echo $statsInput; ?> value="1" <?php if ($cliente[0]->rfc != '' && $cliente[0]->rfc != null) {echo "checked";}?>>
                             <label class="switch" for="rfc_check"></label>
                         </div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="form-group label-floating">
+                    
+                    <div class="col-10 col-sm-10 col-md-7 col-lg-7">
+                        <div class="form-group label-floating overflow-hidden">
                             <div class="d-none" name="regimenl" id="regimenl">
                                 <h4 class="label-on-left m-0">RÉGIMEN FISCAL</h4>
-                                <select name="regimenFiscal" title="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                    <!-- <option> SELECCIONA UNA OPCIÓN </option> -->
+                                <select name="regimenFiscal" title="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                     <?php
                                     for($n=0; $n < count($regFis) ; $n++){
                                         if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac){
@@ -173,14 +183,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-10 col-sm-10 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
                             <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
                             onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-2 col-sm-2 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
                             <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
@@ -298,9 +308,9 @@
                         <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" onkeydown="return false" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group label-floating select-is-empty">
+                        <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0" style="top:-29px;">NACIONALIDAD (<small style="color: red;">*</small>)</label>
-                            <select name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                                                 for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
@@ -322,9 +332,9 @@
                         <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group label-floating select-is-empty">
+                        <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
-                            <select name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                 for($n=0; $n < count($edoCivil) ; $n++){
                                     if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil){
@@ -342,9 +352,9 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group label-floating select-is-empty">
+                        <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
-                            <select name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                 for($n=0; $n < count($regMat) ; $n++){
                                     if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
@@ -495,10 +505,9 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating select-is-empty">
+                            <div class="form-group label-floating select-is-empty overflow-hidden">
                                 <label class="label-on-left m-0">NACIONALIDAD</label> 
-                                <select class="selectpicker select-gral m-0" data-live-search="true" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>
-                                <!--$nacionalidades-->';
+                                <select class="selectpicker select-gral m-0" data-live-search="true" data-container="body" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>';
 
                                 for($n=0; $n < count($nacionalidades) ; $n++){
                                     if($nacionalidades[$n]['id_opcion'] == $copropiedad[$i]->nacionalidad_valor){
@@ -531,9 +540,9 @@
                             </div>
                         </div>        
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating select-is-empty">
+                            <div class="form-group label-floating select-is-empty overflow-hidden">
                                 <label class="label-on-left m-0">ESTADO CIVIL</label>
-                                <select class="selectpicker select-gral m-0" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
+                                <select class="selectpicker select-gral m-0" data-container="body" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
                                         
                                 ';
                                 for($n=0; $n < count($edoCivil) ; $n++)
@@ -551,9 +560,9 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating select-is-empty">
+                            <div class="form-group label-floating select-is-empty overflow-hidden">
                                 <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
-                                <select name="r_matrimonial_cop[]" data-live-search="true" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
+                                <select name="r_matrimonial_cop[]" data-live-search="true" data-container="body" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
                                     for($n=0; $n < count($regMat) ; $n++){
                                         if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor){
                                             echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
@@ -821,7 +830,7 @@
                     <div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="row form-inline">
                             <div class="col">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
                                     <label class="label-on-left m-0">En el Municipio de
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control letrasCaracteres" required="true" name="municipio2" id="municipio2"
@@ -884,9 +893,9 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating">
+                            <div class="form-group label-floating overflow-hidden">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -922,9 +931,9 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating select-is-empty">
+                            <div class="form-group label-floating select-is-empty overflow-hidden">
                                 <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco2" title="SELECCIONA UNA OPCIÓN" data-live-search="true" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <select name="parentesco2" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -1007,28 +1016,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row aligned-row">
                     <div class ="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                         <label class="label-on-left m-0">CORREO ELECTRÓNICO ASESOR</label>
                         <input name="correo_asesor" <?php echo $readOnly; ?> id="correo_asesor" type="text" class="form-control input-gral" value="<?=$asesor[0]->correo?>" >
                     </div>
-                    <div class ="col-xs-12 col-sm-4 col-md-4 col-lg-4" align="center">
-                        <div class="input-group">
-                            <section>
-                                <div>
-                                    <div class="togglebutton">
-                                        <label>
-                                        <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_usuario') == 2752  || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
-                                            <label class="label-on-left m-0">ENVIAR A CLIENTE VÍA EMAIL</label>
-                                            <br>
-                                            <input id="pdfOK" name="pdfOK" type="checkbox"/>
-                                        <?php } ?>
-                                        </label>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
                     </div>
+                    <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 checkbox checkbox-inline pt-0 m-0" style="padding-left:15px!important">
+
+                        
+                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_usuario') == 2752  || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
+                                <h4 class="label-on-left mb-0">ENVIAR VÍA EMAIL</h4>
+                                <input id="pdfOK" name="pdfOK" type="checkbox">
+                                <label class="switch" for="pdfOK"></label>
+                            <?php } ?>
+                        
+                    </div>
+                    
                 </div>
                 <br><br>
                 <div class="row pt-5 mt-5 firmas">
@@ -1047,15 +1052,6 @@
                 </div>
                 <div class="row pt-2">
                     <div class="text-center">
-                        <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 ||
-                            $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 ||
-                            $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 ||
-                            $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){?>
-                            <button type="submit" name="guardarC" class="btn btn-primary" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
-                        <?php } else{?>
-
-                            <a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>" target="_blank" class="btn btn-primary">IMPRIMIR DEPOSITO SERIEDAD</a>
-                        <?php }?>
                     </div>  
                 </div>
             </div> 
@@ -1064,11 +1060,9 @@
     </div>
 </div>
 
-    <!-- <?php $this->load->view('template/footer_legend');?> -->
-
 </div>
-<div id="mensaje"></div>
 </div><!--main-panel close-->
+<div id="mensaje"></div>
 </body>
 <?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -1135,7 +1129,7 @@
     }
 
     function resizeInput() {
-    $(this).attr('size', $(this).val().length);
+        $(this).attr('size', $(this).val().length);
     }
 
     $('input[name="letraCantidad"]')
@@ -1389,7 +1383,11 @@
             }
         });
 
-        
+        window.onscroll = () => {
+            const nav = document.querySelector('#sectionBtns');
+            console.log(nav);
+            if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
+        };
     </script>
 <?php } ?>
 
