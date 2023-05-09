@@ -37,7 +37,6 @@
                 <div class="modal-header">
                     <h4 class="modal-title"><b>Solicitar</b> autorización.</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 class=""></h5>
                 </div>
                 <form id="my-edit-form" name="my-edit-form" method="post">
                     <div class="modal-body">
@@ -57,7 +56,6 @@
                     <h4 class="modal-title"><b>Asignar</b> prospecto al cliente
                         <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
                         <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
-                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                     <h5 class=""></h5>
                     <input type="hidden" id="id_cliente_asignar" name="id_cliente_asignar">
                     <div class="modal-body">
@@ -66,7 +64,7 @@
                                 <thead>
                                 <th>Nombre</th>
                                 <th>Correo</th>
-                                <th>Telefono</th>
+                                <th>Teléfono</th>
                                 <th>Información prospecto</th>
                                 <th>Asignar</th>
                                 </thead>

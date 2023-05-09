@@ -1352,6 +1352,13 @@
   height: 41px;
 }
 
+#mainBoxDS input[type="date"]::-webkit-calendar-picker-indicator {
+  width: 18px;
+  height: 18px;
+  margin-right: 20px;
+  opacity: 0.8;
+}
+
 #mainBoxDS .switch {
   position: relative;
   width: 100%;
@@ -1437,6 +1444,37 @@
   transform: scale(0);
 }
 
+#mainBoxDS .radio_container {
+  background-color: #eeeeee;
+  width: 100%;
+  border-radius: 27px;
+  box-shadow: none;
+  padding: 5px !important;
+}
+
+#mainBoxDS .radio_container input[type="radio"] {
+  appearance: none;
+  display: none;
+}
+
+#mainBoxDS .radio_container label {
+  width: 50%;
+  transition: linear 0.3s;
+  font-weight: 100;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS .radio_container label {
+    width: 100% !important;
+  }
+}
+
+#mainBoxDS .radio_container input[type="radio"]:checked + label {
+  background-color: #0a548b;
+  color: #ffffff;
+  transition: 0.3s;
+}
+
 #mainBoxDS #encabezadoDS h6 {
   font-size: 12px;
   text-align: right;
@@ -1472,37 +1510,6 @@
   color: #96843D;
 }
 
-#mainBoxDS #radioDS .radio_container, #mainBoxDS #viviendaDS .radio_container, #mainBoxDS #viviendaDSP .radio_container {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 27px;
-  box-shadow: none;
-  padding: 5px !important;
-}
-
-#mainBoxDS #radioDS .radio_container input[type="radio"], #mainBoxDS #viviendaDS .radio_container input[type="radio"], #mainBoxDS #viviendaDSP .radio_container input[type="radio"] {
-  appearance: none;
-  display: none;
-}
-
-#mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label, #mainBoxDS #viviendaDSP .radio_container label {
-  width: 50%;
-  transition: linear 0.3s;
-  font-weight: 100;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label, #mainBoxDS #viviendaDSP .radio_container label {
-    width: 100% !important;
-  }
-}
-
-#mainBoxDS #radioDS .radio_container input[type="radio"]:checked + label, #mainBoxDS #viviendaDS .radio_container input[type="radio"]:checked + label, #mainBoxDS #viviendaDSP .radio_container input[type="radio"]:checked + label {
-  background-color: #0a548b;
-  color: #ffffff;
-  transition: 0.3s;
-}
-
 #mainBoxDS #containerCopropietario, #mainBoxDS #containerReferencia {
   background-color: #f0f8ff9e;
   border-radius: 15px;
@@ -1515,37 +1522,6 @@
   text-align: center;
   height: 27px;
   font-size: 12px;
-}
-
-#mainBoxDS #radioViv .radioContainer {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 27px;
-  box-shadow: none;
-  padding: 5px !important;
-}
-
-#mainBoxDS #radioViv .radioContainer input[type="radio"] {
-  appearance: none;
-  display: none;
-}
-
-#mainBoxDS #radioViv .radioContainer label {
-  width: 50%;
-  transition: linear 0.3s;
-  font-weight: 100;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #mainBoxDS #radioViv .radioContainer label {
-    width: 100% !important;
-  }
-}
-
-#mainBoxDS #radioViv .radioContainer input[type="radio"]:checked + label {
-  background-color: #0a548b;
-  color: #ffffff;
-  transition: 0.3s;
 }
 
 #mainBoxDS #observaciones textarea {
@@ -1596,9 +1572,17 @@
 }
 
 #mainBoxDS #checkDS .boxChecks .checkstyleDS input:checked + span {
-  background-color: #0a548b;
-  color: #ffffff;
   transition: 0.3s;
+  font-weight: 400;
+  color: #0a548b;
+}
+
+#mainBoxDS #checkDS .boxChecks .checkstyleDS input:checked + span:before {
+  font-family: FontAwesome !important;
+  content: "\f00c";
+  color: #0a548b;
+  font-size: 18px;
+  margin-right: 5px;
 }
 
 #mainBoxDS #boxFactura .boxOnOff {

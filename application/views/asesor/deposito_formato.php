@@ -217,11 +217,11 @@
                         <div class="d-flex">
                             <div class="w-50 mt-1">
                                 <input class="customRadio tipo_comprobante" type="radio" name="tipo_comprobante" id="tipo_comprobante1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 1) { echo "checked=true"; } ?>>
-                                <label for="tipo_comprobante1">Sí</label>
+                                <label for="tipo_comprobante1">SÍ</label>
                             </div>
                             <div class="w-50 mt-1">
                                 <input class="customRadio tipo_comprobante" type="radio" name="tipo_comprobante" id="tipo_comprobante2" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->printPagare == 0) { echo "checked=true"; } ?>>
-                                <label for="tipo_comprobante2">No</label>
+                                <label for="tipo_comprobante2">NO</label>
                             </div>
                         </div>
                     </div>
@@ -285,6 +285,7 @@
                             <label class="label-on-left m-0">
                                 CORREO ELECTRÓNICO
                                 (<small style="color: red;">*</small>)
+                                <small class="pl-1" id="result"></small>
                             </label>
                             <input class="form-control input-gral" required="true" name="correo" id="correo" type="email" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
                         </div>
@@ -293,12 +294,12 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 dateBox">
-                        <label class="label-on-left m-0">FECHA DE NACIMIENTO(<small style="color: red;">*</small>)</label>
+                        <label class="label-on-left m-0">FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label>
                         <input class="form-control input-gral m-0" required="true" name="fecha_nacimiento" id="fecha_nacimiento" onkeydown="return false" type="date" <?php echo $readOnly; ?> value="<?=$cliente[0]->fecha_nacimiento?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label class="label-on-left m-0" style="top:-29px;">NACIONALIDAD(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0" style="top:-29px;">NACIONALIDAD (<small style="color: red;">*</small>)</label>
                             <select name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                                                 for($p=0; $p < count($nacionalidades) ; $p++){
@@ -317,14 +318,13 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <label class="label-on-left m-0">ORIGINARIO DE: (<small style="color: red;">*</small>)</label>
+                        <label class="label-on-left m-0">ORIGINARIO DE (<small style="color: red;">*</small>)</label>
                         <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="originario" id="originario" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->originario?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty">
-                            <label class="label-on-left m-0">ESTADO CIVIL(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
                             <select name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($edoCivil) ; $n++){
                                     if($edoCivil[$n]['id_opcion'] == $cliente[0]->estado_civil){
@@ -345,7 +345,6 @@
                         <div class="form-group label-floating select-is-empty">
                             <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
                             <select name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                <!-- <option value="5"> SELECCIONA UNA OPCIÓN </option> -->
                                 <?php
                                 for($n=0; $n < count($regMat) ; $n++){
                                     if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
@@ -370,7 +369,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">DOMICILIO PARTICULAR(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">DOMICILIO PARTICULAR (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral letrasNumeros" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
@@ -379,7 +378,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">OCUPACIÓN(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">OCUPACIÓN (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral letrasCaracteres" required="true" name="ocupacion" id="ocupacion" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ocupacion?>"/>
                         </div>
                     </div>
@@ -394,13 +393,13 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">PUESTO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">PUESTO (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral letrasCaracteres" name="puesto" required="true" id="puesto" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->puesto?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">ANTIGÜEDAD <small>(AÑOS)</small></label>
+                            <label class="label-on-left m-0">ANTIGÜEDAD (AÑOS)</label>
                             <input class="form-control input-gral" name="antiguedad" id="antiguedad" <?php echo $readOnly; ?> pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->antiguedad?>"/>
                         </div>
                     </div>                
@@ -418,7 +417,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">EDAD AL MOMENTO DE FIRMA(<small style="color: red;">*</small>) <small>(AÑOS)</small></label>
+                            <label class="label-on-left m-0">EDAD AL MOMENTO DE FIRMA (<small style="color: red;">*</small>) (AÑOS)</label>
                             <input class="form-control input-gral" name="edadFirma" id="edadFirma" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="<?=$cliente[0]->edadFirma?>"/>
                         </div>
                     </div>
@@ -434,24 +433,20 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
                         <label class="label-on-left m-0">VIVE EN CASA</label>
                             <div class="radio_container">
-                                <input type="radio" id="tipo_vivienda" <?php echo $statsInput; ?> name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1" style="font-size: 0.8em;"/>
-                                <label>PROPIA</label>
-                                    
+                                <input type="radio" id="tipo_vivienda_1" <?php echo $statsInput; ?> name="tipo_vivienda" required <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1"/>
+                                <label for="tipo_vivienda_1">PROPIA</label>
                                 
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 2) { echo "checked=true"; } ?>  value="2" style="font-size: 0.8em;"/> 
-                                <label>RENTADA</label>    
+                                <input type="radio" id="tipo_vivienda_2" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 2) { echo "checked=true"; } ?>  value="2"/> 
+                                <label for="tipo_vivienda_2">RENTADA</label>    
                     
-                                
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 3) { echo "checked=true"; } ?>  value="3" style="font-size: 0.8em;"/> 
-                                <label>PAGÁNDOSE</label>
+                                <input type="radio" id="tipo_vivienda_3" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 3) { echo "checked=true"; } ?>  value="3"/> 
+                                <label for="tipo_vivienda_3">PAGÁNDOSE</label>
                     
-                                
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 4) { echo "checked=true"; } ?>  value="4" style="font-size: 0.8em;"/> 
-                                <label>FAMILIAR</label>
+                                <input type="radio" id="tipo_vivienda_4" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 4) { echo "checked=true"; } ?>  value="4"/> 
+                                <label for="tipo_vivienda_4">FAMILIAR</label>
                     
-                                
-                                <input type="radio" id="tipo_vivienda" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 5) { echo "checked=true"; } ?>  value="5" style="font-size: 0.8em;"/>
-                                <label> OTRO </label>
+                                <input type="radio" id="tipo_vivienda_5" name="tipo_vivienda" <?php echo $statsInput; ?> required <?php if ($cliente[0]->tipo_vivienda == 5) { echo "checked=true"; } ?>  value="5"/>
+                                <label for="tipo_vivienda_5"> OTRO </label>
                             </div>
                         </div>                      
                     </div>
@@ -489,8 +484,8 @@
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">CORREO ELECTRONICO</label>
-                                <input  class="form-control input-gral" name="email_cop[]" oninput="this.value = this.value.toUpperCase()" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">CORREO ELECTRÓNICO</label>
+                                <input  class="form-control input-gral" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.'/>
                             </div>
                         </div>           
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -547,7 +542,7 @@
                                     {
                                         echo '<option value="'.$edoCivil[$n]['id_opcion'].'" selected>'.$edoCivil[$n]['nombre'].'</option>';
                                     }
-                                    else{
+                                     else{
                                         echo '<option value="'.$edoCivil[$n]['id_opcion'].'">'.$edoCivil[$n]['nombre'].'</option>';
                                     }
                                 }
@@ -557,7 +552,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label class="label-on-left m-0">RÉGIMEN</label>
+                                <label class="label-on-left m-0">RÉGIMEN MATRIMONIAL</label>
                                 <select name="r_matrimonial_cop[]" data-live-search="true" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
                                     for($n=0; $n < count($regMat) ; $n++){
                                         if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor){
@@ -598,14 +593,14 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">ANTIGÜEDAD <small style="font-size: 0.5em;"> (AÑOS)</small></label>
+                                <label class="label-on-left m-0">ANTIGÜEDAD <small"> (AÑOS)</small></label>
                                 <input  class="form-control input-gral" name="antiguedad_cop[]" id="antiguedad_cop[]" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->antiguedad . '" '.$statsInput.'/>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">EDAD FIRMA<small style="font-size: 0.5em;"> (AÑOS)</small></label>
+                                <label class="label-on-left m-0">EDAD FIRMA<small"> (AÑOS)</small></label>
                                 <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.'/>
                             </div> 
                         </div>
@@ -628,7 +623,7 @@
                     </div>
 
                     <div class="row pb-3" id="viviendaDS">
-                            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10"> 
+                            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9"> 
                             <label class="label-on-left m-0">VIVE EN CASA</label>
                                 <div class="radio_container">
                                     <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"'; if ($copropiedad[$i]->tipo_vivienda == 1) { echo "checked=true"; } echo '  value="1" '.$statsInput.'/> 
@@ -647,7 +642,7 @@
                                     <label>OTRO</label>
                                 </div>
                             </div>  
-                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                 <label class="label-on-left m-0">RFC</label>
                                 <input class="form-control input-gral" onblur="validarRFC(this)" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo ' '.$statsInput.'"/>
                                 <input type="hidden" value="'.$limite.'" name="numOfCoprops">
@@ -662,10 +657,6 @@
                     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
                         <b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b>
                     </div>
-
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <button class="btn btn-primary btn-round btn-fab btn-fab-mini to-comment agregar_propietario hide" title="Agregar nuevo propietario" style="color:white;"><i class="material-icons">supervisor_account</i></button>
-                    </div>
                 </center>`;
                 }
                 ?>
@@ -674,7 +665,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">EL SR(A):(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">EL SR(A) (<small style="color: red;">*</small>)</label>
                             <?php
 
                             $limite = $copropiedadTotal[0]->valor_propietarios;
@@ -743,13 +734,13 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->nombreResidencial?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">EN EL MUNICIPIO DE:(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">EN EL MUNICIPIO DE (<small style="color: red;">*</small>)</label>
                             <input type="text" class="form-control input-gral letrasCaracteres" name="municipioDS" id="municipioDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->municipioDS?>"/>
                         </div>
                     </div>            
@@ -758,13 +749,13 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">IMPORTE DE LA OFERTA(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">IMPORTE DE LA OFERTA (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">IMPORTE EN LETRA(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">IMPORTE EN LETRA (<small style="color: red;">*</small>)</label>
                             <input type="text" class="form-control input-gral letrasNumeros" name="letraImport" id="letraImport" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->letraImport?>"/>
                         </div>
                     </div>
@@ -782,19 +773,19 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">SALDO DE DEPÓSITO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">SALDO DE DEPÓSITO (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="saldoDeposito" id="saldoDeposito" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->saldoDeposito?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">APORTACIÓN MENSUAL(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">APORTACIÓN MENSUAL (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="aportMensualOfer" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> id="aportMensualOfer" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">FECHA 1° APORTACIÓN(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">FECHA 1° APORTACIÓN (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="fecha1erAport" <?php echo $readOnly; ?> id="fecha1erAport" onkeydown="return false" type="date" required="true" value="<?=$cliente[0]->fecha1erAport?>"/>
                         </div>
                     </div>
@@ -802,19 +793,19 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">PLAZO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">PLAZO (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="plazo" id="plazo" <?php echo $readOnly; ?> type="number" step="any" required="true" value="<?=$cliente[0]->plazo?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">FECHA LIQUIDACIÓN DE DEPÓSITO(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">FECHA LIQUIDACIÓN DE DEPÓSITO (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" required="true" name="fechaLiquidaDepo" <?php echo $readOnly; ?> id="fechaLiquidaDepo" type="date" onkeydown="return false" value="<?=$cliente[0]->fechaLiquidaDepo?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">FECHA 2° APORTACIÓN(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">FECHA 2° APORTACIÓN (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="fecha2daAport" id="fecha2daAport" <?php echo $readOnly; ?>type="date" onkeydown="return false" required="true" value="<?=$cliente[0]->fecha2daAport?>"/>
                         </div>
                     </div>
@@ -822,7 +813,7 @@
                 <div class="row pt-3">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
                         <label style="font-size: 0.7em;">
-                            Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.<BR>Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
+                            Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.<br>Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
                         </label>
                     </div>
                 </div>
@@ -871,8 +862,8 @@
                                     text-transform: uppercase;
                                 }
                             </style>
-                            <input class="form-control" id="inpPropCoprpNs" type="text" required="true" <?php echo $readOnly; ?>
-                                    readonly value="<?=$cliente[0]->nombre?>  <?=$cliente[0]->apellido_paterno?> <?=$cliente[0]->apellido_materno?> <?php echo $copropsNames;?>" style="font-size: 0.9em; text-align: center;"/>
+                            <input class="form-control text-center" id="inpPropCoprpNs" type="text" required="true" <?php echo $readOnly; ?>
+                                    readonly value="<?=$cliente[0]->nombre?>  <?=$cliente[0]->apellido_paterno?> <?=$cliente[0]->apellido_materno?> <?php echo $copropsNames;?>" style="font-size: 0.9em;"/>
                         </div>
                         <div class="text-center" style="line-height:12px">
                             <label class="label-on-left m-0">Nombre y Firma <b> Ofertante (*)</b></label>
@@ -896,7 +887,6 @@
                             <div class="form-group label-floating">
                                 <label class="label-on-left m-0">PARENTESCO</label>
                                 <select name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
-                                    <!-- <option value=""> SELECCIONA UNA OPCIÓN </option> -->
                                     <?php
                                     
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -906,8 +896,7 @@
                                             echo $parentescos[$p]['id_opcion'];
                                             echo '<option value="'.$parentescos[$p]['id_opcion'].'" selected>'.$parentescos[$p]['nombre'].'</option>';
                                         }
-                                        else
-                                        {
+                                        else{
                                             echo '<option value="'.$parentescos[$p]['id_opcion'].'">'.$parentescos[$p]['nombre'].'</option>';
                                         }
                                     }
@@ -1013,14 +1002,14 @@
                 <div class="row pt-3" id="observaciones">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">OBSERVACIONES(<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
                             <textarea class="form-control pr-2 pl-2 espaciosOff" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class ="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                        <label class="label-on-left m-0">EMAIL ASESOR</label>
+                        <label class="label-on-left m-0">CORREO ELECTRÓNICO ASESOR</label>
                         <input name="correo_asesor" <?php echo $readOnly; ?> id="correo_asesor" type="text" class="form-control input-gral" value="<?=$asesor[0]->correo?>" >
                     </div>
                     <div class ="col-xs-12 col-sm-4 col-md-4 col-lg-4" align="center">
@@ -1041,8 +1030,8 @@
                         </div>
                     </div>
                 </div>
+                <br><br>
                 <div class="row pt-5 mt-5 firmas">
-                    <h4 class="text-center">FIRMAS</h4>
                     <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">
                         <div class="form-group label-floating">
                             <input class="form-control text-center" <?php echo $readOnly; ?> name="asesor_datos" id="asesor_datos" type="text" required="true" value="<?=$asesor[0]->nombreAsesor?><?=$asesoresVC?>"/>
@@ -1056,29 +1045,6 @@
                         <label class="label-on-left m-0">Nombre y Firma <b> Autorización de operación (*)</b></label>
                     </div>
                 </div>
-                <!-- <div class="row">
-                    <div class ="col-md-6">
-                        <div class="col-sm-12 checkbox-radios" style="text-align: left;padding: 0px;visibility: hidden">
-                            <div class="col-md-4 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.9em;">
-                                        <input type="radio" id="especificar"  name="especificar"  <?php echo $statsInput; ?>
-                                            <?php if ($cliente[0]->lugar_prospeccion == 6 ) { echo "checked=true"; } ?>  value="6" style="font-size: 0.9em;"/> Marketing Digital
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 checkbox-radios required">
-                                <div class="radio">
-                                    <label style="font-size: 0.9em;">
-                                        <input type="radio" id="especificar"  name="especificar"  <?php echo $statsInput; ?>
-                                            <?php if ($cliente[0]->lugar_prospeccion == 12 ) {echo "checked=true";} ?>  value="12" style="font-size: 0.9em;"/> Club Maderas
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <div class="row pt-2">
                     <div class="text-center">
                         <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 ||
@@ -1163,10 +1129,6 @@
                             $('#labelNo2').removeClass('hover_focus');
                         }, 1500)
                     }
-                    else{
-                        console.log('continuar...');
-                        console.log("$('input[name=tipoNc_valor]:checked').val()", $('input[name=tipoNc_valor]:checked').val());
-                    }
                 }
             }
         }
@@ -1193,16 +1155,38 @@
     }
 
     function validarRFC(input) {
-    const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
-    if (!regex.test(input.value)) {
-        alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
-        
+        const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
+        if (!regex.test(input.value)) {
+            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
+            
+        }
     }
+
+    const validateEmail = (email) => {
+        return email.match(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+
+    const validate = () => {
+        const $result = $('#result');
+        const email = $('#correo').val();
+        $result.text('');
+
+        if(validateEmail(email)){
+            $result.text('El correo es válido');
+            $result.css('color', 'rgb(26 159 10)');
+        } else{
+            $result.text('El correo es inválido.');
+            $result.css('color', 'red');
+        }
+        return false;
     }
+
+    $('#correo').on('input', validate);
 
     function checkResidencia(){
         let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
-        console.log('valor', valor);
         if(valor == 1){
             //si es de residencia extranjera se debe de preguntar si imprime pagares
             $('#pagarePart').removeClass('hide');
@@ -1405,213 +1389,8 @@
             }
         });
 
-
-        $(document).on('click', '.eliminar_propietario', function(e) {
-
-            e.preventDefault();
-
-            var id_copropietario = $(this).val();
-            var nombre = $(this).attr("data-value");
-
-            id_valor_copropietario = id_copropietario;
-
-            $("#modal_eliminar .modal-body").html("");
-            $("#modal_eliminar .modal-footer").html("");
-            $("#modal_eliminar .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de eliminar al propietario <b>'+nombre+'</b>?</p></div></div>');
-            $("#modal_eliminar .modal-footer").append('<div class="btn-group"><button type="submit" class="btn btn-success" style="margin-right: 20px;">ACEPTAR</button><button type="button" class="btn btn-danger" onclick="close_eliminar()">CANCELAR</button></div>');
-            $("#modal_eliminar").modal();
-
-        });
-
-
-        $(document).on('click', '.agregar_propietario', function(e) {
-
-            e.preventDefault();
-
-
-            $.post("<?=base_url()?>index.php/Asesor/getMatrimonialRegime", function(data) {
-                var len = data.length;
-                for(var i = 0; i<len; i++){
-                    var id = data[i]['id_opcion'];
-                    var name = data[i]['nombre'];
-                    $('#regimen_nuevo').append($('<option>').val(id).text(name.toUpperCase()));
-                }
-            }, 'json');
-
-            //nacionalidad_nuevo
-            /**/$.post("<?=base_url()?>index.php/Asesor/getNationality", function(data) {
-                var len = data.length;
-                for(var i = 0; i<len; i++){
-                    var id = data[i]['id_opcion'];
-                    var name = data[i]['nombre'];
-                    //nacionalidad_nuevo
-                    $('#nacionalidad_nuevo').append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $(".select-is-empty").removeClass("is-empty");
-                $("#nacionalidad_nuevo").select('refresh');
-            }, 'json');
-
-            //estadocivil_nuevo
-            /**/$.post("<?=base_url()?>index.php/Asesor/getCivilStatus", function(data) {
-                var len = data.length;
-                for(var i = 0; i<len; i++){
-                    var id = data[i]['id_opcion'];
-                    var name = data[i]['nombre'];
-
-                    $('#estadocivil_nuevo').append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $(".select-is-empty").removeClass("is-empty"); $("#estadocivil_nuevo").select('refresh');
-            }, 'json');
-
-
-
-
-            $("#modal_agregar .modal-body").html("");
-            $("#modal_agregar .modal-footer").html("");
-
-            $("#modal_agregar .modal-body").append('<input class="form-control" name="idd" id="idd" type="hidden" value="<?=$cliente[0]->id_cliente?>">');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  NOMBRE (<small style="color: red;">*</small>) </label> <input class="form-control" name="nombre_nuevo" id="nombre_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;">  APELLIDO PATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidop_nuevo" id="apellidop_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"> <label class="control-label" style="font-size: 0.8em;"> APELLIDO MATERNO (<small style="color: red;">*</small>) </label> <input class="form-control" name="apellidom_nuevo" id="apellidom_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> EMAIL (<small style="color: red;">*</small>) </label> <input class="form-control" name="correo_nuevo" id="correo_nuevo" type="email" value=""/></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> TELEÉFONO CASA</label><input class="form-control" name="telefono1_nuevo" id="telefono1_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating"><label class="control-label" style="font-size: 0.8em;"> CELULAR (<small style="color: red;">*</small>)</label><input class="form-control" name="telefono2_nuevo" id="telefono2_nuevo" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label><input class="form-control" name="fnacimiento_nuevo" id="fnacimiento_nuevo" onkeydown="return false" type="date" value=""/></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> NACIONALIDAD (<small style="color: red;">*</small>)</label><select name="nacionalidad_nuevo" id="nacionalidad_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ORIGINARIO DE (<small style="color: red;">*</small>) </label> <input class="form-control" name="originario_nuevo" id="originario_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO PARTICULAR (<small style="color: red;">*</small>) </label> <input class="form-control" name="domicilio_particular_nuevo" id="domicilio_particular_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> ESTADO CIVIL (<small style="color: red;">*</small>)</label><select name="estadocivil_nuevo" id="estadocivil_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></select></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="form-group label-floating select-is-empty"><label class="control-label" style="font-size: 0.8em;"> RÉGIMEN </label><select name="regimen_nuevo" id="regimen_nuevo" placeholder="SELECCIONA UNA OPCIÓN" class="form-control"></div></div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> NOMBRE DE CÓNYUGE (<small style="color: red;">*</small>) </label> <input class="form-control" name="conyuge_nuevo" id="conyuge_nuevo" type="text" required value=""/> </div> </div>');
-
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> OCUPACIÓN (<small style="color: red;">*</small>) </label> <input class="form-control" name="ocupacion_nuevo" id="ocupacion_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> PUESTO (<small style="color: red;">*</small>) </label> <input class="form-control" name="puesto_nuevo" id="puesto_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EMPRESA EN LA QUE TRABAJA (<small style="color: red;">*</small>) </label> <input class="form-control" name="empresa_nuevo" id="empresa_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> ANTIGÜEDAD (<small style="color: red;">*</small>) </label> <input class="form-control" name="antiguedad_nuevo" id="antiguedad_nuevo" type="number" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> EDAD AL MOMENTO DE FIRMA (<small style="color: red;">*</small>) </label> <input class="form-control" name="edad_firma_nuevo" id="edad_firma_nuevo" type="number" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-body").append('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> <div class="form-group label-floating">  <label class="control-label" style="font-size: 0.8em;"> DOMICILIO EMPRESA (<small style="color: red;">*</small>) </label> <input class="form-control" name="domempresa_nuevo" id="domempresa_nuevo" type="text" required value=""/> </div> </div>');
-
-            $("#modal_agregar .modal-footer").append('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><div class="btn-group"><button type="submit" class="btn btn-success" style="margin-right: 20px;">GUARDAR</button><button type="button" class="btn btn-danger" onclick="close_agregar()">CANCELAR</button></div></div></div>');
-            $("#modal_agregar").modal();
-
-        });
-
-        var id_valor_copropietario;
-        $("#formulario_eliminar").submit( function(e) {
-            e.preventDefault();
-        }).validate({
-            submitHandler: function( form ) {
-
-                var data = new FormData( $(form)[0] );
-                data.append("id_copropietario", id_valor_copropietario);
-
-                $.ajax({
-                    url: url + "Asesor/eliminar_propietario",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST',
-                    success: function(data){
-                        if(data.resultado){
-                            $("#modal_eliminar").modal('toggle' );
-                            location.reload();
-                        }else{
-                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                        }
-                    },error: function( ){
-                        alert("ERROR EN EL SISTEMA");
-                    }
-                });
-            }
-        });
-
-        // var id_valor_copropietario;
-        $("#formulario_agregar").submit( function(e) {
-            e.preventDefault();
-        }).validate({
-            submitHandler: function( form ) {
-                var data = new FormData( $(form)[0] );
-                console.log(data);
-                $.ajax({
-                    url: url + "Asesor/agregar_propietario",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST',
-                    success: function(data){
-                        if(data.resultado){
-                            $("#modal_agregar").modal('toggle' );
-                            location.reload();
-                        }else{
-                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                        }
-                    },error: function( ){
-                        alert("ERROR EN EL SISTEMA");
-                    }
-                });
-            }
-        });
-
-        function close_eliminar(){
-            $("#modal_eliminar").modal('toggle');
-        }
-
-
-        function close_agregar(){
-            $("#modal_agregar").modal('toggle');
-        }
+        
     </script>
 <?php } ?>
 
-<script>
-    $(document).ready(function () {
-        <?php
-        if($this->session->userdata('success_coprop')==777 && ($onlyView==1 || $onlyView==0))
-        {
-        ?>
-        alerts.showNotification('top', 'right', 'Se guardaron correctamente los datos', 'success');
-        <?php
-        $this->session->unset_userdata('success_coprop');
-        }
-        elseif($this->session->userdata('success_coprop')== -1)
-        {?>
-        alerts.showNotification('top', 'right', 'Hubo un error al guardar los datos intentalo nuevamente', 'danger');
-        <?php
-        $this->session->unset_userdata('success_coprop');
-        }
-        ?>
-    });
-
-
-
-    
-      
-        
-       
-</script>
 </html>
