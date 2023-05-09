@@ -11,39 +11,37 @@ class Administracion_model extends CI_Model {
 
 	public function get_datos_lote_11 () {
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, l.totalNeto, l.fechaSolicitudValidacion,
-        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20) modificado, cl.rfc, l.totalNeto, CONVERT(varchar, l.fechaSolicitudValidacion, 20) fechaSolicitudValidacion,
+        CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(varchar, l.fechaVenc, 20) fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede
-        FROM lotes l
+		cond.idCondominio, cl.expediente, mo.descripcion
+	    FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
-        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-        INNER JOIN sedes se ON se.id_sede = l.ubicacion
-        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
         WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion IN (7) AND l.idMovimiento IN (37, 7, 64, 77) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion IN (8) AND l.idMovimiento IN (38, 65) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)))
         AND cl.status = 1
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, l.totalNeto, l.fechaSolicitudValidacion,
-        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20), cl.rfc, l.totalNeto, CONVERT(varchar, l.fechaSolicitudValidacion, 20),
+        CAST(l.comentario AS varchar(MAX)), CONVERT(varchar, l.fechaVenc, 20), l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         tv.tipo_venta, l.observacionContratoUrgente,
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre
+        cond.idCondominio, cl.expediente, mo.descripcion
         ORDER BY l.nombreLote");
-        return $query->result();
-    }
+		return $query->result();
+	}
 
     public function get_datos_admon($condominio){
     	return $this->db->query("SELECT lot.idCliente, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, lot.comentarioLiberacion, lot.fechaLiberacion, 
@@ -85,24 +83,6 @@ class Administracion_model extends CI_Model {
         }
 
 	}
-
-	   public function get_data_asignacion($idLote){
-		return $this->db->query("SELECT id_estado, id_desarrollo_n FROM lotes WHERE idLote = $idLote")->row();
-	  }
-
-	  public function get_edo_lote(){
-		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 44")->result_array();
-	  }
-
-	  public function get_des_lote(){
-		return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 45")->result_array();
-	  }
-
-	  public function update_asignacion($idLote,$data){
-		$this->db->where("idLote",$idLote);
-		$this->db->update('lotes',$data);
-		return true;
-	 }
 
 	 public function getAssisGte($id_cliente){
         $query = $this->db->query("SELECT id_gerente FROM clientes WHERE id_cliente=".$id_cliente);

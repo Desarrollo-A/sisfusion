@@ -22,38 +22,14 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 	}
 
 
-	public function index()
-	{
-		if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '11' && $this->session->userdata('id_rol') != '34' 
-			&& $this->session->userdata('id_rol') != '23' && $this->session->userdata('id_rol') != '35' 
-			&& $this->session->userdata('id_rol') != '26' && $this->session->userdata('id_rol') != '41' 
-			&& $this->session->userdata('id_rol') != '39' && $this->session->userdata('id_rol') != '31' 
-			&& $this->session->userdata('id_rol') != '49' && $this->session->userdata('id_rol') != '50' 
-			&& $this->session->userdata('id_rol') != '40' && $this->session->userdata('id_rol') != '54' 
-			&& $this->session->userdata('id_rol') != '58' &&
-            $this->session->userdata('id_rol') != '10' && $this->session->userdata('id_rol') != '18' &&
-            $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' &&
-            $this->session->userdata('id_rol') != '21' && $this->session->userdata('id_rol') != '28' &&
-            $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '25' &&
-            $this->session->userdata('id_rol') != '25' && $this->session->userdata('id_rol') != '27' &&
-            $this->session->userdata('id_rol') != '30' && $this->session->userdata('id_rol') != '36' &&
-            $this->session->userdata('id_rol') != '22' && $this->session->userdata('id_rol') != '53' &&
-            $this->session->userdata('id_rol') != '8' && $this->session->userdata('id_rol') != '23' &&
-            $this->session->userdata('id_rol') != '12' && $this->session->userdata('id_rol') != '61' &&
-			$this->session->userdata('id_rol') != '63' && $this->session->userdata('id_rol') != '64' && 
-			$this->session->userdata('id_rol') != '65' && $this->session->userdata('id_rol') != '66' && 
-			$this->session->userdata('id_rol') != '69' && $this->session->userdata('id_rol') != '68' && 
-			$this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '71' &&
-			$this->session->userdata('id_rol') != '72' && $this->session->userdata('id_rol') != '73' && $this->session->userdata('id_rol') != '74' && $this->session->userdata('id_rol') != '75' && $this->session->userdata('id_rol') != '76' && $this->session->userdata('id_rol') != '77' && $this->session->userdata('id_rol') != '78' && $this->session->userdata('id_rol') != '79' && $this->session->userdata('id_rol') != '80' && $this->session->userdata('id_rol') != '81' && $this->session->userdata('id_rol') != '82' && $this->session->userdata('id_rol') != '83' && $this->session->userdata('id_rol') != '84'
-        ) {
+	public function index() {
+		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' , '39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
+		'21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' , 
+		'76', '77' , '78', '79' , '80', '81' , '82', '83' , '84'))) {
 			redirect(base_url() . 'login');
 		}
-
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-		// $this->load->view('administracion/inicio_administracion_view',$datos);
 		$this->load->view('template/home',$datos);
 		$this->load->view('template/footer');
 	}
@@ -103,7 +79,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			$dataPer[$i]['descripcion']=$data[$i]->descripcion;
 			$dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
 			$dataPer[$i]['vl']=$data[$i]->vl;
-			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 			$horaInicio = date("08:00:00");
 			$horaFin = date("16:00:00");
 			$arregloFechas = array();  
@@ -112,9 +87,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 			$time = date('H:i:s', $hoy_strtotime2);
-			
-
-
 
 			if($data[$i]->fechaSolicitudValidacion=='' || empty($data[$i]->fechaSolicitudValidacion)){
 				$dataPer[$i]['fechaVenc2'] = 'N/A';
@@ -259,11 +231,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		$this->load->view('template/header');
 		$datos["rol"] = $this->session->userdata('id_rol');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
-	}
-
-	public function registroStatus11ContratacionAdministracion() {
-		$this->load->view('template/header');
-		$this->load->view('administracion/datos_status11Contratacion_administracion_view');
 	}
 
 	public function editar_registro_lote_administracion_proceceso11(){
@@ -454,114 +421,52 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 			}
 					
 	}
-	public function editar_registro_loteRechazo_administracion_proceceso11(){
-
-		$idLote=$this->input->post('idLote');	 
-		$idCondominio=$this->input->post('idCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idCliente=$this->input->post('idCliente');
-		$comentario=$this->input->post('comentario');
-		$user=$this->input->post('user');
-		$perfil=$this->input->post('perfil'); 
-		$modificado=date("Y-m-d H:i:s");
 	
-
-		$arreglo=array(); 
-		$arreglo["idStatusContratacion"]= 7;
-		$arreglo["idMovimiento"]=66; 
-		$arreglo["comentario"]=$comentario;
-		$arreglo["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo["perfil"]=$this->session->userdata('id_rol');
-		$arreglo["modificado"]=date("Y-m-d H:i:s");
-		$arreglo["fechaVenc"]=date("Y-m-d H:i:s");
+	public function editar_registro_loteRechazo_administracion_proceceso11() {
+		$idLote = $this->input->post('idLote');	 
+		$idCondominio = $this->input->post('idCondominio');
+		$nombreLote = $this->input->post('nombreLote');
+		$idCliente = $this->input->post('idCliente');
+		$comentario = $this->input->post('comentario');
+		$observaciones = $this->input->post('observaciones');
+		$user = $this->input->post('user');
+		$perfil = $this->input->post('perfil'); 
+		$modificado = date("Y-m-d H:i:s");
+		$arreglo = array(); 
+		$arreglo["idStatusContratacion"] = 7;
+		$arreglo["idMovimiento"] = 66; 
+		$arreglo["comentario"] = $comentario . ' - ' . $observaciones;
+		$arreglo["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo["perfil"] = $this->session->userdata('id_rol');
+		$arreglo["modificado"] = date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"] = date("Y-m-d H:i:s");
 		$arreglo["status8Flag"] = 0;
-	
 		$arreglo2=array();
-		$arreglo2["idStatusContratacion"]=7;
-		$arreglo2["idMovimiento"]=66;
-		$arreglo2["nombreLote"]=$nombreLote;
-		$arreglo2["comentario"]=$comentario;
-		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo2["perfil"]=$this->session->userdata('id_rol');
-		$arreglo2["modificado"]=date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"]= $modificado;
-		$arreglo2["idLote"]= $idLote;  
-		$arreglo2["idCondominio"]= $idCondominio;          
-		$arreglo2["idCliente"]= $idCliente;
-
-
-		$nombre = $this->session->userdata('nombre');
-		$apellido_paterno = $this->session->userdata('apellido_paterno');
-		$apellido_materno = $this->session->userdata('apellido_materno');
-
-		$nombre_rechazador = $nombre." ".$apellido_paterno." ".$apellido_materno;
-
-		$data_send = $this->Administracion_model->getInfoToMail($idCliente, $idLote);
-
-		$data_ag = $this->Administracion_model->getAssisGte($idCliente);
-		
-		/*************************************************************************************
-		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-		 ************************************************************************************/
-		$correos_entregar = array();
-		// if(count($data_ag)>0){
-		// 	foreach ($data_ag as $item=>$value){
-		// 		array_push($correos_entregar, $value['correo']);
-		// 	}
-		// }
-
-		$datos_etiquetas =array(
-			'comentario' => $comentario,
-			'id_cliente' => $idCliente,
-			'id_lote' => $idLote
-		);
-
-		$datos_correo[0] = array(
-			"nombreResidencial"	=> $data_send->nombreResidencial,
-			"nombreCondominio"	=> $data_send->nombreCondominio,
-			"nombreLote"		=> $data_send->nombreLote,
-			"nombreCliente"		=> $data_send->nombreCliente,
-			"nombreRechaza"		=> $nombre_rechazador,
-			"fechaApartado"		=> $data_send->fechaApartado,
-			"fechaRechazo"		=> $modificado,
-		);
-
-		#PROVICIONAL TESTING
-		array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-		//$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
-
-		$elementos_correo = array(	"setFrom" => Elementos_Correos_Admin::SET_FROM_EMAIL,
-									"Subject" => Elementos_Correos_Admin::ASUNTO_CORREO_TABLA_RECHAZO_ADMIN_PROC_11. ' ' .$comentario);
-
-		$comentario_general = Elementos_Correos_Admin::EMAIL_RECHAZO_ADMIN_PROC_11.'<br><br>'. $comentario;
-		$datos_encabezados_tabla = Elementos_Correos_Admin::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_ADMIN_PROC_11;
-
-		$plantilla_correo = new plantilla_dinamica_correo;
-		/********************************************************************************************************************************************/
-		
+		$arreglo2["idStatusContratacion"] = 7;
+		$arreglo2["idMovimiento"] = 66;
+		$arreglo2["nombreLote"] = $nombreLote;
+		$arreglo2["comentario"] = $comentario . ' - ' . $observaciones;
+		$arreglo2["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo2["perfil"] = $this->session->userdata('id_rol');
+		$arreglo2["modificado"] = date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"] = $modificado;
+		$arreglo2["idLote"] = $idLote;  
+		$arreglo2["idCondominio"] = $idCondominio;          
+		$arreglo2["idCliente"] = $idCliente;   
 		$validate = $this->Administracion_model->validateSt11($idLote);
-
-		if($validate == 1){
-		if ($this->Administracion_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-			$data['message'] = 'OK';
-			$data_enviar_mail = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-																		$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-			if ($data_enviar_mail > 0) {
-				$data['status_msg'] = 'Correo enviado correctamente';
-			} else {
-				$data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
-			}
-			echo json_encode($data);
-
-			}else{
+		if($validate == 1) {
+			if ($this->Administracion_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE){ 
+				$data['message'] = 'OK';
+				echo json_encode($data);
+			}else {
 				$data['message'] = 'ERROR';
 				echo json_encode($data);
 			}
-		}else {
+		} else {
 			$data['message'] = 'FALSE';
 			echo json_encode($data);
 		}
-	}
+   }
 
 	public function validateSession()
 	{
@@ -572,41 +477,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		}
 	}
 	
-	public function get_data_asignacion($idLote){
-        $data = $this->Administracion_model->get_data_asignacion($idLote);
-        echo json_encode($data);
-    }
- 
-	public function get_edo_lote(){
-        $data = $this->Administracion_model->get_edo_lote();
-        echo json_encode($data);
-    }
- 
-	public function get_des_lote(){
-        $data = $this->Administracion_model->get_des_lote();
-        echo json_encode($data);
-	}
-	
-
-	public function update_asignacion(){
-		$idLote=$this->input->post('idLote');	 
-		$id_desarrollo=$this->input->post('id_desarrollo');
-		$id_estado=$this->input->post('id_estado');	 
-		
-		$data=array();
-		$data["id_desarrollo_n"]=$id_desarrollo;
-		$data["id_estado"]=$id_estado;
-		
-		if ($this->Administracion_model->update_asignacion($idLote,$data) == TRUE){ 
-			$data['message'] = 'OK';
-			echo json_encode($data);
-		}else{
-			$data['message'] = 'ERROR';
-			echo json_encode($data);
-		}
-
-    }
-
     public function status11Validado(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));

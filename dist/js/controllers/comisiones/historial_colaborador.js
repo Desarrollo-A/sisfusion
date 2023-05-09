@@ -8,7 +8,7 @@ $('#filtro33').change(function(ruta){
     $("#filtro44").empty().selectpicker('refresh');
     getAssimilatedCommissions(residencial, condominio);
     $.ajax({
-        url: general_base_url+'Contratacion/lista_proyecto_dos/',
+        url: general_base_url+'Contratacion/lista_proyecto/',
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -43,7 +43,7 @@ $('#filtro35').change(function(ruta){
     param = $('#param').val();
     $("#filtro45").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Contratacion/lista_proyecto_dos/',
+        url: general_base_url+'Contratacion/lista_proyecto/',
         type: 'post',
         dataType: 'json',
         success:function(response){

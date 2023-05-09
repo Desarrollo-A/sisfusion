@@ -210,9 +210,9 @@ public function getStatusMktdPreventa(){
     }
     public function consultProspects_sbdir()
     {
- /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
- $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
- /*-------------------------------------------------------------------------------*/
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("clientes/consulta_prospecto_sbdir",$datos);
     }
@@ -1296,7 +1296,7 @@ public function getStatusMktdPreventa(){
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
-            $data["id_subdirector"] = $this->session->userdata('id_lider');
+            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
             $data["id_regional_2"] = $this->session->userdata('id_regional_2');
         }
@@ -2998,14 +2998,12 @@ public function getStatusMktdPreventa(){
         $this->load->view('clientes/consulta_clientes_proyecto_view', $datos);
     }
 
-    public function getClientsByProyect($id_residencial)
-    {
-        $data = $this->Clientes_model->getClientsByProyect($id_residencial);
-        if($data != null) {
+    public function getClientsByProyect() {
+        $data = $this->Clientes_model->getClientsByProyect($this->session->userdata('id_lider'));
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 }
 

@@ -10,7 +10,6 @@ class Documentacion extends CI_Controller {
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
     }
-
     
     public function documentacion() {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
