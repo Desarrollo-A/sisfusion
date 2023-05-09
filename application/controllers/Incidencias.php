@@ -57,14 +57,126 @@ class Incidencias extends CI_Controller
           echo json_encode(array());
       }
   }
-  
+    // se borro de comisiones mismo nombre
   
   public function getUsuariosRol3($rol)
   {
-    echo json_encode($this->Comisiones_model->getUsuariosRol3($rol)->result_array());
+    echo json_encode($this->Incidencias_model->getUsuariosRol3($rol)->result_array());
   }
 
+  // se borro de comisiones mismo nombre
 
- 
+  public function getAsesoresBaja() {
+
+    $data = $this->Incidencias_model->getAsesoresBaja();
+    if($data != null) {
+        echo json_encode($data);
+    }else{
+        echo json_encode(array());
+    }
+    exit;
+  }
+
+  // se borro de comisiones mismo nombre
+  public function getUsuariosByrol($rol,$user)
+  {
+    echo json_encode($this->Incidencias_model->getUsuariosByrol($rol,$user)->result_array());
+  }
+
+    // se borro de comisiones mismo nombre
+      public function GuardarPago($id_comision)
+    {
+      $comentario_topa = $this->input->post('comentario_topa');
+      $monotAdd =    $this->input->post('monotAdd');
+    
+      $respuesta = $this->Incidencias_model->GuardarPago($id_comision, $comentario_topa, $monotAdd);
+      echo json_encode($respuesta); 
+    }
+    // se mantuvo en comiones porque otra vista se ocupa.
+    public function SaveAjuste($opc = '')
+    {
+    $id_comision = $this->input->post('id_comision');
+    $id_usuario = $this->input->post('id_usuario');
+    $id_lote =    $this->input->post('id_lote');
+    $porcentaje = $pesos=str_replace("%", "", $this->input->post('porcentaje'));
+    $porcentaje_ant = $this->input->post('porcentaje_ant');
+
+    $comision_total = $pesos=str_replace(",", "", $this->input->post('comision_total'));
+
+    $respuesta = $this->Incidencias_model->SaveAjuste($id_comision,$id_lote,$id_usuario,$porcentaje,$porcentaje_ant,$comision_total,$opc);
+
+    
+    echo json_encode($respuesta); 
+    }
+// se borro de comisiones mismo nombre
+    public function CederComisiones(){
+
+      $idAsesorOld = $this->input->post('asesorold');
+      $rol = $this->input->post('roles2');
+      $newUsuario = $this->input->post('usuarioid2');
+      $comentario= $this->input->post('comentario');
+      $respuesta = array($this->Incidencias_model->CederComisiones($idAsesorOld,$newUsuario,$rol));
+      echo json_encode($respuesta[0]);
+    }
+// se borro de comisiones mismo nombre
+      
+    public function UpdateInventarioClient(){
+      $usuarioOld=0;
+      $asesor=$this->input->post('asesor');
+      $coordinador = $this->input->post('coordinador');
+      $gerente = $this->input->post('gerente');
+      $rolSelect= $this->input->post('roles3');
+      $newColab = $this->input->post('usuarioid3');
+      $comentario=$this->input->post('comentario3');
+      $idLote=$this->input->post('idLote');
+      $idCliente=$this->input->post('idCliente');
+  
+      if($rolSelect == 7){
+        $usuarioOld=$asesor;
+      }else if($rolSelect == 9){
+        $usuarioOld=$coordinador;
+      }else if($rolSelect == 3){
+        $usuarioOld=$gerente;
+  
+      }
+      $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario));
+  
+      echo json_encode($respuesta[0]);
+    }
+
+    public function UpdateVcUser(){
+      $usuarioOld=0;
+      
+      $cuantos=$this->input->post('cuantos');
+  
+      if($cuantos == 1){
+        $asesor=$this->input->post('asesor');
+        $coordinador = $this->input->post('coordinador');
+        $gerente = $this->input->post('gerente');
+        $rolSelect= $this->input->post('rolesvc');
+        $newColab = $this->input->post('usuarioid4');
+        $comentario=$this->input->post('comentario4');
+        $idLote=$this->input->post('idLote');
+        $idCliente=$this->input->post('idCliente');
+  
+      }else if($cuantos == 2){
+  
+      }
+   
+  
+      if($rolSelect == 7){
+        $usuarioOld=$asesor;
+      }else if($rolSelect == 9){
+        $usuarioOld=$coordinador;
+      }else if($rolSelect == 3){
+        $usuarioOld=$gerente;
+  
+      }
+      $respuesta = array($this->Incidencias_model->UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$cuantos));
+  
+        echo json_encode($respuesta[0]);
+  
+    }
+
 
 }

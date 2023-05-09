@@ -3009,17 +3009,7 @@ public function LiquidarLote(){
         }
     }
 
-    public function getInCommissions($lote)
-    {
-        $datos = array();
-        $datos = $this->Comisiones_model->getInCommissions($lote);
-        if ($datos != null) {
-            echo json_encode($datos);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
+   
     public function getCommissionsWithoutPaymentInNeodata(){
         $datos=array();
         $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
@@ -5309,16 +5299,6 @@ public function ToparComision($id_comision,$idLote = '')
 }
 
 
-public function GuardarPago($id_comision)
-{
-  $comentario_topa = $this->input->post('comentario_topa');
-  $monotAdd =    $this->input->post('monotAdd');
- 
-  $respuesta = $this->Comisiones_model->GuardarPago($id_comision, $comentario_topa, $monotAdd);
-  echo json_encode($respuesta); 
-}
-
-
 
 
 public function SaveAjuste($opc = '')
@@ -5433,27 +5413,6 @@ public function getDesarrolloSelectINTMEX($a = ''){
 }
 
 
-public function getAsesoresBaja() {
-
-  $data = $this->Comisiones_model->getAsesoresBaja();
-  if($data != null) {
-      echo json_encode($data);
-  }else{
-      echo json_encode(array());
-  }
-  exit;
-}
-
-public function CederComisiones(){
-
-  $idAsesorOld = $this->input->post('asesorold');
-  $rol = $this->input->post('roles2');
-  $newUsuario = $this->input->post('usuarioid2');
-  $comentario= $this->input->post('comentario');
-   $respuesta = array($this->Comisiones_model->CederComisiones($idAsesorOld,$newUsuario,$rol));
-  echo json_encode($respuesta[0]);
-}
-
 public function datosLotesaCeder($id_usuario){
 
   $respuesta = array($this->Comisiones_model->datosLotesaCeder($id_usuario));
@@ -5477,67 +5436,7 @@ function getDatosAbonadoDispersion3($idlote){
   echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion3($idlote)->result_array());
 }
 
-public function getUsuariosByrol($rol,$user)
-  {
-    echo json_encode($this->Comisiones_model->getUsuariosByrol($rol,$user)->result_array());
-  }
-  public function UpdateInventarioClient(){
-    $usuarioOld=0;
-    $asesor=$this->input->post('asesor');
-    $coordinador = $this->input->post('coordinador');
-    $gerente = $this->input->post('gerente');
-    $rolSelect= $this->input->post('roles3');
-    $newColab = $this->input->post('usuarioid3');
-    $comentario=$this->input->post('comentario3');
-    $idLote=$this->input->post('idLote');
-    $idCliente=$this->input->post('idCliente');
-
-    if($rolSelect == 7){
-      $usuarioOld=$asesor;
-    }else if($rolSelect == 9){
-      $usuarioOld=$coordinador;
-    }else if($rolSelect == 3){
-      $usuarioOld=$gerente;
-
-    }
-    $respuesta = array($this->Comisiones_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario));
-
-    echo json_encode($respuesta[0]);
-  }
-
-  public function UpdateVcUser(){
-    $usuarioOld=0;
-    
-    $cuantos=$this->input->post('cuantos');
-
-    if($cuantos == 1){
-      $asesor=$this->input->post('asesor');
-      $coordinador = $this->input->post('coordinador');
-      $gerente = $this->input->post('gerente');
-      $rolSelect= $this->input->post('rolesvc');
-      $newColab = $this->input->post('usuarioid4');
-      $comentario=$this->input->post('comentario4');
-      $idLote=$this->input->post('idLote');
-      $idCliente=$this->input->post('idCliente');
-
-    }else if($cuantos == 2){
-
-    }
  
-
-    if($rolSelect == 7){
-      $usuarioOld=$asesor;
-    }else if($rolSelect == 9){
-      $usuarioOld=$coordinador;
-    }else if($rolSelect == 3){
-      $usuarioOld=$gerente;
-
-    }
-    $respuesta = array($this->Comisiones_model->UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$cuantos));
-
-      echo json_encode($respuesta[0]);
-
-  }
   public function getLideres($lider)
   {
     echo json_encode($this->Comisiones_model->getLideres($lider)->result_array());
@@ -5553,10 +5452,7 @@ public function getUsuariosByrol($rol,$user)
     echo json_encode($respuesta[0]);
   }
 
-  public function getUsuariosRol3($rol)
-  {
-    echo json_encode($this->Comisiones_model->getUsuariosRol3($rol)->result_array());
-  }
+
 
   public function CancelarDescuento(){
     $id_pago = $this->input->post('id_pago');
