@@ -1828,7 +1828,7 @@ function GuardarPago(i){
 
     $.ajax({
         method: 'POST',
-        url: general_base_url+'Comisiones/GuardarPago/'+id_comision,
+        url: general_base_url+'/GuardarPago/'+id_comision,
         data: formData,
         processData: false,
         contentType: false,
@@ -2033,7 +2033,7 @@ function SaveAjuste(i){
     formData.append("comision_total", comision_total);
 
     $.ajax({
-        url: general_base_url+'Comisiones/SaveAjuste',
+        url: general_base_url+'SaveAjuste',
         data: formData,
         cache: false,
         contentType: false,
@@ -2054,7 +2054,7 @@ $("#form_ceder").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_ceder"));
     formData.append("dato", "valor");
     $.ajax({
-        url: general_base_url+'Comisiones/CederComisiones',
+        url: general_base_url+'CederComisiones',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2096,7 +2096,7 @@ $("#form_inventario").on('submit', function(e){
 
     let formData = new FormData(document.getElementById("form_inventario"));
     $.ajax({
-        url: general_base_url+'Comisiones/UpdateInventarioClient',
+        url: general_base_url+'UpdateInventarioClient',
         data: formData,
         method: 'POST',
         contentType: false,
@@ -2142,7 +2142,7 @@ $("#form_vc").on('submit', function(e){
 
     let formData = new FormData(document.getElementById("form_vc"));
     $.ajax({
-        url: general_base_url+'Comisiones/UpdateVcUser',
+        url: general_base_url+'UpdateVcUser',
         data: formData,
         method: 'POST',
         contentType: false,
