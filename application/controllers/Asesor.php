@@ -2842,8 +2842,10 @@ class Asesor extends CI_Controller
             <td width="23%">' . $id_acta_c . '</td>
             <td width="27%">' . $id_poder . '</td>
             <td width="29%" colspan="2">' . $id_apoderado . '</td>
-            </tr>
-
+            </tr>';
+             
+            if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null){
+            $html .= '<tr>    
             <tr>
             <td></td>
             <td width="15%"><b>RFC:</b> ' . $rfc . '</td>
@@ -2851,10 +2853,10 @@ class Asesor extends CI_Controller
             <td width="23%"><b>CP:</b> ' . $cp_fac . '</td>
             <td width="27%"></td>
             <td width="29%" colspan="2"></td>
-            </tr>
- 
+            </tr>';
+            }
 
-            </table>
+            $html .= '</table>
             </td>
             </tr>
 
