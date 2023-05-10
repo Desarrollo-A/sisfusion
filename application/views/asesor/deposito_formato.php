@@ -1375,12 +1375,18 @@
         checkbox.addEventListener("change", function() {
 
             if (checkbox.checked) {
+                $('#regimenFiscal').prop('required',true);
+                $('#rfc').prop('required',true);
+                $('#cp_fac').prop('required',true);
                 campo1.style.display = "block";
                 campo2.style.display = "block";
                 campo3.classList.remove("d-none");
                 campo5.style.display = "block";
                 campo6.style.display = "block";
             } else {
+                $('#regimenFiscal').prop('required',false);
+                $('#rfc').prop('required',false);
+                $('#cp_fac').prop('required',true);
                 campo1.style.display = "none";
                 campo2.style.display = "none";
                 campo3.classList.add("d-none");
