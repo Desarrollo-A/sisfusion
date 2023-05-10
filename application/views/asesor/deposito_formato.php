@@ -164,6 +164,7 @@
                         </div>
                     </div>
                     
+
                     <div class="col-10 col-sm-10 col-md-7 col-lg-7">
                         <div class="form-group label-floating overflow-hidden">
                             <div class="d-none" name="regimenl" id="regimenl">
@@ -186,14 +187,13 @@
                     <div class="col-10 col-sm-10 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
-                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
-                            onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
+                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
                     <div class="col-2 col-sm-2 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
-                            <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
+                            <input class="form-control input-gral" onblur="validarCodigoPostal(this)"  style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
                         </div>
                     </div>    
                 </div>
@@ -380,7 +380,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO PARTICULAR (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral letrasNumeros" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
+                            <input class="form-control input-gral" required="true" name="domicilio_particular" id="domicilio_particular" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_particular?>"/>
                         </div>
                     </div>               
                 </div>
@@ -419,7 +419,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">DOMICILIO EMPRESA</label>
-                            <input class="form-control input-gral letrasNumeros" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
+                            <input class="form-control input-gral" name="domicilio_empresa" id="domicilio_empresa" <?php echo $readOnly; ?> type="text" value="<?=$cliente[0]->domicilio_empresa?>"/>
                         </div>
                     </div>                
                 </div>  
@@ -744,7 +744,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->nombreResidencial?>"/>
+                            <input class="form-control input-gral espaciosOff" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true"  value="<?=$cliente[0]->nombreResidencial?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -1012,7 +1012,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
-                            <textarea class="form-control pr-2 pl-2 espaciosOff" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
+                            <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -1027,7 +1027,7 @@
 
                         
                             <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_usuario') == 2752  || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
-                                <h4 class="label-on-left mb-0">ENVIAR VÍA EMAIL</h4>
+                                <h4 class="label-on-left mb-0">ENVIAR DS AL CLIENTE</h4>
                                 <input id="pdfOK" name="pdfOK" type="checkbox">
                                 <label class="switch" for="pdfOK"></label>
                             <?php } ?>
@@ -1151,8 +1151,14 @@
     function validarRFC(input) {
         const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
         if (!regex.test(input.value)) {
-            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
-            
+            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning'); 
+        }
+    }
+
+    function validarCodigoPostal(input) {
+        const regex = /^\d{5}$/;
+        if (!regex.test(input.value)) {
+            alerts.showNotification('top', 'right', 'El código postal debe contener 5 dígitos numéricos.', 'warning');
         }
     }
 
@@ -1246,16 +1252,6 @@
       }
     }
 
-    // function validarLetras(event) {
-    // const input = event.target;
-    // const regex = /[^a-zA-Z]/g;
-    // input.value = input.value.replace(regex, '');
-    // }
-
-    // function mayus(e) {
-    // e.value = e.value.toUpperCase();
-    // }
-
     $( ".letrasCaracteres" ).on( "focusout", function(){
         const input = event.target;
         input.value = input.value.trim();
@@ -1282,8 +1278,6 @@
         const input = event.target;
         input.value = input.value.trim();
     });
-
-
 
     function historialCampoHtml(data) {
         let html = '<h3>Historial de movimientos</h3>';

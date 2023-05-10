@@ -28,33 +28,15 @@ class Asesor_model extends CI_Model
                                 LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad 
                                 LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil 
                                 LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial
-                                LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 88  
+                                LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
                                 WHERE cl.id_cliente = " . $id_cliente . " 
                                 AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19");
     }
 
-    function getinfoCopropietario($id_cliente)
-    {
-        /*return $this->db->query("SELECT cop.id_cliente, cop.nombre, apellido_paterno, apellido_materno, rfc, correo, telefono, telefono_2, fecha_nacimiento, conyuge, domicilio_particular,
-                                originario_de, ocupacion, empresa, posicion, antiguedad, direccion, edadFirma, ox.nombre as personalidad_juridica, ox2.nombre as nacionalidad, ox3.nombre as estado_civil, 
-                                ox4.nombre as regimen_matrimonial, ox5.nombre as tipo_vivienda
-                                 FROM copropietarios cop 
-                                 LEFT JOIN opcs_x_cats ox ON ox.id_opcion = cop.personalidad_juridica 
-                                 LEFT JOIN opcs_x_cats ox2 ON ox2.id_opcion = cop.nacionalidad 
-                                 LEFT JOIN opcs_x_cats ox3 ON ox3.id_opcion = cop.estado_civil 
-                                 LEFT JOIN opcs_x_cats ox4 ON ox4.id_opcion = cop.regimen_matrimonial 
-                                 LEFT JOIN opcs_x_cats ox5 ON ox5.id_opcion = cop.tipo_vivienda 
-                                 WHERE cop.estatus = 1 AND ox.id_catalogo = 10 AND ox2.id_catalogo = 11 AND ox3.id_catalogo = 18 
-                                 AND ox4.id_catalogo = 19  AND ox5.id_catalogo = 20 AND id_cliente = ".$id_cliente."");*/
-
-
-        return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
-                                    co.nacionalidad as nacionalidad_valor, co.nombre as 
-                                    nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
-                                    originario_de, conyuge, domicilio_particular, personalidad_juridica, 
-                                    ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
-                                    FROM copropietarios co 
-                                    WHERE co.estatus = 1 AND co.id_cliente =" . $id_cliente);
+    function getinfoCopropietario($id_cliente){
+        return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
+        FROM copropietarios co 
+        WHERE co.estatus = 1 AND co.id_cliente =" . $id_cliente);
     }
 
 
@@ -264,7 +246,7 @@ class Asesor_model extends CI_Model
 
     function getFiscalRegime()
     {
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 88 AND estatus = 1 ORDER BY nombre");
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 92 AND estatus = 1 ORDER BY nombre");
     }
 
     function getState()
@@ -328,11 +310,7 @@ class Asesor_model extends CI_Model
         if ($this->session->userdata('id_rol') == 6) {
 
 
-<<<<<<< HEAD
-            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni,  
-=======
             $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni, 
->>>>>>> ecc718
             descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''
@@ -1687,7 +1665,7 @@ class Asesor_model extends CI_Model
 
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 88) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
 
    
