@@ -2842,21 +2842,19 @@ class Asesor extends CI_Controller
             <td width="23%">' . $id_acta_c . '</td>
             <td width="27%">' . $id_poder . '</td>
             <td width="29%" colspan="2">' . $id_apoderado . '</td>
-            </tr>';
-             
-            if ($rfc != '' && $rfc != null){
-            $html .= '<tr>    
+            </tr>
+
             <tr>
             <td></td>
-            <td width="15%"><b>RFC:</b> ' . $rfc . '</td>
-            <td width="50%"><b>REF:</b> ' . $reg_fis . '</td>
+            <td width="25%"><b>RFC:</b> ' . $rfc . '</td>
+            <td width="43%"><b>REF:</b> ' . $reg_fis . '</td>
             <td width="23%"><b>CP:</b> ' . $cp_fac . '</td>
             <td width="27%"></td>
             <td width="29%" colspan="2"></td>
-            </tr>';
-            }
+            </tr>
+ 
 
-            $html .= '</table>
+            </table>
             </td>
             </tr>
 
