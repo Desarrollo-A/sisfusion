@@ -1230,7 +1230,7 @@ class Asesor extends CI_Controller
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
                 $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 88) // UR: REGIMEN FISCAL
+            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
                 $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
         }
 
@@ -2241,7 +2241,7 @@ class Asesor extends CI_Controller
                 $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 88) // UR: REGIMEN FISCAL
+            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
                 $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
         }
         $nacionalidades2 = $arrayobj1;
