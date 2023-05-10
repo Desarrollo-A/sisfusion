@@ -100,7 +100,7 @@
     <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
-                <div class="modal-header">
+                <div class="modal-header" id="integracionEx">
                     <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
                 </div>
                 <div class="modal-body">
