@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
-class Kel_XML extends CI_Controller
+class XMLDownload extends CI_Controller
 {
   public function __construct()
   {
