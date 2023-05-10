@@ -143,18 +143,18 @@
     }
     
 	public function getdp_DS($lotes) {
-        return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
-		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellapellidoPaternoido_paterno, ' ', cl.apellidoMaterno)) nombreCliente,
-		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-        lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-		'ds_old' tipo_doc
-		FROM cliente_consulta cl
-		INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
-		INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
-		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-		WHERE cl.status=1 AND l.status=1 AND cl.idLote=".$lotes);
-        return $query->result_array();
+        return $this->db->query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
+			'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, l.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
+			cl.rfc, cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
+			l.idLote, l.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
+			'ds_old' tipo_doc
+			FROM cliente_consulta cl
+			INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
+			INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
+			INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
+			INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+			WHERE cl.status=1 AND l.status=1 AND cl.idLote=".$lotes)
+			->result_array();
     }
 
 
@@ -4862,75 +4862,6 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
             return $query;
         }
     }
-    public function getLotesAsesorTest($condominio,$residencial){
-        switch ($this->session->userdata('id_rol')) {
-            case '3': // GERENTE
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE (clientes.id_asesor = ".$this->session->userdata('id_usuario')." OR 
-                                        clientes.id_coordinador = ".$this->session->userdata('id_usuario')." OR 
-                                        clientes.id_gerente = ".$this->session->userdata('id_usuario').") AND lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            case '4': // ASISTENTE DIRECTOR
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                                        UNION ALL
-                                        SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-                                        INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                                        WHERE vc.estatus = 1 AND clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            case '5': // ASISTENTE SUBDIRECTOR
-
-                $sede = ($this->session->userdata('id_sede') == 3 || $this->session->userdata('id_sede') == 6) ? '3,6' : $this->session->userdata('id_sede');
-
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN (".$sede.")) 
-                                        AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                                       UNION ALL
-                                       SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-                                        INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                                        WHERE vc.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN (".$sede."))  AND vc.estatus = 1 AND 
-                                        clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            case '6': // ASISTENTE GERENTE
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE (clientes.id_asesor = ".$this->session->userdata('id_lider')." OR 
-                                        clientes.id_coordinador = ".$this->session->userdata('id_lider')." OR clientes.id_gerente = ".$this->session->userdata('id_lider').") AND lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                                        UNION ALL
-                                        SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida  FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-                                        INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                                        WHERE (vc.id_asesor = ".$this->session->userdata('id_lider')." OR vc.id_coordinador = ".$this->session->userdata('id_lider')." 
-                                        OR vc.id_gerente = ".$this->session->userdata('id_lider').") AND vc.estatus = 1 AND 
-                                        clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            case '7': // ASESOR
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_asesor = ".$this->session->userdata('id_usuario')." AND lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            case '9': // COORDINADOR
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE (clientes.id_asesor = ".$this->session->userdata('id_usuario')." 
-                                        OR clientes.id_coordinador = ".$this->session->userdata('id_usuario').") AND lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-            default: // SEE EVERYTHING
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor FROM lotes
-                                        INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE lotes.status = 1
-                                        AND clientes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
-                break;
-        }
-        if($query){
-            $query = $query->result_array();
-            return $query;
-        }
-    }
-
 
 	public function updateDoc($data,$tipo,$idCliente,$idDocumento){
 		$this->db->where("tipo_doc", $tipo);

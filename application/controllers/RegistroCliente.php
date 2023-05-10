@@ -8156,9 +8156,11 @@ class RegistroCliente extends CI_Controller {
 
 
   public function expedientesWS($lotes, $cliente = '') {
-    $query = $this->registrolote_modelo->getdp($lotes,$cliente);
-    if(count($query) <= 0)
-      $query = $this->registrolote_modelo->getdp_DS($lotes);
+    $query = $this->registrolote_modelo->getdp($lotes, $cliente);
+    if (count($query) <= 0) {
+        $query = $this->registrolote_modelo->getdp_DS($lotes);
+    }
+
     $data = array_merge(
       $query,
       $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
@@ -8166,10 +8168,12 @@ class RegistroCliente extends CI_Controller {
       $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
       $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
     );
-    if($data != null)
+
+    if ($data != null) {
         echo json_encode($data);
-    else
+    } else {
         echo json_encode(array());
+    }
   }
 
 
