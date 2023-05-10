@@ -1418,7 +1418,7 @@
 }
 
 #mainBoxDS #mainContainer input:checked + .switch::before {
-  left: 27px;
+  left: 50%;
   background: #ffffff;
 }
 

@@ -99,12 +99,12 @@
     <!-- modal  ENVIA A CONTRALORIA 2-->
     <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
-            <div class="modal-content" >
+            <div class="modal-content">
                 <div class="modal-header" id="integracionEx">
-                    <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
+                    <h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <textarea class="form-control" id="comentario" rows="3" placeholder="Comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
