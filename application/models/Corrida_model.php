@@ -159,8 +159,13 @@
     /*modificada by MJ*/
     public function getDescuentos()
     {
-        $query = $this->db->query('SELECT descuentos.porcentaje, relaciones.id_paquete, relaciones.prioridad, descuentos.apply, descuentos.id_condicion, 
-            relaciones.id_descuento,  relaciones.msi_descuento FROM [relaciones] inner join [descuentos] on relaciones.id_descuento = descuentos.id_descuento order by prioridad');
+        $query = $this->db->query('SELECT descuentos.porcentaje, relaciones.id_paquete, relaciones.prioridad, c.apply, descuentos.id_condicion, 
+            relaciones.id_descuento,  relaciones.msi_descuento 
+            FROM [relaciones] 
+            INNER JOIN [descuentos] ON relaciones.id_descuento = descuentos.id_descuento
+            INNER JOIN condiciones c ON descuentos.id_condicion = c.id_condicion  
+            
+            order by prioridad');
         return $query->result_array();
     }
     /*public function getDescuentos(){
