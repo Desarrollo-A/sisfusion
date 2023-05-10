@@ -2844,7 +2844,7 @@ class Asesor extends CI_Controller
             <td width="29%" colspan="2">' . $id_apoderado . '</td>
             </tr>';
              
-            if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null){
+            if ($rfc != '' && $rfc != null){
             $html .= '<tr>    
             <tr>
             <td></td>
