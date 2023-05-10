@@ -1209,7 +1209,9 @@ class Asesor extends CI_Controller
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        $datos["cliente"][0]->tipo_nc = ($datos["cliente"][0]->tipo_nc== '' || $datos["cliente"][0]->tipo_nc ==null) ? 3 : $datos["cliente"][0]->tipo_nc;
+
+        $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
+
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
         if (count($datos["referencias"]) < 1) {
             $aray1 = array(

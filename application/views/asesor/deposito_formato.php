@@ -164,6 +164,7 @@
                         </div>
                     </div>
                     
+
                     <div class="col-10 col-sm-10 col-md-7 col-lg-7">
                         <div class="form-group label-floating overflow-hidden">
                             <div class="d-none" name="regimenl" id="regimenl">
@@ -186,14 +187,13 @@
                     <div class="col-10 col-sm-10 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" name="rfcl" id="rfcl" style="display:none;">RFC</h4>
-                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?>
-                            onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
+                            <input type="text"  pattern="[A-Za-z0-9]+" onblur="validarRFC(this)" class="form-control input-gral" oninput="this.value = this.value.toUpperCase()" name="rfc" id="rfc" style="display:none;" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==13) return false;" value="<?php echo $cliente[0]->rfc; ?>">   
                         </div>
                     </div>
                     <div class="col-2 col-sm-2 col-md-2 col-lg-2">
                         <div class="form-group">
                             <h4 class="label-on-left m-0" style="display:none;" name="codigol" id="codigol">CÓDIGO POSTAL</h4>
-                            <input type="number" class="form-control input-gral" min="20000" max="99998" style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
+                            <input class="form-control input-gral" onblur="validarCodigoPostal(this)"  style="display:none;" name="cp_fac" id="cp_fac" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp_fac; ?>">        
                         </div>
                     </div>    
                 </div>
@@ -1151,8 +1151,14 @@
     function validarRFC(input) {
         const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
         if (!regex.test(input.value)) {
-            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
-            
+            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning'); 
+        }
+    }
+
+    function validarCodigoPostal(input) {
+        const regex = /^\d{5}$/;
+        if (!regex.test(input.value)) {
+            alerts.showNotification('top', 'right', 'El código postal debe contener 5 dígitos numéricos.', 'warning');
         }
     }
 
