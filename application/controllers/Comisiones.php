@@ -757,7 +757,7 @@ function update_estatus(){
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;
+    $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
 
       if( $consulta_comisiones->num_rows() > 0 ){
 
@@ -1256,7 +1256,7 @@ function update_estatus(){
 
     $validar_user = $this->session->userdata('id_usuario');
     $validar_sede = $this->session->userdata('id_sede');
-    $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
+    $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     date_default_timezone_set('America/Mexico_City');       
     $fecha_actual = strtotime($obtenerFechaSql);
       //fecha inicio
@@ -1616,7 +1616,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
 
       date_default_timezone_set('America/Mexico_City');    
-      $obtenerFechaSql = $this->db->query("Select FORMAT(SYSDATETIME(), 'yyyy-MM-dd hh:mm:ss') as sysdatetime")->row()->sysdatetime;   
+      $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
       $fecha_actual = strtotime($obtenerFechaSql);
 
        //fecha inicio
