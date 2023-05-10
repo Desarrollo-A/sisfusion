@@ -1057,9 +1057,7 @@ class Asesor extends CI_Controller
             $data[$i]['id_coordinador'] = $query[0]->id_coordinador;
             $data[$i]['id_gerente'] = $query[0]->id_gerente;
             $data[$i]['id_sede'] = $query[0]->id_sede;
-            $data[$i]['nombre'] = $query[0]->nombre;
-            $data[$i]['apellido_paterno'] = $query[0]->apellido_paterno;
-            $data[$i]['apellido_materno'] = $query[0]->apellido_materno;
+            $data[$i]['nombreCliente'] = $query[0]->nombreCliente;
             $data[$i]['idLote'] = $query[0]->idLote;
             $data[$i]['fechaApartado'] = $query[0]->fechaApartado;
             $data[$i]['fechaVencimiento'] = $query[0]->fechaVencimiento;
@@ -1086,6 +1084,7 @@ class Asesor extends CI_Controller
             $data[$i]['gerente'] = $query[0]->gerente;
             $data[$i]['subdirector'] = $query[0]->subdirector;
             $data[$i]['regional'] = $query[0]->regional;
+            $data[$i]['regional2'] = $query[0]->regional2;
             $data[$i]['estatus'] = $query[0]->estatus;
             $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
         }
