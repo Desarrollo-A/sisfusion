@@ -196,8 +196,9 @@
                                             <th>GERENTE</th>
                                             <th>SUBDIRECTOR</th>
                                             <th>DIRECTOR REGIONAL</th>
-                                            <th>FECHA APARTADO</th>
-                                            <th>FECHA VENCIMIENTO</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>FECHA DE APARTADO</th>
+                                            <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
                                             <th>ACCIONES</th>

@@ -8117,15 +8117,15 @@ class RegistroCliente extends CI_Controller {
 		$data["modificado"]=date("Y-m-d H:i:s");
 		$data["idUser"]=0;
 
-            $carpeta = '';
-            if($id_tipoDoc == 31){
-                $carpeta = 'autFechainicio';
-            }else{
-                $carpeta = 'expediente';
-            }
+        $carpeta = '';
+        if($id_tipoDoc == 31){
+            $carpeta = 'autFechainicio';
+        }else{
+            $carpeta = 'expediente';
+        }
 
 		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
+        $file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
 
 
 		if(file_exists($file)){
@@ -8155,26 +8155,21 @@ class RegistroCliente extends CI_Controller {
 	}
 
 
-  public function expedientesWS($lotes,$cliente = '') {
-      $query = $this->registrolote_modelo->getdp($lotes,$cliente);
-        if(count($query) <= 0){
-            $query = $this->registrolote_modelo->getdp_DS($lotes);
-        }
-        
-        $data = array_merge(
-          $query,
-          $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
-          $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
-          $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
-          $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
-        );
-
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
+  public function expedientesWS($lotes, $cliente = '') {
+    $query = $this->registrolote_modelo->getdp($lotes,$cliente);
+    if(count($query) <= 0)
+      $query = $this->registrolote_modelo->getdp_DS($lotes);
+    $data = array_merge(
+      $query,
+      $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
+      $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
+      $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
+      $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
+    );
+    if($data != null)
+        echo json_encode($data);
+    else
+        echo json_encode(array());
   }
 
 

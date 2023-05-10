@@ -150,6 +150,8 @@ $(document).ready(function () {
                         BtnStats = 'Asignar Subdirector';
                     }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
                         BtnStats = 'Asignar Sede';
+                    }else if(d.referencia==null || d.referencia==''|| d.referencia==0) {
+                        BtnStats = 'Asignar Referencia';
                     }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
                         BtnStats = 'Asignar Plan <br> Sede:'+d.sede;
                     } else{
@@ -266,7 +268,8 @@ $(document).ready(function () {
         tipo_venta = $(this).attr("data-tipov");
 
         if(parseFloat(totalNeto2) > 0){
-            
+            alert('opcion1');
+
             $("#modal_NEODATA .modal-body").html("");
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
@@ -542,6 +545,9 @@ $(document).ready(function () {
                 }); //FIN getStatusNeodata
                 
                 $("#modal_NEODATA").modal();
+            } else{
+                alert('opcion2');
+                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>El lote '+row.data().nombreLote+' presenta una inconsistencia, favor de revisar con sistemas o validar que tenga una referencia en inventario </b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             }
     }); //FIN VERIFY_NEODATA
     /**----------------------------------------------------------------------- */

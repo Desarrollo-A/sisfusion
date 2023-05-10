@@ -370,47 +370,10 @@ function fillDataTable(id_condominio) {
             titleAttr: 'Tus ventas',
             title:"Tus ventas",
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,9,10,11],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO';
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                                break;
-                            case 3:
-                                return 'CLIENTE';
-                                break;
-                            case 4:
-                                return 'COORDINADOR';
-                                break;
-                            case 5:
-                                return 'GERENTE';
-                                break;
-                            case 6:
-                                return 'SUBDIRECTOR';
-                                break;
-                            case 7:
-                                return 'REGIONAL';
-                                break;
-                            case 8:
-                                return 'FECHA APARTADO';
-                                break;
-                            case 9:
-                                return 'FECHA VENCIMIENTO';
-                                break;
-                            case 10:
-                                return 'COMENTARIO';
-                                break;
-                            case 11:
-                                return 'PROSPECTO';
-                                break;
-                        }
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
             }
@@ -424,47 +387,10 @@ function fillDataTable(id_condominio) {
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,9,10,11],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'PROYECTO';
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                                break;
-                            case 3:
-                                return 'CLIENTE';
-                                break;
-                            case 4:
-                                return 'COORDINADOR';
-                                break;
-                            case 5:
-                                return 'GERENTE';
-                                break;
-                            case 6:
-                                return 'SUBDIRECTOR';
-                                break;
-                            case 7:
-                                return 'REGIONAL';
-                                break;
-                            case 8:
-                                return 'FECHA APARTADO';
-                                break;
-                            case 9:
-                                return 'FECHA VENCIMIENTO';
-                                break;
-                            case 10:
-                                return 'COMENTARIO';
-                                break;
-                            case 11:
-                                return 'PROSPECTO';
-                                break;
-                        }
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
             }
@@ -492,11 +418,7 @@ function fillDataTable(id_condominio) {
             { "data": "nombreResidencial" },
             { "data": "nombreCondominio" },
             { "data": "nombreLote" },
-            {
-                "data": function( d ){
-                    return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
-                }
-            },
+            { "data": "nombreCliente" },
             {
                 "data": function( d ){
                     return d.coordinador;
@@ -515,6 +437,11 @@ function fillDataTable(id_condominio) {
             {
                 "data": function( d ){
                     return d.regional;
+                }
+            },
+            {
+                "data": function( d ){
+                    return d.regional2;
                 }
             },
             { "data": "fechaApartado" },
