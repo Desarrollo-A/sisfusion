@@ -77,7 +77,7 @@ class Usuarios_modelo extends CI_Model
             case '5': // ASISTENTE SUBDIRECCIÓN
                 if ($this->session->userdata('id_usuario') == 4888 || $this->session->userdata('id_usuario') == 546) // ADRIANA PEREZ && DIRCE 3 (MÉRIDA) Y 11 (MONTERREY)
                     $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%')";
-                else if ($this->session->userdata('id_usuario') == 10924 || $this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
+                else if ($this->session->userdata('id_usuario') == 10924 || $this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7324 || $this->session->userdata('id_usuario') == 5620) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%') AND usuarios.id_usuario != " . $this->session->userdata('id_lider_2') . "";
                /* else if($this->session->userdata('id_usuario') == 6831) //6831	YARETZI MARICRUZ ROSALES HERNANDEZ
                     $id_sede = "(usuarios.id_sede LIKE '%8%' OR usuarios.id_sede LIKE '%10%')";*/

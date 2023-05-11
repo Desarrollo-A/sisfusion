@@ -597,6 +597,10 @@
   margin: 0;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-pdf i {
   color: #f44336;
 }
@@ -1418,7 +1422,7 @@
 }
 
 #mainBoxDS #mainContainer input:checked + .switch::before {
-  left: 27px;
+  left: 50%;
   background: #ffffff;
 }
 
@@ -1581,7 +1585,6 @@
   border-radius: 12px;
   border: 1px solid #eee;
   background-color: #eee;
-  height: 17rem;
 }
 
 #mainBoxDS #mainContainer #checkDS .boxChecks {

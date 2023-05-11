@@ -37,26 +37,22 @@ class AdmonAccesos extends CI_Controller {
     }
 
     public function validateUserAccess() {
-        if (!isset($_GET["token"]))
-            echo json_encode(array("status" => -1, "msj" => "No viene un token informado en la petición."), JSON_UNESCAPED_UNICODE);
+        $token = file_get_contents("php://input");
+        if ($token == '')
+            echo json_encode(array("status" => -1, "msj" => "No existe un token."), JSON_UNESCAPED_UNICODE);
         else {
-            $token = $_GET["token"];
-            if ($token == '')
-                echo json_encode(array("status" => -1, "msj" => "El token viene vacío."), JSON_UNESCAPED_UNICODE);
+            $data = json_decode($this->decryptCreds($token));
+            if (!isset($data->param_user) || !isset($data->param_pass))
+                echo json_encode(array("status" => -1, "msj" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
             else {
-                $data = json_decode($this->decryptCreds($token));
-                if (!isset($data->param_user) || !isset($data->param_pass))
-                    echo json_encode(array("status" => -1, "msj" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                if ($data->param_user == '' || $data->param_pass == '')
+                    echo json_encode(array("status" => -1, "msj" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                 else {
-                    if ($data->param_user == '' || $data->param_pass == '')
-                        echo json_encode(array("status" => -1, "msj" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
-                    else {
-                        $result = $this->AdmonAccesos_model->getUserInformation($data->param_user, encriptar($data->param_pass));
-                        if (!isset($result->id_usuario))
-                            echo json_encode(array("status" => -1, "msj" => "No se logró autenticar el usuario."), JSON_UNESCAPED_UNICODE);
-                        else
-                            echo json_encode(array("status" => 1, "msj" => "Autenticado exitosamente."), JSON_UNESCAPED_UNICODE);
-                    }
+                    $result = $this->AdmonAccesos_model->getUserInformation($data->param_user, encriptar($data->param_pass));
+                    if (!isset($result->id_usuario))
+                        echo json_encode(array("status" => -1, "msj" => "No se logró autenticar el usuario."), JSON_UNESCAPED_UNICODE);
+                    else
+                        echo json_encode(array("status" => 1, "msj" => "Autenticado exitosamente."), JSON_UNESCAPED_UNICODE);
                 }
             }
         }
