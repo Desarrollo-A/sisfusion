@@ -7,7 +7,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Resguardos extends CI_Controller
 {
-  private $gph;
   public function __construct()
   {
     parent::__construct();
