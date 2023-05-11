@@ -1386,7 +1386,7 @@
             } else {
                 $('#regimenFiscal').prop('required',false);
                 $('#rfc').prop('required',false);
-                $('#cp_fac').prop('required',true);
+                $('#cp_fac').prop('required',false);
                 campo1.style.display = "none";
                 campo2.style.display = "none";
                 campo3.classList.add("d-none");
