@@ -4029,17 +4029,6 @@ class RegistroCliente extends CI_Controller {
 		exit;
 	}
 
-
-	public function registrosClienteDocumentoContratacion()
-	{
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-   $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-   /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-	}
-
 	public function registrosExpedienteVentasAsistentes(){
 		$datos=array();
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
@@ -4300,22 +4289,6 @@ class RegistroCliente extends CI_Controller {
 		}
 	}
 
-
-	public function registrosClienteDocumentosJuridico()
-	{
-		$this->validateSession();
-	       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		//$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-		$this->load->view("juridico/datos_cliente_documentos_juridico_view",$datos);
-	}
-
-
-
-
 	public function historialJuridico($idCliente){
 		$datos["bitacora"] = $this->registrolote_modelo->ConsultJuridico($idCliente);
 		$this->load->view('historial_juridico_view', $datos);
@@ -4351,17 +4324,6 @@ class RegistroCliente extends CI_Controller {
 			die("ERROR");
 		}
 	}
-
-
-	public function registrosClienteDocumentosAdministracion()
-	{
-		$datos=array();
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-
-	}
-
 
 	public function registrosClienteDocumentosPostventa(){
 		$datos=array();

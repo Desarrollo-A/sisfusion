@@ -42,16 +42,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
 	}
 
-	public function documentacion_administracion(){
-		    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-			$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-			/*-------------------------------------------------------------------------------*/
-	
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);//datos_cliente_contratacion_view
-	}
-
 	public function datos_estatus_11_datos(){
 		$data = $this->Administracion_model->get_datos_lote_11();
 		$dataPer= array();

@@ -1,11 +1,3 @@
-/**
- * TODO: Eliminar todas las vistas que mandan a llamar la vista vieja
- * Ej.
- * index.php/Contraloria/documentacion_contraloria
- * index.php/registroCliente/registrosClienteDocumentosJuridico
- * index.php/Asistente_gerente/registrosClienteDocumentosventasAsistentes
- */
-
 $('[data-toggle="tooltip"]').tooltip();
 
 const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97];

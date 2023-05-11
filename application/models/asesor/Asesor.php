@@ -623,19 +623,6 @@ class Asesor extends CI_Controller {
         }
     }
 
-
-
-
-// $this->validateSession();
-//         $datos=array();
-//         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-//         $this->load->view('template/header');
-//         $this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-
-
-
-
-
     public function depositoSeriedad()
     {
         // $this->validateSession();
@@ -648,14 +635,7 @@ class Asesor extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("asesor/DSConsult");
     }
-    public function documentacion()
-    {
-        // $this->validateSession();
-         $datos=array();
-         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);
-    }
+
     public function registrosLoteVentasAsesor()
     {
         // $this->validateSession();

@@ -811,16 +811,6 @@ class Asesor extends CI_Controller
         $this->load->view("asesor/DSConsult");
     }
 
-    public function documentacion()
-    {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);
-    }
-
     public function registrosLoteVentasAsesor()
     {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/

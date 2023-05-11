@@ -47,24 +47,7 @@ class Contraloria extends CI_Controller {
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_corrida_contraloria");
 	}
-	public function documentacion_contraloria(){
-		$this->validateSession();
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		//$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-		$this->load->view("contraloria/vista_documentacion_contraloria",$datos);
-	}
-	public function documentacion_contraloria_ds(){
-        $this->validateSession();
-        $datos=array();
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        //$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-        $this->load->view("contraloria/vista_documentacion_contraloria_ds",$datos);
-    }
+
 	public function historial_pagos_contraloria(){
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
