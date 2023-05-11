@@ -10,7 +10,7 @@
         $this->load->view('template/sidebar', $datos);
     ?>
     <style>
-        .textoshead::placeholder { color: white; }
+        .textoshead::placeholder { color: white; }    
     </style>
     <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false" style="z-index: 1600;top: 30%;" >
@@ -37,7 +37,6 @@
                 <div class="modal-header">
                     <h4 class="modal-title"><b>Solicitar</b> autorización.</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 class=""></h5>
                 </div>
                 <form id="my-edit-form" name="my-edit-form" method="post">
                     <div class="modal-body">
@@ -57,7 +56,6 @@
                     <h4 class="modal-title"><b>Asignar</b> prospecto al cliente
                         <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
                         <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
-                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                     <h5 class=""></h5>
                     <input type="hidden" id="id_cliente_asignar" name="id_cliente_asignar">
                     <div class="modal-body">
@@ -66,7 +64,7 @@
                                 <thead>
                                 <th>Nombre</th>
                                 <th>Correo</th>
-                                <th>Telefono</th>
+                                <th>Teléfono</th>
                                 <th>Información prospecto</th>
                                 <th>Asignar</th>
                                 </thead>
@@ -101,13 +99,12 @@
     <!-- modal  ENVIA A CONTRALORIA 2-->
     <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4></center>
+            <div class="modal-content">
+                <div class="modal-header" id="integracionEx">
+                    <h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario" rows="3"></textarea>
+                    <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
@@ -198,9 +195,10 @@
                                             <th>COORDINADOR</th>
                                             <th>GERENTE</th>
                                             <th>SUBDIRECTOR</th>
-                                            <th>REGIONAL</th>
-                                            <th>FECHA APARTADO</th>
-                                            <th>FECHA VENCIMIENTO</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>FECHA DE APARTADO</th>
+                                            <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
                                             <th>ACCIONES</th>
@@ -242,16 +240,16 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                        <center><h4 class="modal-title"><label>Integración de expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" id="comentario3" rows="3"></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save3" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary"></i> Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>

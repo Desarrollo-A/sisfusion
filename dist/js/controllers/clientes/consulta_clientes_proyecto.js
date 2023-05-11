@@ -1,29 +1,4 @@
-$( document ).ready(function() {
-    $.post(general_base_url + "Contratacion/lista_proyecto", function(data) {
-        var len = data.length;
-        for(var i = 0; i<len; i++)
-        {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-
-        $("#proyecto").selectpicker('refresh');
-    }, 'json');
-});
-
-$(document).on('change','#proyecto', function() {
-    id_proyecto = $("#proyecto").val();
-
-    getClientsByProyect(id_proyecto);
-
-
-    $(window).resize(function(){
-        tabla_clientes.columns.adjust();
-    });
-});
-
-function getClientsByProyect(id_proyecto){
+$( document ).ready(function() {   
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
     $('#tabla_clientes thead tr:eq(0) th').each( function (i) {
@@ -45,7 +20,7 @@ function getClientsByProyect(id_proyecto){
     $('#tabla_clientes').DataTable({
         destroy: true,
         ajax:{
-            url: 'getClientsByProyect/'+id_proyecto,
+            url: 'getClientsByProyect/',
             dataSrc: "",
             type: "POST",
             cache: false
@@ -88,26 +63,26 @@ function getClientsByProyect(id_proyecto){
                 {data: 'proyecto'},
                 {data: 'nombre_condominio'},
                 {data: 'nombreLote'},
-                {data: 'StatusContratacion'},
-                {data: 'StatusLote'},
                 {data: 'nombre_completo'},
+                {data: 'fechaApartado'},
                 {
-                    "data": function(d){
-                        return '<p>'+myFunctions.convertDateYMDHMS(d.fechaApartado)+'</p>';
+                    data: function (d) {
+                        return (d.fecha_nacimiento == null || d.fecha_nacimiento == '' ? 'SIN ESPECIFICAR' : d.fecha_nacimiento);
                     }
                 },
-                {data: 'nombre'},
-                {data: 'fecha_nacimiento'},
                 {
-                    "data": function (d) {
-                        if (d.edad == null || d.edad == 'null') {
-                            return '<center>'+ d.edadFirma+'<p><p> <span class="label label-danger" style="background:#00bcd41f; color:#00bcd4">Edad de firma</span> </center>';
-                        }else{
+                    data: function (d) {
+                        if (d.edad == null || d.edad == 'null')
+                            return 'SIN ESPECIFICAR';
+                        else
                             return d.edad;
-                        }
                     }
                 },
-                {data: 'ocupacion'}
+                {
+                    data: function (d) {
+                        return (d.ocupacion == null || d.ocupacion == '') ? 'SIN ESPECIFICAR' : d.ocupacion;
+                    }
+                }
             ]
     });
-}
+});

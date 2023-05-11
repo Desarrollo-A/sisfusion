@@ -74,7 +74,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 
-
+    <script type="text/javascript" src="<?= base_url("dist/js/moment.js")?>"></script>
 
 
 
@@ -329,10 +329,10 @@
             position: fixed;
         }
         .btn-simular{
-             background-color: #103f75;
-             color:white;
-             width: 100%;
-         }
+            background-color: #103f75;
+            color:white;
+            width: 100%;
+        }
         .btn-simular:hover{
             background-color: #0d214c;
             color:#f2f2f2;
@@ -745,16 +745,16 @@
                                                 <label>Días para pagar Enganche: </label>
                                                 <select ng-model="day" id="day"
                                                         ng-options="item.day for item in diasEnganche" class="form-control"
-                                                        ><!-- ng-change="daysEng(); ChengecheckEngDif"-->
+                                                ><!-- ng-change="daysEng(); ChengecheckEngDif"-->
                                                     <option value=""> - Selecciona los días de enganche -</option>
                                                 </select>
                                             </div>
                                             <div class="form-group hide" id="select_mce">
                                                 <label>Incluir mensulidades en el enganche diferido:</label><br>
-<!--                                                <select name="mensualidad_con_enganche" id="mensualidad_con_enganche" ng-change="changeDaysEng()">-->
-<!--                                                    <option value="1">Si</option>-->
-<!--                                                    <option value="2">No</option>-->
-<!--                                                </select>-->
+                                                <!--                                                <select name="mensualidad_con_enganche" id="mensualidad_con_enganche" ng-change="changeDaysEng()">-->
+                                                <!--                                                    <option value="1">Si</option>-->
+                                                <!--                                                    <option value="2">No</option>-->
+                                                <!--                                                </select>-->
                                                 <input type="checkbox" name="mensualidad_con_enganche" ng-model="mensualidad_con_enganche" id="mensualidad_con_enganche" >
                                                 <!-- ng-change="checkMensualidadEnganche()"-->
                                             </div>
@@ -1430,7 +1430,6 @@
                 //
                 // }
                 if($scope.inicioMensualidad==3){
-                    
 
                     var cntFechaCustom  =  angular.element( document.getElementById("cnt-fechaCustom"));
                     var offsetCnt  =  angular.element( document.getElementById("offsetCnt"));
@@ -1493,7 +1492,6 @@
 
                 ///////////////////////////////////////
 
-                    console.log($scope.inicioMensualidad);
 
                 var applyTotal = descuentosAplicados.filter(function(condicion) {
 
@@ -2086,6 +2084,8 @@
                     }
                 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                 var ini;
                 var ini2;
                 var ini3;
@@ -2114,7 +2114,7 @@
                 //     }
                 // }
                 // else{
-                    condicion_mes = 0;
+                condicion_mes = 0;
                 // }
 
                 var month = (new Date($scope.fechaApartado).getMonth() + (1 + condicion_mes));
@@ -2160,14 +2160,14 @@
                     var mes ;
                     //
                     // if($scope.day.day=='Diferido' && $scope.mesesdiferir>0 && $scope.mensualidad_con_enganche==true){
-                        // mes = (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
-                        // console.log('$scope.fechaApartado', $scope.fechaApartado);
-                        // console.log('condicion_mes', condicion_mes);
+                    // mes = (new Date($scope.fechaApartado).getMonth() + (3+condicion_mes));
+                    // console.log('$scope.fechaApartado', $scope.fechaApartado);
+                    // console.log('condicion_mes', condicion_mes);
                     // }else{
                     console.log('$scope.apartado', $scope.apartado);
                     console.log('$scope.mesesdiferir ', $scope.mesesdiferir );
                     console.log('condicion_mes', condicion_mes);
-                        mes = ($scope.apartado>0 && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (1+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
+                    mes = ($scope.apartado>0 && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (1+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
                     // }
                     console.log('El mes a empezar es:' + mes);
 
@@ -2185,25 +2185,25 @@
                     console.log('V2');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (9+condicion_mes));
                 }
-                    else if ($scope.descDateOctubre == 1){
+                else if ($scope.descDateOctubre == 1){
                     console.log('V3');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (6+condicion_mes));
                 }
-                    else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1)
-                    {
+                else if ($scope.descDateMayoMerida == 1 || $scope.descDateMayoMeridaC == 1 || $scope.descDateMayoAllQro1 == 1 || $scope.descDateMayoAllQro2 == 1 || $scope.descDateMayoSLP == 1 || $scope.helpMxMerida1 == 1 || $scope.helpMxMerida2 == 1 || $scope.helpMxMerida3 == 1 || $scope.helpMxMerida4 == 1)
+                {
                     console.log('V4');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (1+condicion_mes));
                 }
-                    else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
+                else if ($scope.descDateSeptiembreMerida == 1 || $scope.descDateSeptiembreMeridaC == 1 || $scope.descDateSepLM4 == 1 || $scope.descDateSepLM3C == 1 || $scope.descDateSepLM4C == 1 || $scope.descDateSepL1 == 1
 
                     || $scope.descDateSepL2 == 1 || $scope.descDateSepL3 == 1 || $scope.descDateSepL4 == 1 || $scope.descDateSepL5 == 1
                     || $scope.descDateSepAllQro1 == 1 || $scope.descDateSepAllQro2 == 1){
                     console.log('V5');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (5+condicion_mes));
                 }
-                    else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
+                else if ($scope.engancheCincoMilLM == 1 || $scope.engancheVeintiCincoMilLM == 1 || $scope.engancheCincoMilL1 == 1 || $scope.engancheCincoMilL2 == 1 || $scope.engancheVeintiCincoMilL == 1
                     || $scope.cinco_milLM == 1)
-                    {
+                {
                     console.log('V6');
                     var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes)) : (new Date($scope.fechaApartado).getMonth() + (2+condicion_mes));
                 }
@@ -2851,7 +2851,12 @@
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
                             if($scope.helpMxMerida1 == 0 && $scope.helpMxMerida2 == 0 && $scope.helpMxMerida3 == 0 && $scope.helpMxMerida4 == 0){
@@ -3001,7 +3006,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -3126,7 +3136,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -3244,7 +3259,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
 
@@ -3498,7 +3518,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
 
@@ -3652,6 +3677,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -3780,7 +3811,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -3895,7 +3931,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
 
@@ -4047,7 +4088,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -4183,8 +4229,7 @@
                             // if(e == 0){
                             //     $scope.fechaPM = $scope.dateCf;
                             // }
-                             // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
-
+                            // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
                             rangEd.push({
                                 "fecha" :  day + '-' + mes + '-' + yearc,
                                 "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
@@ -4277,7 +4322,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
 
@@ -4473,7 +4523,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -4572,6 +4627,13 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
@@ -4698,7 +4760,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-                            console.log('INIT', $scope.dateCf);
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
 
@@ -4794,7 +4861,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
                             $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
@@ -4919,7 +4991,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
 
 
@@ -5134,7 +5211,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -5233,7 +5315,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
                             $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
@@ -5306,13 +5393,11 @@
 
 
             $scope.checkMensualidadEnganche = function(){
-                // console.log('que onda');
                 calcularCF();
             };
 
             $scope.daysEng = function() {
                 $scope.daysEnganche = $scope.day.day;
-                //chacha
                 // console.log("Andamos debuggeando: ", $scope.day.day);
                 var TuFecha = new Date();
                 var dias = parseInt($scope.daysEnganche);
