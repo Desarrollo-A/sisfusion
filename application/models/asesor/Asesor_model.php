@@ -3,8 +3,7 @@
 /**
  *
  */
-class Asesor_model extends CI_Model
-{
+class Asesor_model extends CI_Model {
 
     function __construct()
     {
@@ -12,7 +11,7 @@ class Asesor_model extends CI_Model
     }
 
     function getinfoCliente($id_cliente)
-    {
+{
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
                                 nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
                                 cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
@@ -175,7 +174,6 @@ class Asesor_model extends CI_Model
         return $query->result();
     }
 
-    /******NUEVO MODELO 28-10-20********/
     public function get_info_prospectos($id_asesor) {
         $query = $this->db->query("SELECT p.*, lp.nombre as lugar_prospeccion, pv.nombre as plaza_venta,
         nac.nombre as nacionalidad
@@ -458,7 +456,7 @@ class Asesor_model extends CI_Model
                                     LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = co.estado_civil
                                     LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial WHERE co.estatus = 1 AND co.id_cliente = ".$cliente." AND
                                     oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
-        $query = $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
+        $query =  $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
                                     co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, 
@@ -609,17 +607,17 @@ class Asesor_model extends CI_Model
     {
 
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('clientes', $arreglo_cliente);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('clientes',$arreglo_cliente);
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('deposito_seriedad', $arreglo_ds);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('deposito_seriedad',$arreglo_ds);
 
-        $this->db->where("id_referencia", $id_referencia1);
-        $this->db->update('referencias', $arreglo_referencia1);
+        $this->db->where("id_referencia",$id_referencia1);
+        $this->db->update('referencias',$arreglo_referencia1);
 
-        $this->db->where("id_referencia", $id_referencia2);
-        $this->db->update('referencias', $arreglo_referencia2);
+        $this->db->where("id_referencia",$id_referencia2);
+        $this->db->update('referencias',$arreglo_referencia2);
 
         return true;
     }
@@ -628,21 +626,19 @@ class Asesor_model extends CI_Model
     {
 
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('clientes', $arreglo_cliente);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('clientes',$arreglo_cliente);
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('deposito_seriedad', $arreglo_ds);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('deposito_seriedad',$arreglo_ds);
 
         return true;
     }
-
     public function checkExistRefrencias($id_cliente)
     {
         $query = $this->db->get_where('referencias', array('id_cliente' => $id_cliente));
         return $query->result();
     }
-
     public function insertnewRef($data)
     {
         $query = $this->db->insert('referencias', $data);
@@ -972,7 +968,7 @@ class Asesor_model extends CI_Model
 
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones', $data);
+        $this->db->insert('autorizaciones',$data);
         return $this->db->affected_rows();
     }
 
@@ -1000,7 +996,6 @@ class Asesor_model extends CI_Model
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
 	}
-
 
     public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
@@ -1903,5 +1898,4 @@ class Asesor_model extends CI_Model
         return $query->result_array();
     }
 }
-    
 

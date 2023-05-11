@@ -52,7 +52,6 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
                         <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
-                            <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
                             <?php if ($this->session->userdata('id_rol') == 17) { ?>
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
                             <?php }?>
