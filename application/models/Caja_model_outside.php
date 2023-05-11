@@ -304,7 +304,8 @@
                     userLiberacion = '".$this->session->userdata('username')."',
                     precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
                     enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
+                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
+                    asig_jur = 0
                     WHERE idLote IN (".$row['idLote'].") and status = 1 ");
                 } else if ($datos['activeLE'] == 1){
                     $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
@@ -324,7 +325,8 @@
                     userLiberacion = '".$this->session->userdata('username')."',
                     precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
                     enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1))
+                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
+                    asig_jur = 0
                     WHERE idLote IN (".$row['idLote'].") and status = 1 ");
                 }
                 if ($this->db->trans_status() === FALSE){

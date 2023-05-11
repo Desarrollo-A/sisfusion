@@ -141,11 +141,13 @@
         return $query->row();
 
     }
-    public function getdp_DS($lotes){
-        $query = $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
-		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, l.nombreLote, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nomCliente, cl.apellidoPaterno apellido_paterno, cl.apellidoMaterno apellido_materno, cl.rfc,
-		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-        l.idLote, '' coordinador, '' gerente, '' subdirector, '' regional, l.observacionContratoUrgente
+    
+	public function getdp_DS($lotes) {
+        return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
+		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellapellidoPaternoido_paterno, ' ', cl.apellidoMaterno)) nombreCliente,
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
+        lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
+		'ds_old' tipo_doc
 		FROM cliente_consulta cl
 		INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
@@ -4781,7 +4783,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				$where_sede = '';
 				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
-				else if (in_array($id_usuario, array(7096, 7097, 10924))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
+				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
 					$where_sede = 'AND clientes.id_sede IN(4, 9, 13, 14)';
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9', '13', '14')) OR id_usuario IN (7092, 690))";
 				}
@@ -4972,75 +4974,44 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
 		$where = '';
-		if($cliente != ''){
+		if($cliente != '')
 			$where= "hd.idLote = $lotes AND cl.id_cliente = $cliente";
-		} else {
+		else
 			$where = "hd.status = 1 AND hd.idLote = $lotes";
-		}
-		$query = $this->db-> query("SELECT 
-		hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lotes.nombreLote, 
-		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cond.nombre, res.nombreResidencial, 
-		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor, cl.flag_compartida, 
-		UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, lotes.observacionContratoUrgente
+
+		return $this->db-> query("SELECT hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lo.nombreLote, 
+		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc, co.nombre, re.nombreResidencial, 
+		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, se.abreviacion as ubic, 
+		hd.movimiento, hd.movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
 		FROM historial_documento hd
-		INNER JOIN lotes ON lotes.idLote = hd.idLote
-		INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
-		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+		INNER JOIN lotes lo ON lo.idLote = hd.idLote
+		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 		LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
-		LEFT JOIN sedes ON lotes.ubicacion = sedes.id_sede
-		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
-		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		".$extraInner."
-		WHERE ". $where.$extraWhere);
-		return $query->result_array();
+		LEFT JOIN sedes se ON se.id_sede = lo.ubicacion
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+		$extraInner
+		WHERE $where $extraWhere")->result_array();
 	}
-	//public function getExpedienteAll($lotes) {
-		/*SELECT historial_documento.expediente, historial_documento.idDocumento, historial_documento.modificado,
-		historial_documento.status, historial_documento.idCliente, historial_documento.idLote, lotes.nombreLote, cliente.primerNombre,
-		cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.rfc, cliente.razonSocial, condominio.nombre,
-		residencial.nombreResidencial, users.primerNombre as primerNom, users.segundoNombre as segundoNom, users.apellidoPaterno as apellidoPa,
-		users.apellidoMaterno as apellidoMa, users.ubicacion as ubic, historial_documento.movimiento, tipo_documento.descripcion, condominio.idCondominio,
-		tipo_documento.id_tipo, lotes.idMovimiento, historial_documento.tipo_doc
-		from historial_documento
-		inner join lotes on lotes.idLote = historial_documento.idLote
-		inner join cliente on historial_documento.idCliente = cliente.idCliente
-		inner join condominio on condominio.idCondominio = lotes.idCondominio
-		inner join residencial on residencial.idResidencial = condominio.idResidencial
-		left join tipo_documento on historial_documento.tipo_doc = tipo_documento.id_tipo
-		left join users on historial_documento.idUser = users.id
-		where historial_documento.status = 1*/
-	/*	$query = $this->db-> query('SELECT
-		hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lotes.nombreLote,
-		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cond.nombre, res.nombreResidencial,
-		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic,
-		hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor
-		FROM historial_documento hd
-		INNER JOIN lotes ON lotes.idLote = hd.idLote
-		INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
-		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-		LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
-		LEFT JOIN sedes ON lotes.ubicacion = sedes.id_sede
-		WHERE hd.status = 1 and hd.idLote = '.$lotes);
-
-		return $query->result_array();
-
-	}*/
-
-
-	public function getdp($lotes,$cliente = ''){
+	
+	public function getdp($lotes, $cliente = '') {
 	    $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
@@ -5050,154 +5021,161 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         }
 		$where = '';
 
-		if($cliente != ''){
-			$where = "l.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes AND cl.id_cliente = $cliente";
-		} else {
-			$where = "cl.status = 1 AND l.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes";
-		}
-		$query = $this->db-> query("SELECT TOP(1)  'Depósito de seriedad' as expediente, 'DEPÓSITO DE SERIEDAD' as movimiento,
-		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
-		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ds.fechaCrate as modificado, l.idLote, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, l.observacionContratoUrgente
+		if($cliente != '')
+			$where = "lo.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes AND cl.id_cliente = $cliente";
+		else
+			$where = "cl.status = 1 AND lo.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes";
+
+		return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
+		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente idDocumento, ds.fechaCrate modificado, 
+		lo.idLote, cl.flag_compartida,	lo.observacionContratoUrgente,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+		'ds_new' tipo_doc
 		FROM clientes cl
-		INNER JOIN lotes l ON l.idLote = cl.idLote
+		INNER JOIN lotes lo ON lo.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
-		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		".$extraInner."
-		WHERE ".$where.$extraWhere);
-		return $query->result_array();
-
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+		$extraInner
+		WHERE $where $extraWhere")->result_array();
 	}
 
-
-	public function get_auts_by_loteAll($idLote, $cliente= ''){
+	public function get_auts_by_loteAll($idLote, $cliente = '') {
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
-            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+        if($id_rol == 54) {
+            $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
-
-
 		$where = '';
-		if($cliente != ''){
-			$where = "l.idLote = $idLote AND cl.id_cliente = $cliente";
-		} else {
-			$where = "cl.status = 1 AND l.idLote = $idLote";
-		}
+		if($cliente != '')
+			$where = "lo.idLote = $idLote AND cl.id_cliente = $cliente";
+		else
+			$where = "cl.status = 1 AND lo.idLote = $idLote";
 
-		$query = $this->db-> query("SELECT  TOP(1) 'Autorizaciones' as expediente, 'AUTORIZACIONES' as movimiento, 'VENTAS-ASESOR' as primerNom, 'VENTAS' as ubic, l.nombreLote,
-		cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, cl.fechaApartado as modificado,
-		res.nombreResidencial, cond.nombre, l.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, 
-		CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as sol,
-		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, cl.id_asesor, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-		l.observacionContratoUrgente
+		return $this->db-> query("SELECT  TOP(1) 'Autorizaciones' as expediente, 'AUTORIZACIONES' as movimiento, 'VENTAS-ASESOR' as primerNom, 'VENTAS' as ubic, lo.nombreLote,
+		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+		cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, cl.fechaApartado as modificado,
+		re.nombreResidencial, co.nombre, lo.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, 
+		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, 
+		cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END sol,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+		'autorizacion' tipo_doc
 		FROM autorizaciones aut
-		INNER JOIN lotes l ON l.idLote = aut.idLote
+		INNER JOIN lotes lo ON lo.idLote = aut.idLote
 		INNER JOIN clientes cl ON aut.idCliente = cl.id_cliente
-		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-		LEFT JOIN usuarios as asesor ON aut.id_sol = asesor.id_usuario
-		LEFT JOIN usuarios as users1 ON aut.id_aut = users1.id_usuario
-		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
-		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		".$extraInner."
-		WHERE ".$where.$extraWhere);
-		return $query->result_array();
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		LEFT JOIN usuarios users1 ON aut.id_aut = users1.id_usuario
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+		$extraInner
+		WHERE $where $extraWhere")->result_array();
 	}
 
-	public function getsProspeccionData($idLote,$cliente='')
-	{
+	public function getsProspeccionData($idLote,$cliente='') {
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
+        if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
-
 		$where = '';
-		if($cliente != ''){
+		if($cliente != '')
 			$where = "l.status = 1 AND cl.idLote = $idLote AND cl.id_cliente = $cliente";
-		} else {
+		else
 			$where = "cl.status = 1 AND l.status = 1 AND cl.idLote = $idLote";
-		}
+		
 		$query = $this->db->query("SELECT 'Prospecto' as expediente, 'PROSPECTO' as movimiento,
-		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
+		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc,
 		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
-		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-		l.observacionContratoUrgente
+		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, 
+		l.observacionContratoUrgente, 'prospecto' tipo_doc,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 		INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 		INNER JOIN prospectos ps ON cl.id_prospecto = ps.id_prospecto
-		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
-		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		".$extraInner."
-		WHERE ". $where.$extraWhere);
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+		$extraInner
+		WHERE $where $extraWhere");
 		return $query->result_array();
-
 	}
 
-    public function getEVMTKTD($idLote,$cliente = '')
-    {
+    public function getEVMTKTD($idLote, $cliente = '') {
         $id_rol = $this->session->userdata('id_rol');
         $extraInner = '';
         $extraWhere = '';
-        if($id_rol==54){
-            $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
+        if($id_rol == 54) {
+            $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
             $extraWhere = " AND pr.source='DragonCEM'";
         }
-
-
 		$complemento = '';
-		if($cliente != ''){
-			$complemento= " AND  cl.id_cliente=$cliente";
-		}
+		if($cliente != '')
+			$complemento= " AND  cl.id_cliente = $cliente";
 
         $query = $this->db->query("SELECT ec.evidencia as expediente, 'EVIDENCIA MKTD' as movimiento,
-        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS primerNom, 
-        sedes.abreviacion as ubic, l.nombreLote, cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc,
-        cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,
-        cl.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-		UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-		UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-		UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-		l.observacionContratoUrgente
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) primerNom, 
+        sedes.abreviacion as ubic, lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,
+        cl.id_prospecto, cl.id_asesor, lo.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida, lo.observacionContratoUrgente,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
         FROM clientes cl
-        INNER JOIN lotes l ON l.idLote = cl.idLote
-        INNER JOIN deposito_seriedad ds ON ds.id_cliente=cl.id_cliente
-        INNER JOIN usuarios asesor ON asesor.id_usuario=cl.id_asesor
-        INNER JOIN condominios cond ON cond.idCondominio=l.idCondominio
-        INNER JOIN residenciales res ON res.idResidencial= cond.idResidencial
-        INNER JOIN evidencia_cliente ec ON cl.id_cliente=ec.idCliente
-        LEFT JOIN sedes ON l.ubicacion = sedes.id_sede
-		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
-		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-		LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-		".$extraInner."
-        WHERE cl.status=1 AND l.status=1 AND ec.estatus=3 AND cl.idLote=".$idLote. $complemento.$extraWhere  );
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN evidencia_cliente ec ON cl.id_cliente = ec.idCliente
+        LEFT JOIN sedes ON lo.ubicacion = sedes.id_sede
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+		$extraInner
+        WHERE cl.status = 1 AND lo.status = 1 AND ec.estatus = 3 AND cl.idLote = $idLote $complemento $extraWhere");
         return $query->result_array();
     }
 

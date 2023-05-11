@@ -367,7 +367,7 @@
                 buttons: [{
                     text: 'XMLS',
                     action: function(){
-                            window.location = url+'Kel_XML/descargar_XML';
+                            window.location = url+'XMLDownload/descargar_XML';
                     },
                     attr: {
                         class: 'btn btn-azure ml-1',
@@ -378,7 +378,7 @@
                     text: 'Opiniones de cumplimiento',
                     action: function(){            
                         $('#spiner-loader').removeClass('hide');   
-                        window.location = url+'Kel_XML/descargar_PDF';
+                        window.location = url+'XMLDownload/descargar_PDF';
                         $('#spiner-loader').addClass('hide');
                     },
                     attr: {
