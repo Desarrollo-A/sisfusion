@@ -5645,6 +5645,8 @@ use application\helpers\email\registro_lote\Elementos_Correo_Registro_Lote;
 			$datos[$i]['diasVenc2'] = $diasVenc2;
 			$datos[$i]['statusFecha'] = $statusFecha;
 			$datos[$i]['status8Flag'] = $data[$i]->status8Flag;
+			$datos[$i]['id_cliente_reubicacion'] = $data[$i]->id_cliente_reubicacion;
+			$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
 		}
 		if ($datos != null) {
 			$result['data'] = $datos;
@@ -13285,129 +13287,103 @@ tr td:hover { background: #666; color: #FFF; }
 	}
 
 
-	public function reportLotesContratados()
-	{
-		 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-		/*$datos = array();
-		$datos["lotesContratados"] = $this->registrolote_modelo->lotesContratados();*/
+	public function reportLotesContratados() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lotesContratados_view",$datos);
 	}
 
-	public function getLotesContratados()
-	{
-		$datos = array();
+	public function getLotesContratados() {
 		$datos = $this->registrolote_modelo->lotesContratados();
-		if($datos != null) {
+		if($datos != null)
 			echo json_encode($datos);
-		} else {
+		else
 			echo json_encode(array());
-		}
 		exit;
 	}
 
-	public function reportLotesPost45()
-	{
-
- /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
- $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
- /*-------------------------------------------------------------------------------*/
-		/*$datos = array();
-		$datos["lotesPost45"] = $this->registrolote_modelo->reportLotesPost45();*/
+	public function reportLotesPost45() {
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lotespost_view",$datos);
-
 	}
-	public function getReportPost45()
-	{
+
+	public function getReportPost45() {
 		$datos = array();
 		$data = $this->registrolote_modelo->reportLotesPost45();
-//		print_r($data[0]);
-//		exit;
-		for($i=0; $i<count($data);$i++)
-		{
+		for($i = 0; $i < count($data); $i ++) {
 			$date1 = new DateTime($data[$i]->fechaApartado);
 			$date2 = new DateTime(date('Y-m-d'));
 			$diff = $date1->diff($date2);
+			if ($diff->days >= 45) {
+				$datos[$i]['referencia'] = $data[$i]->referencia;
+				$datos[$i]['idLote'] = $data[$i]->idLote;
+	            $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
+				$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
+				$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
+				$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
+				$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
+				$datos[$i]['idMovimiento'] = $data[$i]->idMovimiento;
+				$datos[$i]['modificado'] = $data[$i]->modificado;
+				$datos[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
+				$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
+				$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
+				$datos[$i]['comentario'] = $data[$i]->comentario;
+				$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
+				$datos[$i]['gerente'] = $data[$i]->gerente;
+				$datos[$i]['asesor'] = $data[$i]->asesor;
+				$datos[$i]['diasVencidos'] = $diff->days;
+				$datos[$i]['id_cliente_reubicacion'] = $data[$i]->id_cliente_reubicacion;
+				$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
 
-			if ($diff->days>=45)
-			{
-					$datos[$i]['referencia'] = $data[$i]->referencia;
-					$datos[$i]['idLote'] = $data[$i]->idLote;
-                    $datos[$i]['nombreSede'] = $data[$i]->nombreSede;
-					$datos[$i]['id_cliente'] = $data[$i]->id_cliente;
-					$datos[$i]['fechaApartado'] = ($data[$i]->fechaApartado!=null || $data[$i]->fechaApartado!="")?$data[$i]->fechaApartado : "N/A";
-					$datos[$i]['nombreLote'] = $data[$i]->nombreLote;
-					$datos[$i]['idStatusContratacion'] = $data[$i]->idStatusContratacion;
-					$datos[$i]['idMovimiento'] = $data[$i]->idMovimiento;
-					$datos[$i]['modificado'] = $data[$i]->modificado;
-					$datos[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
-					$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
-					$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
-					$datos[$i]['comentario'] = $data[$i]->comentario;
-					$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
-					$datos[$i]['gerente'] = $data[$i]->gerente;
-					/*$datos[$i]['gerente2'] = $data[$i]->gerente2;
-					$datos[$i]['gerente3'] = $data[$i]->gerente3;
-					$datos[$i]['gerente4'] = $data[$i]->gerente4;
-					$datos[$i]['gerente5'] = $data[$i]->gerente5;*/
-					$datos[$i]['asesor'] = $data[$i]->asesor;
-					/*$datos[$i]['asesor2'] = $data[$i]->asesor2;
-					$datos[$i]['asesor3'] = $data[$i]->asesor3;
-					$datos[$i]['asesor4'] = $data[$i]->asesor4;
-					$datos[$i]['asesor5'] = $data[$i]->asesor5;*/
-					$datos[$i]['diasVencidos'] = $diff->days;
-
-					/**procesoContratacion**/
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 18 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 19 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 20  OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63) {$datos[$i]['procesoContratacion']="2. Integración de Expediente (Asistentes Elite)";}
-					if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 2 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 32) {$datos[$i]['procesoContratacion']="3. Revisión Jurídico (Jurídico)";}
-					if($data[$i]->idStatusContratacion == 3 AND $data[$i]->idMovimiento == 33 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 3) {$datos[$i]['procesoContratacion']="4. Datos Verificados (Postventa)";}
-					if($data[$i]->idStatusContratacion == 4 AND $data[$i]->idMovimiento == 34 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 4) {$datos[$i]['procesoContratacion']="5. Revisión 100% (Contraloria)";}
-					if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 35 OR $data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 22 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 62) {$datos[$i]['procesoContratacion']="6. Corrida elaborada (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 36 OR $data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 6 ) {$datos[$i]['procesoContratacion']="7. Contrato elaborado (Jurídico)";}
-					if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 23) {$datos[$i]['procesoContratacion']="7. Elaboración de Contrato (Jurídico)";}
-					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 37 OR $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 7 OR $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 77) {$datos[$i]['procesoContratacion']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
-					if($data[$i]->idStatusContratacion == 8 AND $data[$i]->idMovimiento == 38) {$datos[$i]['procesoContratacion']="9. Contrato recibido con firma de cliente (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento == 39 OR $data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento = 26) {$datos[$i]['procesoContratacion']="10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 40 OR $data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento = 10) {$datos[$i]['procesoContratacion']="11. Validación de enganche (Administración)";}
-					if($data[$i]->idStatusContratacion == 11 AND $data[$i]->idMovimiento == 41) {$datos[$i]['procesoContratacion']="12. Contrato firmado (Representante Legal)";}
-					if($data[$i]->idStatusContratacion == 12 AND $data[$i]->idMovimiento == 42) {$datos[$i]['procesoContratacion']="13. Contrato listo y entregado asesores (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 13 AND $data[$i]->idMovimiento == 43) {$datos[$i]['procesoContratacion']="14. Firma Acuse cliente (Asistentes Gerentes)";}
-					if($data[$i]->idStatusContratacion == 14 AND $data[$i]->idMovimiento == 44) {$datos[$i]['procesoContratacion']="15. Acuse entregado (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 15) {$datos[$i]['procesoContratacion']="LOTE CONTRATADO";}
-					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 64) {$datos[$i]['procesoContratacion']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
-					/**procesoContratacion**/
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31 ) {$datos[$i]['status']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 18 ) {$datos[$i]['status']="Status 2 Rechazado (Jurídico)";}
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 19 ) {$datos[$i]['status']="Status 2 Rechazado (Postventa)";}
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 20 ) {$datos[$i]['status']="Status 2 Rechazado (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 32 ){$datos[$i]['status']="Status 2 listo (Asistentes Gerentes)";}
-					if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 2 ){$datos[$i]['status']="Status 2 enviado a Revisión (Asistentes Gerentes)";}
-					if($data[$i]->idStatusContratacion == 3 AND $data[$i]->idMovimiento == 33 ){$datos[$i]['status']="Status 3 listo (Jurídico)";}
-					if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 3 ){$datos[$i]['status']="Status 2 enviado a Revisión (Asistentes Gerentes) a Postventa";}
-					if($data[$i]->idStatusContratacion == 4 AND $data[$i]->idMovimiento == 34 ){$datos[$i]['status']="Status 4 listo (Postventa) ";}
-					if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 4 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 62){$datos[$i]['status']="Status 2 enviado a Revisión (Elite)";}
-					if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 35 ){$datos[$i]['status']="Status 5 listo (Contraloría) ";}
-					if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 22 ){$datos[$i]['status']="Status 6 Rechazado (Juridico)";}
-					if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 36 ){$datos[$i]['status']="Status 6 listo (Contraloría) ";}
-					if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 6 ){$datos[$i]['status']="Status 6 enviado a Revisión (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 23 ){$datos[$i]['status']="Status 7 Enviado a Modificación (Asistentes Gerentes)";}
-					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 37 ){$datos[$i]['status']="Status 7 listo (Jurídico) ";}
-					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 7 or $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 77 ){$datos[$i]['status']="Contrato con modificaciones entregado";}
-					if($data[$i]->idStatusContratacion == 8 AND $data[$i]->idMovimiento == 38 ){$datos[$i]['status']="Status 8 listo (Asistentes de Gerentes)";}
-					if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento == 39 ){$datos[$i]['status']="Status 9 listo (Asistentes de Gerentes)";}
-					if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento ==26 ){$datos[$i]['status']="Rechazo Status 10 (Administración)";}
-					if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 40 ){$datos[$i]['status']="Status 10 listo (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 10 ){$datos[$i]['status']="Status 10 enviado a Revisión (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 11 AND $data[$i]->idMovimiento == 41 ){$datos[$i]['status']="Status 11 listo (Administración)";}
-					if($data[$i]->idStatusContratacion == 12 AND $data[$i]->idMovimiento == 42 ){$datos[$i]['status']="Status 12 listo (Representante Legal) ";}
-					if($data[$i]->idStatusContratacion == 13 AND $data[$i]->idMovimiento == 43 ){$datos[$i]['status']="Status 13 listo (Contraloría)";}
-					if($data[$i]->idStatusContratacion == 14 AND $data[$i]->idMovimiento == 44 ){$datos[$i]['status']="Status 14 listo (Asistentes Gerentes)";}
-					if($data[$i]->idStatusContratacion == 15 AND $data[$i]->idMovimiento == 45 ){$datos[$i]['status']="Lote Contratado ";}
-					if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 64 ){$datos[$i]['status']="Status 8 Rechazado (Por Contraloría)";}
-					if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63 ){$datos[$i]['status']="Status 2 Rechazado (Por Contraloría)";}
+				/**procesoContratacion**/
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 18 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 19 OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 20  OR $data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63) {$datos[$i]['procesoContratacion']="2. Integración de Expediente (Asistentes Elite)";}
+				if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 2 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 32) {$datos[$i]['procesoContratacion']="3. Revisión Jurídico (Jurídico)";}
+				if($data[$i]->idStatusContratacion == 3 AND $data[$i]->idMovimiento == 33 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 3) {$datos[$i]['procesoContratacion']="4. Datos Verificados (Postventa)";}
+				if($data[$i]->idStatusContratacion == 4 AND $data[$i]->idMovimiento == 34 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 4) {$datos[$i]['procesoContratacion']="5. Revisión 100% (Contraloria)";}
+				if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 35 OR $data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 22 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 62) {$datos[$i]['procesoContratacion']="6. Corrida elaborada (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 36 OR $data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 6 ) {$datos[$i]['procesoContratacion']="7. Contrato elaborado (Jurídico)";}
+				if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 23) {$datos[$i]['procesoContratacion']="7. Elaboración de Contrato (Jurídico)";}
+				if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 37 OR $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 7 OR $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 77) {$datos[$i]['procesoContratacion']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
+				if($data[$i]->idStatusContratacion == 8 AND $data[$i]->idMovimiento == 38) {$datos[$i]['procesoContratacion']="9. Contrato recibido con firma de cliente (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento == 39 OR $data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento = 26) {$datos[$i]['procesoContratacion']="10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 40 OR $data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento = 10) {$datos[$i]['procesoContratacion']="11. Validación de enganche (Administración)";}
+				if($data[$i]->idStatusContratacion == 11 AND $data[$i]->idMovimiento == 41) {$datos[$i]['procesoContratacion']="12. Contrato firmado (Representante Legal)";}
+				if($data[$i]->idStatusContratacion == 12 AND $data[$i]->idMovimiento == 42) {$datos[$i]['procesoContratacion']="13. Contrato listo y entregado asesores (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 13 AND $data[$i]->idMovimiento == 43) {$datos[$i]['procesoContratacion']="14. Firma Acuse cliente (Asistentes Gerentes)";}
+				if($data[$i]->idStatusContratacion == 14 AND $data[$i]->idMovimiento == 44) {$datos[$i]['procesoContratacion']="15. Acuse entregado (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 15) {$datos[$i]['procesoContratacion']="LOTE CONTRATADO";}
+				if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 64) {$datos[$i]['procesoContratacion']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
+				/**procesoContratacion**/
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 31 ) {$datos[$i]['status']="8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";}
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 18 ) {$datos[$i]['status']="Status 2 Rechazado (Jurídico)";}
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 19 ) {$datos[$i]['status']="Status 2 Rechazado (Postventa)";}
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 20 ) {$datos[$i]['status']="Status 2 Rechazado (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 32 ){$datos[$i]['status']="Status 2 listo (Asistentes Gerentes)";}
+				if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 2 ){$datos[$i]['status']="Status 2 enviado a Revisión (Asistentes Gerentes)";}
+				if($data[$i]->idStatusContratacion == 3 AND $data[$i]->idMovimiento == 33 ){$datos[$i]['status']="Status 3 listo (Jurídico)";}
+				if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 3 ){$datos[$i]['status']="Status 2 enviado a Revisión (Asistentes Gerentes) a Postventa";}
+				if($data[$i]->idStatusContratacion == 4 AND $data[$i]->idMovimiento == 34 ){$datos[$i]['status']="Status 4 listo (Postventa) ";}
+				if($data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 4 OR $data[$i]->idStatusContratacion == 2 AND $data[$i]->idMovimiento == 62){$datos[$i]['status']="Status 2 enviado a Revisión (Elite)";}
+				if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 35 ){$datos[$i]['status']="Status 5 listo (Contraloría) ";}
+				if($data[$i]->idStatusContratacion == 5 AND $data[$i]->idMovimiento == 22 ){$datos[$i]['status']="Status 6 Rechazado (Juridico)";}
+				if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 36 ){$datos[$i]['status']="Status 6 listo (Contraloría) ";}
+				if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 6 ){$datos[$i]['status']="Status 6 enviado a Revisión (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 6 AND $data[$i]->idMovimiento == 23 ){$datos[$i]['status']="Status 7 Enviado a Modificación (Asistentes Gerentes)";}
+				if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 37 ){$datos[$i]['status']="Status 7 listo (Jurídico) ";}
+				if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 7 or $data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 77 ){$datos[$i]['status']="Contrato con modificaciones entregado";}
+				if($data[$i]->idStatusContratacion == 8 AND $data[$i]->idMovimiento == 38 ){$datos[$i]['status']="Status 8 listo (Asistentes de Gerentes)";}
+				if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento == 39 ){$datos[$i]['status']="Status 9 listo (Asistentes de Gerentes)";}
+				if($data[$i]->idStatusContratacion == 9 AND $data[$i]->idMovimiento ==26 ){$datos[$i]['status']="Rechazo Status 10 (Administración)";}
+				if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 40 ){$datos[$i]['status']="Status 10 listo (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 10 AND $data[$i]->idMovimiento == 10 ){$datos[$i]['status']="Status 10 enviado a Revisión (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 11 AND $data[$i]->idMovimiento == 41 ){$datos[$i]['status']="Status 11 listo (Administración)";}
+				if($data[$i]->idStatusContratacion == 12 AND $data[$i]->idMovimiento == 42 ){$datos[$i]['status']="Status 12 listo (Representante Legal) ";}
+				if($data[$i]->idStatusContratacion == 13 AND $data[$i]->idMovimiento == 43 ){$datos[$i]['status']="Status 13 listo (Contraloría)";}
+				if($data[$i]->idStatusContratacion == 14 AND $data[$i]->idMovimiento == 44 ){$datos[$i]['status']="Status 14 listo (Asistentes Gerentes)";}
+				if($data[$i]->idStatusContratacion == 15 AND $data[$i]->idMovimiento == 45 ){$datos[$i]['status']="Lote Contratado ";}
+				if($data[$i]->idStatusContratacion == 7 AND $data[$i]->idMovimiento == 64 ){$datos[$i]['status']="Status 8 Rechazado (Por Contraloría)";}
+				if($data[$i]->idStatusContratacion == 1 AND $data[$i]->idMovimiento == 63 ){$datos[$i]['status']="Status 2 Rechazado (Por Contraloría)";}
 			}
 		}
 		$datos = array_values($datos);
