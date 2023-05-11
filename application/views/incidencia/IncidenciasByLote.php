@@ -23,7 +23,7 @@
                     } else {
                         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                     }
-                    break;
+                    break; 
             }
         } else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -377,7 +377,7 @@
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
-                                </select>
+                                </select> 
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Usuario a ceder comisiones</label>
@@ -388,12 +388,22 @@
                                 <textarea id="comentario" name="comentario" class="form-control" rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
-                                <center>
-                                    <button type="submit" id="btn_ceder" class="btn btn-primary">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
+                             
                             </div>
                         </div>
+                        
+                        <div class="modal-footer">     
+                        
+                                    <button type="submit" id="btn_ceder" class="btn btn-gral-data">GUARDAR</button>
+                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                
+                                <!-- <button type="button"   class="btn btn-danger btn-simple " 
+                                        data-dismiss="modal" >Cerrar</button>	
+
+                                <button  type="button"type="submit" id="btn_inv" 
+                                 class="btn btn-gral-data updatePrestamo">Aceptar</button> -->
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -412,7 +422,7 @@
                             <div class="form-group">
                                 <label class="label">Puesto del usuario a modificar</label>
                                 <select class="selectpicker roles3" name="roles3" id="roles3" required>
-                                    <option value="">----Seleccionar-----</option> 
+                                    <option value="">----Seleccionar-----</option>
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -434,12 +444,16 @@
                                 </center>
                             </div> -->
                         </div>
-                        <div class="modal-footer">     
-                                <button type="button"   class="btn btn-danger btn-simple " 
-                                        data-dismiss="modal" >Cerrar</button>	
-
-                                <button  type="button"type="submit" id="btn_inv" 
+                        <div class="modal-footer">    
+                                <!-- <button  type="button"type="submit" id="btn_inv" 
                                  class="btn btn-gral-data updatePrestamo">Aceptar</button>
+                                 <button type="button" class="btn btn-danger btn-simple " 
+                                        data-dismiss="modal" >Cerrar</button>	 -->
+                                <center>
+                                    <button type="submit" id="btn_inv" class="btn btn-gral-data">GUARDAR</button>
+                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                                </center> 
+
                         </div>
                     </form>
                 </div>
@@ -568,14 +582,19 @@
                                             <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
                                                 <thead>
                                                     <tr>   
-                                                        <th>ID LOTE</th>
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
+                                                        <th>ID LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
-                                                        <th>EST. CONTRATACIÓN</th>
+                                                        <th>CONTRATACIÓN</th>
+                                                        
+                                                        <th>PLAN VENTA</th>
+                                                        <th>FEC. SISTEMA</th> 
+                                                        <th>FEC. NEODATA</th>
+
                                                         <th>ENT. VENTA</th>
                                                         <th>ESTATUS COM.</th>
                                                         <th>MÁS</th>
@@ -598,7 +617,7 @@
     <?php $this->load->view('template/footer');?>
         
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/incidencia_by_lote.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/incidencias/incidencia_by_lote.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

@@ -439,7 +439,7 @@
                     text: 'XMLS',
                     action: function(){
                         if(rol == 17 || rol == 13 || rol == 31 || rol== 32){
-                            window.location = url+'Kel_XML/descargar_XML';
+                            window.location = url+'XMLDownload/descargar_XML';
                         }
                         else{
                             alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");
@@ -454,7 +454,7 @@
                     text: 'OPINIONES CUMPLIMIENTO',
                     action: function(){
                         if(rol == 17 || rol == 13 || rol == 31 || rol== 32){
-                            window.location = url+'Kel_XML/descargar_PDF';
+                            window.location = url+'XMLDownload/descargar_PDF';
                         }
                         else{
                             alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");

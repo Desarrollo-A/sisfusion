@@ -59,7 +59,7 @@
         }
 
         input:checked + .switch::before {
-            left: 27px;
+            left: 50%;
             background: $white;
             @media #{$smartphone}{
                 left: 249px;
@@ -273,7 +273,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        z-index: 9999;
+        z-index: 999;
         padding: 0;
         display: flex;
         justify-content: center;

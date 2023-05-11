@@ -597,6 +597,10 @@
   margin: 0;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-pdf i {
   color: #f44336;
 }

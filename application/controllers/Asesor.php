@@ -2,7 +2,7 @@
 
 use application\helpers\email\asesor\Elementos_Correos_Asesor;
 
- if (!defined('BASEPATH')) exit('No direct script access allowed');
+ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Asesor extends CI_Controller
 {
@@ -46,20 +46,16 @@ class Asesor extends CI_Controller
         $this->load->view('template/footer');
     }
 
-
     public function dataPrueba($idCliente, $onlyView)
     {
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
-
-        // print_r($datos);
     }
 
-    public function deposito_seriedad_ds($idCliente, $onlyView)
-    {
+    public function deposito_seriedad_ds($idCliente, $onlyView){
+        print_r("entras");
+        exit;
         $this->validateSession();
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
 
         if ($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3) {
@@ -74,48 +70,32 @@ class Asesor extends CI_Controller
         }
     }
 
-    public function lista_gerentes()
-    {
+    public function lista_gerentes(){
         echo json_encode($this->Asesor_model->get_gerentes_lista()->result_array());
     }
 
-    public function lista_asesores($gerente)
-    {
+    public function lista_asesores($gerente){
         echo json_encode($this->Asesor_model->get_asesores_lista($gerente)->result_array());
     }
-
-    public function lista_proyecto()
-    {
+    public function lista_proyecto(){
         echo json_encode($this->Asesor_model->get_proyecto_lista()->result_array());
     }
-
-    public function lista_condominio($proyecto)
-    {
+    public function lista_condominio($proyecto){
         echo json_encode($this->Asesor_model->get_condominio_lista($proyecto)->result_array());
     }
-
-    public function lista_lote($condominio)
-    {
+    public function lista_lote($condominio){
         echo json_encode($this->Asesor_model->get_lote_lista($condominio)->result_array());
     }
-
-    public function datos_dinamicos($lote, $asesor)
-    {
+    public function datos_dinamicos($lote, $asesor){
         echo json_encode($this->Asesor_model->get_datos_dinamicos($lote, $asesor)->result_array());
     }
-
-    public function forma_venta()
-    {
+    public function forma_venta(){
         echo json_encode($this->Asesor_model->get_datos_forma()->result_array());
     }
-
-    public function tipo_venta()
-    {
+    public function tipo_venta(){
         echo json_encode($this->Asesor_model->get_datos_tipo()->result_array());
     }
-
-    public function verificar_solicitud($lote)
-    {
+    public function verificar_solicitud($lote){
         echo json_encode($this->Asesor_model->get_validar_solicitud($lote)->result_array());
     }
 
@@ -222,22 +202,14 @@ class Asesor extends CI_Controller
 
     public function inventario()/*this is the function*/
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
 
-    //public function cf()
-    //{
-        //$this->load->view("corrida/cf_view");
-    //}
-
-    public function cf2()
-    {
+    public function cf2(){
         $this->load->view("corrida/cf_view2");
     }
 
@@ -250,7 +222,7 @@ class Asesor extends CI_Controller
     public function eliminar_propietario()
     {
         $json['resultado'] = FALSE;
-        if ($this->input->post("id_copropietario")) {
+        if ($this->input->post("id_copropietario")){
             $this->load->model("Asesor_model");
             $id_copropietario = $this->input->post("id_copropietario");
             $this->db->query('UPDATE copropietarios SET estatus = 0 WHERE id_copropietario = ' . $id_copropietario . '');
@@ -266,7 +238,7 @@ class Asesor extends CI_Controller
 
         $json['resultado'] = FALSE;
 
-        if ($this->input->post("nombre_nuevo")) {
+        if($this->input->post("nombre_nuevo")){
 
             $nuevo0 = $this->input->post("idd");
             $nuevo1 = $this->input->post("nombre_nuevo");
@@ -334,8 +306,7 @@ class Asesor extends CI_Controller
     }
 
 
-    public function getGerente()
-    {
+    public function getGerente(){
         $data = $this->registrolote_modelo->getGerente();
         if ($data != null) {
             echo json_encode($data);
@@ -358,13 +329,6 @@ class Asesor extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("asesor/consulta_prospectos", $datos);
     }
-    // Este es el query padre de todos los select
-    // public function allSelectCatalogo()
-    // {
-    //     $data['data'] = $this->Asesor_model->getCatalogoSelect()->result_array();
-    //     echo json_encode($data);
-    //     // echo json_encode($this->Asesor_model->getCatalogoSelect()->result_array());
-    // }
 
     public function consultStatistics()
     {
@@ -427,9 +391,6 @@ class Asesor extends CI_Controller
     {
         echo json_encode($this->Asesor_model->getMediosVenta()->result_array());
     }
-    // public function getTipoVenta(){
-    //     echo json_encode($this->Asesor_model->getTipoVenta()->result_array());
-    // }
     public function getPlan()
     {
         echo json_encode($this->Asesor_model->getPlan()->result_array());
@@ -794,10 +755,7 @@ class Asesor extends CI_Controller
 
     public function depositoSeriedad()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        // $this->validateSession();
         $this->load->view('template/header');
         $this->load->view("asesor/depositoSeriedad", $datos);
     }
@@ -806,16 +764,13 @@ class Asesor extends CI_Controller
 
     public function depositoSeriedadConsulta()
     {
-        // $this->validateSession();
         $this->load->view('template/header');
         $this->load->view("asesor/DSConsult");
     }
 
     public function documentacion()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);
@@ -823,9 +778,7 @@ class Asesor extends CI_Controller
 
     public function registrosLoteVentasAsesor()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -834,9 +787,7 @@ class Asesor extends CI_Controller
 
     public function invDispAsesor()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
 
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
@@ -845,11 +796,8 @@ class Asesor extends CI_Controller
 
     public function manual()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        // $this->load->view("asesor/manual_view",$datos);
         $this->load->view("asesor/manuales_view", $datos);
     }
 
@@ -1060,8 +1008,7 @@ class Asesor extends CI_Controller
         exit;
     }
 
-    public function tableClienteDS()
-    {
+    public function tableClienteDS(){
         $objDatos = json_decode(file_get_contents("php://input"));
         $dato = $this->Asesor_model->registroClienteDS($this->input->post('id_condominio'));
         $data = array();
@@ -1081,9 +1028,7 @@ class Asesor extends CI_Controller
             $data[$i]['id_coordinador'] = $query[0]->id_coordinador;
             $data[$i]['id_gerente'] = $query[0]->id_gerente;
             $data[$i]['id_sede'] = $query[0]->id_sede;
-            $data[$i]['nombre'] = $query[0]->nombre;
-            $data[$i]['apellido_paterno'] = $query[0]->apellido_paterno;
-            $data[$i]['apellido_materno'] = $query[0]->apellido_materno;
+            $data[$i]['nombreCliente'] = $query[0]->nombreCliente;
             $data[$i]['idLote'] = $query[0]->idLote;
             $data[$i]['fechaApartado'] = $query[0]->fechaApartado;
             $data[$i]['fechaVencimiento'] = $query[0]->fechaVencimiento;
@@ -1110,6 +1055,7 @@ class Asesor extends CI_Controller
             $data[$i]['gerente'] = $query[0]->gerente;
             $data[$i]['subdirector'] = $query[0]->subdirector;
             $data[$i]['regional'] = $query[0]->regional;
+            $data[$i]['regional2'] = $query[0]->regional2;
             $data[$i]['estatus'] = $query[0]->estatus;
             $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
         }
@@ -1200,16 +1146,11 @@ class Asesor extends CI_Controller
     public function getInfoTest($id_cliente)
     {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        // print_r(json_encode($datos));
     }
 
-    public function deposito_seriedad($id_cliente, $onlyView)
-    {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+    public function deposito_seriedad($id_cliente, $onlyView){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-
         $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
 
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
@@ -1258,7 +1199,7 @@ class Asesor extends CI_Controller
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
                 $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 88) // UR: REGIMEN FISCAL
+            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
                 $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
         }
 
@@ -1267,8 +1208,6 @@ class Asesor extends CI_Controller
         $datos["regMat"] = $arrayobj3;
         $datos["parentescos"] = $arrayobj4;
         $datos["regFis"] = $arrayobj5;
-
-
         $datos['onlyView'] = $onlyView;
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
         if(isset($datos['corrida_financiera']->id_corrida)){
@@ -1279,7 +1218,6 @@ class Asesor extends CI_Controller
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
-
     }
 
     public function getHistorialDS($idCliente)
@@ -1305,7 +1243,7 @@ class Asesor extends CI_Controller
         $arrayobj1 = new ArrayObject();
         $arrayobj2 = new ArrayObject();
         $arrayobj3 = new ArrayObject();
-        //$arrayobj4 = new ArrayObject();
+        $arrayobj5 = new ArrayObject();
         for ($i = 0; $i < count($catalogs); $i++) {
             if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
                 $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
@@ -1390,53 +1328,43 @@ class Asesor extends CI_Controller
             // $arreglo_ds["desarrollo"]= '0';
         }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////
-
-
         if ($informacion_cliente->row()->idOficial_pf) {
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1" checked="checked"> Identificación&nbsp;Oficial';
         } else if (!$informacion_cliente->row()->idOficial_pf) {
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
         } else if (!$informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
         } else if (!$informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
         } else if (!$informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
         } else if (!$informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($informacion_cliente->row()->idOficialApoderado_pm) {
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
         } else if (!$informacion_cliente->row()->idOficialApoderado_pm) {
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1"> Identificación&nbsp;Oficial&nbsp;Apoderado';
         }
 
-        // //----------------------------------------------------------------------------------------------------------
-        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
         if ($informacion_cliente->row()->tipo_vivienda != '' || $informacion_cliente->row()->tipo_vivienda != null) {
-            // $arreglo_cliente["tipo_vivienda"]= $tipo_vivienda;
-
             if ($informacion_cliente->row()->tipo_vivienda == 1) {
                 $tv1 = '<input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" checked="checked" readonly> PROPIA';
                 $tv2 = '<input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly> RENTADA';
@@ -1660,17 +1588,20 @@ class Asesor extends CI_Controller
             
             if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null){
             $html .= '<tr>
-            <th colspan="3">
-            <h5><p style="font-size:9px;"><strong>DATOS FACTURACIÓN:</strong></p></h5>
-            </th>
-            </tr>
-            <tr>
-                <td width="20%"><b>RFC:</b> ' . $informacion_cliente->row()->rfc . '</td>
-                <td width="50%"><b>RÉGIMEN FISCAL:</b> ' . $informacion_cliente->row()->reg_nom . '</td>
-                <td width="30%"><b>CODIGO POSTAL:</b> ' . $informacion_cliente->row()->cp_fac . '</td>
-                <td width="29%" colspan="2"></td>
-            </tr>';
-             }
+                    <th colspan="3">
+                        <h5><p style="font-size:9px;"><strong>DATOS FACTURACIÓN:</strong></p></h5>
+                    </th>
+                </tr>
+                <tr>
+                <td width="20%"><b>RFC:</b> ' . $informacion_cliente->row()->rfc . '</td>';
+                if( $informacion_cliente->row()->reg_nom != 0 ){
+                    $html .= '<td width="50%"><b>RÉGIMEN FISCAL:</b> ' . $informacion_cliente->row()->reg_nom . '</td>';
+                }
+                if( $informacion_cliente->row()->cp_fac != 0 ){
+                    $html = '<td width="30%"><b>CÓDIGO POSTAL:</b> ' . $informacion_cliente->row()->cp_fac . '</td><td width="29%" colspan="2">';
+                }
+                $html = '</td></tr>' ;   
+            }
             
             $html .= '</table>
             </td>
@@ -2223,7 +2154,7 @@ class Asesor extends CI_Controller
         $array20 = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
 
-        $cm = (empty($this->input->post('especificar'))) ? '11' : $this->input->post('especificar');
+        $cm = (empty( $this->input->post('especificar') )) ? '11' : $this->input->post('especificar');
 
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
@@ -2263,7 +2194,6 @@ class Asesor extends CI_Controller
         $ecivil_select = $this->input->post('estado_civil');
         $regimen_select = $this->input->post('regimen_matrimonial');
         $regifis_select = $this->input->post('regimenFiscal');
-
         $parentezco_select1 = $this->input->post('parentezco_select1');
         $parentezco_select2 = $this->input->post('parentezco_select2');
 
@@ -2272,7 +2202,6 @@ class Asesor extends CI_Controller
         $arrayobj2 = new ArrayObject();
         $arrayobj3 = new ArrayObject();
         $arrayobj4 = new ArrayObject();
-        //$arrayobj4 = new ArrayObject();
         for ($i = 0; $i < count($catalogs); $i++) {
             if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
                 $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
@@ -2280,10 +2209,8 @@ class Asesor extends CI_Controller
                 $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
             else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
                 $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 88) // UR: REGIMEN FISCAL
+            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
                 $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            /*else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
-                    $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));*/
         }
         $nacionalidades2 = $arrayobj1;
         $edoCivil = $arrayobj2;
@@ -2299,11 +2226,6 @@ class Asesor extends CI_Controller
                 $est_vic = $edoCivil[$n]['nombre'];
             }
         }
-        // for ($n = 0; $n < count($regFiscal); $n++) {
-        //     if ($regFiscal[$n]['id_opcion'] == $ecivil_select) {
-        //         $est_vic = $regFiscal[$n]['nombre'];
-        //     }
-        // }
         for ($c = 0; $c < count($regMat); $c++) {
             if ($regMat[$c]['id_opcion'] == $regimen_select) {
                 $reg_ses = $regMat[$c]['nombre'];
@@ -2430,7 +2352,6 @@ class Asesor extends CI_Controller
             }
         }
         /*****MARTHA DEBALE OPTION*******/
-        //$descuento_mdb = $this->input->post('descuento_mdb');
         /*************/
         $des_casa = $this->input->post('des_hide');
 
@@ -2446,7 +2367,7 @@ class Asesor extends CI_Controller
         $arreglo_ds["actaConstitutiva_pm"] = $actaConstitutiva_pm;
         $arreglo_ds["idOficialApoderado_pm"] = $idOficialApoderado_pm;
 
-        if ($des_casa == 1) {
+        if ($des_casa == 1){
             $arreglo_ds["costoM2_casas"] = $costoM2;
         } else {
             $arreglo_ds["costoM2"] = $costoM2;
@@ -2472,7 +2393,6 @@ class Asesor extends CI_Controller
         $arreglo_ds["anio"] = $anio;
         $arreglo_ds["observacion"] = $observacion;
         $arreglo_ds['modificado_por'] = $this->session->userdata('id_usuario');
-
 
         //ARRAY DATOS CLIENTE
         $arreglo_cliente = array();
@@ -2506,8 +2426,6 @@ class Asesor extends CI_Controller
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
-        //$arreglo_cliente['lugar_prospeccion'] = $cm;
-//        $arreglo_cliente["descuento_mdb"] = $descuento_mdb;
 
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();
@@ -2583,8 +2501,6 @@ class Asesor extends CI_Controller
             $arreglo_ds["desarrollo"] = '0';
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////
-
         if ($this->input->post('idOficial_pf')) {
             $arreglo_ds["idOficial_pf"] = $idOficial_pf;
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1" checked="checked"> Identificación&nbsp;Oficial';
@@ -2592,7 +2508,7 @@ class Asesor extends CI_Controller
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
             $arreglo_ds["idOficial_pf"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($this->input->post('idDomicilio_pf')) {
             $arreglo_ds["idDomicilio_pf"] = $idDomicilio_pf;
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
@@ -2600,7 +2516,7 @@ class Asesor extends CI_Controller
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
             $arreglo_ds["idDomicilio_pf"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($this->input->post('actaMatrimonio_pf')) {
             $arreglo_ds["actaMatrimonio_pf"] = $actaMatrimonio_pf;
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
@@ -2608,7 +2524,7 @@ class Asesor extends CI_Controller
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
             $arreglo_ds["actaMatrimonio_pf"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($this->input->post('actaConstitutiva_pm')) {
             $arreglo_ds["actaConstitutiva_pm"] = $actaConstitutiva_pm;
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
@@ -2616,7 +2532,7 @@ class Asesor extends CI_Controller
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
             $arreglo_ds["actaConstitutiva_pm"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($this->input->post('poder_pm')) {
             $arreglo_ds["poder_pm"] = $poder_pm;
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
@@ -2624,7 +2540,7 @@ class Asesor extends CI_Controller
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
             $arreglo_ds["poder_pm"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
+        
         if ($this->input->post('idOficialApoderado_pm')) {
             $arreglo_ds["idOficialApoderado_pm"] = $idOficialApoderado_pm;
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
@@ -2632,9 +2548,6 @@ class Asesor extends CI_Controller
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1"> Identificación&nbsp;Oficial&nbsp;Apoderado';
             $arreglo_ds["idOficialApoderado_pm"] = '0';
         }
-        //----------------------------------------------------------------------------------------------------------
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if ($this->input->post('tipo_vivienda')) {
             $arreglo_cliente["tipo_vivienda"] = $tipo_vivienda;
@@ -3629,9 +3542,7 @@ class Asesor extends CI_Controller
     /*autorizaciones*/
     public function autorizaciones()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("asesor/autorizaciones", $datos);
     }
@@ -3794,13 +3705,11 @@ class Asesor extends CI_Controller
         if(count($data)>=1){
             $data['message'] = 'OBSERVACION_CONTRATO';
             echo json_encode($data);
-            exit;
         }else{
         if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)
             $documentsNumber = 3;
         else
             $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
-
 
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
@@ -3977,10 +3886,7 @@ class Asesor extends CI_Controller
             $arreglo2["idCliente"] = $this->input->post('idCliente');
             $arreglo2["comentario"] = $this->input->post('comentario');
 
-
-
             $validate = $this->Asesor_model->validateSt2($idLote);
-
 
             if ($validate == 1) {
 
@@ -4807,7 +4713,6 @@ class Asesor extends CI_Controller
         }
     }
 
-    /*----------------------------CARPETAS--------------------------------------*/
     public function saveCarpetas()
     {
         $fileTmpPath = $_FILES['file-upload']['tmp_name'];
@@ -4818,7 +4723,6 @@ class Asesor extends CI_Controller
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
 
-        // echo $fileTmpPath = $_FILES['file-upload']['name'];
         $data = [
             'nombre' => $this->input->post("nombre"),
             'descripcion' => $this->input->post("desc"),
@@ -4828,7 +4732,6 @@ class Asesor extends CI_Controller
             'fecha_creacion' => date("Y-m-d H:i:s"),
             'fecha_modificacion' => date("Y-m-d H:i:s")
         ];
-
 
         $uploadFileDir = './static/documentos/carpetas/';
         $dest_path = $uploadFileDir . $newFileName;
@@ -4903,23 +4806,16 @@ class Asesor extends CI_Controller
 
     }
 
-    /*---------------------------------FIN CARPETAS------------------------------------------------*/
-
-
     public function presentacionesCarpetas()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("asesor/carpetas_view", $datos);
     }
 
     public function AdminCarpetas()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("asesor/carpetas_admin", $datos);
     }
@@ -5708,10 +5604,7 @@ class Asesor extends CI_Controller
 
     public function inventoryByLote()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));        
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/inventoryByLote", $datos);
@@ -5822,10 +5715,7 @@ class Asesor extends CI_Controller
     }
 
     public function expedientesRechazados(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        // $this->validateSession();
         $this->load->view('template/header');
         $this->load->view("asesor/contratosCancelados", $datos);
     }
@@ -5877,7 +5767,6 @@ class Asesor extends CI_Controller
 
     public function reporteAsesores(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $this->load->view("asesor/reporte_asesores_view", $datos);
 

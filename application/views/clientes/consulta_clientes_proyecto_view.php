@@ -3,20 +3,10 @@
 <body class="">
     <div class="wrapper ">
         <?php
-            switch ($this->session->userdata('id_rol')) {
-                case '18':
-                    // code...
-                    $datos = array();
-                    $datos = $datos4;
-                    $datos = $datos2;
-                    $datos = $datos3;
-                    $this->load->view('template/sidebar', $datos);
-                    break;
-                default:
-                    // code...
-                    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                    break;
-            }
+            if(in_array($this->session->userdata('id_usuario'), array(1980, 7097)))
+                $this->load->view('template/sidebar', '');
+            else
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         ?>
         <!--Contenido de la página-->
         <div class="content boxContent">
@@ -28,21 +18,11 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Clientes por proyecto</h3>
+                                <h3 class="card-title center-align">Reporte de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Proyecto</label>
-                                                <select name="proyecto"
-                                                        id="proyecto" 
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn" 
-                                                        data-show-subtext="true" 
-                                                         data-live-search="true" 
-                                                         title="Selecciona una opción" 
-                                                         data-size="7" required>
-                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -56,13 +36,10 @@
                                                 <tr>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>ESTATUS CONTRATACIÓN</th>
-                                                    <th>ESTATUS LOTE</th>
-                                                    <th>NOMBRE COMPLETO</th>
-                                                    <th>FECHA APARTADO</th>
-                                                    <th>PERSONALIDAD JURÍDICA</th>
-                                                    <th>FECHA NACIMIENTO</th>
+                                                    <th>LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>FECHA DE NACIMIENTO</th>
                                                     <th>EDAD</th>
                                                     <th>OCUPACIÓN</th>
                                                 </tr>

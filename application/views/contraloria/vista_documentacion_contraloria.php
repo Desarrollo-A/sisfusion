@@ -716,7 +716,7 @@ c                                    </span>
 			content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>asesor/deposito_seriedad/'+$itself.attr('data-idc')+'/1/"></iframe></div>',
 			player:     "html",
 			title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
-			width:      1600,
+			width:      2000,
 			height:     900
 		});
 	});
@@ -727,7 +727,7 @@ c                                    </span>
             content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute" src="<?=base_url()?>asesor/deposito_seriedad_ds/'+$itself.attr('data-idc')+'/1/"></iframe></div>',
             player:     "html",
             title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
-            width:      1600,
+            width:      1800,
             height:     900
         });
     });
