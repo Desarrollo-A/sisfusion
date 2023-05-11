@@ -42,9 +42,9 @@
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
-                                            <th>SUP</th>
+                                            <th>SUPERFICIE</th>
                                             <th>M2</th>
-                                            <th>PRECIO LISTA</th>
+                                            <th>PRECIO DE LISTA</th>
                                             <th>TOTAL CON DESCUENTOS</th>
                                             <th>REFERENCIA</th>
                                             <th>MSNI</th>
@@ -53,13 +53,16 @@
                                             <th>GERENTE</th>
                                             <th>SUBDIRECTOR</th>
                                             <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
                                             <th>ESTATUS</th>
-                                            <th>FECHA.AP</th>
+                                            <th>FECHA DE APARTADO</th>
                                             <th>COMENTARIO</th>
                                             <th>LUGAR PROSPECCIÓN</th>
                                             <th>FECHA APERTURA</th>
-                                            <th>FECHA VAL. ENGANCHE</th>
+                                            <th>FECHA VALIDACIÓN ENGANCHE</th>
 											<th>CANTIDAD ENGANCHE PAGADO</th>
+											<th>REUBICACIÓN</th>
+											<th>FECHA REUBICACIÓN</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -77,7 +80,6 @@
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<script src="<?=base_url()?>dist/js/controllers/inventario/inventario.js"></script>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
@@ -86,4 +88,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/inventario/inventario.js"></script>
 
