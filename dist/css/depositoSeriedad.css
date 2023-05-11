@@ -621,6 +621,10 @@
   color: #209E63;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-excel:hover {
   background-color: #209E63 !important;
 }
@@ -1324,6 +1328,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1608,6 +1613,6 @@
   cursor: pointer;
 }
 
-#mainBoxDS #ofertanteInput .form-group {
+#mainBoxDS #ofertanteInput .form-group, #mainBoxDS .firmas .form-group {
   padding: 0 !important;
 }

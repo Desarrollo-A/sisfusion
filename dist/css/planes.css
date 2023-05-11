@@ -1692,37 +1692,6 @@
   padding: 0 10px;
 }
 
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount {
-  color: #103f75;
-}
-
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount i {
-  color: #849ec1;
-}
-
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount .boxOnOff {
-  width: 100%;
-  display: flex;
-  background-color: #ffffff;
-  padding: 5px 7px;
-  border-radius: 27px;
-  justify-content: space-between;
-}
-
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount .boxOnOff .switch-label {
-  cursor: pointer;
-}
-
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount .boxOnOff .inputMSI {
-  width: 50%;
-  border: none;
-  text-align: center;
-}
-
-.cargarPlan .tab-content #showPackage .cardPlan .boxAllDiscounts .boxDetailDiscount .rowDetailDiscount .boxOnOff .inputMSI:read-only {
-  color: #c1c1c1;
-}
-
 .cargarPlan .tab-content #showPackage .cardPlan .default__check[type=checkbox] ~ .custom__check {
   display: flex;
   align-items: center;
