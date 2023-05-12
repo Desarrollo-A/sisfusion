@@ -222,21 +222,29 @@ class Internomex_model extends CI_Model {
         ORDER BY au.fecha_creacion DESC");
     }
 
-    public function getInformacionR($empresa){
+    public function getInformacionContratos(){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT opcs.nombre, cli.ocupacion, cli.nombre, cli.apellido_paterno, cli.apellido_materno, ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), '') AS fecha_nacimiento, ISNULL(curp,'') AS curp, ISNULL(cli.rfc,'') AS rfc, 
-        opcs2.nombre, cli.domicilio_particular, CASE WHEN con.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END AS tipo_lote, 
-        lot.nombreLote, lot.sup, ISNULL(lot.totalNeto2, NULL) AS totalNeto, ISNULL(corf.plan_corrida, 0) AS plan_corrida, ISNULL(corf.pago_enganche, NULL) AS pago_enganche, ISNULL(com.comision_total, 0) AS comision_total, ISNULL(com.fecha_comision, '') AS fecha_comision
-        FROM clientes cli
-        INNER JOIN lotes lot ON lot.idCliente = cli.id_cliente AND lot.idLote = cli.idLote
-        INNER JOIN condominios cON ON con.idCondominio = lot.idCondominio
-        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.empresa = '$empresa'
-        LEFT JOIN corridas_financieras corf ON corf.id_lote = lot.idLote AND corf.id_cliente = cli.id_cliente AND corf.status = 1
+        return $this->db->query("SELECT lo.idLote, op1.nombre tipo_persona, 
+        cl.ocupacion actividad_sector,
+        UPPER(cl.nombre) nombre_denominacion, ISNULL(cl.apellido_paterno, '') apellido_paterno, ISNULL(cl.apellido_materno, '') apellido_materno, 
+        ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion, 
+        ISNULL(curp,'') curp, ISNULL(cl.rfc, '') rfc, 
+        op2.nombre nacionalidad, cl.domicilio_particular direccion, 
+        CASE WHEN co.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END tipo_propiedad, 
+        lo.nombreLote nombrePropiedad, lo.sup tamanio_terreno, 
+        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') costo, 
+        ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
+        ISNULL(cm.fecha_comision, '') fecha_pago_comision, FORMAT(ISNULL(cm.comision_total, 0), 'C') monto_comision
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote --AND lo.idLote IN (1003, 1018)
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
         LEFT JOIN (SELECT id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103) fecha_comision, SUM(comision_total) comision_total FROM comisiones 
-        GROUP BY id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103)) com ON com.id_lote = lot.idLote AND com.idCliente = cli.id_cliente
-        INNER JOIN opcs_x_cats opcs ON opcs.id_opcion = cli.personalidad_juridica AND opcs.id_catalogo = 10
-        INNER JOIN opcs_x_cats opcs2 ON opcs2.id_opcion = cli.nacionalidad AND opcs2.id_catalogo = 11
-        WHERE cli.status = 1")->result_array(); 
+        GROUP BY id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103)) cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
+        INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
+        INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
+        WHERE cl.status = 1")->result_array(); 
     }
 
 }

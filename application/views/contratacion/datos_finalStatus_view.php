@@ -67,6 +67,8 @@
                                                     <th>LIBERACIÓN</th>
                                                     <th>ÚLT. MOVIMIENTO</th>
                                                     <th>ESTATUS LOTE</th>
+                                                    <th>REUBICACIÓN</th>
+                                                    <th>FECHA REUBICACIÓN</th>
                                                 </tr>
                                             </thead>
                                         </table>
