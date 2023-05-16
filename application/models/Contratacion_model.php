@@ -173,27 +173,62 @@ class Contratacion_model extends CI_Model {
 	 }
 
 
-	 function getClient($idLote){
-        return $this->db->query("SELECT idLote, idCliente FROM lotes WHERE idLote = $idLote");
-    }
+   function getClient($idLote){
+      return $this->db->query(
+         "SELECT idLote, idCliente
+          FROM lotes
+          WHERE idLote = $idLote");
+   }
 
    function getCoSallingAdvisers($id_cliente) {
-      return $this->db-> query("SELECT id_cliente, 
-      CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
-      CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
-      CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
-      CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
-      CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
-      CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
-      CONVERT(varchar, vc.fecha_creacion, 20) fecha_creacion, (CASE vc.creado_por WHEN '1297' THEN 'Control interno' ELSE vc.creado_por END) creado_por 
-      FROM ventas_compartidas vc 
-      LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
-      LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
-      LEFT JOIN usuarios u2 ON u2.id_usuario = vc.id_gerente
-      LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
-      LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
-      LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2
-      WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente")->result_array();
+      return $this->db-> query(
+         "SELECT  id_cliente, 
+                  CONVERT(varchar, vc.fecha_creacion, 20) AS fecha_creacion,
+                  CASE 
+                     WHEN u0.id_usuario IS NULL THEN 
+                        'SIN ESPECIFICAR'
+                     ELSE 
+                        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno))
+                  END AS asesor,
+                  CASE
+                     WHEN u1.id_usuario IS NULL THEN
+                        'SIN ESPECIFICAR'
+                     ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno))
+                  END AS coordinador,
+                  CASE 
+                     WHEN u2.id_usuario IS NULL THEN
+                        'SIN ESPECIFICAR'
+                     ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno))
+                  END AS gerente,
+                  CASE
+                     WHEN u3.id_usuario IS NULL THEN
+                        'SIN ESPECIFICAR'
+                     ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno))
+                  END AS subdirector,
+                  CASE
+                     WHEN u4.id_usuario IS NULL THEN
+                        'SIN ESPECIFICAR'
+                     ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
+                  END AS regional,
+                  CASE
+                     WHEN u5.id_usuario IS NULL THEN
+                        'SIN ESPECIFICAR'
+                     ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno))
+                  END AS regional2,
+                  CASE vc.creado_por
+                     WHEN '1297' THEN 
+                        'ADMINISTRADOR INTERNO SISTEMAS'
+                     ELSE vc.creado_por
+                  END AS creado_por 
+         FROM ventas_compartidas vc 
+         LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
+         LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
+         LEFT JOIN usuarios u2 ON u2.id_usuario = vc.id_gerente
+         LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
+         LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
+         LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2
+         WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente 
+         ORDER BY vc.id_cliente")->result_array();
    }
 
     function getClauses($lote){

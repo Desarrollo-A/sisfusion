@@ -8448,188 +8448,35 @@ class RegistroCliente extends CI_Controller {
 	
     function getResultsClientsSerch()
     {
-        $name_client = $this->input->post('nombre');
-        $correo_client = $this->input->post('correo');
-        $telefono_client = $this->input->post('telefono');
-        $apellido_paterno = $this->input->post('apellido_paterno');
-        $apellido_materno = $this->input->post('apellido_materno');
+      $info_client = [];
+      $this->input->post('nombre') !== ''
+      ? $info_client["cl.nombre"] = $this->input->post('nombre')
+      : '';
 
+      $this->input->post('apellido_paterno') !== ''
+      ? $info_client["cl.apellido_paterno"] = $this->input->post('apellido_paterno')
+      : '';
 
-        if(!empty($name_client) && empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByName($name_client);
-        }
-        if(empty($name_client) && !empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByMail($correo_client);
-        }
-        if(empty($name_client) && empty($correo_client) && !empty($telefono_client) && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientByTel($telefono_client);
-        }
-        if(empty($name_client) && empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientByApPaterno($apellido_paterno);
-        }
-        if(empty($name_client) && empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientByApMaterno($apellido_materno);
-        }
+      $this->input->post('apellido_materno') !== ''
+      ? $info_client["cl.apellido_materno"] = $this->input->post('apellido_materno')
+      : '';
 
-        /**Telefono, apellido_paterno, apellido_materno vacío,  ----correo y prospecto**/
-        if(!empty($name_client) && !empty($correo_client) && empty($telefono_client)  && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByMailName($name_client, $correo_client);
-        }
-        /**correo, apellido_paterno, apellido_materno vacío,  ----nombre y telefono**/
-        if(!empty($name_client) && empty($correo_client) && !empty($telefono_client)  && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameTel($name_client, $telefono_client);
-        }
-        /**nombre, apellido_paterno, apellido_materno vacío,  ----correo y telefono**/
-        if(empty($name_client) && !empty($correo_client) && !empty($telefono_client)  && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByMailTel($correo_client, $telefono_client);
-        }
-        /******NUEVAS COMBINACIONES DE NOMBRE*******/
-        /**correo, telefono, ap_materno vacío    ------ NOMBRE + AP_PATERNO**/
-        if(!empty($name_client) && empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaterno($name_client, $apellido_paterno);
-        }
-        /**correo, telefono, ap_paterno vacío    ------ NOMBRE + AP_MATERNO**/
-        if(!empty($name_client) && empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApMaterno($name_client, $apellido_materno);
-        }
-        /****correo*****/
-        /**nombre, telefono, ap_materno vacío    ------ CORREO + AP_PATERNO**/
-        if(empty($name_client) && !empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByMailApPaterno($correo_client, $apellido_paterno);
-        }
-        /**nombre, telefono, ap_paterno vacío    ------ CORREO + AP_MATERNO**/
-        if(empty($name_client) && !empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByMailApMaterno($correo_client, $apellido_materno);
-        }
-        /***telefono***/
-        /**correo, nombre, apellido_materno vacío,  ---- apellido_paterno y telefono**/
-        if(empty($name_client) && empty($correo_client) && !empty($telefono_client)  && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByApPaternoTel($apellido_paterno, $telefono_client);
-        }
-        /**correo, nombre, apellido_paterno vacío,  ---- apellido_materno y telefono**/
-        if(empty($name_client) && empty($correo_client) && !empty($telefono_client)  && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByApMaternoTel($apellido_materno, $telefono_client);
-        }
+      $this->input->post('telefono') !== ''
+      ? $info_client["cl.telefono"] = $this->input->post('telefono')
+      : '';
 
-        /*********nombre + 2************/
-        /**correo, telefono vacío    ------ NOMBRE + AP_PATERNO + AP_MATERNO**/
-        if(!empty($name_client) && empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaternoApMaterno($name_client, $apellido_paterno, $apellido_materno);
-        }
-        /**ap_materno, telefono vacío    ------ NOMBRE + AP_PATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaternoMail($name_client, $apellido_paterno, $correo_client);
-        }
-        /**ap_materno, correo vacío    ------ NOMBRE + AP_PATERNO + TELEFONO**/
-        if(!empty($name_client) && empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaternoTel($name_client, $apellido_paterno, $telefono_client);
-        }
-
-        /********nombre + 3***********/
-        /** telefono vacío    ------ NOMBRE + AP_PATERNO + AP_MATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaternoApMaternoMail($name_client, $apellido_paterno, $apellido_materno, $correo_client);
-        }
-        /** correo vacío    ------ NOMBRE + AP_PATERNO + AP_MATERNO + TELEFONO**/
-        if(!empty($name_client) && empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameApPaternoApMaternoTel($name_client, $apellido_paterno, $apellido_materno, $telefono_client);
-        }
-
-        /********convinaciones | ap_paterno*********/
-        /** correo, nombre, telefono vacío    ------  AP_PATERNO + AP_MATERNO **/
-        if(empty($name_client) && empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByApPaternoApMaterno($apellido_paterno, $apellido_materno);
-        }
-        /**  nombre, telefono vacío    ------  AP_PATERNO + AP_MATERNO + CORREO**/
-        if(empty($name_client) && !empty($correo_client) && empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByApPaternoApMaternoMail($apellido_paterno, $apellido_materno, $correo_client);
-        }
-        /**  nombre, correo vacío    ------  AP_PATERNO + AP_MATERNO + TELEFONO**/
-        if(empty($name_client) && empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByApPaternoApMaternoTel($apellido_paterno, $apellido_materno, $telefono_client);
-        }
-        /**  apellido_paterno, correo vacío    ------  NOMBRE + AP_MATERNO + TELEFONO**/
-        if(!empty($name_client) && empty($correo_client) && !empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNombreApMaternoTel($name_client, $apellido_materno, $telefono_client);
-        }
-        /**  apellido_paterno, telefono vacío    ------  NOMBRE + AP_MATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNombreApMaternoMail($name_client, $apellido_materno, $correo_client);
-        }
-        /**  apellido_paterno, telefono vacío    ------  NOMBRE + AP_MATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNombreTelMail($name_client, $telefono_client, $correo_client);
-        }
-        /**  apellido_paterno vacío    ------  NOMBRE + TELEFONO + AP_MATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && !empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNombreTelMailApMaterno($name_client, $telefono_client, $correo_client, $apellido_materno);
-        }
-        /**  apellido_materno vacío    ------  NOMBRE + TELEFONO + AP_PATERNO + CORREO**/
-        if(!empty($name_client) && !empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNombreTelMailApPaterno($name_client, $telefono_client, $correo_client, $apellido_paterno);
-        }
-        /**  apellido_materno, nombre vacío    ------   TELEFONO + AP_PATERNO + CORREO**/
-        if(empty($name_client) && !empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByTelMailApPaterno($telefono_client, $correo_client, $apellido_paterno);
-        }
-        /**  apellido_paterno, nombre vacío    ------   TELEFONO + AP_MATERNO + CORREO**/
-        if(empty($name_client) && !empty($correo_client) && !empty($telefono_client) && empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByTelMailApMaterno($telefono_client, $correo_client, $apellido_materno);
-        }
-
-        /**   nombre vacío    ------   TELEFONO + AP_MATERNO + CORREO + AP_PATERNO**/
-        if(empty($name_client) && !empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByTelMailApPaternoApMaterno($telefono_client, $correo_client, $apellido_paterno, $apellido_materno);
-        }
-        /**   apellido_paterno, apellido_materno vacío    ------   NOMBRE + TELEFONO + CORREO*/
-        if(!empty($name_client) && !empty($correo_client) && !empty($telefono_client) && empty($apellido_paterno) && empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByNameMailTel($telefono_client, $correo_client, $name_client);
-        }
-        /*************************************************/
-        // buscar todos
-        if(!empty($name_client) && !empty($correo_client) && !empty($telefono_client) && !empty($apellido_paterno) && !empty($apellido_materno))
-        {
-            $data['data'] = $this->registrolote_modelo->getClientsByAllFiels($name_client, $correo_client, $telefono_client, $apellido_paterno, $apellido_materno);
-        }
-
-
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
+      $this->input->post('correo') !== ''
+      ? $info_client["cl.correo"] = $this->input->post('correo')
+      : '';
+      
+      $data = (!empty($info_client) || count($info_client) > 0) 
+              ? $this->registrolote_modelo->getDetailedInfoClients($info_client)
+              : array();
+      if($data != null) {
+          echo json_encode($data);
+      } else {
+          echo json_encode(array());
+      }
     }
 
     function getLotesAllAssistant($condominio,$residencial)
