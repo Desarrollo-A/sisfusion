@@ -146,15 +146,16 @@ class Contratacion extends CI_Controller
 		}
 	}
 
-    public function getCoSallingAdvisers($idLote) {
+    public function getCoSallingAdvisers($idLote=null) {
+        $idLote = is_null($idLote) ? $this->input->post("idLote") : $idLote;
         // ME TRAIGO EL ID DEL CLIENTEE
         $data = $this->Contratacion_model->getClient($idLote)->result_array();
         // EVALUO QUE EL ID DEL CLIENTE NO SEA 0 O NULO, EN ESE CASO YA NO VOY BUSCO EN VENTAS COMPARTIDAS
-        if ($data[0]['idCliente'] != NULL && $data[0]['idCliente'] != 0)
+        if (!empty($data) && $data[0]['idCliente'] != NULL && $data[0]['idCliente'] != 0)
             $finalAnswer = $this->Contratacion_model->getCoSallingAdvisers($data[0]['idCliente']);
         else // BUSCO VENTAS COMPARTIDAS ACTIVAS
             $finalAnswer = array();
-
+        
         if ($finalAnswer != null)
             echo json_encode($finalAnswer);
         else 
