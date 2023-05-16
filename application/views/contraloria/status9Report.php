@@ -4,16 +4,11 @@
 <body class="">
     <div class="wrapper ">
         <?php
-    switch ($this->session->userdata('id_rol')) {
-        case '17': // SUBDIRECTOR CONTRALORÍA
-            $this->load->view('template/sidebar', '');
-            break;
-
-        default:
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            break;
-    }
-    ?>
+            if (in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)))
+                $this->load->view('template/sidebar', '');
+            else
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+        ?>
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
