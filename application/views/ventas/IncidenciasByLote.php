@@ -412,7 +412,7 @@
                             <div class="form-group">
                                 <label class="label">Puesto del usuario a modificar</label>
                                 <select class="selectpicker roles3" name="roles3" id="roles3" required>
-                                    <option value="">----Seleccionar-----</option>
+                                    <option value="">----Seleccionar-----</option> 
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>

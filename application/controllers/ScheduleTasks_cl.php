@@ -78,6 +78,8 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
     //                         'irene.vallejo@ciudadmaderas.com',
     //                         'leydi.sanchez@ciudadmaderas.com',
     //                         'monserrat.cazares@ciudadmaderas.com');
+    //                         'danae.perez@ciudadmaderas.com');
+    //                         'nestor.vera@ciudadmaderas.com');
     $correos_entregar = array('programador.analista18@ciudadmaderas.com');
 
     $elementos_correo = array("setFrom" => Elementos_Correo_ScheduleTasks_Cl::SET_FROM_EMAIL,

@@ -597,6 +597,10 @@
   margin: 0;
 }
 
+.color-letter {
+  color: #209E63;
+}
+
 .buttons-pdf i {
   color: #f44336;
 }
@@ -618,6 +622,10 @@
 }
 
 .buttons-excel i {
+  color: #209E63;
+}
+
+.color-letter {
   color: #209E63;
 }
 
@@ -1324,6 +1332,7 @@
   border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
+  border: none;
 }
 
 .input-gral ::placeholder {
@@ -1335,19 +1344,53 @@
   margin: 0 3px;
 }
 
-#mainBoxDS .label-on-left {
+#mainBoxDS {
+  padding: 50px !important;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS {
+    padding: 20px !important;
+  }
+}
+
+#mainBoxDS #mainContainer {
+  padding: 50px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer {
+    padding: 30px !important;
+  }
+}
+
+#mainBoxDS #mainContainer .label-on-left {
   font-size: 10px;
 }
 
-#mainBoxDS .form-group {
+@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
+  #mainBoxDS #mainContainer .label-on-left {
+    font-size: 8px;
+    padding: 0;
+  }
+}
+
+#mainBoxDS #mainContainer .form-group {
   margin: 0 !important;
 }
 
-#mainBoxDS input {
+#mainBoxDS #mainContainer input {
   height: 41px;
 }
 
-#mainBoxDS .switch {
+#mainBoxDS #mainContainer input[type="date"]::-webkit-calendar-picker-indicator {
+  width: 18px;
+  height: 18px;
+  margin-right: 20px;
+  opacity: 0.8;
+}
+
+#mainBoxDS #mainContainer .switch {
   position: relative;
   width: 100%;
   height: 30px;
@@ -1358,7 +1401,7 @@
   cursor: pointer;
 }
 
-#mainBoxDS .switch::before {
+#mainBoxDS #mainContainer .switch::before {
   content: '';
   position: absolute;
   top: 4px;
@@ -1370,29 +1413,41 @@
   transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#mainBoxDS .switch::before::after {
+#mainBoxDS #mainContainer .switch::before::after {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(128, 128, 128, 0.1);
 }
 
-#mainBoxDS input:checked + .switch {
-  background: #96843D;
+#mainBoxDS #mainContainer input:checked + .switch {
+  background: #0a548b;
 }
 
-#mainBoxDS input:checked + .switch::before {
-  left: 27px;
+#mainBoxDS #mainContainer input:checked + .switch::before {
+  left: 50%;
   background: #ffffff;
 }
 
-#mainBoxDS input:checked + .switch:active::before {
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer input:checked + .switch::before {
+    left: 249px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 991px) {
+  #mainBoxDS #mainContainer input:checked + .switch::before {
+    left: 40px;
+  }
+}
+
+#mainBoxDS #mainContainer input:checked + .switch:active::before {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(150, 137, 0, 0.2);
 }
 
-#mainBoxDS .customRadio:checked, #mainBoxDS .customRadio:not(:checked) {
+#mainBoxDS #mainContainer .customRadio:checked, #mainBoxDS #mainContainer .customRadio:not(:checked) {
   position: absolute;
   left: -9999px;
 }
 
-#mainBoxDS .customRadio:checked + label, #mainBoxDS .customRadio:not(:checked) + label {
+#mainBoxDS #mainContainer .customRadio:checked + label, #mainBoxDS #mainContainer .customRadio:not(:checked) + label {
   position: relative;
   padding-left: 28px;
   cursor: pointer;
@@ -1401,7 +1456,7 @@
   color: #333333;
 }
 
-#mainBoxDS .customRadio:checked + label:before, #mainBoxDS .customRadio:not(:checked) + label:before {
+#mainBoxDS #mainContainer .customRadio:checked + label:before, #mainBoxDS #mainContainer .customRadio:not(:checked) + label:before {
   content: '';
   position: absolute;
   left: 0;
@@ -1413,11 +1468,11 @@
   background: #ffffff;
 }
 
-#mainBoxDS .customRadio:checked + label:after, #mainBoxDS .customRadio:not(:checked) + label:after {
+#mainBoxDS #mainContainer .customRadio:checked + label:after, #mainBoxDS #mainContainer .customRadio:not(:checked) + label:after {
   content: '';
   width: 12px;
   height: 12px;
-  background: #96843D;
+  background: #0a548b;
   position: absolute;
   top: 5px;
   left: 5px;
@@ -1426,131 +1481,113 @@
   transition: all 0.2s ease;
 }
 
-#mainBoxDS .customRadio:not(:checked) + label:after {
+#mainBoxDS #mainContainer .customRadio:not(:checked) + label:after {
   opacity: 0;
   -webkit-transform: scale(0);
   transform: scale(0);
 }
 
-#mainBoxDS #encabezadoDS h6 {
+#mainBoxDS #mainContainer .radio_container {
+  background-color: #eeeeee;
+  width: 100%;
+  border-radius: 27px;
+  box-shadow: none;
+  padding: 5px !important;
+}
+
+#mainBoxDS #mainContainer .radio_container input[type="radio"] {
+  appearance: none;
+  display: none;
+}
+
+#mainBoxDS #mainContainer .radio_container label {
+  width: 100%;
+  transition: linear 0.3s;
+  font-weight: 100;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer .radio_container label {
+    width: 100% !important;
+  }
+}
+
+#mainBoxDS #mainContainer .radio_container input[type="radio"]:checked + label {
+  background-color: #0a548b;
+  color: #ffffff;
+  transition: 0.3s;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer .radio_container {
+    display: block !important;
+    border-radius: 21px;
+  }
+}
+
+#mainBoxDS #mainContainer #encabezadoDS h6 {
   font-size: 12px;
   text-align: right;
 }
 
-@media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #mainBoxDS #encabezadoDS h6 {
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer #encabezadoDS h6 {
     text-align: center;
     padding-bottom: -10px;
   }
 }
 
-#mainBoxDS #encabezadoDS h3 {
-  color: #96843D;
+#mainBoxDS #mainContainer #encabezadoDS h3 {
+  color: #0a548b;
   display: flex;
   justify-content: end;
   align-items: center;
 }
 
 @media (min-device-width: 320px) and (max-device-width: 480px), (min-width: 480px) and (max-width: 991px) {
-  #mainBoxDS #encabezadoDS h3 {
+  #mainBoxDS #mainContainer #encabezadoDS h3 {
     text-align: center;
+    font-size: 18px;
+  }
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  #mainBoxDS #mainContainer #encabezadoDS h3 {
     padding-top: 5%;
   }
 }
 
-#mainBoxDS #encabezadoDS h3 i {
+#mainBoxDS #mainContainer #encabezadoDS h3 i {
   color: #929292;
   margin-left: 5px;
 }
 
-#mainBoxDS #encabezadoDS span {
-  color: #96843D;
+#mainBoxDS #mainContainer #encabezadoDS span {
+  color: #0a548b;
 }
 
-#mainBoxDS #radioDS .radio_container, #mainBoxDS #viviendaDS .radio_container {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 27px;
-  box-shadow: none;
-  padding: 5px !important;
-}
-
-#mainBoxDS #radioDS .radio_container input[type="radio"], #mainBoxDS #viviendaDS .radio_container input[type="radio"] {
-  appearance: none;
-  display: none;
-}
-
-#mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label {
-  width: 50%;
-  transition: linear 0.3s;
-  font-weight: 100;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #mainBoxDS #radioDS .radio_container label, #mainBoxDS #viviendaDS .radio_container label {
-    width: 100% !important;
-  }
-}
-
-#mainBoxDS #radioDS .radio_container input[type="radio"]:checked + label, #mainBoxDS #viviendaDS .radio_container input[type="radio"]:checked + label {
-  background-color: #0a548b;
-  color: #ffffff;
-  transition: 0.3s;
-}
-
-#mainBoxDS #containerCopropietario, #mainBoxDS #containerReferencia {
+#mainBoxDS #mainContainer #containerCopropietario, #mainBoxDS #mainContainer #containerReferencia {
   background-color: #f0f8ff9e;
   border-radius: 15px;
   padding: 0 18px !important;
   margin-top: 30px;
 }
 
-#mainBoxDS #ofertanteInput input {
+#mainBoxDS #mainContainer #ofertanteInput input {
   padding: 0;
   text-align: center;
   height: 27px;
   font-size: 12px;
 }
 
-#mainBoxDS #radioViv .radioContainer {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 27px;
-  box-shadow: none;
-  padding: 5px !important;
-}
-
-#mainBoxDS #radioViv .radioContainer input[type="radio"] {
-  appearance: none;
-  display: none;
-}
-
-#mainBoxDS #radioViv .radioContainer label {
-  width: 50%;
-  transition: linear 0.3s;
-  font-weight: 100;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #mainBoxDS #radioViv .radioContainer label {
-    width: 100% !important;
-  }
-}
-
-#mainBoxDS #radioViv .radioContainer input[type="radio"]:checked + label {
-  background-color: #0a548b;
-  color: #ffffff;
-  transition: 0.3s;
-}
-
-#mainBoxDS #observaciones textarea {
+#mainBoxDS #mainContainer #observaciones textarea {
   background-image: none;
   border-radius: 12px;
   border: 1px solid #eee;
   background-color: #eee;
 }
 
-#mainBoxDS #checkDS .boxChecks {
+#mainBoxDS #mainContainer #checkDS .boxChecks {
   background-color: #eeeeee;
   width: 100%;
   border-radius: 27px;
@@ -1558,13 +1595,13 @@
   padding: 5px !important;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS {
   cursor: pointer;
   user-select: none;
   display: block;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS span {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS span {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1576,26 +1613,34 @@
   font-weight: 100;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
   margin: 0 3px;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS span:hover {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS span:hover {
   box-shadow: none;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS input {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS input {
   pointer-events: none;
   display: none;
 }
 
-#mainBoxDS #checkDS .boxChecks .checkstyleDS input:checked + span {
-  background-color: #0a548b;
-  color: #ffffff;
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS input:checked + span {
   transition: 0.3s;
+  font-weight: 400;
+  color: #0a548b;
 }
 
-#mainBoxDS #boxFactura .boxOnOff {
+#mainBoxDS #mainContainer #checkDS .boxChecks .checkstyleDS input:checked + span:before {
+  font-family: FontAwesome !important;
+  content: "\f00c";
+  color: #0a548b;
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+#mainBoxDS #mainContainer #boxFactura .boxOnOff {
   width: 100%;
   display: flex;
   background-color: #ffffff;
@@ -1604,10 +1649,35 @@
   justify-content: space-between;
 }
 
-#mainBoxDS #boxFactura .boxOnOff .switch-label {
+#mainBoxDS #mainContainer #boxFactura .boxOnOff .switch-label {
   cursor: pointer;
 }
 
-#mainBoxDS #ofertanteInput .form-group {
+#mainBoxDS #mainContainer #ofertanteInput .form-group, #mainBoxDS #mainContainer .firmas .form-group {
   padding: 0 !important;
+}
+
+#mainBoxDS #sectionBtns {
+  position: fixed;
+  backdrop-filter: blur(1.2rem);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.4s ease-out;
+}
+
+#mainBoxDS .btnAction {
+  padding: 8px 30px;
+  text-align: center;
+  font-size: 12px;
+  color: #fff;
+  box-shadow: none;
+  margin: 15px 0;
+  border-radius: 27px;
+  background: #96843D;
 }

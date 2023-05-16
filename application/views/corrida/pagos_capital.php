@@ -69,6 +69,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
+    <script type="text/javascript" src="<?= base_url("dist/js/moment.js")?>"></script>
 
 
 
@@ -473,88 +474,98 @@
                                     </div >
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 form-group" >
-                                        <label>Proyecto:</label>
-                                        <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial"
-                                                ng-change="onSelectChangep(proyecto)" class="selectList js-example-basic-single js-states form-control">
-                                            <option value = ""> - Selecciona un Proyecto - </option>
-                                        </select>
-                                        <p id="proyectotext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Condominio:</label>
-                                        <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios"
-                                                ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
-                                            <option value = ""> - Selecciona un Condominio - </option>
-                                        </select>
-                                        <p id="condominiotext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-3 form-group" >
-                                        <label>Lote:</label>
-                                        <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes"
-                                                ng-change="onSelectChangel(lote)" class="selectList js-example-basic-single js-states form-control">
-                                            <option value = ""> - Selecciona un Lote - </option>
-                                        </select>
-                                        <p id="lotetext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Plan:</label>
-                                        <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
-                                            <option value = ""> - Selecciona un plan - </option>
-                                            <option value = "Crédito"> Crédito </option>
-                                            <option value = "Contado"> Contado </option>
-                                        </select>
-                                        <p id="plantext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Años:</label>
-                                        <select id="yearplan" ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
-                                            <option value = ""> - Selecciona los años - </option>
-                                        </select>
-                                        <p id="aniotext" style="color: red;"></p>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 co-lg-12">
+                                        <div class="col-md-3 form-group" >
+                                            <label>Proyecto:</label>
+                                            <select id="proyectoS"  ng-model = "proyecto" ng-options = "item.descripcion for item in residencial"
+                                                    ng-change="onSelectChangep(proyecto)" class="selectList js-example-basic-single js-states form-control">
+                                                <option value = ""> - Selecciona un Proyecto - </option>
+                                            </select>
+                                            <p id="proyectotext" style="color: red;"></p>
+                                        </div>
+                                        <div class="col-md-2 form-group" >
+                                            <label>Condominio:</label>
+                                            <select id="condominioS" ng-model="condominio" ng-options="item.nombre for item in condominios"
+                                                    ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
+                                                <option value = ""> - Selecciona un Condominio - </option>
+                                            </select>
+                                            <p id="condominiotext" style="color: red;"></p>
+                                        </div>
+                                        <div class="col-md-3 form-group" >
+                                            <label>Lote:</label>
+                                            <select ng-model="lote" id="lote" ng-options="item.nombreLote for item in lotes"
+                                                    ng-change="onSelectChangel(lote)" class="selectList js-example-basic-single js-states form-control">
+                                                <option value = ""> - Selecciona un Lote - </option>
+                                            </select>
+                                            <p id="lotetext" style="color: red;"></p>
+                                        </div>
+                                        <div class="col-md-2 form-group" >
+                                            <label>Plan:</label>
+                                            <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
+                                                <option value = ""> - Selecciona un plan - </option>
+                                                <option value = "Crédito"> Crédito </option>
+                                                <option value = "Contado"> Contado </option>
+                                            </select>
+                                            <p id="plantext" style="color: red;"></p>
+                                        </div>
+                                        <div class="col-md-2 form-group" >
+                                            <label>Años:</label>
+                                            <select id="yearplan" ng-model="yearplan" id="yearplan" ng-options="item.yearplan for item in yearsplan" class="form-control" ng-change="getAgePlan()">
+                                                <option value = ""> - Selecciona los años - </option>
+                                            </select>
+                                            <p id="aniotext" style="color: red;"></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 form-group" >
-                                        <label>Superficie:</label>
-                                        <div class="input-group">
-                                            <input type="text" ng-model="superficie" class="form-control" ng-readonly="true">
-                                            <span class="input-group-addon" id="basic-addon1">m2</span>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 co-lg-12">
+                                        <div class="col-md-2 form-group" >
+                                            <label>Superficie:</label>
+                                            <div class="input-group">
+                                                <input type="text" ng-model="superficie" class="form-control" ng-blur="changeDaysEng()"><!--ng-readonly="true" -->
+                                                <span class="input-group-addon" id="basic-addon1">m2</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 form-group" >
+                                            <label>Precio m2:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="basic-addon1">$</span>
+                                                <input type="text" ng-model="preciom2" class="form-control" value="{{preciom2 | currency}}" ng-blur="changeDaysEng()"><!--ng-readonly="true"-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 form-group" >
+                                            <label>Total:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="basic-addon1">$</span>
+                                                <input type="text" ng-model="total" class="form-control" value="{{total | currency}}" ng-readonly="true"> <!--ng-readonly="true"-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 form-group" >
+                                            <label>Porcentaje:</label>
+                                            <div class="input-group">
+                                                <input type="text" ng-model="porcentajeInv" class="form-control" value="{{porcentaje | currency}}" ng-readonly="true" ><!--ng-readonly="true"-->
+                                                <span class="input-group-addon" id="basic-addon1">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 form-group" >
+                                            <label>Enganche:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="basic-addon1">$</span>
+                                                <input type="text" ng-model="enganche" class="form-control" value="{{enganche | currency}}" ng-readonly="true"> <!--ng-readonly="true-->
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Precio m2:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="basic-addon1">$</span>
-                                            <input type="text" ng-model="preciom2" class="form-control" value="{{preciom2 | currency}}" ng-readonly="true">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="col-lg-offset-7 col-lg-3 col-xs-12 col-sm-12 col-md-3 form-group">
+                                            <label>Fecha Inicio Mensualidad:</label>
+                                            <input type="date" ng-model="fechainicioMensualidad" ng-blur="changeDaysEng()" class="form-control" ><!--ng-readonly="true"-->
                                         </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
+                                            <label>Meses sin interés:</label>
+                                            <input type="number" ng-model="mesesSinInteres" ng-blur="cambioMsi()" id="mesesSinInteres" class="form-control"><!--ng-readonly="true"-->
+                                        </div
+                                        >
                                     </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Total:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="basic-addon1">$</span>
-                                            <input type="text" ng-model="total" class="form-control" value="{{total | currency}}" ng-readonly="true">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Porcentaje:</label>
-                                        <div class="input-group">
-                                            <input type="text" ng-model="porcentajeInv" class="form-control" value="{{porcentaje | currency}}" ng-readonly="true">
-                                            <span class="input-group-addon" id="basic-addon1">%</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Fecha:</label>
-                                        <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Enganche:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="basic-addon1">$</span>
-                                            <input type="text" ng-model="enganche" class="form-control" value="{{enganche | currency}}" ng-readonly="true">
-                                        </div>
-                                    </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 form-group" >
@@ -1031,7 +1042,18 @@
             // $scope.range2= 0;
             // $scope.range3= 0;
 
-
+            $scope.imposeMinMax = function(el){
+                if(el.value != ""){
+                    if(parseInt(el.value) < parseInt(el.min)){
+                        el.value = el.min;
+                        $scope.mesesSinInteres = el.min;
+                    }
+                    if(parseInt(el.value) > parseInt(el.max)){
+                        el.value = el.max;
+                        $scope.mesesSinInteres = el.max;
+                    }
+                }
+            }
 
             $scope.mesesdiferir = 0;
 
@@ -1082,7 +1104,6 @@
 
 
             function calcularCF(){
-            console.log("$scope.alphaNumeric:", $scope.alphaNumeric);
 
 ///////////////////////////////////////
 
@@ -1107,12 +1128,21 @@
 ///////////////////////////////////////////
 
 
+                console.log('$scope.superficie: ', parseFloat($scope.superficie));
+                console.log('$scope.preciom2: ', $scope.preciom2);
+                console.log('Total: ', ($scope.preciom2*$scope.superficie));
+                console.log('Enganche: ', (($scope.preciom2*$scope.superficie)*($scope.porcentajeInv/100)));
 
-
+                var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
+                var total_calculado = $scope.preciom2*$scope.superficie;
+                $scope.total = total_calculado;
+                $scope.enganche = total_calculado * ($scope.porcentajeInv/100);
+                $scope.cantidad = total_calculado * ($scope.porcentajeInv/100);
+                cantidadEnganche.val(total_calculado * ($scope.porcentajeInv/100));
                 var porcentaje1 = 0;
                 var porcentaje2 = 0;
                 var porcentajeDeEnganche = $scope.porcentajeEng;
-                var r1 = $scope.total;
+                var r1 = $scope.total;//
                 var descEng = 0;
                 var enganche = 0;
                 var supLote = $scope.superficie;
@@ -1372,12 +1402,12 @@
                 var ini3;
 
 //INICIO FECHA
-                var day;
-                var month = (new Date().getMonth() + 1);
-                var yearc = new Date().getFullYear();
+                var day = new Date($scope.fechainicioMensualidad).getDate();
+                var month = (new Date($scope.fechainicioMensualidad).getMonth() + 1);
+                var yearc = new Date($scope.fechainicioMensualidad).getFullYear();
 
 
-                if (month == 1){
+               /* if (month == 1){
                     day = '0' + 1;
                 }
                 if (month == 2){
@@ -1420,9 +1450,9 @@
 
                     }
 
-                }
+                }*/
 
-                var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3);
+                var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date($scope.fechainicioMensualidad).getMonth() + 1) : (new Date($scope.fechainicioMensualidad).getMonth() + 1);
 
 //FIN FECHA
 
@@ -1503,10 +1533,7 @@
 /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
 
 
-
-
                 $scope.infoLote={
-
                     precioTotal: r1,
                     yPlan: $scope.age_plan,
                     msn: $scope.msni,
@@ -1521,8 +1548,8 @@
                     capital: ($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan*12)),
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche,
-                }
-                console.log($scope.infoLote);
+                };
+
 
                 $scope.engancheFinal = ($scope.infoLote.engancheF);
                 $scope.saldoFinal = $scope.infoLote.precioTotal;
@@ -2194,6 +2221,14 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
+
                             if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
@@ -2330,6 +2365,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -2553,7 +2594,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             //nuevo codigo 19 FEB
                             $scope.pagoACapital = function()
                             {
@@ -2895,7 +2941,12 @@
                             }
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
@@ -3048,7 +3099,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -3168,10 +3224,17 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
                             }
+
                             var PagoACapital;
                             $scope.pagoACapital = function()
                             {
@@ -3273,7 +3336,12 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -3366,7 +3434,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
                             $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
@@ -3412,6 +3485,11 @@
 
 
                     if($scope.infoLote.mesesSinInteresP1 == 0) {
+
+                        //se resetea el valor de MSI en la vista
+                        $scope.finalMesesp1 = 0;
+                        $scope.totalPrimerPlan = 0;
+
 
                         $scope.infoLote.mesesSinInteresP1 = ($scope.mesesdiferir > 0) ? ($scope.infoLote.mesesSinInteresP1 + $scope.mesesdiferir) : ($scope.infoLote.mesesSinInteresP1);
 
@@ -3475,9 +3553,15 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
                             $scope.interes_plan2 = $scope.infoLote.precioTotal * ($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
-                            $scope.dateCf = day + '-' + mes + '-' + yearc;
 
                             if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
@@ -3602,7 +3686,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
                             $scope.capital3 = ($scope.p3 - $scope.interes_plan3);
@@ -3719,6 +3808,15 @@
 
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
+
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
+
 
                             if(i == 0){
                                 $scope.fechaPM = $scope.dateCf;
@@ -3845,6 +3943,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan2 = $scope.total2*($scope.infoLote.interes_p2);
                             $scope.capital2 = ($scope.p2 - $scope.interes_plan2);
@@ -3937,7 +4041,12 @@
 
                             $scope.dateCf = day + '-' + mes + '-' + yearc;
 
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
 
                             $scope.interes_plan3 = $scope.total3*($scope.infoLote.interes_p3);
                             $scope.capital2 = ($scope.p3 - $scope.interes_plan3);
@@ -4018,7 +4127,7 @@
             $scope.daysEng = function() {
                 $scope.daysEnganche = $scope.day.day;
 
-                var TuFecha = new Date();
+                var TuFecha = new Date($scope.fechainicioMensualidad);
                 var dias = parseInt($scope.daysEnganche);
                 TuFecha.setDate(TuFecha.getDate() + dias);
                 if($scope.day.day != 'Diferido')
@@ -4111,6 +4220,36 @@
 
             };
 
+            $scope.cambioMsi = function () {
+                console.log($scope.mesesSinInteres);
+                if($scope.mesesSinInteres<0){
+                    $scope.mesesSinInteres = 0;
+                    console.log('menor: ', $scope.mesesSinInteres);
+                }else if($scope.mesesSinInteres>36){
+                    $scope.mesesSinInteres = 36;
+                    console.log('mayor: ', $scope.mesesSinInteres);
+
+                }
+                $scope.msni = $scope.mesesSinInteres;
+                console.log($scope.msni);
+                    // var msii  =  angular.element(document.querySelector('#mesesSinInteres'));
+                // msii.val(parseInt(msii.val()));
+                // console.log(msii.val());
+                //
+                // if(msii>36){
+                //     $scope.mesesSinInteres = 36;
+                //     $scope.msni = 36;
+                //     msii.val(36);
+                // }else if(msii<0){
+                //     $scope.mesesSinInteres = 0;
+                //     $scope.msni = 0;
+                //     msii.val(0);
+                // }else{
+                //     $scope.mesesSinInteres = msii.val();
+                //     $scope.msni = msii.val();
+                // }
+                calcularCF();
+            }
 
             $scope.ChengecheckEngDif = function(){
                 calcularCF();
@@ -4287,6 +4426,7 @@
                         $scope.total="";
                         $scope.porcentajeInv="";
                         $scope.CurrentDate="";
+                        $scope.fechainicioMensualidad="";
                         $scope.enganche="";
                         $scope.paquetes = "";
 
@@ -4378,6 +4518,7 @@
                         $scope.total="";
                         $scope.porcentajeInv="";
                         $scope.CurrentDate="";
+                        $scope.fechainicioMensualidad="";
                         $scope.enganche="";
                         $scope.paquetes = "";
 
@@ -4496,13 +4637,15 @@
                         /*Termina Reinicia los valores del arreglo que trae descuentos*/
 
 
-
+                        console.log( ' response.data[0]', response.data[0]);
+                        $scope.fechainicioMensualidad = new Date();
+                        $scope.mesesSinInteres = response.data[0].msni;
                         $scope.superficie = response.data[0].sup;
                         $scope.preciom2 = response.data[0].precio;
                         $scope.total = response.data[0].total;
                         $scope.porcentajeInv = response.data[0].porcentaje;
                         $scope.enganche = response.data[0].enganche;
-                        $scope.CurrentDate = new Date();
+                        // $scope.CurrentDate = new Date();
 
                         $scope.nombreLote = response.data[0].nombreLote;
                         $scope.precioTotal = response.data[0].total;
@@ -5058,7 +5201,7 @@
                     var range = [];
                     ini = ($scope.mesesdiferir >= 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
 
-                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 < 35)
+                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <= 35)
                     {
 
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
@@ -5103,6 +5246,12 @@
 
                             if (i == 0) {
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
+                            }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
                             }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
@@ -5303,6 +5452,12 @@
                             $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
+                            }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -5630,7 +5785,12 @@
 
 
                             $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             //nuevo codigo 2 marzo 20
                             if(i == 0){
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
@@ -5917,6 +6077,12 @@
                             if(i == 0){
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
@@ -6088,7 +6254,7 @@
                     var range = [];
                     ini = ($scope.mesesdiferir >= 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
 
-                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 < 35)
+                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <= 35)
                     {
                         for (var i = ini; i <= $scope.infoLote.mesesSinInteresP1 - 1; i++) {
                             if (mes == 13) {
@@ -6129,7 +6295,12 @@
                                 mes = '12';
                             }
                             $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
-
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
                             if(i == 0){
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
@@ -6332,6 +6503,14 @@
                             if (i == 0) {
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
+
                             //nuevo codigo 21 FEB
                             var interes = 0;
                             var total = 0;
@@ -6662,6 +6841,16 @@
                             if(i == 0){
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
+
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
+
+
                             var interes = 0;
                             var total = 0;
                             var capital = 0;
@@ -6946,6 +7135,16 @@
                             if(i == 0){
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
                             }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
+                            }
+
+
+
+
                             var newSaldoTable = 0;
                             var alphaOriginal = [];
                             alphaOriginal = $scope.alphaNumeric;
@@ -7144,6 +7343,12 @@
                             $scope.dateCf = $scope.alphaNumeric[i]['fecha'];
                             if (i == 0) {
                                 $scope.fechaPM = $scope.alphaNumeric[i]['fecha'];
+                            }
+                            let flagValidDate = moment($scope.dateCf, "DD-MM-YYYY").isValid();
+                            if( flagValidDate === false){
+                                var lastDayOfMonth = new Date(yearc, mes, 0);
+                                let validDate = moment(lastDayOfMonth).format("DD-MM-YYYY");
+                                $scope.dateCf = validDate;
                             }
                             //nuevo codigo 21 FEB
                             var interes = 0;
@@ -7685,7 +7890,7 @@
                     var range=[];
 
                     ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
-                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 < 35)
+                    if ($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <= 35)
                     {
                         $scope.infoLote.mesesSinInteresP1 = ($scope.mesesdiferir > 0) ? ($scope.infoLote.mesesSinInteresP1 + $scope.mesesdiferir) : ($scope.infoLote.mesesSinInteresP1);
 
@@ -8272,7 +8477,7 @@
                                         if ($scope.alphaNumeric[full['pago'] - 1]['saldo'] <= 0) {
                                             $scope.alphaNumeric[full['pago'] - 1]['saldo'] = 0;
                                         }
-                                        if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "")//
+                                        if ($scope.alphaNumeric[posicionPago - 1]['disp'] == 1 && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != "" && full['pagoCapital'] != "" && $scope.alphaNumeric[posicionPago - 1]['pagoCapital'] != 0 )//
                                         {
                                             // console.log($scope.alphaNumeric[posicionPago-1]['pago']   +" "+	posicionPago);
                                             // console.log('Estoy llegando aquí');
@@ -9461,7 +9666,7 @@
 
 
                         $scope.dtoptions = DTOptionsBuilder.newOptions().withOption('aaData', $scope.alphaNumeric).withOption('order', [1, 'asc']).withDisplayLength(240).withDOM("<'pull-right'B><l><t><'pull-left'i><p>").withButtons([
-                            {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
+                                {extend: 'excel', text: '<i class="fa fa-file-excel-o"></i> Excel', titleAttr: 'Excel'}
 
                             ]
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});

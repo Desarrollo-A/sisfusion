@@ -278,36 +278,43 @@ class Contratacion_model extends CI_Model {
    public function getCompleteInventory ($sede_residencial) {
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
-      res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
+      res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup, 
       lot.total, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion,
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, lot.msi as msni,
-      CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-      CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-      CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-      CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
-      CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as coordinador2,
-      CONCAT(gerente2.nombre,' ', gerente2.apellido_paterno, ' ', gerente2.apellido_materno) as gerente2, asesor2.id_rol,
-      lot.precio, lot.fecha_modst, cl.fechaApartado, lot.observacionContratoUrgente,
+      CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
+      CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
+      CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
+      CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+      CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+      CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+      CASE WHEN u00.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u00.nombre, ' ', u00.apellido_paterno, ' ', u00.apellido_materno)) END asesor2,
+      CASE WHEN u11.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u11.nombre, ' ', u11.apellido_paterno, ' ', u11.apellido_materno)) END coordinador2,
+      CASE WHEN lot.idAsesor = 832 THEN UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) ELSE CASE u11.id_rol WHEN 3 THEN CASE WHEN u11.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u11.nombre, ' ', u11.apellido_paterno, ' ', u11.apellido_materno)) END ELSE CASE WHEN u22.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u22.nombre, ' ', u22.apellido_paterno, ' ', u22.apellido_materno)) END END END gerente2, 
+      CASE u11.id_rol WHEN 3 THEN CASE WHEN u22.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u22.nombre, ' ', u22.apellido_paterno, ' ', u22.apellido_materno)) END ELSE CASE WHEN u33.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u33.nombre, ' ', u33.apellido_paterno, ' ', u33.apellido_materno)) END END subdirector2, 
+      CASE u11.id_rol WHEN 3 THEN CASE WHEN u33.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u33.nombre, ' ', u33.apellido_paterno, ' ', u33.apellido_materno)) END ELSE CASE WHEN u44.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u44.nombre, ' ', u44.apellido_paterno, ' ', u44.apellido_materno)) END END regional22,
+      lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 20), '') fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-      CONCAT(subdirector.nombre, ' ', subdirector.apellido_paterno, ' ', subdirector.apellido_materno) as subdirector,
-      CONCAT(director.nombre, ' ', director.apellido_paterno, ' ', director.apellido_materno) as regional,
       $prospectingPlaceDetail lugar_prospeccion, 
-      lot.fecha_creacion,sl.background_sl,
-      lot.totalValidado as cantidad_enganche, fechaSolicitudValidacion as fecha_validacion
+      ISNULL(CONVERT(varchar, lot.fecha_creacion, 20), '') fecha_creacion,sl.background_sl,
+      lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') fecha_validacion,
+      cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
       LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
       LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente                
-      LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-      LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-      LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario                
-      LEFT JOIN usuarios asesor2 ON lot.idAsesor = asesor2.id_usuario
-      LEFT JOIN usuarios coordinador2 ON asesor2.id_lider = coordinador2.id_usuario
-      LEFT JOIN usuarios gerente2 ON coordinador2.id_lider = gerente2.id_usuario
-      LEFT JOIN usuarios subdirector ON gerente2.id_lider = subdirector.id_usuario
-      LEFT JOIN usuarios director ON subdirector.id_lider = director.id_usuario
+      LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+      LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+      LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+      LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+      LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+      LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+      LEFT JOIN usuarios u00 ON u00.id_usuario = lot.idAsesor
+      LEFT JOIN usuarios u11 ON u11.id_usuario = u00.id_lider -- COORDINADOR
+      LEFT JOIN usuarios u22 ON u22.id_usuario = u11.id_lider -- GERENTE
+      LEFT JOIN usuarios u33 ON u33.id_usuario = u22.id_lider -- SUBDIRECTOR
+      LEFT JOIN usuarios u44 ON u44.id_usuario = u33.id_lider -- REGIONAL
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto       
       WHERE lot.status = 1  ORDER BY con.nombre, lot.idLote");
