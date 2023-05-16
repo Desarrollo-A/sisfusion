@@ -2928,12 +2928,6 @@ public function getStatusMktdPreventa(){
             json_encode(array());
     }
 
-    public function listadoClientes(){//vista clientes DRAGON POPEA
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("clientes/clientesViewDR",$datos);
-    }
-
     function searchData(){
         //este metodo se usa para la busqueda de clientes y prospectos USER POPEA
         //se diferencias por la bandera TB
