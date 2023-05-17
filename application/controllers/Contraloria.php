@@ -3784,5 +3784,21 @@ class Contraloria extends CI_Controller {
         }
     }
 
+    public function inventarioComisionistas(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("contraloria/inventarioComisionistas_view",$datos);
+
+    }
+
+    public function getInvientarioComisionista($estatus, $condominio, $proyecto) {
+		$data = $this->Contraloria_model->getInvientarioComisionista($estatus, $condominio, $proyecto);
+		if($data!=null)
+            echo json_encode($data);
+        else
+		    echo json_encode(array());
+		exit;
+    }
+
 
 }
