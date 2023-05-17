@@ -1138,4 +1138,53 @@ class Contraloria_model extends CI_Model {
         return $query->result_array();
     }
 
+    function getInvientarioComisionista($estatus, $condominio, $proyecto) {
+        $filtroProyecto = "";
+        $filtroCondominio = "";
+        $filtroEstatus = "";
+        if ($proyecto != 0)
+            $filtroProyecto = "AND re.idResidencial = $proyecto";
+        if ($condominio != 0)
+            $filtroCondominio = "AND co.idCondominio = $condominio";
+        if ($estatus != 0)
+            $filtroEstatus = "AND lo.idStatusLote = $estatus";
+
+        return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.referencia,
+        CASE WHEN a.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(a.nombre, ' ', a.apellido_paterno, ' ', a.apellido_materno)) END nombreAsesor1,
+        CASE WHEN c.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) END nombreCoordinador1,
+        CASE WHEN g.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(g.nombre, ' ', g.apellido_paterno, ' ', g.apellido_materno)) END nombreGerente1,
+        CASE WHEN a1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(a1.nombre, ' ', a1.apellido_paterno, ' ', a1.apellido_materno)) END nombreAsesor2,
+        CASE WHEN c1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(c1.nombre, ' ', c1.apellido_paterno, ' ', c1.apellido_materno)) END nombreCoordinador2,
+        CASE WHEN g1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(g1.nombre, ' ', g1.apellido_paterno, ' ', g1.apellido_materno)) END nombreGerente2,
+        CASE WHEN a2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(a2.nombre, ' ', a2.apellido_paterno, ' ', a2.apellido_materno)) END nombreAsesor3,
+        CASE WHEN c2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(c2.nombre, ' ', c2.apellido_paterno, ' ', c2.apellido_materno)) END nombreCoordinador3,
+        CASE WHEN g2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(g2.nombre, ' ', g2.apellido_paterno, ' ', g2.apellido_materno)) END nombreGerente3,
+        CASE WHEN lo.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, sl.background_sl, tv.tipo_venta tipo_venta,
+        ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') AS fechaApartado, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lo.casa
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio $filtroCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroProyecto
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote
+        LEFT JOIN (SELECT MIN(id_vcompartida) idVentaUno, id_cliente FROM ventas_compartidas WHERE estatus = 1
+        GROUP BY id_cliente) ventaUno ON ventaUno.id_cliente = cl.id_cliente
+        LEFT JOIN (SELECT MAX(id_vcompartida) idVentaDos, id_cliente FROM ventas_compartidas WHERE estatus = 1
+        GROUP BY id_cliente ) ventaDos ON ventaDos.id_cliente = cl.id_cliente
+        LEFT JOIN usuarios a on a.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios c on c.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios g on g.id_usuario = cl.id_gerente
+        LEFT JOIN ventas_compartidas vc1 on vc1.id_vcompartida = ventaUno.idVentaUno
+        LEFT JOIN usuarios a1 on a1.id_usuario = vc1.id_asesor
+        LEFT JOIN usuarios c1 on c1.id_usuario = vc1.id_coordinador
+        LEFT JOIN usuarios g1 on g1.id_usuario = vc1.id_gerente
+        LEFT JOIN ventas_compartidas vc2 on vc2.id_vcompartida = ventaDos.idVentaDos AND vc2.id_vcompartida != ventaUno.idVentaUno
+        LEFT JOIN usuarios a2 on a2.id_usuario = vc2.id_asesor
+        LEFT JOIN usuarios c2 on c2.id_usuario = vc2.id_coordinador
+        LEFT JOIN usuarios g2 on g2.id_usuario = vc2.id_gerente
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
+        WHERE lo.status = 1 $filtroEstatus --AND lo.idLote IN (83994, 66922, 53696, 53697, 81203, 55668, 63149, 51878, 58803)
+        ORDER BY lo.nombreLote")->result_array();
+    }
+
 }
