@@ -229,12 +229,10 @@ class Contraloria_model extends CI_Model {
 	public function registroStatusContratacion9 () {
 		$id_sede = $this->session->userdata('id_sede');
 		$id_usuario = $this->session->userdata('id_usuario');
-	    if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+	    if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
-		else if($id_usuario == 2815) // Brenda Sánchez solicita poder ver todas las donaciones
-			$filtroSede = "AND (l.ubicacion IN ('$id_sede') OR l.tipo_venta = 4)";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
@@ -333,7 +331,7 @@ class Contraloria_model extends CI_Model {
     public function registroStatusContratacion10v2 () {
         $id_sede = $this->session->userdata('id_sede');
         $id_usuario = $this->session->userdata('id_usuario');
-        if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
             $filtroSede = "";
         else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERRE Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -425,7 +423,7 @@ class Contraloria_model extends CI_Model {
     public function registroStatusContratacion15 () {
         $id_sede = $this->session->userdata('id_sede');
         $id_usuario = $this->session->userdata('id_usuario');
-        if($id_usuario == 2749 || $id_usuario == 2807 || $this->session->userdata('id_rol') == 63 || $id_usuario == 2754 || $id_usuario == 6390 || $id_usuario == 9775) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
             $filtroSede = "";
         else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
