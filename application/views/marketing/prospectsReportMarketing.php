@@ -33,13 +33,18 @@
                         <div class="material-datatables">
                             <div class="form-group">
                                 <div class="table-responsive">
-                                    <table id="verDet" class="table table-bordered table-hover" width="100%" style="text-align:center;">
+                                    <table id="verDet" class="table-striped table-hover">
                                         <thead>
-                                        <tr>
-                                            <th>Gerente</th>
-                                            <th>Coordinador</th>
-                                            <th>Asesor</th>
-                                        </tr>
+                                            <tr>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>FECHA ALTA</th>
+                                                <th>USUARIO</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -126,7 +131,7 @@
                                                             <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4" id="clientes_btnsPr">
                                                                 <div class=" col col-xs-12 col-sm-12 col-md-12 col-lg-12 center-align centered" id="inside">
                                                                     <div class="form-group label-floating div_last_name">
-                                                                        <button type="button" class="btn btn-simple" onclick="cleanFilters()" id="cleanButton">LIMPIAR</button>
+                                                                        <button type="button" class="btn btn-danger btn-simple" onclick="cleanFilters()" id="cleanButton">LIMPIAR</button>
                                                                         <button type="button" class="btn btn-primary" id="searchButton">BUSCAR</button>
                                                                     </div>
                                                                 </div>
@@ -146,7 +151,7 @@
                                                                 <th>ASESOR</th>
                                                                 <th>COORDINADOR</th>
                                                                 <th>GERENTE</th>
-                                                                <th>FECHA CREACIÓN</th>
+                                                                <th>FECHA DE CREACIÓN</th>
                                                                 <th>ID CRM</th>
                                                                 <th>ID DRAGON</th>
                                                                 <th>ORIGEN</th>
@@ -222,7 +227,7 @@
                                                             <div class=" col col-xs-12 col-sm-12 col-md-12 col-lg-12 center-align centered" id="insideC">
 <!--                                                                <div class=" col col-xs-12 col-sm-12 col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4 center-align centered" id="insideC-->
                                                                 <div class="form-group label-floating div_last_name">
-                                                                    <button type="button" class="btn btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
+                                                                    <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
                                                                     <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
                                                                 </div>
                                                             </div>
@@ -233,26 +238,27 @@
                                                         <div class="form-group">
                                                             <div class="table-responsive">
                                                                 <table class="table-striped table-hover"
-                                                                       id="tabla_clientes" name="tabla_clientes">
+                                                                       id="tabla_clientes" 
+                                                                       name="tabla_clientes">
                                                                     <thead>
-                                                                    <tr>
-                                                                        <th>ID LOTE</th>
-                                                                        <th>PROYECTO</th>
-                                                                        <th>CONDOMINIO</th>
-                                                                        <th>LOTE</th>
-                                                                        <th>NOMBRE CLIENTE</th>
-                                                                        <th>NO. RECIBO</th>
-                                                                        <th>REFERENCIA</th>
-                                                                        <th>FECHA APARTADO</th>
-                                                                        <th>ENGANCHE</th>
-                                                                        <th>FECHA ENGANCHE</th>
-                                                                        <th>FECHA CREACIÓN PROSPECTO</th>
-                                                                        <th>ID CRM</th>
-                                                                        <th>ID DRAGON</th>
-                                                                        <th>ORIGEN</th>
-                                                                        <th>ESTATUS LOTE</th>
-                                                                        <th>ACCIONES</th>
-                                                                    </tr>
+                                                                        <tr>
+                                                                            <th>ID LOTE</th>
+                                                                            <th>PROYECTO</th>
+                                                                            <th>CONDOMINIO</th>
+                                                                            <th>LOTE</th>
+                                                                            <th>NOMBRE CLIENTE</th>
+                                                                            <th>NO. RECIBO</th>
+                                                                            <th>REFERENCIA</th>
+                                                                            <th>FECHA APARTADO</th>
+                                                                            <th>ENGANCHE</th>
+                                                                            <th>FECHA ENGANCHE</th>
+                                                                            <th>FECHA CREACIÓN PROSPECTO</th>
+                                                                            <th>ID CRM</th>
+                                                                            <th>ID DRAGON</th>
+                                                                            <th>ORIGEN</th>
+                                                                            <th>ESTATUS LOTE</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
                                                                     </thead>
                                                                 </table>
                                                             </div>
@@ -287,14 +293,6 @@
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <!--  Full Calendar Plugin    -->
-    <script>
-        userType = <?= $this->session->userdata('id_rol') ?> ;
-        idUser = <?= $this->session->userdata('id_usuario') ?> ;
-        typeTransaction = 1;
-        var url = "<?=base_url()?>";
-        var url2 = "<?=base_url()?>index.php/";
-    </script>
     <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/controllers/marketing/marketing.js"></script>
 </body>

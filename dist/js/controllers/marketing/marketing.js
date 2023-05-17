@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	$.post(url + "Contraloria/get_sede", function (data) {
+	$.post(general_base_url + "Contraloria/get_sede", function (data) {
 		var len = data.length;
 		for (var i = 0; i < len; i++) {
 			var id = data[i]['id_sede'];
@@ -110,10 +110,34 @@ $('#searchButtonC').click(()=>{
 });
 
 var tabla_valores_prospectos;
+var titulos_encabezado_prospectos = [];
+var num_colum_encabezado_prospectos = [];
+$("#tabla_prospectos").ready(function () {
+	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
+		var title = $(this).text();
+		titulos_encabezado_prospectos.push(title);
+        num_colum_encabezado_prospectos.push(i);
+		$(this).html(`<input 	type="text"
+                                class="textoshead"
+                                data-toggle="tooltip_prospectos" 
+                                data-placement="top"
+                                title="${title}"
+                                placeholder="${title}"/>`);
+		$('input', this).on('keyup change', function () {
+			if (tabla_valores_prospectos.column(i).search() !== this.value) {
+				tabla_valores_prospectos
+					.column(i)
+					.search(this.value)
+					.draw();
+			}
+		});
+	});
+});
+
 function fillTable(data_search) {
 	tabla_valores_prospectos = $("#tabla_prospectos").DataTable({
 		width: 'auto',
-		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 		buttons: [
 			{
 				extend: 'excelHtml5',
@@ -122,47 +146,10 @@ function fillTable(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Lista de prospectos',
 				exportOptions: {
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+					columns: num_colum_encabezado_prospectos,
 					format: {
 						header: function (d, columnIdx) {
-							switch (columnIdx) {
-								case 0:
-									return 'NOMBRE';
-									break;
-								case 1:
-									return 'TELÉFONO';
-									break;
-								case 2:
-									return 'CORREO';
-									break;
-								case 3:
-									return 'LUGAR PROSPECCIÓN';
-									break;
-								case 4:
-									return 'ASESOR';
-									break;
-								case 5:
-									return 'COORDINADOR';
-									break;
-								case 6:
-									return 'GERENTE';
-									break;
-								case 7:
-									return 'FECHA CREACIÓN';
-									break;
-								case 8:
-									return 'ID CRM';
-									break;
-								case 9:
-									return 'ID DRAGON';
-									break;
-								case 10:
-									return 'ORIGEN';
-									break;
-								case 11:
-									return 'SEDE';
-									break;
-							}
+							return ' '+titulos_encabezado_prospectos[columnIdx] +' ';
 						}
 					}
 				},
@@ -171,7 +158,7 @@ function fillTable(data_search) {
 		],
 		pagingType: "full_numbers",
 		language: {
-			url: url+"static/spanishLoader_v2.json",
+			url: general_base_url+"static/spanishLoader_v2.json",
 			paginate: {
 				previous: "<i class='fa fa-angle-left'>",
 				next: "<i class='fa fa-angle-right'>"
@@ -307,7 +294,7 @@ function fillTable(data_search) {
 		}],
 		ajax: {
 			type: 'POST',
-			url: url2+'Clientes/searchData',
+			url: general_base_url+'Clientes/searchData',
 			data: {
 				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
@@ -321,112 +308,51 @@ function fillTable(data_search) {
 			},
 			cache: false
 		},
-		order: [[1, 'asc']]
-	});
-
-	$('#tabla_prospectos tbody').on('click', 'td.details-control', function () {
-		var tr = $(this).closest('tr');
-		var row = tabla_valores_cliente.row(tr);
-
-		if ( row.child.isShown() ) {
-			row.child.hide();
-			tr.removeClass('shown');
-			$(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-		}
-		else {
-
-
-
-			var informacion_adicional2 = '<table class="table text-justify">' +
-				'<tr>INFORMACIÓN: <b>' + row.data().nombre + ' ' + row.data().apellido_paterno + ' ' + row.data().apellido_materno + '</b>' +
-				'<td style="font-size: .8em"><strong>CORREO: </strong>' + myFunctions.validateEmptyField(row.data().correo) + '</td>' +
-				'<td style="font-size: .8em"><strong>TELEFONO: </strong>' + myFunctions.validateEmptyField(row.data().telefono1) + '</td>' +
-				'<td style="font-size: .8em"><strong>RFC: </strong>' + myFunctions.validateEmptyField(row.data().rfc) + '</td>' +
-				'<td style="font-size: .8em"><b>FECHA +45:</b> ' + myFunctions.validateEmptyField(row.data().fechaVecimiento) + '</td>' +
-				'<td style="font-size: .8em"><strong>FECHA NACIMIENTO: </strong>' + myFunctions.validateEmptyField(row.data().fechaNacimiento) + '</td>' +
-				'</tr>' +
-				'<tr>' +
-				'<td style="font-size: .8em"><b>DOMICILIO PARTICULAR:</b> ' + myFunctions.validateEmptyField(row.data().domicilio_particular) + '</td>' +
-				'<td style="font-size: .8em"><b>ENTERADO:</b> ' + myFunctions.validateEmptyField(row.data().enterado) + '</td>' +
-				'</tr>' +
-				'<tr>' +
-				'<td style="font-size: .8em"><b>GERENTE TITULAR:</b> ' + myFunctions.validateEmptyField(row.data().gerente) + '</td>' +
-				'<td style="font-size: .8em"><b>ASESOR TITULAR:</b> ' + myFunctions.validateEmptyField(row.data().asesor) + '</td>' +
-				'</tr>' +
-				'</table>';
-			var informacion_adicional = '<div class="container subBoxDetail">';
-			informacion_adicional += '       <div class="row">';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-			informacion_adicional += '               <label><b>'+row.data().nombre+' '+row.data().apellido_paterno+' '+row.data().apellido_materno+'</b></label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Correo: </b>'+myFunctions.validateEmptyField(row.data().correo)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Teléfono: </b>'+myFunctions.validateEmptyField(row.data().telefono1)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>RFC: </b>'+myFunctions.validateEmptyField(row.data().rfc)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Fecha +45: </b>'+myFunctions.validateEmptyField(row.data().fechaVecimiento)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Fecha nacimiento: </b>'+myFunctions.validateEmptyField(row.data().fechaNacimiento)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Domicilio Particular: </b>'+myFunctions.validateEmptyField(row.data().domicilio_particular)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Enterado: </b>'+myFunctions.validateEmptyField(row.data().enterado)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Gerente: </b>'+myFunctions.validateEmptyField(row.data().gerente) +'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Asesor Titular: </b>'+myFunctions.validateEmptyField(row.data().asesor)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '       </div>';
-			informacion_adicional += '    </div>';
-
-
-			row.child(informacion_adicional).show();
-			tr.addClass('shown');
-			$(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-		}
+		order: [[1, 'asc']],
+		initComplete: function () {
+            $('[data-toggle="tooltip_prospectos"]').tooltip("destroy");
+            $('[data-toggle="tooltip_prospectos"]').tooltip({trigger: "hover"});
+        }
 	});
 }
 
-$("#tabla_prospectos").ready(function () {
-	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		// if (i != 0 && i != 11) {
-			var title = $(this).text();
-			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
-			$('input', this).on('keyup change', function () {
-				if (tabla_valores_cliente.column(i).search() !== this.value) {
-					tabla_valores_cliente
-						.column(i)
-						.search(this.value)
-						.draw();
-				}
-			});
-		// }
-	});
+var titulos_encabezado = [];
+var num_colum_encabezado = [];
+$("#tabla_clientes").ready(function () {
+	let excluir_column = ['ACCIONES'];
+	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
+		var title = $(this).text();
 
-	let titulos = [];
-	$('#tabla_prospectos thead tr:eq(0) th').each(function (i) {
-		// if (i != 0 && i != 14) {
-			var title = $(this).text();
-
-			titulos.push(title);
-		// }
+		if (!excluir_column.includes(title) && title !== ''){
+            titulos_encabezado.push(title);
+            num_colum_encabezado.push(i);
+        }
+		let readOnly = excluir_column.includes(title) ? 'readOnly': '';
+        let width = title == 'ACCIONES' ? 'width: 57px;' : '';
+		$(this).html(`<input 	type="text"
+                                style="${width}"
+                                class="textoshead"
+                                data-toggle="tooltip" 
+                                data-placement="top"
+                                title="${title}"
+                                placeholder="${title}"
+                                ${readOnly}/>`);
+		$('input', this).on('keyup change', function () {
+			if (tabla_valores_cliente.column(i).search() !== this.value) {
+				tabla_valores_cliente
+					.column(i)
+					.search(this.value)
+					.draw();
+			}
+		});
 	});
 });
+
 var tabla_valores_cliente;
 function fillTableClientes(data_search) {
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
 		width: 'auto',
-		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 		buttons: [
 			{
 				extend: 'excelHtml5',
@@ -435,55 +361,10 @@ function fillTableClientes(data_search) {
 				titleAttr: 'Registro de clientes',
 				title:'Registro de clientes',
 				exportOptions: {
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+					columns: num_colum_encabezado,
 					format: {
 						header: function (d, columnIdx) {
-							switch (columnIdx) {
-								case 0:
-									return 'ID LOTE';
-									break;
-								case 1:
-									return 'PROYECTO';
-								case 2:
-									return 'CONDOMINIO';
-									break;
-								case 3:
-									return 'LOTE';
-									break;
-								case 4:
-									return 'NOMBRE';
-									break;
-								case 5:
-									return 'NO. RECIBO';
-									break;
-								case 6:
-									return 'REFERENCIA';
-									break;
-								case 7:
-									return 'FECHA APARTADO';
-									break;
-								case 8:
-									return 'ENGANCHE';
-									break;
-								case 9:
-									return 'FECHA ENGANCHE';
-									break;
-								case 10:
-									return 'FECHA CREACIÓN PROSPECTO';
-									break;
-								case 11:
-									return 'ID CRM';
-									break;
-								case 12:
-									return 'ID DRAGON';
-									break;
-								case 13:
-									return 'ORIGEN';
-									break;
-								case 14:
-									return 'ESTATUS LOTE';
-									break;
-							}
+							return ' '+titulos_encabezado[columnIdx] +' ';
 						}
 					}
 				},
@@ -492,7 +373,7 @@ function fillTableClientes(data_search) {
 		],
 		pagingType: "full_numbers",
 		language: {
-			url: url+"static/spanishLoader_v2.json",
+			url: general_base_url +"static/spanishLoader_v2.json",
 			paginate: {
 				previous: "<i class='fa fa-angle-left'>",
 				next: "<i class='fa fa-angle-right'>"
@@ -605,7 +486,18 @@ function fillTableClientes(data_search) {
 			},
 			{
 				data: function (d) {
-					return '<center><button class="btn-data btn-deepGray cop" title= "Ventas compartidas" data-idcliente="' + d.id_cliente + '"><i class="material-icons">people</i></button></center>';
+					return `<center>
+								<button class="btn-data btn-blueMaderas cop"
+										data-toggle="tooltip" 
+                                        data-placement="top"
+										title="Ventas compartidas"
+										data-idcliente="${d.id_cliente}"
+										data-idLote="${d.idLote}">
+									<i class="material-icons">
+										people
+									</i>
+								</button>
+							</center>`;
 				}
 			}
 
@@ -618,7 +510,7 @@ function fillTableClientes(data_search) {
 		}],
 		ajax: {
 			type: 'POST',
-			url: url2 + 'Clientes/searchData',
+			url: general_base_url + 'Clientes/searchData',
 			data: {
 				"idLote": data_search['idLote'],
 				"name" :  data_search['name'],
@@ -632,161 +524,119 @@ function fillTableClientes(data_search) {
 			},
 			cache: false
 		},
-		order: [[1, 'asc']]
-	});
-
-	$('#tabla_clientes tbody').on('click', 'td.details-control', function () {
-		var tr = $(this).closest('tr');
-		var row = tabla_valores_cliente.row(tr);
-
-		if ( row.child.isShown() ) {
-			row.child.hide();
-			tr.removeClass('shown');
-			$(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-		}
-		else {
-
-
-
-			var informacion_adicional2 = '<table class="table text-justify">' +
-				'<tr>INFORMACIÓN: <b>' + row.data().nombre + ' ' + row.data().apellido_paterno + ' ' + row.data().apellido_materno + '</b>' +
-				'<td style="font-size: .8em"><strong>CORREO: </strong>' + myFunctions.validateEmptyField(row.data().correo) + '</td>' +
-				'<td style="font-size: .8em"><strong>TELEFONO: </strong>' + myFunctions.validateEmptyField(row.data().telefono1) + '</td>' +
-				'<td style="font-size: .8em"><strong>RFC: </strong>' + myFunctions.validateEmptyField(row.data().rfc) + '</td>' +
-				'<td style="font-size: .8em"><b>FECHA +45:</b> ' + myFunctions.validateEmptyField(row.data().fechaVecimiento) + '</td>' +
-				'<td style="font-size: .8em"><strong>FECHA NACIMIENTO: </strong>' + myFunctions.validateEmptyField(row.data().fechaNacimiento) + '</td>' +
-				'</tr>' +
-				'<tr>' +
-				'<td style="font-size: .8em"><b>DOMICILIO PARTICULAR:</b> ' + myFunctions.validateEmptyField(row.data().domicilio_particular) + '</td>' +
-				'<td style="font-size: .8em"><b>ENTERADO:</b> ' + myFunctions.validateEmptyField(row.data().enterado) + '</td>' +
-				'</tr>' +
-				'<tr>' +
-				'<td style="font-size: .8em"><b>GERENTE TITULAR:</b> ' + myFunctions.validateEmptyField(row.data().gerente) + '</td>' +
-				'<td style="font-size: .8em"><b>ASESOR TITULAR:</b> ' + myFunctions.validateEmptyField(row.data().asesor) + '</td>' +
-				'</tr>' +
-				'</table>';
-			var informacion_adicional = '<div class="container subBoxDetail">';
-			informacion_adicional += '       <div class="row">';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-			informacion_adicional += '               <label><b>'+row.data().nombre+' '+row.data().apellido_paterno+' '+row.data().apellido_materno+'</b></label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Correo: </b>'+myFunctions.validateEmptyField(row.data().correo)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Teléfono: </b>'+myFunctions.validateEmptyField(row.data().telefono1)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>RFC: </b>'+myFunctions.validateEmptyField(row.data().rfc)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Fecha +45: </b>'+myFunctions.validateEmptyField(row.data().fechaVecimiento)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Fecha nacimiento: </b>'+myFunctions.validateEmptyField(row.data().fechaNacimiento)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Domicilio Particular: </b>'+myFunctions.validateEmptyField(row.data().domicilio_particular)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Enterado: </b>'+myFunctions.validateEmptyField(row.data().enterado)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Gerente: </b>'+myFunctions.validateEmptyField(row.data().gerente) +'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '           <div class="col-12 col-sm-12 col-sm-12 col-lg-12">';
-			informacion_adicional += '               <label><b>Asesor Titular: </b>'+myFunctions.validateEmptyField(row.data().asesor)+'</label>';
-			informacion_adicional += '           </div>';
-			informacion_adicional += '       </div>';
-			informacion_adicional += '    </div>';
-
-
-			row.child(informacion_adicional).show();
-			tr.addClass('shown');
-			$(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-		}
+		order: [[1, 'asc']],
+		initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+        }
 	});
 }
-$("#tabla_clientes").ready(function () {
-	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if ( i != 15) {
-			var title = $(this).text();
-			$(this).html('<input class="textoshead" placeholder="' + title + '"/>');
-			$('input', this).on('keyup change', function () {
-				if (tabla_valores_cliente.column(i).search() !== this.value) {
-					tabla_valores_cliente
-						.column(i)
-						.search(this.value)
-						.draw();
-				}
-			});
-		}
-	});
 
-	let titulos = [];
-	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-		if ( i != 13) {
-			var title = $(this).text();
-
-			titulos.push(title);
-		}
-	});
-});
-
-
-
-var id_cliente_global = 0;
-
+var tableHistorial;
+var id_lote_global = 0;
 $(document).on('click', '.cop', function (e) {
 	e.preventDefault();
 	var $itself = $(this);
-	var id_cliente = $itself.attr('data-idcliente');
-	id_cliente_global = id_cliente;
+	var idLote = $itself.attr('data-idLote');
+	id_lote_global = idLote;
+	tableHistorial.ajax.reload();
+	$('#verDetalles').modal('show');
+});
+
+var titulos_encabezado_detalle = [];
+var num_colum_encabezado_detalle = [];
+$("#verDet").ready(function () {
+	$('#verDet thead tr:eq(0) th').each(function (i) {
+		var title = $(this).text();
+		titulos_encabezado_detalle.push(title);
+		num_colum_encabezado_detalle.push(i);
+		$(this).html(`<input 	type="text"
+								class="textoshead"
+								data-toggle="tooltip_details" 
+								data-placement="top"
+								title="${title}"
+								placeholder="${title}"
+								readOnly/>`);
+	});
+});
+
+$(document).ready(function () {
 	tableHistorial = $('#verDet').DataTable({
 		responsive: true,
 		autoWidth: 'true',
-		dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-		buttons: [
+		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+		buttons:[
 			{
 				extend: 'excelHtml5',
 				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 				className: 'btn buttons-excel',
 				titleAttr: 'Reporte ventas compartidas',
 				title:'Reporte ventas compartidas',
+				exportOptions: {
+					columns: num_colum_encabezado_detalle,
+					format: {
+						header: function (d, columnIdx) {
+							return ' '+titulos_encabezado_detalle[columnIdx] +' ';
+						}
+					}
+				}
 			}
 		],
 		scrollX: true,
 		pageLength: 10,
 		language: {
-			url: url+"static/spanishLoader_v2.json",
+			url: general_base_url+"static/spanishLoader_v2.json",
 			paginate: {
 				previous: "<i class='fa fa-angle-left'>",
 				next: "<i class='fa fa-angle-right'>"
 			}
 		},
 		columns: [
-			{data: "nombreGerente"},
-			{data: "nombreCoordinador"},
-			{data: "nombreAsesor"}
+			{
+				"data": "asesor"
+			},
+			{
+				"data": "coordinador"
+			},
+			{
+				"data": "gerente"
+			},
+			{
+				"data": "subdirector"
+			},
+			{
+				"data": "regional"
+			},
+			{
+				"data": "regional2"
+			},
+			{
+				"data": "fecha_creacion"
+			},
+			{
+				"data": "creado_por"
+			}
 		],
-		processing: true,
-		destroy: true,
-		bAutoWidth: false,
-		bLengthChange: false,
-		bInfo: true,
-		ordering: false,
-		fixedColumns: true,
-		ajax: {
-			url: url2+"registroCliente/getcop/",
-			type: "POST",
-			cache: false,
-			data: function (d) {
-				d.id_cliente = id_cliente_global;
+		"processing": true,
+		"bAutoWidth": false,
+		"bLengthChange": false,
+		"bInfo": true,
+		"ordering": false,
+		"fixedColumns": true,
+		"ajax": {
+			"url": `${general_base_url}Contratacion/getCoSallingAdvisers/`,
+			"type": "POST",
+			"cache": false,
+			"dataSrc": "",
+			"data": function (d) {
+				d.idLote = id_lote_global;
 			}
 		},
+		initComplete: function () {
+            $('[data-toggle="tooltip_details"]').tooltip("destroy");
+            $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
+        }
 	});
-
-	$('#verDetalles').modal('show');
 });
 
 function changeSede(){

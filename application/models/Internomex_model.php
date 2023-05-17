@@ -222,7 +222,7 @@ class Internomex_model extends CI_Model {
         ORDER BY au.fecha_creacion DESC");
     }
 
-    public function getInformacionContratos(){
+    public function getInformacionContratos() {
         ini_set('memory_limit', -1);
         return $this->db->query("SELECT lo.idLote, op1.nombre tipo_persona, 
         cl.ocupacion actividad_sector,
@@ -234,9 +234,10 @@ class Internomex_model extends CI_Model {
         lo.nombreLote nombrePropiedad, lo.sup tamanio_terreno, 
         FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') costo, 
         ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
-        ISNULL(cm.fecha_comision, '') fecha_pago_comision, FORMAT(ISNULL(cm.comision_total, 0), 'C') monto_comision
+        ISNULL(cm.fecha_comision, '') fecha_pago_comision, FORMAT(ISNULL(cm.comision_total, 0), 'C') monto_comision,
+        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), '') fechaEstatus9
         FROM clientes cl
-        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote --AND lo.idLote IN (1003, 1018)
+        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote AND lo.status = 1 --AND lo.idLote IN (1003)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
@@ -244,6 +245,7 @@ class Internomex_model extends CI_Model {
         GROUP BY id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103)) cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
         INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
         INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
+		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
         WHERE cl.status = 1")->result_array(); 
     }
 
