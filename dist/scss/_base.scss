@@ -207,6 +207,7 @@ $darkCyan           : #30ada1;
 $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
 $veryDarkBlue       : #1B4F72;
+$VeryDarkCyan       : #0E6251;
 /* END vrbls coloress */
 
 /* size devices */
@@ -937,4 +938,12 @@ $tv                 : "(min-width: 1280px)";
 .isRequired{
     color: $redGoogle;
     margin: 0 3px;
+}
+
+/*Etiqueta para DataTable (vista Inventario Disponible)*/
+//Para el campo de tipo de venta
+.lbl-sale-type{
+    color: $VeryDarkCyan;
+    border: none;
+    background-color:  #0E625118;
 }

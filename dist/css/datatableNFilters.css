@@ -1344,6 +1344,15 @@
   margin: 0 3px;
 }
 
+/*Etiqueta para DataTable (vista Inventario Disponible)
+Para el campo de tipo de venta
+*/
+.lbl-sale-type{
+  color: #0E6251;
+  border: none;
+  background-color:  #0e625118;
+}
+
 .boxContent .nav-tabs-cm {
   background: #eeeeee;
   padding: 0;
