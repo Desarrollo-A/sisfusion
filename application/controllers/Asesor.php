@@ -52,8 +52,6 @@ class Asesor extends CI_Controller
     }
 
     public function deposito_seriedad_ds($idCliente, $onlyView){
-        print_r("entras");
-        exit;
         $this->validateSession();
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);

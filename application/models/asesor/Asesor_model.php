@@ -429,18 +429,25 @@ class Asesor_model extends CI_Model {
 
     public function selectDS($cliente)
     {
-        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, 
-                                    cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as 
-                                    nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, 
-                                    ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, 
-                                    cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, ds.costoM2, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, 
-                                    ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, 
-                                    ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, ds.costom2f,  cl.lugar_prospeccion, ds.fecha_modificacion, ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac
-                                    FROM clientes cl 
-                                    INNER JOIN lotes lot ON cl.idLote = lot.idLote  
-                                    INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-                                    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
-                                    INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
+        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, 
+        cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, 
+        con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, 
+        ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, 
+        cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
+        CASE WHEN CHARINDEX('.', ds.costoM2) = 0 THEN CONCAT(ds.costoM2, '.00') ELSE ds.costoM2 END costoM2, ds.proyecto, ds.municipio as municipioDS, 
+        CASE WHEN CHARINDEX('.', ds.importOferta) = 0 THEN CONCAT(ds.importOferta, '.00') ELSE ds.importOferta END importOferta, ds.letraImport, 
+        CASE WHEN CHARINDEX('.', ds.cantidad) = 0 THEN CONCAT(ds.cantidad, '.00') ELSE ds.cantidad END cantidad, ds.letraCantidad, 
+        CASE WHEN CHARINDEX('.', ds.saldoDeposito) = 0 THEN CONCAT(ds.saldoDeposito, '.00') ELSE ds.saldoDeposito END saldoDeposito,
+        CASE WHEN CHARINDEX('.', ds.aportMensualOfer) = 0 THEN CONCAT(ds.aportMensualOfer, '.00') ELSE ds.aportMensualOfer END aportMensualOfer, ds.fecha1erAport, ds.plazo, 
+        ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
+        CASE WHEN CHARINDEX('.', ds.costom2f) = 0 THEN CONCAT(ds.costom2f, '.00') ELSE ds.costom2f END costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, 
+        ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, 
+        tipo_comprobanteD, cl.regimen_fac, cl.cp_fac
+        FROM clientes cl 
+        INNER JOIN lotes lot ON cl.idLote = lot.idLote  
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
 
         return $query->result();
 
@@ -449,13 +456,6 @@ class Asesor_model extends CI_Model {
 
     public function selectDSCopropiedad($cliente)
     {
-        /*SELECT id_copropietario, id_cliente, oc3.id_opcion as regimen_valor, oc2.id_opcion as estado_valor, oc.id_opcion as nacionalidad_valor, co.nombre as
-                                    nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, ocupacion, empresa, posicion,
-                                    antiguedad, edadFirma, direccion FROM copropietarios co
-                                    LEFT JOIN opcs_x_cats oc ON oc.id_opcion = co.nacionalidad
-                                    LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = co.estado_civil
-                                    LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial WHERE co.estatus = 1 AND co.id_cliente = ".$cliente." AND
-                                    oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
         $query =  $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
                                     co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
@@ -469,12 +469,6 @@ class Asesor_model extends CI_Model {
 
     public function selectDSCopropiedadCount($cliente)
     {
-        /*SELECT count(*) as valor_propietarios FROM copropietarios co
-                                    LEFT JOIN opcs_x_cats oc ON oc.id_opcion = co.nacionalidad
-                                    LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = co.estado_civil
-                                    LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial
-                                    WHERE co.estatus = 1 AND co.id_cliente = ".$cliente."
-                                    AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
         $query = $this->db->query("SELECT count(*) as valor_propietarios FROM copropietarios co 
                                     WHERE co.estatus = 1 AND co.id_cliente = " . $cliente);
         return $query->result();
@@ -490,8 +484,6 @@ class Asesor_model extends CI_Model {
 
     public function selectDSAsesor($cliente)
     {
-        /*INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
-                                    INNER JOIN usuarios ger ON ger.id_usuario = us.id_lider WHERE cl.id_cliente*/
         $query = $this->db->query("
             SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, 
                     CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
