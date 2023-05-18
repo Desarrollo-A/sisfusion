@@ -899,7 +899,7 @@
 
 
     public function data_cliente2($idCondominio){
-        $query = $this->db->query("SELECT cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede, cl.nombre ,cl.apellido_paterno, cl.apellido_materno,
+        $query = $this->db->query("SELECT cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,id_subdirector,id_regional,id_regional_2,cl.id_sede, cl.nombre ,cl.apellido_paterno, cl.apellido_materno,
 		lotes.referencia ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc, cl.id_prospecto
         ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
         ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
@@ -913,7 +913,10 @@
         (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
         (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
         (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador,
-        /*(CASE lotes.idStatusContratacion WHEN 1 THEN 1 ELSE 0 END)*/ '1' changePermission, lotes.idStatusContratacion, lotes.idMovimiento, residencial.empresa
+		(SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_subdirector=id_usuario) AS subdirector,
+		(SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_regional=id_usuario) AS regional,
+		(SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_regional_2=id_usuario) AS regional_2,
+         '1' changePermission, lotes.idStatusContratacion, lotes.idMovimiento, residencial.empresa
         FROM clientes as cl
         LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
         LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
@@ -945,11 +948,17 @@
         vcp.id_asesor, CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor,
         vcp.id_coordinador, CONCAT (uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombre_coordinador,
         vcp.id_gerente, CONCAT (uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombre_gerente,
+		vcp.id_subdirector, CONCAT (sb.nombre, ' ', sb.apellido_paterno, ' ', sb.apellido_materno) nombre_subdirector,
+		vcp.id_regional, CONCAT (rg1.nombre, ' ', rg1.apellido_paterno, ' ', rg1.apellido_materno) nombre_regional,
+		vcp.id_regional_2, CONCAT (rg2.nombre, ' ', rg2.apellido_paterno, ' ', rg2.apellido_materno) nombre_regional_2,
         vcp.fecha_creacion, 1 estatus FROM clientes p
         INNER JOIN ventas_compartidas vcp ON vcp.id_cliente = p.id_cliente
         INNER JOIN usuarios u ON u.id_usuario = vcp.id_asesor
         LEFT JOIN usuarios uu ON uu.id_usuario = vcp.id_coordinador
         INNER JOIN usuarios uuu ON uuu.id_usuario = vcp.id_gerente
+		INNER JOIN usuarios sb ON sb.id_usuario=vcp.id_subdirector
+		LEFT JOIN usuarios rg1 ON rg1.id_usuario=vcp.id_regional
+		LEFT JOIN usuarios rg2 ON rg2.id_usuario=vcp.id_regional_2
 		WHERE vcp.id_cliente = " . $id_cliente . " AND vcp.estatus IN (1, 2)")->result_array();
 
     }
