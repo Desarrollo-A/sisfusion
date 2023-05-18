@@ -165,7 +165,7 @@ function selectOpcion(){
                         $("#usuarioid7").selectpicker('refresh');
                         $("#usuarioid8").selectpicker('refresh');
                     }, 'json');
-                });
+                }); 
                 /**----------------------------------------------------------------------- */
                 $('#miModalVcNew').modal('show');
             }
