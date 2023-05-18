@@ -991,7 +991,7 @@
                                             $('#spiner-loader').addClass('hide');
                                             $("#totpagarPen").html(formatMoney(0));
                                             $("#all").prop('checked', false);
-                                            var fecha = new Date();
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
 
                                             alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
 
@@ -1000,9 +1000,14 @@
                                         }else if(data == 2) {
                                             $('#spiner-loader').addClass('hide');
                                             $("#all").prop('checked', false);
-                                            var fecha = new Date();
-
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
                                             alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
+                                        }
+                                        else if(data == 3) {
+                                            $('#spiner-loader').addClass('hide');
+                                            $("#all").prop('checked', false);
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
+                                            alerts.showNotification("top", "right", "NO SE PUEDEN ENVIAR PORQUE NO HA CAPTURADO UN CÓDIGO POSTAL.", "warning");
                                         } else {
                                             $('#spiner-loader').addClass('hide');
                                             alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
