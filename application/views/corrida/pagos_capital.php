@@ -573,14 +573,14 @@
                                             <label>Enganche (%): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">%</span>
-                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche" min="0" class="form-control" ng-change="selectPorcentajeEnganche()" string-to-number limit-to-max>
+                                                <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche" min="0" class="form-control" ng-blur="selectPorcentajeEnganche()" string-to-number limit-to-max>
                                             </div>
                                         </div>
                                         <div class="col-md-12 form-group">
                                             <label>Enganche cantidad ($): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">$</span>
-                                                <input ng-model="cantidad" id="cantidadEnganche" type="number" class="form-control" min="0" ng-change="resultCantidad()" string-to-number>
+                                                <input ng-model="cantidad" id="cantidadEnganche" type="number" class="form-control"  ng-change="resultCantidad()" string-to-number>
                                             </div>
                                         </div>
                                     </div>
@@ -1138,7 +1138,7 @@
                 $scope.total = total_calculado;
                 $scope.enganche = total_calculado * ($scope.porcentajeInv/100);
                 $scope.cantidad = total_calculado * ($scope.porcentajeInv/100);
-                cantidadEnganche.val(total_calculado * ($scope.porcentajeInv/100));
+                // cantidadEnganche.val(total_calculado * ($scope.porcentajeInv/100));
                 var porcentaje1 = 0;
                 var porcentaje2 = 0;
                 var porcentajeDeEnganche = $scope.porcentajeEng;
@@ -4386,8 +4386,15 @@
                 if(porcentajeEnganche.val() >= 0 && porcentajeEnganche.val()<=100)
                 {
                     var engToShow  =   (r1 * (porcentajeEnganche.val() / 100));
-                    cantidadEnganche.val(parseFloat(engToShow).toFixed(2));
+                    // cantidadEnganche.val(0); //= parseFloat(engToShow).toFixed(2);
+                    // console.log('cantidadEnganche', cantidadEnganche[0].value);
+                    // cantidadEnganche.val(engToShow);
+                    // console.log('camouibfushdfkjs', engToShow);
+                    cantidadEnganche.val(engToShow);
+
+                    console.log('ok5');
                 }
+
                 /*termina nuevo*/
 
 
