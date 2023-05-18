@@ -5274,14 +5274,7 @@ public function lista_sedes()
   $this->load->view('template/header');
   $this->load->view("ventas/UpdatePrecioLote", $datos);
 }
-public function CambiarPrecioLote(){
-  $idLote = $this->input->post("idLote");
-  $precioAnt = $this->input->post("precioAnt");
-  $precio=str_replace(",", "", $this->input->post("precioL"));
-  $comentario='Se modificó el precio de '.$precioAnt.' a '.$precio;
-  $respuesta = $this->Comisiones_model->CambiarPrecioLote($idLote,$precio,$comentario);
-echo json_encode($respuesta);
-}
+
 
 public function getPagosByComision($id_comision)
 {
@@ -5413,25 +5406,19 @@ public function getDesarrolloSelectINTMEX($a = ''){
 }
 
 
-public function datosLotesaCeder($id_usuario){
-
-  $respuesta = array($this->Comisiones_model->datosLotesaCeder($id_usuario));
- echo json_encode($respuesta);
-}
 
 
+// public function getUserInventario($id_cliente){
 
-public function getUserInventario($id_cliente){
+//   $datos = $this->Comisiones_model->getUserInventario($id_cliente)->result_array();
+//   echo json_encode($datos[0]);
+// }
 
-  $datos = $this->Comisiones_model->getUserInventario($id_cliente)->result_array();
-  echo json_encode($datos[0]);
-}
+// public function getUserVC($id_cliente){
 
-public function getUserVC($id_cliente){
-
-  $datos = $this->Comisiones_model->getUserVC($id_cliente)->result_array();
-  echo json_encode($datos);
-}
+//   $datos = $this->Comisiones_model->getUserVC($id_cliente)->result_array();
+//   echo json_encode($datos);
+// }
 function getDatosAbonadoDispersion3($idlote){
   echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion3($idlote)->result_array());
 }
@@ -5465,15 +5452,7 @@ function getDatosAbonadoDispersion3($idlote){
 
 
 
-public function saveTipoVenta(){
 
-  $idLote = $this->input->post('id');
-  $tipo = $this->input->post('tipo');
-
-  $respuesta = $this->Comisiones_model->saveTipoVenta($idLote,$tipo);
- echo json_encode($respuesta); 
-
-}
 
 
 
@@ -6151,14 +6130,14 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode($res);
     }
 
-    public function AddEmpresa(){
-      $idLote = $this->input->post("idLoteE");
-      $Precio = $this->input->post("PrecioLoteE");
-      $idCliente = $this->input->post("idClienteE");
+    // public function AddEmpresa(){
+    //   $idLote = $this->input->post("idLoteE");
+    //   $Precio = $this->input->post("PrecioLoteE");
+    //   $idCliente = $this->input->post("idClienteE");
   
-      $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
-      echo json_encode($respuesta);
-    }
+    //   $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+    //   echo json_encode($respuesta);
+    // }
 
 
 
