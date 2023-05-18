@@ -198,8 +198,12 @@ class Reporte_model extends CI_Model {
                     else // ESTE SÍ TIENE SUBDIRECTOR
                         $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
                 else { // SE CONSULTA DESDE LA TABLA PAPÁ
-                    if ($leadersList[4] == 0) // NO TIENE REGIONAL NI SUBDIRECTOR
-                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
+                    if ($leadersList[4] == 0) { // NO TIENE REGIONAL 
+                        if ($leadersList[3] == 0) // NO TIENE SUBDIRECTPR
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = 0 AND cl.id_regional = 0";
+                        else if ($leadersList[3] != 0) // SÍ TIENE SUBDIRECTPR
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = 0";
+                    }
                     else // ESTE SÍ TIENE SUBDIRECTOR
                         $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
                 }

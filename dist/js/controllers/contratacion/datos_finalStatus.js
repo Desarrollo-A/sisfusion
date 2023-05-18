@@ -18,7 +18,7 @@ let titulos_intxt = [];
 $('#Jtabla thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
-    $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#Jtabla').DataTable().column(i).search() !== this.value) {
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
@@ -53,7 +53,9 @@ function getFinalDate() {
 function fillTable(sede, residencial) {
     const [date, dateTime] = getFinalDate();
     $('#Jtabla').DataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -61,7 +63,7 @@ function fillTable(sede, residencial) {
             titleAttr: 'Estatus actuales de terrenos al: ' + dateTime ,
             title: 'Estatus actuales de terrenos al:  ' + dateTime ,
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -81,7 +83,6 @@ function fillTable(sede, residencial) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        scrollX: true,
         columnDefs: [{
             defaultContent: "Sin especificar",
             targets: "_all",
@@ -191,6 +192,22 @@ function fillTable(sede, residencial) {
                     let label_statusLote = `<span class="label" style="background: #D2B4DE; color: #4A235A">${data.estatus_lote}</span>`;
                     let tipo_venta = `<span class="label" style="background: #FAD7A0; color: #7E5109">${data.tipo_venta}</span>`;
                     return  `<center>${label_statusLote}<br><br>${tipo_venta}</center>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
+                        return `<span class="label" style="background: #A3E4D7; color: #0E6251">REUBICADO</span>`;
+                    else
+                        return `<span class="label" style="background: #ABB2B9; color: #17202A">NO APLICA</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
+                        return d.fechaAlta;
+                    else
+                        return 'NO APLICA';
                 }
             }
         ],
