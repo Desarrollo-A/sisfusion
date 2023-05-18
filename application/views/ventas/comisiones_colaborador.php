@@ -93,7 +93,6 @@
                          placeholder="Captura tu Código Postal" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="codigopostalCancel" class="btn btn-secondary" data-dismiss="modal" style="display:none" >Close</button>
                         <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
                     </div>
                     </form>
@@ -802,9 +801,9 @@
                     if(data1.length == 0){
                         // $("#solicitud_cp").modal();
                     }else if(data1.length != 0){
-                        document.getElementById("dato_solicitudcp").disabled = true;  
-                        document.getElementById("codigopostalSubmit").disabled = true;
-                        document.getElementById('codigopostalCancel').style.display = 'inline';
+                        // document.getElementById("dato_solicitudcp").disabled = true;  
+                        // document.getElementById("codigopostalSubmit").disabled = true;
+                        // document.getElementById('codigopostalCancel').style.display = 'inline';
                     }
                 }
             });
