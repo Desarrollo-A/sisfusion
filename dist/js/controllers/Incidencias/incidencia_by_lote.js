@@ -1,9 +1,5 @@
-
-
-$("#modal_avisos").draggable({
-    handle: ".modal-header"
-}); 
-
+ 
+ 
 $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
@@ -13,10 +9,20 @@ $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     }
  
     $("#asesorold").selectpicker('refresh');
+}, 'json'); 
 
-           
+$("#modal_avisos").draggable({
+    handle: ".modal-header"
+}); 
 
-}, 'json');
+
+
+
+var rol  = id_rol_general;
+var id_user  = id_usuario_general;
+
+
+var idLote = 0;
 
 function selectOpcion(){
     id_cliente = document.getElementById("clientes2").value;
@@ -130,7 +136,7 @@ function selectOpcion(){
                     var parent = $(this).val();
                     let id_l = parent.split(',');
                     console.log(id_l);
-                    $.post('Comisiones/getLideres/'+id_l[1], function(data) {
+                    $.post('Incidencias/getLideres/'+id_l[1], function(data) {
                         $('#usuarioid6 option').remove(); 
                         $('#usuarioid7 option').remove(); 
                         $('#usuarioid8 option').remove(); 
@@ -192,11 +198,16 @@ function selectOpcion(){
                     <input type="hidden" value="${data[0].id_asesor}" id="asesor" name="asesor">
                     <input type="hidden" value="${data[0].id_coordinador}" id="coordinador" name="coordinador">
                     <input type="hidden" value="${data[0].id_gerente}" id="gerente" name="gerente">
+            
+            
+            
                     <input type="hidden" value="${data[0].asesor}" id="asesorname" name="asesorname">
                     <input type="hidden" value="${data[0].coordinador}" id="coordinadorname" name="coordinadorname">
                     <input type="hidden" value="${data[0].gerente}" id="gerentename" name="gerentename">
                     <input type="hidden" value="${idLote}" id="idLote" name="idLote" >
-                    <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">`);
+                    <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">
+                    
+                    `);
                     $('#miModalVc').modal('show');
             }
             else if(cuantos == 2){
@@ -208,18 +219,14 @@ function selectOpcion(){
         }); 
     }
 }
-var rol  = id_rol_general;
-var id_user  = id_usuario_general;
 
-
-var idLote = 0;
 
     
 $("#asesorold").change(function() {
     $("#info").removeAttr('style');
     document.getElementById('info').innerHTML='Cargando...';
     var parent = $(this).val();
-    $.post('Incidencias/datosLotesaCeder/'+parent, function(data) {
+     $.post('Incidencias/datosLotesaCeder/'+parent, function(data) { 
         document.getElementById('info').innerHTML='';
         var len = data[0].length;
         if(len ==0 ){
@@ -260,25 +267,6 @@ $("#asesorold").change(function() {
     }, 'json'); 
 });
 
-$("#roles2").change(function() {
-    var parent = $(this).val();
-    $('#usuarioid2 option').remove(); 
-    $.post('Incidencias/getUsuariosRol3/'+parent, function(data) {
-     
-        var len = data.length;
-        for( var i = 0; i<len; i++){
-            var id = data[i]['id_usuario'];
-            var name = data[i]['name_user'];
-    
-            $("#usuarioid2").append($('<option>').val(id).attr('data-value', id).text(name));
-        }
-        if(len<=0){
-            $("#usuarioid2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        
-        $("#usuarioid2").selectpicker('refresh');
-    }, 'json'); 
-});
 
 $("#roles3").change(function() {
     var parent = $(this).val();
@@ -397,6 +385,39 @@ $("#roles3").change(function() {
      
     
 });
+
+
+
+
+
+$("#roles2").change(function() {
+    var parent = $(this).val();
+    $('#usuarioid2 option').remove(); 
+  
+    $.post('Incidencias/getUsuariosRol3/'+parent, function(data) {
+     
+        var len = data.length;
+        for( var i = 0; i<len; i++){
+            var id = data[i]['id_usuario'];
+            var name = data[i]['name_user'];
+    
+            $("#usuarioid2").append($('<option>').val(id).attr('data-value', id).text(name));
+        }
+        if(len<=0){
+            $("#usuarioid2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        
+        $("#usuarioid2").selectpicker('refresh');
+    }, 'json'); 
+});
+
+
+
+
+
+
+
+
 
 $("#rolesvc").change(function() {
     var parent = $(this).val();
@@ -575,43 +596,7 @@ function Regresar(i,por,colab,puesto,precioLote){
     $('#modal_avisos').modal('show');
 }
 
-function saveTipo(id){
-    let tipo = $('#tipo_v').val();
-    if(tipo == ''){
-    }
-    else{
-        var formData = new FormData;
-        formData.append("tipo", tipo);
-        formData.append("id", id);
-        $.ajax({
-            url: general_base_url+'Incidencias/saveTipoVenta',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success:function(data){
-                if(data == 1){
-                    $('#modal_pagadas .modal-body').html('');
-                
-                    $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Tipo de venta actualizado", "success");
-                }
-                else{
-                    $('#modal_pagadas .modal-body').html('');
-                    $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Algo salio mal", "danger");
-                }
-            }
-        });
-    }
-}
+
 function SaveAjusteRegre(i,por,total){
     let id_comision = $('#id_comision_'+i).val();
     let id_usuario = $('#id_usuario_'+i).val();
@@ -661,6 +646,43 @@ function SaveAjusteRegre(i,por,total){
     });
 }
 
+function saveTipo(id){
+    let tipo = $('#tipo_v').val();
+    if(tipo == ''){
+    }
+    else{
+        var formData = new FormData;
+        formData.append("tipo", tipo);
+        formData.append("id", id);
+        $.ajax({
+            url: general_base_url+'Incidencias/saveTipoVenta',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success:function(data){
+                if(data == 1){
+                    $('#modal_pagadas .modal-body').html('');
+                
+                    $("#modal_pagadas").modal('toggle');
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "Tipo de venta actualizado", "success");
+                }
+                else{
+                    $('#modal_pagadas .modal-body').html('');
+                    $("#modal_pagadas").modal('toggle');
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "Algo salio mal", "danger");
+                }
+            }
+        });
+    }
+}
 function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
     let precioLote = parseFloat(precio);
@@ -835,11 +857,12 @@ $('#filtro55').change(function(ruta){
 let titulos = [];
 function onKeyUp(event) {
     var keycode = event.keyCode;
-    if(keycode == '13'){
+        
+    if(keycode == '13'){ 
         $('.find_doc').click();
     }
 }
-
+ 
 $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
    if(idLote != '' ){
@@ -1020,22 +1043,19 @@ $(".find_doc").click( function() {
                     else if(data.registro_comision == 7 ) {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
-                        // BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
 
                     }
                     else if(data.registro_comision == 1 ) {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
-                        // BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
 
                     }
                     else {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
-                        // BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
-
+                    
                     }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -1235,7 +1255,7 @@ $(".find_doc").click( function() {
                                 }
 
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> <i>'+row.data().nombreLote+'</i></b></h3></div></div><br>');
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
+                                $.getJSON( general_base_url + "Incidencias/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
                                     
                                     $("#modal_NEODATA .modal-body").append(` <div class="row"><div class="col-md-2"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-3">ACCIONES</div></div>`);
                                     let contador=0;
@@ -1449,88 +1469,6 @@ $(".find_doc").click( function() {
     });
 });
 
-// $(document).on("click", ".ver_historial", function(){
-//     var tr = $(this).closest('tr');
-//     var row = tabla_inventario.row( tr );
-//     idLote = $(this).val();
-//     var $itself = $(this);
-
-//     var element = document.getElementById("li_individual_sales");
-//     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
-//         $.getJSON(url+"Contratacion/getClauses/"+idLote).done( function( data ){
-//             $('#clauses_content').html(data[0]['nombre']);
-//         });
-//         element.classList.remove("hide");
-//     }
-//     else {
-//         element.classList.add("hide");
-//         $('#clauses_content').html('');
-//     }
-
-//     $("#seeInformationModal").on("hidden.bs.modal", function(){
-//         $("#changeproces").html("");
-//         $("#changelog").html("");
-//         $('#nomLoteHistorial').html("");
-//     });
-
-//     $("#seeInformationModal").modal();
-//     var urlTableFred = '';
-//     $.getJSON(url+"Contratacion/obtener_liberacion/"+idLote).done( function( data ){
-//         urlTableFred = url+"Contratacion/obtener_liberacion/"+idLote;
-//         fillFreedom(urlTableFred);
-//     });
-
-//     var urlTableHist = '';
-//     $.getJSON(url+"Contratacion/historialProcesoLoteOp/"+idLote).done( function( data ){
-//         $('#nomLoteHistorial').html($itself.attr('data-nomLote'));
-//         urlTableHist = url+"Contratacion/historialProcesoLoteOp/"+idLote;
-//         fillHistory(urlTableHist);
-//     });
-
-//     var urlTableCSA = '';
-//     $.getJSON(url+"Contratacion/getCoSallingAdvisers/"+idLote).done( function( data ){
-//         urlTableCSA = url+"Contratacion/getCoSallingAdvisers/"+idLote;
-//         fillCoSellingAdvisers(urlTableCSA);
-//     });	
-    
-//     fill_data_asignacion();
-// });
-
-// function fillLiberacion (v) {
-//     $("#changelog").append('<li class="timeline-inverted">\n' +
-//     '<div class="timeline-badge success"></div>\n' +
-//     '<div class="timeline-panel">\n' +
-//     '<label><h5><b>LIBERACIÓN - </b>'+v.nombreLote+'</h5></label><br>\n' +
-//     '<b>ID:</b> '+v.idLiberacion+'\n' +
-//     '<br>\n' +
-//     '<b>Estatus:</b> '+v.estatus_actual+'\n' +
-//     '<br>\n' +
-//     '<b>Comentario:</b> '+v.observacionLiberacion+'\n' +
-//     '<br>\n' +
-//     '<span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.nombre+' '+v.apellido_paterno+' '+v.apellido_materno+' - '+v.modificado+'</span>\n' +
-//     '</h6>\n' +
-//     '</div>\n' +
-//     '</li>');
-// }
-
-// function fillProceso (i, v) {
-//     $("#changeproces").append('<li class="timeline-inverted">\n' +
-//     '<div class="timeline-badge info">'+(i+1)+'</div>\n' +
-//     '<div class="timeline-panel">\n' +
-//     '<b>'+v.nombreStatus+'</b><br><br>\n' +
-//     '<b>Comentario:</b> \n<p><i>'+v.comentario+'</i></p>\n' +
-//     '<br>\n' +
-//     '<b>Detalle:</b> '+v.descripcion+'\n' +
-//     '<br>\n' +
-//     '<b>Perfil:</b> '+v.perfil+'\n' +
-//     '<br>\n' +
-//     '<b>Usuario:</b> '+v.usuario+'\n' +
-//     '<br>\n' +
-//     '<span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.modificado+'</span>\n' +
-//     '</h6>\n' +
-//     '</div>\n' +
-//     '</li>');
-// }
 
 
 function formatMoney( n ) {
@@ -1543,164 +1481,6 @@ function formatMoney( n ) {
 
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
-
-// function fillHistory(urlTableHist){
-//     tableHistorial = $('#verDet').DataTable( {
-//         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-//         width: 'auto',
-//         buttons: [{
-//             extend: 'excelHtml5',
-//             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-//             className: 'btn buttons-excel',
-//             titleAttr: 'Descargar archivo de Excel',
-//         },
-//         {
-//             extend: 'pdfHtml5',
-//             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-//             className: 'btn buttons-pdf',
-//             titleAttr: 'Descargar archivo PDF',
-//         }],
-//         pagingType: "full_numbers",
-//         fixedHeader: true,
-//         language: {
-//             url: "<?=base_url()?>/static/spanishLoader_v2.json",
-//             paginate: {
-//                 previous: "<i class='fa fa-angle-left'>",
-//                 next: "<i class='fa fa-angle-right'>"
-//             }
-//         },
-//         destroy: true,
-//         ordering: false,
-//         columns: [{
-//             "data": "nombreLote" 
-//         },
-//         {
-//             "data": "nombreStatus" 
-//         },
-//         { 
-//             "data": "descripcion"
-//         },
-//         { 
-//             "data": "comentario"
-//         },
-//         {
-//             "data": "modificado"
-//         },
-//         {
-//             "data": "usuario"
-//         }],
-//         "ajax": {
-//             "url": urlTableHist,
-//             "dataSrc": ""
-//         },
-//     });
-// }
-
-// function fillFreedom(urlTableFred){
-//     tableHistorialBloqueo = $('#verDetBloqueo').DataTable( {
-//         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-//         width: 'auto',
-//         buttons: [{
-//             extend: 'excelHtml5',
-//             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-//             className: 'btn buttons-excel',
-//             titleAttr: 'Descargar archivo de Excel',
-//         },
-//         {
-//             extend: 'pdfHtml5',
-//             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-//             className: 'btn buttons-pdf',
-//             titleAttr: 'Descargar archivo PDF',
-//         }],
-//         pagingType: "full_numbers",
-//         fixedHeader: true,
-//         language: {
-//             url: "<?=base_url()?>/static/spanishLoader_v2.json",
-//             paginate: {
-//                 previous: "<i class='fa fa-angle-left'>",
-//                 next: "<i class='fa fa-angle-right'>"
-//             }
-//         },
-//         destroy: true,
-//         ordering: false,
-//         columns: [{
-//             "data": "nombreLote"
-//         },
-//         {
-//             "data": "precio"
-//         },
-//         { 
-//             "data": "modificado" 
-//         },
-//         { 
-//             "data" : "observacionLiberacion"
-//         },
-//         { 
-//             "data": "userLiberacion"
-//         }],
-//         "ajax": {
-//             "url": urlTableFred,
-//             "dataSrc": ""
-//         },
-//     });
-// }
-
-// function fillCoSellingAdvisers(urlTableCSA){
-// tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
-//     dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-//         width: 'auto',
-//         buttons: [{
-//             extend: 'excelHtml5',
-//             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-//             className: 'btn buttons-excel',
-//             titleAttr: 'Descargar archivo de Excel',
-//         },
-//         {
-//             extend: 'pdfHtml5',
-//             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-//             className: 'btn buttons-pdf',
-//             titleAttr: 'Descargar archivo PDF',
-//         }],
-//         pagingType: "full_numbers",
-//         fixedHeader: true,
-//         language: {
-//             url: "<?=base_url()?>/static/spanishLoader_v2.json",
-//             paginate: {
-//                 previous: "<i class='fa fa-angle-left'>",
-//                 next: "<i class='fa fa-angle-right'>"
-//             }
-//         },
-//         destroy: true,
-//         ordering: false,
-//         columns: [{
-//             "data": "asesor"
-//         },
-//         { 
-//             "data": "coordinador"
-//         },
-//         { 
-//             "data": "gerente" 
-//         },
-//         {
-//             "data" : "fecha_creacion"
-//         },
-//         { 
-//             "data": "creado_por" 
-//         }],
-//         ajax: {
-//             "url": urlTableCSA,
-//             "dataSrc": ""
-//         },
-//     });
-// }
-
-// function fill_data_asignacion(){
-//     $.getJSON(url+"Administracion/get_data_asignacion/"+idLote).done( function( data ){
-//         (data.id_estado == 1) ? $("#check_edo").prop('checked', true) : $("#check_edo").prop('checked', false);
-//         $('#sel_desarrollo').val(data.id_desarrollo_n);
-//         $("#sel_desarrollo").selectpicker('refresh');
-//     });
-// }
 
 $(document).on('click', '#save_asignacion', function(e) {
     e.preventDefault();
@@ -1776,7 +1556,7 @@ $("#my_updatebandera_form").on('submit', function(e){
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: general_base_url+'Comisiones/updateBandera',
+        url: general_base_url+'Incidencias/updateBandera',
         data: new FormData(this),
         contentType: false,
         cache: false,
@@ -2209,7 +1989,7 @@ console.log(parseFloat(nuevoPorce));
     if(parseFloat(abonado) > parseFloat(comisionTotal)){
         $('#comision_total_'+i).val(formatMoney(comisionTotal));
         $.ajax({
-            url: general_base_url+'Comisiones/getPagosByComision/'+id_comision,
+            url: general_base_url+'Incidencias/getPagosByComision/'+id_comision,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -2497,52 +2277,3 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
     function tieneRegional(usuario){
      
     }
-
-
-// $("#form_empresa").on('submit', function(e){ 
-//     e.preventDefault();
-//     document.getElementById('btn_add').disabled=true;
-
-//     let formData = new FormData(document.getElementById("form_empresa"));
-//     $.ajax({
-//         url: general_base_url+'Comisiones/AddEmpresa',
-//         data: formData,
-//         method: 'POST',
-//         contentType: false,
-//         cache: false,
-//         processData:false,
-//         success: function(data) {
-//             console.log(data);
-//             if (data == 1) {
-//                 $('#form_empresa')[0].reset();
-//                 $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
-
-//                 $('#addEmpresa').modal('toggle');
-//                 alerts.showNotification("top", "right", "El registro se guardo correctamente.", "success");
-//                 document.getElementById('btn_add').disabled=false;
-
-//             }if (data == 2) {
-//                 $('#form_empresa')[0].reset();
-//                 $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
-
-//                 $('#addEmpresa').modal('toggle');
-//                 alerts.showNotification("top", "right", "EMPRESA YA SE ENCUENTRA REGISTRADA.", "warning");
-//                 document.getElementById('btn_add').disabled=false;
-
-//             } else if (data == 0){
-//                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
-//                 $('#addEmpresa').modal('toggle');
-//                 document.getElementById('btn_add').disabled=false;
-//                 $('#form_empresa')[0].reset();
-
-//             }
-//         },
-//         error: function(){
-//             $('#form_empresa')[0].reset();
-//             $('#addEmpresa').modal('toggle');
-//             document.getElementById('btn_add').disabled=false;
-//             $('#addEmpresa').modal('hide');
-//             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-//         }
-//     });
-// });
