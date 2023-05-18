@@ -34,8 +34,8 @@
 						<div class="modal-body">
 							<div class="form-group">
 								<label class="label">Puesto del usuario</label>
-								<select class="selectpicker" name="roles" id="roles" required>
-									<option value="">----Seleccionar-----</option>
+								<select class="selectpicker select-gral" name="roles" id="roles"
+								 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>
