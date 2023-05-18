@@ -82,4 +82,38 @@ class Documentacion extends CI_Controller {
         echo json_encode($response);
         // FALTA ENVIAR EL CORREO CUANDO ES LA CORRIDA QUE SE ELIMINA
     }
+
+    /**-------ESCRITURACIÓN---------- */
+    
+    function reasonsForRejectionByDocument()
+    {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("documentacion/reasonsForRejectionByDocument", $datos);
+    }
+    public function getCatalogOptions(){
+        
+        echo json_encode($this->Documentacion_model->getCatalogOptions()->result_array());
+    }
+    function getReasonsForRejectionByDocument()
+    {
+        if ($this->input->post("id_documento") == '' || $this->input->post("tipo_proceso") == '')
+            echo json_encode(array());
+        else {
+            $data['data'] = $this->Documentacion_model->getReasonsForRejectionByDocument($this->input->post("id_documento"), $this->input->post('tipo_proceso'))->result_array();
+            if ($data != null)
+                echo json_encode($data);
+            else
+                echo json_encode(array());
+        }
+    }
+    function getRejectionReasons()
+    {
+        $tipo_proceso = $this->input->post('tipo_proceso');
+        $data = $this->Documentacion_model->getRejectionReasons($tipo_proceso);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }

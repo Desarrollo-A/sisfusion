@@ -32,8 +32,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="botonPausar" class="btn btn-success btn-simple">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="botonPausar" class="btn btn-success btn-simple">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -95,8 +95,8 @@
                     <input type="hidden" name="status" id="status">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -128,8 +128,8 @@
                                 <input type="hidden" name="estatus" id="estatus">
                             </div>
                             <div class="col-lg-12 form-group p-0 d-flex justify-end">
-                                <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
                             </div>
                         </div>
                     </div>
@@ -633,8 +633,8 @@
                                 </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
                     </div>
                 </form> 
             </div>
@@ -851,8 +851,35 @@
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="valorOperModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Modificar valor de operación de contrato</b></h4>
+            </div>
+            <form id="formValorOperacion" name="formValorOperacion" method="post">
+                <input type="hidden" name="id_solicitudOper" id="id_solicitudOper">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label label-gral">Valor de operación</label>
+                        <input type="text" id="valorOper" name="valorOper" class="form-control input-gral">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="requestOper" class="btn btn-success btn-simple">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -987,8 +1014,8 @@
             </div>
 
                         <div class="modal-footer">
-                            <button type="submit" id="RequestInformacion" class="btn btn-success btn-simple">Aceptar</button>
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="RequestInformacion" class="btn btn-success btn-simple">Aceptar</button>
                         </div>
 
 
