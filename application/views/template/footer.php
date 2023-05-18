@@ -58,13 +58,13 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
-		<?php
+		/*<?php
             if(in_array($this->session->userdata('id_rol'), array(17, 70, 7, 9, 3, 6, 2, 5, 15, 11, 4, 8, 74, 81, 73, 63, 55))){
                 if ($this->session->userdata('no_show_modal_info')==0) {
                     echo '$("#avisoNovedades").modal("toggle");';
                 }
             }
-         ?>
+         ?>*/
 	});
 
     function validaCheckSession(){

@@ -485,7 +485,7 @@ class Asesor_model extends CI_Model {
     public function selectDSAsesor($cliente)
     {
         $query = $this->db->query("
-            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, 
+            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
                     CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
                     CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
                     asesor.id_lider, gerente.id_usuario, asesor.correo
@@ -497,28 +497,18 @@ class Asesor_model extends CI_Model {
         return $query->result();
     }
 
-    public function selectDSAsesor1($cliente)
-    {
-        /*return $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre,' ',us.apellido_paterno) AS nombreAsesor, us.id_lider, ger.id_usuario, CONCAT(ger.nombre,' ',ger.apellido_paterno) AS nombreGerente
-                                 FROM clientes cl INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
-                                 INNER JOIN usuarios ger ON ger.id_usuario = us.id_lider WHERE cl.id_cliente  = ".$cliente."");*/
-        return $query = $this->db->query("
-            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, 
-                    CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
-                    CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
-                    asesor.id_lider, gerente.id_usuario, asesor.correo
-                    
+    public function selectDSAsesor1($cliente){
+        return $query = $this->db->query("SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ',asesor.apellido_materno) AS nombreAsesor, CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador, CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente, asesor.id_lider, gerente.id_usuario, asesor.correo
         FROM clientes cl 
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= " . $cliente . "");
     }
 
-
     public function selectDSAsesorCompartido($cliente)
     {
         $query = $this->db->query("SELECT vc.id_asesor, 
-            CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
+            CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
             CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
             CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
             FROM clientes cl 
@@ -532,13 +522,8 @@ class Asesor_model extends CI_Model {
 
     public function selectDSAsesorCompartido1($cliente)
     {
-        /*return $this->db->query("SELECT vc.id_asesor, CONCAT(us2.nombre,' ',us2.apellido_paterno) AS nombreAsesor, us2.id_lider, ger2.id_usuario, CONCAT(ger2.nombre,' ',ger2.apellido_paterno) AS nombreGerente
-                                FROM clientes cl
-                                LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente
-                                LEFT JOIN usuarios us2 ON us2.id_usuario = vc.id_asesor
-                                LEFT JOIN usuarios ger2 ON ger2.id_usuario = us2.id_lider WHERE cl.id_cliente = ".$cliente."");*/
         return $query = $this->db->query("SELECT vc.id_asesor, 
-            CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
+            CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
             CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
             CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
             FROM clientes cl 
