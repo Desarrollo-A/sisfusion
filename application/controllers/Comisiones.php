@@ -6266,30 +6266,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       $this->load->view('ventas/comisiones_detenidas', $datos);
     }
 
-
-    /**---------------------------------PRESTAMOS AUTOMATICOS------------------------------------- */
-    public function panel_prestamos()
-    {
-
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $datos["descuentos"] =  $this->Comisiones_model->lista_estatus_descuentos()->result_array();
-      $this->load->view('template/header');
-      $this->load->view("ventas/panel_prestamos", $datos);
-    }
-    public function viewHistorialPrestamos()
-    {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $this->load->view('template/header');
-        $this->load->view("ventas/historial_prestamos", $datos);
-    }
-    /**------------------------------------------------------------------------------------------- */
-
-
+ 
     public function cambiarEstatusComisiones()
     {
         $idPagos = explode(',', $this->input->post('idPagos'));
