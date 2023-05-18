@@ -104,15 +104,6 @@ function getRpClientes()
                                 id_rol IN (7, 9) AND id_usuario NOT BETWEEN 2535 AND 2597 AND estatus = 1 ORDER BY nombre");
     }
 
-    function updateClient($data, $id_cliente) {
-        $response = $this->db->update("clientes", $data, "id_cliente = $id_cliente");
-        if (! $response ) {
-            return $finalAnswer = 0;
-        } else {
-            return $finalAnswer = 1;
-        }
-    }
-
     function uploadData($data) {
         $this->db->trans_begin();
         $response = $this->db->insert("prospectos", $data);

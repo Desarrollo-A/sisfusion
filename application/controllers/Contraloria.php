@@ -288,29 +288,6 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Clientes_model->getAdvisersVentas()->result_array());
     }
 
-    public function consultClients(){
-        $this->validateSession();
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contraloria/vista_documentacion_contraloria_cl",$datos);
-    }
-
-    public function reasignClient(){
-        $data = array(
-            "id_gerente" => $_POST['id_gerente'],
-            "id_coordinador" => $_POST['id_coordinador'],
-            "id_asesor" => $_POST['id_asesor'],
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
-        );
-        $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
-        echo json_encode($response);
-    }
-
-
     public function validateSession()
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
@@ -3212,20 +3189,6 @@ class Contraloria extends CI_Controller {
         $response = $this->Contraloria_model->updateRecord("lotes", $data, "idLote", $this->input->post("idLote")); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         echo json_encode($response);
     }
-
-
-    public function Documentacion_loteclient(){
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
-
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-
-        $this->load->view('template/header');
-        $this->load->view("contraloria/vista_documentacion_contraloria_cl_lote", $datos);
-    }
-
 
     public function updateLotesStatusLiberacion(){
         for ($i = 0; $i < count($this->input->post("idLote")); $i++) {
