@@ -283,7 +283,7 @@ class Postventa_model extends CI_Model
         
         $num_movimiento = $type == 3 ? 1 : 0;
         if($actividades_x_estatus->estatus_siguiente == 12 ){
-            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento NOT IN(1,2,3,4,6,16,21,22,23)");
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
         }
         if($actividades_x_estatus->estatus_siguiente == 13 || $actividades_x_estatus->estatus_siguiente == 18){
             $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
