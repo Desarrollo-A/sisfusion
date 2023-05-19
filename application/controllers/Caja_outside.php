@@ -3,7 +3,7 @@
 class Caja_outside extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model'));
+        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -278,7 +278,19 @@ class Caja_outside extends CI_Controller {
 
         }
         else if ($data->accion == 3) {
-
+            $inicio = date("Y-m-01");
+            $fin = date("Y-m-t");
+            //$datosCondominio = $this->caja_model_aoutside->getDatosCondominio($data->idCondominio);
+                    if($data->tipo_lote == 1 ){ //1 - Comercial
+                        //si el condominio es comercial solo consultar sin importar la superficie
+                        $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, $inicio, $fin);
+                        $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
+                    }else{ //0 - Habitacional
+                        $paquetesMenores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup < 200",$data->id_proy, $inicio, $fin);
+                        $paquetesMayores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup > 200",$data->id_proy, $inicio, $fin);
+                        $datos["descuentoHabMenores"] = count($paquetesMenores200) == 0 ? NULL : $paquetesMenores200[0]['id_descuento'];
+                        $datos["descuentoHabMayores"] = count($paquetesMayores200) == 0 ? NULL : $paquetesMayores200[0]['id_descuento'];
+                    }
             foreach ($data->lotes as $value) {
 
                 $datos["idCondominio"] = $data->idCondominio;
@@ -286,7 +298,7 @@ class Caja_outside extends CI_Controller {
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
                 $datos["activeLE"] = $data->activeLE;
-
+                $datos["tipo_lote"] = $data->tipo_lote;
                 $datos["activeLP"] = $data->activeLP;
 
 
@@ -1682,7 +1694,23 @@ class Caja_outside extends CI_Controller {
             11 DONACIÓN
             12 INTERCAMBIO ESCRITURADO
         */
+        $inicio = date("Y-m-01");
+        $fin = date("Y-m-t");
         $getCurrentLoteStatus = $this->caja_model_outside->validateCurrentLoteStatus($idLote)->row();
+        $descuentos = NULL;
+        $query_tipo_lote = "AND c.tipo_lote =".$getCurrentLoteStatus->tipo_lote;
+        $query_superdicie = $getCurrentLoteStatus->sup < 200 ?  "AND sup < 200" : "AND sup >= 200";
+        $desarrollos = $getCurrentLoteStatus->idResidencial;
+        $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $inicio, $fin);
+        if(count($getPaquetesDescuentos) == 0){
+            $descuentos = NULL;
+        }else{
+            $descuentos = $getPaquetesDescuentos[0]['id_paquete'];
+        }
+        /*
+        1.- consultar lotes < 200
+        2.- consultar lotes >= 200
+        */
         if ($getCurrentLoteStatus->idStatusLote == 2 || $getCurrentLoteStatus->idStatusLote == 3 || $getCurrentLoteStatus->idStatusLote == 99) {
             if ($getCurrentLoteStatus->idStatusLote == 2)
                 echo json_encode(array("message" => "Acción no válida. El lote actualmente se encuentra CONTRATADO."), JSON_UNESCAPED_UNICODE);
@@ -1726,10 +1754,12 @@ class Caja_outside extends CI_Controller {
                         echo json_encode($response);
                     }
                 } else if ($idStatusLote == 1) {          
+                    //LIBERACIÓN DE LOTE        
                     $arreglo["idAsesor"] = NULL;
                     $arreglo["idAsesor2"] = NULL;
                     $arreglo["observacionContratoUrgente"] = NULL;
                     $arreglo["motivo_change_status"] = $motivo_change_status;
+                    $arreglo['id_descuento'] = $descuentos;
                 } else if ($idStatusLote == 2) {
                     $arreglo["motivo_change_status"] = $motivo_change_status;
                 } 

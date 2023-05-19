@@ -10,15 +10,17 @@
 	</style>
 	<div class="wrapper">
 		<?php
-		$datos = array();
-		$this->load->view('template/sidebar', $datos);
+			if (in_array($this->session->userdata('id_rol'), array(17,5)))
+				$this->load->view('template/sidebar', '');
+			else
+				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
 		?>
 
 		<div class="modal fade" id="modalView" role="dialog">
 			<div class="modal-dialog" style="width: 500px">
 				<div class="modal-content text-center">
 					<div class="container-fluid">
-						<div id="contentView" class="pt-2"></div>
+						<div id="contentView" class="pt-2 pb-2"></div>
 					</div>
 				</div>
 			</div>
@@ -28,17 +30,16 @@
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
-						<h5>Una vez guardados los planes ya no se podrá modificar la información.</h5>
+						<h5>¿Estas seguro de guardar tus cambios?</h5>
 					</div>
 					<div class="container-fluid">
 						<div class="row mb-1 mt-1">
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								<button type="button" class="btnSave btn-gral-data" onclick="SavePaquete();">Guardar
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">	
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">CANCELAR
 								</button>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								
-								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar
+								<button type="button" class="btn btn-primary" onclick="SavePaquete();">GUARDAR
 								</button>
 							</div>
 						</div>
@@ -56,11 +57,11 @@
 					<div class="container-fluid">
 						<div class="row mb-1 mt-1">
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								<input type="hidden" value="0" id="iddiv">
-								<button type="button" class="btn-gral-data" onclick="RemovePackage();">Sí</button>
+								<button type="button" class="btn btn-danger btn-simple pt-1" data-dismiss="modal">Cancelar</button>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">Cancelar</button>
+								<input type="hidden" value="0" id="iddiv">
+								<button type="button" class="btn btn-primary" onclick="RemovePackage();">Aceptar</button>
 							</div>
 						</div>
 					</div>
@@ -216,7 +217,7 @@
 									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="Guardar">
+									<input type="submit" class="btn-gral-data" name="disper_btn"  id="dispersar" value="GUARDAR">
 								</div>
 							</div>
 						</div>
@@ -231,9 +232,9 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
 						<ul class="nav nav-tabs nav-tabs-cm" role="tablist">
 							<li class="active" id="li-aut">
-								<a href="#nuevas-1" role="tab" data-toggle="tab">AUTORIZACIONES</a>
+								<a href="#nuevas-1" role="tab" onclick="verificarEdicion()" data-toggle="tab">AUTORIZACIONES</a>
 							</li>
-                            <li id="li-plan">
+                            <li id="li-plan" class="">
 								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
 							</li>
                         </ul>
@@ -282,13 +283,12 @@
 														<tr>
 															<th>ID</th>
 															<th>SEDE</th>
-															<th>RESIDENCIAL</th>
+															<th>PROYECTO</th>
 															<th>FECHA INICIO</th>
 															<th>FECHA FIN</th>
 															<th>TIPO LOTE</th>
 															<th>TIPO DE SUPERFICIE</th>
 															<th>ESTATUS AUTORIZACIÓN</th>
-															<th>ESTATUS</th>
 															<th>FECHA CREACIÓN</th>
 															<th>CREADO POR</th>
 															<th>ACCIONES</th>

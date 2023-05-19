@@ -384,6 +384,13 @@ if(id_estatus == 20 || id_estatus == 25 ){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
     }
 }
+if(id_estatus == 12){
+    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    console.log(indexidDocumentos)
+    if(indexidDocumentos >= 0){
+        documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+    }
+}
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
             data: data,
@@ -1120,6 +1127,12 @@ function fillTable(beginDate, endDate, estatus) {
                                    bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != '' ) ? 1 
                                      : userType == 56 && (d.estatus_construccion != 0 && d.estatus_construccion != null) ? 1  : 0;
                                     }
+                                    bandera_reject = userType == 11 ? 1 : 0;
+
+                            break;
+                            case 58:
+                                bandera_request = userType == 55 ? 1 : 0;
+                                group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
@@ -1152,6 +1165,7 @@ function fillTable(beginDate, endDate, estatus) {
                                 /**SI ADMIN NO HA DADO SU ESTATUS Y COMITÉ SI */ 
                                     // BOTON APROBAR
                                     banderaAdmin=1;
+                                    bandera_reject = userType == 11 ? 1 : 0;
                                     bandera_request = userType == 11 && (d.cliente_anterior != null && d.cliente_anterior != 0) ? 1 : 0;
                                     group_buttons += `<button id="informacion" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;
                                 }
@@ -1191,10 +1205,18 @@ function fillTable(beginDate, endDate, estatus) {
                             case 12:
                             case 36:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
-                                    bandera_request = 1;
+                                    //bandera_request = 1;
                                    //btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                   permiso = 2;
-                                   group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
+                                  // permiso = 2;
+                                   bandera_reject = 1;  
+                                   bandera_request = d.estatusValidacion == 1 ? 1 : 0;
+                                   group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                  // group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
+                                }
+                            break;
+                            case 59:
+                                if (userType == 57 && d.id_titulacion == idUser) {
+                                    group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                 }
                             break;
                             case 13:
@@ -2078,6 +2100,7 @@ function permisos(permiso, expediente, idDocumento, tipo_documento, idSolicitud,
 }
 let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
+   // alert(proceso);
     documentosObligatorios = [];
     var filtered = data.filter(function(value){ 
         if((value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1) || (value.tipo_documento == 12 && (value.estatus_solicitud == 48 || value.estatus_solicitud == 51 || value.estatus_solicitud == 53))){
@@ -2153,6 +2176,21 @@ function buildTableDetail(data, permisos,proceso = 0) {
                     solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
                 }
             }
+        }else if (permisos == 2 && (v.estatus_solicitud == 12 || v.estatus_solicitud == 59)) {
+            if(v.tipo_documento == 17){
+                solicitudes += ``;
+            }else{
+                                    //EV: ESTATUS VALIDACIÓN DE CADA DOCUMENTO
+                if (v.ev == 1) // 1 VALIDADO, SE MUESTRA BOTON PARA NOK
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-warning upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento NOK"><i class="fas fa-thumbs-down"></i></button>`;
+                else if (v.ev == 2) //2 DOCUMENTO RECHAZADO, SE MUESTRA BOTON PARA VALIDAR
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-green upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
+                else if (v.expediente != null) { //EXPEDIENTE SIN MOVIMIENTOS, SE MUESTRA BOTON PARA VALIDAR OK Y RECHACHAZAR
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar OK"><i class="fas fa-thumbs-up"></i></button>`;
+                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
+                 }
+            }
+            
         }//PENDIENTE SI BORRAR O NO
         else if (permisos == 1 && v.ev == null && v.estatus_solicitud == 13 && v.tipo_documento == 7){
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
@@ -2634,36 +2672,66 @@ $(document).on('click', '#informacion', function () {
     
     $("#informacionModal").modal();
 });
+/**------------ACTUALIZAR VALOR DE OPERACIÓN DE CONTRATO */
+$(document).on('click', '#btnValorOper', function () {
+    var data = escrituracionTable.row($(this).parents('tr')).data();
+    getBudgetInformacion(data.id_solicitud,1);
+    $('#id_solicitudOper').val(data.id_solicitud);
+    $("#valorOperModal").modal();
+});
+$(document).on("submit", "#formValorOperacion", function (e) {
+    e.preventDefault();
+    let idSolicitud = $("#id_solicitudOper").val();
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url: "updateValorOper",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            alerts.showNotification("top", "right", "Se actualizó la información.", "success");
+            $("#valorOperModal").modal("hide");
+            escrituracionTable.ajax.reload(null,false);
+        }
+    });
 
-function getBudgetInformacion(idSolicitud){
+ });
+/**------------------------------------------- */
+function getBudgetInformacion(idSolicitud,actividad = 0){
     $('#spiner-loader').removeClass('hide');
     $.post('getBudgetInformacion',{
         idSolicitud:idSolicitud
-    }, function(data) {
-        if(data.bandera_admin == 1 && data.bandera_comite == 1){
-            $('#RequestInformacion').addClass('hide');
-            $('#information_campos').addClass('hide');
-            document.getElementById('construccionI').disabled = true;
-            document.getElementById('clienteI').disabled = true;
-            document.getElementById('nombreI').disabled = true;
-            document.getElementById('fechaCAI').disabled = true;
-            document.getElementById('rfcDatosI').disabled = true;
-            document.getElementById('aportacionesI').disabled = true;
-            document.getElementById('descuentosI').disabled = true;
-            document.getElementById('motivoI').disabled = true;
-            }
-        $('#liquidado').val(data.nombrePago);
-        $('#construccionI').val(data.nombreConst);
-        $('#clienteI').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
-        $("#clienteI").selectpicker('refresh');
-        $('#nombreI').val(data.nombre_anterior);
-        let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
-        $('#fechaCAI').val(fechaAnterior);
-        $('#rfcDatosI').val(data.RFC);
-        $('#aportacionesI').val('$'+formatMoney(data.aportacion));
-        $('#descuentosI').val('$'+formatMoney(data.descuento));
-        $('#motivoI').val(data.motivo);
-        
+    }, function(data) { 
+        if(actividad == 1){
+            $('#valorOper').val(`$${formatMoney(data.valor_contrato)}`);
+        }else{
+            if(data.bandera_admin == 1 && data.bandera_comite == 1){
+                $('#RequestInformacion').addClass('hide');
+                $('#information_campos').addClass('hide');
+                document.getElementById('construccionI').disabled = true;
+                document.getElementById('clienteI').disabled = true;
+                document.getElementById('nombreI').disabled = true;
+                document.getElementById('fechaCAI').disabled = true;
+                document.getElementById('rfcDatosI').disabled = true;
+                document.getElementById('aportacionesI').disabled = true;
+                document.getElementById('descuentosI').disabled = true;
+                document.getElementById('motivoI').disabled = true;
+                }
+            $('#liquidado').val(data.nombrePago);
+            $('#construccionI').val(data.nombreConst);
+            $('#clienteI').val(data.cliente_anterior == 1 ? 'uno':'dos').trigger('change');
+            $("#clienteI").selectpicker('refresh');
+            $('#nombreI').val(data.nombre_anterior);
+            let fechaAnterior =data.fecha_anterior != null ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-") :data.fecha_anterior;
+            $('#fechaCAI').val(fechaAnterior);
+            $('#rfcDatosI').val(data.RFC);
+            $('#aportacionesI').val('$'+formatMoney(data.aportacion));
+            $('#descuentosI').val('$'+formatMoney(data.descuento));
+            $('#motivoI').val(data.motivo);
+        }
+        console.log(data);        
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
