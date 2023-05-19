@@ -6302,4 +6302,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 		
 	}
-} 
+
+    public function sendMailAdmin($idLote) {
+        $this->db->select_max("idHistorialLote");
+        $this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
+        $query = $this->db->get('historial_lotes');
+
+        return $query->row();
+    }
+}
