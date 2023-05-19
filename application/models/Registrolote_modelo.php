@@ -43,42 +43,6 @@
         return true;
     }
 
-	public function getLotesGral_DS($condominio) {
-        $query = $this->db->query("SELECT lc.idLote, nombreLote, idStatusLote FROM deposito_seriedad_consulta ds
-                                INNER JOIN cliente_consulta cc ON cc.idCliente = ds.idCliente 
-                                INNER JOIN lotes_consulta lc ON lc.idCliente = cc.idCliente 
-                                WHERE lc.status = 1 AND lc.idCondominio = ".$condominio."");
-        if($query){
-            $query = $query->result_array();
-            return $query;
-        }
-    }
-
-    public function getLotesGral_CL($condominio) {
-        $query = $this->db->query("SELECT lc.idLote, nombreLote, idStatusLote FROM clientes cc
-                                INNER JOIN lotes lc ON lc.idCliente = cc.id_cliente 
-                                WHERE lc.status = 1 AND cc.status = 1 AND lc.idCondominio = ".$condominio."");
-        if($query){
-            $query = $query->result_array();
-            return $query;
-        }
-    }
-
-    public function getdp_CL($lotes){
-		$query = $this->db->query("SELECT cl.id_cliente, l.idLote, l.idCliente, l.nombreLote, c.nombre, r.nombreResidencial, cl.nombre nomCliente, cl.apellido_paterno, cl.apellido_materno,
-										CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-										CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
-										CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente FROM lotes l
-										INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-										INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-										INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-										LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
-										LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
-										LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente WHERE l.idLote = ".$lote);
-
-        return $query->result_array();
-    }
-
 	public function selectDS_ds($idCliente){
         /**/$query= $this->db-> query("SELECT cliente_consulta.idCliente, primerNombre, segundoNombre, apellidoPaterno, apellidoMaterno, cliente_consulta.rfc, razonSocial, cliente_consulta.fechaNacimiento, telefono1, telefono2, calle, numero, colonia, cliente_consulta.municipio, estado, cliente_consulta.correo, referencia1, telreferencia1,
                                 referencia2, telreferencia2, nombreLote, lotes_consulta.nombreLote, lotes_consulta.idLote, nombreResidencial, condominios.nombre as nombreCondominio, lotes_consulta.sup,
@@ -4885,20 +4849,6 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		return $query->row();
 	}
 
-
-	public function sendMailAdmin($idLote) {
-
-		$this->db->select_max("idHistorialLote");
-		$this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
-		$query = $this->db->get('historial_lotes');
-
-		return $query->row();
-
-	}
-
-
-
-
 	public function deleteDoc($id, $data) {
 		$this->db->where("idDocumento", $id);
 		$this->db->update('historial_documento', $data);
@@ -5286,15 +5236,6 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		}
 	}
 
-	public function getClientByLote($lote){
-
-		$result = $this->db->query('select id_cliente,nombre, apellido_paterno, apellido_materno, status from clientes where idLote='.$lote.' ORDER BY status DESC')->result_array();
-
-		//print_r($result->result_array());
-		return count($result) > 0 ? $result: array();
-
-	}
-
 	public function getLotesJuridico($condominio,$residencial)
 	{
 
@@ -5653,4 +5594,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 		
 	}
-} 
+
+    public function sendMailAdmin($idLote) {
+        $this->db->select_max("idHistorialLote");
+        $this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
+        $query = $this->db->get('historial_lotes');
+
+        return $query->row();
+    }
+}
