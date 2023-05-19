@@ -377,7 +377,7 @@ if(id_estatus == 19 || id_estatus == 22 ){
         documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
     }
 }
-if(id_estatus == 20 || id_estatus == 25 ){
+if(id_estatus == 20 || id_estatus == 25 || id_estatus == 12){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
     console.log(indexidDocumentos)
     if(indexidDocumentos >= 0){
@@ -417,7 +417,7 @@ if(id_estatus == 12){
                                 createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
                             }
                         }
-                        if((id_estatus == 20 || id_estatus == 25) && (action == 3 || action == 4)){
+                        if((id_estatus == 20 || id_estatus == 25 || id_estatus == 12) && (action == 3 || action == 4)){
                             var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
                             var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
                             // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
@@ -637,7 +637,7 @@ $(document).on('click', '#presupuesto', function () {
     var data = escrituracionTable.row($(this).parents('tr')).data();
     let area_actual = $(this).attr('data-area-actual');
 
-    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.id_estatus == 36)){
+    if(area_actual == 55 && (data.id_estatus == 9  || data.id_estatus == 11 || data.id_estatus == 36 || data.id_estatus == 59)){
        /*document.getElementById('RequestPresupuesto').style.display = "none";
        document.getElementById('nombrePresupuesto2').disabled = true;
        document.getElementById('tipoE').disabled = true;
@@ -1205,18 +1205,18 @@ function fillTable(beginDate, endDate, estatus) {
                             case 12:
                             case 36:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
-                                    //bandera_request = 1;
-                                   //btnsAdicionales += `<button id="request" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
-                                  // permiso = 2;
                                    bandera_reject = 1;  
-                                   bandera_request = d.estatusValidacion == 1 ? 1 : 0;
+                                   bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                    group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                   // group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
+                                  group_buttons += `<button id="viewInfoClient" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información del cliente"><i class="fas fa-user-circle"></i></i></button>`; 
                                 }
                             break;
                             case 59:
-                                if (userType == 57 && d.id_titulacion == idUser) {
+                                if (userType == 55) {
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
+                                    group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`; 
+                                    bandera_request = 1;                                        
                                 }
                             break;
                             case 13:
@@ -2151,6 +2151,8 @@ function buildTableDetail(data, permisos,proceso = 0) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="3" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         } //PERMISO DE ESCRITURA SUBIR NUEVO ARCHIVO FORMAS DE PAGO FECHA FIRMA
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 26 || v.estatus_solicitud == 30) && (v.tipo_documento == 22) ) {
+            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
+        } else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 59) && (v.tipo_documento == 11 || v.tipo_documento == 17 || v.tipo_documento == 18) ) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
         else if (permisos == 2 && v.estatus_solicitud == 5) {

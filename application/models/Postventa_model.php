@@ -247,10 +247,10 @@ class Postventa_model extends CI_Model
   
         $notaria = $estatus->id_notaria; 
         $notariaInterna = '';
-        if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1){
+        if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1 && $type == 1){
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
-        if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1){
+        if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1 && $type == 1){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitudes_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row()->pertenece;
             $notariaInterna = $pertenece == 2 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
         }
