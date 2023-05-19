@@ -182,24 +182,24 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 let botones = '';
                 switch(id_rol_general){
                     case 5:
-                        if(d.estatus == 1){
+                        if(d.estatus_autorizacion == 1){
                             botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
-                        if(d.estatus == 3){
+                        if(d.estatus_autorizacion == 3){
                             botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
-                        if(d.estatus == 4){
+                        if(d.estatus_autorizacion == 4){
                             botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                     break;
                     case 17:
-                        if(d.estatus == 2){
+                        if(d.estatus_autorizacion == 2){
                             botones += botonesPermiso(1,0,1,1,d.id_autorizacion,d.estatus_autorizacion);
                         }
-                        if(d.estatus == 3){
+                        if(d.estatus_autorizacion == 3){
                             botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
-                        if(d.estatus == 4){
+                        if(d.estatus_autorizacion == 4){
                             botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                     break;
@@ -995,7 +995,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             
             $(`#selectDescuentos_${indexGral}_${indexCondiciones}`).append(`
             <div class="w-100 d-flex justify-center align-center">
-                <select id="ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}" required name="${indexGral}_${indexCondiciones}_ListaDescuentos${nombreCondicion}_[]" multiple class="form-control">
+                <select id="ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}" required name="${indexGral}_${indexCondiciones}_ListaDescuentos${nombreCondicion}_[]" multiple class="form-control" data-live-search="true">
             </div>`);
 
 
@@ -1023,7 +1023,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
 
             //Propiedades que asignaremos a los select
-                                                       /* $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
+                                                        $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({
                                                             allow_single_deselect: false,
                                                             containerCssClass: "select-gral",
                                                             dropdownCssClass: "custom-dropdown",
@@ -1032,55 +1032,21 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                                                             closeOnSelect : false,
                                                             placeholder : "SELECCIONA UNA OPCIÓN",
                                                             allowHtml: true, 
-                                                            allowClear: true});*/
+                                                            allowClear: true});
                  //Acciones que se ejecutaran cuando SE selecciona un descuento de una condición
             //     $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: true, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
 
                 // $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).off('select2:select');
                  $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
-                    /*let element = evt.params.data.element;
+                    let element = evt.params.data.element;
                     let $element = $(element);
-                    $element.detach();
+                    $element.detach(); 
                     $(this).append($element);
-                    $(this).trigger("change");*/
-                    var id = evt.params.data.id;
-
-                    var element = $(this).children("option[value="+id+"]");
-            
-                    moveElementToEndOfParent(element);
-            
                     $(this).trigger("change");
                 });
-                var ele=$(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).parent().find("ul.select2-selection__rendered");
-                    ele.sortable({
-                        containment: 'parent',
-                        update: function() {
-                            orderSortedValues();
-                            console.log(""+$(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).val())
-                        }
-                    });
 
-                    orderSortedValues = function() {
-                    var value = ''
-                        $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).parent().find("ul.select2-selection__rendered").children("li[title]").each(function(i, obj){
 
-                            var element = $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).children('option').filter(function () { return $(this).html() == obj.title });
-                            moveElementToEndOfParent(element)
-                        });
-                    };
 
-                    moveElementToEndOfParent = function(element) {
-                        var parent = element.parent();
-
-                        element.detach();
-
-                        parent.append(element);
-                    };
-        //$(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: true, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
-       // $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
-     //   $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).trigger('change.select2');
-
-  
 
             //Acciones que se ejecutaran cuando DESselecciona un descuento de una condición
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:unselecting", function (evt){
