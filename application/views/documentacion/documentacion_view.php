@@ -2,10 +2,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <body class="">
-    <div class="wrapper ">
+    <div class="wrapper">
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55)))	
+		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73)))
                 $this->load->view('template/sidebar', '');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
@@ -34,6 +34,7 @@
                         <input type="text" class="hide" id="idDocumento">
                         <input type="text" class="hide" id="tipoDocumento">
                         <input type="text" class="hide" id="nombreDocumento">
+                        <input type="text" class="hide" id="tituloDocumento">
                         <input type="text" class="hide" id="accion">
                     </div>
                     <div class="modal-footer mt-2">

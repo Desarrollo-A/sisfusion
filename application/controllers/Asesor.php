@@ -796,14 +796,6 @@ class Asesor extends CI_Controller
         $this->load->view("asesor/DSConsult");
     }
 
-    public function documentacion()
-    {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);
-    }
-
     public function registrosLoteVentasAsesor()
     {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
@@ -1368,31 +1360,31 @@ class Asesor extends CI_Controller
         } else if (!$informacion_cliente->row()->idOficial_pf) {
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
         }
-        
+
         if ($informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
         } else if (!$informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
         }
-        
+
         if ($informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
         } else if (!$informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
         }
-        
+
         if ($informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
         } else if (!$informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
         }
-        
+
         if ($informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
         } else if (!$informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
         }
-        
+
         if ($informacion_cliente->row()->idOficialApoderado_pm) {
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
         } else if (!$informacion_cliente->row()->idOficialApoderado_pm) {
@@ -2550,7 +2542,7 @@ class Asesor extends CI_Controller
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
             $arreglo_ds["idOficial_pf"] = '0';
         }
-        
+
         if ($this->input->post('idDomicilio_pf')) {
             $arreglo_ds["idDomicilio_pf"] = $idDomicilio_pf;
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
@@ -2558,7 +2550,7 @@ class Asesor extends CI_Controller
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
             $arreglo_ds["idDomicilio_pf"] = '0';
         }
-        
+
         if ($this->input->post('actaMatrimonio_pf')) {
             $arreglo_ds["actaMatrimonio_pf"] = $actaMatrimonio_pf;
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
@@ -2566,7 +2558,7 @@ class Asesor extends CI_Controller
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
             $arreglo_ds["actaMatrimonio_pf"] = '0';
         }
-        
+
         if ($this->input->post('actaConstitutiva_pm')) {
             $arreglo_ds["actaConstitutiva_pm"] = $actaConstitutiva_pm;
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
@@ -2574,7 +2566,7 @@ class Asesor extends CI_Controller
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
             $arreglo_ds["actaConstitutiva_pm"] = '0';
         }
-        
+
         if ($this->input->post('poder_pm')) {
             $arreglo_ds["poder_pm"] = $poder_pm;
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
@@ -2582,7 +2574,7 @@ class Asesor extends CI_Controller
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
             $arreglo_ds["poder_pm"] = '0';
         }
-        
+
         if ($this->input->post('idOficialApoderado_pm')) {
             $arreglo_ds["idOficialApoderado_pm"] = $idOficialApoderado_pm;
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
@@ -5651,7 +5643,7 @@ class Asesor extends CI_Controller
 
     public function inventoryByLote()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));        
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/inventoryByLote", $datos);
