@@ -58,26 +58,12 @@ class Asistente_gerente extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view("ventasAsistentes/datos_7_ventasAsistentes_view",$datos);
 	}
-	public function consultaDS()
-	{
-		$this->validateSession();
-        $datos=array();
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contraloria/vista_documentacion_contraloria_ds",$datos);
-	}
+
 	public function registroEstatus9VentasAsistentes(){
 		/*menu function*/                    
    		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view',$datos);
-	}
-	public function registrosClienteDocumentosventasAsistentes(){
-		  	/*menu function*/                 
-    	  	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		  	$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-			$this->load->view('template/header');
-			$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",  $datos);
 	}
 
 	public function inventario()

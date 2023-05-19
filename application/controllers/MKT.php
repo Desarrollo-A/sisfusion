@@ -165,15 +165,6 @@ class MKT extends CI_Controller {
 		echo json_encode($clientes);
 	}
 
-	public function documentos()
-	{
-		 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);
-	}
 	public function inventario()
 	{
 	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
