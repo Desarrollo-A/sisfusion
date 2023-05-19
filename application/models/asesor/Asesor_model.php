@@ -429,25 +429,7 @@ class Asesor_model extends CI_Model {
 
     public function selectDS($cliente)
     {
-        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, 
-        cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, 
-        con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, 
-        ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, 
-        cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
-        CASE WHEN CHARINDEX('.', ds.costoM2) = 0 THEN CONCAT(ds.costoM2, '.00') ELSE ds.costoM2 END costoM2, ds.proyecto, ds.municipio as municipioDS, 
-        CASE WHEN CHARINDEX('.', ds.importOferta) = 0 THEN CONCAT(ds.importOferta, '.00') ELSE ds.importOferta END importOferta, ds.letraImport, 
-        CASE WHEN CHARINDEX('.', ds.cantidad) = 0 THEN CONCAT(ds.cantidad, '.00') ELSE ds.cantidad END cantidad, ds.letraCantidad, 
-        CASE WHEN CHARINDEX('.', ds.saldoDeposito) = 0 THEN CONCAT(ds.saldoDeposito, '.00') ELSE ds.saldoDeposito END saldoDeposito,
-        CASE WHEN CHARINDEX('.', ds.aportMensualOfer) = 0 THEN CONCAT(ds.aportMensualOfer, '.00') ELSE ds.aportMensualOfer END aportMensualOfer, ds.fecha1erAport, ds.plazo, 
-        ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
-        CASE WHEN CHARINDEX('.', ds.costom2f) = 0 THEN CONCAT(ds.costom2f, '.00') ELSE ds.costom2f END costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, 
-        ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, 
-        tipo_comprobanteD, cl.regimen_fac, cl.cp_fac
-        FROM clientes cl 
-        INNER JOIN lotes lot ON cl.idLote = lot.idLote  
-        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
-        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
+        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, FORMAT(CAST(ds.costoM2 AS float),'C') as costoM2, ds.proyecto, ds.municipio as municipioDS, FORMAT(CAST(ds.importOferta AS float),'C') as importOferta, ds.letraImport, FORMAT(CAST( ds.cantidad AS float),'C') as cantidad, ds.letraCantidad, FORMAT(CAST(ds.saldoDeposito AS float),'C') AS saldoDeposito, FORMAT(CAST(aportMensualOfer AS float),'C') AS aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, FORMAT(CAST(ds.costom2f AS float),'C') as costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, FORMAT(CAST(ds.costoM2_casas AS float),'C') as costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac FROM clientes cl INNER JOIN lotes lot ON cl.idLote = lot.idLote INNER JOIN condominios con ON con.idCondominio = lot.idCondominio INNER JOIN residenciales res ON res.idResidencial = con.idResidencial INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
 
         return $query->result();
 
