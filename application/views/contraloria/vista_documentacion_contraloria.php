@@ -592,7 +592,11 @@ c                                    </span>
 
 									}
 									else if(data.tipo_doc == 8){
-										file = '<center><button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fa fa-clipboard" aria-hidden="true"></i></button></center>';
+									    if(data.idMovimiento == 106){
+                                            file = '<center><button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
+                                        }else{
+                                            file = '<center><button type="button" title= "Contrato inhabilitado" class="btn-data btn-warning disabled" disabled><i class="fa fa-clipboard" aria-hidden="true"></i></button></center>';
+                                        }
 									}
                                     else if(data.tipo_doc == 31){
                                         file = '<center><button type="button" title= "Autorizacion" class="btn-data btn-green disabled" disabled><i class="fa fa-upload" aria-hidden="true"></i></button></center>';

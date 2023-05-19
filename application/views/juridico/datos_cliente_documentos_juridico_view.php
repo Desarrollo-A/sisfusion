@@ -998,7 +998,7 @@
 									if(data.tipo_doc == 7){
 										file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-warning" disabled><i class="fa fa-list-alt" aria-hidden="true"></i></button>';
 									} else if(data.tipo_doc == 8){
-										if(data.idMovimiento == 36 || data.idMovimiento == 6 || data.idMovimiento == 23 || data.idMovimiento == 76 || data.idMovimiento == 83 || data.idMovimiento == 95 || data.idMovimiento == 97){
+										if(data.idMovimiento == 36 || data.idMovimiento == 6 || data.idMovimiento == 23 || data.idMovimiento == 76 || data.idMovimiento == 83 || data.idMovimiento == 95 || data.idMovimiento == 97 || data.idMovimiento == 112){
 											file = '<center><button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
 										} else {
 											file = '<center><button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fa fa-upload" aria-hidden="true"></i></button></center>';
