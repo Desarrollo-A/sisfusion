@@ -9,7 +9,7 @@ class Incidencias_model extends CI_Model {
  
     public function getInCommissions($idlote)
     {
-        $query = $this->db-> query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, 
+        $query = $this->db-> query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede,sd.nombre, 
  CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, 
                 res.nombreResidencial, cond.nombre as nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, 
                 l.totalNeto2, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion,
@@ -31,13 +31,14 @@ class Incidencias_model extends CI_Model {
                       LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
                       LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
                       INNER JOIN  usuarios ae ON ae.id_usuario = cl.id_asesor
+                      LEFT JOIN sedes sd ON cl.id_sede = sd.id_sede 
                       LEFT JOIN  usuarios co ON co.id_usuario = cl.id_coordinador
                       LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
                       LEFT JOIN  usuarios su ON su.id_usuario = cl.id_subdirector
                       LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
                       WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 AND l.idLote = $idlote)
                       UNION
-                      (SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',
+                      (SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede, sd.nombre,  CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',
                       cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, 
                       res.nombreResidencial, cond.nombre as nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, 
                       l.totalNeto2, l.plan_enganche, plane.nombre as enganche_tipo, cl.lugar_prospeccion,
@@ -60,6 +61,7 @@ class Incidencias_model extends CI_Model {
                       LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
                       LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
                       INNER JOIN  usuarios ae ON ae.id_usuario = cl.id_asesor
+                      LEFT JOIN sedes sd ON cl.id_sede = sd.id_sede 
                       LEFT JOIN  usuarios co ON co.id_usuario = cl.id_coordinador
                       LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
                       LEFT JOIN  usuarios su ON su.id_usuario = cl.id_subdirector
@@ -931,12 +933,26 @@ class Incidencias_model extends CI_Model {
             WHERE com.id_lote = $idlote  AND com.estatus = 1 ORDER BY com.rol_generado asc");
         }
 
+        public  function sedesCambios (){
+            $cmd = "SELECT id_sede,nombre,abreviacion FROM sedes WHERE estatus = 1";
+            $query = $this->db->query($cmd);
+            return $query->result();
+        }
 
-        public function getPagosByComision($id_comision){
-            $datos =  $this->db-> query("SELECT pci.id_pago_i,pci.abono_neodata,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,cat.nombre,pci.comentario
-             FROM pago_comision_ind pci INNER JOIN usuarios u ON u.id_usuario=pci.id_usuario 
-             INNER JOIN opcs_x_cats cat ON cat.id_opcion=pci.estatus
-              WHERE pci.id_comision=$id_comision AND pci.estatus in(1,6) AND cat.id_catalogo=23")->result_array();
-            return $datos;
-           }
+        public function updateSedesEdit($idCliente, $idLote, $data){
+        try {
+                $this->db->where('id_cliente', $idCliente);
+                $this->db->where('idLote', $idLote);
+                if($this->db->update('clientes', $data))
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }               
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }    
+        }
+
         }
