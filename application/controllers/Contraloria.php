@@ -2921,6 +2921,7 @@ class Contraloria extends CI_Controller {
             case 1://condominios
                 $longitud_array = count($arrayMsi);
                 $flag = 1;
+                $fecha_insercion = date('Y-m-d H:i:s');
                 foreach ($arrayMsi as $index => $result){
 //                    $data = $this->Contraloria_model->getLotes($arrayMsi[$index]->ID);
 //                    foreach ($data as $resultado){
@@ -2931,7 +2932,7 @@ class Contraloria extends CI_Controller {
 //                        array_push($array_update, $array_push);
 //                    }
 
-                    $fecha_insercion = date('Y-m-d H:i:s');
+
                     $insert_aut = array(
                         //id_autorizacion: AUTO_INCREMENT
                         "idResidencial" => $idResidencial, //NO ACEPTA NULOS
@@ -2981,7 +2982,7 @@ class Contraloria extends CI_Controller {
                 $valorRepetidomveces = array_search(max($countedValues), $countedValues);
 
                 //sacar los valores distintos
-
+                $fecha_insercion = date('Y-m-d H:i:s');
                 foreach ($arrayMsi as $index => $result){
                     if($arrayMsi[$index]->MSNI != $valorRepetidomveces){
                         array_push($array_diferentes, $arrayMsi[$index]);
@@ -2991,7 +2992,7 @@ class Contraloria extends CI_Controller {
                 $array_diferentes = json_encode($array_diferentes, JSON_UNESCAPED_SLASHES);
                 $condominioValue = ($typeTranscation == 1) ? '' : '';
 
-                $fecha_insercion = date('Y-m-d H:i:s');
+
                 $insert_aut = array(
                     //id_autorizacion: AUTO_INCREMENT
                     "idResidencial" => $idResidencial, //NO ACEPTA NULOS
@@ -3782,6 +3783,22 @@ class Contraloria extends CI_Controller {
             $updateData = $arrayVista;
             return $updateData;
         }
+    }
+
+    public function inventarioComisionistas(){
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("contraloria/inventarioComisionistas_view",$datos);
+
+    }
+
+    public function getInvientarioComisionista($estatus, $condominio, $proyecto) {
+		$data = $this->Contraloria_model->getInvientarioComisionista($estatus, $condominio, $proyecto);
+		if($data!=null)
+            echo json_encode($data);
+        else
+		    echo json_encode(array());
+		exit;
     }
 
 

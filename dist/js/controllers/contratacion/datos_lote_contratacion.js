@@ -41,8 +41,8 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
 
 $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
-    ix_idCondominio = $("#idCondominioInventario").val() == '' ? null : $("#idCondominioInventario").val();
-    ix_idEstatus = $("#idEstatus").val() == '' ? null : $("#idEstatus").val();
+    ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
+    ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
 
     tabla_inventario = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",

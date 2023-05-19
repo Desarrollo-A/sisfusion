@@ -198,8 +198,12 @@ class Reporte_model extends CI_Model {
                     else // ESTE SÍ TIENE SUBDIRECTOR
                         $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
                 else { // SE CONSULTA DESDE LA TABLA PAPÁ
-                    if ($leadersList[4] == 0) // NO TIENE REGIONAL NI SUBDIRECTOR
-                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
+                    if ($leadersList[4] == 0) { // NO TIENE REGIONAL 
+                        if ($leadersList[3] == 0) // NO TIENE SUBDIRECTPR
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = 0 AND cl.id_regional = 0";
+                        else if ($leadersList[3] != 0) // SÍ TIENE SUBDIRECTPR
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = 0";
+                    }
                     else // ESTE SÍ TIENE SUBDIRECTOR
                         $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
                 }
@@ -901,7 +905,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
             WHERE lo.idStatusLote IN (2, 3) AND hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
             UNION ALL
-            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, '$0.00' precioFinal, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             cl.fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
@@ -916,8 +920,12 @@ class Reporte_model extends CI_Model {
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado 
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
+            lo.idLote, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
+            cl.fechaApartado, se.nombre, hl.modificado
             UNION ALL
-            SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
+            SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, '$0.00' precioFinal, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             cl.fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
@@ -933,6 +941,10 @@ class Reporte_model extends CI_Model {
             hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado
             WHERE hl.modificado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
+            lo.idLote, lo.referencia, 
+            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
+            cl.fechaApartado, se.nombre, hl.modificado
         ) t
         ORDER BY t.fechaApartado");
         return $query;
