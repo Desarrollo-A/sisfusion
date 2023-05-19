@@ -885,4 +885,58 @@ class Incidencias_model extends CI_Model {
         }
 
 
+        function getLideres($lider){
+            return $this->db->query("select u.id_usuario as id_usuario1,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as name_user,u2.id_usuario as id_usuario2,CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) as name_user2,
+            u3.id_usuario as id_usuario3,CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) as name_user3 from usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario inner join usuarios u3 on u3.id_usuario=u2.id_lider where u.id_usuario=$lider");
+        }
+
+
+
+        function updateBandera($id_pagoc, $param) {
+            // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
+            $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+    
+            if($param == 55){
+              $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+            }
+    
+            if (! $response ) {
+                return $finalAnswer = 0;
+            } else {
+                return $finalAnswer = 1;
+            }
+        }
+
+
+        public function getDatosAbonadoDispersion($idlote){
+            $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
+            $estrucura = $request->estructura;
+            if($request->lugar_prospeccion == 6)
+                $rel_final = 6;
+            else
+                $rel_final = 11;
+                
+            return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta,
+            com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END as rol, com.comision_total, pci.abono_pagado, com.rol_generado,/* pc.porcentaje_saldos, (CASE us.id_usuario WHEN 832 THEN 25  ELSE pc.porcentaje_saldos END) porcentaje_saldos,*/com.descuento
+            FROM comisiones com
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
+            GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+            INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado AND oxc.id_catalogo = 1
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
+            /*INNER JOIN porcentajes_comisiones pc ON pc.id_rol = com.rol_generado  AND pc.relacion_prospeccion = $rel_final*/
+            WHERE com.id_lote = $idlote  AND com.estatus = 1 ORDER BY com.rol_generado asc");
+        }
+
+
+        public function getPagosByComision($id_comision){
+            $datos =  $this->db-> query("SELECT pci.id_pago_i,pci.abono_neodata,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,cat.nombre,pci.comentario
+             FROM pago_comision_ind pci INNER JOIN usuarios u ON u.id_usuario=pci.id_usuario 
+             INNER JOIN opcs_x_cats cat ON cat.id_opcion=pci.estatus
+              WHERE pci.id_comision=$id_comision AND pci.estatus in(1,6) AND cat.id_catalogo=23")->result_array();
+            return $datos;
+           }
         }

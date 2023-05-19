@@ -294,6 +294,25 @@ public function ToparComision($id_comision,$idLote = '')
       echo json_encode( $bandera );
     }
 
+    public function getLideres($lider)
+    {
+      echo json_encode($this->Incidencias_model->getLideres($lider)->result_array());
+    }
 
 
+    public function updateBandera(){
+      $response = $this->Incidencias_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
+      echo json_encode($response);
+    }
+
+    function getDatosAbonadoDispersion($idlote){
+      echo json_encode($this->Incidencias_model->getDatosAbonadoDispersion($idlote)->result_array());
+    }
+
+    
+    public function getPagosByComision($id_comision)
+    {
+      $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
+      echo json_encode($respuesta); 
+    }
 }
