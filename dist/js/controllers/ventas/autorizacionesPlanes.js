@@ -1040,16 +1040,13 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                  $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:select", function (evt){            
                     let element = evt.params.data.element;
                     let $element = $(element);
-                    $element.detach();
+                    $element.detach(); 
                     $(this).append($element);
                     $(this).trigger("change");
                 });
 
-        //$(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).select2({allow_single_deselect: false,containerCssClass: "select-gral", dropdownCssClass: "custom-dropdown", tags: true, tokenSeparators: [',', ' '], closeOnSelect : false, placeholder : "Seleccione una opción", allowHtml: true, allowClear: true});
-       // $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).selectpicker('refresh');
-     //   $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).trigger('change.select2');
 
-  
+
 
             //Acciones que se ejecutaran cuando DESselecciona un descuento de una condición
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).on("select2:unselecting", function (evt){
