@@ -531,7 +531,7 @@ $(document).on('click', '#pausarSolicitud', function () {
 $(document).on('click', '#borrarSolicitud', function () {
    var data = escrituracionTable.row($(this).parents('tr')).data();
    document.getElementById('labelmodal').innerHTML = 'Borrar solicitud';
-   //document.getElementById('comentarioPausa')[0].placeholder = 'Descripción del por que se elimna la solicitud';
+   //document.getElementById('comentarioPausa')[0].placeholder = 'Descripción del por que se elimina la solicitud';
    $('#comentarioPausa').attr('placeholder','Descripción del por que se elimina la solicitud');
     $('#id_solicitud').val(data.id_solicitud);
     $('#banderaCliente').val($(this).attr('data-banderaEscrituracion'));

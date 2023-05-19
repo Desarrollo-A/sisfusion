@@ -3,8 +3,7 @@
 /**
  *
  */
-class Asesor_model extends CI_Model
-{
+class Asesor_model extends CI_Model {
 
     function __construct()
     {
@@ -12,7 +11,7 @@ class Asesor_model extends CI_Model
     }
 
     function getinfoCliente($id_cliente)
-    {
+{
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
                                 nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
                                 cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
@@ -175,7 +174,6 @@ class Asesor_model extends CI_Model
         return $query->result();
     }
 
-    /******NUEVO MODELO 28-10-20********/
     public function get_info_prospectos($id_asesor) {
         $query = $this->db->query("SELECT p.*, lp.nombre as lugar_prospeccion, pv.nombre as plaza_venta,
         nac.nombre as nacionalidad
@@ -431,18 +429,7 @@ class Asesor_model extends CI_Model
 
     public function selectDS($cliente)
     {
-        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, 
-                                    cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as 
-                                    nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, 
-                                    ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, 
-                                    cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, ds.costoM2, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, 
-                                    ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, 
-                                    ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, ds.costom2f,  cl.lugar_prospeccion, ds.fecha_modificacion, ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac
-                                    FROM clientes cl 
-                                    INNER JOIN lotes lot ON cl.idLote = lot.idLote  
-                                    INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-                                    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
-                                    INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
+        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, FORMAT(CAST(ds.costoM2 AS float),'C') as costoM2, ds.proyecto, ds.municipio as municipioDS, FORMAT(CAST(ds.importOferta AS float),'C') as importOferta, ds.letraImport, FORMAT(CAST( ds.cantidad AS float),'C') as cantidad, ds.letraCantidad, FORMAT(CAST(ds.saldoDeposito AS float),'C') AS saldoDeposito, FORMAT(CAST(aportMensualOfer AS float),'C') AS aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, FORMAT(CAST(ds.costom2f AS float),'C') as costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, FORMAT(CAST(ds.costoM2_casas AS float),'C') as costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac FROM clientes cl INNER JOIN lotes lot ON cl.idLote = lot.idLote INNER JOIN condominios con ON con.idCondominio = lot.idCondominio INNER JOIN residenciales res ON res.idResidencial = con.idResidencial INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
 
         return $query->result();
 
@@ -451,14 +438,7 @@ class Asesor_model extends CI_Model
 
     public function selectDSCopropiedad($cliente)
     {
-        /*SELECT id_copropietario, id_cliente, oc3.id_opcion as regimen_valor, oc2.id_opcion as estado_valor, oc.id_opcion as nacionalidad_valor, co.nombre as
-                                    nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, ocupacion, empresa, posicion,
-                                    antiguedad, edadFirma, direccion FROM copropietarios co
-                                    LEFT JOIN opcs_x_cats oc ON oc.id_opcion = co.nacionalidad
-                                    LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = co.estado_civil
-                                    LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial WHERE co.estatus = 1 AND co.id_cliente = ".$cliente." AND
-                                    oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
-        $query = $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
+        $query =  $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, 
                                     co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, 
@@ -471,12 +451,6 @@ class Asesor_model extends CI_Model
 
     public function selectDSCopropiedadCount($cliente)
     {
-        /*SELECT count(*) as valor_propietarios FROM copropietarios co
-                                    LEFT JOIN opcs_x_cats oc ON oc.id_opcion = co.nacionalidad
-                                    LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = co.estado_civil
-                                    LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = co.regimen_matrimonial
-                                    WHERE co.estatus = 1 AND co.id_cliente = ".$cliente."
-                                    AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19*/
         $query = $this->db->query("SELECT count(*) as valor_propietarios FROM copropietarios co 
                                     WHERE co.estatus = 1 AND co.id_cliente = " . $cliente);
         return $query->result();
@@ -492,10 +466,8 @@ class Asesor_model extends CI_Model
 
     public function selectDSAsesor($cliente)
     {
-        /*INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
-                                    INNER JOIN usuarios ger ON ger.id_usuario = us.id_lider WHERE cl.id_cliente*/
         $query = $this->db->query("
-            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, 
+            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
                     CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
                     CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
                     asesor.id_lider, gerente.id_usuario, asesor.correo
@@ -507,28 +479,18 @@ class Asesor_model extends CI_Model
         return $query->result();
     }
 
-    public function selectDSAsesor1($cliente)
-    {
-        /*return $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre,' ',us.apellido_paterno) AS nombreAsesor, us.id_lider, ger.id_usuario, CONCAT(ger.nombre,' ',ger.apellido_paterno) AS nombreGerente
-                                 FROM clientes cl INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
-                                 INNER JOIN usuarios ger ON ger.id_usuario = us.id_lider WHERE cl.id_cliente  = ".$cliente."");*/
-        return $query = $this->db->query("
-            SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, 
-                    CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
-                    CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
-                    asesor.id_lider, gerente.id_usuario, asesor.correo
-                    
+    public function selectDSAsesor1($cliente){
+        return $query = $this->db->query("SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ',asesor.apellido_materno) AS nombreAsesor, CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador, CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente, asesor.id_lider, gerente.id_usuario, asesor.correo
         FROM clientes cl 
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= " . $cliente . "");
     }
 
-
     public function selectDSAsesorCompartido($cliente)
     {
         $query = $this->db->query("SELECT vc.id_asesor, 
-            CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
+            CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
             CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
             CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
             FROM clientes cl 
@@ -542,13 +504,8 @@ class Asesor_model extends CI_Model
 
     public function selectDSAsesorCompartido1($cliente)
     {
-        /*return $this->db->query("SELECT vc.id_asesor, CONCAT(us2.nombre,' ',us2.apellido_paterno) AS nombreAsesor, us2.id_lider, ger2.id_usuario, CONCAT(ger2.nombre,' ',ger2.apellido_paterno) AS nombreGerente
-                                FROM clientes cl
-                                LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente
-                                LEFT JOIN usuarios us2 ON us2.id_usuario = vc.id_asesor
-                                LEFT JOIN usuarios ger2 ON ger2.id_usuario = us2.id_lider WHERE cl.id_cliente = ".$cliente."");*/
         return $query = $this->db->query("SELECT vc.id_asesor, 
-            CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
+            CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
             CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
             CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
             FROM clientes cl 
@@ -609,17 +566,17 @@ class Asesor_model extends CI_Model
     {
 
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('clientes', $arreglo_cliente);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('clientes',$arreglo_cliente);
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('deposito_seriedad', $arreglo_ds);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('deposito_seriedad',$arreglo_ds);
 
-        $this->db->where("id_referencia", $id_referencia1);
-        $this->db->update('referencias', $arreglo_referencia1);
+        $this->db->where("id_referencia",$id_referencia1);
+        $this->db->update('referencias',$arreglo_referencia1);
 
-        $this->db->where("id_referencia", $id_referencia2);
-        $this->db->update('referencias', $arreglo_referencia2);
+        $this->db->where("id_referencia",$id_referencia2);
+        $this->db->update('referencias',$arreglo_referencia2);
 
         return true;
     }
@@ -628,21 +585,19 @@ class Asesor_model extends CI_Model
     {
 
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('clientes', $arreglo_cliente);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('clientes',$arreglo_cliente);
 
-        $this->db->where("id_cliente", $id_cliente);
-        $this->db->update('deposito_seriedad', $arreglo_ds);
+        $this->db->where("id_cliente",$id_cliente);
+        $this->db->update('deposito_seriedad',$arreglo_ds);
 
         return true;
     }
-
     public function checkExistRefrencias($id_cliente)
     {
         $query = $this->db->get_where('referencias', array('id_cliente' => $id_cliente));
         return $query->result();
     }
-
     public function insertnewRef($data)
     {
         $query = $this->db->insert('referencias', $data);
@@ -972,7 +927,7 @@ class Asesor_model extends CI_Model
 
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones', $data);
+        $this->db->insert('autorizaciones',$data);
         return $this->db->affected_rows();
     }
 
@@ -1000,7 +955,6 @@ class Asesor_model extends CI_Model
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
 	}
-
 
     public function validateSt2($idLote) {
         $this->db->where("idLote", $idLote);
@@ -1903,5 +1857,4 @@ class Asesor_model extends CI_Model
         return $query->result_array();
     }
 }
-    
 
