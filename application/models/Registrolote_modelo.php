@@ -105,20 +105,18 @@
     }
     
 	public function getdp_DS($lotes) {
-        return $this->db->query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
-			'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, l.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
-			cl.rfc, cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-			l.idLote, l.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-			'ds_old' tipo_doc
-			FROM cliente_consulta cl
-			INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
-			INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
-			INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-			INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-			WHERE cl.status=1 AND l.status=1 AND cl.idLote=".$lotes)
-			->result_array();
+        return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
+		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
+		lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
+		'ds_old' tipo_doc
+		FROM cliente_consulta cl
+		INNER JOIN lotes_consulta lo ON lo.idLote = cl.idLote
+		INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")->result_array();
     }
-
 
 	public function registroCliente()
 	{
@@ -4584,7 +4582,6 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
         return $query->result();
 	}
-
     function getRevision7() {
         $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
             hd.fechaVenc, lotes.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
@@ -4774,16 +4771,25 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
                 break;
             case '6': // ASISTENTE GERENTE
 				$id_lider = $this->session->userdata('id_lider');
+				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-						
+				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+					$id_lider = $id_lider . ', 671';
+					$sede = "AND clientes.id_sede = 12";
+				}
+				else if ($this->session->userdata('id_usuario') == 10795) { // MARCELA CUELLAR MORON
+					$id_lider = $id_lider . ', 654';
+					$sede = "AND clientes.id_sede = 12";
+				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE (clientes.id_asesor IN ($id_lider) OR 
+                INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
+				WHERE (clientes.id_asesor IN ($id_lider) OR 
                 clientes.id_coordinador IN ($id_lider) OR clientes.id_gerente IN ($id_lider)) AND lotes.status = 1
                 AND clientes.status = 1 AND lotes.idCondominio = $condominio
                 UNION ALL
                 SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida  FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote 
+                INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
                 INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
                 WHERE (vc.id_asesor IN ($id_lider) OR vc.id_coordinador IN ($id_lider) 
                 OR vc.id_gerente IN ($id_lider)) AND vc.estatus = 1 AND 
@@ -4840,6 +4846,16 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 	public function getNomExp($idDocumento) {
 		$query = $this->db-> query('SELECT idDocumento, expediente, idLote FROM historial_documento where idDocumento = '.$idDocumento);
+		return $query->row();
+	}
+
+
+	public function sendMailAdmin($idLote) {
+
+		$this->db->select_max("idHistorialLote");
+		$this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
+		$query = $this->db->get('historial_lotes');
+
 		return $query->row();
 	}
 
@@ -5085,784 +5101,67 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		return $query->result_array();
 	}
 
-
-
 	public function getcop($id_cliente){
 
-			$query = $this->db-> query("SELECT CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor,
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador,
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente
-            FROM ventas_compartidas vc 
-            LEFT JOIN clientes cl ON vc.id_cliente = cl.id_cliente  
-            LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
-			LEFT JOIN usuarios coordinador ON coordinador.id_usuario = vc.id_coordinador 
-            LEFT JOIN usuarios gerente ON gerente.id_usuario = vc.id_gerente 
-            WHERE vc.id_cliente = ".$id_cliente." AND vc.estatus=1");
+			$query = $this->db-> query(
+				"SELECT CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor,
+						CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador,
+						CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente
+				FROM ventas_compartidas vc 
+				LEFT JOIN clientes cl ON vc.id_cliente = cl.id_cliente  
+				LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
+				LEFT JOIN usuarios coordinador ON coordinador.id_usuario = vc.id_coordinador 
+				LEFT JOIN usuarios gerente ON gerente.id_usuario = vc.id_gerente 
+				WHERE vc.id_cliente = ".$id_cliente." AND vc.estatus=1");
 			return $query->result();
 
 	}
 
 	   /*busquedas*/
-    function getClientsByName($name_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND cl.status = 1 order by cl.id_cliente desc");
 
-        return $query->result();
-    }
-
-    function getClientsByMail($correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.correo ='%".$correo_client."%' AND cl.correo LIKE '%".$correo_client."%' AND cl.status = 1  order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-    function getClientByTel($telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.telefono1 ='".$telefono_client."' 
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-    function getClientsByMailName($name_client, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
-                                cl.correo LIKE '%".$correo_client."%' AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-    function getClientsByNameTel($name_client, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-
-    function getClientsByMailTel($correo_client, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.correo LIKE '%".$correo_client."%' OR cl.telefono1= '".$telefono_client."'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-    function getClientsByAllFiels($name_client, $correo_client, $telefono_client, $apellido_paterno, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where  CONCAT (cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) LIKE '%".$name_client."%' AND
-                                cl.correo LIKE '%".$correo_client."%' AND cl.telefono1= '".$telefono_client."' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                 cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-
-    /*nuevo alv*/
-    function getClientByApPaterno($apellido_paterno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' 
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientByApMaterno($apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_materno LIKE '%".$apellido_materno."%' 
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByNameApPaterno($name_client, $apellido_paterno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByNameApMaterno($name_client, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByMailApPaterno($correo_client, $apellido_paterno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.correo LIKE '%".$correo_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByMailApMaterno($correo_client, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.correo LIKE '%".$correo_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByApPaternoTel($apellido_paterno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByApMaternoTel($apellido_materno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_materno LIKE '%".$apellido_materno."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByNameApPaternoApMaterno($name_client, $apellido_paterno, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNameApPaternoMail($name_client, $apellido_paterno, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByNameApPaternoTel($name_client, $apellido_paterno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-
-        return $query->result();
-    }
-    function getClientsByNameApPaternoApMaternoMail($name_client, $apellido_paterno, $apellido_materno, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNameApPaternoApMaternoTel($name_client, $apellido_paterno, $apellido_materno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByApPaternoApMaterno($apellido_paterno, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByApPaternoApMaternoMail($apellido_paterno, $apellido_materno, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByApPaternoApMaternoTel($apellido_paterno, $apellido_materno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.apellido_paterno LIKE '%".$apellido_paterno."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNombreApMaternoTel($name_client, $apellido_materno, $telefono_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.telefono1 LIKE '%".$telefono_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNombreApMaternoMail($name_client, $apellido_materno, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND
-                                cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNombreTelMail($name_client, $telefono_client, $correo_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNombreTelMailApMaterno($name_client, $telefono_client, $correo_client, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNombreTelMailApPaterno($name_client, $telefono_client, $correo_client, $apellido_paterno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.nombre LIKE '%".$name_client."%' AND
-                                cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
-                                 cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByTelMailApPaterno($telefono_client, $correo_client, $apellido_paterno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
-                                 cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByTelMailApMaterno($telefono_client, $correo_client, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
-                                 cl.apellido_materno LIKE '%".$apellido_materno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByTelMailApPaternoApMaterno($telefono_client, $correo_client, $apellido_paterno, $apellido_materno)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
-                                 cl.apellido_materno LIKE '%".$apellido_materno."%' AND cl.apellido_paterno LIKE '%".$apellido_paterno."%'
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
-    function getClientsByNameMailTel($telefono_client, $correo_client, $name_client)
-    {
-        $query = $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-                                cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-                                ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-                                ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-                                ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por, oc.nombre as primerContacto,
-                                cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-                                (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-                                (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
-                                FROM clientes as cl
-                                LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-                                LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-                                LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-                                LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-                                LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-                                LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
-                                where cl.telefono1 LIKE '%".$telefono_client."%' AND cl.correo LIKE '%".$correo_client."%' AND
-                                 cl.nombre LIKE '%".$name_client."%' 
-                                 AND cl.status = 1 order by cl.id_cliente desc");
-        return $query->result();
-    }
+	public function getDetailedInfoClients($inf_client){
+		$array_size = count($inf_client);
+		$where = ($array_size == 1) ? key($inf_client)." LIKE '%".$inf_client[key($inf_client)]."%'" : '';
+		if(isset($where) && $array_size > 1){
+			foreach ($inf_client as $index => $client_data) {
+				$where .= $index . " LIKE '%" . $client_data . "%' " . ($array_size > 1 ? "AND " : '');
+				$array_size--;
+			}
+		}
+		$query = $this->db->query("SELECT	cl.id_cliente, id_asesor, id_coordinador, id_gerente,
+		cl.id_sede, personalidad_juridica,
+		cl.nacionalidad, cl.rfc, curp, cl.correo,
+		telefono1, us.rfc, telefono2, telefono3,
+		fecha_nacimiento, lugar_prospeccion, medio_publicitario, otro_lugar,
+		plaza_venta, tp.tipo, estado_civil, regimen_matrimonial,
+		nombre_conyuge, domicilio_particular, tipo_vivienda, ocupacion,
+		cl.empresa, puesto, edadFirma, antiguedad,
+		domicilio_empresa, telefono_empresa , noRecibo, engancheCliente,
+		concepto, cl.idTipoPago, expediente,
+		cl.status, cl.idLote, fechaVencimiento,
+		cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
+		cl.fecha_modificacion, cl.modificado_por, cl.status, nombreLote,
+		oc.nombre AS primerContacto, 
+		cond.nombre AS nombreCondominio, 
+		residencial.nombreResidencial AS nombreResidencial,
+		CONVERT(VARCHAR, fechaEnganche, 20) AS fechaEnganche,
+		CONVERT(VARCHAR, fechaApartado, 20) AS fechaApartado,
+		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
+		(SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
+		(SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente, 
+		(SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador
+		FROM clientes AS cl
+		LEFT JOIN usuarios AS us ON cl.id_asesor=us.id_usuario
+		LEFT JOIN lotes AS lotes ON lotes.idLote=cl.idLote
+		LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
+		LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
+		LEFT JOIN tipopago AS tp on cl.idTipoPago=tp.idTipoPago
+		LEFT JOIN opcs_x_cats as oc ON cl.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9
+		WHERE $where AND cl.status = 1 
+		ORDER BY cl.id_cliente DESC");
+		return $query->result();
+	}
     /***************/
-
-
-
-
-
-
-
-
-
-
-
 
 	public function getNameLote($idLote){
 		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
@@ -5897,40 +5196,43 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
     public function registroClienteTwo($id_proyecto, $id_condominio)
     {
         if ($id_condominio == 0) { // SE FILTRA POR RESIDENCIAL
-            return $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-            cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-            ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-            ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-            ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
-            cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-            (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador, lotes.referencia
-            FROM clientes as cl
-            LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-            LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-            LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-            LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-            LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-            where cl.status = 1 AND residencial.idResidencial = $id_proyecto order by cl.id_cliente desc")->result();
+            $where = "AND residencial.idResidencial = $id_proyecto";
         } else { // SE FILTRA POR CONDOMINIO
-            return $this->db->query("select cl.id_cliente ,id_asesor ,id_coordinador ,id_gerente ,cl.id_sede ,cl.nombre ,cl.apellido_paterno ,
-            cl.apellido_materno ,personalidad_juridica ,cl.nacionalidad ,cl.rfc ,curp ,cl.correo ,telefono1, us.rfc
-            ,telefono2 ,telefono3 ,fecha_nacimiento ,lugar_prospeccion ,medio_publicitario ,otro_lugar ,plaza_venta ,tp.tipo ,estado_civil ,regimen_matrimonial ,nombre_conyuge  
-            ,domicilio_particular ,tipo_vivienda ,ocupacion ,cl.empresa ,puesto ,edadFirma ,antiguedad ,domicilio_empresa ,telefono_empresa  ,noRecibo
-            ,engancheCliente ,concepto ,fechaEnganche ,cl.idTipoPago ,expediente ,cl.status ,cl.idLote ,fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, cl.creado_por,
-            cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote,
-            (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS asesor,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_gerente=id_usuario ) AS gerente ,
-            (SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) FROM usuarios WHERE cl.id_coordinador=id_usuario) AS coordinador, lotes.referencia
-            FROM clientes as cl
-            LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
-            LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
-            LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
-            LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
-            LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-            where cl.status = 1 AND cond.idCondominio = $id_condominio order by cl.id_cliente desc")->result();
+			$where = "AND cond.idCondominio = $id_condominio";
         }
+
+		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
+		cl.id_sede, personalidad_juridica, cl.nacionalidad,
+		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
+		telefono3, fecha_nacimiento, lugar_prospeccion, otro_lugar,
+		medio_publicitario, plaza_venta, tp.tipo, estado_civil,
+		regimen_matrimonial, nombre_conyuge, domicilio_particular,
+		tipo_vivienda, ocupacion, cl.empresa, puesto, edadFirma,
+		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
+		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
+		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
+		fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
+		cl.creado_por, cl.fecha_modificacion, cl.modificado_por,
+		cond.nombre AS nombreCondominio,
+		residencial.nombreResidencial AS nombreResidencial,
+		UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCompleto,
+		CONVERT(VARCHAR, fechaEnganche, 20) AS fechaEnganche,
+		CONVERT(VARCHAR, fechaApartado, 20) AS fechaApartado,
+		(SELECT UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))) AS asesor,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios 
+		WHERE cl.id_gerente=id_usuario ) AS gerente,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios
+		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status
+		FROM clientes as cl
+		LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
+		LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
+		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
+		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
+		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
+		WHERE cl.status = 1 $where
+		ORDER BY cl.id_cliente DESC")->result();
     }
 
     public function getLotesGralTwo($condominio, $residencial) {
@@ -6302,12 +5604,4 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 		
 	}
-
-    public function sendMailAdmin($idLote) {
-        $this->db->select_max("idHistorialLote");
-        $this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
-        $query = $this->db->get('historial_lotes');
-
-        return $query->row();
-    }
-}
+} 

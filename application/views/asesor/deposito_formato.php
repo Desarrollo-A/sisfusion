@@ -3,9 +3,6 @@
 
 <body onload="cargarInputs()" onsubmit="guardarInputs()">
 <div class="wrapper">
-    <style>
-        
-    </style>
     <?php
         $datos = array();
         $datos = $datos4;
@@ -13,7 +10,7 @@
         $datos = $datos3;
     ?>
     <?php
-        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form method="post" class="form-horizontal" action="'.base_url().'index.php/Asesor/editar_ds/" enctype="multipart/form-data">';
@@ -36,7 +33,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 AND $onlyView==0){?>
+            <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
                 </section>
@@ -52,7 +49,6 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
                         <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
-                            <i class="fas fa-info-circle fa-xs" style="cursor: pointer;" onclick="historial()"></i>
                             <?php if ($this->session->userdata('id_rol') == 17) { ?>
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
                             <?php }?>
@@ -69,8 +65,7 @@
                         <h6 class="label-on-left mb-0">DESARROLLO</h6>
                         <div class="radio_container">
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 ||
-                            $cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33) {echo "checked=true";} ?>  value="1"/>
+                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 ) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
                             <label for="two">LN</label>
@@ -738,7 +733,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="costom2f" id="costom2f" oninput="this.value = formatearNumero(this.value)"  <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                            <input class="form-control input-gral" name="costom2f" id="costom2f" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -759,7 +754,7 @@
                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">IMPORTE DE LA OFERTA (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="importOferta" id="importOferta" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
+                            <input class="form-control input-gral" name="importOferta" id="importOferta" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->importOferta?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
@@ -772,7 +767,7 @@
                 <div class="row pb-3 pt-3" id="ofertanteInput">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-inline">
                         <label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $ (<b><span style="color: red;">*</span></b>)
-                            <input class="form-control p-0" name="cantidad" id="cantidad" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->cantidad?>"/>
+                            <input class="form-control p-0" name="cantidad" id="cantidad" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> type="text" required="true" value="<?=$cliente[0]->cantidad?>"/>
 
                             (<input class="form-control p-0 letrasNumeros" name="letraCantidad" <?php echo $readOnly; ?> id="letraCantidad" oninput="this.value = this.value.toUpperCase()" type="text" required="true" value="<?=$cliente[0]->letraCantidad?>"/>),
                             misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo. El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma.
@@ -783,13 +778,13 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">SALDO DE DEPÓSITO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="saldoDeposito" id="saldoDeposito" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->saldoDeposito?>"/>
+                            <input class="form-control input-gral" name="saldoDeposito" id="saldoDeposito" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->saldoDeposito?>"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">APORTACIÓN MENSUAL (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="aportMensualOfer" oninput="this.value = formatearNumero(this.value)" <?php echo $readOnly; ?> id="aportMensualOfer" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
+                            <input class="form-control input-gral" name="aportMensualOfer" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> id="aportMensualOfer" step="any" required="true" value="<?=$cliente[0]->aportMensualOfer?>" step="any"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -1217,27 +1212,21 @@
         });
     }
 
-    function formatearNumero(numero) {
-    return "$ " + numero.toString().replace(/\D/g, "")
-                    .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-                .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-    }
-
     function cargarInputs() {
         var inputs = document.getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].name === "cantidad") {
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }else if (inputs[i].name === "costom2f") {
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }else if (inputs[i].name === "costoM2") {
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }else if (inputs[i].name === "importOferta"){
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }else if (inputs[i].name === "saldoDeposito"){
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }else if (inputs[i].name === "aportMensualOfer"){
-                inputs[i].value = formatearNumero(inputs[i].value);
+                inputs[i].value = inputs[i].value;
             }
         }
     }
@@ -1278,6 +1267,54 @@
         const input = event.target;
         input.value = input.value.trim();
     });
+
+    $("input[data-type='currency']").on({
+        keyup: function() {
+        formatCurrency($(this));
+        },
+        blur: function() { 
+        formatCurrency($(this), "blur");
+        }
+    });
+
+    function formatCurrency(input, blur) {
+        var input_val = input.val();
+        if (input_val === "") { return; }
+        // original length
+        var original_len = input_val.length;
+
+        // initial caret position 
+        var caret_pos = input.prop("selectionStart");
+            
+        // check for decimal
+        if (input_val.indexOf(".") >= 0) {
+            var decimal_pos = input_val.indexOf(".");
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+            left_side = formatNumber(left_side);
+            right_side = formatNumber(right_side);
+            if (blur === "blur") {
+                right_side += "00";
+            }
+            right_side = right_side.substring(0, 2);
+            input_val = "$" + left_side + "." + right_side;
+
+        } else {
+            input_val = formatNumber(input_val);
+            input_val = "$" + input_val;
+            if (blur === "blur") {
+            input_val += ".00";
+            }
+        }
+        input.val(input_val);
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
+    }
+
+    function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
 
     function historialCampoHtml(data) {
         let html = '<h3>Historial de movimientos</h3>';

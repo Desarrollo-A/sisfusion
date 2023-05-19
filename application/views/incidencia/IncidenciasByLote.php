@@ -1,5 +1,15 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<style>
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+</style>
 <body>
     <div class="wrapper">
         <?php
@@ -30,6 +40,51 @@
         }
         ?>
 
+
+
+        <div class="modal fade modal-alertas" id="modal_sedes" name="modal_sedes" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button> 
+                    <h4 class="card-title"><b>Cambio de sedes</b></h4>
+                   
+                    </div>
+                    <form method="post" id="form_sede">
+
+                        <div class="modal-body">
+                            
+                            <div class="tituloLote" id="tituloLote" ></div>
+                            <div class="sedeOld" id="sedeOld" ></div>
+                            
+                            <div class="form-group" >
+                                <label class="label">Selecciona una opción </label>
+                                <select id="sedesCambio" name="sedesCambio" 
+                                class="selectpicker select-gral sedesNuevo" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                required data-live-search="true">
+                                <?php foreach($sedes as $sede){ ?>>
+                                    <option value="<?= $sede->id_sede ?>"> <?= $sede->nombre  ?> </option>
+                                <?php  }  ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">  
+                            <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal">
+                                CANCELAR
+                            </button>
+                            <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="margin: 15px;">
+                                ACEPTAR
+                            </button>
+            			</div>
+                    
+                    </form>
+                
+                </div>
+            </div>
+        </div>
        
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
@@ -302,18 +357,41 @@
         style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                    <div class="modal-header">
-                                           
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="material-icons">clear</i>
-                    </button>    
-                    <h4 class="card-title"><b>Cambiar usuario</b></h4>
+                    <div class="modal-header">           
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>      
+                     
                         <!-- <button type="button" style="font-size: 20px;top:20px;" class="close" data-dismiss="modal">  <i class="large material-icons">close</i></button> -->
                     </div>
-                    <div class="modal-body"></div>
-                    <div class="modal-footer">
-
+                    <div class="modal-body"> 
+                    <h4 class="modal-title" >Cambiar usuario</h4>
+                        <div class="form-group">        
+                            <div class="col-md-12" >
+                            <label class="control-label"  >
+                                Seleccione una opción
+                            </label>
+                                <select class="selectpicker select-gral m-0"
+                                data-style="btn"
+                                data-cliente=""
+                                data-lote=""
+                                title="SELECCIONA UNA OPCIÓN" required data-live-search="true"
+                               name="opcion" 
+                                onchange="selectOpcion()" id="opcion" >
+                                    <option value="1">Cliente</option>
+                                    <option value="2">Venta compartida</option>
+                                </select>
+                            <input type="hidden" class="form-control"
+                            id="lotes1" name="lotes1">
+                            <input type="hidden" class="form-control"
+                            id="clientes2" name="clientes2">
+                            <!-- aqui mero vamos a poner los imputs  -->
+                            <!--  -->
+                            </div> 
+                        </div> 
+                  
                     </div>
+                    <div class="modal-footer"></div>
                 </div>
             </div>
         </div>
@@ -364,16 +442,19 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="label">Asesor dado de baja</label>
-                                <select name="asesorold" id="asesorold" class="selectpicker" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required>
-                                    <option value="0">Seleccione todo</option>
+                                <select name="asesorold" id="asesorold" class="selectpicker select-gral" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                data-style="btn " data-show-subtext="true" data-live-search="true" 
+                                title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
                             <div id="info" ></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="label">Puesto del usuario a ceder la comisiones</label>
-                                <select class="selectpicker roles2" name="roles2" id="roles2" required>
-                                    <option value="">----Seleccionar-----</option>
+                                <select class="selectpicker select-gral roles2" 
+                                    name="roles2" id="roles2" required
+                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -381,11 +462,14 @@
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Usuario a ceder comisiones</label>
-                                <select id="usuarioid2" name="usuarioid2" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
+                                <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
+                                title="SELECCIONA UNA OPCIÓN" 
+                                 required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="label">Descripción</label>
-                                <textarea id="comentario" name="comentario" class="form-control" rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
+                                placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
                              
@@ -393,15 +477,9 @@
                         </div>
                         
                         <div class="modal-footer">     
-                        
-                                    <button type="submit" id="btn_ceder" class="btn btn-gral-data">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                
-                                <!-- <button type="button"   class="btn btn-danger btn-simple " 
-                                        data-dismiss="modal" >Cerrar</button>	
 
-                                <button  type="button"type="submit" id="btn_inv" 
-                                 class="btn btn-gral-data updatePrestamo">Aceptar</button> -->
+                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    <button type="submit" id="btn_ceder" class="btn btn-gral-data ">GUARDAR</button>
                         </div>
 
                     </form>
@@ -421,39 +499,37 @@
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="label">Puesto del usuario a modificar</label>
-                                <select class="selectpicker roles3" name="roles3" id="roles3" required>
-                                    <option value="">----Seleccionar-----</option>
+                                <select class="selectpicker select-gral roles3"  name="roles3" 
+                                    id="roles3" required
+                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
+                                    <option value="2">Sub director</option>
+                                    <option value="59">Regional</option>
                                 </select>
                                 <p id="UserSelect"></p>
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Seleccionar usuario</label>
-                                <select id="usuarioid3" name="usuarioid3" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
-                            </div>
+                                <select id="usuarioid3" name="usuarioid3" 
+                                class="selectpicker select-gral directorSelect " 
+                                title="SELECCIONA UNA OPCIÓN" 
+                                required data-live-search="true"></select>
+                            </div>      
+                            <p id="UserSelectDirec"></p>                
                             <div class="form-group">
                                 <label class="label">Descripción</label>
-                                <textarea id="comentario3" name="comentario3" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario3" name="comentario3" 
+                                class="form-control input-gral" rows="3" placeholder="Descripción"
+                                 required></textarea>
                             </div>
-                            <!-- <div class="form-group">
-                                <center>
-                                    <button class="btn btn-primary">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
-                            </div> -->
+                
                         </div>
                         <div class="modal-footer">    
-                                <!-- <button  type="button"type="submit" id="btn_inv" 
-                                 class="btn btn-gral-data updatePrestamo">Aceptar</button>
-                                 <button type="button" class="btn btn-danger btn-simple " 
-                                        data-dismiss="modal" >Cerrar</button>	 -->
-                                <center>
+                                    
+                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
                                     <button type="submit" id="btn_inv" class="btn btn-gral-data">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center> 
-
                         </div>
                     </form>
                 </div>
@@ -472,8 +548,11 @@
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="label">Puesto del usuario a modificar</label>
-                                <select class="selectpicker rolesvc" name="rolesvc" id="rolesvc" required>
-                                    <option value="">----Seleccionar-----</option>
+
+                                    <select class="selectpicker select-gral rolesvc" 
+                                    name="rolesvc" id="rolesvc" required
+                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -482,23 +561,24 @@
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Seleccionar usuario</label>
-                                <select id="usuarioid4" name="usuarioid4" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
+                                <select id="usuarioid4" name="usuarioid4" 
+                                class="selectpicker select-gral directorSelect" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="label">Descripción</label>
-                                <textarea id="comentario4" name="comentario4" class="form-control" rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario4" name="comentario4" class="form-control input-gral"
+                                 rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
                               
                             </div>
                         </div>
                         <div class="modal-footer">     
-                                <center>
-                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
-                                    <button type="submit" id="btn_vc" class="btn btn-gral-data">GUARDAR</button>
-                                </center>
-                           
-                       </div>
+                                <button class="btn btn-danger btn-simple " type="button" data-dismiss="modal" >CANCELAR</button>
+                                <button type="submit" id="btn_vc" class="btn btn-gral-data" >GUARDAR</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -515,19 +595,23 @@
                             <div class="vcnew"></div>
                             <div class="form-group" id="users5">
                                 <label class="label">Asesor</label>
-                                <select id="usuarioid5" name="usuarioid5" class="form-control asesor ng-invalid ng-invalid-required" required data-live-search="true" required></select>
+                                <select id="usuarioid5" name="usuarioid5" class="selectpicker select-gral  asesor " 
+                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users6">
                                 <label class="label">Coordinador</label>
-                                <select id="usuarioid6" name="usuarioid6" class="form-control coor ng-invalid ng-invalid-required"  data-live-search="true" required></select>
+                                <select id="usuarioid6" name="usuarioid6" class="selectpicker select-gral  coor "
+                                data-live-search="true" required    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="label">Gerente</label>
-                                <select id="usuarioid7" name="usuarioid7" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
+                                <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral  ger " 
+                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="label">Subdirector</label>
-                                <select id="usuarioid8" name="usuarioid8" class="form-control ger ng-invalid ng-invalid-required" required data-live-search="true" required></select>
+                                <select id="usuarioid8" name="usuarioid8" class="selectpicker select-gral ger " 
+                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
                         </div>
                         <div class="modal-footer">     
@@ -565,7 +649,9 @@
                                             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                                 <div class="form-group  label-floating is-empty">
                                                     <label class="control-label label-gral">Lote</label>
-                                                    <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote" class="form-control input-gral" type="number" maxlength="6">
+                                                    <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote" 
+                                                    onkeydown="return event.keyCode !== 69"
+                                                    class="form-control input-gral" type="number" min="1"  maxlength="6">
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
