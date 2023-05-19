@@ -173,6 +173,7 @@ class Usuarios_modelo extends CI_Model
                 break;
             case '13': // CONTRALORÍA
             case '17': // SUBDIRECTOR CONTRALORÍA
+            case '70': // EJECUTIVO DE CONTRALORÍA JR
             case '32': // CONTRALORÍA CORPORATIVA
             case '63': // CONTRALORÍA CORPORATIVA
             case '33': // CONSULTA (CONTROL INTERNO)

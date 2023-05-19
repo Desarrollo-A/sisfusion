@@ -7,7 +7,27 @@
  
 
 </style>
+<!------MODAL CONFIRMACIÓN CAMBIO DE PESTAÑA--------> 
+<div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" >
+            <div class="modal-content" style="padding: 0 20px;">
+                <div class="modal-head pt-1 text-center">
+                    <h4>¿Al cambiar de pestaña se limpiarán los datos cargados, deseas continuar?</h4>
+                </div>
+                <div class="modal-body" >
+                    <div class="container-fluid">
+                        <div class="row" id="" >
 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancel" class="btn btn-danger btn-simple">Cerrar</button>
+                    <button type="button" id="btnLimpiar" class="btn btn-primary">Aceptar</button>
+                </div>
+            </div>
+        </div>
+</div>
 <!--------> 
 <div class="modal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" >
@@ -36,7 +56,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title card-title"><b id="titleAvance"></b></h4>
+                <h4 id="titleAvance"></h4>
             </div>
             
             <form id="avanceAutorizacion" name="avanceAutorizacion" method="post">
