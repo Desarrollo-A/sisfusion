@@ -13,7 +13,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
     $this->load->library('phpmailer_lib');
-    $this->load->model('Comisiones_model','Comisiones_model');
+    $this->load->model('Comisiones_model');
   }
 
   public function index()
@@ -28,7 +28,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
                                FROM prestamos_aut pa
                                JOIN usuarios u ON u.id_usuario = pa.id_usuario
                                JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                               JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+                               JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
                                JOIN comisiones c ON c.id_comision = pci.id_comision
                                WHERE pa.id_prestamo = ".$id_prestamo."
                                group by pa.id_prestamo")->result_array();
@@ -61,7 +61,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
         if(($pagoMensual + $VerificarCierre[0]['pagado']) > ($data[$m]['monto'] - 0.50)){
             $pagoMensual =  $data[$m]['monto'] - $VerificarCierre[0]['pagado'];
         }
-            $tipo_prestamo = $data[$m]['tipo'];
+        $tipo_prestamo = $data[$m]['tipo'];
         $PagosByUSer = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_usuario=".$data[$m]['id_usuario']." AND estatus=1 ORDER BY abono_neodata DESC")->result_array();
         $Suma = 0;
         $FechaUltimoAbono = $VerificarCierre[0]['modificado'] != 0 ?  explode(" ",$VerificarCierre[0]['modificado']) : explode(" ",'2022-01-01 00:00:00');
@@ -93,8 +93,10 @@ class ScheduleTasks_Prestamos extends CI_Controller
                                             //Proceso para cerrar el prestamo, si es que ya se pago por completo
                             $CierrePrestamo = $this->CierrePrestamo($data[$m]['id_prestamo']);
                             if($CierrePrestamo[0]['pagado'] > ($data[$m]['monto'] - 0.50)){
+                                // EL PAGO SE APLICO CORRECTAMENTE Y SE CIERRA EL PRÉSTAMO, AQUI EVALUAR SI SE PASO LA CANTIDAD, NO APLICAR EL PRÉSTAMO
                                 $this->db->query("UPDATE prestamos_aut SET modificado_por=1,pendiente=0,fecha_modificacion=GETDATE(),estatus=3 WHERE id_prestamo=".$data[$m]['id_prestamo']."");
                             }else{
+                                //EL PAGO MENSUAL SE APLICO CORRECTAMENTE Y EL PRÉSTAMO SIGUE ACTIVO
                                 $this->db->query("UPDATE prestamos_aut SET n_p=n_p+1,modificado_por=1,pendiente=0,fecha_modificacion=GETDATE() WHERE id_prestamo=".$data[$m]['id_prestamo']."");
                             }
                             break;

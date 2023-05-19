@@ -751,78 +751,29 @@ function update_estatus(){
   }
 
   public function acepto_comisiones_user(){
+     //echo date('Y-m-d H:i:s');
     $this->load->model("Comisiones_model");
     $id_user_Vl = $this->session->userdata('id_usuario');
+    $id_rol = $this->session->userdata('id_rol');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
     $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
-
+    //echo "FechaSQL: ".$obtenerFechaSql;
+    //echo "<br>";
+    //echo "Fecha Actual: ".$fecha_actual;
       if( $consulta_comisiones->num_rows() > 0 ){
 
-        $validar_sede = $this->session->userdata('id_sede');
-        date_default_timezone_set('America/Mexico_City');       
+       // $validar_sede = $this->session->userdata('id_sede');
+       // date_default_timezone_set('America/Mexico_City');       
         $fecha_actual = strtotime($obtenerFechaSql);
+        $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+        $fechaFin = $id_rol == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
 
-
-        
-           //fecha inicio
-      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
-      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
-      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
-      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
-      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
-      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
-      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
-      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
-      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
-      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
-      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
-      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
-      //fecha fin
-      
-      if($validar_sede == 8){
-        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
-      }else{
-        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
-
-      }
-      //$resultado = array("resultado" => 3);
-      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
-        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
-        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
-        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
-        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
-        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
-        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
-        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
-        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 7689)||($id_user_Vl == 1))
+      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689))
             {
 
 
@@ -1256,78 +1207,25 @@ function update_estatus(){
 
     $validar_user = $this->session->userdata('id_usuario');
     $validar_sede = $this->session->userdata('id_sede');
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
-    date_default_timezone_set('America/Mexico_City');       
     $fecha_actual = strtotime($obtenerFechaSql);
+    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
       //fecha inicio
-      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
-      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
-      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
-      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
-      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
-      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
-      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
-      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
-      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
-      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
-      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
-      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
-      //fecha fin
-      
-      if($validar_sede == 8){
-        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
-      }else{
-        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
+      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689))
+          {
+            if($a == ''){
+              echo json_encode($this->Comisiones_model->getDesarrolloSelect()->result_array());
 
-      }
-      //$resultado = array("resultado" => 3);
-      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
-        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
-        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
-        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
-        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
-        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
-        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
-        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
-        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 1)){
-      
+            }else{
+              echo json_encode($this->Comisiones_model->getDesarrolloSelect($a)->result_array());
 
-
-    if($a == ''){
-      echo json_encode($this->Comisiones_model->getDesarrolloSelect()->result_array());
-
-    }else{
-      echo json_encode($this->Comisiones_model->getDesarrolloSelect($a)->result_array());
-
-    }
-  }else{
-    echo json_encode(3);
-  }
+            }
+          }else{
+            echo json_encode(3);
+          }
   }
 
   function getDatosProyecto($idlote,$id_usuario = ''){
@@ -1614,68 +1512,15 @@ if( isset( $_FILES ) && !empty($_FILES) ){
     public function guardar_solicitud2($usuario = ''){
       $validar_user = $this->session->userdata('id_usuario');
       $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
-
-      date_default_timezone_set('America/Mexico_City');    
+      $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
       $fecha_actual = strtotime($obtenerFechaSql);
+      $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+      $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
 
-       //fecha inicio
-      $fecha_entrada1 = strtotime("09-01-2023 00:00:00");
-      $fecha_entrada2 = strtotime("17-02-2023 00:00:00");
-      $fecha_entrada3 = strtotime("13-03-2023 00:00:00");
-      $fecha_entrada4 = strtotime("10-04-2023 00:00:00");
-      $fecha_entrada5 = strtotime("08-05-2023 00:00:00");
-      $fecha_entrada6 = strtotime("12-06-2023 00:00:00");
-      $fecha_entrada7 = strtotime("10-07-2023 00:00:00");
-      $fecha_entrada8 = strtotime("07-08-2023 00:00:00");
-      $fecha_entrada9 = strtotime("11-09-2023 00:00:00");
-      $fecha_entrada10 = strtotime("09-10-2023 00:00:00");
-      $fecha_entrada11 = strtotime("13-11-2023 00:00:00");
-      $fecha_entrada12 = strtotime("11-12-2023 00:00:00");
-      //fecha fin
-      
-      if($validar_sede == 8){
-        $fecha_entrada11 = strtotime("10-01-2023 15:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 15:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 15:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 15:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 15:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 15:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 15:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 15:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 15:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 15:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 15:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 15:59:00");
-      }else{
-        $fecha_entrada11 = strtotime("10-01-2023 13:59:00");
-        $fecha_entrada22 = strtotime("14-02-2023 13:59:00");
-        $fecha_entrada33 = strtotime("14-03-2023 13:59:00");
-        $fecha_entrada44 = strtotime("11-04-2023 13:59:00");
-        $fecha_entrada55 = strtotime("09-05-2023 13:59:00");
-        $fecha_entrada66 = strtotime("13-06-2023 13:59:00");
-        $fecha_entrada77 = strtotime("11-07-2023 13:59:00");
-        $fecha_entrada88 = strtotime("08-08-2023 13:59:00");
-        $fecha_entrada99 = strtotime("12-09-2023 13:59:00");
-        $fecha_entrada100 = strtotime("10-10-2023 13:59:00");
-        $fecha_entrada111 = strtotime("14-11-2023 13:59:00");
-        $fecha_entrada122 = strtotime("12-12-2023 13:59:00");
-
-      }
-      $resultado = array("resultado" => 3);
-
-      if(($fecha_actual >= $fecha_entrada1 && $fecha_actual <= $fecha_entrada11) ||
-        ($fecha_actual >= $fecha_entrada2 && $fecha_actual <= $fecha_entrada22) ||
-        ($fecha_actual >= $fecha_entrada3 && $fecha_actual <= $fecha_entrada33) ||
-        ($fecha_actual >= $fecha_entrada4 && $fecha_actual <= $fecha_entrada44) || 
-        ($fecha_actual >= $fecha_entrada5 && $fecha_actual <= $fecha_entrada55) ||
-        ($fecha_actual >= $fecha_entrada6 && $fecha_actual <= $fecha_entrada66) ||
-        ($fecha_actual >= $fecha_entrada7 && $fecha_actual <= $fecha_entrada77) ||
-        ($fecha_actual >= $fecha_entrada8 && $fecha_actual <= $fecha_entrada88) ||
-        ($fecha_actual >= $fecha_entrada9 && $fecha_actual <= $fecha_entrada99) || 
-        ($fecha_actual >= $fecha_entrada10 && $fecha_actual <=$fecha_entrada100) ||
-        ($fecha_actual >= $fecha_entrada11 && $fecha_actual <=$fecha_entrada111) ||
-        ($fecha_actual >= $fecha_entrada12 && $fecha_actual <=$fecha_entrada122)||($id_user_Vl == 1)){
+      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) )
+          {
 
       
       if($usuario != ''){

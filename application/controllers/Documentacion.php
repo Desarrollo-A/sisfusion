@@ -192,5 +192,4 @@ class Documentacion extends CI_Controller {
         else
             echo json_encode(array());
     }
-
 }

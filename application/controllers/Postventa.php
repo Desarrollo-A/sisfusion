@@ -7,7 +7,7 @@ class Postventa extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'Documentacion_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
+        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter', 'phpmailer_lib'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -1471,7 +1471,7 @@ class Postventa extends CI_Controller
                 );
             }
         }
-        $rejectionReasonsList = $this->Documentacion_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
+        $rejectionReasonsList = $this->Postventa_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
         if (count($rejectionReasonsList) >= 1) { // SÍ ENCONTRÓ REGISTROS
             for ($r = 0; $r < count($rejectionReasonsList); $r++) {
                 $updateArrayData[] = array(
@@ -3143,6 +3143,22 @@ function saveNotaria(){
             echo json_encode(0);
         }
     }
+
+    public function updateValorOper(){
+        $replace = ["$", ","];
+        $id_solicitud = $this->input->post("id_solicitudOper");
+        $modificado_por =$this->session->userdata('id_usuario');
+        $updateArrayData[] = array(
+            'id_solicitud' => $id_solicitud,
+            'valor_contrato' =>  str_replace($replace,"",$this->input->post("valorOper")),
+            'modificado_por' =>  $this->session->userdata('id_usuario')
+        );
+        $this->General_model->updateBatch("solicitudes_escrituracion", $updateArrayData, "id_solicitud"); 
+        $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,1,0,'SE MODIFICÓ EL VALOR DE OPERACIÓN DE CONTRATO',GETDATE(),$modificado_por,GETDATE(),$modificado_por,0)");
+
+        echo json_encode($response);
+
+}
 }
 
 
