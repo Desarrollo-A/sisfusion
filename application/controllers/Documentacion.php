@@ -112,7 +112,7 @@ class Documentacion extends CI_Controller {
 //        $mail->AddAddress('asistente.admon@ciudadmaderas.com');
         $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
         $mail->isHTML(true);
-        $mailContent = utf8_decode(`
+        $mailContent = utf8_decode("
             <html>
                 <head>
                     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
@@ -175,11 +175,11 @@ class Documentacion extends CI_Controller {
                                             <th>Fecha/Hora</th>
                                         </tr>
                                         <tr>
-                                            <td><center>$infoLote->nombreResidencial</center></td>
-                                            <td><center>$infoLote->nombre</center></td>
-                                            <td><center>$infoLote->nombreLote</center></td>
+                                            <td><center>".$infoLote->nombreResidencial."</center></td>
+                                            <td><center>".$infoLote->nombre."</center></td>
+                                            <td><center>".$infoLote->nombreLote."</center></td>
                                             <td><center>SE MODIFICÓ CORRIDA FINANCIERA</center></td>
-                                            <td><center>`. date("Y-m-d H:i:s") .`</center></td>
+                                            <td><center>". date('Y-m-d H:i:s') ."</center></td>
                                         </tr>
                                     </table>
                                 </center>
@@ -188,7 +188,7 @@ class Documentacion extends CI_Controller {
                     </table>
                 </body>
             </html>
-        `);
+        ");
         $mail->Body = $mailContent;
         $mail->send();
 
