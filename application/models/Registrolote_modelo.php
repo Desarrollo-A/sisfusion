@@ -105,7 +105,6 @@
     }
     
 	public function getdp_DS($lotes) {
-<<<<<<< HEAD
         return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
 		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
 		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
@@ -117,20 +116,6 @@
 		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 		WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")->result_array();
-=======
-        return $this->db->query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
-			'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, l.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
-			cl.rfc, cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-			l.idLote, l.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-			'ds_old' tipo_doc
-			FROM cliente_consulta cl
-			INNER JOIN lotes_consulta l ON l.idLote = cl.idLote
-			INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
-			INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-			INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-			WHERE cl.status=1 AND l.status=1 AND cl.idLote=".$lotes)
-			->result_array();
->>>>>>> jcoronelg
     }
 
 	public function registroCliente()
@@ -4597,7 +4582,6 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
         return $query->result();
 	}
-
     function getRevision7() {
         $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
             hd.fechaVenc, lotes.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,

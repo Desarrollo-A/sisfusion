@@ -383,7 +383,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
-        $valor_contrato = $_POST['valorC'];
+        $valor_contrato = str_replace('$','', (str_replace(',','', $_POST['valorC'])));
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
