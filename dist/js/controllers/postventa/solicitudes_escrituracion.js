@@ -1774,10 +1774,13 @@ function getMotivosRechazos(tipo_documento,estatus) {
     $("#motivos_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $("#area_rechazo").find("option").remove();
     $("#area_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
-    let showSelect = estatus == 3 || estatus == 4 || estatus == 29 || estatus == 48 ? 'show' : 'none';
+    let showSelect = estatus == 3 || estatus == 4 && userType != 11 ? 'show' : estatus == 29 || estatus == 48 ? 'show' : 'none';
 
     //estatus = estatus == 3 || estatus == 4 ? '3,4' : estatus;
     if(estatus != 3 && estatus != 4){
+        $('#area_rechazo').prop('required', false);
+    }
+    if(estatus == 4 && userType == 11){
         $('#area_rechazo').prop('required', false);
     }
     document.getElementById("rechazo").style.display = showSelect;
