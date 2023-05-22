@@ -693,7 +693,7 @@
         (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END) coordinador2,
         (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END) gerente2,
         cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status comentario,
-        l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular
+        l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular,cond.tipo_lote
         FROM lotes l
         LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -718,7 +718,7 @@
         (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END),
         (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END),
         cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-        l.idAsesor, tv.tipo_venta order by l.idLote;");
+        l.idAsesor, tv.tipo_venta,cond.tipo_lote order by l.idLote;");
         return $query->result();
     }
 
