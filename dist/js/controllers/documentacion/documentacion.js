@@ -537,7 +537,7 @@ function getExtensionPorTipoDocumento(tipoDocumento) {
         return 'xlsx';
     }
 
-    if (tipoDocumento === TipoDoc.CONTRATO || tipoDocumento === tipoDocumento.CONTRATO_FIRMADO) {
+    if (tipoDocumento === TipoDoc.CONTRATO || tipoDocumento === TipoDoc.CONTRATO_FIRMADO) {
         return 'pdf';
     }
 
