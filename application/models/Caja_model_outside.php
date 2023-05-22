@@ -789,7 +789,10 @@
 
     public function getAsesorSpecial() {
         return $this->db->query("SELECT u.id_usuario id_asesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor, 
-        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente FROM usuarios u 
+        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente, 
+		 uuu.id_usuario id_subdirector,
+		  uuu.id_usuario  id_regional,
+		 uuu.id_usuario  id_regional_2 FROM usuarios u 
         INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider
         INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
         WHERE u.id_usuario IN (2583, 2593, 10808)")->result_array();
