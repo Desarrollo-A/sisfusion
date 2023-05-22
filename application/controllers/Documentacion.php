@@ -21,7 +21,6 @@ class Documentacion extends CI_Controller {
     public function subirArchivo() {
         $file = $_FILES["uploadedDocument"];
         $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $idLote = $this->input->post('idLote');
         $idDocumento = $this->input->post('idDocumento');
         $tipoDocumento = $this->input->post('tipoDocumento');
         $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
