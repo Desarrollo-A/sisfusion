@@ -4774,14 +4774,14 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
+				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
 					$id_lider = $id_lider . ', 671';
 					$sede = "AND clientes.id_sede = 12";
-				}	
+				}
 				else if ($this->session->userdata('id_usuario') == 10795) { // MARCELA CUELLAR MORON
 					$id_lider = $id_lider . ', 654';
 					$sede = "AND clientes.id_sede = 12";
-				}	
+				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
 				WHERE (clientes.id_asesor IN ($id_lider) OR 
@@ -4846,6 +4846,16 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 	public function getNomExp($idDocumento) {
 		$query = $this->db-> query('SELECT idDocumento, expediente, idLote FROM historial_documento where idDocumento = '.$idDocumento);
+		return $query->row();
+	}
+
+
+	public function sendMailAdmin($idLote) {
+
+		$this->db->select_max("idHistorialLote");
+		$this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
+		$query = $this->db->get('historial_lotes');
+
 		return $query->row();
 	}
 
@@ -5190,7 +5200,7 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
         } else { // SE FILTRA POR CONDOMINIO
 			$where = "AND cond.idCondominio = $id_condominio";
         }
-		
+
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
@@ -5594,12 +5604,4 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 		
 	}
-
-    public function sendMailAdmin($idLote) {
-        $this->db->select_max("idHistorialLote");
-        $this->db->where("idLote = ".$idLote." AND (perfil = '11' or perfil = 'administracion') and status = 1 ");
-        $query = $this->db->get('historial_lotes');
-
-        return $query->row();
-    }
-}
+} 
