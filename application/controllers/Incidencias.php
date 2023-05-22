@@ -22,6 +22,8 @@ class Incidencias extends CI_Controller
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
+
+
     $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
     $this->validateSession(); 
    }
@@ -43,7 +45,7 @@ class Incidencias extends CI_Controller
     $datos["sedes"] = $this->Incidencias_model->sedesCambios();
     
     $this->load->view('template/header');
-    $this->load->view("incidencia/IncidenciasByLote", $datos);
+    $this->load->view("incidencias/IncidenciasByLote", $datos);
   }
 
   // se encuentra en comisiones ! 
@@ -340,6 +342,7 @@ public function ToparComision($id_comision,$idLote = '')
 
       echo json_encode ($respuesta);
     }
+
 
 
 }
