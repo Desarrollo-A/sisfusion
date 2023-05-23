@@ -37,6 +37,11 @@ let documentacionLoteTabla = null;
 Shadowbox.init();
 
 $(document).ready(function () {
+    $('#addDeleteFileModal').on('hidden.bs.modal', function () {
+        $('#fileElm').val(null);
+        $('#file-name').val('');
+    })
+
     $("input:file").on("change", function () {
         const target = $(this);
         const relatedTarget = target.siblings(".file-name");
