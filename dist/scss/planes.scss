@@ -296,31 +296,7 @@
                 }
               }
             }
-            .rowDetailDiscount{
-              color: $blueIndigo;
-              i{
-                color: #849ec1;
-              }
-              .boxOnOff{
-                width: 100%;
-                display: flex;
-                background-color: $white;
-                padding: 5px 7px;
-                border-radius: 27px;
-                justify-content: space-between;
-                .switch-label{
-                  cursor: pointer;
-                }
-                .inputMSI{
-                  width: 50%;
-                  border: none;
-                  text-align: center;
-                  &:read-only{
-                    color: $platinumScroll;
-                  }
-                }
-              }
-            }
+
           }
         }
         .default__check[type=checkbox] ~ .custom__check{

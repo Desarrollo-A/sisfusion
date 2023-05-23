@@ -214,6 +214,7 @@
 
 
     public function aplicaLiberacion($datos){
+       $descuentos=NULL;
         $query = $this->db-> query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = ".$datos['idCondominio']." and nombreLote = '".$datos['nombreLote']."' and status = 1");
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
@@ -236,6 +237,15 @@
             }
             //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
+           
+           /**PAQUETES CF */
+                  if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+                    //si el condominio es comercial solo consultar sin importar la superficie
+                   $descuentos=$datos['descuentosComerciales'];
+                  }else{ //0 - Habitacional
+                          $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMenores'];
+                          var_dump($datos['descuentoHabMenores']);
+                 }
             /**----------------------------------------------- */
             $data_l = array(
             'nombreLote'=> $datos['nombreLote'],
@@ -285,6 +295,7 @@
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
                     registro_comision = 8,
+                    id_descuento='$descuentos',
                     tipo_venta = $tv, 
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
@@ -693,7 +704,7 @@
         (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END) coordinador2,
         (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END) gerente2,
         cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status comentario,
-        l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular
+        l.idAsesor, l.motivo_change_status, tv.tipo_venta, (CASE l.tipo_venta WHEN 1 THEN 1 ELSE 0 END) es_particular,cond.tipo_lote
         FROM lotes l
         LEFT JOIN clientes cl ON l.idLote=cl.idLote and l.idCliente = cl.id_cliente and cl.status = 1             
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -718,7 +729,7 @@
         (CASE WHEN u00.id_rol = 9 THEN concat(u00.nombre,' ', u00.apellido_paterno, ' ', u00.apellido_materno) ELSE concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) END),
         (CASE WHEN u00.id_rol = 9 THEN concat(u11.nombre,' ', u11.apellido_paterno, ' ', u11.apellido_materno) ELSE concat(u22.nombre,' ', u22.apellido_paterno, ' ', u22.apellido_materno) END),
         cond.idCondominio, l.sup, l.precio, l.total, l.porcentaje, l.enganche, l.saldo, l.referencia, st.nombre, l.fecha_modst, l.motivo_change_status,
-        l.idAsesor, tv.tipo_venta order by l.idLote;");
+        l.idAsesor, tv.tipo_venta,cond.tipo_lote order by l.idLote;");
         return $query->result();
     }
 
@@ -789,7 +800,10 @@
 
     public function getAsesorSpecial() {
         return $this->db->query("SELECT u.id_usuario id_asesor, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_asesor, 
-        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente FROM usuarios u 
+        uu.id_usuario id_coordinador, uuu.id_usuario id_gerente, 
+		 uuu.id_usuario id_subdirector,
+		  uuu.id_usuario  id_regional,
+		 uuu.id_usuario  id_regional_2 FROM usuarios u 
         INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider
         INNER JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
         WHERE u.id_usuario IN (2583, 2593, 10808)")->result_array();
@@ -1443,10 +1457,12 @@
     }
 
     public function validateCurrentLoteStatus($idLote){
-        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote, 
+        return $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idStatusContratacion, lo.idStatusLote,con.tipo_lote,re.idResidencial,lo.sup, 
         UPPER(sc.nombreStatus) nombreStatusContratacion, st.nombre nombreStatusLote FROM lotes lo
         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+        LEFT JOIN condominios con ON con.idCondominio=lo.idCondominio
+        LEFT JOIN residenciales re ON re.idResidencial=con.idResidencial
         WHERE lo.idLote IN ($idLote)");
     }
 

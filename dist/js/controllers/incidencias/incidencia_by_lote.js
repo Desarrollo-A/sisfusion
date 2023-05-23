@@ -226,7 +226,7 @@ $("#asesorold").change(function() {
     $("#info").removeAttr('style');
     document.getElementById('info').innerHTML='Cargando...';
     var parent = $(this).val();
-     $.post('Incidencias/datosLotesaCeder/'+parent, function(data) { 
+     $.post('/datosLotesaCeder/'+parent, function(data) { 
         document.getElementById('info').innerHTML='';
         var len = data[0].length;
         if(len ==0 ){
@@ -271,6 +271,7 @@ $("#asesorold").change(function() {
 $("#roles3").change(function() {
     var parent = $(this).val();
     document.getElementById('UserSelect').innerHTML = '';
+    document.getElementById('UserSelectDirec').innerHTML = '';
     let user =0;
     let bandera59 = 0 ;
     let nameUser='';
@@ -307,6 +308,7 @@ $("#roles3").change(function() {
         $('#ger').removeClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
+        document.getElementById('UserSelectDirec').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
 
     }else if(parent == 59){
         
@@ -363,10 +365,11 @@ $("#roles3").change(function() {
 
     document.getElementById('UserSelect').innerHTML = '<em>Usuario a cambiar: <b>'+nameUser+'</b></em>';
     
+ 
     $('#usuarioid3 option').remove(); 
    if(bandera59 != 1){ // LLAVE DEL  BANDERA59
 
-    $.post('Incidencias/getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post('/getUsuariosByrol/'+parent+'/'+user, function(data) {
       
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -394,7 +397,7 @@ $("#roles2").change(function() {
     var parent = $(this).val();
     $('#usuarioid2 option').remove(); 
   
-    $.post('Incidencias/getUsuariosRol3/'+parent, function(data) {
+    $.post('/getUsuariosRol3/'+parent, function(data) {
      
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -515,7 +518,7 @@ $("#rolesvc").change(function() {
     }
 
     $('#usuarioid4 option').remove(); 
-    $.post('Incidencias/getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post('/getUsuariosByrol/'+parent+'/'+user, function(data) {
         
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -668,14 +671,14 @@ function saveTipo(id){
                     $('#modal_pagadas .modal-body').html('');
                 
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Tipo de venta actualizado", "success");
                 }
                 else{
                     $('#modal_pagadas .modal-body').html('');
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Algo salio mal", "danger");
                 }
@@ -1032,13 +1035,18 @@ $(".find_doc").click( function() {
                     if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
                         BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                     }
+                  
                 }
                 else {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
                         BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
                             BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
-                        }
+                        }         
+                        if(data.registro_comision == 0){
+                            BtnStats += '<button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
+
+                        }     
                     }
                     else if(data.registro_comision == 7 ) {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
@@ -1568,7 +1576,7 @@ $("#my_updatebandera_form").on('submit', function(e){
                 $('#myUpdateBanderaModal').modal("hide");
                 $("#id_pagoc").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
             }
@@ -1597,7 +1605,7 @@ $("#form_pagadas").submit(function(e) {;
             success: function(data) {
                 if (data == 1) {
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Precio Actualizado", "success");
                 }else if(data == 2){
                     $("#modal_pagadas").modal('toggle');
@@ -1761,7 +1769,6 @@ function VlidarNuevos(i,usuario){
 
 function ToparComision(i){
 
-    console.log('khldhajdjhgdahdhjdahadhkl');
     var comentario = $('#comentario_topaT_'+i).val();
     console.log(i);
     console.log($('#comentario_topaT_'+i).val());
@@ -2143,7 +2150,7 @@ $("#form_inventario").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
 
                 $('#form_inventario')[0].reset();
                 $("#roles3").val('');
@@ -2189,7 +2196,7 @@ $("#form_vc").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
 
                 $('#form_vc')[0].reset();
                 $("#rolesvc").val('');
@@ -2236,7 +2243,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
             console.log(data);
             if (data == 1) {
                 $('#form_vcNew')[0].reset();
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
 
                 $('#usuarioid5').val('default');
                 $("#usuarioid5").selectpicker("refresh");
@@ -2277,3 +2284,63 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
     function tieneRegional(usuario){
      
     }
+
+    $(document).on('click', '.cambioSede', function(e){
+        $("#tituloLote").html('')
+        $("#sedeOld").html('')
+
+        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+        nombreLote  = $(this).attr("data-nombre");
+        nombreSede  = $(this).attr("data-sedesName");
+        idSedes     = $(this).attr("data-sedes");
+        cliente    = $(this).attr("data-cliente");
+        idLote    = $(this).attr("data-idLote");
+        tipoLote    = $(this).attr("data-tipo");
+
+        console.log(nombreSede)
+        console.log(idSedes)
+        if (idSedes == 0){
+            nombreSede = "Sin sede";
+        }
+        $("#tituloLote").append( `  <div id="sedes"><p>Selecciona la nueva sede del lote <b>${nombreLote}</b> </p>`);
+
+        $('#sedeOld').append(`      <span class="card-title"> Sede actual :  <b>${nombreSede} </b></span>`);
+    
+        $("#modal_sedes").modal();
+
+    });
+    
+    $("#form_sede").submit(function(e) {;
+        e.preventDefault();
+    }).validate({
+        submitHandler: function(form) {
+            var data = new FormData($(form)[0]);
+            data.append('cliente', cliente);
+            data.append('idLote', idLote);
+            
+            console.log(data);
+
+            $.ajax({
+                url: general_base_url + "Incidencias/cambioSede",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                method: 'POST',
+                type: 'POST', // For jQuery < 1.9
+                success: function(data) {
+                    alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                    $("#tituloLote").html('')
+                    $("#sedeOld").html('')
+                    $('#modal_sedes').modal('hide');
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+                },
+                error: function() {
+                    alert("ERROR EN EL SISTEMA");
+                }
+            });
+        }
+    });
+

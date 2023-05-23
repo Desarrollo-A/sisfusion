@@ -22,6 +22,8 @@ class Incidencias extends CI_Controller
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
+
+
     $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
     $this->validateSession(); 
    }
@@ -40,8 +42,10 @@ class Incidencias extends CI_Controller
     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+    $datos["sedes"] = $this->Incidencias_model->sedesCambios();
+    
     $this->load->view('template/header');
-    $this->load->view("incidencia/IncidenciasByLote", $datos);
+    $this->load->view("incidencias/IncidenciasByLote", $datos);
   }
 
   // se encuentra en comisiones ! 
@@ -227,11 +231,6 @@ class Incidencias extends CI_Controller
     }
     
 
-    public function getPagosByComision($id_comision)
-{
-  $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
-  echo json_encode($respuesta); 
-}
     
 public function getComisionesLoteSelected($idLote){
   echo json_encode($this->Incidencias_model->getComisionesLoteSelected($idLote)->result_array());
@@ -315,4 +314,35 @@ public function ToparComision($id_comision,$idLote = '')
       $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
       echo json_encode($respuesta); 
     }
+ 
+    public function cambioSede(){
+      $sede     = $this->input->post("sedesCambio");
+      $lote     = $this->input->post("idLote");
+      $cliente  = $this->input->post("cliente");
+
+      $planComision = 0;
+   
+      $arr_update = array( 
+        "id_sede"                 =>  intval($sede),
+        "plan_comision"           =>  $planComision, 
+        );
+
+        $update = $this->Incidencias_model->updateSedesEdit($cliente, $lote, $arr_update);
+        if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Sede actualizada");
+        }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Sede no actualizada, inténtalo más tarde ");
+        }
+
+      echo json_encode ($respuesta);
+    }
+
+
+
 }

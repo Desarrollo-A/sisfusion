@@ -40,6 +40,51 @@ hr {
         }
         ?>
 
+
+
+        <div class="modal fade modal-alertas" id="modal_sedes" name="modal_sedes" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button> 
+                    <h4 class="card-title"><b>Cambio de sedes</b></h4>
+                   
+                    </div>
+                    <form method="post" id="form_sede">
+
+                        <div class="modal-body">
+                            
+                            <div class="tituloLote" id="tituloLote" ></div>
+                            <div class="sedeOld" id="sedeOld" ></div>
+                            
+                            <div class="form-group" >
+                                <label class="label">Selecciona una opción </label>
+                                <select id="sedesCambio" name="sedesCambio" 
+                                class="selectpicker select-gral sedesNuevo" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                required data-live-search="true">
+                                <?php foreach($sedes as $sede){ ?>>
+                                    <option value="<?= $sede->id_sede ?>"> <?= $sede->nombre  ?> </option>
+                                <?php  }  ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">  
+                            <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal">
+                                CANCELAR
+                            </button>
+                            <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="margin: 15px;">
+                                ACEPTAR
+                            </button>
+            			</div>
+                    
+                    </form>
+                
+                </div>
+            </div>
+        </div>
        
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
@@ -471,7 +516,8 @@ hr {
                                 class="selectpicker select-gral directorSelect " 
                                 title="SELECCIONA UNA OPCIÓN" 
                                 required data-live-search="true"></select>
-                            </div>                            
+                            </div>      
+                            <p id="UserSelectDirec"></p>                
                             <div class="form-group">
                                 <label class="label">Descripción</label>
                                 <textarea id="comentario3" name="comentario3" 

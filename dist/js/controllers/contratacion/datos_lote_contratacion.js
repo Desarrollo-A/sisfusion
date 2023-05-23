@@ -62,7 +62,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'MADERAS_CRM_INVENTARIO',
                 exportOptions: {
-                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26],
+                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx] + ' ';
@@ -237,6 +237,38 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 }
             },
             { data: 'comentario_administracion' },
+            {
+                data: function(d){
+                    if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
+                        return 'SIN ESPECIFICAR';
+                    else
+                        return d.fecha_creacion;
+                }
+            },
+            {
+                data: function(d){
+                    if(d.apartadoXReubicacion == 1)
+                        return `<center><span class="label" style="background:#D7BDE2; color:#512E5F;">REUBICACIÓN</span> <center>`;
+                    else
+                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
+                data: function(d){
+                    if(d.apartadoXReubicacion == 1)
+                        return d.fechaAlta;
+                    else
+                       return 'NO APLICA';                   
+                }         
+            },
+            {
+                data: function(d){
+                    if(d.venta_compartida != 0)
+                        return `<center><span class="label" style="background:#A3E4D7; color:#0E6251;">COMPARTIDA</span> <center>`;
+                    else
+                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                }         
+            },
             {
                 data: function (d) {
                     return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="Ver más información"><i class="fas fa-history"></i></button></center>`;
