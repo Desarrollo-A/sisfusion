@@ -19,6 +19,13 @@ class Documentacion extends CI_Controller {
     }
 
     public function subirArchivo() {
+        $lote = $this->Registrolote_modelo->getNameLote($this->input->post('idLote'));
+
+        if ($lote->observacionContratoUrgente && intval($lote->observacionContratoUrgente) === 1) {
+            echo json_encode(['code' => 400, 'message' => 'El registro se encuentra en proceso de liberación.']);
+            return;
+        }
+
         $file = $_FILES["uploadedDocument"];
         $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
         $idDocumento = $this->input->post('idDocumento');
@@ -26,23 +33,28 @@ class Documentacion extends CI_Controller {
         $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
 
         $folder = $this->getCarpetaDeArchivo($tipoDocumento);
-        
-        if ($tipoDocumento == 7) { // SE VA A SUBIR / REEMPLAZAR LA CORRIDA
-            if ($fileExt == 'xlsx') {
-                $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
-            } else {
-                echo json_encode(3); // SE INTENTÓ SUBIR UN ARCHIVO DIFERENTE A UN .XLSX (CORRIDA)
-            }
-        } else { // SE VA A SUBIR EL EXPEDIENTE O EL CONTRATO
-            $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+
+        if ($tipoDocumento != 7) { // SE VA A SUBIR EL EXPEDIENTE O EL CONTRATO
+            $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+            echo json_encode($res);
+            return;
         }
+
+        // SE VA A SUBIR / REEMPLAZAR LA CORRIDA
+        if ($fileExt != 'xlsx') {
+            // SE INTENTÓ SUBIR UN ARCHIVO DIFERENTE A UN .XLSX (CORRIDA)
+            echo json_encode(['code' => 400, 'message' => 'El archivo que se intenta subir no cuenta con la extención .xlsx']);
+            return;
+        }
+
+        $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+        echo json_encode($res);
     }
 
-    function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento) {
+    function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
-        $validateMovement = $movement == FALSE ? 0 : 1;
 
-        if ($validateMovement == 1) {
+        if ($movement) {
             $updateDocumentData = array(
                 "expediente" => $documentName,
                 "modificado" => date('Y-m-d H:i:s'),
@@ -51,11 +63,12 @@ class Documentacion extends CI_Controller {
 
             $result = $this->General_model->updateRecord("historial_documento", $updateDocumentData, "idDocumento", $idDocumento);
 
-            $response = ($result) ? 1 : 4;
-            echo json_encode($response);
-        } else {
-            echo json_encode(2); // EL ARCHIVO NO SE PUDO MOVER
+            return ($result)
+                ? ['code' => 200]
+                : ['code' => 500];
         }
+
+        return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
     }
 
     public function eliminarArchivo() {
@@ -68,6 +81,13 @@ class Documentacion extends CI_Controller {
         );
 
         $nombreExp = $this->Registrolote_modelo->getNomExp($idDocumento);
+        $infoLote = $this->Registrolote_modelo->getNameLote($nombreExp->idLote);
+
+        if ($infoLote->observacionContratoUrgente && intval($infoLote->observacionContratoUrgente) === 1) {
+            echo json_encode(['code' => 400, 'message' => 'El registro se encuentra en proceso de liberación.']);
+            return;
+        }
+
         $filename = $this->Documentacion_model
             ->getFilename($idDocumento)
             ->row()
@@ -80,7 +100,7 @@ class Documentacion extends CI_Controller {
         }
 
         $result = $this->General_model->updateRecord("historial_documento", $updateDocumentData, "idDocumento", $idDocumento);
-        $response = ($result) ? 1 : 2;
+        $response = ($result) ? ['code' => 200] : ['code' => 500];
 
         if (intval($tipoDocumento) !== 7) { // El tipo de documento es CORRIDA
             echo json_encode($response);
@@ -94,7 +114,6 @@ class Documentacion extends CI_Controller {
             return;
         }
 
-        $infoLote = $this->Registrolote_modelo->getNameLote($nombreExp->idLote);
         $mail = $this->phpmailer_lib->load();
 
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
