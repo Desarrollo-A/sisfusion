@@ -4,7 +4,60 @@
 <body onload="cargarInputs()" onsubmit="guardarInputs()">
 <div class="wrapper">
     <style>
-        
+        ul.timeline-3 {
+        list-style-type: none;
+        position: relative;
+        height: 300px; /* Establece la altura del contenedor */
+        overflow: auto;
+    }
+    ul.timeline-3:before {
+        content: " ";
+        background: #d4d9df;
+        display: inline-block;
+        position: absolute;
+        left: 29px;
+        width: 2px;
+        height: 100%;
+        z-index: 400;
+    }
+    ul.timeline-3 > li {
+        margin: 20px 0;
+        padding-left: 20px;
+    }
+    ul.timeline-3 > li:before {
+        content: " ";
+        background: white;
+        display: inline-block;
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid #0a548b;
+        left: 20px;
+        width: 20px;
+        height: 20px;
+        z-index: 400;
+    }
+
+    .scroll-styles::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+    }
+
+    /* El background del scroll (border)*/
+    .scroll-styles::-webkit-scrollbar {
+    width: 9px;
+    background-color: transparent;
+    }
+
+    /* Color de la barra de desplazamiento */
+    .scroll-styles::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    }
+
+    /* Color del HOVER de barra de desplazamiento */
+    .scroll-styles::-webkit-scrollbar-thumb:hover {
+    background-color: #929292;
+    }
+
     </style>
     <?php
         $datos = array();
@@ -471,21 +524,21 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE</label>
+                                <label class="label-on-left m-0">NOMBRE (<small style="color: red;">*</small>)</label>
                                 <input readonly class="form-control input-gral" type="text" required="true" value="'.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno.'"/>
                                 <input id="id_cop[]" name="id_cop[]" type="hidden" value="'.$copropiedad[$i]->id_copropietario.'">
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELEÉFONO CASA</label>
+                                <label class="label-on-left m-0">TELÉFONO CASA</label>
                                 <input  class="form-control input-gral" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" '.$statsInput.'/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">CELULAR</label>
-                                <input  class="form-control input-gral" name="telefono2_cop[]" id="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">CELULAR (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral" name="telefono2_cop[]" id="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" '.$statsInput.' required/>
                             </div>
                         </div>
                     </div>
@@ -493,20 +546,20 @@
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">CORREO ELECTRÓNICO</label>
-                                <input  class="form-control input-gral" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral" name="email_cop[]" id="email_cop[]" type="email" value="' . $copropiedad[$i]->correo . '" '.$statsInput.' required/>
                             </div>
                         </div>           
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty">
-                                <label class="label-on-left m-0">FECHA DE NACIMIENTO</label>
-                                <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" onkeydown="return false" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral" name="fnacimiento_cop[]" id="fnacimiento_cop[]" onkeydown="return false" type="date" value="' . $copropiedad[$i]->fecha_nacimiento . '" '.$statsInput.' required/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty overflow-hidden">
-                                <label class="label-on-left m-0">NACIONALIDAD</label> 
-                                <select class="selectpicker select-gral m-0" data-live-search="true" data-container="body" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.'>';
+                                <label class="label-on-left m-0">NACIONALIDAD (<small style="color: red;">*</small>)</label> 
+                                <select class="selectpicker select-gral m-0" data-live-search="true" data-container="body" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.' required>';
 
                                 for($n=0; $n < count($nacionalidades) ; $n++){
                                     if($nacionalidades[$n]['id_opcion'] == $copropiedad[$i]->nacionalidad_valor){
@@ -525,8 +578,8 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">DOMICILIO PARTICULAR</label>
-                                <input  class="form-control input-gral letrasNumeros" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                                <label class="label-on-left m-0">DOMICILIO PARTICULAR (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral letrasNumeros" name="id_particular_cop[]" id="id_particular_cop[]" type="text" value="' . $copropiedad[$i]->domicilio_particular . '" style="font-size: 0.9em;" '.$statsInput.' required/>
                             </div>
                         </div>
                     </div>
@@ -534,14 +587,14 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0"> ORIGINARIO DE</label>
-                                <input type="text" class="form-control input-gral letrasCaracteres" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.'/>
+                                <label class="label-on-left m-0"> ORIGINARIO DE (<small style="color: red;">*</small>)</label>
+                                <input type="text" class="form-control input-gral letrasCaracteres" name="originario_cop[]" id="originario_cop[]" type="text" value="' . $copropiedad[$i]->originario_de . '" style="font-size: 0.9em;" '.$statsInput.' required/>
                             </div>
                         </div>        
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty overflow-hidden">
-                                <label class="label-on-left m-0">ESTADO CIVIL</label>
-                                <select class="selectpicker select-gral m-0" data-container="body" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.'>
+                                <label class="label-on-left m-0">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                                <select class="selectpicker select-gral m-0" data-container="body" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.' required>
                                         
                                 ';
                                 for($n=0; $n < count($edoCivil) ; $n++)
@@ -586,14 +639,14 @@
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">OCUPACIÓN</label>
-                                <input  class="form-control input-gral letrasCaracteres" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral letrasCaracteres" name="ocupacion_cop[]" id="ocupacion_cop[]" type="text" value="' . $copropiedad[$i]->ocupacion . '" '.$statsInput.' required/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">PUESTO</label>
-                                <input  class="form-control input-gral letrasCaracteres" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">PUESTO (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral letrasCaracteres" name="puesto_cop[]" id="puesto_cop[]" type="text" value="' . $copropiedad[$i]->posicion . '" '.$statsInput.' required/>
                             </div>
                         </div> 
                     </div>
@@ -608,8 +661,8 @@
 
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">EDAD FIRMA<small"> (AÑOS)</small></label>
-                                <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.'/>
+                                <label class="label-on-left m-0">EDAD FIRMA<small"> (AÑOS) (<small style="color: red;">*</small>)</small></label>
+                                <input  class="form-control input-gral" name="edadFirma_cop[]" id="edadFirma_cop[]" onKeyPress="if(this.value.length==2) return false;"  type="number" step="any" value="' . $copropiedad[$i]->edadFirma . '" '.$statsInput.' required/>
                             </div> 
                         </div>
 
@@ -737,7 +790,8 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="costom2f" id="costom2f" oninput="this.value = formatearNumero(this.value)"  <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                            <input class="form-control input-gral" minlength="2" name="costom2f" id="costom2f" oninput="this.value = formatearNumero(this.value)"  <?php echo $readOnly; ?> step="any" required value="<?=$cliente[0]->costom2f?>"/>
+                            <div><?php echo $this->session->flashdata('costom2f'); ?></div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -992,7 +1046,6 @@
                 /*coord gerente asesor normal*/
                 $coordGerenteVN = '';
                 if($asesor[0]->nombreCoordinador==' '){
-
                     $coordinadorVN = '';
                 }
                 else{
@@ -1075,318 +1128,316 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <!-- Modal general -->
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-
 <script>
-    $(document).ready(function() {
-        const e = new Event("change");
-        const element = document.querySelector('#rfc_check')
-        element.dispatchEvent(e);
-    });
+    // Variables
+const cliente = "<?=$cliente[0]->id_cliente?>";
+const onlyView = <?=$onlyView?>;
 
-    const cliente = "<?=$cliente[0]->id_cliente?>";
-    function validaTipoVivienda()
-    {
-        if (!$("input[name='tipo_vivienda']").is(':checked')) {
-            alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+$(document).ready(function() {
+    const e = new Event("change");
+    const element = document.querySelector('#rfc_check')
+    element.dispatchEvent(e);
+});
+
+function validaTipoVivienda()
+{
+    if (!$("input[name='tipo_vivienda']").is(':checked')) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+    }
+    else {
+        if (!$("input[name='tipoNc_valor']").is(':checked')) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+            $('#tipoNc_valor').focus();
+            $('#label1').addClass('hover_focus');
+            $('#label2').addClass('hover_focus');
+            setTimeout(()=>{
+                $('#label1').removeClass('hover_focus');
+                $('#label2').removeClass('hover_focus');
+            },1500)
         }
-        else {
-            if (!$("input[name='tipoNc_valor']").is(':checked')) {
-                alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
-                $('#tipoNc_valor').focus();
-                $('#label1').addClass('hover_focus');
-                $('#label2').addClass('hover_focus');
-                setTimeout(()=>{
-                    $('#label1').removeClass('hover_focus');
-                    $('#label2').removeClass('hover_focus');
-                },1500)
+        else{
+            if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                $('.imprimePagare').focus();
+                $('#labelSi1').addClass('hover_focus');
+                $('#labelNo1').addClass('hover_focus');
+                setTimeout(() => {
+                    $('#labelSi1').removeClass('hover_focus');
+                    $('#labelNo1').removeClass('hover_focus');
+                }, 1500)
             }
             else{
-                if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                    alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
-                    $('.imprimePagare').focus();
-                    $('#labelSi1').addClass('hover_focus');
-                    $('#labelNo1').addClass('hover_focus');
+                if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                    alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                    $('.tipo_comprobante').focus();
+                    $('#labelSi2').addClass('hover_focus');
+                    $('#labelNo2').addClass('hover_focus');
                     setTimeout(() => {
-                        $('#labelSi1').removeClass('hover_focus');
-                        $('#labelNo1').removeClass('hover_focus');
+                        $('#labelSi2').removeClass('hover_focus');
+                        $('#labelNo2').removeClass('hover_focus');
                     }, 1500)
-                }
-                else{
-                    if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                        alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
-                        $('.tipo_comprobante').focus();
-                        $('#labelSi2').addClass('hover_focus');
-                        $('#labelNo2').addClass('hover_focus');
-                        setTimeout(() => {
-                            $('#labelSi2').removeClass('hover_focus');
-                            $('#labelNo2').removeClass('hover_focus');
-                        }, 1500)
-                    }
                 }
             }
         }
     }
+}
 
-    function resizeInput() {
-        $(this).attr('size', $(this).val().length);
-    }
+function resizeInput() {
+    $(this).attr('size', $(this).val().length);
+}
 
-    $('input[name="letraCantidad"]')
-        .keyup(resizeInput)
-        .each(resizeInput);
+$('input[name="letraCantidad"]')
+    .keyup(resizeInput)
+    .each(resizeInput);
 
-    function estaEnRango(valor, minimo = 1, maximo = 31) {
+function estaEnRango(valor, minimo = 1, maximo = 31) {
     return valor >= minimo && valor <= maximo;
-    }
+}
 
-    function validarDia(input) {
+function validarDia(input) {
     const valor = parseInt(input.value);
     if (!estaEnRango(valor)) {
         input.value = '';
         alerts.showNotification('top', 'right', 'El día debe estar dentro del rango del 1 al 31.', 'warning');
     }
-    }
+}
 
-    function validarRFC(input) {
-        const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
-        if (!regex.test(input.value)) {
-            alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning'); 
+function validarRFC(input) {
+    const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
+    if (!regex.test(input.value)) {
+        alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning'); 
+    }
+}
+
+function validarCodigoPostal(input) {
+    const regex = /^\d{5}$/;
+    if (!regex.test(input.value)) {
+        alerts.showNotification('top', 'right', 'El código postal debe contener 5 dígitos numéricos.', 'warning');
+    }
+}
+
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+const validate = () => {
+    const $result = $('#result');
+    const email = $('#correo').val();
+    $result.text('');
+
+    if(validateEmail(email)){
+        $result.text('El correo es válido');
+        $result.css('color', 'rgb(26 159 10)');
+    } else{
+        $result.text('El correo es inválido.');
+        $result.css('color', 'red');
+    }
+    return false;
+}
+
+$('#correo').on('input', validate);
+
+function checkResidencia(){
+    let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
+    if(valor == 1){
+        //si es de residencia extranjera se debe de preguntar si imprime pagares
+        $('#pagarePart').removeClass('hide');
+        $('#domicilioCarta').removeClass('hide');
+        document.getElementsByName("imprimePagare")[0].setAttribute('required', true);
+        document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
+    }else{
+        //se vuelve a quitar el apartado de pagares
+        $('#pagarePart').addClass('hide');
+        $('#domicilioCarta').addClass('hide');
+        document.getElementsByName("imprimePagare")[0].removeAttribute('required');
+        document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
+
+    }
+}
+
+function historial() {
+    console.log("lo que sea");
+    $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
+        const info = JSON.parse(data);
+        if (info.length === 0) {
+            alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
+            return;
         }
-    }
-
-    function validarCodigoPostal(input) {
-        const regex = /^\d{5}$/;
-        if (!regex.test(input.value)) {
-            alerts.showNotification('top', 'right', 'El código postal debe contener 5 dígitos numéricos.', 'warning');
-        }
-    }
-
-    const validateEmail = (email) => {
-        return email.match(
-            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-    };
-
-    const validate = () => {
-        const $result = $('#result');
-        const email = $('#correo').val();
-        $result.text('');
-
-        if(validateEmail(email)){
-            $result.text('El correo es válido');
-            $result.css('color', 'rgb(26 159 10)');
-        } else{
-            $result.text('El correo es inválido.');
-            $result.css('color', 'red');
-        }
-        return false;
-    }
-
-    $('#correo').on('input', validate);
-
-    function checkResidencia(){
-        let valor = document.querySelector('input[name="tipoNc_valor"]:checked').value;
-        if(valor == 1){
-            //si es de residencia extranjera se debe de preguntar si imprime pagares
-            $('#pagarePart').removeClass('hide');
-            $('#domicilioCarta').removeClass('hide');
-            document.getElementsByName("imprimePagare")[0].setAttribute('required', true);
-            document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
-        }else{
-            //se vuelve a quitar el apartado de pagares
-            $('#pagarePart').addClass('hide');
-            $('#domicilioCarta').addClass('hide');
-            document.getElementsByName("imprimePagare")[0].removeAttribute('required');
-            document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
-
-        }
-    }
-
-    function historial() {
-        $.get(`${url}Asesor/getHistorialDS/${cliente}`, function (data) {
-            const info = JSON.parse(data);
-            if (info.length === 0) {
-                alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
-                return;
-            }
-            changeSizeModal('modal-lg');
-            appendBodyModal(historialCampoHtml(info));
-            appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
-            showModal();
-        });
-    }
-
-    function formatearNumero(numero) {
-    return "$ " + numero.toString().replace(/\D/g, "")
-                    .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-                .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-    }
-
-    function cargarInputs() {
-        var inputs = document.getElementsByTagName("input");
-        for (var i = 0; i < inputs.length; i++) {
-            if (inputs[i].name === "cantidad") {
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "costom2f") {
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "costoM2") {
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "importOferta"){
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "saldoDeposito"){
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }else if (inputs[i].name === "aportMensualOfer"){
-                inputs[i].value = formatearNumero(inputs[i].value);
-            }
-        }
-    }
-
-    function guardarInputs() {
-      var button = document.getElementsByTagName("button");
-      var inputs = document.getElementsByTagName("input");
-      for (var i = 0; i < inputs.length; i++) {
-        if (button[i].type === "submit") {
-            inputs[i].value = inputs[i].value.replace(/\,/g, "");
-        }
-      }
-    }
-
-    $( ".letrasCaracteres" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
+        changeSizeModal('modal-md');
+        appendBodyModal(historialCampoHtml(info));
+        appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+        showModal();
     });
+}
+
+function formatearNumero(numero) {
+return "$" + numero.toString().replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+}
+
+function cargarInputs() {
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].name === "cantidad") {
+            inputs[i].value = (inputs[i].value); 
+        }else if (inputs[i].name === "costom2f") {
+            inputs[i].value = (inputs[i].value); 
+        }else if (inputs[i].name === "costoM2") {
+            inputs[i].value = (inputs[i].value); 
+        }else if (inputs[i].name === "importOferta"){
+            inputs[i].value = (inputs[i].value); 
+        }else if (inputs[i].name === "saldoDeposito"){
+            inputs[i].value = (inputs[i].value);                    
+        }else if (inputs[i].name === "aportMensualOfer"){
+            inputs[i].value = (inputs[i].value);
+        }
+    }
+}
+
+function guardarInputs() {
+  var button = document.getElementsByTagName("button");
+  var inputs = document.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) {
+    if (button[i].type === "submit") {
+        inputs[i].value = inputs[i].value.replace(/\,/g, "");
+    }
+  }
+}
+
+// function validarLetras(event) {
+// const input = event.target;
+// const regex = /[^a-zA-Z]/g;
+// input.value = input.value.replace(regex, '');
+// }
+
+// function mayus(e) {
+// e.value = e.value.toUpperCase();
+// }
+
+$( ".letrasCaracteres" ).on( "focusout", function(){
+    const input = event.target;
+    input.value = input.value.trim();
+});
+
+$( ".letrasCaracteres" ).on( "keyup", function() {
+    const input = event.target;
+    const regex = /[^a-zA-Z ñÑáéíóúÁÉÍÓÚüÜ.,-]/g;
+    input.value = input.value.replace(regex, '').toUpperCase();
+});
+
+$( ".letrasNumeros" ).on( "focusout", function(){
+    const input = event.target;
+    input.value = input.value.trim();
+});
+
+$( ".letrasNumeros" ).on( "keyup", function() {
+    const input = event.target;
+    const regex = /[^a-zA-Z 0-9@#&_.-]/g;
+    input.value = input.value.replace(regex, '').toUpperCase();
+});
+
+$( ".espaciosOff" ).on( "focusout", function(){
+    const input = event.target;
+    input.value = input.value.trim();
+});
+
+
+
+function historialCampoHtml(data) {
+    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
     
-    $( ".letrasCaracteres" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z ñÑáéíóúÁÉÍÓÚüÜ.,-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".letrasNumeros" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    $( ".letrasNumeros" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z 0-9@#&_.-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".espaciosOff" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    function historialCampoHtml(data) {
-        let html = '<h3>Historial de movimientos</h3>';
-        data.forEach(columna => {
-            let dataTable = '';
-            columna.detalle.forEach(cambio => {
-                dataTable += `
-                <tr>
-				  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
-                  <td>${cambio.fecha}</td>
-                  <td>${cambio.anterior}</td>
-                  <td>${cambio.nuevo}</td>
-                </tr>`;
-            });
-
-            html += `
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h4><b>Campo: ${columna.columna}</b></h4>
-                    </div>
-                    <div class="col-lg-12">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Usuario</th>
-                              <th scope="col">Modificación</th>
-                              <th scope="col">Valor Anterior</th>
-                              <th scope="col">Valor Nuevo</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            ${dataTable}
-                          </tbody>
-                        </table>
-                    </div>
-                </div>
+    dataTable += `
+    <div class="container-fluid">
+        <div class="row p-0">
+            <div class="col-md-12 offset-md-3 p-0">
+                <ul class="timeline-3 scroll-styles">
+                
             `;
+
+    data.forEach(columna => {
+        dataTable += `<li><div class="container-fluid">
+        <div class="row">
+        <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
+        columna.detalle.forEach(cambio => {
+            dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
+            </div>
+            </div>
+            <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
+            <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
+            <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
+            
+          </li>
+       `;
         });
 
-        return html;
-    }
+    });
+    dataTable += '</ul></div></div></div>';
+    return dataTable;
 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-    var urlimg = "<?=base_url()?>img/";
+}
+ if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
+    $("#nacionalidad").change(function(){
+        var valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
+        $(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+valor_nacionalidad+'">');
+    });
 
+    $("#estado_civil").change(function(){
+        var valor_estado_civil = $('select[name="estado_civil"] option:selected').text();
+        $(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+valor_estado_civil+'">');
+    });
+
+
+    $("#regimen_matrimonial").change(function(){
+        var valor_regimen = $('select[name="regimen_matrimonial"] option:selected').text();
+        $(".datos_select").append('<input type="hidden" name="regimen_select" id="regimen_select" value="'+valor_regimen+'">');
+    });
+
+    $("#parentezco").change(function(){
+        var valor_parentezco = $('select[name="parentezco"] option:selected').text();
+        $(".datos_select").append('<input type="hidden" name="parentezco_select1" id="parentezco_select1" value="'+valor_parentezco+'">');
+    });
+
+    $("#parentezco").change(function(){
+        var valor_parentezco = $('select[name="parentezco"] option:selected').text();
+        $(".datos_select").append('<input type="hidden" name="parentezco_select2" id="parentezco_select2" value="'+valor_parentezco+'">');
+    });
+
+    const checkbox = document.getElementById("rfc_check");
+    const campo1 = document.getElementById("rfc");
+    const campo2 = document.getElementById("rfcl");
+    const campo3 = document.getElementById("regimenl");
+    const campo5 = document.getElementById("codigol");
+    const campo6 = document.getElementById("cp_fac");
+
+    checkbox.addEventListener("change", function() {
+
+        if (checkbox.checked) {
+            $('#regimenFiscal').prop('required',true);
+            $('#rfc').prop('required',true);
+            $('#cp_fac').prop('required',true);
+            campo1.style.display = "block";
+            campo2.style.display = "block";
+            campo3.classList.remove("d-none");
+            campo5.style.display = "block";
+            campo6.style.display = "block";
+        } else {
+            $('#regimenFiscal').prop('required',false);
+            $('#rfc').prop('required',false);
+            $('#cp_fac').prop('required',false);
+            campo1.style.display = "none";
+            campo2.style.display = "none";
+            campo3.classList.add("d-none");
+            campo5.style.display = "none";
+            campo6.style.display = "none";
+        }
+    });
+
+    window.onscroll = () => {
+        const nav = document.querySelector('#sectionBtns');
+        console.log(nav);
+        if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
+    };
+}
 </script>
-<?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
-    <script>
-        $("#nacionalidad").change(function(){
-            var valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
-            $(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+valor_nacionalidad+'">');
-        });
-
-        $("#estado_civil").change(function(){
-            var valor_estado_civil = $('select[name="estado_civil"] option:selected').text();
-            $(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+valor_estado_civil+'">');
-        });
-
-
-        $("#regimen_matrimonial").change(function(){
-            var valor_regimen = $('select[name="regimen_matrimonial"] option:selected').text();
-            $(".datos_select").append('<input type="hidden" name="regimen_select" id="regimen_select" value="'+valor_regimen+'">');
-        });
-
-        $("#parentezco").change(function(){
-            var valor_parentezco = $('select[name="parentezco"] option:selected').text();
-            $(".datos_select").append('<input type="hidden" name="parentezco_select1" id="parentezco_select1" value="'+valor_parentezco+'">');
-        });
-
-        $("#parentezco").change(function(){
-            var valor_parentezco = $('select[name="parentezco"] option:selected').text();
-            $(".datos_select").append('<input type="hidden" name="parentezco_select2" id="parentezco_select2" value="'+valor_parentezco+'">');
-        });
-
-        const checkbox = document.getElementById("rfc_check");
-        const campo1 = document.getElementById("rfc");
-        const campo2 = document.getElementById("rfcl");
-        const campo3 = document.getElementById("regimenl");
-        const campo5 = document.getElementById("codigol");
-        const campo6 = document.getElementById("cp_fac");
-    
-        checkbox.addEventListener("change", function() {
-
-            if (checkbox.checked) {
-                $('#regimenFiscal').prop('required',true);
-                $('#rfc').prop('required',true);
-                $('#cp_fac').prop('required',true);
-                campo1.style.display = "block";
-                campo2.style.display = "block";
-                campo3.classList.remove("d-none");
-                campo5.style.display = "block";
-                campo6.style.display = "block";
-            } else {
-                $('#regimenFiscal').prop('required',false);
-                $('#rfc').prop('required',false);
-                $('#cp_fac').prop('required',false);
-                campo1.style.display = "none";
-                campo2.style.display = "none";
-                campo3.classList.add("d-none");
-                campo5.style.display = "none";
-                campo6.style.display = "none";
-            }
-        });
-
-        window.onscroll = () => {
-            const nav = document.querySelector('#sectionBtns');
-            if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
-        };
-    </script>
-<?php } ?>
-
-</html>
