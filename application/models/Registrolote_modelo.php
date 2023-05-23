@@ -5164,12 +5164,12 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
     /***************/
 
 	public function getNameLote($idLote){
-		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
-		res.nombreResidencial
-        FROM lotes l
-        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		where l.idLote = ".$idLote." ");
+		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre, res.nombreResidencial, 
+            l.observacionContratoUrgente
+            FROM lotes l
+            INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		    where l.idLote = $idLote");
 		return $query->row();
 	}
 

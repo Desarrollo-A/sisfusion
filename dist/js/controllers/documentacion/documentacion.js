@@ -32,6 +32,8 @@ const TipoDoc = {
     PROSPECTO: 'prospecto',
 };
 
+const observacionContratoUrgente = 1; // Bandera para inhabilitar
+
 let documentacionLoteTabla = null;
 
 Shadowbox.init();
@@ -181,6 +183,14 @@ $('#idLote').change(function () {
                 render: function (data) {
                     let buttonMain = '';
                     let buttonDelete = '';
+
+                    if (data.observacionContratoUrgente && parseInt(data.observacionContratoUrgente) === observacionContratoUrgente) {
+                        buttonMain = (data.expediente == null || data.expediente === "")
+                            ? '<p>En proceso de liberación</p>'
+                            : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
+
+                        return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                    }
 
                     if (data.tipo_doc == TipoDoc.CONTRATO) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
@@ -459,7 +469,9 @@ $(document).on("click", "#sendRequestButton", function (e) {
         let extensionesPermitidas = getExtensionPorTipoDocumento(tipoDocumento);
         let statusValidateExtension = validateExtension(extensionDeDocumento, extensionesPermitidas);
         if (!statusValidateExtension) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
-            alerts.showNotification("top", "right", `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. Recuerda seleccionar un archivo ${extensionesPermitidas}`, "warning");
+            alerts.showNotification("top", "right",
+                `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. `+
+                    `Recuerda seleccionar un archivo ${extensionesPermitidas}`, "warning");
             return;
         }
 
@@ -483,17 +495,19 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 $('#uploadFileButton').prop('disabled', true);
             },
             success: function (response) {
-                $("#sendRequestButton").prop("disabled", false);
-                if (response == 1) {
-                    alerts.showNotification("top", "right", `El documento ${nombreDocumento} se ha cargado con éxito.`, "success");
+                const res = JSON.parse(response);
 
+                if (res.code === 200) {
+                    alerts.showNotification("top", "right", `El documento ${nombreDocumento} se ha cargado con éxito.`, "success");
                     documentacionLoteTabla.ajax.reload();
                     $("#addDeleteFileModal").modal("hide");
-                } else if (response == 2) {
-                    alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
-                } else if (response == 3) {
-                    alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
-                } else {
+                }
+
+                if (res.code === 400) {
+                    alerts.showNotification("top", "right", res.message, "warning");
+                }
+
+                if (res.code === 500) {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 }
             }, error: function () {
@@ -516,13 +530,22 @@ $(document).on("click", "#sendRequestButton", function (e) {
             processData: false,
             type: 'POST',
             success: function (response) {
+                const res = JSON.parse(response);
+
                 $("#sendRequestButton").prop("disabled", false);
-                if (response == 1) {
+
+                if (res.code === 200) {
                     alerts.showNotification("top", "right", `El documento ${nombreDocumento} se ha eliminado con éxito.`, "success");
 
                     documentacionLoteTabla.ajax.reload();
                     $("#addDeleteFileModal").modal("hide");
-                } else if (response == 2) {
+                }
+
+                if (res.code === 400) {
+                    alerts.showNotification("top", "right", res.message, "warning");
+                }
+
+                if (res.code === 500) {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 }
             }, error: function () {
