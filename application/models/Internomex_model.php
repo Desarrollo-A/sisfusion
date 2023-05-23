@@ -141,7 +141,7 @@ class Internomex_model extends CI_Model {
 
     public function getPagosFinal($beginDate, $endDate){
         $condicion = '';
-        if ($this->session->userdata('id_rol') != 31){
+        if (!in_array($this->session->userdata('id_rol'), array(31, 17, 70, 71, 73))) { // INTERNOMEX & CONTRALORÍA
             $idUsuario = $this->session->userdata('id_usuario');
             $condicion = " AND p.id_usuario = $idUsuario";
         }
@@ -158,7 +158,7 @@ class Internomex_model extends CI_Model {
         INNER JOIN sedes c on c.id_sede = p.forma_pago 
         INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
         INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
-        INNER JOIN opcs_x_cats tp ON tp.id_catalogo=86 AND tp.id_opcion = p.tipo_pago
+        INNER JOIN opcs_x_cats tp ON tp.id_catalogo = 86 AND tp.id_opcion = p.tipo_pago
         WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
     }
 

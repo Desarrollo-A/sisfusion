@@ -190,9 +190,10 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
+                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
                     return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> ${libContraloria} <center>`;
                 }
             },
             {
