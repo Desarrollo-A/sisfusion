@@ -111,7 +111,7 @@ function selectOpcion(){
                 <input type="hidden" id="id_cliente" value="${id_cliente}" name="id_cliente" >`);
 
                 $('#usuarioid5 option').remove(); 
-                $.post('Incidencias/getUsuariosRol3/'+7, function(data) {
+                $.post(general_base_url+'Incidencias/getUsuariosRol3/'+7, function(data) {
      
                     var len = data.length;
                     for( var i = 0; i<len; i++){
@@ -136,7 +136,7 @@ function selectOpcion(){
                     var parent = $(this).val();
                     let id_l = parent.split(',');
                     console.log(id_l);
-                    $.post('Incidencias/getLideres/'+id_l[1], function(data) {
+                    $.post(general_base_url+'Incidencias/getLideres/'+id_l[1], function(data) {
                         $('#usuarioid6 option').remove(); 
                         $('#usuarioid7 option').remove(); 
                         $('#usuarioid8 option').remove(); 
@@ -226,7 +226,7 @@ $("#asesorold").change(function() {
     $("#info").removeAttr('style');
     document.getElementById('info').innerHTML='Cargando...';
     var parent = $(this).val();
-     $.post('/datosLotesaCeder/'+parent, function(data) { 
+     $.post(general_base_url+'Incidencias/datosLotesaCeder/'+parent, function(data) { 
         document.getElementById('info').innerHTML='';
         var len = data[0].length;
         if(len ==0 ){
@@ -369,7 +369,7 @@ $("#roles3").change(function() {
     $('#usuarioid3 option').remove(); 
    if(bandera59 != 1){ // LLAVE DEL  BANDERA59
 
-    $.post('/getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post(general_base_url+'Incidencias/getUsuariosByrol/'+parent+'/'+user, function(data) {
       
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -397,7 +397,7 @@ $("#roles2").change(function() {
     var parent = $(this).val();
     $('#usuarioid2 option').remove(); 
   
-    $.post('/getUsuariosRol3/'+parent, function(data) {
+    $.post(general_base_url+'Incidencias/getUsuariosRol3/'+parent, function(data) {
      
         var len = data.length;
         for( var i = 0; i<len; i++){
@@ -518,7 +518,7 @@ $("#rolesvc").change(function() {
     }
 
     $('#usuarioid4 option').remove(); 
-    $.post('/getUsuariosByrol/'+parent+'/'+user, function(data) {
+    $.post(general_base_url+'Incidencias/getUsuariosByrol/'+parent+'/'+user, function(data) {
         
         var len = data.length;
         for( var i = 0; i<len; i++){
