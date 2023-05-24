@@ -6705,8 +6705,25 @@ public function descuentosCapitalHumano(){
     $this->load->view("ventas/add_descuento", $datos);
   }
 
-public function getPuestosDescuentos(){
-echo json_encode($this->Comisiones_model->getPuestosDescuentos()->result_array());
-}
+  public function getPuestosDescuentos(){
+  echo json_encode($this->Comisiones_model->getPuestosDescuentos()->result_array());
+  }
 
+
+
+  public function lotes(){
+    $lotes = $this->Comisiones_model->lotes();
+    
+    $pagos = $this->Comisiones_model->pagos();
+    
+    $monto = $this->Comisiones_model->monto();
+
+    $dispersion[ "lotes"] = $lotes->nuevo_general; 
+    $dispersion["pagos"] = $pagos->nuevo_general;
+    $dispersion["monto"] = $monto->nuevo_general;
+
+    echo json_encode(  $dispersion);
+    }
+
+ 
 }
