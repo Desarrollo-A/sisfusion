@@ -1720,7 +1720,7 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
         return $query->result_array();
     }
-    function getInicioMensualidadAut($idLote, $id_client36){
+    function getInicioMensualidadAut($idLote, $id_cliente){
         $query = $this->db->query("SELECT * FROM corridas_financieras cf
         INNER JOIN historial_documento hd ON hd.idLote = cf.id_lote
         WHERE cf.id_lote=".$idLote." AND cf.id_cliente=".$id_cliente." AND hd.tipo_doc=31");
