@@ -81,7 +81,7 @@ class Contraloria extends CI_Controller {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("contraloria/vista_6_contraloria",$datos);
+        $this->load->view("contraloria/vista_6_contraloria");
     }
 
     public function getCommissionPlans(){
