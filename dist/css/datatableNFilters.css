@@ -1353,6 +1353,43 @@ Para el campo de tipo de venta
   background-color:  #0e625118;
 }
 
+/*
+*(Vista Solicitud de Comisiones)
+*/
+/*-Boton para video de youtube-*/
+.btn-dt-youtube{
+  box-shadow: none;
+  padding: 7px 25px;
+  color: #c01313;
+  background-color: transparent;
+  border: 1px solid #c01313;
+  border-radius: 27px;
+  margin: 0;
+}
+
+.btn-dt-youtube {
+  color: #c01313;
+  border: none;
+  background-color: #c0131318;
+}
+
+.btn-dt-youtube:hover {
+  background-color: #c01313;
+  color: #ffffff !important;
+}
+/*-----------------------------------------------------------*/
+.lbl-dark-blue{
+  color: #1B4F72;
+  border: none;
+  background-color: #1B4F7250;
+}
+
+.lbl-dark-cyan{
+  color: #008c76;
+  border: none;
+  background-color: #008c7650;
+}
+/************************************************************/
 .boxContent .nav-tabs-cm {
   background: #eeeeee;
   padding: 0;

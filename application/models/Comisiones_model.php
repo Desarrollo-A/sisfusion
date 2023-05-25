@@ -838,40 +838,35 @@ function getDatosHistorialPagoRP($id_usuario){
 
     function getDatosComisionesNuevasNivel2(){
         return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 1 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 1 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+                }
+
+
+                function getDatosComisionesRecibidasNivel2(){
+                    return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 4 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+                }
+                    
+
+
+                function getDatosComisionesHistorialNivel2(){
+                    $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador,
+            oxc.nombre as puesto
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
     }
 
-
-    function getDatosComisionesRecibidasNivel2(){
-        return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 4 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
-    }
-        
-
-
-    function getDatosComisionesHistorialNivel2(){
-        $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador,
-oxc.nombre as puesto
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
-    }
-
-
-
-
-
-    
     function getDatosComisionesAsesor($estado){
         $user_data = $this->session->userdata('id_usuario');
         $sede = $this->session->userdata('id_sede');
@@ -919,9 +914,6 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
             u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion,
             opt.estatus)");
         }
-
-
-
 
     function getDatosComisionesAsesorBaja($estado){
         $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';

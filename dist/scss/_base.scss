@@ -203,11 +203,11 @@ $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
 $sunny              : #F9F871;
-$darkCyan           : #30ada1;
+$darkCyan           : #008c76;
 $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
 $veryDarkBlue       : #1B4F72;
-$VeryDarkCyan       : #0E6251;
+$veryDarkCyan       : #0E6251;
 /* END vrbls coloress */
 
 /* size devices */
@@ -943,7 +943,42 @@ $tv                 : "(min-width: 1280px)";
 /*Etiqueta para DataTable (vista Inventario Disponible)*/
 //Para el campo de tipo de venta
 .lbl-sale-type{
-    color: $VeryDarkCyan;
+    color: $veryDarkCyan;
     border: none;
     background-color:  #0E625118;
 }
+/************************************************************/
+/*Boton para video de youtube (vista Solicitud de Comisiones)*/
+.btn-dt-youtube{
+    box-shadow: none;
+    padding: 7px 25px;
+    color: $red;
+    background-color: transparent;
+    border: 1px solid $red;
+    border-radius: 27px;
+    margin: 0;
+}
+
+.btn-dt-youtube {
+    color: $red;
+    border: none;
+    background-color: #c0131318;
+}
+
+.btn-dt-youtube:hover {
+    background-color: $red;
+    color: $white !important;
+}
+
+.lbl-dark-blue{
+    color: $veryDarkBlue;
+    border: none;
+    background-color: #1B4F7250;
+}
+
+.lbl-dark-cyan{
+    color: $darkCyan;
+    border: none;
+    background-color: #008c7650;    
+}
+/************************************************************/
