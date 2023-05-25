@@ -1218,7 +1218,7 @@ const validateEmail = (email) => {
     return email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-};
+}
 
 const validate = () => {
     const $result = $('#result');
@@ -1251,12 +1251,10 @@ function checkResidencia(){
         $('#domicilioCarta').addClass('hide');
         document.getElementsByName("imprimePagare")[0].removeAttribute('required');
         document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
-
     }
 }
 
 function historial() {
-    console.log("lo que sea");
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
         const info = JSON.parse(data);
         if (info.length === 0) {
@@ -1270,29 +1268,6 @@ function historial() {
     });
 }
 
-function formatearNumero(numero) {
-    return "$" + numero.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-}
-
-function cargarInputs() {
-    var inputs = document.getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].name === "cantidad") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "costom2f") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "costoM2") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "importOferta"){
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "saldoDeposito"){
-            inputs[i].value = (inputs[i].value);                    
-        }else if (inputs[i].name === "aportMensualOfer"){
-            inputs[i].value = (inputs[i].value);
-        }
-    }
-}
-
 function guardarInputs() {
   var button = document.getElementsByTagName("button");
   var inputs = document.getElementsByTagName("input");
@@ -1302,16 +1277,6 @@ function guardarInputs() {
     }
   }
 }
-
-// function validarLetras(event) {
-// const input = event.target;
-// const regex = /[^a-zA-Z]/g;
-// input.value = input.value.replace(regex, '');
-// }
-
-// function mayus(e) {
-// e.value = e.value.toUpperCase();
-// }
 
 $( ".letrasCaracteres" ).on( "focusout", function(){
     const input = event.target;
@@ -1451,27 +1416,27 @@ function historialCampoHtml(data) {
                     </div>
                 </div>
             `;
-
-    data.forEach(columna => {
-        dataTable += `<li><div class="container-fluid">
-        <div class="row">
-        <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
-        columna.detalle.forEach(cambio => {
-            dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
-            </div>
-            </div>
-            <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
-            <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
-            <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
-            
-          </li>
-       `;
         });
 
-    });
-    dataTable += '</ul></div></div></div>';
-    return dataTable;
-
+            data.forEach(columna => {
+                dataTable += `<li><div class="container-fluid">
+                <div class="row">
+                <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
+                columna.detalle.forEach(cambio => {
+                    dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
+                    </div>
+                    </div>
+                    <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
+                    <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
+                    <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
+                    
+                </li>
+                `;
+                });
+            }); 
+        dataTable += '</ul></div></div></div>';
+        return dataTable;
+    }
 }
  if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
     $("#nacionalidad").change(function(){
