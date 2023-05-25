@@ -56,6 +56,7 @@ class PaquetesCorrida extends CI_Controller
         $datos_sede = $this->input->post("sede");
         $residenciales = $this->input->post("residencial[]");
         $superficie = $this->input->post("superficie");
+        $idAutorizacion = $this->input->post("idSolicitudAut");
         $inicio = 0;//$this->input->post("inicio");
         $fin = 0;//$this->input->post("fin");
         $query_superdicie = '';
@@ -110,18 +111,18 @@ class PaquetesCorrida extends CI_Controller
                     $descuentos = $_POST[$i . "_0_ListaDescuentosTotal_"];
 
                     for ($j = 0; $j < count($descuentos); $j++) {
-                        $meses_s_i = 0;
+                       /* $meses_s_i = 0;
                         if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
                             $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
                             $msi = explode(",", $msi);
                             $meses_s_i = $msi[1];
-                        }
+                        }*/
 
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
                             'prioridad' => $j + 1,
-                            'msi_descuento' => $meses_s_i,
+                            'msi_descuento' => 0,
                             'fecha_creacion' => $hoy2,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => $hoy2,
@@ -133,17 +134,17 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_1_ListaDescuentosEnganche_"])) {
                     $descuentos = $_POST[$i . "_1_ListaDescuentosEnganche_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                        $meses_s_i = 0;
+                       /* $meses_s_i = 0;
                         if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
                             $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
                             $msi = explode(",", $msi);
                             $meses_s_i = $msi[1];
-                        }
+                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
                             'prioridad' => $j + 1,
-                            'msi_descuento' => $meses_s_i,
+                            'msi_descuento' => 0,
                             'fecha_creacion' => $hoy2,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => $hoy2,
@@ -155,17 +156,17 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_2_ListaDescuentosEfectivoporm_"])) {
                     $descuentos = $_POST[$i . "_2_ListaDescuentosEfectivoporm_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                        if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
+                       /* if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
                             $meses_s_i = 0;
                             $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
                             $msi = explode(",", $msi);
                             $meses_s_i = $msi[1];
-                        }
+                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
                             'prioridad' => $j + 1,
-                            'msi_descuento' => $meses_s_i,
+                            'msi_descuento' => 0,
                             'fecha_creacion' => $hoy2,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => $hoy2,
@@ -177,17 +178,17 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_3_ListaDescuentosBono_"])) {
                     $descuentos = $_POST[$i . "_3_ListaDescuentosBono_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                        $meses_s_i = 0;
+                        /*$meses_s_i = 0;
                         if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
                             $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
                             $msi = explode(",", $msi);
                             $meses_s_i = $msi[1];
-                        }
+                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
                             'prioridad' => $j + 1,
-                            'msi_descuento' => $meses_s_i,
+                            'msi_descuento' => 0,
                             'fecha_creacion' => $hoy2,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => $hoy2,
@@ -234,13 +235,14 @@ class PaquetesCorrida extends CI_Controller
           "tipo_lote" => $TipoLote,
           "superficie" => $superficie,
           "paquetes" => $cadena_lotes,
-          "estatus_autorizacion" => 0,
+          "estatus_autorizacion" => 1,
           "estatus" => 1,
           "fecha_creacion" => $hoy2,
           "creado_por" => $user_sesionado,
           "fecha_modificacion" => $hoy2,
            "modificado_por" => $user_sesionado,
-           "accion" => $accion
+           "accion" => $accion,
+           "idAutorizacion" => $idAutorizacion
         );
          $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
         // $this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
@@ -266,10 +268,8 @@ class PaquetesCorrida extends CI_Controller
   }
 
   public function getDescuentosYCondiciones(){
-    $primeraCarga = $this->input->post("primeraCarga");
     $tipoCondicion = $this->input->post("tipoCondicion");
-
-    echo json_encode($this->PaquetesCorrida_model->getDescuentosYCondiciones($primeraCarga, $tipoCondicion),JSON_NUMERIC_CHECK);
+    echo json_encode($this->PaquetesCorrida_model->getDescuentosYCondiciones($tipoCondicion),JSON_NUMERIC_CHECK);
   }
 
   public function SaveNewDescuento(){
@@ -287,7 +287,7 @@ class PaquetesCorrida extends CI_Controller
     } 
     else {
       $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
-      $lastRecords = $this->PaquetesCorrida_model->getDescuentosYCondiciones(0, $id_condicion);
+      $lastRecords = $this->PaquetesCorrida_model->getDescuentosYCondiciones($id_condicion);
       
       echo(json_encode(array("status" => 402, "mensaje" => "Descuento almacenado correctamente", "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }

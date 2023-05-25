@@ -145,8 +145,8 @@ class Postventa_model extends CI_Model
         $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
         
-        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, de2.estatusValidacion,de2.no_rechazos
-        ,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22
+        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
+        de2.estatusValidacion,de2.no_rechazos,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente 
@@ -247,10 +247,10 @@ class Postventa_model extends CI_Model
   
         $notaria = $estatus->id_notaria; 
         $notariaInterna = '';
-        if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1){
+        if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1 && $type == 1){
             $notariaInterna = ' AND estatus_siguiente=13 ';
         }
-        if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1){
+        if($estatus->id_estatus == 12 && $notaria != 0 && $estatus->bandera_notaria == 1 && $type == 1){
             $pertenece = $this->db->query("SELECT pertenece FROM solicitudes_escrituracion se INNER JOIN Notarias n ON n.idNotaria = se.id_notaria WHERE id_solicitud = $id_solicitud")->row()->pertenece;
             $notariaInterna = $pertenece == 2 ? ' AND estatus_siguiente=18 ' : ' AND estatus_siguiente=13 ';
         }
@@ -282,7 +282,12 @@ class Postventa_model extends CI_Model
         $fechaFirma = $actividades_x_estatus->estatus_siguiente == 36  || $actividades_x_estatus->estatus_siguiente == 34 ? ",fecha_firma=NULL " : "";
         
         $num_movimiento = $type == 3 ? 1 : 0;
-
+        if($actividades_x_estatus->estatus_siguiente == 12 ){
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
+        }
+        if($actividades_x_estatus->estatus_siguiente == 13 || $actividades_x_estatus->estatus_siguiente == 18){
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
+        }
         if($actividades_x_estatus->estatus_siguiente == 20  || $actividades_x_estatus->estatus_siguiente == 25){
             $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10) AND expediente IS NOT NULL");
         } if($actividades_x_estatus->estatus_siguiente == 19  || $actividades_x_estatus->estatus_siguiente == 22 || $actividades_x_estatus->estatus_siguiente == 24){
@@ -395,6 +400,8 @@ class Postventa_model extends CI_Model
             $tipo_doc = 'IN (14,19)';
         }elseif($status == 26 || $status == 27 || $status == 28 || $status == 30 || $status == 31){
             $tipo_doc = 'IN (22)';
+        }elseif($status == 12 || $status == 59){
+            $tipo_doc = 'IN (11,17,18)';
         }
 
         $query = $this->db->query("SELECT de.idDocumento,
@@ -1151,6 +1158,16 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
          VALUES($idSolicitud,19,0,'".$comentario."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,20)");
 
+    }
+    function getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)
+    {
+        return $this->db->query("SELECT mrxd.id_mrxdoc, mr.motivo, UPPER(CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) userValidacion 
+        FROM solicitudes_escrituracion se      
+        INNER JOIN documentos_escrituracion de ON de.idSolicitud = se.id_solicitud
+        INNER JOIN usuarios u ON u.id_usuario = de.validado_por
+        INNER JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = $idDocumento AND mrxd.estatus = 1 AND mrxd.tipo = $documentType
+        INNER JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
+        WHERE se.id_solicitud = $idSolicitud");
     }
 
 }

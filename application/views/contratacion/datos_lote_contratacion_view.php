@@ -25,7 +25,7 @@ table tfoot tr th {
 <body>
     <div class="wrapper">
         <?php
-			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63)))
+			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63, 18)))
             	$this->load->view('template/sidebar', '');
 			else
 				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -227,6 +227,10 @@ table tfoot tr th {
                                                 <th>CLIENTE</th>
                                                 <th>COPROPIETARIO (S)</th>
                                                 <th>COMENTARIO NEODATA</th>
+                                                <th>FECHA APERTURA</th>
+                                                <th>APARTADO REUBICACIÓN</th>
+                                                <th>FECHA ALTA</th>
+                                                <th>VENTA COMPARTIDA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

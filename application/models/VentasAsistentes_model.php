@@ -57,14 +57,15 @@ class VentasAsistentes_model extends CI_Model {
                                     INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
                                 WHERE cli.status = 1 AND cli.idLote = '".$lote."'");
     }
+    
     function get_datos_lote_cont($lote){
         return $this->db->query("SELECT cli.id_cliente, cli.nombre, cli.apellido_paterno, cli.apellido_materno, cli.idLote, 
-                                lot.nombreLote, con.nombre as condominio, res.nombreResidencial, 
-                                CASE WHEN lot.contratoArchivo = 'NULL' THEN 'SIN ESPECIFICAR' ELSE lot.contratoArchivo END AS contratoArchivo
-                                FROM clientes cli INNER JOIN [lotes] lot ON lot.idLote = cli.idLote 
-                                    INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
-                                    INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
-                                WHERE cli.status = 1 AND cli.idLote = '".$lote."'");
+        lot.nombreLote, con.nombre as condominio, res.nombreResidencial, 
+        CASE WHEN lot.contratoArchivo = 'NULL' THEN 'SIN ESPECIFICAR' ELSE lot.contratoArchivo END AS contratoArchivo
+        FROM clientes cli INNER JOIN [lotes] lot ON lot.idLote = cli.idLote 
+        INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
+        INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
+        WHERE cli.status = 1 AND cli.idLote = '".$lote."'");
     }
 
     public function getLegalRejections() {

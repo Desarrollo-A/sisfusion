@@ -85,12 +85,7 @@ class Caja extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_cliente_contratacion_view");
 	}
-	public function documentacion(){
-		$datos=array();
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view", $datos);//datos_cliente_contratacion_view
-	}
+
 	public function inventario()/*this is the function*/
 	{
 		$datos = array();

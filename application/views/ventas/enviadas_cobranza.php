@@ -778,7 +778,7 @@
                 lote = $(this).attr("data-value");
 
                 $("#seeInformationModal").modal();
-                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAAAAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
                 $.getJSON("getComments/"+id_pago).done( function( data ){
                     $.each( data, function(i, v){
                         $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');

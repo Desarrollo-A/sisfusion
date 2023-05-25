@@ -121,12 +121,6 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
                     return `<p class="m-0">${d.tipoSuperficie}</p>`;  
             }
         },
-        {
-            "width": "5%",
-            "data": function( d ){
-                    return `<p class="m-0"><span class="label ${d.colorAutorizacion}">${d.estatusAutorizacion}</span></p>`;  
-            }
-        },
         {  
             "width": "5%",
             "data": function( d ){
@@ -278,7 +272,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
          tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
-        document.getElementById('titleAvance').innerHTML = tipo == 1 ? 'Avanzar autorización' : 'Rechazar autorización';
+        document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
         $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
         $('#tipo').val(tipo);
@@ -373,7 +367,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         <span>Superficie:</span><span class="label lbl-sky">${data.tipoSuperficie}</span>
         <div class="row" >
             <div class="col-lg-12" id="cards">
-   
             </div>
         </div>
         `);
@@ -394,29 +387,16 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     if(existe != undefined){
                         crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
                     }
-               /* for (let o = 0; o < tiposDescuentos.length; o++) {   
-                    console.log(tiposDescuentos[o]);
-                    console.log(tiposDescuentos[o].condicion.id_condicion);
-                 
-                        
-                        
-                    }  */
+                    if(m == dataPaquetes.length -1){
+                        $('#spiner-loader').addClass('hide');
+                    }
             }
-
-
         });
 
         $("#modalView").modal();
-        $('#spiner-loader').addClass('hide');
-
     });
 
     function crearDivs(dataPaquete,tiposDescuentos,descuentosPorPlan){
-        console.log('--------------')
-        console.log(dataPaquete);
-        console.log(tiposDescuentos);
-        console.log(descuentosPorPlan);
-        console.log('--------------')
         $('#cards').append(`
             <div class="col-lg-6">
                 <div class="card">
@@ -440,8 +420,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             console.log(tiposDescuentos[m].condicion);
             if(existe != undefined){
                 let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
-                console.log('descuentosByPlan');
-console.log(descuentosByPlan);
                 for (let o = 0; o < descuentosByPlan.length; o++) {
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
@@ -451,17 +429,7 @@ console.log(descuentosByPlan);
                     }
                     
                 }
-
-
-                //llenar(dataPaquete.id_paquete,tiposDescuentos[m].condicion.id_condicion,existe)
-                console.log('---SI HAY-----')
-                console.log(existe);
-                console.log('---SI HAY-----')
-                  
-
-             }
-
-                   
+             }          
         }
     }
 

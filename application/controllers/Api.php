@@ -35,9 +35,9 @@ class Api extends CI_Controller
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        "data" => array("username" => "caja",),
+                        "data" => array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@"),
                     );
-                    $token = JWT::encode($data, '977929_5117+8773_');
+                    $token = JWT::encode($data, 'erhPE3r934oj4$f3#_');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -426,6 +426,8 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['nombrePropiedad'] = $dbTransaction[$i]['nombrePropiedad'];
                             $data2[$i]['propiedad']['tamanio_terreno'] = $dbTransaction[$i]['tamanio_terreno'];
                             $data2[$i]['propiedad']['costo'] = $dbTransaction[$i]['costo'];
+                            $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
+                            $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fechaEstatus9'];
                             $data2[$i]['pagos']['forma_pago'] = $dbTransaction[$i]['forma_pago'];
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
