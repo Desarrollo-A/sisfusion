@@ -106,16 +106,18 @@
     
 	public function getdp_DS($lotes) {
         return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
-		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
-		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
-		lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-		'ds_old' tipo_doc, lo.status8Flag
-		FROM cliente_consulta cl
-		INNER JOIN lotes_consulta lo ON lo.idLote = cl.idLote
-		INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
-		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-		WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")->result_array();
+            'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
+            cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
+            lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
+            'ds_old' tipo_doc, l.status8Flag
+            FROM cliente_consulta cl
+            INNER JOIN lotes_consulta lo ON lo.idLote = cl.idLote
+            INNER JOIN lotes l ON lo.idLote = l.idLote    
+            INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")
+            ->result_array();
     }
 
 	public function registroCliente()
