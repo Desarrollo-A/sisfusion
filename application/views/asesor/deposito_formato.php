@@ -1127,7 +1127,7 @@
 <!-- Modal general -->
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
-    // Variables
+// Variables
 const cliente = "<?=$cliente[0]->id_cliente?>";
 const onlyView = <?=$onlyView?>;
 
@@ -1137,8 +1137,7 @@ $(document).ready(function() {
     element.dispatchEvent(e);
 });
 
-function validaTipoVivienda()
-{
+function validaTipoVivienda(){
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
     }
@@ -1184,9 +1183,7 @@ function resizeInput() {
     $(this).attr('size', $(this).val().length);
 }
 
-$('input[name="letraCantidad"]')
-    .keyup(resizeInput)
-    .each(resizeInput);
+$('input[name="letraCantidad"]').keyup(resizeInput).each(resizeInput);
 
 function estaEnRango(valor, minimo = 1, maximo = 31) {
     return valor >= minimo && valor <= maximo;
@@ -1256,7 +1253,6 @@ function checkResidencia(){
 }
 
 function historial() {
-    console.log("lo que sea");
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
         const info = JSON.parse(data);
         if (info.length === 0) {
@@ -1302,16 +1298,6 @@ function guardarInputs() {
     }
   }
 }
-
-// function validarLetras(event) {
-// const input = event.target;
-// const regex = /[^a-zA-Z]/g;
-// input.value = input.value.replace(regex, '');
-// }
-
-// function mayus(e) {
-// e.value = e.value.toUpperCase();
-// }
 
 $( ".letrasCaracteres" ).on( "focusout", function(){
     const input = event.target;
@@ -1532,7 +1518,6 @@ function historialCampoHtml(data) {
 
     window.onscroll = () => {
         const nav = document.querySelector('#sectionBtns');
-        console.log(nav);
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
     };
 }
