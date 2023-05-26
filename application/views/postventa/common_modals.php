@@ -887,6 +887,25 @@
 </div>
 
 
+<div class="modal fade" id="modalInfoClient" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Información del cliente</b></h4>
+            </div>
+                <div class="modal-body" id="modalContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog boxContent">
         <div class="modal-content card">

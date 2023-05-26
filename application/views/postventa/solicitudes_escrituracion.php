@@ -247,6 +247,7 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/postventa/solicitudes_escrituracion.js"></script>
 

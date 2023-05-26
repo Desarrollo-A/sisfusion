@@ -1060,7 +1060,7 @@ function fillTable(beginDate, endDate, estatus) {
             },
             {
                 data: function (d) {
-                    return d.valor_contrato;
+                    return  '$'+formatMoney(d.valor_contrato);
                 }
             },
             {
@@ -1258,7 +1258,11 @@ function fillTable(beginDate, endDate, estatus) {
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         group_buttons += `<button id="newNotary" data-idSolicitud=${d.id_solicitud} class="btn-data btn-sky" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Nueva Notaría"><i class="fas fa-user-tie"></i></button>`;
                                         group_buttons += `<button id="pausarSolicitud" data-idSolicitud=${d.id_solicitud} class="btn-data btn-orangeYellow" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Pausar solicitud"><i class="fas fa-pause"></i></button>`;
-                                        bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1) ? 1 : (d.id_notaria != 0 && d.documentosCargados == 1 && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) ? 1 : 0) ;                                        
+                                        bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1 && d.formasPago == 1) 
+                                        ? 1 
+                                        : (d.id_notaria != 0 && d.documentosCargados == 1 && d.formasPago == 1  && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) 
+                                        ? 1 
+                                        : 0) ;                                        
                                         bandera_reject = 1;
                                     }
                             break;
@@ -1484,7 +1488,7 @@ function fillTableCarga(beginDate, endDate, estatus) {
         {
             "width": "2.5%",
             data: function (d) {
-                return d.valor_contrato;
+                return  '$'+formatMoney(d.valor_contrato);
             }
         },
         {
@@ -1624,7 +1628,7 @@ function tablaSolicitudesPausadas() {
         {
             "width": "2.5%",
             data: function (d) {
-                return d.valor_contrato;
+                return  '$'+formatMoney(d.valor_contrato);
             }
         },
         {
@@ -2140,12 +2144,24 @@ function buildTableDetail(data, permisos,proceso = 0) {
         // PERMISO DE ESCRITURA TIENE PERMISOS (ESCRITURA) DOCUMENTOS: CONTRATO, PRESUPUESTOS, FORMAS DE PAGO, SOLO SE VALIDAN LOS PRESUPUESTOS LOS OTROS SOLO LECTURA
         if (permisos == 1 && (v.ev == null || v.ev == 2) && ( v.estatus_solicitud == 19 || v.estatus_solicitud == 22 || v.estatus_solicitud ==  24) && (v.tipo_documento == 7 || v.tipo_documento == 12 || v.tipo_documento == 18)){
             solicitudes += ``;
-            if(v.tipo_documento == 12){
+            if(v.tipo_documento == 12 || v.tipo_documento == 7){
                 //(ESCRITURA) VALIDAR PRESUPUESTOS CARGADOS, SOLO SE PUEDE VALIDAR UNO
-                if(v.estatusPresupuesto == null || v.estatusPresupuesto == 0){
-                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up" style="color: aliceblue"></i></button>`;
+                if(v.tipo_documento == 12){
+                    if(v.estatusPresupuesto == null || v.estatusPresupuesto == 0){
+                        solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="3" class="btn-data btn-deepGray approve" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up" style="color: aliceblue"></i></button>`;
+                    }else{
+                        solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="4" class="btn-data btn-green approve" data-toggle="tooltip" data-placement="left" title="Documento NOK" disabled><i class="fas fa-thumbs-up"></i></button>`;
+                    }
                 }else{
-                    solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-estatus-solicitud="${v.estatus_solicitud}" data-details ="1" data-action="4" class="btn-data btn-green approve" data-toggle="tooltip" data-placement="left" title="Documento NOK" disabled><i class="fas fa-thumbs-up"></i></button>`;
+                                    //EV: ESTATUS VALIDACIÓN DE CADA DOCUMENTO
+                        if (v.ev == 1) // 1 VALIDADO, SE MUESTRA BOTON PARA NOK
+                            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-warning upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento NOK"><i class="fas fa-thumbs-down"></i></button>`;
+                        else if (v.ev == 2) //2 DOCUMENTO RECHAZADO, SE MUESTRA BOTON PARA VALIDAR
+                            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-green upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Documento OK"><i class="fas fa-thumbs-up"></i></button>`;
+                        else if (v.expediente != null) { //EXPEDIENTE SIN MOVIMIENTOS, SE MUESTRA BOTON PARA VALIDAR OK Y RECHACHAZAR
+                            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="3" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar OK"><i class="fas fa-thumbs-up"></i></button>`;
+                            solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action="4" class="btn-data btn-gray upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title="Sin validar NOK"><i class="fas fa-thumbs-down"></i></button>`;
+                    }
                 }
             }
         }
@@ -2168,7 +2184,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documento-validar="${v.documento_a_validar}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }//ACTIVIDAD APE0012 VISTA PARA VALIDAR LOS ARCHIVOS CARGADOS EXCEPTO: PRESUPUESTO, OTROS, CONTRATO, FORMAS DE PAGO
         else if (permisos == 2 && (v.estatus_solicitud == 20 || v.estatus_solicitud == 25 || v.estatus_solicitud == 27 || v.estatus_solicitud == 31)) {
-            if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18){
+            if(v.tipo_documento == 12 || v.tipo_documento == 7 || v.tipo_documento == 17 || v.tipo_documento == 18 || v.tipo_documento == 11){
                 solicitudes += ``;
             }else{
                 //EV: ESTATUS VALIDACIÓN DE CADA DOCUMENTO
@@ -2333,6 +2349,30 @@ $(document).on("submit", "#newNotario", function (e) {
             escrituracionTable.ajax.reload(null,false);
         }
     });
+});
+
+
+$(document).on('click','#viewInfoClient',function(){
+    var dataTable = escrituracionTable.row($(this).parents('tr')).data();
+        $('#spiner-loader').removeClass('hide');
+        document.getElementById('modalContent').innerHTML = '';
+                $.post('getInfoCliente',{id_cliente:dataTable.id_cliente}, function(data) {
+                    $('#modalContent').append(`
+                        <div class="row aligned-row">
+                             <div class="col-lg-1 p-0 text-right d-flex align-center justify-center">
+                                <i class="fas fa-info fa-lg"></i>
+                            </div>
+                            <div class="col-lg-11 ">
+                                    <h6>Id cliente: <b>${data[0].id_cliente}</b></h6>
+                                    <h6>Nombre cliente: <b>${data[0].nombreCliente}</b></h6>
+                            </div>
+                        </div>
+                    `);
+                    
+                    
+                    $('#spiner-loader').addClass('hide');
+                }, 'json');
+        $('#modalInfoClient').modal('show');
 });
 //MOSTRAR INFORMACION DE LA NOTARIA
 $(document).on('click', '#notaria', function () {
@@ -3092,6 +3132,18 @@ $(document).on('click', '#bajarConMotivo', function () {
         break;
         case '22':
             folder = "FORMAS_PAGO_FECHA";
+        break;
+        case '23':
+            folder = "CHECK_LIST";
+        break; 
+        case '24':
+            folder = "BENEFICIARIO_CONTROLADOR";
+        break; 
+        case '25':
+            folder = "CARATULAS_BANCARIAS";
+        break;  
+        case '26':
+            folder = "ESTADOS_DE_CUENTA";
         break;
         default:
             break;
