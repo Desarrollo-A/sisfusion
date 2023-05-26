@@ -7,6 +7,8 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
         if ($('#Jtabla').DataTable().column(i).search() !== this.value)
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
     });
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
 
 $(document).ready(function () {
@@ -23,19 +25,19 @@ $(document).ready(function () {
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
     $('#Jtabla').DataTable({
-        ajax: {
-            url: `${general_base_url}registroLote/getLotesContratados`,
+         ajax: {
+             url: `${general_base_url}/registroLote/getLotesContratados`,
             dataSrc: ""
-        },
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        scrollX: true,
+         },
+         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+         width: "100%",
+         scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Lotes contratados al: ' + dateTime,
-            title: 'Lotes contratados al: ' + dateTime,
+            titleAttr: 'Lotes contratados al ' + dateTime,
+            title: 'Lotes contratados al ' + dateTime,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
