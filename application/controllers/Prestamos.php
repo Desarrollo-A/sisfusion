@@ -32,28 +32,30 @@ class Prestamos extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-  public function panel_prestamos()
-  {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    $this->load->view('template/header');
-    $this->load->view("ventas/panel_prestamos", $datos);
+  public function prestamos() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("prestamos/prestamos-view", $datos);
   }
-  public function prestamos()
-  {
 
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    $this->load->view('template/header');
-    $this->load->view("ventas/prestamos", $datos);
+  public function historial() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("prestamos/historial-view", $datos);
+  }
+
+  public function getRetiros($user,$opc)
+  {
+    $data["data"] = $this->Resguardos_model->getRetiros($user,$opc)->result_array();
+    echo json_encode($data);
+  }
+
+  public function getListaRetiros($id)
+  {
+      echo json_encode($this->Resguardos_model->getListaRetiros($id)->result_array());
   }
 }

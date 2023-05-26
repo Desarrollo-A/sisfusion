@@ -13294,6 +13294,9 @@ tr td:hover { background: #666; color: #FFF; }
 	}
 
 	public function getLotesContratados() {
+		ini_set('max_execution_time', 0);
+    	set_time_limit(0);
+		ini_set('memory_limit','2048M');
 		$datos = $this->registrolote_modelo->lotesContratados();
 		if($datos != null)
 			echo json_encode($datos);

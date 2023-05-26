@@ -411,14 +411,14 @@ $(document).ready(function () {
                                             
                                             $.getJSON( url + "Comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
                                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
-                                                 console.log('gree:'+data.length);
+                                                //  console.log('gree:'+data.length);
  
                                                 $.each( data, function( i, v){
                                                     saldo =0;
                                                     saldo =  ((10 *(v.porcentaje_decimal / 100)) * total);
     
                                                     if(v.abono_pagado>0){
-                                                        console.log("OPCION 1");
+                                                        // OPCION 1
                                                         evaluar = (v.comision_total-v.abono_pagado);
                                                         if(evaluar<1){
                                                             pending = 0;
@@ -429,8 +429,7 @@ $(document).ready(function () {
                                                         }
     
                                                         resta_1 = saldo-v.abono_pagado;
-                                                        console.log('resta_1'+resta_1);
-    
+     
                                                         if(resta_1<1){
                                                             saldo = 0;
                                                         }
@@ -444,7 +443,7 @@ $(document).ready(function () {
                                                         }
                                                     }  
                                                     else if(v.abono_pagado<=0){
-                                                        console.log("OPCION 2");
+                                                        //OPCION 2 
                                                         pending = (v.comision_total);
                                                         if(saldo > pending){
                                                             saldo = pending;
@@ -500,8 +499,7 @@ $(document).ready(function () {
                             }
                         }
                         else{
-                            console.log("QUERY SIN RESULTADOS");
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                         }
                     }); //FIN getStatusNeodata
                     
@@ -765,7 +763,7 @@ function Editar(i,precio,id_usuario,lengt){
       /*console.log(i);
       console.log(precioLote);
       console.log(Neodata);*/
-      console.log(len);
+    //   console.log(len);
       let comision_actual = parseFloat(replaceAll($('#abono_nuevo_'+i).val(), ',',''));
       let pagado = parseFloat(replaceAll($('#pagado_'+i).val(), ',',''));
       let total_comision = parseFloat(replaceAll($('#comision_total_'+i).val(), ',',''));
@@ -774,9 +772,9 @@ function Editar(i,precio,id_usuario,lengt){
       let disponible = 0;
 
       for (let m = 0; m < len; m++) {
-          console.log($('#comision_total_'+m).val());
-          console.log($('#pagado_'+m).val());
-          console.log($('#abono_nuevo_'+m).val());
+        //   console.log($('#comision_total_'+m).val());
+        //   console.log($('#pagado_'+m).val());
+        //   console.log($('#abono_nuevo_'+m).val());
           comision_total =  comision_total + parseFloat(replaceAll($('#comision_total_'+m).val(), ',',''));
        abonado = abonado + parseFloat(replaceAll($('#pagado_'+m).val(), ',',''));
        disponible = disponible + parseFloat(replaceAll($('#abono_nuevo_'+m).val(), ',',''));
