@@ -17,7 +17,6 @@
                     <i class="material-icons">clear</i>
                 </button>
                 <h4 class="modal-title card-title"><b id="labelmodal">Pausar solicitud</b></h4>
-
             </div>
             
             <form id="formPausar" name="formPausar" method="post">
@@ -33,13 +32,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="botonPausar" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="submit" id="botonPausar" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <!--------> 
+
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -50,42 +50,7 @@
                 <h4 class="modal-title card-title"><b>Avance de estatus</b></h4>
                 <p id="actividad_siguiente"></p>
 
-            </div>
-
-        
-
-
-
-
- 
-       <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="container mt-5 mb-5">
-                        <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                <p id="titulo_comentarios"></p>
-                                <div class="tab-content">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                    <div class="card-content card card-plain">
-                                                    <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-            
+            </div>            
             <form id="approveForm" name="approveForm" method="post">
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" max="255" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
@@ -96,9 +61,37 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="ApproveF" class="btn btn-success btn-simple">Aceptar</button>
+                    <button type="submit" id="ApproveF" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container mt-5 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3">
+                            <p id="titulo_comentarios"></p>
+                            <div class="tab-content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card-content card card-plain">
+                                            <ul class="timeline timeline-simple overflow-auto scroll-styles" id="comments-list-asimilados" style="height: 500px;;"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"    onclick="cleanCommentsAsimilados()">Cerrar</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -361,7 +354,7 @@
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label estiloEsc label-gral">Aportaciones</label>
+                                    <label class="control-label label-gral">Aportaciones</label>
                                     <input id="aportaciones" name="aportaciones" required class="form-control input-gral" type="text">
                                 </div>
                             </div>
@@ -885,39 +878,6 @@
         </div>
     </div>
 </div>
-
-
-<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog boxContent">
-        <div class="modal-content card">
-            <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
-                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
-                <div class="modal-body text-center toolbar m-0 p-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                         required>
-                                    </select>
-                                </div>ASAS
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 d-flex justify-end p-0">
-                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="requestEstatusLote" class="btn btn-primary mt-2">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->
-
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -931,101 +891,85 @@
             </div>
 
             <form class="card-content" id="formInformacion" name="formInformacion" method="POST">
-            <input type="hidden" name="idSolicitud" id="idSolicitud">
-            
-            <div class="modal-body">
-
-                     <div class="container-fluid">
+                <input type="hidden" name="idSolicitud" id="idSolicitud">
+                <div class="modal-body pt-0">
+                    <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Lote liquidado?</label>
-                                    <input id="liquidado" name="liquidado" class="form-control input-gral" type="text" disabled>
+                                    <label class="control-label label-gral">¿Lote liquidado? (<small style="color: red;">*</small>)</label>
+                                    <input id="liquidado" name="liquidado" class="form-control input-gral" type="text">
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral"><b style="color:red;">*</b> Estatus construcción</label>
+                                    <label class="control-label label-gral">Estatus construcción (<small style="color: red;">*</small>)</label>
                                     <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral"><b style="color:red;">*</b> ¿Tenemos cliente anterior?</label>
-                                    <select class="selectpicker" data-style="btn btn-primary btn-round"
-                                            title="¿Tenemos cliente anterior?" data-size="7" id="clienteI" name="clienteI"
-                                            data-live-search="true" >
-                                            <option value ="default" selected >Seleccione una opción</option>
-                                            <option value="uno">Sí</option>
-                                            <option value="dos">No</option>
+                                    <label class="control-label label-gral">¿Tenemos cliente anterior? (<small style="color: red;">*</small>)</label>
+                                    <select class="selectpicker select-gral" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="clienteI" name="clienteI" data-live-search="true">
+                                        <option value="uno">Sí</option>
+                                        <option value="dos">No</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- estos input solo se muestran si es si el select anterior -->
-                            <div id="ifInformacion" style="display:none">
+                            <div id="ifInformacion">
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group estiloEsc is-focused">
-                                        <label class="control-label label-gral">Nombre del titular anterior</label>
+                                    <div class="form-group m-0 m-0">
+                                        <label class="control-label label-gral">Tipo contrato anterior (<small style="color: red;">*</small>)</label>
+                                        <select class="selectpicker select-gral" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="tipoContratoAnt" name="tipoContratoAnt">
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 pr-0">
+                                    <div class="form-group m-0 m-0">
+                                        <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
                                         <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group label-floating is-focused">
-                                        <label class="control-label estiloEsc label-gral btn-round">Fecha del contrato anterior</label>
-                                        <input type="text" class="form-control datepicker" id="fechaCAI" name="fechaCAI" >
+                                    <div class="form-group m-0">
+                                        <label class="control-label label-gral btn-round">Fecha del contrato anterior (<small style="color: red;">*</small>)</label>
+                                        <input type="text" class="form-control input-gral datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group estiloEsc is-focused">
-                                        <label class="control-label label-gral">RFC / Datos personales</label>
-                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
+                                    <div class="form-group m-0">
+                                        <label class="control-label label-gral">RFC / Datos personales (<small style="color: red;">*</small>)</label>
+                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" onKeyPress="if(this.value.length==13) return false;" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
-                            <div >
+                            <div>
                                 <div class="col-md-6 pr-0">
-                                    <div class="form-group estiloEsc is-focused">
-                                        <label class="control-label label-gral"><b style="color:red;">*</b> Aportaciones</label>
+                                    <div class="form-group m-0 is-focused">
+                                        <label class="control-label label-gral">Aportaciones (<small style="color: red;">*</small>)</label>
                                         <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
-                                      <div class="form-group estiloEsc is-focused">
-                                        <label class="control-label label-gral"><b style="color:red;">*</b> Descuentos</label>
+                                      <div class="form-group m-0 is-focused">
+                                        <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
                                         <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">
-                                    <div class="form-group estiloEsc is-focused">
-                                        <label class="control-label label-gral"><b style="color:red;">*</b> Motivo</label>
-                                        <textarea id="motivoI" name="motivo" class="form-control input-gral" required></textarea>
-                                        <!--<input id="motivo" name="motivo" class="form-control input-gral" type="text">-->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 pr-0">
-                                <div class="form-group text-left m-0" id="information_campos">
-                                    <p><b style="color:red;">*</b> Estos campos son obligatorios</p>
+                                    <label class="control-label label-gral">Motivo (<small style="color: red;">*</small>)</label>
+                                    <textarea id="motivoI" name="motivo" class="text-modal" required></textarea>
                                 </div>
                             </div>
                         </div>
-                     </div>
-            </div>
+                    </div>
+                </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="RequestInformacion" class="btn btn-success btn-simple">Aceptar</button>
-                        </div>
-
-
-                        <!-- <div class="row">
-                            <div class="col-md-12 d-flex justify-end p-0">
-                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="RequestInformacion" class="btn btn-primary mt-2">Guardar</button>
-                            </div>                
-                        </div> -->
-                   
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="RequestInformacion" class="btn btn-primary">Aceptar</button>
+                </div>
             </form>
         </div>
     </div>

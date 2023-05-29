@@ -19,13 +19,13 @@ class VentasAsistentes_model extends CI_Model {
     //Función para traer proyecto por usuario
     function get_proyecto_lista_usu(){
         return $this->db->query('SELECT r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80)) descripcion 
-                                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
-                                    INNER JOIN lotes l ON l.idCliente = cli.id_cliente
-                                    INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
-                                    INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
-                                WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1
-                                GROUP BY r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80))
-                                ORDER BY CAST(r.descripcion AS varchar(80))');
+                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
+                INNER JOIN lotes l ON l.idCliente = cli.id_cliente
+                INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
+                INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
+                WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1
+                GROUP BY r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80))
+                ORDER BY CAST(r.descripcion AS varchar(80))');
     }
 
     //Función para traer condominio por usuario

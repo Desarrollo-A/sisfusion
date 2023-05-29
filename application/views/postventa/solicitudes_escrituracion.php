@@ -35,7 +35,6 @@
                             <li class="active">
                                 <a href="#solicitudes" onclick="borrarClase()" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
                             </li>
-
                             <li>
                                 <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
                             </li>
