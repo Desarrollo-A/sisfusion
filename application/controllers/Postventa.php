@@ -1732,7 +1732,7 @@ class Postventa extends CI_Controller
             "descuento" => str_replace($replace,"",$data['descuentos']),
             "motivo" => $data['motivo']
         );
-        ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",strtotime($data['fechaCAI']));
+        ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",$data['fechaCAI']);
 
         //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
