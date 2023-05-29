@@ -59,10 +59,10 @@ $(document).ready(function () {
             defaultContent: "Sin especificar",
             targets: "_all",
             searchable: true,
-            orderable: true
+            orderable: false
         }],
         destroy: true,
-        ordering: true,
+        ordering: false,
         columns: [
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },

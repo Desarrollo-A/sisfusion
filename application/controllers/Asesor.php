@@ -3492,7 +3492,6 @@ class Asesor extends CI_Controller
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
-
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ){
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
