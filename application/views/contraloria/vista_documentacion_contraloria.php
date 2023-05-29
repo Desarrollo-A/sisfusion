@@ -366,7 +366,6 @@ c                                    </span>
 
 			var valorSeleccionado = $(this).val();
 
-			// console.log(valorSeleccionado);
 			//build select condominios
 			$("#filtro4").empty().selectpicker('refresh');
 			$.ajax({

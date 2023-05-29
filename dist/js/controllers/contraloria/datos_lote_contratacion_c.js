@@ -46,8 +46,7 @@ $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
     $(this).html(`<input type="text"
-                         class="textoshead"
-                         style="width:100%;"
+                         class="textoshead w-100"
                          data-toggle="tooltip" 
                          data-placement="top"
                          title="${title}"
@@ -66,12 +65,17 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
     ix_condominio = ($("#condominio").val() == '') ? null : $("#condominio").val();
     ix_estatus = ($("#estatus").val() == '') ? null : $("#estatus").val();
     tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         destroy: true,
         "ajax":
         {
             "url": `${general_base_url}index.php/Contratacion/get_inventario/` + ix_estatus + `/` + ix_condominio + `/` + ix_proyecto,
             "dataSrc": ""
+        },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         },
         buttons: [
             {
@@ -114,7 +118,6 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        processing: true,
         pageLength: 10,
         bAutoWidth: false,
         bLengthChange: false,
@@ -122,7 +125,7 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
         bInfo: true,
         searching: true,
         paging: true,
-        ordering: true,
+        ordering: false,
         fixedColumns: true,
         columnDefs: [{
             defaultContent: "",
@@ -132,21 +135,17 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
         }],
         columns:
             [{
-                // "width": "10%",
                 data: 'nombreResidencial'
             },
             {
-                // "width": "10%",
                 "data": function (d) {
                     return '<p>' + (d.nombreCondominio).toUpperCase() + '</p>';
                 }
             },
             {
-                // "width": "14%",
                 data: 'nombreLote'
             },
             {
-                // "width": "10%",
                 "data": function (d) {
                     return '<p>' + d.superficie + '</p>';
                 }
@@ -414,16 +413,26 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
             },
             {
                 "data": function (d) {
-                    return '<center><button class="btn-data btn-green ver_historial" value="' + d.idLote + '" data-nomLote="' + d.nombreLote + '" data-tipo-venta="' + d.tipo_venta + '" title="Ver detalles generales"><i class="fas fa-history"></i></button></center>';
+                    $('[data-toggle="tooltip"]').tooltip({
+                        trigger: "hover"
+                    });
+                    return '<center><button class="btn-data btn-green ver_historial" value="' + d.idLote + '" data-nomLote="' + d.nombreLote + '"  data-tipo-venta="' + d.tipo_venta + '" data-toggle="tooltip" data-placement="top" title="Ver detalles generales"><i class="fas fa-history"></i></button></center>';
                 }
-            }]
+            }]      
     });
-
 
     $(window).resize(function () {
         tabla_inventario.columns.adjust();
     });
+    
 });
+
+$('#tabla_inventario_contraloria').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    })
+});
+
 $(document).on("click", ".ver_historial", function () {
     var tr = $(this).closest('tr');
     var row = tabla_inventario.row(tr);
@@ -468,7 +477,6 @@ $(document).on("click", ".ver_historial", function () {
         urlTableCSA = `${general_base_url}Contratacion/getCoSallingAdvisers/` + idLote;
         fillCoSellingAdvisers(urlTableCSA);
     });
-
 });
 
 function fillLiberacion(v) {
@@ -509,20 +517,57 @@ function fillProceso(i, v) {
     // comentario, perfil, modificado,
 }
 
+let titulos_encabezadoh = [];
+let num_colum_encabezadoh = [];
+$('#verDet thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_encabezadoh.push(title);
+    num_colum_encabezadoh .push(i);
+    $(this).html(`<input type="text"
+                         class="textoshead w-100"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}"
+                         placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#verDet').DataTable().column(i).search() !== this.value) {
+            $('#verDet').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
 function fillHistory(urlTableHist) {
     tableHistorial = $('#verDet').DataTable({
-        responsive: true,
-        dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6'f>rt> <'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width:"100%",
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o"></i>',
-                titleAttr: 'Excel'
+                className: 'btn buttons-excel',
+                titleAttr: 'Excel',
+                exportOptions: {
+                    columns: num_colum_encabezadoh,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadoh[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf-o"></i>',
-                titleAttr: 'PDF'
+                className: 'btn buttons-pdf',
+                titleAttr: 'PDF',
+                exportOptions: {
+                    columns: num_colum_encabezadoh,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadoh[columnIdx] +' ';
+                        }
+                    }
+                }
             }
         ],
         columnDefs: [{
@@ -551,36 +596,72 @@ function fillHistory(urlTableHist) {
             { "data": "usuario" }
 
         ],
-        /*"ajax": {
-            "url": urlTableHist,//"<?=base_url()?>index.php/registroLote/historialProcesoLoteOp/"
-            "type": "POST",
-            cache: false,
-            "data": function( d ){
-                d.idLote = idlote_global;
-            }
-        },*/
         "ajax":
         {
             "url": urlTableHist,
             "dataSrc": ""
         },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        }
     });
 }
+
+let titulos_encabezadob = [];
+let num_colum_encabezadob = [];
+$('#verDetBloqueo thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_encabezadob.push(title);
+    num_colum_encabezadob .push(i);
+    $(this).html(`<input type="text"
+                         class="textoshead w-100"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}"
+                         placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#verDet').DataTable().column(i).search() !== this.value) {
+            $('#verDet').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
 function fillFreedom(urlTableFred) {
     tableHistorialBloqueo = $('#verDetBloqueo').DataTable({
         responsive: true,
 
-        dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6'f>rt> <'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width:"100%",
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o"></i>',
-                titleAttr: 'Excel'
+                titleAttr: 'Excel',
+                className: 'btn buttons-excel',
+                exportOptions: {
+                    columns: num_colum_encabezadob,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadob[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf-o"></i>',
-                titleAttr: 'PDF'
+                titleAttr: 'PDF',
+                className: 'btn buttons-pdf',
+                exportOptions: {
+                    columns: num_colum_encabezadob,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadob[columnIdx] +' ';
+                        }
+                    }
+                }
             }
         ],
         columnDefs: [{
@@ -616,20 +697,58 @@ function fillFreedom(urlTableFred) {
     });
 }
 
+let titulos_encabezadoc = [];
+let num_colum_encabezadoc = [];
+$('#seeCoSellingAdvisers thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_encabezadoc.push(title);
+    num_colum_encabezadoc .push(i);
+    $(this).html(`<input type="text"
+                         class="textoshead w-100"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}"
+                         placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#verDet').DataTable().column(i).search() !== this.value) {
+            $('#verDet').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
 function fillCoSellingAdvisers(urlTableCSA) {
     tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable({
         responsive: true,
-        dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6'f>rt> <'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width:"100%",
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o"></i>',
-                titleAttr: 'Excel'
+                titleAttr: 'Excel',
+                className: 'btn buttons-excel',
+                exportOptions: {
+                    columns: num_colum_encabezadoc,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadoc[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf-o"></i>',
-                titleAttr: 'PDF'
+                titleAttr: 'PDF',
+                className: 'btn buttons-pdf',
+                exportOptions: {
+                    columns: num_colum_encabezadoc,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezadoc[columnIdx] +' ';
+                        }
+                    }
+                }
             }
         ],
         columnDefs: [{

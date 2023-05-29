@@ -19,31 +19,29 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table id="Jtabla" class="table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>SEDE</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>GERENTE</th>
-                                                        <th>ASESOR(ES)</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PROCESO CONTRATACIÓN</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA CONTRATADO</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>PRECIO F.</th>
-                                                        <th>REUBICACIÓN</th>
-                                                        <th>FECHA REUBICACIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <table id="Jtabla" class="table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>SEDE</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>GERENTE</th>
+                                                    <th>ASESOR(ES)</th>
+                                                    <th>USUARIO</th>
+                                                    <th>PROCESO CONTRATACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>FECHA CONTRATADO</th>
+                                                    <th>FECHA APARTADO</th>
+                                                    <th>PRECIO F.</th>
+                                                    <th>REUBICACIÓN</th>
+                                                    <th>FECHA REUBICACIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

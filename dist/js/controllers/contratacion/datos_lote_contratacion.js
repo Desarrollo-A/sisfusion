@@ -31,7 +31,12 @@ let titulosInventario = [];
 $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text"
+                         class="textoshead"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}"
+                         placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
             $('#tablaInventario').DataTable().column(i).search(this.value).draw();
@@ -54,6 +59,11 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
             dataSrc: ""
         },
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: "hover"
+                });
+            },
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -249,6 +259,10 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
     });
 });
 
+$('#tablaInventario').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 $(document).on("click", ".ver_historial", function () {
     let $itself = $(this);
     let element = document.getElementById("divTabClausulas");
@@ -280,7 +294,7 @@ let titulostablaHistorialContratacion = [];
 $('#tablaHistorialContratacion thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulostablaHistorialContratacion.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaHistorialContratacion').DataTable().column(i).search() !== this.value) {
             $('#tablaHistorialContratacion').DataTable().column(i).search(this.value).draw();
@@ -332,6 +346,9 @@ function consultarHistoriaContratacion(idLote) {
             url: `${general_base_url}Contratacion/historialProcesoLoteOp/${idLote}`,
             dataSrc: ""
         },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 }
 
@@ -339,7 +356,7 @@ let titulosTablaHistoriaLiberacion = [];
 $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosTablaHistoriaLiberacion.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaHistoriaLiberacion').DataTable().column(i).search() !== this.value) {
             $('#tablaHistoriaLiberacion').DataTable().column(i).search(this.value).draw();
@@ -397,7 +414,7 @@ let titulosTablaVentasCompartidas = [];
 $('#tablaVentasCompartidas thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosTablaVentasCompartidas.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaVentasCompartidas').DataTable().column(i).search() !== this.value) {
             $('#tablaVentasCompartidas').DataTable().column(i).search(this.value).draw();
