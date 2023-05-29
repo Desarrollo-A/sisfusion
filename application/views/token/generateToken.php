@@ -42,66 +42,7 @@
 <body class="">
 <div class="wrapper">
 
-    <?php $this->load->view('template/sidebar', ""); ?>
-
-    <div class="modal fade in" id="reviewTokenEvidence" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-        <div class="modal-dialog" style="max-width: inherit;">
-            <div class="modal-content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div id="img_actual">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" tabindex="-1" role="dialog" id="generateTokenModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content boxContent">
-                <div class="modal-body card no-shadow">
-                    <div class="card-content">
-                        <div class="toolbar">
-                            <h3 class="card-title center-align">Selecciona un asesor</h3>
-                            <div class="row aligned-row">
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-                                    <div class="form-group label-floating select-is-empty m-0 p-0">
-                                        <select id="asesoresList" name="asesoresList"
-                                                class="selectpicker select-gral m-0"
-                                                data-style="btn" data-show-subtext="true"
-                                                data-live-search="true"
-                                                title="Selecciona un asesor" data-size="7" required>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="form-group label-floating select-is-empty m-0 p-0">
-                                        <div class="file-gph">
-                                            <input class="d-none" type="file" id="fileElm">
-                                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                            <label class="upload-btn m-0" for="fileElm">
-                                                <span>Seleccionar</span>
-                                                <i class="fas fa-folder-open"></i>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"    onclick="cleanSelects()">Cerrar</button>
-                    <button class="btn btn-primary" onclick="generateToken()">Generar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END Modals -->
+<?php $this->load->view('template/sidebar', ""); ?>
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -121,7 +62,7 @@
                                                 <span class="subSpan w-100 d-flex">
                                                     <input class="form-control generated-token" id="generatedToken" placeholder="Aún no se ha generado ningún token" readonly/>
                                                     <button id="copyToken" onclick="copyToClipBoard()" data-toggle="popover" data-content="Se ha copiado el contenido">
-                                                        <i class="fas fa-clone"></i>
+                                                        <i class="fas fa-clone"  data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"></i>
                                                     </button>
                                                 </span>
                                             </span>
@@ -129,31 +70,29 @@
                                     </div>
                                     
                                     <div class="col col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
-                                        <button class="btn-rounded btn-s-greenLight" id="generateToken" title="Generar token">
-                                            <i class="fas fa-plus" title="Generar token"></i>
+                                        <button class="btn-rounded btn-s-greenLight" id="generateToken" data-toggle="tooltip"  data-placement="top" title="GENERAR TOKEN">
+                                            <i class="fas fa-plus" ></i>
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive box-table">
-                                <table id="evidenceTable" name="evidenceTable"
-                                       class="table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>TIPO</th>
-                                            <th>ID LOTE</th>
-                                            <th>LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA APARTADO</th>
-                                            <th>ASESOR</th>
-                                            <th>GERENTE</th>
-                                            <th>FECHA ALTA</th>
-                                            <th>ESTATUS</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                            <table id="evidenceTable" name="evidenceTable"
+                                    class="table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>TIPO</th>
+                                        <th>ID LOTE</th>
+                                        <th>LOTE</th>
+                                        <th>CLIENTE</th>
+                                        <th>FECHA DE APARTADO</th>
+                                        <th>ASESOR</th>
+                                        <th>GERENTE</th>
+                                        <th>FECHA DE ALTA</th>
+                                        <th>ESTATUS</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -179,23 +118,6 @@
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/apartado/generateToken.js"></script>
 
-<script>
-    let id_gerente = "<?=$this->session->userdata('id_usuario')?>";
-    let current_rol_user = "<?=$this->session->userdata('id_rol')?>";
-    $(document).ready(function () {
-        fillevidenceTable();
-        getAsesoresList();
-    });
 
-    $(document).ready(function () {
-        $("input:file").on("change", function () {
-            var target = $(this);
-            var relatedTarget = target.siblings(".file-name");
-            var fileName = target[0].files[0].name;
-            relatedTarget.val(fileName);
-        });
-    });
-
-</script>
 
 </body>

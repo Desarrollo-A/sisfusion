@@ -19,31 +19,27 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table id="Jtabla" class="table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>SEDE</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>GERENTE</th>
-                                                        <th>ASESOR(ES)</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PROCESO CONTRATACIÓN</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA CONTRATADO</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>PRECIO F.</th>
-                                                        <th>REUBICACIÓN</th>
-                                                        <th>FECHA REUBICACIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <table id="Jtabla" class="table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>SEDE</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>GERENTE</th>
+                                                    <th>ASESOR(ES)</th>
+                                                    <th>USUARIO</th>
+                                                    <th>PROCESO CONTRATACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>FECHA DE CONTRATADO</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>PRECIO DE FIANZA</th>
+                                                    <th>REUBICACIÓN</th>
+                                                    <th>FECHA DE REUBICACIÓN</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -53,8 +49,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div>
-    </div>
     </div>
     <!--main-panel close-->
 </body>

@@ -145,7 +145,7 @@ class Postventa_model extends CI_Model
         $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
         
-        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
+        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, CONVERT(varchar, se.fecha_creacion, 20) fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
         de2.estatusValidacion,de2.no_rechazos,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
@@ -875,7 +875,8 @@ function checkBudgetInfo($idSolicitud){
         {
             $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%' AND se.id_estatus not in(49) "; 
         }
-        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
+        
+        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
         r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
         se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area,
         cp.area_actual, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente,
@@ -1170,4 +1171,7 @@ function checkBudgetInfo($idSolicitud){
         WHERE se.id_solicitud = $idSolicitud");
     }
 
+    function getTipoContratoAnt(){
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 93");
+    }
 }
