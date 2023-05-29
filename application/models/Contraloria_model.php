@@ -1187,4 +1187,20 @@ class Contraloria_model extends CI_Model {
         ORDER BY lo.nombreLote")->result_array();
     }
 
+    function getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where) {
+        $filter = "AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        return $this->db->query("SELECT re.nombreResidencial, re.descripcion, co.nombre nombreCondominio, lo.nombreLote, lo.referencia,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreUsuario,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, ISNULL(se.nombre, 'SIN ESPECIFICAR') nombreSede, 
+        CONVERT(varchar, hd.modificado, 105) fechaCargaContratoFirmado, CASE WHEN hd.expediente IS NULL THEN 'NO SE HA CARGADO CONTRATO' ELSE 'CONTRATO CARGADO' END estatusDocumento
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 $filter
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN (SELECT * FROM historial_documento WHERE status = 1 AND tipo_doc = 30) hd ON hd.idLote = lo.idLote AND hd.idCliente = lo.idCliente
+        LEFT JOIN usuarios u0 ON u0.id_usuario = hd.idUser
+        WHERE lo.status = 1 AND lo.idStatusContratacion = 15 AND lo.idMovimiento = 45 AND lo.idStatusLote = 2")->result();
+	}
+
 }
