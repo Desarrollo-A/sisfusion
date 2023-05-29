@@ -489,9 +489,10 @@ class Usuarios_modelo extends CI_Model
     function getChangelog($id_usuario)
     {
         switch ($this->session->userdata('id_rol')) {
-            case '13': // CONTRALORÍA
+            // case '13': // CONTRALORÍA
             case '17': // SUBDIRECCIÓN CONTRALORÍA
-            case '32': // CONTRALORÍA CORPORTATICA
+            case '80': // CONTRALORÍA CORPORTATICA
+
                 $query = $this->db->query("SELECT fecha_creacion, creador, 
                 (CASE col_afect 
                 WHEN 'id_lider' THEN 'líder'

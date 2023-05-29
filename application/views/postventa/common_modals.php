@@ -940,7 +940,7 @@
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0">
                                         <label class="control-label label-gral">RFC / Datos personales (<small style="color: red;">*</small>)</label>
-                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" >
+                                        <input id="rfcDatosI" name="rfcDatosI" class="form-control input-gral" type="text" onKeyPress="if(this.value.length==13) return false;" autocomplete="off">
                                     </div>
                                 </div>
                             </div>

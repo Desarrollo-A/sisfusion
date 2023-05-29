@@ -1717,8 +1717,7 @@ class Postventa extends CI_Controller
     }
 
     //INFORMACIÓN ADMIN
-    public function newInformacion()
-    {
+    public function newInformacion() {
         $replace = ["$", ","];
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
@@ -1734,7 +1733,7 @@ class Postventa extends CI_Controller
         );
         if($data['clienteI'] == 'uno'){
             if($data['fechaCAI'] != '' || $data['fechaCAI'] != null || $data['fechaCAI'] != 'null' || $data['fechaCAI'] != 'NaN-NaN-NaN'){
-                $updateData['fecha_anterior'] = date("Y-m-d",strtotime($data['fechaCAI']));
+                $updateData['fecha_anterior'] = date("Y-m-d", strtotime(str_replace('/', '-', $data['fechaCAI'])));
             }
         }
 

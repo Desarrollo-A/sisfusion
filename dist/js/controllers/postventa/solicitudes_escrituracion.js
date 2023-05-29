@@ -3727,7 +3727,7 @@ $(document).on("submit", "#formInformacion", function (e) {
       setNewInformacion(data);
     }
     else{
-      alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de escrituración', 'danger');
+      alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de contrato anterior', 'danger');
     }
   }
   else{
