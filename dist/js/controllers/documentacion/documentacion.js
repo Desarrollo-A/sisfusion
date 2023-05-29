@@ -1,6 +1,6 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97];
+const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 41];
 const rolesPermitidosContrato = [15];
 
 const movimientosPermitidosContratoFirmado = [45];
@@ -33,6 +33,12 @@ const TipoDoc = {
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
+
+/**
+ * Bandera para inhabilitar el eliminado del contrato cuando ya hizo el movimiento asistentes de gerentes
+ * @type {number}
+ */
+const status8Flag = 1;
 
 let documentacionLoteTabla = null;
 
@@ -237,7 +243,11 @@ $('#idLote').change(function () {
                     
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) && includesArray(rolesPermitidosCartaDomicilio, id_rol_general))
+                            buttonMain = (
+                                includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
+                                includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                                parseInt(data.status8Flag) !== status8Flag
+                            )
                                 // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -250,7 +260,11 @@ $('#idLote').change(function () {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
 
                         // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) && includesArray(rolesPermitidosCartaDomicilio, id_rol_general)) {
+                        if (
+                            includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
+                            includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                            parseInt(data.status8Flag) !== status8Flag
+                        ) {
                             buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
 

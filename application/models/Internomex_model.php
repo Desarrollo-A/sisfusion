@@ -235,7 +235,7 @@ class Internomex_model extends CI_Model {
         FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') costo, 
         ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
         ISNULL(cm.fecha_comision, '') fecha_pago_comision, FORMAT(ISNULL(cm.comision_total, 0), 'C') monto_comision,
-        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), '') fechaEstatus9
+        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), '') fechaEstatus9, ISNULL(CONVERT(varchar, hl2.modificado, 103), '') fechaEstatus7
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote AND lo.status = 1 --AND lo.idLote IN (1003)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -246,6 +246,7 @@ class Internomex_model extends CI_Model {
         INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
         INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
 		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 7 AND idMovimiento = 37 AND status = 1 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente 
         WHERE cl.status = 1")->result_array(); 
     }
 

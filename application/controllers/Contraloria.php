@@ -81,7 +81,7 @@ class Contraloria extends CI_Controller {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("contraloria/vista_6_contraloria",$datos);
+        $this->load->view("contraloria/vista_6_contraloria", $datos);
     }
 
     public function getCommissionPlans(){
@@ -1814,7 +1814,7 @@ class Contraloria extends CI_Controller {
         $fechaVenc=$this->input->post('fechaVenc');
         $totalNeto2=$this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
-        $naci = $this->input->post('residencia');
+        $residencia = $this->input->post('residencia');
         $charactersNoPermit = array('$',',');
         $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
         $id_usuario = $this->session->userdata('id_usuario');

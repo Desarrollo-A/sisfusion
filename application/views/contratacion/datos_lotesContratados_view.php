@@ -34,7 +34,7 @@
                                                     <th>COMENTARIO</th>
                                                     <th>FECHA DE CONTRATADO</th>
                                                     <th>FECHA DE APARTADO</th>
-                                                    <th>PRECIO FIANZA</th>
+                                                    <th>PRECIO DE FIANZA</th>
                                                     <th>REUBICACIÓN</th>
                                                     <th>FECHA DE REUBICACIÓN</th>
                                                 </tr>
