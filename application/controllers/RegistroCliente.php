@@ -1954,27 +1954,6 @@ class RegistroCliente extends CI_Controller {
       $this->load->view('template/header');
       $this->load->view("juridico/vista_documentacion_juridico",$datos);
     }
-  
-
-    function getLotesAll_CL($condominio)
-    {
-        $data = $this->registrolote_modelo->getLotesGral_CL($condominio);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-    public function expedientesWS_CL($lotes) {
-        $data = array_merge($this->registrolote_modelo->getdp_CL($lotes));
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }
 
 
  	public function expedientesWS_DS($lotes) {
@@ -1985,16 +1964,6 @@ class RegistroCliente extends CI_Controller {
             echo json_encode(array());
         }
         exit;
-    }
-
-    function getLotesAll_DS($condominio)
-    {
-        $data = $this->registrolote_modelo->getLotesGral_DS($condominio);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
     }
 
     public function query_ds(){
@@ -4029,17 +3998,6 @@ class RegistroCliente extends CI_Controller {
 		exit;
 	}
 
-
-	public function registrosClienteDocumentoContratacion()
-	{
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-   $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-   /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-	}
-
 	public function registrosExpedienteVentasAsistentes(){
 		$datos=array();
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
@@ -4300,22 +4258,6 @@ class RegistroCliente extends CI_Controller {
 		}
 	}
 
-
-	public function registrosClienteDocumentosJuridico()
-	{
-		$this->validateSession();
-	       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		//$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-		$this->load->view("juridico/datos_cliente_documentos_juridico_view",$datos);
-	}
-
-
-
-
 	public function historialJuridico($idCliente){
 		$datos["bitacora"] = $this->registrolote_modelo->ConsultJuridico($idCliente);
 		$this->load->view('historial_juridico_view', $datos);
@@ -4345,23 +4287,12 @@ class RegistroCliente extends CI_Controller {
 		$this->registrolote_modelo->insertBitacoraRecibo($arreglo2);
 
 		if ($this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo)){
-			redirect(base_url()."index.php/registroCliente/registrosClienteDocumentosJuridico");
+			redirect(base_url()."index.php/Documentacion/documentacion");
 		}else
 		{
 			die("ERROR");
 		}
 	}
-
-
-	public function registrosClienteDocumentosAdministracion()
-	{
-		$datos=array();
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
-
-	}
-
 
 	public function registrosClienteDocumentosPostventa(){
 		$datos=array();
@@ -4746,7 +4677,6 @@ class RegistroCliente extends CI_Controller {
 
 	function getCondominios($residencial)
 	{
-        //		$data['condominios'] = $this->registrolote_modelo->getCondominio($residencial);
 		$data = $this->registrolote_modelo->getCondominio($residencial);
 		if($data != null) {
 			echo json_encode($data);
@@ -4754,17 +4684,6 @@ class RegistroCliente extends CI_Controller {
 			echo json_encode(array());
 		}
 		exit;
-	}
-
-
-	function getLotesAll($condominio,$residencial)
-	{
-		$data = $this->registrolote_modelo->getLotesGral($condominio,$residencial);
-		if($data != null) {
-			echo json_encode($data);
-		} else {
-			echo json_encode(array());
-		}
 	}
 
 	function getExpediente($lotes)
@@ -8156,9 +8075,11 @@ class RegistroCliente extends CI_Controller {
 
 
   public function expedientesWS($lotes, $cliente = '') {
-    $query = $this->registrolote_modelo->getdp($lotes,$cliente);
-    if(count($query) <= 0)
-      $query = $this->registrolote_modelo->getdp_DS($lotes);
+    $query = $this->registrolote_modelo->getdp($lotes, $cliente);
+    if (count($query) <= 0) {
+        $query = $this->registrolote_modelo->getdp_DS($lotes);
+    }
+
     $data = array_merge(
       $query,
       $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
@@ -8166,274 +8087,13 @@ class RegistroCliente extends CI_Controller {
       $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
       $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
     );
-    if($data != null)
+
+    if ($data != null) {
         echo json_encode($data);
-    else
+    } else {
         echo json_encode(array());
-  }
-
-
-	public function addFileCorrida(){
-
-		$aleatorio = rand(100,1000);
-		$idCliente=$this->input->post('idCliente');
-		$nombreResidencial=$this->input->post('nombreResidencial');
-		$nombreCondominio=$this->input->post('nombreCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idLote=$this->input->post('idLote');
-		$idCondominio=$this->input->post('idCondominio');
-		$expediente= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
-		$tipodoc=$this->input->post('tipodoc');
-		$idDocumento=$this->input->post('idDocumento');
-
-		$proyecto = str_replace(' ', '',$nombreResidencial);
-		$condominio = str_replace(' ', '',$nombreCondominio);
-		$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-		$condom = substr($condominioQuitaN, 0, 3);
-		$cond= strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-		$date= date('dmY');
-		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
-
-		$nombArchivo= $composicion;
-		$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$expediente;
-
-		$arreglo=array();
-		$arreglo["expediente"] = $expediente;
-
-		$fileExt = strtolower(substr($expediente, strrpos($expediente, '.') + 1));
-
-		if ($fileExt == 'xlsx'){
-
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/corrida/".$expediente);
-			$validaMove = $move == FALSE ? 0 : 1;
-
-			if ($validaMove == 1) {
-
-				$arreglo=array();
-				$arreglo["expediente"] = $expediente;
-
-
-				$arreglo2=array();
-				$arreglo2["expediente"]= $expediente;
-				$arreglo2["modificado"]= date('Y-m-d H:i:s');
-				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
-
-				$this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
-				$this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
-
-				$response['message'] = 'OK';
-				echo json_encode($response);
-
-			} else if ($validaMove == 0){
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			} else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
-
-		} else {
-
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-
-		}
-
-
-	}
-
-
-    public function deleteCorrida()
-    {
-      
-      $idDocumento = $this->input->post('idDocumento');
-      $data = array();
-      $data["expediente"] = NULL;
-      $data["modificado"] = date("Y-m-d H:i:s");
-      $data["idUser"] = $this->session->userdata('id_usuario');
-      $nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-      $file = "./static/documentos/cliente/corrida/" . $nombreExp->expediente;
-      if (file_exists($file)) {
-          unlink($file);
-      }
-      $delete = $this->registrolote_modelo->deleteDoc($idDocumento, $data);
-      $validaDelete = $delete == TRUE ? 1 : 0;
-      if ($validaDelete == 1) {
-          $response['message'] = 'OK';
-          echo json_encode($response);
-          $validaMail = $this->registrolote_modelo->sendMailAdmin($nombreExp->idLote);
-          if ($validaMail->idHistorialLote != NULL) {
-            $infoLote = $this->registrolote_modelo->getNameLote($nombreExp->idLote);
-            $comentario = 'SE MODIFICO CORRIDA FINANCIERA';
-            /********************************************************************************
-            * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-            ********************************************************************************/
-            // l.idLote, l.nombreLote, cond.nombre,res.nombreResidencial
-            $datos_correo[0] = json_decode(json_encode($infoLote), true);
-            $datos_correo[0] += ["observacion" => $comentario];
-            $datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
-
-            $datos_etiquetas = null;
-
-            $correos_entregar = array('programador.analista18@ciudadmaderas.com');
-            // $correos_entregar = array('coord.administrativoslp@ciudadmaderas.com',
-            //                         'coord.administrativo@ciudadmaderas.com',
-            //                         'coord.administrativo1@ciudadmaderas.com',
-            //                         'coord.administrativo2@ciudadmaderas.com',
-            //                         'coord.administrativo3@ciudadmaderas.com',
-            //                         'karen.pina@ciudadmaderas.com',
-            //                         'coord.administrativo4@ciudadmaderas.com',
-            //                         'coord.administrativo5@ciudadmaderas.com',
-            //                         'coord.administrativo7@ciudadmaderas.com',
-            //                         'asistente.admon@ciudadmaderas.com');
-
-
-            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
-                                      "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_ELIMINAR_ARCHIVO_CORRIDA);
-
-            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_ELIMINAR_ARCHIVO_CORRIDA.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_ELIMINAR_ARCHIVO_CORRIDA;
-
-            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-            $plantilla_correo = new plantilla_dinamica_correo;
-            /********************************************************************************************/
-            $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-            if($envio_correo){
-              $data['message_email'] = 'OK';
-            }else{
-              $data['message_email'] = $envio_correo;
-            }
-          }
-      }
-      else if ($validaDelete == 0) {
-          $response['message'] = 'ERROR';
-          echo json_encode($response);
-      }
-      else {
-          $response['message'] = 'ERROR';
-          echo json_encode($response);
-      }
     }
-
-	public function addFileContrato(){
-
-		$aleatorio = rand(100,1000);
-		$idCliente=$this->input->post('idCliente');
-		$nombreResidencial=$this->input->post('nombreResidencial');
-		$nombreCondominio=$this->input->post('nombreCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idLote=$this->input->post('idLote');
-		$idCondominio=$this->input->post('idCondominio');
-		$expediente_crudo= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
-		$tipodoc=$this->input->post('tipodoc');
-		$idDocumento=$this->input->post('idDocumento');
-
-
-		$proyecto = str_replace(' ', '',$nombreResidencial);
-		$condominio = str_replace(' ', '',$nombreCondominio);
-		$condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-		$condom = substr($condominioQuitaN, 0, 3);
-		$cond= strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
-		$date= date('dmY');
-		$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
-
-		$nombArchivo= $composicion;
-		$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio;
-
-		$arreglo=array();
-		$arreglo["expediente"] = $expediente;
-
-		$fileExt = strtolower(substr($expediente_crudo, strrpos($expediente_crudo, '.') + 1));
-
-		if($tipodoc == 8){
-            $contrato_tipo = 'contrato';
-        }else if($tipodoc == 30){
-            $contrato_tipo = 'contratoFirmado';
-        }
-
-
-		if ($fileExt == 'pdf'){
-
-			$move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$contrato_tipo."/".$expediente.'.'.$fileExt);
-			$validaMove = $move == FALSE ? 0 : 1;
-
-			if ($validaMove == 1) {
-
-				$arreglo=array();
-				$arreglo["expediente"] = $expediente.'.'.$fileExt;
-
-
-				$arreglo2=array();
-				$arreglo2["expediente"]= $expediente.'.'.$fileExt;
-				$arreglo2["modificado"]= date('Y-m-d H:i:s');
-				$arreglo2["idUser"]= $this->session->userdata('id_usuario');
-
-				$this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
-				$this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
-
-				$response['message'] = 'OK';
-				echo json_encode($response);
-
-			} else if ($validaMove == 0){
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			} else {
-				$response['message'] = 'ERROR';
-				echo json_encode($response);
-			}
-
-		} else {
-
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-
-		}
-	}
-
-	public function deleteContrato(){
-
-		$idDocumento=$this->input->post('idDocumento');
-		$tipo_documento = $this->input->post('tipo_doc');
-
-		$data=array();
-		$data["expediente"]= NULL;
-		$data["modificado"]=date("Y-m-d H:i:s");
-		$data["idUser"]=$this->session->userdata('id_usuario');
-
-		$carpeta = '';
-		if($tipo_documento == 8){
-            $carpeta = 'contrato';
-        }elseif($tipo_documento == 30){
-            $carpeta = 'contratoFirmado';
-        }else{
-            $carpeta = '';
-        }
-
-		$nombreExp = $this->registrolote_modelo->getNomExp($idDocumento);
-		$file = "./static/documentos/cliente/".$carpeta."/".$nombreExp->expediente;
-
-		if(file_exists($file)){
-			unlink($file);
-		}
-
-		$delete=$this->registrolote_modelo->deleteDoc($idDocumento, $data);
-		$validaDelete = $delete == TRUE ? 1 : 0;
-
-		if ($validaDelete == 1) {
-			$response['message'] = 'OK';
-			echo json_encode($response);
-		} else if ($validaDelete == 0){
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode($response);
-		}
-
-	}
-
+  }
 
     public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
@@ -8507,12 +8167,6 @@ class RegistroCliente extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-    }
-
-    public function getClientByLote($lote){
-      $datos=array();
-      $datos= $this->registrolote_modelo->getClientByLote($lote);
-      echo json_encode($datos);
     }
 
     

@@ -59,12 +59,6 @@
 								Depósito de seriedad
 							</a>
 						</li>
-						<li class="<?php if ($DSConsult == 1) {echo 'active';} ?>">
-							<a href="<?= base_url() ?>index.php/asesor/depositoSeriedadConsulta">
-								<!--<span class="sidebar-mini"> DSC </span>-->
-								Depósito de seriedad (consulta)
-							</a>
-						</li>
 						<li class="<?php if ($documentacion == 1) {echo 'active';} ?>">
 							<a href="<?= base_url() ?>index.php/asesor/documentacion">
 								<!--<span class="sidebar-mini"> D </span>-->

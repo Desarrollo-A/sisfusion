@@ -61,10 +61,9 @@
 					<select class="selectpicker select-gral " name="tipoD" id="tipoD" 
 					 required data-live-search="true">
 					<option disabled default >SELECCIONA UNA OPCIÓN</option>
-                                            <?php foreach($descuentos as $descuento){ ?>
-
-                                                <option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
-                                            <?php } ?>
+                        <?php foreach($descuentos as $descuento){ ?>
+                            <option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
+                        <?php } ?>
 					</select>
 				</div> 
 				<div class="col-md-4">
@@ -326,9 +325,5 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-	<script>
 
-	Shadowbox.init();
-
-</script>
 </body>

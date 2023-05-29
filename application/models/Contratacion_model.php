@@ -62,28 +62,15 @@ class Contratacion_model extends CI_Model {
 
    function getInventarioData($estatus, $condominio, $proyecto) {
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
-      $condicion = '';
-      if ($estatus != 'null' && $condominio != 'null' && $proyecto != 'null')
-         $condicion = ' AND lot.idCondominio IN ('.$condominio.') AND lot.idStatusLote = '.$estatus.' ORDER BY lot.idLote ';
-      if ($proyecto != 'null' && $condominio == 'null' && $estatus != 'null') {
-         if($proyecto==0)
-             $condicion = ' AND lot.idStatusLote = $estatus ORDER BY lot.idLote ';
-         else
-             $condicion = ' AND res.idResidencial IN ('.$proyecto.') AND lot.idStatusLote = '.$estatus.' ORDER BY con.nombre, lot.idLote ';
-      }
-      if ($proyecto == 'null' && $condominio == 'null' && $estatus != 'null')
-          $condicion = ' AND lot.idStatusLote = '.$estatus.' ORDER BY lot.idLote ';
-      if ($proyecto != 'null' && $condominio == 'null' && $estatus == 'null') {
-         if($proyecto==0)
-             $condicion = ' ORDER BY con.nombre, lot.idLote ';
-         else
-             $condicion = ' AND res.idResidencial IN ('.$proyecto.') ORDER BY res.nombreResidencial, con.nombre, lot.idLote';
-      }
-      if ($proyecto != 'null' && $condominio != 'null' && $estatus == 'null')
-          $condicion = ' AND res.idResidencial IN ('.$proyecto.') AND lot.idCondominio IN ('.$condominio.') ORDER BY lot.idLote';
-      if ($proyecto == 'null' && $condominio == 'null' && $estatus == 'null')
-
-      $condicion = ' AND lot.idStatusLote = 100 ORDER BY lot.idLote';
+      $filtroProyecto = "";
+      $filtroCondominio = "";
+      $filtroEstatus = "";
+      if ($proyecto != 0)
+         $filtroProyecto = "AND res.idResidencial = $proyecto";
+      if ($condominio != 0)
+         $filtroCondominio = "AND con.idCondominio = $condominio";
+      if ($estatus != 0)
+            $filtroEstatus = "AND lot.idStatusLote = $estatus";
 
       $query = $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
       lot.total, lot.referencia, ISNULL(lot.comentario, 'SIN ESPECIFICAR') comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
@@ -107,8 +94,8 @@ class Contratacion_model extends CI_Model {
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
       sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion
       FROM lotes lot
-      INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-      INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+      INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
+      INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
       LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
       LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente 
@@ -130,7 +117,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
-      WHERE lot.status = 1 $condicion");
+      WHERE lot.status = 1 $filtroEstatus
+      ORDER BY lot.nombreLote");
       return $query->result_array();
    }
 

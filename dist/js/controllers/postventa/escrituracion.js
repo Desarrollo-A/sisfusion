@@ -117,9 +117,10 @@ function print() { //FUNCIÓN PARA GENERAR PDF DE LA DOCUMENTACIÓN REQUERIDA PA
     let bandera_client = $('#bandera_client').val(); // SE VALIDA SI EL LOTE SELECCIONADO TIENE UN CLIENTE ASIGNADO, DE LO CONTRARIO MOSTRAR ALERTA
     if(bandera_client == 'true'){
         window.open("printChecklist/" + data, "_blank")
-    }else{
+    }
+    else{
         alerts.showNotification("top", "right", "No existe cliente para este lote.", "warning");
-        }
+    }
 }
 
 function email() { //FUCIÓN PARA EVIAR PDF POR MAIL DEL CLIENTE - PENDIENTE SI BORRAR O NO

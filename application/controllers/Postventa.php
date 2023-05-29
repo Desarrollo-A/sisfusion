@@ -383,7 +383,7 @@ class Postventa extends CI_Controller
         $idCliente = $_POST['idCliente'];
         $idPostventa = $_POST['idPostventa'];
         $referencia = $_POST['referencia'];
-        $valor_contrato = $_POST['valorC'];
+        $valor_contrato = str_replace('$','', (str_replace(',','', $_POST['valorC'])));
         $empresa = $_POST['empresa'];
         $personalidad = $_POST['perj'];
         $resDecode = $this->servicioPostventa($referencia, $empresa);
@@ -1667,6 +1667,16 @@ class Postventa extends CI_Controller
             echo json_encode(array());    
     }
 
+    public function getTipoContratoAnt()
+    {
+        $data = $this->Postventa_model->getTipoContratoAnt()->result_array()
+        ;
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
     public function getTipoEscrituracion()
     {
         $data = $this->Postventa_model->getTipoEscrituracion();
@@ -1719,22 +1729,26 @@ class Postventa extends CI_Controller
     }
 
     //INFORMACIÓN ADMIN
-    public function newInformacion()
-    {
+    public function newInformacion() {
         $replace = ["$", ","];
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
+            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null) ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
              "aportacion" => str_replace($replace,"",$data['aportaciones']),
             "descuento" => str_replace($replace,"",$data['descuentos']),
-            "motivo" => $data['motivo']
+            "motivo" => $data['motivo'],
+            
         );
-        ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",$data['fechaCAI']);
+        if($data['clienteI'] == 'uno'){
+            if($data['fechaCAI'] != '' || $data['fechaCAI'] != null || $data['fechaCAI'] != 'null' || $data['fechaCAI'] != 'NaN-NaN-NaN'){
+                $updateData['fecha_anterior'] = date("Y-m-d", strtotime(str_replace('/', '-', $data['fechaCAI'])));
+            }
+        }
 
-        //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
@@ -3181,10 +3195,13 @@ function saveNotaria(){
         echo json_encode($response);
     }
 
+<<<<<<< .merge_file_a21468
     function getInfoCliente(){
         $id_cliente = $this->input->post("id_cliente");
         $data = $this->Postventa_model->getInfoCliente($id_cliente)->result_array();
         echo json_encode($data);
+=======
+>>>>>>> .merge_file_a24752
     }
 }
 

@@ -85,15 +85,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
-                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.</p>
+                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada. Por favor verifica o ingresa tu Código Postal. El valor que ingreses debe ser el mismo que venga en tu constancia de situación fiscal.</p>
                     </div>
                     <form id="codigoForm">
                     <div class="modal-body">
-                        <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="1"
-                        min="10000" max="99999" placeholder="Captura tu Código Postal" required>
+                        <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="5"
+                         placeholder="Captura tu Código Postal" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="codigopostalCancel" class="btn btn-secondary" data-dismiss="modal" style="display:none" >Close</button>
                         <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
                     </div>
                     </form>
@@ -802,9 +801,9 @@
                     if(data1.length == 0){
                         // $("#solicitud_cp").modal();
                     }else if(data1.length != 0){
-                        document.getElementById("dato_solicitudcp").disabled = true;  
-                        document.getElementById("codigopostalSubmit").disabled = true;
-                        document.getElementById('codigopostalCancel').style.display = 'inline';
+                        // document.getElementById("dato_solicitudcp").disabled = true;  
+                        // document.getElementById("codigopostalSubmit").disabled = true;
+                        // document.getElementById('codigopostalCancel').style.display = 'inline';
                     }
                 }
             });
@@ -828,7 +827,7 @@
                 processData: false,
                 type: 'POST',
                 success: function (response) {
-                alerts.showNotification("top","right","Se capturo tu codigo postal: "+dato_solicitudcp+"","success");
+                alerts.showNotification("top","right","Se capturó tu código postal: "+dato_solicitudcp+"","success");
                 $("#solicitud_cp").modal("hide");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -948,17 +947,27 @@
                             actual=15;
 
                         }
-                        var hoy = new Date();
+                        var hoy = new Date('<?php echo date('Y-m-d H:i:s')?>');
                         var dia = hoy.getDate();
                         var mes = hoy.getMonth()+1;
                         var anio = hoy.getFullYear();
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
 
-                         if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)) ||
-                        (id_usuario == 7689)){
+                        if(((mes == 1 && dia ==  9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+                        ((mes == 5 && dia ==  8) || (mes == 5 && dia ==  9 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 8 && dia ==  7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+                        ((mes == 11 && dia == 13)  || (mes == 11 && dia == 14 && hora <= 13)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                        (id_usuario == 7689) )
+                        {
 
                             if ($('input[name="idT[]"]:checked').length > 0) {
                                 $('#spiner-loader').removeClass('hide');
@@ -982,7 +991,7 @@
                                             $('#spiner-loader').addClass('hide');
                                             $("#totpagarPen").html(formatMoney(0));
                                             $("#all").prop('checked', false);
-                                            var fecha = new Date();
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
 
                                             alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
 
@@ -991,9 +1000,14 @@
                                         }else if(data == 2) {
                                             $('#spiner-loader').addClass('hide');
                                             $("#all").prop('checked', false);
-                                            var fecha = new Date();
-
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
                                             alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
+                                        }
+                                        else if(data == 3) {
+                                            $('#spiner-loader').addClass('hide');
+                                            $("#all").prop('checked', false);
+                                            var fecha = new Date('<?php echo date('Y-m-d H:i:s')?>');
+                                            alerts.showNotification("top", "right", "NO SE PUEDEN ENVIAR PORQUE NO HA CAPTURADO UN CÓDIGO POSTAL.", "warning");
                                         } else {
                                             $('#spiner-loader').addClass('hide');
                                             alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
@@ -1062,7 +1076,7 @@
                 {
                     text: '<i class="fa fa-archive" aria-hidden="true"></i>',
                     className: 'btn btn-azure',
-                    titleAttr: 'Clic para consultar codigo postal',
+                    titleAttr: 'Clic para consultar código postal',
                     action: function (e,dt,button,confing){
                         $('#solicitud_cp').modal('show');
                     }
@@ -1244,21 +1258,29 @@
                             actual=15;
 
                         }
-                        var hoy = new Date();
+                        var hoy = new Date('<?php echo date('Y-m-d H:i:s')?>');
                         var dia = hoy.getDate();
                         var mes = hoy.getMonth()+1;
                         var anio = hoy.getFullYear();
                         var hora = hoy.getHours();
                         var minuto = hoy.getMinutes();
-    
 
 
-                        if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 24) || (mes == 12 && dia == 24 && hora <= 13)) ||
-                        (id_usuario == 7689))
+                        if(((mes == 1 && dia ==  9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+                        ((mes == 5 && dia ==  8) || (mes == 5 && dia ==  9 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 8 && dia ==  7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+                        ((mes == 11 && dia == 13)  || (mes == 11 && dia == 14 && hora <= 13)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                        (id_usuario == 7689)  )
                         {
-
+ 
                             switch (full.forma_pago) {
                                 case '1': //SIN DEFINIR
                                 case 1: //SIN DEFINIR
@@ -2277,17 +2299,27 @@
             if(userSede == 8){
                 actual=15;
             }
-            var hoy = new Date();
+            var hoy = new Date('<?php echo date('Y-m-d H:i:s')?>');
             var dia = hoy.getDate();
             var mes = hoy.getMonth()+1;
             var anio = hoy.getFullYear();
             var hora = hoy.getHours();
             var minuto = hoy.getMinutes();
     
-             if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)))
-            {
+             if(((mes == 1 && dia ==  9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+                        ((mes == 5 && dia ==  8) || (mes == 5 && dia ==  9 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 8 && dia ==  7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+                        ((mes == 11 && dia == 13)  || (mes == 11 && dia == 14 && hora <= 13)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                        (id_usuario == 7689) )
+                        {
 
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .modal-header").html("");

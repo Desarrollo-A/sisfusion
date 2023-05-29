@@ -1,48 +1,52 @@
-$('#evidenceTable thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($("#evidenceTable").DataTable().column(i).search() !== this.value) {
-            $("#evidenceTable").DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-        }
-    });
+let evidenceTable;
 
+$(document).ready(function () {
+    fillevidenceTable();
+    getAsesoresList();
+
+    $("input:file").on("change", function () {
+        var target = $(this);
+        var relatedTarget = target.siblings(".file-name");
+        var fileName = target[0].files[0].name;
+        relatedTarget.val(fileName);
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+let titulosEvidence = [];
+$('#evidenceTable thead tr:eq(0) th').each(function (i) {
+    let title = $(this).text();
+    titulosEvidence.push(title);
+    $(this).html(`<input class="textoshead"
+                        data-toggle="tooltip" 
+                        data-placement="top"
+                        title="${title}"
+                        placeholder="${title}"/>`);                       
+    $( 'input', this).on('keyup change', function () {
+        if ($('#evidenceTable').DataTable().column(i).search() !== this.value) {
+            $('#evidenceTable').DataTable().column(i).search(this.value).draw();
+        }   
+    });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 function fillevidenceTable() {
-    let current_rol_user;
     evidenceTable = $("#evidenceTable").dataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
-        buttons: [
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        buttons:[
             {
                 extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
+                title: 'Consulta BBVA',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
+                    columns: [0, 1, 2, 3, 4,5,6,7,8],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return "ID";
-                                    break;
-                                case 1:
-                                    return "GENERADO PARA"
-                                case 2:
-                                    return "FECHA ALTA";
-                                    break;
-                                case 3:
-                                    return "CREADO POR";
-                                    break;
-                                case 4:
-                                    return "ETATUS";
-                                    break;
-                            }
+                            return ' ' + titulosEvidence[columnIdx] + ' ';
                         }
                     }
                 }
@@ -62,9 +66,9 @@ function fillevidenceTable() {
                 data: function (d) {
                     let tipo;
                     if (d.type == 1) // MJ: EVIDENCIA TOKEN BBVA
-                        tipo = `<span class="label" style="background: #AED6F1; color: #1F618D">${d.tipoEvidencia}</span>`;
+                        tipo = `<span class="label lbl-blueMaderas">${d.tipoEvidencia}</span>`;
                     else if (d.type == 2) // MJ: EVIDENCIA VIDEO CLIENTE
-                        tipo = `<span class="label" style="background:#A2D9CE; color: #117A65">${d.tipoEvidencia}</span>`;
+                        tipo = `<span class="label lbl-green">${d.tipoEvidencia}</span>`;
                     return tipo;
                 }
             },
@@ -132,29 +136,31 @@ function fillevidenceTable() {
                     let estatus;
                     switch (d.estatus) {
                         case 0:
-                            estatus = `<span class="label" style="background: #CCD1D1; color: #616A6B">No validada</span>`;
+                            estatus = `<span class="label lbl-deepGray">No validada</span>`;
                             break;
                         case 1:
-                            estatus = `<span class="label" style="background: #A9DFBF; color: #1E8449">Aceptada</span>`;
+                            estatus = `<span class="label lbl-green">Aceptada</span>`;
                             break;
                         case 2:
-                            estatus = `<span class="label" style="background: #E6B0AA; color: #922B21">Rechazada</span>`;
+                            estatus = `<span class="label lbl-warning">Rechazada</span>`;
                             break;
                     }
                     return estatus;
+                    
                 }
             },
             {
+                
                 data: function (d) {
                     let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-gray reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" title="Ver evidencia"></body><i class="fas fa-eye"></i></button>`;
+                    btns += `<button class="btn-data btn-gray reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
-                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" title="Copiar token"><i class="fas fa-copy"></i></button>`;
+                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="Copiar token"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
                         if (d.estatus == 1 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" title="Rechazar"><i class="fas fa-minus"></i></button>`;
+                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="RECHAZAR"><i class="fas fa-minus"></i></button>`;
                         if (d.estatus == 2 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" title="Aceptar"><i class="fas fa-check"></i></button>`;
+                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="ACEPTAR"><i class="fas fa-check"></i></button>`;
                     }
                     btns += '</div>';
                     return btns;
@@ -162,15 +168,19 @@ function fillevidenceTable() {
             }
         ],
         columnDefs: [{
-            visible: false,
-            searchable: false
+            orderable : false,
+            searchable: true,
+            target: 0,
         }],
         ajax: {
             url: "getEvidencesInformation",
             type: "POST",
             cache: false
         }
+        
     });
+
+   
 }
 
 $(document).on("click", "#generateToken", function () {
@@ -194,7 +204,7 @@ function generateToken() {
             $('#spiner-loader').removeClass('hide');
             let data = new FormData();
             data.append("id_asesor", $("#asesoresList").val());
-            data.append("id_gerente", id_gerente);
+            data.append("id_gerente", id_usuario_general);
             data.append("uploaded_file", $("#fileElm")[0].files[0]);
             $.ajax({
                 url: general_base_url + 'Api/generateToken',
@@ -273,7 +283,7 @@ $(document).on('click', '.validateEvidence', function () {
         dataType: 'json',
         success: function (data) {
             $("#evidenceTable").DataTable().ajax.reload(null, false);
-            alerts.showNotification("top", "right", action == 2 ? "La evidencia ha sido marcada como rechazada." : "La evidencia ha sido marcada como aceptada.", "success");
+            alerts.showNotification("top", "right", action == 2 ? "La evidencia ha sido marcada como rechazada."  : "La evidencia ha sido marcada como aceptada.", action == 2 ? "danger" : "success");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
@@ -316,3 +326,8 @@ function formatVideoURL(response){
     }
     return url;
 }
+
+
+$(window).resize(function(){
+    evidenceTable.columns.adjust();
+});

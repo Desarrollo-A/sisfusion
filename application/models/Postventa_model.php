@@ -880,7 +880,8 @@ function checkBudgetInfo($idSolicitud){
         {
             $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%' AND se.id_estatus not in(49) "; 
         }
-        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
+        
+        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
         r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
         se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area,
         cp.area_actual, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente,
@@ -1179,4 +1180,7 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT id_cliente,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombreCliente,fechaApartado  FROM clientes WHERE id_cliente=$idCliente");
     }
 
+    function getTipoContratoAnt(){
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 93");
+    }
 }

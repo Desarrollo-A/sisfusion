@@ -598,15 +598,19 @@ $(document).on('click', '.btnVer', function(e){
     let id_aut = $(this).attr('data-idautorizacion');
     // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
 
-
     let arr = id_aut.split(' ');
+
+
     if(arr.length <= 1){
-        let id = parseInt(id_aut[0]);
+        let id = parseInt(id_aut);
+        console.log('id', id);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID LOTE');
     }else if(arr.length > 1){
         // let id = 'residencial';
+        console.log('id_aut', id_aut);
+
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID CONDOMINIO');
@@ -881,34 +885,6 @@ $(document).on('click', '.btnHistorial', function () {
 });
 
 
-$(document).on('click', '.btnEditar', function(e){
-    let id_aut = $(this).attr('data-idautorizacion');
-    let data = [];
-    // console.log(id_aut);
-    let arr = id_aut.split(' ');
-
-    if(arr.length <= 1){
-        let id = parseInt(id_aut[0]);
-        data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
-        data['edit'] = 1;
-        dataUpdateGeneral[0] = id_aut;
-        dataUpdateGeneral[1] = 1;//tipo_update
-    }else if(arr.length > 1){
-        data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
-        data['edit'] = 1;
-        dataUpdateGeneral[0] = id_aut;
-        dataUpdateGeneral[1] = 2;//tipo_update
-
-    }
-    //tipo_update: 1 NORMAL(lote), 2:condominio
-
-    // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
-    // data['edit'] = 1;                                               //ORIGINAL
-    $('#cambiosGuardaMSI').removeClass('hide');
-    loadTableVAUT(data);
-    $('#verAut').modal('show');
-});
-
 $(document).on('submit', '#cambiosMSIF', function(e) {
     e.preventDefault();
     var params = tablaMsiVisualizar.$('input').serialize();
@@ -952,6 +928,34 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
         });
     }
 
+});
+
+$(document).on('click', '.btnEditar', function(e){
+    let id_aut = $(this).attr('data-idautorizacion');
+    let data = [];
+    // console.log(id_aut);
+    let arr = id_aut.split(' ');
+
+    if(arr.length <= 1){
+        let id = parseInt(id_aut);
+        data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
+        data['edit'] = 1;
+        dataUpdateGeneral[0] = id_aut;
+        dataUpdateGeneral[1] = 1;//tipo_update
+    }else if(arr.length > 1){
+        data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
+        data['edit'] = 1;
+        dataUpdateGeneral[0] = id_aut;
+        dataUpdateGeneral[1] = 2;//tipo_update
+
+    }
+    //tipo_update: 1 NORMAL(lote), 2:condominio
+
+    // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
+    // data['edit'] = 1;                                               //ORIGINAL
+    $('#cambiosGuardaMSI').removeClass('hide');
+    loadTableVAUT(data);
+    $('#verAut').modal('show');
 });
 
 function createArrayEvents(params){

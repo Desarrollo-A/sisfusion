@@ -26,6 +26,7 @@ class Administracion_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+	    LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion IN (7) AND l.idMovimiento IN (37, 7, 64, 77) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR

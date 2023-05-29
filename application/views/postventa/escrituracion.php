@@ -133,7 +133,7 @@
                                                         <div class="col-md-4 pl-0">
                                                             <div class="form-group label-floating is-focused">
                                                                 <label class="control-label estiloEsc label-gral"><span class="isRequired">*</span>Valor de operación de contrato</label>
-                                                                <input id="valorC" name="valorC" class="form-control input-gral" type="text" required>
+                                                                <input id="valorC" name="valorC" class="form-control input-gral"  data-type="currency" type="text" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
