@@ -757,7 +757,7 @@ function checkBudgetInfo($idSolicitud){
 
     function getBudgetInformacion($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura,
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.id_opcion idEstatusPago, oxc3.nombre tipoEscritura,
         CASE se.cliente_anterior WHEN 1 THEN 'SÍ' ELSE 'NO' END cli_anterior
         FROM solicitudes_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente
