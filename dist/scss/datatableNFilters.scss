@@ -288,7 +288,7 @@ table{
         display: none;
     }
     thead tr {
-        background-color: $blueIndigo;
+        background-color: $blueIndigoDeep;
         th{
             padding: 0px!important;
             input{
@@ -299,7 +299,7 @@ table{
                 text-align: center;
                 font-weight: 300;
                 font-size: 10px!important;
-                background-color: $blueIndigo;
+                background-color: $blueIndigoDeep;
                 text-transform: uppercase;
                 &:active{
                     border: 1px solid $white;

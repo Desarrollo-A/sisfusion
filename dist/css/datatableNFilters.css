@@ -1675,7 +1675,7 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #103f75;
+  background-color: #143860;
 }
 
 table thead tr th {
@@ -1690,7 +1690,7 @@ table thead tr th input {
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #103f75;
+  background-color: #143860;
   text-transform: uppercase;
 }
 
