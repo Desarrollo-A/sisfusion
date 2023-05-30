@@ -253,7 +253,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Fecha de contrato</label>
                                     <input type="text" class="form-control datepicker input-gral"
-                                    id="fContrato" name="fContrato" disabled/>
+                                    id="fContrato" name="fContrato" required/>
                                 </div>
                             </div>
                         </div>

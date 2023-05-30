@@ -102,7 +102,7 @@ sp2 = {
     });
   },
 };
-
+var arrayEstatusLote = [];
 $(document).ready(function () {
   sp.initFormExtendedDatetimepickers();
   sp2.initFormExtendedDatetimepickers();
@@ -143,8 +143,21 @@ $(document).ready(function () {
     if (len <= 0) {
         $("#tipoContratoAnt").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
     }
-    $("#tipoContratoAnt").selectpicker('refresh').val();
+    $("#tipoContratoAnt").selectpicker('refresh');
   }, 'json'); 
+
+  $.post(
+    "getEstatusPago",
+    function (data) {
+        arrayEstatusLote = data;
+      var len = data.length;
+      /*for (var i = 0; i < len; i++) {
+          arrayEstatusLote[i].id=data[i]["id_opcion"];
+          arrayEstatusLote[i].nombre=data[i]["nombre"];
+      }*/
+    },
+    "json"
+  );
 });
 
 //eventos jquery
@@ -772,8 +785,10 @@ $(document).on("click", "#presupuesto", function () {
        document.getElementById('superficie').disabled = true;
        document.getElementById('catastral').disabled = true;*/
     document.getElementById("cliente").disabled = true;
+    document.getElementById("liquidado").disabled = true;
+    document.getElementById("tipoContratoAnt").disabled = true;
     document.getElementById("nombreT").disabled = true;
-    document.getElementById("fechaCA").disabled = true;
+    document.getElementById("fechaCA").disabled = false;
     document.getElementById("rfcDatos").disabled = true;
     document.getElementById("aportaciones").disabled = true;
     document.getElementById("descuentos").disabled = true;
@@ -1959,6 +1974,7 @@ function getBudgetInfo(idSolicitud) {
       var str =
         data.modificado != null ? data.modificado.split(" ")[0].split("-") : "";
       var strM = data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : "";
+      alert(strM)
       $("#fContrato").val(strM);
       $("#catastral").val(data.clave_catastral);
       $("#construccionInfo").val(data.nombreConst);
@@ -2662,21 +2678,17 @@ function getEstatusConstruccion(estatus_construccion) {
 }
 
 function getEstatusPago() {
+    console.log(arrayEstatusLote)
     $("#spiner-loader").removeClass("hide");
     $("#estatusPago").find("option").remove();
     $("#liquidado").find("option").remove();
     $("#estatusPago").append(
       $("<option disabled selected>").val("0").text("Seleccione una opción")
     );
-    $.post(
-      "getEstatusPago",
-      function (data) {
-        var len = data.length;
+        var len = arrayEstatusLote.length;
         for (var i = 0; i < len; i++) {
-          var id = data[i]["id_opcion"];
-          var name = data[i]["nombre"];
-          $("#estatusPago").append($("<option>").val(id).text(name));
-          $("#liquidado").append($("<option>").val(id).text(name));
+          $("#estatusPago").append($("<option>").val(arrayEstatusLote[i].id_opcion).text(arrayEstatusLote[i].nombre));
+          $("#liquidado").append($("<option>").val(arrayEstatusLote[i].id_opcion).text(arrayEstatusLote[i].nombre));
         }
         if (len <= 0) {
           $("#estatusPago").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -2685,9 +2697,7 @@ function getEstatusPago() {
         $("#estatusPago").selectpicker("refresh");
         $("#liquidado").selectpicker("refresh");
         $("#spiner-loader").addClass("hide");
-      },
-      "json"
-    );
+      
   }
 
 function createDocRow(row, tr, thisVar) {
@@ -3026,6 +3036,8 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
           $("#RequestInformacion").addClass("hide");
           $("#information_campos").addClass("hide");
           document.getElementById("construccionI").disabled = true;
+          document.getElementById("liquidado").disabled = true;
+          document.getElementById("tipoContratoAnt").disabled = true;
           document.getElementById("clienteI").disabled = true;
           document.getElementById('nombreI').disabled = true;
           document.getElementById('fechaCAI').disabled = true;
@@ -3034,12 +3046,15 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
           document.getElementById("descuentosI").disabled = true;
           document.getElementById("motivoI").disabled = true;
         }
-        $("#liquidado").val(data.idEstatusPago).selectpicker("refresh");
+        $("#liquidado").val(data.idEstatusPago).trigger("change");
         $("#construccionI").val(data.nombreConst);
         $("#clienteI")
           .val(data.cliente_anterior == 1 ? "uno" : "dos")
           .trigger("change");
         $("#clienteI").selectpicker("refresh");
+        $("#tipoContratoAnt").val(data.tipo_contrato_ant).trigger("change");
+        $("#tipoContratoAnt").selectpicker('refresh');
+
         $("#nombreI").val(data.nombre_anterior);
         let fechaAnterior =
           data.fecha_anterior != null
@@ -3068,8 +3083,7 @@ $(document).on("change", "#clienteI", function () {
         $('#ifInformacion').hide();
         $("#ifInformacion input").attr("required", false);
         $("#ifInformacion input").val('');
-        $('#tipoContratoAnt').val('default').selectpicker('deselectAll');
-        $('#tipoContratoAnt').selectpicker('refresh');
+        $('#tipoContratoAnt').val('').trigger('change');
     }
   });
 
@@ -3079,6 +3093,7 @@ $(document).on("submit", "#formInformacion", function (e) {
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
     data.append("idSolicitud", idSolicitud);
+    data.append("tipoContratoAnt", $("#tipoContratoAnt").val());
     if( $("#clienteI").val() == "uno" ){
       if( $("#tipoContratoAnt").val() != '' ){
         setNewInformacion(data);

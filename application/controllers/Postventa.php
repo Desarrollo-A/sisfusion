@@ -1736,7 +1736,7 @@ class Postventa extends CI_Controller
         $updateData = array(
             "estatus_pago" => $data['liquidado'],
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
-            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null)  ? 0 : $data['tipoContratoAnt'],
+            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null || $data['tipoContratoAnt'] == 'null')  ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
             "aportacion" => str_replace($replace,"",$data['aportaciones']),
