@@ -878,6 +878,61 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
+=======
+
+
+<div class="modal fade" id="modalInfoClient" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Información del cliente</b></h4>
+            </div>
+                <div class="modal-body" id="modalContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
+            <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
+                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
+                <div class="modal-body text-center toolbar m-0 p-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Estatus construcción</label>
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
+                                         required>
+                                    </select>
+                                </div>ASAS
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex justify-end p-0">
+                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="requestEstatusLote" class="btn btn-primary mt-2">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+>>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -904,7 +959,11 @@
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
+<<<<<<< HEAD
                                     <label class="control-label label-gral">Estatus construcción</label>
+=======
+                                    <label class="control-label label-gral">Estatus construcción (<small style="color: red;">*</small>)</label>
+>>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
@@ -929,7 +988,11 @@
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group m-0 m-0">
                                         <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
+<<<<<<< HEAD
                                         <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
+=======
+                                        <input id="nombreI" name="nombreI"  class="form-control input-gral" type="text" >
+>>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
@@ -949,13 +1012,21 @@
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Aportaciones (<small style="color: red;">*</small>)</label>
+<<<<<<< HEAD
                                         <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
+=======
+                                        <input id="aportacionesI" name="aportaciones" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
+>>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
+<<<<<<< HEAD
                                         <input id="descuentosI" name="descuentos" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
+=======
+                                        <input id="descuentosI" name="descuentos" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
+>>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">

@@ -190,12 +190,14 @@ class Postventa_model extends CI_Model
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END banderaPresupuesto FROM Presupuestos WHERE expediente != '' GROUP BY idSolicitud) pr ON pr.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN expediente IS NOT NULL THEN 1 END) THEN 0 ELSE 1 END contrato
         FROM documentos_escrituracion WHERE tipo_documento = 18 GROUP BY idSolicitud) de4 ON de4.idSolicitud = se.id_solicitud
+        LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion=1 THEN 1 END) THEN 0 ELSE 1 END formasPago
+        FROM documentos_escrituracion WHERE tipo_documento = 7 GROUP BY idSolicitud) de5 ON de5.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END presupuestoAprobado FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) presup2 ON presup2.idSolicitud = se.id_solicitud
 
         LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1 WHERE cl.clasificacion in (1,2)
         GROUP BY cl.estatus_actual, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cs.estatus_siguiente
         $AddWhere $filtroTabla $WhereFechas
-        GROUP BY doc22.no_editados22,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,se.id_solicitud,c.banderaEscrituracion,se.id_cliente,se.id_lote,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,de2.documentosCargados,presup2.presupuestoAprobado,de2.estatusValidacion,de2.no_rechazos,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, a.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato ORDER BY se.id_solicitud DESC");
+        GROUP BY doc22.no_editados22,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,se.id_solicitud,c.banderaEscrituracion,se.id_cliente,se.id_lote,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,de2.documentosCargados,presup2.presupuestoAprobado,de2.estatusValidacion,de2.no_rechazos,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, a.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato,de5.formasPago ORDER BY se.id_solicitud DESC");
 
 
     }
@@ -238,13 +240,13 @@ class Postventa_model extends CI_Model
         $idUsuario = $this->session->userdata('id_usuario');
         $rol = $this->session->userdata('id_rol');
 
-        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite,id_notaria,bandera_notaria FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
+        $estatus = $this->db->query("SELECT id_estatus,bandera_admin,bandera_comite,id_notaria,bandera_notaria,personalidad_juridica FROM solicitudes_escrituracion WHERE id_solicitud = $id_solicitud")->row();//->id_estatus;
       
         $sqlAreaRechazo = '';
         if($area_rechazo != 0 && $area_rechazo != ''){
             $sqlAreaRechazo = " AND estatus_siguiente=$area_rechazo ";
         }
-  
+        $personalidadJuridica = $estatus->personalidad_juridica;
         $notaria = $estatus->id_notaria; 
         $notariaInterna = '';
         if($estatus->id_estatus == 12 && $notaria == 0 && $estatus->bandera_notaria == 1 && $type == 1){
@@ -261,7 +263,7 @@ class Postventa_model extends CI_Model
         }
         else if($estatus->id_estatus == 4 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 1){
             $estatus = $estatus->id_estatus;
-            $actividades_x_estatus = (object)array("estatus_siguiente" => 3 ,"estatus_actual" => 4, "clave_actividad" => "APE0003");
+            $actividades_x_estatus = $type == 3 ? (object)array("estatus_siguiente" => 58 ,"estatus_actual" => 4, "clave_actividad" => "APE0003") : (object)array("estatus_siguiente" => 3 ,"estatus_actual" => 4, "clave_actividad" => "APE0003"); 
         }
         else if($estatus->id_estatus == 2 && $estatus->bandera_admin == 0 && $estatus->bandera_comite == 0){
             $estatus = $estatus->id_estatus;
@@ -286,12 +288,15 @@ class Postventa_model extends CI_Model
             $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
         }
         if($actividades_x_estatus->estatus_siguiente == 13 || $actividades_x_estatus->estatus_siguiente == 18){
-            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,22,23)");
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento IN(1,2,3,4,6,16,21,23)");
         }
         if($actividades_x_estatus->estatus_siguiente == 20  || $actividades_x_estatus->estatus_siguiente == 25){
             $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10) AND expediente IS NOT NULL");
         } if($actividades_x_estatus->estatus_siguiente == 19  || $actividades_x_estatus->estatus_siguiente == 22 || $actividades_x_estatus->estatus_siguiente == 24){
-            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10)");
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=0  WHERE idSolicitud = $id_solicitud AND tipo_documento in(5,8,9,10,22)");
+        }
+        if($actividades_x_estatus->estatus_siguiente == 23){
+            $this->db->query("UPDATE documentos_escrituracion SET documento_a_validar=1  WHERE idSolicitud = $id_solicitud AND tipo_documento in(22)");
         }
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo $fechaFirma  WHERE id_solicitud = $id_solicitud");
@@ -387,7 +392,7 @@ class Postventa_model extends CI_Model
         }elseif($status == 18){
             $tipo_doc = 'IN (7)';
         }elseif($status == 19 ||$status == 22 || $status == 24 || $status == 20 || $status == 25 || $status == 34){
-            $tipo_doc = "IN (1,3,4,5,6,7,8,9,17,18$docPersonalidadJuridica $docNotariaExterna)";
+            $tipo_doc = "IN (1,3,4,5,6,7,8,9,11,17,18,23,24,25,26$docPersonalidadJuridica $docNotariaExterna)";
         }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
             $tipo_doc = 'IN (17,18)';
         }elseif($status == 29 || $status == 35 || $status == 40){
@@ -1169,6 +1174,10 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN motivos_rechazo_x_documento mrxd ON mrxd.id_documento = $idDocumento AND mrxd.estatus = 1 AND mrxd.tipo = $documentType
         INNER JOIN motivos_rechazo mr ON mr.id_motivo = mrxd.id_motivo
         WHERE se.id_solicitud = $idSolicitud");
+    }
+    function getInfoCliente($idCliente)
+    {
+        return $this->db->query("SELECT id_cliente,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombreCliente,fechaApartado  FROM clientes WHERE id_cliente=$idCliente");
     }
 
     function getTipoContratoAnt(){

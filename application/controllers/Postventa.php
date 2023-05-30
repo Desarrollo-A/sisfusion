@@ -695,7 +695,19 @@ class Postventa extends CI_Controller
             break;
             case 22:
                 $folder = "static/documentos/postventa/escrituracion/FORMAS_PAGO_FECHA/";
-            break;    
+            break;   
+            case 23:
+                $folder = "static/documentos/postventa/escrituracion/CHECK_LIST/";
+            break; 
+            case 24:
+                $folder = "static/documentos/postventa/escrituracion/BENEFICIARIO_CONTROLADOR/";
+            break; 
+            case 25:
+                $folder = "static/documentos/postventa/escrituracion/CARATULAS_BANCARIAS/";
+            break;  
+            case 26:
+                $folder = "static/documentos/postventa/escrituracion/ESTADOS_DE_CUENTA/";
+            break; 
         }
         return $folder;
 
@@ -1724,7 +1736,7 @@ class Postventa extends CI_Controller
             "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null) ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
-             "aportacion" => str_replace($replace,"",$data['aportaciones']),
+            "aportacion" => str_replace($replace,"",$data['aportaciones']),
             "descuento" => str_replace($replace,"",$data['descuentos']),
             "motivo" => $data['motivo'],
             
@@ -3165,11 +3177,26 @@ function saveNotaria(){
             'valor_contrato' =>  str_replace($replace,"",$this->input->post("valorOper")),
             'modificado_por' =>  $this->session->userdata('id_usuario')
         );
-        $this->General_model->updateBatch("solicitudes_escrituracion", $updateArrayData, "id_solicitud"); 
-        $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,1,0,'SE MODIFICÓ EL VALOR DE OPERACIÓN DE CONTRATO',GETDATE(),$modificado_por,GETDATE(),$modificado_por,0)");
-
+        $insertToDataHistorial[0] = array(
+            "id_solicitud" => $id_solicitud,
+            "numero_estatus" => 1,
+            "tipo_movimiento" => 0,
+            "descripcion" => 'SE MODIFICÓ EL VALOR DE OPERACIÓN DE CONTRATO',
+            "fecha_creacion" => date("Y-m-d H:i:s"),
+            "creado_por"  => $modificado_por,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $modificado_por,
+            "estatus_siguiente" =>0
+        );
+        $this->General_model->updateBatch("solicitudes_escrituracion", $updateArrayData, "id_solicitud");
+        $response = $this->General_model->insertBatch("historial_escrituracion", $insertToDataHistorial);
         echo json_encode($response);
+    }
 
+    function getInfoCliente(){
+        $id_cliente = $this->input->post("id_cliente");
+        $data = $this->Postventa_model->getInfoCliente($id_cliente)->result_array();
+        echo json_encode($data);
     }
 }
 

@@ -3747,5 +3747,23 @@ class Contraloria extends CI_Controller {
 		exit;
     }
 
+    public function reporteEscaneos() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("contraloria/reporteEscaneos_view",$datos);
+    }
+
+    public function getReporteEscaneos() {
+        if (isset($_POST) && !empty($_POST)) {
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $where = $this->input->post("where");
+            $data = $this->Contraloria_model->getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where);
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
+
 
 }
