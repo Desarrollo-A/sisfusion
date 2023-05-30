@@ -391,23 +391,30 @@ $(document).on("click", ".upload", function () {
 });
 
 $(document).on("click", "#sendRequestButton", function (e) {
-  var info = escrituracionTable.page.info();
-  e.preventDefault();
-  let action = $("#action").val();
-  let id_estatus = $("#id_estatus").val();
-  let documento_validar = $("#documento_validar").val();
-  let sendRequestPermission = 0;
-  if (action == 1) {
-    // UPLOAD FILE
-    let uploadedDocument = $("#uploadedDocument")[0].files[0];
-    let allowedExtensions =
-      /(\.xls|\.xlsx|\.pdf|\.jpg|\.jpeg|\.png|\.doc|\.docx|\.csv|\.rar|\.zip)$/i;
-    let validateUploadedDocument =
-      uploadedDocument == undefined ||
-      !allowedExtensions.exec(uploadedDocument.name)
-        ? 0
-        : 1;
-    // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+    var info = escrituracionTable.page.info();
+    e.preventDefault();
+    let action = $("#action").val();
+    let id_estatus =  $('#id_estatus').val();
+    let documento_validar =  $('#documento_validar').val();
+    let sendRequestPermission = 0;
+    if (action == 1) { // UPLOAD FILE
+        let uploadedDocument = $("#uploadedDocument")[0].files[0];
+        let allowedExtensions = /(\.xls|\.xlsx|\.pdf|\.jpg|\.jpeg|\.png|\.doc|\.docx|\.csv|\.rar|\.zip)$/i;
+        let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
+        // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+
+        if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+        else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+    } else if (action == 2) // MJ: DELETE FILE
+        sendRequestPermission = 1;
+    else if (action == 3)// MJ: VALIDATE OK
+        sendRequestPermission = 1;
+    else if (action == 4) { // MJ: VALIDATE NOK FILE
+        let rejectionReasons = $("#rejectionReasons").val();
+        if (rejectionReasons == '') { // THERE ARE NO OPTIONS
+            alerts.showNotification("top", "right", "Asegúrese de haber seleccionado al menos un motivo de rechazo", "warning");
+        } else sendRequestPermission = 1;
+    }
 
     if (sendRequestPermission == 1) {
         let idSolicitud = $("#idSolicitud").val();
@@ -430,160 +437,99 @@ $(document).on("click", "#sendRequestButton", function (e) {
         let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
 if(id_estatus == 19 || id_estatus == 22 ){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    console.log(indexidDocumentos)
     if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
-      }
     }
 }
 if(id_estatus == 20 || id_estatus == 25 || id_estatus == 12){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    console.log(indexidDocumentos)
     if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
     }
 }
 if(id_estatus == 12){
     var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+    console.log(indexidDocumentos)
     if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
     }
-    $.ajax({
-      url:
-        action == 1
-          ? "uploadFile"
-          : action == 2
-          ? "deleteFile"
-          : "validateFile",
-      data: data,
-      cache: false,
-      contentType: false,
-      processData: false,
-      type: "POST",
-      success: function (response) {
-        $("#sendRequestButton").prop("disabled", false);
-        //  alert(details)
-        if (response == 1) {
-          // getDocumentsInformation(idSolicitud);
-          alerts.showNotification(
-            "top",
-            "right",
-            action == 1
-              ? "El documento se ha cargado con éxito."
-              : action == 2
-              ? "El documento se ha eliminado con éxito."
-              : action == 4
-              ? "Los motivos de rechazo se han asociado de manera exitosa para el documento."
-              : "El documento ha sido validado correctamente.",
-            "success"
-          );
-          if (details == 1) {
-            var tr = $(`#trees${idSolicitud}`).closest("tr");
-            var row = escrituracionTable.row(tr);
-            createDocRow(row, tr, $(`#trees${idSolicitud}`));
-            if (
-              (id_estatus == 19 || id_estatus == 22) &&
-              (action == 1 || action == 2)
-            ) {
-              var index = documentosObligatorios.findIndex(
-                (e) => e.cargado == 0
-              );
-              // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
-              //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
-              if ((index < 0 && action == 1) || (action == 2 && index >= 0)) {
-                escrituracionTable.ajax.reload(null, false);
-                createDocRow(
-                  integracionExpediente.row,
-                  integracionExpediente.tr,
-                  integracionExpediente.this
-                );
-              }
+}
+        $.ajax({
+            url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (response) {
+                $("#sendRequestButton").prop("disabled", false);
+              //  alert(details)
+                if (response == 1) {
+                    // getDocumentsInformation(idSolicitud);
+                    alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
+                    if(details == 1){
+                        var tr = $(`#trees${idSolicitud}`).closest('tr');
+                        var row = escrituracionTable.row(tr);
+                        createDocRow(row, tr, $(`#trees${idSolicitud}`));
+                        if((id_estatus == 19 || id_estatus == 22) && (action == 1 || action == 2)){
+                            var index = documentosObligatorios.findIndex(e => e.cargado == 0);
+                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                            if((index < 0 && action == 1) || (action == 2 && index >= 0 )){
+                                escrituracionTable.ajax.reload(null,false);
+                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                            }
+                        }
+                        if((id_estatus == 20 || id_estatus == 25 || id_estatus == 12) && (action == 3 || action == 4)){
+                            var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
+                            var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
+                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                            if(((index2 < 0 && indexNull < 0) && action == 3) || (action == 4 && index2 >= 0 )){
+                                escrituracionTable.ajax.reload(null,false);
+                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                            }
+                        }
+                        if((id_estatus == 26 || id_estatus == 30 || id_estatus == 31) ){
+                            escrituracionTable.ajax.reload(null,false);
+                            createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                        }
+
+                    }else if(details == 2){
+                        let idNxS = $("#idNxS").val();
+                        buildUploadCards(idNxS);
+                        // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
+                        // var row = escrituracionTable.row(tr);
+                        // createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
+                    }else if(details == 3){
+                        var tr = $(`#docs${idSolicitud}`).closest('tr');
+                        var row = escrituracionTable.row(tr);
+                        createDocRowOtros(row, tr, $(`#docs${idSolicitud}`),contador);
+
+                    }else if(details == 4){
+                        var tr = $(`#pago${idSolicitud}`).closest('tr');
+                        var row = escrituracionTable.row(tr);
+                        createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
+                    }
+                    else{
+                        escrituracionTable.ajax.reload(null,false);
+                        escrituracionTableTest.ajax.reload(null,false);
+                    }
+                    $("#uploadModal").modal("hide");
+                    $('#spiner-loader').addClass('hide');
+                } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
+                else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
+                $('#spiner-loader').addClass('hide');
+            }, error: function () {
+                $("#sendRequestButton").prop("disabled", false);
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                $('#spiner-loader').addClass('hide');
             }
-            if (
-              (id_estatus == 20 || id_estatus == 25 || id_estatus == 12) &&
-              (action == 3 || action == 4)
-            ) {
-              var index2 = documentosObligatorios.findIndex(
-                (e) => e.validado == 2
-              );
-              var indexNull = documentosObligatorios.findIndex(
-                (e) => e.validado == null
-              );
-              // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
-              //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
-              if (
-                (index2 < 0 && indexNull < 0 && action == 3) ||
-                (action == 4 && index2 >= 0)
-              ) {
-                escrituracionTable.ajax.reload(null, false);
-                createDocRow(
-                  integracionExpediente.row,
-                  integracionExpediente.tr,
-                  integracionExpediente.this
-                );
-              }
-            }
-            if (id_estatus == 26 || id_estatus == 30 || id_estatus == 31) {
-              escrituracionTable.ajax.reload(null, false);
-              createDocRow(
-                integracionExpediente.row,
-                integracionExpediente.tr,
-                integracionExpediente.this
-              );
-            }
-          } else if (details == 2) {
-            let idNxS = $("#idNxS").val();
-            buildUploadCards(idNxS);
-            // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
-            // var row = escrituracionTable.row(tr);
-            // createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
-          } else if (details == 3) {
-            var tr = $(`#docs${idSolicitud}`).closest("tr");
-            var row = escrituracionTable.row(tr);
-            createDocRowOtros(row, tr, $(`#docs${idSolicitud}`), contador);
-          } else if (details == 4) {
-            var tr = $(`#pago${idSolicitud}`).closest("tr");
-            var row = escrituracionTable.row(tr);
-            createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
-          } else {
-            escrituracionTable.ajax.reload(null, false);
-            escrituracionTableTest.ajax.reload(null, false);
-          }
-          $("#uploadModal").modal("hide");
-          $("#spiner-loader").addClass("hide");
-        } else if (response == 0)
-          alerts.showNotification(
-            "top",
-            "right",
-            "Oops, algo salió mal.",
-            "warning"
-          );
-        else if (response == 2)
-          alerts.showNotification(
-            "top",
-            "right",
-            "No fue posible almacenar el archivo en el servidor.",
-            "warning"
-          );
-        else if (response == 3)
-          alerts.showNotification(
-            "top",
-            "right",
-            "El archivo que se intenta subir no cuenta con la extención .xlsx",
-            "warning"
-          );
-        $("#spiner-loader").addClass("hide");
-      },
-      error: function () {
-        $("#sendRequestButton").prop("disabled", false);
-        alerts.showNotification(
-          "top",
-          "right",
-          "Oops, algo salió mal.",
-          "danger"
-        );
-        $("#spiner-loader").addClass("hide");
-      },
-    });
-  }
+        });
+    }
 });
 
 $(document).on("submit", "#formPresupuesto", function (e) {
@@ -1273,47 +1219,7 @@ $(document).on("click", ".modalPresupuestos", function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-    $.ajax({
-        url: 'approvePresupuesto',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            $("#sendRequestButton").prop("disabled", false);
-            if (response == 1) {
-                // getDocumentsInformation(idSolicitud);
-                alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
-                if(details == 1){
-                    var tr = $(`#trees${idSolicitud}`).closest('tr');
-                    var row = escrituracionTable.row(tr);
-                    createDocRow(row, tr, $(`#trees${idSolicitud}`));
-                    if(idEstatusSolicitud == 19 || idEstatusSolicitud == 22){
-                        var index = documentosObligatorios.findIndex(e => e.cargado == 0);
-                        // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
-                        //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
-                        if(index < 0){
-                            escrituracionTable.ajax.reload(null,false);
-                           // createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
-                        }
-                    }
-                }
-                else{
-                    escrituracionTable.ajax.reload(null,false);
-                }
-                // $("#uploadModal").modal("hide");
-            } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-            else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
-            else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
-            $('#spiner-loader').addClass('hide');
-        }, error: function () {
-            $("#sendRequestButton").prop("disabled", false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            $('#spiner-loader').addClass('hide');
-        }
-    });
-})
+  
 $(document).on('change', '.selectpicker.notaria-select', async function(e){
     if ($(this).val()) {
         let descripcion = {};
@@ -2756,31 +2662,33 @@ function getEstatusConstruccion(estatus_construccion) {
 }
 
 function getEstatusPago() {
-  $("#spiner-loader").removeClass("hide");
-  $("#estatusPago").find("option").remove();
-  $("#estatusPago").append(
-    $("<option disabled selected>").val("0").text("Seleccione una opción")
-  );
-  $.post(
-    "getEstatusPago",
-    function (data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-        var id = data[i]["id_opcion"];
-        var name = data[i]["nombre"];
-        $("#estatusPago").append($("<option>").val(id).text(name));
-      }
-      if (len <= 0) {
-        $("#estatusPago").append(
-          '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>'
-        );
-      }
-      $("#estatusPago").selectpicker("refresh");
-      $("#spiner-loader").addClass("hide");
-    },
-    "json"
-  );
-}
+    $("#spiner-loader").removeClass("hide");
+    $("#estatusPago").find("option").remove();
+    $("#liquidado").find("option").remove();
+    $("#estatusPago").append(
+      $("<option disabled selected>").val("0").text("Seleccione una opción")
+    );
+    $.post(
+      "getEstatusPago",
+      function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+          var id = data[i]["id_opcion"];
+          var name = data[i]["nombre"];
+          $("#estatusPago").append($("<option>").val(id).text(name));
+          $("#liquidado").append($("<option>").val(id).text(name));
+        }
+        if (len <= 0) {
+          $("#estatusPago").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+          $("#liquidado").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
+        $("#estatusPago").selectpicker("refresh");
+        $("#liquidado").selectpicker("refresh");
+        $("#spiner-loader").addClass("hide");
+      },
+      "json"
+    );
+  }
 
 function createDocRow(row, tr, thisVar) {
   //ROWDETAILS INTEGRACIÓN DE EXPEDIENTE
@@ -3104,6 +3012,7 @@ $(document).on("submit", "#formValorOperacion", function (e) {
 function getBudgetInformacion(idSolicitud, actividad = 0) {
   //$("#fechaCAI").html("");
   $("#spiner-loader").removeClass("hide");
+  getEstatusPago();
   $.post(
     "getBudgetInformacion",
     {
@@ -3125,7 +3034,7 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
           document.getElementById("descuentosI").disabled = true;
           document.getElementById("motivoI").disabled = true;
         }
-        $("#liquidado").val(data.nombrePago);
+        $("#liquidado").val(data.idEstatusPago).selectpicker("refresh");
         $("#construccionI").val(data.nombreConst);
         $("#clienteI")
           .val(data.cliente_anterior == 1 ? "uno" : "dos")
@@ -3152,36 +3061,36 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
 }
 
 $(document).on("change", "#clienteI", function () {
-  if ($(this).val() == 'uno') {
-      $('#ifInformacion').show();
-      $("#ifInformacion input").attr("required", true);
-  } else {
-      $('#ifInformacion').hide();
-      $("#ifInformacion input").attr("required", false);
-      $("#ifInformacion input").val('');
-      $('#tipoContratoAnt').val('default').selectpicker('deselectAll');
-      $('#tipoContratoAnt').selectpicker('refresh');
-  }
-});
+    if ($(this).val() == 'uno') {
+        $('#ifInformacion').show();
+        $("#ifInformacion input").attr("required", true);
+    } else {
+        $('#ifInformacion').hide();
+        $("#ifInformacion input").attr("required", false);
+        $("#ifInformacion input").val('');
+        $('#tipoContratoAnt').val('default').selectpicker('deselectAll');
+        $('#tipoContratoAnt').selectpicker('refresh');
+    }
+  });
 
 //AGREGAR INFORMACIÓN - ADMIN
 $(document).on("submit", "#formInformacion", function (e) {
-  e.preventDefault();
-  let idSolicitud = $("#idSolicitud").val();
-  let data = new FormData($(this)[0]);
-  data.append("idSolicitud", idSolicitud);
-  if( $("#clienteI").val() == "uno" ){
-    if( $("#tipoContratoAnt").val() != '' ){
-      setNewInformacion(data);
+    e.preventDefault();
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData($(this)[0]);
+    data.append("idSolicitud", idSolicitud);
+    if( $("#clienteI").val() == "uno" ){
+      if( $("#tipoContratoAnt").val() != '' ){
+        setNewInformacion(data);
+      }
+      else{
+        alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de contrato anterior', 'danger');
+      }
     }
     else{
-      alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de contrato anterior', 'danger');
+      setNewInformacion(data);
     }
-  }
-  else{
-    setNewInformacion(data);
-  }
-});
+  });
 
 function setNewInformacion(data){
     $.ajax({

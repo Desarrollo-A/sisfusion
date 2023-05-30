@@ -1734,11 +1734,12 @@ class Postventa extends CI_Controller
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
+            "estatus_pago" => $data['liquidado'],
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
-            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null) ? 0 : $data['tipoContratoAnt'],
+            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null)  ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
-             "aportacion" => str_replace($replace,"",$data['aportaciones']),
+            "aportacion" => str_replace($replace,"",$data['aportaciones']),
             "descuento" => str_replace($replace,"",$data['descuentos']),
             "motivo" => $data['motivo'],
             
@@ -3195,13 +3196,10 @@ function saveNotaria(){
         echo json_encode($response);
     }
 
-<<<<<<< .merge_file_a21468
     function getInfoCliente(){
         $id_cliente = $this->input->post("id_cliente");
         $data = $this->Postventa_model->getInfoCliente($id_cliente)->result_array();
         echo json_encode($data);
-=======
->>>>>>> .merge_file_a24752
     }
 }
 
