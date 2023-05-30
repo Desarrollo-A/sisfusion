@@ -1035,7 +1035,7 @@ $(document).on("click", "#estatusL", function () {
   getEstatusConstruccion(estatus_construccion);
   $("#estatusLModal").modal();
 });
-
+ 
 $(document).on("submit", "#formEstatusLote", function (e) {
   e.preventDefault();
   let id_solicitud = $("#id_solicitudEstatus").val();
@@ -1190,17 +1190,7 @@ $(document).on("click", ".modalPresupuestos", function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-  
-$(document).on('change', '.selectpicker.notaria-select', async function(e){
-    if ($(this).val()) {
-        let descripcion = {};
-        let iconSave = $(this).parent().next().find('.icon-save');
-        iconSave.removeClass('inactive');
-        iconSave.addClass('active');
-        descripcion = await getDescriptionNotaria($(this).val());
-        $(this).parent().parent().next().text(descripcion.direccion);
-    }
-})
+
 
 $(document).on('click', '.saveNotaria', function() {
     let tr = $(this).closest('tr');
@@ -1212,13 +1202,6 @@ $(document).on('click', '.saveNotaria', function() {
     }
 })
 
-$(document).on('click', '.modalPresupuestos', function(){
-    let idNxS = $(this).attr('data-idNxS');
-    $("#idNxS").val(idNxS);
-    buildUploadCards(idNxS);
-    $('#loadPresupuestos').modal();
-    $('[data-toggle="tooltip"]').tooltip();
-})
 
 $(document).on('click', '.modalCopiaCertificada', function(){
     let idNxS = $(this).attr('data-idNxS2');
@@ -2223,7 +2206,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         } //PERMISO DE ESCRITURA SUBIR NUEVO ARCHIVO FORMAS DE PAGO FECHA FIRMA
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 26 || v.estatus_solicitud == 30) && (v.tipo_documento == 22) ) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        } else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 59) && (v.tipo_documento == 11 || v.tipo_documento == 17 || v.tipo_documento == 18) ) {
+        } else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 59) && (v.tipo_documento == 17 || v.tipo_documento == 18) ) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
         else if (permisos == 2 && v.estatus_solicitud == 5) {
