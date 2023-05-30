@@ -7,51 +7,51 @@ $(document).ready(function() {
             if (data[i]['tipo'] == 1) // SON LAS SEDES
                 $("#sedes").append($('<option>').val(id).text(name.toUpperCase()));
             else if (data[i]['tipo'] == 2) // SON LAS RESIDENCIALES
-                $("#residenciales").append($('<option>').val(id).text(name.toUpperCase()));
+                $("#residenciales").append($('<option> ').val(id).text(name.toUpperCase()));
         }
         $("#sedes").selectpicker('refresh');
         $("#residenciales").selectpicker('refresh');
     }, 'json');
 });
-
 let titulos_intxt = [];
 $('#Jtabla thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#Jtabla').DataTable().column(i).search() !== this.value) {
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
         }
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
-
 $(document).on('change', "#sedes", function () {
-    if($(this).val() != "2") {
+     if($(this).val() != "2") {
         fillTable($(this).val(), 0);
+        $('#JTH').removeClass('hide');
         $('#div_proyectos').addClass('hide');
-        $('#residenciales').val('').selectpicker('refresh')
+        $('#residenciales').val('').selectpicker('refresh');
     }
-    else if($(this).val() == "2")
+    else if($(this).val() == "2"){
+        fillTable($(this).val(), 0);
+        $('#JTH').removeClass('hide');
         $('#div_proyectos').removeClass('hide');
-    else
-        alerts.showNotification("top", "right", "Selecciona una empresa para continuar con la búsqueda.", "warning");
+    }    
+    else                                            
+        alerts.showNotification("top", "right", "SELECCIONA UNA OPCIÓN PARA CONTINUAR CON LA BÚSQUEDA.", "warning");
 });
-
 $(document).on('change', "#residenciales", function () {
     fillTable($("#sedes").val(), $(this).val());
 });
-
 function getFinalDate() {
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
-    return [date, dateTime];
+    return [dateTime];
 }
-
 function fillTable(sede, residencial) {
-    const [date, dateTime] = getFinalDate();
+    const [dateTime] = getFinalDate();
     $('#Jtabla').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -60,8 +60,8 @@ function fillTable(sede, residencial) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Estatus actuales de terrenos al: ' + dateTime ,
-            title: 'Estatus actuales de terrenos al:  ' + dateTime ,
+            titleAttr: 'Estatus actuales de terrenos al ' +dateTime ,
+            title: 'Estatus actuales de terrenos al '+dateTime ,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                 format: {
@@ -97,15 +97,15 @@ function fillTable(sede, residencial) {
             {data: 'nombreLote'}, // LOTE
             {data: 'nombreSede' }, // SEDE
             {data: 'referencia'}, // REFERENCIA
-            {data: 'sup'}, // SUPERFICIE
-            { data: // GERENTE
-                function(data) {
-                    return (data.gerente != "" && data.gerente != null) ? " - " + data.gerente : "";
-                }
-            },
+            {data: 'sup'}, // SUPERFICIE 
             { data: // ASESOR
                 function(data) {
-                    return (data.asesor != "" && data.asesor != null) ? " - " + data.asesor : "";
+                    return (data.asesor != "" && data.asesor != null) ? "" + data.asesor : "";
+                }
+            },
+            { data: // GERENTE
+                function(data) {
+                    return (data.gerente != "" && data.gerente != null) ? "" + data.gerente : "";
                 }
             },
             { // PROCESO CONTRATACIÓN
@@ -114,7 +114,7 @@ function fillTable(sede, residencial) {
             },
             { data: // ESTATUS
                 function(data) {
-                    return (data.status == null || data.status == "") ? "N/A" : data.status;
+                    return (data.status == null || data.status == "") ? "NO APLICA" : data.status;
                 }
             },
             { data: 'comentario'}, // COMERNTARIO
@@ -162,12 +162,12 @@ function fillTable(sede, residencial) {
             },
             { data: // ESTATUS
                 function(data) {
-                    return (data.statusFecha == null) ? "N/A" : data.statusFecha;
+                    return (data.statusFecha == null) ? "NO APLICA" : data.statusFecha;
                 }
             },
             { data: // FECHA APARTADO
                 function(data) {
-                    return (data.fechaApartado == null) ? "N/A" : myFunctions.convertDateYMDHMS(data.fechaApartado);
+                    return (data.fechaApartado == null) ? "NO APLICA" : myFunctions.convertDateYMDHMS(data.fechaApartado);
                 }
             },
             { data: 'nombreCliente'}, // NOMBRE CLIENTE
@@ -175,9 +175,9 @@ function fillTable(sede, residencial) {
                 function(data) {
                     let labelAlc = '';
                     if(data.observacionContratoUrgente == '1')
-                        labelAlc = `<span class="label" style="background: #E6B0AA; color: #641E16">En Proceso de liberación</span>`;
+                        labelAlc = `<span class="label lbl-green">En Proceso de liberación</span>`;
                     else
-                        labelAlc = `<span class="label" style="background: #ABB2B9; color: #17202A">Sin registro</span>`;
+                        labelAlc = `<span class="label lbl-grayDark">Sin registro</span>`;
                     return  labelAlc;
                 }
             },
@@ -189,17 +189,17 @@ function fillTable(sede, residencial) {
             },
             { data: // ESTATUS LOTE
                 function(data) {
-                    let label_statusLote = `<span class="label" style="background: #D2B4DE; color: #4A235A">${data.estatus_lote}</span>`;
-                    let tipo_venta = `<span class="label" style="background: #FAD7A0; color: #7E5109">${data.tipo_venta}</span>`;
+                    let label_statusLote = `<span class="label lbl-blueMaderas">${data.estatus_lote}</span>`;
+                    let tipo_venta = `<span class="label lbl-sunny">${data.tipo_venta}</span>`;
                     return  `<center>${label_statusLote}<br><br>${tipo_venta}</center>`;
                 }
             },
             {
                 data: function (d) {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
-                        return `<span class="label" style="background: #A3E4D7; color: #0E6251">REUBICADO</span>`;
+                        return `<span class="label lbl-green">REUBICADO</span>`;
                     else
-                        return `<span class="label" style="background: #ABB2B9; color: #17202A">NO APLICA</span>`;
+                        return `<span class="label lbl-grayDark">NO APLICA</span>`;
                 }
             },
             {

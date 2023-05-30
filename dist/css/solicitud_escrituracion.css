@@ -1043,6 +1043,12 @@
   background-color: #B7950B18;
 }
 
+.lbl-sunny {
+  color: #B7950B;
+  border: none;
+  background-color: #F9F87118;
+}
+
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
 /* El background del scroll */

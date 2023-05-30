@@ -237,7 +237,6 @@
 		return $query->result_array();
 	}
 ///	fin filtro de condominios por residencial
-
 // filtro de lote por condominios y residencial
 	public function getLotes($condominio,$residencial)
 	{
@@ -252,7 +251,6 @@
 		}
 	}
 ///	fin filtro de lote por condominios y residencial
-
 // filtro de lotes2 por condominios y residencial (para el historial)
 	public function getLotes2($condominio,$residencial)
 	{
@@ -392,7 +390,6 @@
 		return $query->result_array();
 	}
 ///	fin filtro de condominios por residencial PARA SUR Y SAN LUIS
-
 // filtro de lote por condominios y residencial
 	public function getLotesQro($condominio,$residencial)
 	{
@@ -407,7 +404,6 @@
 		}
 	}
 ///	fin filtro de lote por condominios y residencial
-
 //////////////////////////////INICIA PANEL PARA REGISTRAR STATUS CONTRATACION DEL LOTE VERIFICANDO STATUS ANTERIOR ///////////////////////
 	public function registroStatusContratacion () {
 		$query = $this->db-> query('
@@ -778,14 +774,14 @@
 			$where = "AND residencial.idResidencial = $residencial";
 		else
 			$where = "";
-		$query = $this->db-> query("SELECT lotes.idLote, s.nombre as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+		$query = $this->db-> query("SELECT lotes.idLote, Upper(s.nombre) as nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
         lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
         fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
         lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, sup, cl.fechaApartado,
         UPPER(concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno)) as asesor, idAsesor,
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,
-        lotes.observacionContratoUrgente, hl.modificado as modificado_historial, st.nombre as estatus_lote, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, 
+        lotes.observacionContratoUrgente, hl.modificado as modificado_historial,Upper( st.nombre) as estatus_lote, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, 
 		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8,
 		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
         FROM lotes as lotes
@@ -793,7 +789,7 @@
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede $where
-        LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
+        LEFT JOIN usuarios AS us ON cl.id_asesor=us.id_usuario
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
@@ -926,7 +922,6 @@
 	return $query->result();
 	}
 ///	fin filtro de lote por condominios y residencial DOCUMENTACION ELITE FIN
-
 // filtro de lote por condominios y residencial DOCUMENTACION CONTRALORIA INICIO
 	public function getLotesDocContraloria($condominio,$residencial) {
 		$this->db->select('idLote,nombreLote, idStatusLote');
@@ -1342,7 +1337,6 @@
         JOIN usuarios asesor ON cl.id_asesor=asesor.id_usuario
         JOIN usuarios gerente ON gerente.id_usuario=asesor.id_lider
         WHERE hl.idStatusContratacion=15 AND hl.idMovimiento=45 AND hl.status=1 ".$filter);
-		//return $query->result();
 	}
 // filtro de lote por condominios y residencial DOCUMENTACION ELITE INICIO
 	public function getExp($lotes)
@@ -1425,7 +1419,7 @@
 		return $query->result();
 	}
     public function lotesContratados() {
-        $query = $this->db->query("SELECT lotes.idLote, ISNULL(s.nombre, 'Sin especificar') AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+        $query = $this->db->query("SELECT lotes.idLote, ISNULL(UPPER(s.nombre), 'SIN ESPECIFICAR') AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
         lotes.idStatusContratacion, lotes.idMovimiento, CONVERT(VARCHAR, hd.modificado, 120) modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
         lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
         lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado,
@@ -1650,10 +1644,10 @@
 		return $this->db->update('usuarios', $data);
 	}
 	public function corridaContraloria2(){
-		$query = $this->db-> query('SELECT cliente.idCliente, primerNombre, segundoNombre,
-apellidoPaterno, apellidoMaterno, razonSocial, expediente, nombreLote, rfc, condominio.nombre, residencial.nombreResidencial
- FROM cliente INNER JOIN lotes ON cliente.idLote = lotes.idLote 
-inner join condominio on condominio.idCondominio = lotes.idCondominio inner join residencial on condominio.idResidencial = residencial.idResidencial
+	$query = $this->db-> query('SELECT cliente.idCliente, primerNombre, segundoNombre,
+	apellidoPaterno, apellidoMaterno, razonSocial, expediente, nombreLote, rfc, condominio.nombre, residencial.nombreResidencial
+	FROM cliente INNER JOIN lotes ON cliente.idLote = lotes.idLote 
+	inner join condominio on condominio.idCondominio = lotes.idCondominio inner join residencial on condominio.idResidencial = residencial.idResidencial
 	where cliente.status = 1
      ');
 		return $query->result();
@@ -1797,9 +1791,9 @@ inner join condominio on condominio.idCondominio = lotes.idCondominio inner join
 	}
 	public function getClienteChangeAsesor($condominio) {
 		$this->db->select('lotes.idLote,nombreLote, condominio.nombre as nombreCondominio, residencial.nombreResidencial,cliente.primerNombre, cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.razonSocial,
-	gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4.nombreGerente as gerente4, gerente5.nombreGerente as gerente5, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, asesor4.nombreAsesor as asesor4, asesor5.nombreAsesor as asesor5,
-	asesor.idAsesor as idAsesor1, asesor2.idAsesor as idAsesor2,
-	gerente1.idGerente as idGerente1');
+		gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, gerente4.nombreGerente as gerente4, gerente5.nombreGerente as gerente5, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, asesor4.nombreAsesor as asesor4, asesor5.nombreAsesor as asesor5,
+		asesor.idAsesor as idAsesor1, asesor2.idAsesor as idAsesor2,
+		gerente1.idGerente as idGerente1');
 		$this->db->join('cliente', 'cliente.idLote = lotes.idLote');
 		$this->db->join('asesor', 'cliente.idAsesor = asesor.idAsesor');
 		$this->db->join('asesor as asesor1', 'asesor1.idAsesor = cliente.idAsesor', 'left');
@@ -1839,9 +1833,9 @@ inner join condominio on condominio.idCondominio = lotes.idCondominio inner join
 	}
 	public function selectRegistroPorContratoStatus12($numContrato){
 		$this->db->select("cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio, l.modificado, l.fechaSolicitudValidacion, l.fechaRecepcionContrato,
-cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.rfc, l.contratoUrgente, CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor,
-concat(gerente.nombre,' ', gerente.apellido_paterno,' ', gerente.apellido_materno) as nombreGerente, l.observacionContratoUrgente,
-l.fechaRL, l.idStatusContratacion, l.idMovimiento, l.firmaRL, cl.status, l.validacionEnganche");
+		cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.rfc, l.contratoUrgente, CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor,
+		concat(gerente.nombre,' ', gerente.apellido_paterno,' ', gerente.apellido_materno) as nombreGerente, l.observacionContratoUrgente,
+		l.fechaRL, l.idStatusContratacion, l.idMovimiento, l.firmaRL, cl.status, l.validacionEnganche");
 		$this->db->join('clientes cl', 'cl.idLote = l.idLote ');
 		$this->db->join('usuarios asesor', 'cl.id_asesor = asesor.id_usuario');
 		$this->db->join('usuarios gerente', 'asesor.id_lider = gerente.id_usuario');
@@ -1893,9 +1887,9 @@ l.fechaRL, l.idStatusContratacion, l.idMovimiento, l.firmaRL, cl.status, l.valid
 // filtro de lotes por proyecto
 	public function getInventarioXproyecto($residencial){
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
-lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
-');
+		gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
+		lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
+		');
 		$this->db->join('statuslote', 'lotes.idStatusLote = statuslote.idStatusLote');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
 		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
@@ -1958,10 +1952,9 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 // filtro de lotes por proyecto todos
 	public function getInventarioXproyectoCondominioStatus($residencial,$condominio,$status){
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-	gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
-	
-    lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
-	');
+		gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
+		lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
+		');
 		$this->db->join('statuslote', 'lotes.idStatusLote = statuslote.idStatusLote');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
 		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
@@ -1993,9 +1986,9 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 // filtro de lotes por proyecto
 	public function getInventarioXproyectoStatus($residencial,$status){
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-	gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
-	lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
-	');
+		gerente1.nombreGerente as gerente1, gerente2.nombreGerente as gerente2, gerente3.nombreGerente as gerente3, asesor1.nombreAsesor as asesor, asesor2.nombreAsesor as asesor2, asesor3.nombreAsesor as asesor3, cliente.fechaApartado,
+		lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGerente as gerenteL2, asesorLote.nombreAsesor as asesorL, asesorLote2.nombreAsesor as asesorL2, lotes.fecha_modst, cliente.user as userApartado, lotes.userstatus as userLote, motivo_change_status
+		');
 		$this->db->join('statuslote', 'lotes.idStatusLote = statuslote.idStatusLote');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
 		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
@@ -2023,33 +2016,28 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		}
 	}
 // Fin de filtro de lotes por proyecto
-/// Filtro todos lotes
+// Filtro todos lotes
 	public function getInventarioTodos()
 	{
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, 
 		modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, 
 		condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-	
-	gerente1.nombreGerente as gerente1, 
-	gerente2.nombreGerente as gerente2, 
-	gerente3.nombreGerente as gerente3, 
-	asesor1.nombreAsesor as asesor,
-	asesor2.nombreAsesor as asesor2, 
-	asesor3.nombreAsesor as asesor3, 
-	
-	cliente.fechaApartado,
-	
-    lotes.idstatuslote, 
-	gerenteLote.nombreGerente as gerenteL, 
-	gerenteLote2.nombreGerente as gerenteL2, 
-	asesorLote.nombreAsesor as asesorL, 
-	asesorLote2.nombreAsesor as asesorL2, 
-	lotes.fecha_modst, 
-	cliente.user as userApartado, 
-	lotes.userstatus as userLote, 
-	motivo_change_status
-	
-	
+		gerente1.nombreGerente as gerente1, 
+		gerente2.nombreGerente as gerente2, 
+		gerente3.nombreGerente as gerente3, 
+		asesor1.nombreAsesor as asesor,
+		asesor2.nombreAsesor as asesor2, 
+		asesor3.nombreAsesor as asesor3, 
+		cliente.fechaApartado,
+		lotes.idstatuslote, 
+		gerenteLote.nombreGerente as gerenteL, 
+		gerenteLote2.nombreGerente as gerenteL2, 
+		asesorLote.nombreAsesor as asesorL, 
+		asesorLote2.nombreAsesor as asesorL2, 
+		lotes.fecha_modst, 
+		cliente.user as userApartado, 
+		lotes.userstatus as userLote, 
+		motivo_change_status
 	');
 		$this->db->join('statuslote', 'lotes.idStatusLote = statuslote.idStatusLote');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
@@ -2075,7 +2063,7 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 			return $query;
 		}
 	}
-/// Fin fitro lotes
+// Fin fitro lotes
 // Inicio filtro status opcion todos en la vista inventario terrenos en VEntas asistentes
 	public function getStatus(){
 		$this->db->select('idStatusLote, nombre');
@@ -2084,7 +2072,7 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		$query = $this->db->get();
 		return $query->result_array();
 	}
-///	fin filtro de status
+//	fin filtro de status
 		public function historialProcesoFin($lotes){
 		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, historial_lotes.comentario, movimientos.descripcion,
 		(CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
@@ -2125,8 +2113,7 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		return $query->result();
 	}
 	public function registroStatusContratacion10v2 () {
-	
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, l.validacionEnganche, l.firmaRL,
+	$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, l.validacionEnganche, l.firmaRL,
 	l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.perfil, cond.nombre as nombreCondominio,
 	res.nombreResidencial, l.ubicacion, l.tipo_venta, l.numContrato
 	FROM lotes l
@@ -2138,8 +2125,8 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 	OR l.idStatusContratacion=9 AND l.idMovimiento=26 AND cl.status=1
 	GROUP BY l.idLote, cl.id_cliente, l.validacionEnganche, l.firmaRL,
 	l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.perfil, cond.nombre,
-	res.nombreResidencial, l.ubicacion, l.tipo_venta, l.numContrato;
-");
+	res.nombreResidencial, l.ubicacion, l.tipo_venta, l.numContrato;"
+	);
 		return $query->result();
 	}
 	public function getDescuentoscf($idLote){
@@ -2238,8 +2225,8 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 	}
 	public function getInventarioXproyectoc($residencial) {
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo,
-	condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-	lotes.idstatuslote, condominio.msni as mesesn');
+		condominio.nombre as nombreCondominio, residencial.nombreResidencial,
+		lotes.idstatuslote, condominio.msni as mesesn');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
 		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
 		$this->db->where('residencial.idResidencial', $residencial);
@@ -2579,8 +2566,6 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		left JOIN gerente as gerente3 ON asesor3.idGerente = gerente3.idGerente
 		LEFT JOIN gerente as gerente4 ON asesor4.idGerente = gerente4.idGerente
 		left JOIN gerente as gerente5 ON asesor5.idGerente = gerente5.idGerente
-		
-		
 		where lotes.idStatusContratacion = "11" and lotes.idMovimiento  = "41" and cliente.status = 1 and lotes.firmaRL = "NULL" OR lotes.firmaRL = " "
 		OR lotes.idStatusContratacion = "10" and lotes.idMovimiento  = "40" and cliente.status = 1 and lotes.firmaRL = "NULL" OR lotes.firmaRL = " "
 		OR lotes.idStatusContratacion = "7" and lotes.idMovimiento  = "66" and cliente.status = 1 and lotes.firmaRL = "NULL" OR lotes.firmaRL = " "
@@ -2589,29 +2574,29 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		return $query->result();
 	}
 	public function getSupThree($residencial, $condominio, $sup, $grupo) {
-	$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo,
-	condominio.nombre as nombreCondominio, residencial.nombreResidencial,
-	lotes.idstatuslote, condominio.msni as mesesn');
-	$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
-	$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
-	$this->db->where_in('condominio.idCondominio', $condominio, FALSE);
-	$this->db->where('residencial.idResidencial', $residencial);
-	$this->db->where_in('sup', $sup, FALSE);
-	if($grupo == 1){
-		$this->db->where('sup <', '200');
-	} else if ($grupo == 2){
-		$this->db->where('sup >=', '200');
-		$this->db->where('sup <', '300');
-	} else if($grupo == 3) {
-		$this->db->where('sup >=', '300');
-	}
-	$this->db->where('lotes.idStatusLote', 1);
-	$this->db->where('lotes.status', 1);
-	$query = $this->db->get('lotes');
-	if($query){
-		$query = $query->result_array();
-		return $query;
-	}
+		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo,
+		condominio.nombre as nombreCondominio, residencial.nombreResidencial,
+		lotes.idstatuslote, condominio.msni as mesesn');
+		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
+		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
+		$this->db->where_in('condominio.idCondominio', $condominio, FALSE);
+		$this->db->where('residencial.idResidencial', $residencial);
+		$this->db->where_in('sup', $sup, FALSE);
+		if($grupo == 1){
+			$this->db->where('sup <', '200');
+		} else if ($grupo == 2){
+			$this->db->where('sup >=', '200');
+			$this->db->where('sup <', '300');
+		} else if($grupo == 3) {
+			$this->db->where('sup >=', '300');
+		}
+		$this->db->where('lotes.idStatusLote', 1);
+		$this->db->where('lotes.status', 1);
+		$query = $this->db->get('lotes');
+		if($query){
+			$query = $query->result_array();
+			return $query;
+		}
 	}
 	public function getInfoResepcionExp($idLote){
 		$this->db->select('lotes.idLote, nombreLote, condominio.nombre as nombreCondominio, residencial.nombreResidencial,
@@ -2779,7 +2764,7 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 		$query = $this->db-> query('SELECT *  FROM sedes WHERE id_sede='.$id_sede.' AND estatus=1');
 		return $query->result();
 	}
-/////////////////////// NEW MAJO /////////////////////
+////////////////////// NEW MAJO ////////////////////
 	public function table_datosBancarios(){
 		$this->db->select('idDBanco, empresa, banco, cuenta, clabe');
 		$query= $this->db->get("datosbancarios");
@@ -3045,28 +3030,27 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 	}
     function getRevision7() {
         $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
-            hd.fechaVenc, lotes.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
-            lotes.comentario, res.nombreResidencial, s.nombre as nombreSede,
-            hd.status, hd.comentario,
-            CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-            CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-            CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-            UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
-            CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario
-            FROM historial_lotes hd
-            INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente
-            INNER JOIN sedes s ON s.id_sede = cl.id_sede
-            INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
-            INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
-            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-            LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-            LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-            LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-            --LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
-            LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = (SELECT TOP 1 usuario FROM historial_lotes WHERE idLote = lotes.idLote AND status = 1 AND idStatusContratacion = 6 ORDER BY modificado DESC)
-            WHERE (hd.idStatusContratacion =5 and hd.idMovimiento=22 and cl.status = 1
-            or hd.idStatusContratacion = 3 and hd.idMovimiento = 82 and cl.status = 1)
-            AND hd.status = 1 ORDER BY hd.modificado ASC");
+		hd.fechaVenc, lotes.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
+		lotes.comentario, res.nombreResidencial, s.nombre as nombreSede,
+		hd.status, hd.comentario,
+		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+		CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+		CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
+		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario
+		FROM historial_lotes hd
+		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente
+		INNER JOIN sedes s ON s.id_sede = cl.id_sede
+		INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
+		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
+		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = (SELECT TOP 1 usuario FROM historial_lotes WHERE idLote = lotes.idLote AND status = 1 AND idStatusContratacion = 6 ORDER BY modificado DESC)
+		WHERE (hd.idStatusContratacion =5 and hd.idMovimiento=22 and cl.status = 1
+		or hd.idStatusContratacion = 3 and hd.idMovimiento = 82 and cl.status = 1)
+		AND hd.status = 1 ORDER BY hd.modificado ASC");
         return $query->result();
     }
 	function getDirectores(){
@@ -3093,18 +3077,18 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 			$condicion = ' autorizaciones.id_aut ='.$this->session->userdata('id_usuario').' AND';
 			$query = $this->db-> query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
 			lotes.nombreLote, autorizaciones.estatus, lotes.idLote, condominio.idCondominio,
-		autorizaciones.autorizacion, autorizaciones.fecha_creacion, id_autorizacion, autorizaciones.idLote,
-		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
-		CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut
-		FROM autorizaciones 
-		inner join lotes on lotes.idLote = autorizaciones.idLote 
-		inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
-		inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
-		inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
-		inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
-		where autorizaciones.estatus = 1 and ".$condicion." lotes.idLote=".$idLote);
-		}
-		return $query->result_array();
+			autorizaciones.autorizacion, autorizaciones.fecha_creacion, id_autorizacion, autorizaciones.idLote,
+			CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
+			CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut
+			FROM autorizaciones 
+			inner join lotes on lotes.idLote = autorizaciones.idLote 
+			inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
+			inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
+			inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
+			inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
+			where autorizaciones.estatus = 1 and ".$condicion." lotes.idLote=".$idLote);
+			}
+			return $query->result_array();
 	}
 	/*autorizaciones nuevo sistema*/
 	public function insertAutorizacion($data)
@@ -3126,27 +3110,27 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 	/*mostrar autorizaciones para Rigel - DC ROL 1*/
 	public function autsByDC(){
 		$query = $this->db-> query("SELECT cl.id_cliente, nombreLote, cl.rfc, res.nombreResidencial,
-				cond.nombre as nombreCondominio, cl.status, cl.id_asesor, cond.idCondominio,
-				lotes.idLote, cl.fechaApartado, 
-				CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-                CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-				CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente, motivoAut
-				FROM clientes cl
-				INNER JOIN lotes lotes ON cl.idLote = lotes.idLote
-				INNER JOIN condominios cond ON lotes.idCondominio = cond.idCondominio
-				INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-				INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-				INNER JOIN autorizaciones aut ON aut.idLote = lotes.idLote
-				INNER JOIN usuarios asesor ON asesor.id_usuario = aut.id_sol
-                INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-				WHERE cl.status = 1 AND aut.estatus=3
-				GROUP BY cl.id_cliente, nombreLote, cl.rfc, res.nombreResidencial,
-				cond.nombre, cl.status, cl.id_asesor, cond.idCondominio,
-				lotes.idLote, cl.fechaApartado, 
-				CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-                CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-				CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno), motivoAut
-				ORDER BY cl.fechaApartado DESC;");
+		cond.nombre as nombreCondominio, cl.status, cl.id_asesor, cond.idCondominio,
+		lotes.idLote, cl.fechaApartado, 
+		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+		CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente, motivoAut
+		FROM clientes cl
+		INNER JOIN lotes lotes ON cl.idLote = lotes.idLote
+		INNER JOIN condominios cond ON lotes.idCondominio = cond.idCondominio
+		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+		INNER JOIN autorizaciones aut ON aut.idLote = lotes.idLote
+		INNER JOIN usuarios asesor ON asesor.id_usuario = aut.id_sol
+		INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
+		WHERE cl.status = 1 AND aut.estatus=3
+		GROUP BY cl.id_cliente, nombreLote, cl.rfc, res.nombreResidencial,
+		cond.nombre, cl.status, cl.id_asesor, cond.idCondominio,
+		lotes.idLote, cl.fechaApartado, 
+		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+		CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno), motivoAut
+		ORDER BY cl.fechaApartado DESC;");
 		return $query->result();
 	}
 	// filtro de lote por condominios y residencial DOCUMENTACION ASESOR INICIO
@@ -3536,8 +3520,8 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
 	public function getcop($id_cliente){
 			$query = $this->db-> query(
 				"SELECT CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor,
-						CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador,
-						CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente
+				CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador,
+				CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente
 				FROM ventas_compartidas vc 
 				LEFT JOIN clientes cl ON vc.id_cliente = cl.id_cliente  
 				LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
@@ -3877,25 +3861,25 @@ lotes.idstatuslote, gerenteLote.nombreGerente as gerenteL, gerenteLote2.nombreGe
             }
         }
 		$query = $this->db->query(" SELECT re.descripcion nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
-										CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sl.nombre estatusLote,
-										sc.nombreStatus estatusContratacion, mo.descripcion movimiento,
-										CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
-										CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) AS coordinador, 
-										CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
-										CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) AS subdirector,
-										CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) AS regional
-									FROM clientes cl
-										INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
-										INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-										INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
-										INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
-										INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-										INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-										INNER JOIN usuarios asesor ON asesor.id_usuario = cl.id_asesor
-										LEFT JOIN usuarios coord ON coord.id_usuario = cl.id_coordinador
-										INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-										LEFT JOIN usuarios sub ON sub.id_usuario = cl.id_subdirector
-									WHERE lo.idStatusContratacion = 1 AND lo.idMovimiento = 31 $filter ORDER BY cl.id_Cliente ASC");
+		CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sl.nombre estatusLote,
+		sc.nombreStatus estatusContratacion, mo.descripcion movimiento,
+		CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+		CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) AS coordinador, 
+		CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+		CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) AS subdirector,
+		CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) AS regional
+	FROM clientes cl
+		INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
+		INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+		INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+		INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+		INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+		INNER JOIN usuarios asesor ON asesor.id_usuario = cl.id_asesor
+		LEFT JOIN usuarios coord ON coord.id_usuario = cl.id_coordinador
+		INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios sub ON sub.id_usuario = cl.id_subdirector
+	WHERE lo.idStatusContratacion = 1 AND lo.idMovimiento = 31 $filter ORDER BY cl.id_Cliente ASC");
 		return $query->result();
 	}
 	public function getReporteRechazos(){
