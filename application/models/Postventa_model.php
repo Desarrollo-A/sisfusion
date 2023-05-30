@@ -81,6 +81,8 @@ class Postventa_model extends CI_Model
 
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico, $valor_contrato)
     {
+        $replace = ["$", ","];
+        $valor_contrato = str_replace($replace,"",$valor_contrato);
         if(is_object($data)){
             $data = (array)$data;
         }
