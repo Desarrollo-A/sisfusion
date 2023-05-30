@@ -271,7 +271,7 @@ class Postventa_model extends CI_Model
             $estatus = $estatus->id_estatus;
             $estatus_sig =  $rol == 56 ? 4 : 3;
             $clave =  $rol == 56 ? 'APE0003' : 'APE0002';
-            $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
+            $actividades_x_estatus = $type == 3 ? (object)array("estatus_siguiente" => 58 ,"estatus_actual" => 2, "clave_actividad" => "APE0002") : (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
         }
         else {
             $estatus = $estatus->id_estatus;
