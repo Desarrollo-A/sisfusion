@@ -259,7 +259,7 @@ class Contratacion_model extends CI_Model {
       INNER JOIN sedes se ON se.id_sede = re.sede_residencial
       WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre
       UNION ALL
-      SELECT re.idResidencial id, UPPER(CAST(re.descripcion AS VARCHAR(75))) nombre, 2 tipo FROM residenciales re
+      SELECT re.idResidencial id,  UPPER(CAST(CONCAT(nombreResidencial, ' - ' ,re.descripcion ) as VARCHAR(75))) nombre, 2 tipo FROM residenciales re
       WHERE re.status = 1 AND re.sede_residencial = 2");
    }
 
