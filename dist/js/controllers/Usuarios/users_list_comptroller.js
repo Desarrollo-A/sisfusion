@@ -323,17 +323,14 @@ $(document).on('click', '.see-user-information', function(e){
 });
 
 function fillChangelog (v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"><span class="material-icons">check</span></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>'+v.parametro_modificado+'</h6></label><br>\n' +
-        '            <b>Valor anterior:</b> '+v.anterior+'\n' +
+    $("#changelog").append('<li>\n' +
+        '            <a>Campo: <b>'+v.parametro_modificado+'</b></a>\n' +
+        '            <a style="float: right">'+v.fecha_creacion+'</a><br>\n' +
+        '            <a>Valor anterior:</a> <b> '+v.anterior+' </b>\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> '+v.nuevo+'\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.fecha_creacion+' - '+v.creador+'</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
+        '            <a>Valor nuevo:</a> <b> '+v.nuevo+' </b>\n' +
+        '            <br>\n' +
+        '            <a>Usuario:<b> '+v.creador+' </b></a>\n' +
         '</li>');
 }
 
