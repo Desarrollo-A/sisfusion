@@ -1339,7 +1339,9 @@ function crearTablas(datosTablas){
                             break;
                             case 58:
                                 bandera_request = userType == 55 ? 1 : 0;
-                                group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
+                                if (userType == 55) { 
+                                    group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
+                                }
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
