@@ -928,8 +928,9 @@ class Postventa extends CI_Controller
            // "descuento" => $data['descuentos'],
             "valor_escriturar" => $data['valor_escri']
         );
-        //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
-        
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        ($data['fContrato'] == '' || $data['fContrato'] == null || $data['fContrato'] == 'null' || $data['fContrato'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_contrato'] =date("Y-m-d", strtotime(str_replace('/', '-', $data['fContrato'])));
+
         if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
             $updateData['bandera_notaria'] = 1;
@@ -1329,17 +1330,17 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Aportaciones:</b><br>
-                                                    $'.number_format($data->aportacion, 2, '.', '').'
+                                                    $'.number_format($data->aportacion, 2, '.', ',').'
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Descuentos:</b><br>
-                                                    $'.number_format($data->descuento, 2, '.', '').'
+                                                    $'.number_format($data->descuento, 2, '.', ',').'
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>Fecha de contrato:</b><br>
-                                                    ' . $data->modificado . '
+                                                    ' . $data->fecha_contrato . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                 <b>Motivo:</b><br>
@@ -1363,7 +1364,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                             <td style="font-size: 1em;">
                                                 <b>Valor de operación de contrato:</b><br>
-                                                ' .$data->valor_contrato. '
+                                                $' .number_format($data->valor_contrato, 2, '.', ',').'
                                             </td>
                                              <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
@@ -1381,6 +1382,10 @@ class Postventa extends CI_Controller
                                                             <td style="font-size: 1em;">
                                                                 <b>Nombre del titular anterior:</b><br>
                                                                 ' . $data->nombre_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Tipo de contrato anterior:</b><br>
+                                                                ' . $data->tipoContrato . '
                                                             </td>
                                                             <td style="font-size: 1em;">
                                                                 <b>Fecha contrato anterior:</b><br>

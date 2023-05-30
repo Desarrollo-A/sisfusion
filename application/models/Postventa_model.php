@@ -564,7 +564,7 @@ class Postventa_model extends CI_Model
     }
 
 function checkBudgetInfo($idSolicitud){
-        return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote, 
+        return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote,oxc4.nombre as tipoContrato,
         cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura, n.nombre_notaria, 
         n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre
                 FROM solicitudes_escrituracion se 
@@ -578,6 +578,7 @@ function checkBudgetInfo($idSolicitud){
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
                 LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
+                LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = se.tipo_contrato_ant AND oxc4.id_catalogo = 93
                 WHERE se.id_solicitud =$idSolicitud");
     }
 
@@ -761,7 +762,7 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getBudgetInformacion($idSolicitud){
-        return $this->db->query("SELECT se.*, hl.modificado,
+        return $this->db->query("SELECT se.*, hl.modificado,se.fecha_contrato,oxc4.nombre as tipoContrato,
         cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst,oxc.id_opcion idEstatusPago,oxc3.nombre tipoEscritura,
         CASE se.cliente_anterior WHEN 1 THEN 'SÍ' ELSE 'NO' END cli_anterior
         FROM solicitudes_escrituracion se 
@@ -773,6 +774,7 @@ function checkBudgetInfo($idSolicitud){
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
+        LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = se.tipo_contrato_ant AND oxc4.id_catalogo = 93
         WHERE se.id_solicitud = $idSolicitud");
     }
 

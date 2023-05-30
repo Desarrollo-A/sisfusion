@@ -1974,7 +1974,8 @@ function getBudgetInfo(idSolicitud) {
       var str =
         data.modificado != null ? data.modificado.split(" ")[0].split("-") : "";
       var strM = data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : "";
-      alert(strM)
+      var fechaContrato =data.fecha_contrato != null ? data.fecha_contrato.split("-") : null;
+      strM = data.fecha_contrato == null ? strM : `${fechaContrato[2]}-${fechaContrato[1]}-${fechaContrato[0]}`;
       $("#fContrato").val(strM);
       $("#catastral").val(data.clave_catastral);
       $("#construccionInfo").val(data.nombreConst);
