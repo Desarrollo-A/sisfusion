@@ -1655,8 +1655,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());    
     }
 
-    public function getTipoContratoAnt()
-    {
+    public function getTipoContratoAnt() {
         $data = $this->Postventa_model->getTipoContratoAnt()->result_array()
         ;
         if ($data != null)
@@ -1665,8 +1664,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function getTipoEscrituracion()
-    {
+    public function getTipoEscrituracion() {
         $data = $this->Postventa_model->getTipoEscrituracion();
         if ($data != null)
             echo json_encode($data);
@@ -1674,8 +1672,7 @@ class Postventa extends CI_Controller
             echo json_encode(array());
     }
 
-    public function servicioPostventa($referencia, $empresa){
-        //$url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/getDatos_clientePV';
+    public function servicioPostventa($referencia, $empresa) {
         $url = 'https://api-cobranza.gphsis.com/index.php/PaginaCDM/getDatos_clientePV';
         $datos = base64_encode(json_encode(array(
             "referencia" => $referencia,
@@ -1722,6 +1719,7 @@ class Postventa extends CI_Controller
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
+            "estatus_pago" => $data['liquidado'],
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
             "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null) ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],

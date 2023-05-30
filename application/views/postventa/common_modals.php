@@ -898,12 +898,13 @@
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">¿Lote liquidado? (<small style="color: red;">*</small>)</label>
-                                    <input id="liquidado" name="liquidado" class="form-control input-gral" type="text">
+                                    <select class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="liquidado" name="liquidado" data-live-search="true">
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Estatus construcción (<small style="color: red;">*</small>)</label>
+                                    <label class="control-label label-gral">Estatus construcción</label>
                                     <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
@@ -948,13 +949,13 @@
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Aportaciones (<small style="color: red;">*</small>)</label>
-                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
+                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
-                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
+                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">

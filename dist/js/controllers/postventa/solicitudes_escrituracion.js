@@ -3295,10 +3295,7 @@ function getEstatusConstruccion(estatus_construccion) {
       }
       if (estatus_construccion != null && estatus_construccion != 0) {
         $(`#construccion`).val(estatus_construccion);
-        //$(`#construccion`).selectpicker('val',estatus_construccion);
         $(`#construccion`).trigger("change");
-        //$('#construccion').val(estatus_construccion).trigger('change');
-        //$("#construccion").selectpicker('refresh');
       }
       $("#spiner-loader").addClass("hide");
     },
@@ -3309,6 +3306,7 @@ function getEstatusConstruccion(estatus_construccion) {
 function getEstatusPago() {
   $("#spiner-loader").removeClass("hide");
   $("#estatusPago").find("option").remove();
+  $("#liquidado").find("option").remove();
   $("#estatusPago").append(
     $("<option disabled selected>").val("0").text("Seleccione una opción")
   );
@@ -3320,13 +3318,14 @@ function getEstatusPago() {
         var id = data[i]["id_opcion"];
         var name = data[i]["nombre"];
         $("#estatusPago").append($("<option>").val(id).text(name));
+        $("#liquidado").append($("<option>").val(id).text(name));
       }
       if (len <= 0) {
-        $("#estatusPago").append(
-          '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>'
-        );
+        $("#estatusPago").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        $("#liquidado").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
       }
       $("#estatusPago").selectpicker("refresh");
+      $("#liquidado").selectpicker("refresh");
       $("#spiner-loader").addClass("hide");
     },
     "json"
@@ -3654,8 +3653,8 @@ $(document).on("submit", "#formValorOperacion", function (e) {
 });
 /**------------------------------------------- */
 function getBudgetInformacion(idSolicitud, actividad = 0) {
-  //$("#fechaCAI").html("");
   $("#spiner-loader").removeClass("hide");
+  getEstatusPago();
   $.post(
     "getBudgetInformacion",
     {
@@ -3677,16 +3676,16 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
           document.getElementById("descuentosI").disabled = true;
           document.getElementById("motivoI").disabled = true;
         }
-        $("#liquidado").val(data.nombrePago);
+        $("#liquidado").val(data.idEstatusPago).selectpicker("refresh");
         $("#construccionI").val(data.nombreConst);
         $("#clienteI")
           .val(data.cliente_anterior == 1 ? "uno" : "dos")
           .trigger("change");
-        $("#clienteI").selectpicker("refresh");
+        $("#tipoContratoAnt").val(data.tipo_contrato_ant).selectpicker("refresh");
         $("#nombreI").val(data.nombre_anterior);
         let fechaAnterior =
           data.fecha_anterior != null
-            ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("-")
+            ? data.fecha_anterior.split(" ")[0].split("-").reverse().join("/")
             : data.fecha_anterior;
         if (fechaAnterior != null)
             $("#fechaCAI").val(fechaAnterior);
@@ -3744,7 +3743,7 @@ function setNewInformacion(data){
         processData: false,
         type: "POST",
         success: function (response) {
-          alerts.showNotification( "top", "right", "Se agrego la información.", "success");
+          alerts.showNotification( "top", "right", "Se agregó la información.", "success");
           $("#informacionModal").modal("hide");
           escrituracionTable.ajax.reload(null, false);
         },
