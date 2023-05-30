@@ -5610,4 +5610,10 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 
 		
 	}
+
+    public function buscarLotePorIdCliente(int $idCliente, string $columns = '*')
+    {
+        $query = $this->db->query("SELECT $columns FROM lotes WHERE idCliente = $idCliente");
+        return $query->row();
+    }
 } 

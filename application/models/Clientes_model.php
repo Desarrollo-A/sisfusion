@@ -4388,4 +4388,16 @@ function getStatusMktdPreventa(){
             ORDER BY cli.id_cliente");
         return $query->result_array();
     }
+
+    function clienteAutorizacion(int $id)
+    {
+        $query = $this->db->query("SELECT c.id_cliente, 
+            acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
+	        acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms
+            FROM clientes c
+            LEFT JOIN autorizaciones_clientes acc ON c.id_cliente = acc.id_cliente AND acc.id_tipo = 1
+            LEFT JOIN autorizaciones_clientes acs ON c.id_cliente = acs.id_cliente AND acs.id_tipo = 2
+            WHERE c.id_cliente = $id");
+        return $query->row();
+    }
 }

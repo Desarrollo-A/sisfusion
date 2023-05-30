@@ -2,7 +2,7 @@
 
 use application\helpers\email\asesor\Elementos_Correos_Asesor;
 
- if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Asesor extends CI_Controller
 {
@@ -15,6 +15,11 @@ class Asesor extends CI_Controller
         $this->load->model('registrolote_modelo');
         $this->load->model('caja_model_outside');
         $this->load->model('General_model');
+        $this->load->model('Clientes_model');
+        $this->load->model([
+            'opcs_catalogo/valores/AutorizacionClienteOpcs',
+            'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
+        ]);
         $this->load->library(array('session', 'form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
@@ -5523,6 +5528,242 @@ class Asesor extends CI_Controller
         else if ($documentType == 8) $folder = "static/documentos/cliente/contrato/";
         else $folder = "static/documentos/cliente/expediente/";
         return $folder;
+    }
+
+    public function enviarCorreoAut()
+    {
+        $correoCliente = $this->input->post('correo');
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($correoCliente) || !isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return;
+        }
+
+        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+        if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::ENVIADO) {
+            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue enviado anteriormente.']);
+            return;
+        }
+
+        if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
+            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue validado anteriormente.']);
+            return;
+        }
+
+        $codigo = md5(microtime());
+        $codigoCorreoData = [
+            'id_cliente' => $idCliente,
+            'codigo' => $codigo,
+            'id_tipo' => TipoAutorizacionClienteOpcs::CORREO
+        ];
+        $this->General_model->addRecord('autorizaciones_clientes', $codigoCorreoData);
+
+        $banderaCorreoData = [
+            'correo' => $correoCliente,
+            'autorizacion_correo' => AutorizacionClienteOpcs::ENVIADO
+        ];
+        $resultado = $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
+
+        $code = ($resultado) ? 200 : 500;
+
+        $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
+        // $this->correoAut($url, $correoCliente);
+
+        echo json_encode(['code' => $code]);
+    }
+
+    public function enviarSmsAut()
+    {
+        $telefonoCliente = $this->input->post('telefono');
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($telefonoCliente) || !isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return;
+        }
+
+        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::ENVIADO) {
+            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue enviado anteriormente.']);
+            return;
+        }
+
+        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
+            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue validado anteriormente.']);
+            return;
+        }
+
+        $codigo = md5(microtime());
+        $url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$codigo";
+        /*$resultadoSms = $this->smsAut($url, $telefonoCliente);
+
+        if (!$resultadoSms) {
+            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+            return;
+        }*/
+
+        $codigoSmsData = [
+            'id_cliente' => $idCliente,
+            'codigo' => $codigo,
+            'id_tipo' => TipoAutorizacionClienteOpcs::SMS
+        ];
+        $this->General_model->addRecord('autorizaciones_clientes', $codigoSmsData);
+
+        $banderaSmsData = [
+            'telefono1' => $telefonoCliente,
+            'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
+        ];
+        $resultado = $this->General_model->updateRecord('clientes', $banderaSmsData, 'id_cliente', $idCliente);
+
+        $code = ($resultado) ? 200 : 500;
+
+        echo json_encode(['code' => $code]);
+    }
+
+    public function correoAut(string $url, string $correo): void
+    {
+        $mail = $this->phpmailer_lib->load();
+        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
+        $mail->addAddress($correo);
+        $mail->Subject = utf8_decode('PROCESO DE VERIFICACIÓN DE CLIENTE');
+        $mail->isHTML(true);
+        $mail->Body = utf8_decode("
+            <html>
+                <head>
+                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+                    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
+                        integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+                    <style media='all' type='text/css'>
+                        .encabezados {
+                            text-align: center;
+                            padding-top:  1.5%;
+                            padding-bottom: 1.5%;
+                        }
+
+                        .encabezados a {
+                            color: #234e7f;
+                            font-weight: bold;
+                        }
+
+                        .fondo {
+                            background-color: #234e7f;
+                            color: #fff;
+                        }
+
+                        h4 {
+                            text-align: center;
+                        }
+
+                        p {
+                            text-align: right;
+                        }
+
+                        strong {
+                            color: #234e7f;
+                        }
+                    </style>
+                </head>      
+                <body>
+                    <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
+                        <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
+                            <table width='750px' cellspacing='0' cellpadding='3' class='container'>
+                                <tr class='navbar navbar-inverse encabezados'>
+                                    <td>
+                                        <img src='https://www.ciudadmaderas.com/assets/img/logo.png'
+                                             width='100%'
+                                             class='img-fluid'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </tr>
+                        <tr>
+                            <p>
+                                Te hemos enviado este correo con el motivo de dar un seguimiento a tu verificación de cliente.
+                                Si tu reconoces este proceso de verificación, accede a través de este <a href='$url' target='_blank'>link</a>.
+                                De lo contrario, has caso omiso a este correo.
+                            </p>
+                        </tr>
+                    </table>
+                </body>      
+            </html>
+        ");
+        $mail->send();
+    }
+
+    /**
+     * @return bool true si salió bien
+     */
+    public function smsAut(string $url, string $telefono, int $idCliente): bool
+    {
+        $camposSms = [
+            'Content' => "Verificación de cliente, accede a través de este link $url",
+            'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
+            'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
+            'Sender' => "$idCliente",
+            'Recipient' => $telefono,
+            'CampaignCode' => 'null',
+            'DynamicFields' => [],
+            'isUnicode' => 0
+        ];
+
+        $sms = $this->apiExternoSms('https://sendsms.mailup.com/api/v2.0/sms/163369/1','POST', $camposSms);
+        $respuestaSMS = json_decode($sms,true);
+
+        return ((isset($respuestaSMS['Code']) && $respuestaSMS['Code'] == 0) ||
+            (isset($respuestaSMS["Code"]) && $respuestaSMS["Code"] == 301));
+    }
+
+    public function apiExternoSms(string $url, string $tipo, string $body)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => $tipo,
+            CURLOPT_POSTFIELDS =>json_encode( $body ),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json;odata=verbose;charset=utf-8',
+                'Authorization: Basic bTE2MzM2OTpLNVUyQktKRw=='
+            )
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $response;
     }
 }
 ?>
