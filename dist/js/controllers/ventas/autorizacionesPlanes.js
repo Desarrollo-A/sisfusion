@@ -915,6 +915,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#residencial option').remove();
         document.getElementById('showPackage').innerHTML = '';
         $('#index').val(0);	
+        $('#idSolicitudAut').val('');
         setIniDatesXMonth("fechainicio", "fechafin");
         sinPlanesDiv();
         $(".leyendItems").addClass('d-none');

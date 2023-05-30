@@ -253,7 +253,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Fecha de contrato</label>
                                     <input type="text" class="form-control datepicker input-gral"
-                                    id="fContrato" name="fContrato" disabled/>
+                                    id="fContrato" name="fContrato" required/>
                                 </div>
                             </div>
                         </div>
@@ -878,6 +878,58 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="modalInfoClient" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b>Información del cliente</b></h4>
+            </div>
+                <div class="modal-body" id="modalContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog boxContent">
+        <div class="modal-content card">
+            <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
+                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
+                <div class="modal-body text-center toolbar m-0 p-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Estatus construcción</label>
+                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
+                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
+                                         required>
+                                    </select>
+                                </div>ASAS
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex justify-end p-0">
+                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="requestEstatusLote" class="btn btn-primary mt-2">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -898,7 +950,8 @@
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral">¿Lote liquidado? (<small style="color: red;">*</small>)</label>
-                                    <input id="liquidado" name="liquidado" class="form-control input-gral" type="text">
+                                    <select class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="liquidado" name="liquidado" data-live-search="true">
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6 pr-0">
@@ -928,7 +981,7 @@
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group m-0 m-0">
                                         <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
-                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
+                                        <input id="nombreI" name="nombreI"  class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
@@ -948,13 +1001,13 @@
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Aportaciones (<small style="color: red;">*</small>)</label>
-                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" type="text">
+                                        <input id="aportacionesI" name="aportaciones" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
-                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" type="text">
+                                        <input id="descuentosI" name="descuentos" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">
