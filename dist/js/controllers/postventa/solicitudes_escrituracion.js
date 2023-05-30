@@ -1035,7 +1035,7 @@ $(document).on("click", "#estatusL", function () {
   getEstatusConstruccion(estatus_construccion);
   $("#estatusLModal").modal();
 });
-
+ 
 $(document).on("submit", "#formEstatusLote", function (e) {
   e.preventDefault();
   let id_solicitud = $("#id_solicitudEstatus").val();
