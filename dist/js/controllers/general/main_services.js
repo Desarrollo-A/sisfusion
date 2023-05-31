@@ -2,7 +2,7 @@ function getResidenciales() {
     $('#spiner-loader').removeClass('hide');
     $("#residenciales").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getResidencialesList',
+        url: general_base_url + 'General/getResidencialesList',
         type: 'post',
         dataType: 'json',
         success: function (response) {
@@ -42,7 +42,7 @@ function getCondominios(idResidencial) {
     $('#spiner-loader').removeClass('hide');
     $("#condominios").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getCondominiosList',
+        url: general_base_url + 'General/getCondominiosList',
         type: 'post',
         dataType: 'json',
         data: {

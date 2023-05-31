@@ -18,14 +18,14 @@
                             <div  class="toolbar">
                                 <div class="container-fluid">
                                 <div class="row ">
-                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 ">
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden">
                                             <label class="control-label">Sedes por proyecto</label>
                                             <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN"
                                                     data-size="7" data-live-search="true" data-container="body" required>
                                             </select>
                                         </div> 
-                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 hide" id="div_proyectos">
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden hide" id="div_proyectos">
                                             <label class="control-label">Proyecto</label>
                                             <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" 
