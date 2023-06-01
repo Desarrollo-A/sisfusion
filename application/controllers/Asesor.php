@@ -840,7 +840,7 @@ class Asesor extends CI_Controller
 
     public function tableClienteDS(){
         $objDatos = json_decode(file_get_contents("php://input"));
-        $dato = $this->Asesor_model->registroClienteDS($this->input->post('id_condominio'));
+        $dato = $this->Asesor_model->registroClienteDS($this->input->post('idCondominio'));
         $data = array();
 
         for ($i = 0; $i < COUNT($dato); $i++) {
@@ -888,6 +888,8 @@ class Asesor extends CI_Controller
             $data[$i]['regional2'] = $query[0]->regional2;
             $data[$i]['estatus'] = $query[0]->estatus;
             $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
+            $data[$i]['autorizacion_correo'] = $query[0]->autorizacion_correo;
+            $data[$i]['autorizacion_sms'] = $query[0]->autorizacion_sms;
         }
 
 
@@ -5530,37 +5532,69 @@ class Asesor extends CI_Controller
         return $folder;
     }
 
-    public function enviarCorreoAut()
+    public function enviarAutorizaciones()
     {
         $correoCliente = $this->input->post('correo');
+        $telefonoCliente = $this->input->post('telefono');
+        $lada = $this->input->post('lada');
         $idCliente = $this->input->post('idCliente');
 
+        if (!isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Cliente requerido.']);
+            return;
+        }
+
+        if (!isset($correoCliente) && !isset($telefonoCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Correo y/o teléfono requerido.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (isset($correoCliente)) {
+            $resultadoCorreo = $this->enviarCorreoAut($idCliente, $correoCliente, $cliente);
+            if (!$resultadoCorreo) {
+                return;
+            }
+        }
+
+        if (isset($telefonoCliente)) {
+            $resultadoSms = $this->enviarSmsAut($idCliente, $telefonoCliente, $lada, $cliente);
+            if (!$resultadoSms) {
+                return;
+            }
+        }
+
+        echo json_encode(['code' => 200]);
+    }
+
+    public function enviarCorreoAut(string $idCliente, string $correoCliente, $cliente): bool
+    {
         if (!isset($correoCliente) || !isset($idCliente)) {
             echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
-            return;
+            return false;
         }
 
         $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
 
         if (!isset($lote)) {
             echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
-            return;
+            return false;
         }
 
         if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
-            return;
+            return false;
         }
 
-        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
         if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::ENVIADO) {
             echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue enviado anteriormente.']);
-            return;
+            return false;
         }
 
         if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
             echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue validado anteriormente.']);
-            return;
+            return false;
         }
 
         $codigo = md5(microtime());
@@ -5575,47 +5609,41 @@ class Asesor extends CI_Controller
             'correo' => $correoCliente,
             'autorizacion_correo' => AutorizacionClienteOpcs::ENVIADO
         ];
-        $resultado = $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
-
-        $code = ($resultado) ? 200 : 500;
+        $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
         // $this->correoAut($url, $correoCliente);
 
-        echo json_encode(['code' => $code]);
+        return true;
     }
 
-    public function enviarSmsAut()
+    public function enviarSmsAut(string $idCliente, string $telefonoCliente, string $lada, $cliente): bool
     {
-        $telefonoCliente = $this->input->post('telefono');
-        $idCliente = $this->input->post('idCliente');
-
-        if (!isset($telefonoCliente) || !isset($idCliente)) {
+        if (!isset($telefonoCliente) || !isset($idCliente) || !isset($lada)) {
             echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
-            return;
+            return false;
         }
 
         $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
 
         if (!isset($lote)) {
             echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
-            return;
+            return false;
         }
 
         if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
-            return;
+            return false;
         }
 
-        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
         if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::ENVIADO) {
             echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue enviado anteriormente.']);
-            return;
+            return false;
         }
 
         if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
             echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue validado anteriormente.']);
-            return;
+            return false;
         }
 
         $codigo = md5(microtime());
@@ -5636,13 +5664,17 @@ class Asesor extends CI_Controller
 
         $banderaSmsData = [
             'telefono1' => $telefonoCliente,
+            'lada_tel' => $lada,
             'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
         ];
-        $resultado = $this->General_model->updateRecord('clientes', $banderaSmsData, 'id_cliente', $idCliente);
+        $this->General_model->updateRecord('clientes', $banderaSmsData, 'id_cliente', $idCliente);
 
-        $code = ($resultado) ? 200 : 500;
+        return true;
+    }
 
-        echo json_encode(['code' => $code]);
+    public function clienteAutorizacion($idCliente)
+    {
+        echo json_encode($this->Clientes_model->clienteAutorizacion($idCliente));
     }
 
     public function correoAut(string $url, string $correo): void

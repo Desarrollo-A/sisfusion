@@ -1,4 +1,5 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/autorizaciones-ds.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
 <div class="wrapper">
@@ -134,6 +135,112 @@
                     <button type="button" id="guardar_re3pv" class="btn btn-primary"> Registrar</button>
 
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
+    <!-- modal ENVÍO DE AUTORIZACIONES-->
+    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Envío de autorizaciones al cliente
+                    </h4>
+                </div>
+                <form id="autorizacion-form">
+                    <div class="modal-body">
+                        <!-- CHECKBOX CORREO / SMS -->
+                        <div class="row pt-1 pb-1" id="checkAut">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO</h4>
+                                <div class="container boxChecks p-0">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-aut-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkCorreoAut"
+                                                   id="chkCorreoAut"
+                                                   onchange="chkCorreoAutOnChange()"
+                                                   checked>
+                                            <span>CORREO ELECTRÓNICO</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-aut-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkSmsAut"
+                                                   id="chkSmsAut"
+                                                   onchange="chkSmsAutOnChange()"
+                                                   checked>
+                                            <span>MENSAJE DE TEXTO SMS</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1" id="correo-aut-div">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0">
+                                    <label class="label-on-left m-0">
+                                        CORREO ELECTRÓNICO
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <input class="form-control input-gral"
+                                           name="correoAut"
+                                           id="correoAut"
+                                           type="email"
+                                           required
+                                           placeholder="Ej. ejemplo@gmail.com"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1" id="sms-aut-div">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <div class="form-group m-0">
+                                    <h4 class="label-on-left m-0">LADA</h4>
+                                    <select name="ladaAut"
+                                            title="SELECCIONA UNA OPCIÓN"
+                                            id="ladaAut"
+                                            class="selectpicker m-0 select-gral"
+                                            data-live-search="true"
+                                            data-container="body"
+                                            data-width="100%"
+                                            required>
+                                        <option value="52">+52</option>
+                                        <option value="1">+1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                <div class="form-group m-0">
+                                    <label class="label-on-left m-0">
+                                        CELULAR
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <input class="form-control input-gral"
+                                           required
+                                           name="smsAut"
+                                           id="smsAut"
+                                           type="number"
+                                           step="any"
+                                           onKeyPress="if(this.value.length==10) return false;"
+                                           placeholder="Ej. 4422010101"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove"></span> Cerrar
+                        </button>
+                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">
+                            <span class="material-icons" >send</span> </i> Enviar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

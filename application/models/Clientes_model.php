@@ -4391,7 +4391,7 @@ function getStatusMktdPreventa(){
 
     function clienteAutorizacion(int $id)
     {
-        $query = $this->db->query("SELECT c.id_cliente, 
+        $query = $this->db->query("SELECT c.id_cliente, c.correo, c.telefono1, c.lada_tel,
             acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
 	        acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms
             FROM clientes c

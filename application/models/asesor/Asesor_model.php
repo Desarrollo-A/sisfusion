@@ -105,7 +105,8 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
-        cl.tipo_comprobanteD
+        cl.tipo_comprobanteD, cl.autorizacion_correo, 
+	    cl.autorizacion_sms
 		FROM clientes as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -117,6 +118,8 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
+        LEFT JOIN autorizaciones_clientes acc ON cl.id_cliente = acc.id_cliente AND acc.id_tipo = 1
+        LEFT JOIN autorizaciones_clientes acs ON cl.id_cliente = acs.id_cliente AND acs.id_tipo = 2
         INNER JOIN deposito_seriedad as ds ON ds.id_cliente = cl.id_cliente
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente AND ds.desarrollo IS NOT NULL");
         return $query->result();
@@ -127,17 +130,22 @@ class Asesor_model extends CI_Model {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
         $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
-        cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, convert(varchar,fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
+        cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
         cl.flag_compartida, 'SIN ESPECIFICAR' asesor, 'SIN ESPECIFICAR' coordinador, 'SIN ESPECIFICAR' gerente, 'SIN ESPECIFICAR' subdirector, 'SIN ESPECIFICAR' regional, 'SIN ESPECIFICAR' regional2, 
-        aut.estatus as estatus, 'NULL' as tipo_comprobanteD
+        aut.estatus as estatus, 'NULL' as tipo_comprobanteD,
+        c.autorizacion_correo, 
+	    c.autorizacion_sms
 		FROM cliente_consulta as cl
+        INNER JOIN clientes c ON cl.idCliente = c.id_cliente 
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         LEFT JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN deposito_seriedad_consulta as ds ON ds.idCliente = cl.idCliente
         LEFT JOIN autorizaciones AS aut ON cl.idCliente = aut.idCliente AND lotes.idLote = aut.idLote
+		LEFT JOIN autorizaciones_clientes acc ON cl.idCliente = acc.id_cliente AND acc.id_tipo = 1
+        LEFT JOIN autorizaciones_clientes acs ON cl.idCliente = acs.id_cliente AND acs.id_tipo = 2
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.idCliente = $id_cliente");
         return $query->result();
     }
@@ -157,7 +165,9 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
-        cl.tipo_comprobanteD
+        cl.tipo_comprobanteD,
+        cl.autorizacion_correo, 
+	    cl.autorizacion_sms
 		FROM clientes as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -170,6 +180,8 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
+		LEFT JOIN autorizaciones_clientes acc ON cl.id_cliente = acc.id_cliente AND acc.id_tipo = 1
+        LEFT JOIN autorizaciones_clientes acs ON cl.id_cliente = acs.id_cliente AND acs.id_tipo = 2
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente");
         return $query->result();
     }
