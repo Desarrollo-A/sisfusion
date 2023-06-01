@@ -12,8 +12,8 @@ class Restore extends CI_Controller {
     
     public function return_status_uno()
     {
-        $idCliente = $this->input->post('idCliente');
-		$data= $this->Restore_model->return_status_uno($idCliente);
+        $datos = $_POST;// $this->input->post('idCliente');
+		$data= $this->Restore_model->return_status_uno($datos);
         $data_back = array(
             'data' =>$data
         );
