@@ -25,11 +25,11 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>SEDE</th>
+                                                    <th id ="Upper">SEDE</th>
                                                     <th>REFERENCIA</th>
-                                                    <th>GERENTE</th>
-                                                    <th>ASESOR(ES)</th>
                                                     <th>USUARIO</th>
+                                                    <th>ASESOR(ES)</th>
+                                                    <th>GERENTE</th>
                                                     <th>PROCESO CONTRATACIÓN</th>
                                                     <th>COMENTARIO</th>
                                                     <th>FECHA DE CONTRATADO</th>

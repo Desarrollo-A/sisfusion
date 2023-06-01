@@ -1202,7 +1202,6 @@ $(document).on('click', '.saveNotaria', function() {
     }
 })
 
-
 $(document).on('click', '.modalCopiaCertificada', function(){
     let idNxS = $(this).attr('data-idNxS2');
     $("#idNxS2").val(idNxS);
