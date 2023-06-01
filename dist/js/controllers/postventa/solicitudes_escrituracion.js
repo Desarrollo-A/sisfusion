@@ -2,7 +2,7 @@
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? '' : '';     
     $(this).html(`<input class="${width}" id="head_${i}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
@@ -11,12 +11,7 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-function borrarClase() {
-    const indices = [0, 1, 2, 4, 5, 7, 8, 10];
-    for (let index = 0; index < indices.length; index++) {
-      $(`#head_${indices[index]}`).removeClass("head_escrituracion");
-    }
-  }
+
 
 $("#carga-datatable thead tr:eq(0) th").each(function (i) {
   var title = $(this).text();
@@ -1297,6 +1292,7 @@ function crearTablas(datosTablas){
                     let bandera_request=0;
                     let bandera_reject = 0;
                     let banderaAdmin=0;
+                    let numTable =1;
                     var datosEstatus = {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
@@ -1567,6 +1563,7 @@ function crearTablas(datosTablas){
                                 if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
+                                    numTable=2;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                 }
                             break;
@@ -1593,6 +1590,7 @@ function crearTablas(datosTablas){
                             case 47:
                             case 50: 
                                 if (userType == 57 && d.id_titulacion == idUser) { 
+                                    numTable=2;
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
@@ -1600,6 +1598,7 @@ function crearTablas(datosTablas){
                             break;
                             case 54: 
                                 if (userType == 55 ) { 
+                                    numTable=3;
                                     bandera_request = 1;
                                 }
                             break;
@@ -1611,7 +1610,7 @@ function crearTablas(datosTablas){
                     if(bandera_request == 1){
                        d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
                        d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'APE0004 - RECEPCIÓN DE ESTATUS DE CONSTRUCCIÓN - POSTVENTA' : d.nombre_estatus_siguiente;
-                        group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                       group_buttons += `<button id="request" data-num-table="${numTable} data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
@@ -3421,6 +3420,14 @@ $(document).on("click", "#bajarConMotivo", function () {
         });  
 
         
+
+
+
+    
         
 
-
+        $(window).resize(function(){
+            escrituracion-datatable.columns.adjust();
+            carga-datatable.columns.adjust();
+            pausadas_tabla.columns.adjust();
+        });

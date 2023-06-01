@@ -1320,13 +1320,14 @@ class Postventa extends CI_Controller
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="font-size: 1em;">
-                                                    <b>Valor de operación (descontando bonificaciones y/o descuentos):</b><br>
-                                                    
-                                                </td>
+                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Superficie:</b><br>
                                                     ' . $data->superficie . '
+                                                </td>
+                                                <td style="font-size: 1em;">
+                                                    <b>Valor de operación de contrato</b><br>
+                                                    $' .number_format($data->valor_contrato, 2, '.', ',').'
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Aportaciones:</b><br>
@@ -1363,13 +1364,10 @@ class Postventa extends CI_Controller
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                             <td style="font-size: 1em;">
-                                                <b>Valor de operación de contrato:</b><br>
-                                                $' .number_format($data->valor_contrato, 2, '.', ',').'
-                                            </td>
-                                             <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
                                                 ' .$data->valor_escriturar. '
                                             </td>
+                                            
                                             </tr>
                                                
                                         </table>
