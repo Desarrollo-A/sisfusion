@@ -260,27 +260,25 @@
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <div class="table-responsive">
-                                    <table  id="tabla_ingresar_6" name="tabla_ingresar_6"
-                                            class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>TIPO DE VENTA</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>GERENTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>F.MOD</th>
-                                                <th>F.VENC</th>
-                                                <th>UC</th>
-                                                <th>UBICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+								<table  id="tabla_ingresar_6" name="tabla_ingresar_6"
+										class="table-striped table-hover">
+									<thead>
+										<tr>
+											<th></th>
+											<th>TIPO DE VENTA</th>
+											<th>PROYECTO</th>
+											<th>CONDOMINIO</th>
+											<th>LOTE</th>
+											<th>GERENTE</th>
+											<th>CLIENTE</th>
+											<th>F.MOD</th>
+											<th>F.VENC</th>
+											<th>UC</th>
+											<th>UBICACIÓN</th>
+											<th>ACCIONES</th>
+										</tr>
+									</thead>
+								</table>
                             </div>
                         </div>
                     </div>

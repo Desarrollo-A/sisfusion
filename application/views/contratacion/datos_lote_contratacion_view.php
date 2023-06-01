@@ -8,11 +8,9 @@ table thead tr th {
     font-size: 0.8em;
     text-align: center;
 }
-
 tfoot tr {
     background: #143860;
 }
-
 table tfoot tr th {
     padding: 0px !important;
     color: #fff;
@@ -21,7 +19,6 @@ table tfoot tr th {
     text-align: center;
 }
 </style>
-
 <body>
     <div class="wrapper">
         <?php

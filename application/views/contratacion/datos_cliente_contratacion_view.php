@@ -63,64 +63,44 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Registro de Clientes</h3>
+                                <h3 class="card-title center-align">Registro de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                <select name="proyecto" 
-                                                        id="proyecto" 
-                                                        class="selectpicker select-gral m-0" 
-                                                        data-style="btn"
-                                                        data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona una opción"
-                                                        data-size="7"
-                                                        required>
-                                                </select>
+                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="m-0" for="proyecto">Condominio</label>
-                                                <select name="condominio"
-                                                        id="condominio"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn"
-                                                        data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona una opción"
-                                                        data-size="7"
-                                                        required>
-                                                </select>
+                                                <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_clientes" name="tabla_clientes">
-                                                <thead>
-                                                    <tr>
-                                                        <th>MÁS</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>NO. RECIBO</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>TIPO DE PAGO</th>
-                                                        <th>FECHA DE APARTADO</th>
-                                                        <th>ENGANCHE</th>
-                                                        <th>FECHA DE ENGANCHE</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover hide" id="tabla_clientes" name="tabla_clientes">
+                                            <thead>
+                                                <tr>
+                                                    <th>MÁS</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>NO. RECIBO</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>TIPO DE PAGO</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>ENGANCHE</th>
+                                                    <th>FECHA DE ENGANCHE</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -141,24 +121,22 @@
                         </center>
                         <div class="material-datatables">
                             <div class="form-group">
-                                <div class="table-responsive">
-                                    <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" width="100%" style="text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>FECHA ALTA</th>
-                                                <th>USUARIO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" width="100%" style="text-align:center;">
+                                    <thead>
+                                        <tr>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>FECHA ALTA</th>
+                                            <th>USUARIO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,5 @@
 <?php
 use application\helpers\email\registro_lote\Elementos_Correo_Registro_Lote;
-
 class RegistroLote extends CI_Controller
 {
 	public function __construct()
@@ -118,7 +117,6 @@ class RegistroLote extends CI_Controller
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view("datos_lote_contraloria_view", $datos);
 	}
-
 	public function registrosLoteJuridico()
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
@@ -217,7 +215,6 @@ class RegistroLote extends CI_Controller
 			$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA;
 			//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
 			$plantilla_correo = new plantilla_dinamica_correo;
-			/********************************************************************************************/
 			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
 				$this->registrolote_modelo->insert_bloqueos($data);
 				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
@@ -1221,7 +1218,6 @@ class RegistroLote extends CI_Controller
 		$arreglo2["idCliente"] = $idCliente;
 		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
 			$this->registrolote_modelo->insertHistorialLotes($arreglo2);
-
 			echo 1;
 		} else {
 			echo 0;
@@ -1492,11 +1488,6 @@ class RegistroLote extends CI_Controller
 			echo json_encode(array());
 		}
 		exit;
-		/*
-			  $datos = array();
-			  $datos["lotes"] = $this->registrolote_modelo->selectRegistroLoteCaja($idLote);
-			  $datos["juridicoStatus7"] = $this->registrolote_modelo->getJuridicoStatus7();
-			  $this->load->view('editar_lote_juridico_proceso7_view', $datos);*/
 	}
 	public function editar_registro_lote_juridico_proceceso7()
 	{
@@ -2478,7 +2469,6 @@ class RegistroLote extends CI_Controller
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_status14Contratacion_asistentes_view", $datos);
 	}
@@ -2507,15 +2497,7 @@ class RegistroLote extends CI_Controller
 					$dato[$i]['nombreCondominio'] = $data[$i]->nombreCondominio;
 					$dato[$i]['ubicacion'] = $data[$i]->ubicacion;
 					$dato[$i]['gerente'] = $data[$i]->gerente;
-					/*$dato[$i]['gerente2'] = $data[$i]->gerente2;
-								   $dato[$i]['gerente3'] = $data[$i]->gerente3;
-								   $dato[$i]['gerente4'] = $data[$i]->gerente4;
-								   $dato[$i]['gerente5'] = $data[$i]->gerente5;*/
 					$dato[$i]['asesor'] = $data[$i]->asesor;
-					/*$dato[$i]['asesor2'] = $data[$i]->asesor2;
-								   $dato[$i]['asesor3'] = $data[$i]->asesor3;
-								   $dato[$i]['asesor4'] = $data[$i]->asesor4;
-								   $dato[$i]['asesor5'] = $data[$i]->asesor5;*/
 					$dato[$i]['tipo_venta'] = $data[$i]->tipo_venta;
 				}
 			}
@@ -2881,13 +2863,11 @@ class RegistroLote extends CI_Controller
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_finalStatus_view", $datos);
 	}
 	public function Procesos_Status($idStatus, $idMov)
 	{
-
 		$Control_Pro = array(
 			"IdStatusContratacion" => array(
 				'1,2,3',
@@ -2958,7 +2938,6 @@ class RegistroLote extends CI_Controller
 			}
 		}
 		return ('Not Set: ' . $idMov);
-
 	}
 	public function getFinalStatus()
 	{
@@ -2980,7 +2959,7 @@ class RegistroLote extends CI_Controller
 			$datos[$i]['nombreCliente'] = $data[$i]->nombreCliente;
 			$datos[$i]['comentario'] = $data[$i]->comentario;
 			$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
-			$datos[$i]['gerente'] = ($data[$i]->gerente == " ") ? "N/A" : $data[$i]->gerente;
+			$datos[$i]['gerente'] = ($data[$i]->gerente == " ") ? "NO APLICA" : $data[$i]->gerente;
 			$datos[$i]['asesor'] = $data[$i]->asesor;
 			$datos[$i]['observacionContratoUrgente'] = $data[$i]->observacionContratoUrgente;
 			$datos[$i]['modificado_historial'] = $data[$i]->modificado_historial;
@@ -2997,15 +2976,15 @@ class RegistroLote extends CI_Controller
 			list($diasRest, $arrayFechas, $diasRest2) = $this->getDiasRestantes($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
 			list($diasVenc, $arrayFechas2, $diasVenc2) = $this->getDiasVencidos($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $data[$i]->fechaVenc, $data[$i]->fechaSolicitudValidacion, $data[$i]->validacionEnganche, $data[$i]->status8Flag, $fechaVenc2, $fechaVencimiento);
 			$statusFecha = $this->getStatusFecha($data[$i]->idStatusContratacion, $data[$i]->idMovimiento, $arrayFechas, $arrayFechas2);
-			$datos[$i]['procesoContratacion'] = $procesoContratacion;
-			$datos[$i]['status'] = $status;
-			$datos[$i]['fechaVencimiento'] = $fechaVencimiento;
-			$datos[$i]['fechaVencimiento2'] = $fechaVenc2;
+			$datos[$i]['procesoContratacion'] = strtoupper($procesoContratacion);
+			$datos[$i]['status'] = strtoupper ($status);
+			$datos[$i]['fechaVencimiento'] = strtoupper($fechaVencimiento);
+			$datos[$i]['fechaVencimiento2'] =$fechaVenc2;
 			$datos[$i]['diasRest'] = $diasRest;
 			$datos[$i]['diasRest2'] = $diasRest2;
 			$datos[$i]['diasVenc'] = $diasVenc;
 			$datos[$i]['diasVenc2'] = $diasVenc2;
-			$datos[$i]['statusFecha'] = $statusFecha;
+			$datos[$i]['statusFecha'] = strtoupper($statusFecha);
 			$datos[$i]['status8Flag'] = $data[$i]->status8Flag;
 			$datos[$i]['id_cliente_reubicacion'] = $data[$i]->id_cliente_reubicacion;
 			$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
@@ -3791,7 +3770,6 @@ class RegistroLote extends CI_Controller
 			if ($dataPer[$i]['idStatusContratacion'] == 7 && $dataPer[$i]['idMovimiento'] == 64) {
 				$dataPer[$i]['nombreStatus'] = "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes) ";
 			}
-			/*adsdasdasd*/
 			if ($dataPer[$i]['idStatusContratacion'] == 1 && $dataPer[$i]['idMovimiento'] == 31) {
 				$dataPer[$i]['detalles'] = "Status 1 listo (Caja)";
 			}
@@ -5113,9 +5091,6 @@ class RegistroLote extends CI_Controller
 		} else {
 			echo json_encode(array());
 		}
-		/*$datos = array();
-			  $datos["lotes"] = $this->registrolote_modelo->selectRegistroLoteCaja($idLote);
-			  $this->load->view('editar_loteRechazo_juridico_proceso3_view', $datos);*/
 	}
 	public function editar_registro_loteRechazo_juridico_proceceso3()
 	{
@@ -5469,9 +5444,6 @@ class RegistroLote extends CI_Controller
 			echo json_encode(array());
 		}
 		exit;
-		/*$datos = array();
-			  $datos["lotes"] = $this->registrolote_modelo->selectRegistroLoteCaja($idLote);
-			  $this->load->view('editar_loteRechazo_administracion_proceso11_view', $datos);*/
 	}
 	public function editarLoteRechazoContraloriaStatusContratacion15($idLote)
 	{
@@ -5587,69 +5559,69 @@ class RegistroLote extends CI_Controller
 		echo '</tbody>';
 		echo '</table>';
 		?>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('#tabla_inventario_liberacion').dataTable({
-							initComplete: function () {
-								this.api().columns().every(function () {
-									var column = this;
-									var select = $('<select><option value=""></option></select>')
-										.appendTo($(column.footer()).empty())
-										.on('change', function () {
-											var val = $.fn.dataTable.util.escapeRegex(
-												$(this).val()
-											);
-											column
-												.search(val ? '^' + val + '$' : '', true, false)
-												.draw();
-										});
-									column.data().unique().sort().each(function (d, j) {
-										select.append('<option value="' + d + '">' + d + '</option>')
-									});
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#tabla_inventario_liberacion').dataTable({
+					initComplete: function () {
+						this.api().columns().every(function () {
+							var column = this;
+							var select = $('<select><option value=""></option></select>')
+								.appendTo($(column.footer()).empty())
+								.on('change', function () {
+									var val = $.fn.dataTable.util.escapeRegex(
+										$(this).val()
+									);
+									column
+										.search(val ? '^' + val + '$' : '', true, false)
+										.draw();
 								});
-							},
-							"scrollX": true,
-							"pageLength": 10,
-							"language": {
-								"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-							},
-							dom: 'Bfrtip',
-							buttons: [
-								{
-									extend: 'copyHtml5',
-									text: '<i class="fa fa-files-o"></i>',
-									titleAttr: 'Copy'
-								},
-								{
-									extend: 'excelHtml5',
-									text: '<i class="fa fa-file-excel-o"></i>',
-									titleAttr: 'Excel'
-								},
-								{
-									extend: 'csvHtml5',
-									text: '<i class="fa fa-file-text-o"></i>',
-									titleAttr: 'CSV'
-								},
-								{
-									extend: 'pdfHtml5',
-									text: '<i class="fa fa-file-pdf-o"></i>',
-									titleAttr: 'PDF'
-								}
-							]
+							column.data().unique().sort().each(function (d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
 						});
-					});
-				</script>
-				<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
-				<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-				<script type="text/javascript">
-					Shadowbox.init();
-				</script>
-				<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
-				<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-				<script type="text/javascript">
-					Shadowbox.init();
-				</script>
-				<?php
+					},
+					"scrollX": true,
+					"pageLength": 10,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+					},
+					dom: 'Bfrtip',
+					buttons: [
+						{
+							extend: 'copyHtml5',
+							text: '<i class="fa fa-files-o"></i>',
+							titleAttr: 'Copy'
+						},
+						{
+							extend: 'excelHtml5',
+							text: '<i class="fa fa-file-excel-o"></i>',
+							titleAttr: 'Excel'
+						},
+						{
+							extend: 'csvHtml5',
+							text: '<i class="fa fa-file-text-o"></i>',
+							titleAttr: 'CSV'
+						},
+						{
+							extend: 'pdfHtml5',
+							text: '<i class="fa fa-file-pdf-o"></i>',
+							titleAttr: 'PDF'
+						}
+					]
+				});
+			});
+		</script>
+		<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+		<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+		<script type="text/javascript">
+			Shadowbox.init();
+		</script>
+		<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+		<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+		<script type="text/javascript">
+			Shadowbox.init();
+		</script>
+		<?php
 	}
 	function getLotesInventarioGral($condominio, $residencial)
 	{
@@ -5818,15 +5790,15 @@ class RegistroLote extends CI_Controller
 			$numeroLote = preg_replace('/[^0-9]/', '', $data['lotes'][$i]['nombreLote']);
 			$composicion = $proyecto . $lote . $numeroLote;
 			echo "<td style=text-align:center>
-<img src='" . site_url() . '/main/bikin_barcode/' . $composicion . "'>
- </td>";
-			echo "<td style=text-align:center>
- <a href='" . 'historial_liberacion/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'> 
- <img src='http://contratacion.sisgph.com/contratacion/static/images/historialLiberacion.png' width='25' height='23' title = 'Historial Liberación'/>
- </a>
- <a href='" . 'historialProcesoLote/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'><img src='http://contratacion.sisgph.com/contratacion/static/images/registrarStatus.png' width='25' height='23' title = 'Historial Proceso de contratación'>  
-</a>
-</td>";
+			<img src='" . site_url() . '/main/bikin_barcode/' . $composicion . "'>
+			</td>";
+						echo "<td style=text-align:center>
+			<a href='" . 'historial_liberacion/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'> 
+			<img src='http://contratacion.sisgph.com/contratacion/static/images/historialLiberacion.png' width='25' height='23' title = 'Historial Liberación'/>
+			</a>
+			<a href='" . 'historialProcesoLote/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'><img src='http://contratacion.sisgph.com/contratacion/static/images/registrarStatus.png' width='25' height='23' title = 'Historial Proceso de contratación'>  
+			</a>
+			</td>";
 			$i++;
 		}
 		echo '</tbody>';
@@ -5925,14 +5897,12 @@ class RegistroLote extends CI_Controller
 					echo '<span><center><strong>Acuse de Contratos</strong></span></center>';
 					echo '<br>';
 					echo '<br>';
-					echo '<div class="modal-body"><img src="http://contratacion.gphsis.com/contratacion/static/images/CMOF.png" style="display:block;
-  margin:auto;" width="250" height="80" />   </div>';
+					echo '<div class="modal-body"><img src="http://contratacion.gphsis.com/contratacion/static/images/CMOF.png" style="display:block;margin:auto;" width="250" height="80" />   </div>';
 					echo '<br>';
 					echo '<div style="text-align:right;">' . "Folio: " . ($folioUpd->contador + 1) . "<br>" . '</div>';
 					echo '<div style="text-align:right;">' . "<br>" . '</div>';
 					echo '<br>';
-					echo '<table width="100%" border="1px" align="center" margin: 15px;
-    padding: 15px; style = "border-collapse:collapse">';
+					echo '<table width="100%" border="1px" align="center" margin: 15px; padding: 15px; style = "border-collapse:collapse">';
 					echo '<tr align="center">';
 					echo '<th style = "border:1px solid black"><center>Cod. Lote</center></th>';
 					echo '<th style = "border:1px solid black"><center>Cliente</center></th>';
@@ -6025,25 +5995,25 @@ class RegistroLote extends CI_Controller
 				echo '</div>';
 				echo '<div class="modal-footer">';
 				?>
-								<button onclick="javascript:imprSelec('seleccion')">Imprimir Acuse</button>
-								<?php
-								echo '</div>';
-								echo '</div>';
-								echo '</div>';
-								echo '</div>';
-								echo '</div>';
-								?>
-								<script language="Javascript">
-									function imprSelec(nombre) {
-										var ficha = document.getElementById(nombre);
-										var ventimp = window.open(' ', 'popimpr');
-										ventimp.document.write(ficha.innerHTML);
-										ventimp.document.close();
-										ventimp.print();
-										ventimp.close();
-									}
-								</script>
-								<?php
+				<button onclick="javascript:imprSelec('seleccion')">Imprimir Acuse</button>
+				<?php
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+				?>
+				<script language="Javascript">
+					function imprSelec(nombre) {
+						var ficha = document.getElementById(nombre);
+						var ventimp = window.open(' ', 'popimpr');
+						ventimp.document.write(ficha.innerHTML);
+						ventimp.document.close();
+						ventimp.print();
+						ventimp.close();
+					}
+				</script>
+				<?php
 			}
 		}
 	}
@@ -6088,7 +6058,7 @@ class RegistroLote extends CI_Controller
 							$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
 							$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
 							$sig_fecha_feriado2 == "25-12"
-						) {
+						){
 							$fecha = $fechaAccion;
 							$i = 0;
 							while ($i <= 0) {
@@ -6420,87 +6390,86 @@ class RegistroLote extends CI_Controller
 			echo "<td style=text-align:center>" . $data['lotes'][$i]['comentarioLiberacion'] . "</td>";
 			echo "<td style=text-align:center>" . $data['lotes'][$i]['fechaLiberacion'] . "</td>";
 			echo "<td style=text-align:center>
- <a href='" . 'historial_liberacion/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'> 
- <img src='http://contratacion.sisgph.com/contratacion/static/images/historialLiberacion.png' width='25' height='23' title = 'Historial Liberación'/>
- </a>
- 
- <a href='" . 'historialProcesoLote/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'><img src='http://contratacion.sisgph.com/contratacion/static/images/registrarStatus.png' width='25' height='23' title = 'Historial Proceso de contratación'>  
-</a>
- <a href='" . 'editarContratoUrgente/' . $data['lotes'][$i]['idLote'] . "'><img src='http://contratacion.sisgph.com/contratacion/static/images/confir.png' width='25' height='23' title = 'Contrato Urgente'>  
-</a>
- </td>";
+			<a href='" . 'historial_liberacion/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'> 
+			<img src='http://contratacion.sisgph.com/contratacion/static/images/historialLiberacion.png' width='25' height='23' title = 'Historial Liberación'/>
+			</a>
+			<a href='" . 'historialProcesoLote/' . $data['lotes'][$i]['idLote'] . "' rel='shadowbox[Vacation];width=700;height=440'><img src='http://contratacion.sisgph.com/contratacion/static/images/registrarStatus.png' width='25' height='23' title = 'Historial Proceso de contratación'>  
+			</a>
+			<a href='" . 'editarContratoUrgente/' . $data['lotes'][$i]['idLote'] . "'><img src='http://contratacion.sisgph.com/contratacion/static/images/confir.png' width='25' height='23' title = 'Contrato Urgente'>  
+			</a>
+			</td>";
 			$i++;
 		}
 		echo '</tbody>';
 		echo '</table>';
 		?>
-				<style>
-					th, td {
-						white-space: nowrap;
-					}
-					tr {
-						height: 50px;
-					}
-				</style>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('#tabla_inventario_gral').dataTable({
-							initComplete: function () {
-								this.api().columns().every(function () {
-									var column = this;
-									var select = $('<select><option value=""></option></select>')
-										.appendTo($(column.footer()).empty())
-										.on('change', function () {
-											var val = $.fn.dataTable.util.escapeRegex(
-												$(this).val()
-											);
-											column
-												.search(val ? '^' + val + '$' : '', true, false)
-												.draw();
-										});
-									column.data().unique().sort().each(function (d, j) {
-										select.append('<option value="' + d + '">' + d + '</option>')
+			<style>
+				th, td {
+					white-space: nowrap;
+				}
+				tr {
+					height: 50px;
+				}
+			</style>
+			<script type="text/javascript">
+				$(document).ready(function () {
+					$('#tabla_inventario_gral').dataTable({
+						initComplete: function () {
+							this.api().columns().every(function () {
+								var column = this;
+								var select = $('<select><option value=""></option></select>')
+									.appendTo($(column.footer()).empty())
+									.on('change', function () {
+										var val = $.fn.dataTable.util.escapeRegex(
+											$(this).val()
+										);
+										column
+											.search(val ? '^' + val + '$' : '', true, false)
+											.draw();
 									});
+								column.data().unique().sort().each(function (d, j) {
+									select.append('<option value="' + d + '">' + d + '</option>')
 								});
+							});
+						},
+						"scrollX": true,
+						"pageLength": 10,
+						"order": [[0, "asc"]],
+						"language": {
+							"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+						},
+						dom: 'Bfrtip',
+						buttons: [
+							{
+								extend: 'copyHtml5',
+								text: '<i class="fa fa-files-o"></i>',
+								titleAttr: 'Copy'
 							},
-							"scrollX": true,
-							"pageLength": 10,
-							"order": [[0, "asc"]],
-							"language": {
-								"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+							{
+								extend: 'excelHtml5',
+								text: '<i class="fa fa-file-excel-o"></i>',
+								titleAttr: 'Excel'
 							},
-							dom: 'Bfrtip',
-							buttons: [
-								{
-									extend: 'copyHtml5',
-									text: '<i class="fa fa-files-o"></i>',
-									titleAttr: 'Copy'
-								},
-								{
-									extend: 'excelHtml5',
-									text: '<i class="fa fa-file-excel-o"></i>',
-									titleAttr: 'Excel'
-								},
-								{
-									extend: 'csvHtml5',
-									text: '<i class="fa fa-file-text-o"></i>',
-									titleAttr: 'CSV'
-								},
-								{
-									extend: 'pdfHtml5',
-									text: '<i class="fa fa-file-pdf-o"></i>',
-									titleAttr: 'PDF'
-								}
-							]
-						});
+							{
+								extend: 'csvHtml5',
+								text: '<i class="fa fa-file-text-o"></i>',
+								titleAttr: 'CSV'
+							},
+							{
+								extend: 'pdfHtml5',
+								text: '<i class="fa fa-file-pdf-o"></i>',
+								titleAttr: 'PDF'
+							}
+						]
 					});
-				</script>
-				<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
-				<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-				<script type="text/javascript">
-					Shadowbox.init();
-				</script>
-				<?php
+				});
+			</script>
+			<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+			<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+			<script type="text/javascript">
+				Shadowbox.init();
+			</script>
+			<?php
 	}
 	public function editarLoteRechazoAstatus2StatusContratacion8($idLote)
 	{
@@ -6745,12 +6714,9 @@ class RegistroLote extends CI_Controller
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
-		/*$datos["historial_lotes"] = $this->registrolote_modelo->report();*/
 		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view', $datos);
 	}
-
 	public function getHistProcData()
 	{
 		if (isset($_POST) && !empty($_POST)) {
@@ -6829,81 +6795,81 @@ class RegistroLote extends CI_Controller
 			echo "<td style=text-align:center>" . $data['lotes'][$i]['comentarioLiberacion'] . "</td>";
 			echo "<td style=text-align:center>" . $data['lotes'][$i]['fechaLiberacion'] . "</td>";
 			echo "<td style=text-align:center>
- <a href='" . 'make_corrida/' . $data['lotes'][$i]['idLote'] . "''> 
- <img src='http://contratacion.sisgph.com/contratacion/static/images/solicitud.png' width='25' height='23' title = 'Corrida Financiera'/;
- </a>
- </td>";
+			<a href='" . 'make_corrida/' . $data['lotes'][$i]['idLote'] . "''> 
+			<img src='http://contratacion.sisgph.com/contratacion/static/images/solicitud.png' width='25' height='23' title = 'Corrida Financiera'/;
+			</a>
+			</td>";
 			$i++;
 		}
 		echo '</tbody>';
 		echo '</table>';
 		?>
-				<style>
-					th, td {
-						white-space: nowrap;
-					}
-					tr {
-						height: 50px;
-					}
-				</style>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('#tabla_lotes_corrida').dataTable({
-							initComplete: function () {
-								this.api().columns().every(function () {
-									var column = this;
-									var select = $('<select><option value=""></option></select>')
-										.appendTo($(column.footer()).empty())
-										.on('change', function () {
-											var val = $.fn.dataTable.util.escapeRegex(
-												$(this).val()
-											);
-											column
-												.search(val ? '^' + val + '$' : '', true, false)
-												.draw();
-										});
-									column.data().unique().sort().each(function (d, j) {
-										select.append('<option value="' + d + '">' + d + '</option>')
-									});
+		<style>
+			th, td {
+				white-space: nowrap;
+			}
+			tr {
+				height: 50px;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#tabla_lotes_corrida').dataTable({
+					initComplete: function () {
+						this.api().columns().every(function () {
+							var column = this;
+							var select = $('<select><option value=""></option></select>')
+								.appendTo($(column.footer()).empty())
+								.on('change', function () {
+									var val = $.fn.dataTable.util.escapeRegex(
+										$(this).val()
+									);
+									column
+										.search(val ? '^' + val + '$' : '', true, false)
+										.draw();
 								});
-							},
-							"scrollX": true,
-							"pageLength": 10,
-							"language": {
-								"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-							},
-							dom: 'Bfrtip',
-							buttons: [
-								{
-									extend: 'copyHtml5',
-									text: '<i class="fa fa-files-o"></i>',
-									titleAttr: 'Copy'
-								},
-								{
-									extend: 'excelHtml5',
-									text: '<i class="fa fa-file-excel-o"></i>',
-									titleAttr: 'Excel'
-								},
-								{
-									extend: 'csvHtml5',
-									text: '<i class="fa fa-file-text-o"></i>',
-									titleAttr: 'CSV'
-								},
-								{
-									extend: 'pdfHtml5',
-									text: '<i class="fa fa-file-pdf-o"></i>',
-									titleAttr: 'PDF'
-								}
-							]
+							column.data().unique().sort().each(function (d, j) {
+								select.append('<option value="' + d + '">' + d + '</option>')
+							});
 						});
-					});
-				</script>
-				<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
-				<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-				<script type="text/javascript">
-					Shadowbox.init();
-				</script>
-				<?php
+					},
+					"scrollX": true,
+					"pageLength": 10,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+					},
+					dom: 'Bfrtip',
+					buttons: [
+						{
+							extend: 'copyHtml5',
+							text: '<i class="fa fa-files-o"></i>',
+							titleAttr: 'Copy'
+						},
+						{
+							extend: 'excelHtml5',
+							text: '<i class="fa fa-file-excel-o"></i>',
+							titleAttr: 'Excel'
+						},
+						{
+							extend: 'csvHtml5',
+							text: '<i class="fa fa-file-text-o"></i>',
+							titleAttr: 'CSV'
+						},
+						{
+							extend: 'pdfHtml5',
+							text: '<i class="fa fa-file-pdf-o"></i>',
+							titleAttr: 'PDF'
+						}
+					]
+				});
+			});
+		</script>
+		<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+		<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+		<script type="text/javascript">
+			Shadowbox.init();
+		</script>
+		<?php
 	}
 	public function make_corrida($idLote)
 	{
@@ -7147,7 +7113,6 @@ class RegistroLote extends CI_Controller
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view('juridico/historialContratadorReporte_view', $datos);
 	}
@@ -7184,35 +7149,35 @@ class RegistroLote extends CI_Controller
 		$cabeceras = "CC: delia.cdmaderas@gmail.com\r\n";
 		$cabeceras .= "Content-type: text/html; charset=utf-8 \r\n";
 		$mensaje = "
-<style type='text/css'>
-table {  color: #333; border-collapse: collapse;}
-td, th { border: 20px solid transparent; height: 30px; }
-th { background: #D3D3D3; font-weight: bold; }
-td { background: #FAFAFA; text-align: center; }
-tr:nth-child(even) td { background: #F1F1F1; }  
-tr:nth-child(odd) td { background: #FEFEFE; } 
-tr td:hover { background: #666; color: #FFF; }
-</style>
-<h4><center>Lotes con 15 días en Integración de Expediente:</center></h4>
-<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-  <tr class='active'>
-    <th >Proyecto</th>
-    <th>Condominio</th> 
-    <th>Lote</th>
-    <th>Cliente</th>
-  </tr>";
-		foreach ($datos["sendApartados_old"] as $row_cliente) {
-			$mensaje .= "
-  <tr>   
-         <td> " . $row_cliente->nombreResidencial . " </td>
-         <td> " . $row_cliente->nombre . " </td>
-         <td> " . $row_cliente->nombreLote . " </td>
-         <td> " . $row_cliente->primerNombre . " " . $row_cliente->segundoNombre . " " . $row_cliente->apellidoPaterno . " " . $row_cliente->apellidoMaterno . " " . $row_cliente->razonSocial . " </td>
-  </tr>
-";
+		<style type='text/css'>
+		table {  color: #333; border-collapse: collapse;}
+		td, th { border: 20px solid transparent; height: 30px; }
+		th { background: #D3D3D3; font-weight: bold; }
+		td { background: #FAFAFA; text-align: center; }
+		tr:nth-child(even) td { background: #F1F1F1; }  
+		tr:nth-child(odd) td { background: #FEFEFE; } 
+		tr td:hover { background: #666; color: #FFF; }
+		</style>
+		<h4><center>Lotes con 15 días en Integración de Expediente:</center></h4>
+		<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
+		<tr class='active'>
+			<th >Proyecto</th>
+			<th>Condominio</th> 
+			<th>Lote</th>
+			<th>Cliente</th>
+		</tr>";
+				foreach ($datos["sendApartados_old"] as $row_cliente) {
+					$mensaje .= "
+		<tr>   
+				<td> " . $row_cliente->nombreResidencial . " </td>
+				<td> " . $row_cliente->nombre . " </td>
+				<td> " . $row_cliente->nombreLote . " </td>
+				<td> " . $row_cliente->primerNombre . " " . $row_cliente->segundoNombre . " " . $row_cliente->apellidoPaterno . " " . $row_cliente->apellidoMaterno . " " . $row_cliente->razonSocial . " </td>
+		</tr>
+		";
 		}
 		$mensaje .= "
-  </table></center>";
+ 		 </table></center>";
 		mail($para, $asunto, utf8_decode($mensaje), $cabeceras);
 	}
 	public function sendApartados_old7()
@@ -7227,35 +7192,35 @@ tr td:hover { background: #666; color: #FFF; }
 		$cabeceras = "CC: delia.cdmaderas@gmail.com\r\n";
 		$cabeceras .= "Content-type: text/html; charset=utf-8 \r\n";
 		$mensaje = "
-<style type='text/css'>
-table {  color: #333; border-collapse: collapse;}
-td, th { border: 20px solid transparent; height: 30px; }
-th { background: #D3D3D3; font-weight: bold; }
-td { background: #FAFAFA; text-align: center; }
-tr:nth-child(even) td { background: #F1F1F1; }  
-tr:nth-child(odd) td { background: #FEFEFE; } 
-tr td:hover { background: #666; color: #FFF; }
-</style>
-<h4><center>Lotes con 7 días en Integración de Expediente:</center></h4>
-<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-  <tr class='active'>
-    <th >Proyecto</th>
-    <th>Condominio</th> 
-    <th>Lote</th>
-    <th>Cliente</th>
-  </tr>";
-		foreach ($datos["sendApartados_old"] as $row_cliente) {
+		<style type='text/css'>
+		table {  color: #333; border-collapse: collapse;}
+		td, th { border: 20px solid transparent; height: 30px; }
+		th { background: #D3D3D3; font-weight: bold; }
+		td { background: #FAFAFA; text-align: center; }
+		tr:nth-child(even) td { background: #F1F1F1; }  
+		tr:nth-child(odd) td { background: #FEFEFE; } 
+		tr td:hover { background: #666; color: #FFF; }
+		</style>
+		<h4><center>Lotes con 7 días en Integración de Expediente:</center></h4>
+		<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
+		<tr class='active'>
+			<th >Proyecto</th>
+			<th>Condominio</th> 
+			<th>Lote</th>
+			<th>Cliente</th>
+		</tr>";
+				foreach ($datos["sendApartados_old"] as $row_cliente) {
 			$mensaje .= "
-  <tr>   
+  		<tr>   
          <td> " . $row_cliente->nombreResidencial . " </td>
          <td> " . $row_cliente->nombre . " </td>
          <td> " . $row_cliente->nombreLote . " </td>
          <td> " . $row_cliente->primerNombre . " " . $row_cliente->segundoNombre . " " . $row_cliente->apellidoPaterno . " " . $row_cliente->apellidoMaterno . " " . $row_cliente->razonSocial . " </td>
-  </tr>
-";
+		</tr>
+		";
 		}
 		$mensaje .= "
-  </table></center>";
+  		</table></center>";
 		mail($para, $asunto, utf8_decode($mensaje), $cabeceras);
 	}
 	public function historialDocumentos()
@@ -7263,15 +7228,6 @@ tr td:hover { background: #666; color: #FFF; }
 		$idLote = $this->input->post("idLote");
 		$response['data'] = $this->registrolote_modelo->getExp($idLote);
 		echo json_encode($response);
-		/*$data = $this->registrolote_modelo->getExp($lotes);
-		if($data != null) {
-			echo json_encode($data);
-		} else {
-			echo json_encode(array());
-		}
-		exit;*/
-		/*$data['historial_documento'] = $this->registrolote_modelo->getExp($lotes);
-			  $this->load->view('historial_document_view', $data);*/
 	}
 	function getLotesQuery()
 	{
@@ -7294,27 +7250,27 @@ tr td:hover { background: #666; color: #FFF; }
 		$cabeceras = "CC: delia.cdmaderas@gmail.com, lucero.velazquez@ciudadmaderas.com, programador.analista1@ciudadmaderas.com, coord.contraloria2@ciudadmaderas.com\r\n";
 		$cabeceras .= "Content-type: text/html; charset=utf-8 \r\n";
 		$mensaje = "
-<style type='text/css'>
-table {  color: #333; border-collapse: collapse;}
-td, th { border: 20px solid transparent; height: 30px; }
-th { background: #D3D3D3; font-weight: bold; }
-td { background: #FAFAFA; text-align: center; }
-tr:nth-child(even) td { background: #F1F1F1; }  
-tr:nth-child(odd) td { background: #FEFEFE; } 
-tr td:hover { background: #666; color: #FFF; }
-</style>
-<h4><center>Acumulado de lotes sin ingresar Expediente:</center></h4>
-<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='90%' style='text-align:center;' class='darkheader'>
-  <tr class='active'>
-    <th >Plaza</th>
-    <th>Condominio</th> 
-    <th>Lote</th>
-    <th>Fecha Apartado</th>
-    <th>Cliente</th>
-    <th>Gerente</th>
-    <th>Asesor</th>
-    <th>Días acumulados sin ingresar Expediente</th>
-  </tr>";
+		<style type='text/css'>
+		table {  color: #333; border-collapse: collapse;}
+		td, th { border: 20px solid transparent; height: 30px; }
+		th { background: #D3D3D3; font-weight: bold; }
+		td { background: #FAFAFA; text-align: center; }
+		tr:nth-child(even) td { background: #F1F1F1; }  
+		tr:nth-child(odd) td { background: #FEFEFE; } 
+		tr td:hover { background: #666; color: #FFF; }
+		</style>
+		<h4><center>Acumulado de lotes sin ingresar Expediente:</center></h4>
+	<center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='90%' style='text-align:center;' class='darkheader'>
+		<tr class='active'>
+			<th >Plaza</th>
+			<th>Condominio</th> 
+			<th>Lote</th>
+			<th>Fecha Apartado</th>
+			<th>Cliente</th>
+			<th>Gerente</th>
+			<th>Asesor</th>
+			<th>Días acumulados sin ingresar Expediente</th>
+		</tr>";
 		foreach ($datos["sendApartados_old"] as $row_cliente) {
 			$fechaHoy = $row_cliente->fechaApartado;
 			$fechaDes = date('Y-m-d');
@@ -7339,7 +7295,7 @@ tr td:hover { background: #666; color: #FFF; }
 			}
 			if (count($arregloFechas2) >= 7) {
 				$mensaje .= "
-  <tr>   
+  		<tr>   
          <td> " . $row_cliente->nombreResidencial . " </td>
          <td> " . $row_cliente->nombreCondominio . " </td>
          <td> " . $row_cliente->nombreLote . " </td>
@@ -7348,12 +7304,12 @@ tr td:hover { background: #666; color: #FFF; }
          <td> " . $row_cliente->nombreGerente . " </td>
          <td> " . $row_cliente->nombreAsesor . " </td>
          <td> " . count($arregloFechas2) . " </td>
-  </tr>
-";
+		</tr>
+		";
 			}
 		}
 		$mensaje .= "
-  </table></center>";
+  	</table></center>";
 		mail($para, $asunto, utf8_decode($mensaje), $cabeceras);
 	}
 	public function reportLotesContratados()
@@ -8141,7 +8097,6 @@ tr td:hover { background: #666; color: #FFF; }
 			$data[$i]['estatus'] = $datos[$i]->estatus;
 			$data[$i]['id_sede'] = $datos[$i]->id_sede;
 			$porciones = explode(",", $datos[$i]->id_sede);
-
 			if (count($porciones) == 1) {
 				$dataLocation = $this->registrolote_modelo->getLocation($datos[$i]->id_sede);
 				$data[$i]['ubicacion'] = $dataLocation[0]->abreviacion;
@@ -8692,7 +8647,6 @@ tr td:hover { background: #666; color: #FFF; }
 			'<br><br>' . (!isset($comentario) ? '' : $comentario);
 		$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_A_FECHA;
 		$plantilla_correo = new plantilla_dinamica_correo;
-		/********************************************************************************************/
 		$envio_correo = $plantilla_correo->crearPlantillaCorreo(
 			$correos_entregar,
 			$elementos_correo,
@@ -9123,15 +9077,6 @@ tr td:hover { background: #666; color: #FFF; }
 		$fechaVenc = $this->input->post('fechaVenc');
 		$idCliente = $this->input->post('idCliente');
 		$idCondominio = $this->input->post('idCondominio');
-		/*echo $idLote."<br>";
-			  echo $aleatorio."<br>";
-			  echo $nombreLote."<br>";
-			  echo $observaciones."<br>";
-			  echo $fechaVenc."<br>";
-			  echo $idCliente."<br>";
-			  echo $idCondominio."<br>";
-			  echo $_FILES["expediente"]["name"]."<br>";
-			  exit;*/
 		$expedienteNombre = $_FILES["expediente"]["name"];
 		$datos["getInfoAsRechazoEst3"] = $this->registrolote_modelo->getInfoAsRechazoEst3($idLote);
 		$nombreResidencial = $datos["getInfoAsRechazoEst3"]["nombreResidencial"];
@@ -9390,7 +9335,6 @@ tr td:hover { background: #666; color: #FFF; }
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view('administracion/vista_rechazos_estatus_11', $datos);
 	}
@@ -9422,7 +9366,6 @@ tr td:hover { background: #666; color: #FFF; }
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view('administracion/vista_reportes_gerencial', $datos);
 	}
@@ -9456,7 +9399,6 @@ tr td:hover { background: #666; color: #FFF; }
 	{
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
 		$this->load->view('administracion/vista_rechazos', $datos);
 	}

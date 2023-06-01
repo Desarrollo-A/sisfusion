@@ -1043,6 +1043,12 @@
   background-color: #B7950B18;
 }
 
+.lbl-sunny {
+  color: #B7950B;
+  border: none;
+  background-color: #F9F87118;
+}
+
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
 /* El background del scroll */
@@ -1744,7 +1750,7 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #143860;
+  background-color: #143860 !important;
 }
 
 table thead tr th {
@@ -1759,7 +1765,7 @@ table thead tr th input {
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #143860;
+  background-color: #143860 !important;
   text-transform: uppercase;
 }
 

@@ -43,7 +43,7 @@ $(document).ready(function () {
             }
         },
         columnDefs: [{
-            defaultContent: "Sin especificar",
+            defaultContent: "SIN ESPECIFICAR    ",
             targets: "_all",
             searchable: true,
             orderable: false
@@ -56,17 +56,7 @@ $(document).ready(function () {
             { data: 'nombreLote' },
             { data: 'nombreSede' },
             { data: 'referencia' },
-            {
-                data: function (data) {
-                    var ge1, ge2, ge3, ge4, ge5;
-                    if (data.gerente != "" && data.gerente != null) { ge1 = "" + data.gerente } else { ge1 = ""; }
-                    if (data.gerente2 != "" && data.gerente2 != null) { ge2 = "" + data.gerente2 } else { ge2 = ""; }
-                    if (data.gerente3 != "" && data.gerente3 != null) { ge3 = "" + data.gerente3 } else { ge3 = ""; }
-                    if (data.gerente4 != "" && data.gerente4 != null) { ge4 = "" + data.gerente4 } else { ge4 = ""; }
-                    if (data.gerente5 != "" && data.gerente5 != null) { ge5 = "" + data.gerente5 } else { ge5 = ""; }
-                    return ge1;
-                }
-            },
+            { data: 'nombreUsuario' },
             {
                 data: function (data) {
                     var as1, as2, as3, as4, as5;
@@ -78,7 +68,17 @@ $(document).ready(function () {
                     return as1;
                 }
             },
-            { data: 'nombreUsuario' },
+            {
+                data: function (data) {
+                    var ge1, ge2, ge3, ge4, ge5;
+                    if (data.gerente != "" && data.gerente != null) { ge1 = "" + data.gerente } else { ge1 = ""; }
+                    if (data.gerente2 != "" && data.gerente2 != null) { ge2 = "" + data.gerente2 } else { ge2 = ""; }
+                    if (data.gerente3 != "" && data.gerente3 != null) { ge3 = "" + data.gerente3 } else { ge3 = ""; }
+                    if (data.gerente4 != "" && data.gerente4 != null) { ge4 = "" + data.gerente4 } else { ge4 = ""; }
+                    if (data.gerente5 != "" && data.gerente5 != null) { ge5 = "" + data.gerente5 } else { ge5 = ""; }
+                    return ge1;
+                }
+            },
             {
                 data: function (data) {
                     if (data.idStatusContratacion == 15) { return "LOTE CONTRATADO" } else { return "NO APLICA" };
@@ -119,8 +119,14 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
     titulos.push(title);
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
-        if ($('#Jtabla').DataTable().column(i).search() !== this.value)
+        if ($('#Jtabla').DataTable().column(i).search() !== this.value){
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
+        }
+        $('#Upper').toUpperCase();
     });
             $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
+
+// $('#Upper').toUpperCase(function(){
+
+// });
