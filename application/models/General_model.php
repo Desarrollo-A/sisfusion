@@ -52,7 +52,7 @@ class General_model extends CI_Model
 
     public function getResidencialesList()
     {
-        return $this->db->query("SELECT idResidencial, nombreResidencial, UPPER(CAST(descripcion AS VARCHAR(75))) descripcion, empresa FROM residenciales WHERE status = 1 ORDER BY nombreResidencial ASC")->result_array();
+        return $this->db->query("SELECT idResidencial, CONCAT (nombreResidencial, ' - ', UPPER(CAST(descripcion AS VARCHAR(75)))) descripcion, empresa FROM residenciales WHERE status = 1 ORDER BY nombreResidencial ASC")->result_array();
     }
 
     public function getCondominiosList($idResidencial)
