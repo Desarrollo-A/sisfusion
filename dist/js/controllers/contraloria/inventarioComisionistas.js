@@ -1,11 +1,5 @@
 $(document).ready(function () {
-    $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['nombreResidencial'] + ' - ' + data[i]['descripcion']));
-        }
-        $("#idResidencial").selectpicker('refresh');
-    }, 'json');
-
+    getResidenciales();
     $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
         for (var i = 0; i < data.length; i++) {
             $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
@@ -14,33 +8,27 @@ $(document).ready(function () {
     }, 'json');
 });
 
-$('#idResidencial').change(function () {
-    index_idResidencial = $(this).val();
-    $("#idCondominioInventario").html("");
-    $(document).ready(function () {
-        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
-            }
-            $("#idCondominioInventario").selectpicker('refresh');
-        }, 'json');
-    });
+$('#residenciales').change(function () {
+    let idResidencial = $(this).val();
+    getCondominios(idResidencial);
+    $('#TableHide').removeClass('hide');
 });
 
 let titulosInventario = [];
 $('#tablaInventarioComisionistas thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventarioComisionistas').DataTable().column(i).search() !== this.value)
             $('#tablaInventarioComisionistas').DataTable().column(i).search(this.value).draw();
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
-$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
-    ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
-    ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
+$(document).on('change', '#residenciales, #condominios, #idEstatus', function () {
+    ix_idResidencial = ($("#residenciales").val().length <= 0) ? 0 : $("#residenciales").val();
+    ix_idCondominio = $("#condominios").val() == '' ? 0 : $("#condominios").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
     tabla_inventario = $("#tablaInventarioComisionistas").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -96,9 +84,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.casa == 1)
-                        return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+                        return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
                     else
-                        return d.nombreLote;
+                       return d.nombreLote;
                 }
             },
             { data: 'referencia' },
@@ -114,8 +102,8 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
+                        `<center><span class="label lbl-yellow">${d.descripcion_estatus}</span> <center>` :
+                        `<center><span class="label label lbl-yellow">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> <center>`;
                 }
             },
             {

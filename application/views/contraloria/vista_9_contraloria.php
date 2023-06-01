@@ -24,26 +24,22 @@
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <div class="table-responsive">
-                                    <table id="tabla_ingresar_9" name="tabla_ingresar_9"
-                                            class="table-striped table-hover">
-                                        <thead>
-                                            
-                                            <tr>
-                                                <th></th>
-                                                <th>TIPO DE VENTA</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>GERENTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>RESIDENCIA</th>
-                                                <th>UBICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                                <table id="tabla_ingresar_9" name="tabla_ingresar_9" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>TIPO DE VENTA</th>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>CLIENTE</th>
+                                            <th>GERENTE</th>
+                                            <th>RESIDENCIA</th>
+                                            <th>UBICACIÓN</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -64,7 +60,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12">
                         <label>Comentario</label>
-                        <textarea class="form-control" id="comentario" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario" rows="3"></textarea>
                          <br>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -105,8 +101,8 @@
                 <center><h4 class="modal-title"><label>Rechazo estatus 9 - <b><span class="lote"></span></b></label></h4></center>
             </div>
             <div class="modal-body">
-                <label>Comentario:</label>
-                  <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                <label>Comentario</label>
+                  <textarea class="text-modal" id="comentario3" rows="3"></textarea>
                   <br>              
             </div>
             <div class="modal-footer">

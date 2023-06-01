@@ -1,7 +1,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <style>
-    
+
     .buttons-html5 {
         margin-right: 10px;
     }
@@ -37,6 +37,27 @@
         width: 20px;
         height: 20px;
         z-index: 400;
+    }
+
+    .scroll-styles::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+    }
+
+    /* El background del scroll (border)*/
+    .scroll-styles::-webkit-scrollbar {
+    width: 9px;
+    background-color: transparent;
+    }
+
+    /* Color de la barra de desplazamiento */
+    .scroll-styles::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    }
+
+    /* Color del HOVER de barra de desplazamiento */
+    .scroll-styles::-webkit-scrollbar-thumb:hover {
+    background-color: #929292;
     }
 
 </style>
@@ -171,29 +192,16 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 <i class="material-icons" onclick="cleanComments()">clear</i>
                             </button>
-                            <h4 class="modal-title">Consulta información</h4>
+                            <h4 class="modal-title">Bitácora de cambios</h4>
                         </div>
-                        <div class="modal-body">
-                            <div role="tabpanel">
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                    <li role="presentation" class="active"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                                </ul>
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card card-plain">
-                                                    <div class="card-content">
-                                                        <ul class="timeline timeline-simple" id="changelog"></ul>
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <div class="modal-body">                      
+                                <div class="container-fluid p-0" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <ul class="timeline-3 scroll-styles" id="changelog"></ul>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                         </div>
                         <div class="modal-footer">
