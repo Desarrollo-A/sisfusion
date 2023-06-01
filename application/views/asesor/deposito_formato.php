@@ -1,10 +1,11 @@
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
-<body onload="cargarInputs()" onsubmit="guardarInputs()">
+<body>
 <div class="wrapper">
     <style>
-        ul.timeline-3 {
+
+    ul.timeline-3 {
         list-style-type: none;
         position: relative;
         height: 300px; /* Establece la altura del contenedor */
@@ -105,9 +106,9 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
                         <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
-                            <?php if ($this->session->userdata('id_rol') == 17) { ?>
+                            
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
-                            <?php }?>
+                           
                         </h3>  
                         <h6 class="m-0">Modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
@@ -1260,6 +1261,7 @@ function historial() {
         }
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
+        
         appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
@@ -1302,42 +1304,6 @@ $( ".espaciosOff" ).on( "focusout", function(){
     input.value = input.value.trim();
 });
 
-
-
-function historialCampoHtml(data) {
-    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
-    
-    $( ".letrasCaracteres" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z ñÑáéíóúÁÉÍÓÚüÜ.,-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".letrasNumeros" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    $( ".letrasNumeros" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z 0-9@#&_.-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".espaciosOff" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    $("input[data-type='currency']").on({
-        keyup: function() {
-        formatCurrency($(this));
-        },
-        blur: function() { 
-        formatCurrency($(this), "blur");
-        }
-    });
-
     function formatCurrency(input, blur) {
         var input_val = input.val();
         if (input_val === "") { return; }
@@ -1376,64 +1342,38 @@ function historialCampoHtml(data) {
     function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
-
+        
     function historialCampoHtml(data) {
-        let html = '<h3>Historial de movimientos</h3>';
-        data.forEach(columna => {
-            let dataTable = '';
-            columna.detalle.forEach(cambio => {
-                dataTable += `
-                <tr>
-				  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
-                  <td>${cambio.fecha}</td>
-                  <td>${cambio.anterior}</td>
-                  <td>${cambio.nuevo}</td>
-                </tr>`;
-            });
-
-            html += `
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h4><b>Campo: ${columna.columna}</b></h4>
-                    </div>
-                    <div class="col-lg-12">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Usuario</th>
-                              <th scope="col">Modificación</th>
-                              <th scope="col">Valor Anterior</th>
-                              <th scope="col">Valor Nuevo</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            ${dataTable}
-                          </tbody>
-                        </table>
-                    </div>
-                </div>
+    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
+    
+    dataTable += `
+    <div class="container-fluid">
+        <div class="row p-0">
+            <div class="col-md-12 offset-md-3 p-0">
+                <ul class="timeline-3 scroll-styles">
+                
             `;
+
+    data.forEach(columna => {
+        dataTable += `<li><div class="container-fluid">
+        <div class="row">
+        <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
+        columna.detalle.forEach(cambio => {
+            dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
+            </div>
+            </div>
+            <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
+            <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
+            <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
+            
+          </li>
+       `;
         });
 
-            data.forEach(columna => {
-                dataTable += `<li><div class="container-fluid">
-                <div class="row">
-                <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
-                columna.detalle.forEach(cambio => {
-                    dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
-                    </div>
-                    </div>
-                    <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
-                    <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
-                    <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
-                    
-                </li>
-                `;
-                });
-            }); 
-        dataTable += '</ul></div></div></div>';
-        return dataTable;
-    }
+    });
+    dataTable += '</ul></div></div></div>';
+    return dataTable;
+
 }
  if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
     $("#nacionalidad").change(function(){

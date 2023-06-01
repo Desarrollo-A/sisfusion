@@ -360,10 +360,16 @@ $('#idLote').change(function () {
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
 
-    const pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+
+    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+
         $itself.attr('data-expediente');
-
-    if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
+        if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
+            const idCliente = $itself.attr('data-idCliente');
+            const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
+                ? 'deposito_seriedad' : 'deposito_seriedad_ds';
+    
+            pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
+        }
+        if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
         descargarArchivo(pathUrl, $itself.attr('data-expediente'));
 
         alerts.showNotification('top', 'right', 'El documento <b>' + $itself.attr('data-expediente') + '</b> se ha descargado con éxito.', 'success');
@@ -619,7 +625,9 @@ function crearBotonAccion(type, data) {
                 data-nombre="${data.movimiento}" 
                 data-idDocumento="${data.idDocumento}" 
                 data-idLote="${data.idLote}" 
-                data-tituloDocumento="${tituloDocumento}">
+                data-tituloDocumento="${tituloDocumento}"
+                data-idCliente="${data.idCliente ?? data.id_cliente}">
+                
                     <i class="${buttonIcono}"></i>
             </button>`
 }

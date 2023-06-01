@@ -1,7 +1,7 @@
 $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
     if (i != 0) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value) {
                 $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
@@ -13,8 +13,8 @@ var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
 $("#tabla_ingresar_9").ready(function () {
     tabla_9 = $("#tabla_ingresar_9").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -38,10 +38,10 @@ $("#tabla_ingresar_9").ready(function () {
                                 return 'LOTE';
                                 break;
                             case 5:
-                                return 'GERENTE';
+                                return 'CLIENTE';
                                 break;
                             case 6:
-                                return 'CLIENTE';
+                                return 'GERENTE';
                                 break;
                             case 7:
                                 return 'RESIDENCIA';
@@ -79,10 +79,10 @@ $("#tabla_ingresar_9").ready(function () {
                                 return 'LOTE';
                                 break;
                             case 5:
-                                return 'GERENTE';
+                                return 'CLIENTE';
                                 break;
                             case 6:
-                                return 'CLIENTE';
+                                return 'GERENTE';
                                 break;
                             case 7:
                                 return 'RESIDENCIA';
@@ -110,6 +110,7 @@ $("#tabla_ingresar_9").ready(function () {
         bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
+        scrollX: true,
         columns: [{
             width: "3%",
             className: 'details-control',
@@ -139,12 +140,12 @@ $("#tabla_ingresar_9").ready(function () {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.gerente + '</p>';
+                return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
             }
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                return '<p class="m-0">' + d.gerente + '</p>';
             }
         },
         {
@@ -173,11 +174,11 @@ $("#tabla_ingresar_9").ready(function () {
                     if (data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
                         cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-residencia="' + data.residencia + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                            'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                             '<i class="fas fa-thumbs-up"></i></button>';
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
-                            'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                            'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURIDICO)">' +
                             '<i class="fas fa-thumbs-down"></i></button>';
                     } else
                         cntActions = 'N/A';
@@ -201,6 +202,13 @@ $("#tabla_ingresar_9").ready(function () {
         },
         order: [[1, 'asc']]
     });
+
+    $('#tabla_ingresar_9').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });    
+
     $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_9.row(tr);
