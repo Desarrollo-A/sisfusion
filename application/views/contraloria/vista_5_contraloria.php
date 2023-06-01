@@ -15,7 +15,7 @@
 					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
 							<label>Comentario:</label>
-							<input type="text" class="form-control" name="comentario" id="comentarioenvARevCE">
+							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE">
                              <br>
 						</div>
 
@@ -68,7 +68,7 @@
 				<div class="modal-body">
 					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				     	<label>Comentario:</label>
-						<textarea class="form-control" id="motivoRechazo" rows="3"></textarea>
+						<textarea class="text-modal" id="motivoRechazo" rows="3"></textarea>
 						<input type="hidden" name="idCliente" id="idClienterechCor" >
 						<input type="hidden" name="idCondominio" id="idCondominiorechCor" >
 					</div>
@@ -85,23 +85,23 @@
 
 
   <!-- modal  ENVIA A ASESOR por rechazo 2-->
-  <div class="modal fade" id="rechazarStatus_2" data-backdrop="static" data-keyboard="false">
-		  <div class="modal-dialog">
-			  <div class="modal-content" > 
-					<div class="modal-header">
-						  <center><h4 class="modal-title"><label>Rechazo estatus 5 - <b><span class="lote"></span></b></label></h4></center>
-					</div>
-					<div class="modal-body">
-					<label>Comentario:</label>
-						  <textarea class="form-control" id="comentario2" rows="3"></textarea>
-						  <br>              
-					</div>
-					<div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
-					</div>
+  	<div class="modal fade" id="rechazarStatus_2" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content" > 
+				<div class="modal-header">
+						<center><h4 class="modal-title"><label>Rechazo estatus 5 - <b><span class="lote"></span></b></label></h4></center>
+				</div>
+				<div class="modal-body">
+				<label>Comentario:</label>
+						<textarea class="form-control" id="comentario2" rows="3"></textarea>
+						<br>              
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+					<button type="button" id="save2" class="btn btn-primary">Registrar</button>
+				</div>
+			</div>
 		</div>
-	  </div>
 	</div>
   
   <!-- modal -->
@@ -112,9 +112,9 @@
 
 
   <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-  <div class="modal fade" id="envARev2" data-backdrop="static" data-keyboard="false">
-		  <div class="modal-dialog">
-			  <div class="modal-content" > 
+  	<div class="modal fade" id="envARev2" data-backdrop="static" data-keyboard="false">
+		  	<div class="modal-dialog">
+			  	<div class="modal-content" > 
 					<div class="modal-header">
 						  <center><h4 class="modal-title"><label>Registro estatus 5 - <b><span class="lote"></span></b></label></h4></center>
 					</div>
@@ -127,8 +127,8 @@
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save1" class="btn btn-primary"> Registrar</button>
 					</div>
-		</div>
-	  </div>
+				</div>
+	  		</div>
 	</div>
   
   <!-- modal -->
@@ -154,29 +154,27 @@
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <div class="table-responsive">
-                                    <table  id="tabla_ingresar_5" name="tabla_ingresar_5"
-                                            class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>TIPO</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>REFERENCIA</th>
-                                                <th>GERENTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>F.MOD</th>
-                                                <th>F.VENC</th>
-                                                <th>UC</th>
-                                                <th>SEDE</th>
-												<th>COMENTARIO</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+								<table  id="tabla_ingresar_5" name="tabla_ingresar_5"
+										class="table-striped table-hover">
+									<thead>
+										<tr>
+											<th></th>
+											<th>TIPO</th>
+											<th>PROYECTO</th>
+											<th>CONDOMINIO</th>
+											<th>LOTE</th>
+											<th>REFERENCIA</th>
+											<th>GERENTE</th>
+											<th>CLIENTE</th>
+											<th>F.MOD</th>
+											<th>F.VENC</th>
+											<th>UC</th>
+											<th>SEDE</th>
+											<th>COMENTARIO</th>
+											<th>ACCIONES</th>
+										</tr>
+									</thead>
+								</table>
                             </div>
                         </div>
                     </div>

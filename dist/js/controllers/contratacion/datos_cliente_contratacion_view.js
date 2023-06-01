@@ -14,6 +14,7 @@ $(document).ready(function () {
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
     $("#condominio").html("");
+    $("#tabla_clientes").removeClass('hide');
     $(document).ready(function () {
         $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
             var len = data.length;
@@ -70,7 +71,7 @@ $("#tabla_clientes").ready(function () {
 
 function fillTable(index_proyecto, index_condominio) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
-        width: 'auto',
+        width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
@@ -185,7 +186,7 @@ function fillTable(index_proyecto, index_condominio) {
                                 <button class="btn-data btn-blueMaderas cop"
                                         data-toggle="tooltip" 
                                         data-placement="top"
-                                        title= "Ventas compartidas"
+                                        title= "VENTAS COMPARTIDAS"
                                         data-idcliente="${d.id_cliente}"
                                         data-idLote="${d.idLote}">
                                     <i class="material-icons">
@@ -215,10 +216,12 @@ function fillTable(index_proyecto, index_condominio) {
         "order": [
             [1, 'asc']
         ],
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip("destroy");
-            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
-        }
+    });
+
+    $('#tabla_clientes').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
     
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
@@ -236,7 +239,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
                             <label>
                                 <b>
-                                    ${row.data().nombre} ${row.data().apellido_paterno} ${row.data().apellido_materno}
+                                    ${row.data().nombreCompleto}
                                 </b>    
                             </label>
                         </div>
