@@ -84,7 +84,7 @@ function fillTable(sede, residencial) {
             }
         },
         columnDefs: [{
-            defaultContent: "Sin especificar",
+            defaultContent: "SIN ESPECIFICAR",
             targets: "_all",
             searchable: true,
             orderable: true
