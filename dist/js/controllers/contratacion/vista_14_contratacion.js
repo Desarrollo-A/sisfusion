@@ -119,6 +119,8 @@ $("#tabla_ingresar_14").ready(function () {
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
+
+                return '<div class="d-flex justify-center">N/A</div>';
             }
         }
         ],

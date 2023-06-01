@@ -209,3 +209,51 @@ function remplazarCaracter(text, busca, reemplaza) {
     text = text.toString().replace(busca, reemplaza);
   return text;
 }
+
+$("input[data-type='currency']").on({
+  keyup: function() {
+    formatCurrencyG($(this));
+  },
+  blur: function() { 
+    formatCurrencyG($(this), "blur");
+  }
+});
+
+function formatCurrencyG(input, blur) {
+  var input_val = input.val();
+  if (input_val === "") { return; }
+  // original length
+  var original_len = input_val.length;
+
+  // initial caret position 
+  var caret_pos = input.prop("selectionStart");
+      
+  // check for decimal
+  if (input_val.indexOf(".") >= 0) {
+      var decimal_pos = input_val.indexOf(".");
+      var left_side = input_val.substring(0, decimal_pos);
+      var right_side = input_val.substring(decimal_pos);
+      left_side = formatNumberG(left_side);
+      right_side = formatNumberG(right_side);
+      if (blur === "blur") {
+          right_side += "00";
+      }
+      right_side = right_side.substring(0, 2);
+      input_val = "$" + left_side + "." + right_side;
+
+  } else {
+      input_val = formatNumberG(input_val);
+      input_val = "$" + input_val;
+      if (blur === "blur") {
+      input_val += ".00";
+      }
+  }
+  input.val(input_val);
+  var updated_len = input_val.length;
+  caret_pos = updated_len - original_len + caret_pos;
+  input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+function formatNumberG(n) {
+  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}

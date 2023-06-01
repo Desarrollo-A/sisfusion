@@ -254,12 +254,12 @@ $("#tabla_ingresar_5").ready(function () {
 
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont6 btn-data btn-warning" title= "Rechazar Status">' +
+                                'class="revCont6 btn-data btn-green" title= "Registrar estatus">' +
                                 '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="edit2 btn-data btn-warning" >' +
+                                'class="edit2 btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
                         else {

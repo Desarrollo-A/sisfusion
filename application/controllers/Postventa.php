@@ -695,7 +695,19 @@ class Postventa extends CI_Controller
             break;
             case 22:
                 $folder = "static/documentos/postventa/escrituracion/FORMAS_PAGO_FECHA/";
-            break;    
+            break;   
+            case 23:
+                $folder = "static/documentos/postventa/escrituracion/CHECK_LIST/";
+            break; 
+            case 24:
+                $folder = "static/documentos/postventa/escrituracion/BENEFICIARIO_CONTROLADOR/";
+            break; 
+            case 25:
+                $folder = "static/documentos/postventa/escrituracion/CARATULAS_BANCARIAS/";
+            break;  
+            case 26:
+                $folder = "static/documentos/postventa/escrituracion/ESTADOS_DE_CUENTA/";
+            break; 
         }
         return $folder;
 
@@ -916,8 +928,9 @@ class Postventa extends CI_Controller
            // "descuento" => $data['descuentos'],
             "valor_escriturar" => $data['valor_escri']
         );
-        //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
-        
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        ($data['fContrato'] == '' || $data['fContrato'] == null || $data['fContrato'] == 'null' || $data['fContrato'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_contrato'] =date("Y-m-d", strtotime(str_replace('/', '-', $data['fContrato'])));
+
         if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
             $updateData['bandera_notaria'] = 1;
@@ -1317,17 +1330,17 @@ class Postventa extends CI_Controller
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Aportaciones:</b><br>
-                                                    $'.number_format($data->aportacion, 2, '.', '').'
+                                                    $'.number_format($data->aportacion, 2, '.', ',').'
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Descuentos:</b><br>
-                                                    $'.number_format($data->descuento, 2, '.', '').'
+                                                    $'.number_format($data->descuento, 2, '.', ',').'
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>Fecha de contrato:</b><br>
-                                                    ' . $data->modificado . '
+                                                    ' . $data->fecha_contrato . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                 <b>Motivo:</b><br>
@@ -1351,7 +1364,7 @@ class Postventa extends CI_Controller
                                                 </td>
                                             <td style="font-size: 1em;">
                                                 <b>Valor de operación de contrato:</b><br>
-                                                ' .$data->valor_contrato. '
+                                                $' .number_format($data->valor_contrato, 2, '.', ',').'
                                             </td>
                                              <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
@@ -1369,6 +1382,10 @@ class Postventa extends CI_Controller
                                                             <td style="font-size: 1em;">
                                                                 <b>Nombre del titular anterior:</b><br>
                                                                 ' . $data->nombre_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Tipo de contrato anterior:</b><br>
+                                                                ' . $data->tipoContrato . '
                                                             </td>
                                                             <td style="font-size: 1em;">
                                                                 <b>Fecha contrato anterior:</b><br>
@@ -1655,6 +1672,16 @@ class Postventa extends CI_Controller
             echo json_encode(array());    
     }
 
+    public function getTipoContratoAnt()
+    {
+        $data = $this->Postventa_model->getTipoContratoAnt()->result_array()
+        ;
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
     public function getTipoEscrituracion()
     {
         $data = $this->Postventa_model->getTipoEscrituracion();
@@ -1707,22 +1734,27 @@ class Postventa extends CI_Controller
     }
 
     //INFORMACIÓN ADMIN
-    public function newInformacion()
-    {
+    public function newInformacion() {
         $replace = ["$", ","];
         $data = $_POST;
         $id_solicitud = $data['idSolicitud'];
         $updateData = array(
+            "estatus_pago" => $data['liquidado'],
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
+            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null || $data['tipoContratoAnt'] == 'null')  ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
-             "aportacion" => str_replace($replace,"",$data['aportaciones']),
+            "aportacion" => str_replace($replace,"",$data['aportaciones']),
             "descuento" => str_replace($replace,"",$data['descuentos']),
-            "motivo" => $data['motivo']
+            "motivo" => $data['motivo'],
+            
         );
-        ($data['fechaCAI'] == '' || $data['fechaCAI'] == null || $data['fechaCAI'] == 'null' || $data['fechaCAI'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] = date("Y-m-d",strtotime($data['fechaCAI']));
+        if($data['clienteI'] == 'uno'){
+            if($data['fechaCAI'] != '' || $data['fechaCAI'] != null || $data['fechaCAI'] != 'null' || $data['fechaCAI'] != 'NaN-NaN-NaN'){
+                $updateData['fecha_anterior'] = date("Y-m-d", strtotime(str_replace('/', '-', $data['fechaCAI'])));
+            }
+        }
 
-        //print_r($data);
         $data = $this->Postventa_model->updateInformacion($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
@@ -3153,12 +3185,27 @@ function saveNotaria(){
             'valor_contrato' =>  str_replace($replace,"",$this->input->post("valorOper")),
             'modificado_por' =>  $this->session->userdata('id_usuario')
         );
-        $this->General_model->updateBatch("solicitudes_escrituracion", $updateArrayData, "id_solicitud"); 
-        $response = $this->db->query("INSERT INTO historial_escrituracion VALUES($id_solicitud,1,0,'SE MODIFICÓ EL VALOR DE OPERACIÓN DE CONTRATO',GETDATE(),$modificado_por,GETDATE(),$modificado_por,0)");
-
+        $insertToDataHistorial[0] = array(
+            "id_solicitud" => $id_solicitud,
+            "numero_estatus" => 1,
+            "tipo_movimiento" => 0,
+            "descripcion" => 'SE MODIFICÓ EL VALOR DE OPERACIÓN DE CONTRATO',
+            "fecha_creacion" => date("Y-m-d H:i:s"),
+            "creado_por"  => $modificado_por,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $modificado_por,
+            "estatus_siguiente" =>0
+        );
+        $this->General_model->updateBatch("solicitudes_escrituracion", $updateArrayData, "id_solicitud");
+        $response = $this->General_model->insertBatch("historial_escrituracion", $insertToDataHistorial);
         echo json_encode($response);
+    }
 
-}
+    function getInfoCliente(){
+        $id_cliente = $this->input->post("id_cliente");
+        $data = $this->Postventa_model->getInfoCliente($id_cliente)->result_array();
+        echo json_encode($data);
+    }
 }
 
 
