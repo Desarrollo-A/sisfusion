@@ -1353,10 +1353,8 @@ Para el campo de tipo de venta
   background-color:  #0e625118;
 }
 
-/*
-*(Vista Solicitud de Comisiones)
-*/
-/*-Boton para video de youtube-*/
+/************************************************************/
+/*Boton para video de youtube (vista Solicitud de Comisiones)*/
 .btn-dt-youtube{
   box-shadow: none;
   padding: 7px 25px;
@@ -1377,7 +1375,13 @@ Para el campo de tipo de venta
   background-color: #c01313;
   color: #ffffff !important;
 }
-/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------
+Etiqueta para etiquetas dentro de la DataTable en vistas:
+1.- comisiones_colaboradores
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+2.- comisionesSuma:
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+*/
 .lbl-dark-blue{
   color: #1B4F72;
   border: none;
@@ -1390,6 +1394,25 @@ Para el campo de tipo de venta
   background-color: #008c7650;
 }
 /************************************************************/
+
+/*************************************************************
+Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
+1.- Columna: "Detalle" (distintos casos, distintos colores).
+2.- Columna: "Estatus" (queda poendiente ya que extrae colores de BD)
+****************************************************************/
+/*--------------Calumna "Detalle/*--------------*/
+.lbl-vividOrange{
+  color: #F57F17;
+  border: none;
+  background-color: #F57F1718;
+}
+
+.lbl-darkPink{
+  color: #880E4F;
+  border: none;
+  background-color: #880E4F18;
+}
+
 .boxContent .nav-tabs-cm {
   background: #eeeeee;
   padding: 0;

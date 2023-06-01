@@ -252,11 +252,12 @@ class Comisiones extends CI_Controller
     }
     public function insertar_codigo_postal(){
       $dato_solicitudcp = $this->input->post('dato_solicitudcp');
-      $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);      
+      $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);
     }
 
     public function consulta_codigo_postal(){
       $resolt = $this->Comisiones_model->consulta_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+      $resolt[0]["fecha_actual"] = date('Y-m-d H:i:s');
       echo json_encode($resolt);
     }
 

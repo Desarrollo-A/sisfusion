@@ -126,7 +126,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
             num_colum_encabezado.push(titulos_encabezado.length);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-        let style = title == 'MÁS' ? 'width: 37px;' : (title == '' ? 'width:15px; height:15px;' : '');
         if (title !== '') {
             $(this).html(`<input    type="text"
                                     class="textoshead"
@@ -259,105 +258,107 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [{
-            "width": "5%"
-        },
-        {
-            "width": "5%",
-            "data": function (d) {
-                return '<p class="m-0">' + d.id_pago_suma + '</p>';
-            }
-        },
-        {
-            "width": "5%",
-            "data": function (d) {
-                return '<p class="m-0">' + d.referencia + '</p>';
-            }
-        },
-        {
-            "width": "9%",
-            "data": function (d) {
-                return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
-            }
-        },
-        {
-            "width": "5%",
-            "data": function (d) {
-                return '<p class="m-0"><b>' + d.sede + '</b></p>';
-            }
-        },
-        {
-            "width": "5%",
-            "data": function (d) {
-                return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
-            }
-        },
-        {
-            "width": "9%",
-            "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
-            }
-        },
-        {
-            "width": "9%",
-            "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
-            }
-        },
-        {
-            "width": "5%",
-            "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
-            }
-        },
-        {
-            "width": "9%",
-            "data": function (d) {
-                switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
+        columns: [
+            {
+                "width": "5%"
+            },
+            {
+                "width": "5%",
+                "data": function (d) {
+                    return '<p class="m-0">' + d.id_pago_suma + '</p>';
+                }
+            },
+            {
+                "width": "5%",
+                "data": function (d) {
+                    return '<p class="m-0">' + d.referencia + '</p>';
+                }
+            },
+            {
+                "width": "9%",
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
+                }
+            },
+            {
+                "width": "5%",
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.sede + '</b></p>';
+                }
+            },
+            {
+                "width": "5%",
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
+                }
+            },
+            {
+                "width": "9%",
+                "data": function (d) {
+                    return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
+                }
+            },
+            {
+                "width": "9%",
+                "data": function (d) {
+                    return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
+                }
+            },
+            {
+                "width": "5%",
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
+                }
+            },
+            {
+                "width": "9%",
+                "data": function (d) {
+                    switch (d.id_forma_pago) {
+                        case '1': //SIN DEFINIR
+                        case 1: //SIN DEFINIr
+                            return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
+                        case '2': //FACTURA
+                        case 2: //FACTURA
+                            return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
+                        case '3': //ASIMILADOS
+                        case 3: //ASIMILADOS
+                            return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
+                        case '4': //RD
+                        case 4: //RD
+                            return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '5':
-                    case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>
-                        `;
-                    default:
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
+                        case '5':
+                        case 5:
+                            return `
+                                <p class="mb-1">
+                                    <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                                </p>
+                            `;
+                        default:
+                            return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
+                    }
+                }
+            },
+            {
+                "width": "5%",
+                "orderable": false,
+                "data": function (data) {
+                    return `<button href="#"
+                                    value="${data.id_pago_suma}"
+                                    data-referencia="${data.referencia}"
+                                    class="btn-data btn-blueMaderas consultar_history m-auto"
+                                    title="Detalles"
+                                    data-toggle="tooltip_nuevas" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>`;
+
                 }
             }
-        },
-        {
-            "width": "5%",
-            "orderable": false,
-            "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_suma}"
-                                data-referencia="${data.referencia}"
-                                class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="Detalles"
-                                data-toggle="tooltip_nuevas" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
-
-            }
-        }],
+        ],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
@@ -450,8 +451,8 @@ $(document).on("click", ".individualCheck", function () {
 
 /* Table revisión */
 $("#tabla_revision_comisiones").ready(function () {
-    titulos_encabezado = [];
-    num_colum_encabezado = [];
+    titulos_encabezado.length = 0;
+    num_colum_encabezado.length = 0;
     $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
@@ -654,8 +655,8 @@ $("#tabla_revision_comisiones").ready(function () {
 
 // /* Table pagadas */
 $("#tabla_pagadas_comisiones").ready(function () {
-    titulos_encabezado = [];
-    num_colum_encabezado = [];
+    titulos_encabezado.length = 0;
+    num_colum_encabezado.length = 0;
     $('#tabla_pagadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         var title = $(this).text();
@@ -858,8 +859,8 @@ $("#tabla_pagadas_comisiones").ready(function () {
 /* END pagadas */
 
 $("#tabla_pausadas_comisiones").ready(function () {
-    titulos_encabezado = [];
-    num_colum_encabezado = [];
+    titulos_encabezado.length = 0;
+    num_colum_encabezado.length = 0;
     $('#tabla_pausadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         var title = $(this).text();

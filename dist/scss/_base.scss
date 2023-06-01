@@ -208,6 +208,8 @@ $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
 $veryDarkBlue       : #1B4F72;
 $veryDarkCyan       : #0E6251;
+$vividOrange        : #F57F17;
+$darkPink           : #880E4F;
 /* END vrbls coloress */
 
 /* size devices */
@@ -969,7 +971,13 @@ $tv                 : "(min-width: 1280px)";
     background-color: $red;
     color: $white !important;
 }
-
+/*-----------------------------------------------------------
+Etiqueta para etiquetas dentro de la DataTable en vistas:
+1.- comisiones_colaboradores
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+2.- comisionesSuma:
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+*/
 .lbl-dark-blue{
     color: $veryDarkBlue;
     border: none;
@@ -982,3 +990,20 @@ $tv                 : "(min-width: 1280px)";
     background-color: #008c7650;    
 }
 /************************************************************/
+
+/*************************************************************
+Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
+1.- Columna: "Detalle" (distintos casos, distintos colores).
+2.- Columna: "Estatus" (queda poendiente ya que extrae colores de BD)
+****************************************************************/
+/*--------------Calumna "Detalle/*--------------*/
+.lbl-vividOrange{
+    color: $vividOrange;
+    border: none;
+    background-color: #F57F1718;
+}
+.lbl-darkPink{
+    color: $darkPink;
+    border: none;
+    background-color: #880E4F18;
+}

@@ -1,3 +1,7 @@
+var fecha_actual = '';
+const excluir_column = ['MÁS', ''];
+let columnas_datatable = {};
+
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
 
@@ -35,7 +39,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function (e) {
 
     $.ajax({
         type: 'POST',
-        url: general_base_url + 'index.php/Usuarios/SubirPDFExtranjero',
+        url: general_base_url + 'Usuarios/SubirPDFExtranjero',
         data: formData,
         contentType: false,
         cache: false,
@@ -85,7 +89,7 @@ $(document).ready(function () {
         type: 'GET',
         success: function (response) {
             const data = JSON.parse(response);
-            console.log();
+            fecha_actual = data[0].fecha_actual;
             if (forma_pago == 3) {
                 if (data.length == 0) {
                     $("#solicitud_cp").modal();
@@ -117,9 +121,9 @@ $(document).ready(function () {
             if (data1.length == 0) {
                 // $("#solicitud_cp").modal();
             } else if (data1.length != 0) {
-                document.getElementById("dato_solicitudcp").disabled = true;
-                document.getElementById("codigopostalSubmit").disabled = true;
-                document.getElementById('codigopostalCancel').style.display = 'inline';
+                // document.getElementById("dato_solicitudcp").disabled = true;
+                // document.getElementById("codigopostalSubmit").disabled = true;
+                // document.getElementById('codigopostalCancel').style.display = 'inline';
             }
         }
     });
@@ -143,7 +147,7 @@ $(document).on("submit", "#codigoForm", function (e) {
         processData: false,
         type: 'POST',
         success: function (response) {
-            alerts.showNotification("top", "right", "Se capturo tu codigo postal: " + dato_solicitudcp + "", "success");
+            alerts.showNotification("top", "right", "Se capturó tu código postal: " + dato_solicitudcp + "", "success");
             $("#solicitud_cp").modal("hide");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -205,16 +209,13 @@ $('#condominio_wp').change(function () {
 
 var totaPen = 0;
 var tr;
-const excluir_column = ['MÁS', ''];
 $("#tabla_nuevas_comisiones").ready(function () {
-
-    let titulos_encabezado_nuevas = [];
-    let num_colum_encabezado_nuevas = [];
+    asignarValorColumnasDT("tabla_nuevas_comisiones");
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
-            titulos_encabezado_nuevas.push(title);
-            num_colum_encabezado_nuevas.push(titulos_encabezado_nuevas.length-1);
+            columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+            columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         if (title !== '') {
@@ -281,10 +282,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'REPORTE COMISIONES NUEVAS',
                 exportOptions: {
-                    columns: num_colum_encabezado_nuevas,
+                    columns: columnas_datatable.tabla_nuevas_comisiones.num_encabezados,
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos_encabezado_nuevas[columnIdx] + ' ';
+                            return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
                         }
                     }
                 },
@@ -299,16 +300,24 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         actual = 15;
 
                     }
-                    var hoy = new Date();
+                    var hoy = new Date(fecha_actual);
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth() + 1;
                     var anio = hoy.getFullYear();
                     var hora = hoy.getHours();
                     var minuto = hoy.getMinutes();
-
-                    if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13)) ||
+                    if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+                        ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+                        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
                         (id_usuario_general == 7689)) {
 
                         if ($('input[name="idT[]"]:checked').length > 0) {
@@ -371,7 +380,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             {
                 text: '<i class="fa fa-street-view" aria-hidden="true"></i>',
                 className: `btn btn-azure ${boton_CP}`,
-                titleAttr: 'Clic para consultar codigo postal',
+                titleAttr: 'Clic para consultar código postal',
                 action: function (e, dt, button, confing) {
                     $('#solicitud_cp').modal('show');
                 }
@@ -575,16 +584,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 "width": "5%",
                 "orderable": false,
                 "data": function (data) {
-                    return `<button href="#" 
-                                    value="${data.id_pago_i}"
-                                    data-value="${data.lote}"
-                                    data-code="${data.cbbtton}"
-                                    class="btn-data btn-blueMaderas consultar_logs_nuevas" 
-                                    title="Detalles"
-                                    data-toggle="tooltip_nuevas" 
-                                    data-placement="top">
-                                <i class="fas fa-info"></i>
-                            </button>`;
+                    return `<div class="d-flex justify-center">
+                                <button href="#" 
+                                        value="${data.id_pago_i}"
+                                        data-value="${data.lote}"
+                                        data-code="${data.cbbtton}"
+                                        class="btn-data btn-blueMaderas consultar_logs_nuevas" 
+                                        title="Detalles"
+                                        data-toggle="tooltip_nuevas" 
+                                        data-placement="top">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>`;
 
                 }
             }
@@ -611,10 +622,19 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
 
 
-                    if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-                        ((mes == 12 && dia == 24) || (mes == 12 && dia == 24 && hora <= 13)) ||
-                        (id_usuario_general == 7689)) {
+                    if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+                        ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+                        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                        (id_usuario_general == 7689)){
 
                         switch (full.forma_pago) {
                             case '1': //SIN DEFINIR
@@ -705,13 +725,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
 // INICIO TABLA EN PROCESO
 $("#tabla_revision_comisiones").ready(function () {
-    let titulos_encabezado_revision = [];
-    let num_colum_encabezado_revision = [];
+    asignarValorColumnasDT("tabla_revision_comisiones");
     $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
-            titulos_encabezado_revision.push(title);
-            num_colum_encabezado_revision.push(titulos_encabezado_revision.length - 1);
+            columnas_datatable.tabla_revision_comisiones.titulos_encabezados.push(title);
+            columnas_datatable.tabla_revision_comisiones.num_encabezados.push(columnas_datatable.tabla_revision_comisiones.titulos_encabezados.length-1);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         $(this).html(`<input 	type="text"
@@ -765,10 +784,10 @@ $("#tabla_revision_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES EN REVISION',
             exportOptions: {
-                columns: num_colum_encabezado_revision,
+                columns: columnas_datatable.tabla_revision_comisiones.num_encabezados,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado_revision[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_revision_comisiones.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -876,16 +895,18 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "width": "5%",
             "data": function (data) {
-                return `<button href="#" 
-                                value="${data.id_pago_i}"
-                                data-value="${data.lote}"
-                                data-code="${data.cbbtton}"
-                                class="btn-data btn-blueMaderas consultar_logs_revision"
-                                title="Detalles"
-                                data-toggle="tooltip_revision" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<div class="d-flex justify-center">
+                            <button href="#" 
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.lote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_revision"
+                                    title="Detalles"
+                                    data-toggle="tooltip_revision" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>`;
             }
         }],
         columnDefs: [{
@@ -928,13 +949,12 @@ $("#tabla_revision_comisiones").ready(function () {
 
 // INICIO TABLA INTERNOMEX
 $("#tabla_pagadas_comisiones").ready(function () {
-    let titulos_encabezado_pagar = [];
-    let num_colum_encabezado_pagar = [];
+    asignarValorColumnasDT("tabla_pagadas_comisiones");
     $('#tabla_pagadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
-            titulos_encabezado_pagar.push(title);
-            num_colum_encabezado_pagar.push(titulos_encabezado_pagar.length - 1);
+            columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.push(title);
+            columnas_datatable.tabla_pagadas_comisiones.num_encabezados.push(columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.length-1);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         $(this).html(`<input 	type="text"
@@ -992,10 +1012,10 @@ $("#tabla_pagadas_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES POR PAGAR',
             exportOptions: {
-                columns: num_colum_encabezado_pagar,
+                columns: columnas_datatable.tabla_pagadas_comisiones.num_encabezados,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado_pagar[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -1099,16 +1119,18 @@ $("#tabla_pagadas_comisiones").ready(function () {
 
             "width": "5%",
             "data": function (data) {
-                return `<button href="#" 
-                                value="${data.id_pago_i}"
-                                data-value="${data.lote}"
-                                data-code="${data.cbbtton}"
-                                class="btn-data btn-blueMaderas consultar_logs_pagadas"
-                                title="Detalles"
-                                data-toggle="tooltip_pagar" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<div class="d-flex justify-center">
+                            <button href="#" 
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.lote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_pagadas"
+                                    title="Detalles"
+                                    data-toggle="tooltip_pagar" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>`;
             }
         }],
         columnDefs: [{
@@ -1151,14 +1173,12 @@ $("#tabla_pagadas_comisiones").ready(function () {
 
 // INICIO TABLA OTRAS
 $("#tabla_otras_comisiones").ready(function () {
-
-    let titulos_encabezado_pausadas = [];
-    let num_colum_encabezado_pausadas = [];
+    asignarValorColumnasDT("tabla_otras_comisiones");
     $('#tabla_otras_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
-            titulos_encabezado_pausadas.push(title);
-            num_colum_encabezado_pausadas.push(titulos_encabezado_pausadas.length - 1);
+            columnas_datatable.tabla_otras_comisiones.titulos_encabezados.push(title);
+            columnas_datatable.tabla_otras_comisiones.num_encabezados.push(columnas_datatable.tabla_otras_comisiones.titulos_encabezados.length-1);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         $(this).html(`<input 	type="text"
@@ -1213,10 +1233,10 @@ $("#tabla_otras_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
             exportOptions: {
-                columns: num_colum_encabezado_pausadas,
+                columns: columnas_datatable.tabla_otras_comisiones.num_encabezados,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado_pausadas[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_otras_comisiones.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -1324,16 +1344,18 @@ $("#tabla_otras_comisiones").ready(function () {
         {
             "width": "5%",
             "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_i}"
-                                data-value="${data.lote}"
-                                data-code="${data.cbbtton}"
-                                class="btn-data btn-blueMaderas consultar_logs_pausadas"
-                                title="Detalles"
-                                data-toggle="tooltip_pausadas" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<div class="d-flex justify-center">
+                            <button href="#"
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.lote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_pausadas"
+                                    title="Detalles"
+                                    data-toggle="tooltip_pausadas" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>`;
             }
         }],
         columnDefs: [{
@@ -1375,7 +1397,14 @@ $("#tabla_otras_comisiones").ready(function () {
 // FIN TABLA PAGADAS
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+    let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+    $(this).html(`<input 	type="text"
+                            class="textoshead"
+                            data-toggle="tooltip" 
+                            data-placement="top"
+                            title="${title}"
+                            placeholder="${title}"
+                            ${readOnly}/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
             $('#tabla_comisiones_sin_pago').DataTable()
@@ -1481,6 +1510,10 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             cache: false,
             data: function (d) { }
         },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+        }
     });
 };
 
@@ -1490,16 +1523,6 @@ $(window).resize(function () {
     tabla_pagadas.columns.adjust();
     tabla_otras.columns.adjust();
 });
-
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 $(document).on("click", ".subir_factura", function () {
     resear_formulario();
@@ -1539,8 +1562,6 @@ function EnviarDesarrollos() {
             if (data == 1) {
                 alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente.", "success");
                 document.getElementById('btn_EnviarM').disabled = false;
-                //$('#tabla_nuevas_comisiones').DataTable().ajax.reload(null, false);
-                //$('#tabla_revision_comisiones').DataTable().ajax.reload(null, false);
                 location.reload();
                 $("#ModalEnviar").modal("hide");
             } else {
@@ -1635,16 +1656,27 @@ $(document).on("click", ".subir_factura_multiple", function () {
     if (userSede == 8) {
         actual = 15;
     }
-    var hoy = new Date();
+
+    var hoy = new Date(fecha_actual);
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var anio = hoy.getFullYear();
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    if (((mes == 09 && dia == 30) || (mes == 10 && dia == 11 && hora <= 13)) ||
-        ((mes == 11 && dia == 7) || (mes == 11 && dia == 8 && hora <= 13)) ||
-        ((mes == 12 && dia == 12) || (mes == 12 && dia == 13 && hora <= 13))) {
+    if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
+        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+        ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
+        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
+        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+        (id_usuario_general == 7689)) {
 
         $("#modal_multiples .modal-body").html("");
         $("#modal_multiples .modal-header").html("");
@@ -1937,12 +1969,9 @@ function cargar_info_xml2(informacion_factura) {
     myCommentsList.setAttribute('style', 'color:green;');
     myCommentsList.innerHTML = 'Cantidad correcta';
 
-    console.log('suma:' + suma);
-    console.log('xml:' + cantidadXml);
     if (((suma + .50).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (suma - .50).toFixed(2)) || (cantidadXml.toFixed(2) == (suma).toFixed(2))) {
         alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
         document.getElementById('btng').disabled = false;
-        console.log("Cantidad correcta");
         disabled();
     }
     else {
@@ -1953,7 +1982,6 @@ function cargar_info_xml2(informacion_factura) {
         myCommentsList.setAttribute('style', 'color:red;');
         myCommentsList.innerHTML = 'Cantidad incorrecta';
         alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
-        console.log("cantidad incorrecta");
     }
 
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
@@ -2200,3 +2228,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
         .columns.adjust();
 });
+
+function asignarValorColumnasDT(nombre_datatable) {
+    if(!columnas_datatable[`${nombre_datatable}`]) {
+        columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
+    }
+}

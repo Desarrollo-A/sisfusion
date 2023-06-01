@@ -39,7 +39,7 @@ table tfoot tr th {
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Consulta de historialaaa <b id="nomLoteHistorial"></b></h4>
+                        <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">

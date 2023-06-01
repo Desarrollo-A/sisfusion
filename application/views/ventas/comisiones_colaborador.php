@@ -89,9 +89,6 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <spanaria-hidden="true">&times;</span>
-                        </button>
                         <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
                         <p style = "padding: 1rem">
                             Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.
@@ -99,12 +96,12 @@
                     </div>
                     <form id="codigoForm">
                     <div class="modal-body">
-                        <input  type="number"
+                        <input  type="text"
                                 id="dato_solicitudcp"
                                 name="dato_solicitudcp"
                                 class="form-control input-gral"
-                                min="10000"
-                                max="99999"
+                                minlength="5"
+                                maxlength="5"
                                 placeholder="Captura tu Código Postal"
                                 required>
                     </div>
@@ -664,18 +661,33 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                                                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
-                                                                    <option value="0">Selecciona una opción</option>
+                                                                <select name="proyecto_wp"
+                                                                        id="proyecto_wp"
+                                                                        class="selectpicker select-gral"
+                                                                        data-style="btn btn-second"
+                                                                        data-show-subtext="true"
+                                                                        data-live-search="true"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7"
+                                                                        required>
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                                                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Condominio</label>
-                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+                                                                <select name="condominio_wp"
+                                                                        id="condominio_wp"
+                                                                        class="selectpicker select-gral"
+                                                                        data-style="btn btn-second"
+                                                                        data-show-subtext="true"
+                                                                        data-live-search="true"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7"
+                                                                        required>
                                                                     <option disabled selected>Selecciona una opción</option>
                                                                 </select>
                                                             </div>
@@ -721,6 +733,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();
