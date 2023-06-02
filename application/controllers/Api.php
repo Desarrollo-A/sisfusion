@@ -45,8 +45,7 @@ class Api extends CI_Controller
         }
     }
 
-    function addLeadRecord()
-    {
+    function addLeadRecord() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -54,11 +53,11 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             else {
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(6489);
-                $valida_token = json_decode($this->validateToken($token, 6489));
-                if ($valida_token->status !== 200){
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9860);
+                $valida_token = json_decode($this->validateToken($token, 9860));
+                if ($valida_token->status !== 200)
                     echo json_encode($valida_token);
-                }else {
+                else {
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
                     $valida_token = Null;
                     foreach ($result->data as $key => $value) {
@@ -67,20 +66,18 @@ class Api extends CI_Controller
                     }
                     if(is_null($valida_token))
                         $valida_token = true;
-                    if(!empty($result->data) && $valida_token){
+                    if(!empty($result->data) && $valida_token)
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    }else{
+                    else {
                         $checkSingup = null;
                         echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $data = json_decode(file_get_contents("php://input"));
-                        if(!isset($data->APELLIDOPATERNO)){
+                        if(!isset($data->APELLIDOPATERNO))
                             $data->APELLIDOPATERNO = '';
-                        }
-                        if (!isset($data->APELLIDOMATERNO)) {
+                        if (!isset($data->APELLIDOMATERNO))
                             $data->APELLIDOMATERNO = ''; 
-                        }
                         if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDDRAGON))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
@@ -126,9 +123,8 @@ class Api extends CI_Controller
                                 }
                             }
                         }
-                    }else{
+                    } else
                         echo json_encode($checkSingup);
-                    }
                 }
             }
         }

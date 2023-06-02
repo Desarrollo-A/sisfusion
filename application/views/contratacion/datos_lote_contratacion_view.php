@@ -228,6 +228,7 @@ table tfoot tr th {
                                                 <th>APARTADO REUBICACIÓN</th>
                                                 <th>FECHA ALTA</th>
                                                 <th>VENTA COMPARTIDA</th>
+                                                <th>UBICACIÓN VENTA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
