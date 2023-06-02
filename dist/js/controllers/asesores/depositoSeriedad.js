@@ -1270,7 +1270,7 @@ $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
     $('#enviarNuevamenteEstatus3PV').modal('show');
 });
 
-$(document).on('click', '.btn-autorizacion', function (e) {
+$(document).on('click', '.btn-autorizacion', function () {
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
 
@@ -1310,6 +1310,31 @@ $(document).on('click', '.btn-autorizacion', function (e) {
     });
 });
 
+$(document).on('click', '.btn-reenvio', function () {
+    const $itself = $(this);
+    const idCliente = $itself.attr('data-idCliente');
+
+    $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
+        cliente = JSON.parse(data);
+
+        if (parseInt(cliente.autorizacion_correo) !== ESTATUS_AUTORIZACION.ENVIADO) {
+            $('#chk-correo-reenvio-div').hide();
+            $('#chk-sms-reenvio-div').removeAttr('class');
+            $('#chk-sms-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
+            $('#chkCorreoReenvio').prop('checked', false);
+        }
+
+        if (parseInt(cliente.autorizacion_sms) !== ESTATUS_AUTORIZACION.ENVIADO) {
+            $('#chk-sms-reenvio-div').hide();
+            $('#chk-correo-reenvio-div').removeAttr('class');
+            $('#chk-correo-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
+            $('#chkSmsReenvio').prop('checked', false);
+        }
+
+        $('#reenvio-modal').modal('toggle');
+    });
+});
+
 $(document).on('hidden.bs.modal', '#autorizaciones-modal', function () {
     cliente = null;
 
@@ -1332,6 +1357,21 @@ $(document).on('hidden.bs.modal', '#autorizaciones-modal', function () {
 
     $('#chkCorreoAut').prop('checked', true);
     $('#chkSmsAut').prop('checked', true);
+});
+
+$(document).on('hidden.bs.modal', '#reenvio-modal', function () {
+    cliente = null;
+
+    $('#chk-correo-reenvio-div').show();
+    $('#chk-sms-reenvio-div').show();
+
+    $('#chk-sms-reenvio-div').removeAttr('class');
+    $('#chk-sms-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
+    $('#chk-correo-reenvio-div').removeAttr('class');
+    $('#chk-correo-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
+
+    $('#chkCorreoReenvio').prop('checked', true);
+    $('#chkSmsReenvio').prop('checked', true);
 });
 
 $(document).on('submit', '#autorizacion-form', function (e) {
@@ -1411,7 +1451,79 @@ $(document).on('submit', '#autorizacion-form', function (e) {
             }
 
             if (response.code === 400) {
-                alerts.showNotification("top", "right", res.message, "warning");
+                alerts.showNotification("top", "right", response.message, "warning");
+            }
+
+            if (response.code === 500) {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            }
+
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+});
+
+$(document).on('submit', '#reenvio-form', function (e) {
+    e.preventDefault();
+
+    const formValues = {};
+    $.each($('#reenvio-form').serializeArray(), function (i, campo) {
+        formValues[campo.name] = campo.value;
+    });
+
+    if (!formValues.chkCorreoReenvio && !formValues.chkSmsReenvio) {
+        alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
+        return;
+    }
+
+    if (parseInt(cliente.autorizacion_sms) !== ESTATUS_AUTORIZACION.ENVIADO &&
+        parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO && !formValues.chkCorreoReenvio) {
+        alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
+        return;
+    }
+
+    if (parseInt(cliente.autorizacion_correo) !== ESTATUS_AUTORIZACION.ENVIADO &&
+        (parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO && !formValues.chkSmsReenvio)) {
+        alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
+        return;
+    }
+
+    let data = new FormData();
+    data.append('idCliente', cliente.id_cliente);
+
+    if (parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO && formValues.chkCorreoReenvio) {
+        data.append('correo', true);
+    }
+
+    if (parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO && formValues.chkSmsReenvio) {
+        data.append('sms', true);
+    }
+
+    $('#spiner-loader').removeClass('hide');
+
+    $.ajax({
+        url: `${general_base_url}Asesor/reenvioAutorizacion`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            const response = JSON.parse(data);
+
+            if (response.code === 200) {
+                alerts.showNotification("top", "right", 'Autorización reenviada con éxito', "success");
+                tabla_valores_ds.ajax.reload();
+                $('#reenvio-modal').modal('hide');
+            }
+
+            if (response.code === 400) {
+                alerts.showNotification("top", "right", response.message, "warning");
             }
 
             if (response.code === 500) {
@@ -1531,18 +1643,21 @@ function generarBotonesAutorizacion(data) {
         `;
     }
 
-    /*if (data.autorizacion_correo !== null || data.autorizacion_sms !== null) {
+    if (data.autorizacion_correo !== null || data.autorizacion_sms !== null) {
         botones += `
-            <button class="btn-data btn-azure btn-rounded btn-renvio" 
-                    title="Renvío de verificación">
+            <button class="btn-data btn-azure btn-rounded btn-reenvio" 
+                    title="Reenvío de verificación"
+                    data-idCliente='${data.id_cliente}'>
                 <i class="fas fa-share-square"></i>
             </button>
-            <button class="btn-data btn-violetDeep btn-rounded btn-solicitar" 
-                    title="Solicitar edición del registro">
-                    <i class="fas fa-pencil-square"></i>
-            </button>
         `;
-    }*/
+        /**
+         * <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+         *                     title="Solicitar edición del registro">
+         *                     <i class="fas fa-pencil-square"></i>
+         *             </button>
+         */
+    }
 
     return botones;
 }

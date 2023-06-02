@@ -1587,7 +1587,7 @@ input:checked + .switch:active::before {
     background-color: #eee;
 }
 
-#checkAut .boxChecks {
+.checkAut .boxChecks {
     background-color: #eeeeee;
     width: 100%;
     border-radius: 27px;
@@ -1595,13 +1595,13 @@ input:checked + .switch:active::before {
     padding: 5px !important;
 }
 
-#checkAut .boxChecks .checkstyleAut {
+.checkAut .boxChecks .checkstyleAut {
     cursor: pointer;
     user-select: none;
     display: block;
 }
 
-#checkAut .boxChecks .checkstyleAut span {
+.checkAut .boxChecks .checkstyleAut span {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1613,26 +1613,26 @@ input:checked + .switch:active::before {
     font-weight: 100;
 }
 
-#checkAut .boxChecks .checkstyleAut span:nth-child(2) {
+.checkAut .boxChecks .checkstyleAut span:nth-child(2) {
     margin: 0 3px;
 }
 
-#checkAut .boxChecks .checkstyleAut span:hover {
+.checkAut .boxChecks .checkstyleAut span:hover {
     box-shadow: none;
 }
 
-#checkAut .boxChecks .checkstyleAut input {
+.checkAut .boxChecks .checkstyleAut input {
     pointer-events: none;
     display: none;
 }
 
-#checkAut .boxChecks .checkstyleAut input:checked + span {
+.checkAut .boxChecks .checkstyleAut input:checked + span {
     transition: 0.3s;
     font-weight: 400;
     color: #0a548b;
 }
 
-#checkAut .boxChecks .checkstyleAut input:checked + span:before {
+.checkAut .boxChecks .checkstyleAut input:checked + span:before {
     font-family: FontAwesome !important;
     content: "\f00c";
     color: #0a548b;

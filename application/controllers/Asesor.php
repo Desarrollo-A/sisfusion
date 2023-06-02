@@ -5677,6 +5677,71 @@ class Asesor extends CI_Controller
         echo json_encode($this->Clientes_model->clienteAutorizacion($idCliente));
     }
 
+    public function reenvioAutorizacion()
+    {
+        $reenviarCorreo = $this->input->post('correo');
+        $reenviarSms = $this->input->post('sms');
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($reenviarCorreo) && !isset($reenviarSms) || !isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return;
+        }
+
+        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (isset($reenviarCorreo)) {
+            if ($cliente->autorizacion_correo === null) {
+                echo json_encode(['code' => 400, 'message' => 'No se ha enviado un correo de autorización anteriormente.']);
+                return;
+            }
+
+            if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
+                echo json_encode(['code' => 400, 'message' => 'El correo ya se ha validado anteriormente.']);
+                return;
+            }
+
+            $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
+
+            // $this->correoAut($urlCorreo, $correoCliente);
+        }
+
+        if (isset($reenviarSms)) {
+            if ($cliente->autorizacion_sms === null) {
+                echo json_encode(['code' => 400, 'message' => 'No se ha enviado el sms de autorización anteriormente.']);
+                return;
+            }
+
+            if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
+                echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue validado anteriormente.']);
+                return;
+            }
+
+            $url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
+
+            /*$resultadoSms = $this->smsAut($url, $telefonoCliente);
+
+            if (!$resultadoSms) {
+                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+                return;
+            }*/
+        }
+
+        echo json_encode(['code' => 200]);
+    }
+
     public function correoAut(string $url, string $correo): void
     {
         $mail = $this->phpmailer_lib->load();

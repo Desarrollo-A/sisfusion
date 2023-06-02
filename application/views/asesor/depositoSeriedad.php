@@ -152,7 +152,7 @@
                 <form id="autorizacion-form">
                     <div class="modal-body">
                         <!-- CHECKBOX CORREO / SMS -->
-                        <div class="row pt-1 pb-1" id="checkAut">
+                        <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO</h4>
                                 <div class="container boxChecks p-0">
@@ -245,6 +245,56 @@
         </div>
     </div>
     <!-- modal -->
+
+    <div class="modal fade" id="reenvio-modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Reenvío de autorizaciones al cliente
+                    </h4>
+                </div>
+                <form id="reenvio-form">
+                    <div class="modal-body">
+                        <!-- CHECKBOX CORREO / SMS -->
+                        <div class="row pt-1 pb-1 checkAut">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO</h4>
+                                <div class="container boxChecks p-0">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-reenvio-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkCorreoReenvio"
+                                                   id="chkCorreoReenvio"
+                                                   checked>
+                                            <span>CORREO ELECTRÓNICO</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-reenvio-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkSmsReenvio"
+                                                   id="chkSmsReenvio"
+                                                   checked>
+                                            <span>MENSAJE DE TEXTO SMS</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove"></span> Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-icons" >send</span> </i> Reenviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="content boxContent">
         <div class="container-fluid">
