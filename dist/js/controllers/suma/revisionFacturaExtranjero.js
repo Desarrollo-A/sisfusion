@@ -1,9 +1,7 @@
-var totaPen = 0;
-
 $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function() {
             if (tabla_factura.column(i).search() !== this.value) {
                 tabla_factura.column(i).search(this.value).draw();
@@ -25,29 +23,56 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
 });
 
+// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
-    tr = $(this).closest('tr');
-    var row = tabla_factura.row(tr).data();
+    var totaPen = 0;
+    tabla_factura.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_factura.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_factura.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_factura.row(tr).data();
+            totaPen += row.impuesto; 
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
 
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
+    });
     $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
 
+// Función de selección total
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_factura.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html('$' + formatMoney(tota2));
-    });
+    if(e.checked == true){
+        $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_factura.row(tr).data();
+            tota2 += row.impuesto;
+
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+    }
+
+    if(e.checked == false){
+        $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(0));
+    }
 }
 
 $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
@@ -218,9 +243,8 @@ tabla_factura = $("#tabla_factura").DataTable({
         "orderable": false,
         "data": function( data ){
             var BtnStats;
-            
-            BtnStats = `<button href="#" value="${data.id_pago_suma}"  data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_logs" title="Historial"><i class="fas fa-info"></i></button>
-            <button href="#" value="${data.id_pago_suma}" data-value="${data.id_pago_suma}" class="btn-data btn-warning cambiar_estatus" title="${(data.estatus == 2) ? 'Pausar solicitud': 'Activar solicitud' }">${(data.estatus == 2) ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>`;
+            BtnStats = `<button href="#" value="${data.id_pago_suma}"  data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_logs" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>
+            <button href="#" value="${data.id_pago_suma}" data-value="${data.id_pago_suma}" class="btn-data ${(data.estatus == 2)? 'btn-warning cambiar_estatus': 'btn-green cambiar_estatus'}" data-toggle="tooltip" data-placement="top"  title="${(data.estatus == 2) ? 'PAUSAR LA SOLICITUD': 'ACTIVAR LA SOLICITUD' }">${(data.estatus == 2) ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>`;
             return '<div class="d-flex justify-center">'+BtnStats+'</div>';
 
         }
@@ -255,6 +279,11 @@ tabla_factura = $("#tabla_factura").DataTable({
         data: { formaPago: '5'},
         dataType: 'json',
         dataSrc: ""
+    },
+    initComplete: function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     },
 });
 
@@ -320,4 +349,8 @@ $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
             }
         });
     }
+});
+
+$(window).resize(function(){
+    tabla_factura.columns.adjust();
 });

@@ -1,5 +1,4 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
 class Suma extends CI_Controller
 {
     public function __construct()
@@ -9,11 +8,8 @@ class Suma extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
     }
-
     public function index() {}
-
     public function validateUserAccess() {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->id_asesor) || !isset($data->contrasena))
@@ -44,7 +40,6 @@ class Suma extends CI_Controller
             }
         }
     }
-
     public function validateWeek(){
         $date = new DateTime();
         $week = $date->format("W");
@@ -53,41 +48,34 @@ class Suma extends CI_Controller
         
         echo json_encode($data);
     }
-
     public function comisiones_suma(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
-
         $this->load->view('template/header');
         $this->load->view("ventas/comisiones_suma", $datos);
     }
-
     public function getComisionesByStatus(){
         $user = $this->session->userdata('id_usuario');
         $data = $this->Suma_model->getComisionesByStatus($_POST['estatus'], $user);
         echo json_encode($data);
     }
-
     public function getAllComisionesByUser(){
         $user = $this->session->userdata('id_usuario');
         $year = $_POST['anio'];
         $data = $this->Suma_model->getAllComisionesByUser($user, $year);
         echo json_encode($data);
     }
-
     public function getAllComisiones(){
         $year = $_POST['anio'];
         $data = $this->Suma_model->getAllComisiones($year);
         echo json_encode($data);
     }
-
     public function sumServ(){
         $data_json = json_decode((file_get_contents("php://input")));
         $request = array();
         $primerFiltro = false;
         $stringReferencias = '';
-
         foreach ($data_json as &$data) {
             if (!isset($data->id_cliente) || !isset($data->total_venta) || !isset($data->comisionistas) || !isset($data->nombre_cliente) || !isset($data->id_pago) || !isset($data->referencia)){
                 $detalle[] = (object) ['idPagoSuma' => $idPago, 'idComisionCRM' => 0, 'status' => 404, 'referencia' => $referencia ];
@@ -149,14 +137,12 @@ class Suma extends CI_Controller
                 }
             }
         }
-
         //Obtenemos todas las referencias de las comisiones mandadas en el array
         if ($stringReferencias != '' ){
             $stringReferencias = substr($stringReferencias, 0, -2);
             $dataDuplicados = $this->Suma_model->duplicateReference($stringReferencias)->result_array();
             foreach ($dataDuplicados as $objDuplicado ){
                 $refDup = $objDuplicado['referencia'];
-
                 $filteredArrayComisiones = 
                     array_filter($arrayComisiones, function($element) use($refDup){
                     return $element['referencia'] == $refDup;
@@ -165,7 +151,6 @@ class Suma extends CI_Controller
                     array_filter($arrayPagos, function($element) use($refDup){
                     return $element['referencia'] == $refDup;
                 });
-
                 foreach ($filteredArrayComisiones as $key => $posicion) {
                     $detalle[] = (object) ['idPagoSuma' => $posicion['id_pago'], 'idComisionCRM' => 0, 'status' => 409, 'referencia' => $refDup ];
                     unset($arrayComisiones[$key]);
@@ -174,11 +159,9 @@ class Suma extends CI_Controller
                     unset($arrayPagos[$key]);
                 }
             }
-
             $arrayComisiones = array_values($arrayComisiones); 
             $arrayPagos = array_values($arrayPagos); 
         }
-
         if(count($arrayComisiones) > 0) {
             list($result, $ids) = $this->Suma_model->setComisionesPagos($arrayComisiones, $arrayPagos);
             if($result){
@@ -198,31 +181,25 @@ class Suma extends CI_Controller
         else
             echo(json_encode(array("status" => 403, "mensaje" => "Hubo algún error.", "detalle" => $detalle), JSON_UNESCAPED_UNICODE));
     }
-
     public function getHistorial($pago){
         echo json_encode($this->Suma_model->getHistorial($pago)->result_array());
     }
-
     public function acepto_comisiones_user(){
         $id_user_Vl = $this->session->userdata('id_usuario');
         $formaPagoUsuario = $this->session->userdata('forma_pago');
         $sol=$this->input->post('idcomision');  
         $consulta_comisiones = $this->db->query("SELECT id_pago_suma FROM pagos_suma where id_pago_suma IN (".$sol.")");
         $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
-
         if( ($opinionCumplimiento != NULL && $formaPagoUsuario == 5) || $formaPagoUsuario != 5){
             if( $consulta_comisiones->num_rows() > 0 ){
                 $consulta_comisiones = $consulta_comisiones->result_array();
                 $sep = ',';
                 $id_pago_i = '';
-
                 $data=array();
                 $pagoInvoice = array();
-
                 foreach ($consulta_comisiones as $row) {
                     $id_pago_i .= implode($sep, $row);
                     $id_pago_i .= $sep;
-
                     $row_arr=array(
                         'id_pago' => $row['id_pago_suma'],
                         'id_usuario' =>  $id_user_Vl,
@@ -231,7 +208,6 @@ class Suma extends CI_Controller
                         'comentario' =>  'COLABORADOR ENVÍO A DTO. SUMA' 
                     );
                     array_push($data,$row_arr);
-
                     if ($formaPagoUsuario == 5) { // Pago extranjero
                         $pagoInvoice[] = array(
                             'id_pago_suma' => $row['id_pago_suma'],
@@ -268,7 +244,6 @@ class Suma extends CI_Controller
             echo json_encode($data_response);
         }
     }
-
     public function guardar_solicitud($usuario = ''){
         $validar_user = $this->session->userdata('id_usuario');
         $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
@@ -278,7 +253,6 @@ class Suma extends CI_Controller
         date_default_timezone_set('America/Mexico_City');       
         $numDia =  date('N', time());
         $hora = date('H');
-
         if( $numDia == '1' || ( $numDia == '2' && $hora <= '14' ) ){
             if($usuario != ''){
               $usuarioid = $usuario;
@@ -351,107 +325,82 @@ class Suma extends CI_Controller
             echo json_encode(3);
         }
     }
-
     public function revision_asimilados(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_asimilados_suma", $datos);
     }
-
     public function revision_remanentes(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_remanentes_suma", $datos);
     }
-
     public function revision_facturas(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_factura_suma", $datos);
     }
-
     public function revision_extranjero(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_extranjero_suma", $datos);
     }
-
     public function revision_xml(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_xml_suma", $datos);
     }
-
     public function revision_asimilados_intmex(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_INTMEXasimilados_suma", $datos);  
     }
-
     public function revision_remanentes_intmex(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_INTMEXremanente_suma", $datos);  
     }
-
     public function revision_factura_intmex(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_INTMEXfactura_suma", $datos);  
     }
-
     public function revision_extranjeros_intmex(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/revision_INTMEXextranjero_suma", $datos);  
     }
-
     public function historial_comisiones(){
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
-
         $this->load->view('template/header');
         $this->load->view("ventas/historial_comisiones_suma", $datos);  
     }
-
     public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");
         $idUsuario = $this->input->post("idUsuario");
         $formaPago = $this->input->post("formaPago");
-
         echo json_encode($this->Suma_model->getRevisionIntMex($idRol, $idUsuario, $formaPago)->result_array());
     }
-
     public function getRevision(){
         $formaPago = $this->input->post("formaPago");
         echo json_encode($this->Suma_model->getRevision($formaPago)->result_array());
     }
-
     public function getFacturaRevision(){
         echo json_encode($this->Suma_model->getFacturaRevision()->result_array());
     }
     public function getFacturaExtranjeroRevision(){
         echo json_encode($this->Suma_model->getFacturaExtranjeroRevision()->result_array());
     }
-
     public function setPausarDespausarComision(){
         $idUsuario = $this->session->userdata('id_usuario');
         $idRol= $this->session->userdata('id_rol');
@@ -466,22 +415,17 @@ class Suma extends CI_Controller
             $estatus = 3;
         else
             $estatus = 2;
-
         $respuesta = $this->Suma_model->setPausarDespausarComision($estatus, $idPago, $idUsuario, $obs);
-
         echo json_encode( $respuesta );
     }
-
     public function aceptoInternomexAsimilados(){
         $idUsuario = $this->session->userdata('id_usuario');
         $idsComisiones = explode(",",$this->input->post('idcomision'));
-
         for ($i = 0; $i < count($idsComisiones); $i++) {
             $updateArrayData[] = array(
                 'id_pago_suma' => $idsComisiones[$i],
                 'estatus' => 3
             );
-
             $insertArrayData[]=array(
                 'id_pago' => $idsComisiones[$i],
                 'id_usuario' =>  $idUsuario,
@@ -490,21 +434,17 @@ class Suma extends CI_Controller
                 'comentario' =>  'SUMA ENVÍO A INTERNOMEX' 
             );
         }
-
         $reponse = $this->Suma_model->setAsimiladosInternomex($updateArrayData, $insertArrayData);
         echo json_encode( $reponse );
     }
-
     public function pago_internomex(){
         $idUsuario = $this->session->userdata('id_usuario');
         $idsComisiones = explode(",",$this->input->post('idcomision'));
-
         for ($i = 0; $i < count($idsComisiones); $i++) {
             $updateArrayData[] = array(
                 'id_pago_suma' => $idsComisiones[$i],
                 'estatus' => 6
             );
-
             $insertArrayData[]=array(
                 'id_pago' => $idsComisiones[$i],
                 'id_usuario' =>  $idUsuario,
@@ -513,28 +453,22 @@ class Suma extends CI_Controller
                 'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
             );
         }
-
         $reponse = $this->Suma_model->setPagosInternomex($updateArrayData, $insertArrayData);
         echo json_encode( $reponse );
     }
-
     public function getDatosNuevasXSuma(){
     $datos =  $this->Suma_model->getDatosNuevasXSuma()->result_array();
        echo json_encode( array( "data" => $datos));
     }
-
     public function lista_roles(){
       echo json_encode($this->Suma_model->get_lista_roles()->result_array());
     }
-
     public function lista_usuarios($rol,$forma_pago){
       echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
     }
-
     public function carga_listado_factura(){
         echo json_encode( $this->Suma_model->get_solicitudes_factura($this->input->post("id_usuario") ) );
     }
-
     public function getDatosFactura($uuid, $id_res){
         if($uuid){
              $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
@@ -550,8 +484,6 @@ class Suma extends CI_Controller
         }
         echo json_encode( $datos );
       }
-
-
     public function GetDescripcionXML($xml){
         error_reporting(0);
     
@@ -576,10 +508,8 @@ class Suma extends CI_Controller
         $arr[4]=  $cadena;
         echo json_encode($arr);
     }
-
     public function updateClientName(){
         $data = json_decode((file_get_contents("php://input")));
-
         if (!isset($data->id_cliente))
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
@@ -590,7 +520,6 @@ class Suma extends CI_Controller
                     "id_cliente" => $data->id_cliente,
                     "nombre_cliente" => $data->nombre_cliente
                 );
-
                 $result = $this->General_model->updateRecord("comisiones_suma", $updateData, "id_cliente", $data->id_cliente);
                 if ($result == true)
                     echo json_encode(array("status" => 200, "message" => "El registro se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
@@ -599,13 +528,11 @@ class Suma extends CI_Controller
             }
         }
     }
-
     public function getTotalComisionAsesor(){
         $idUsuario = $this->session->userdata('id_usuario');
         $data = $this->Suma_model->getTotalComisionAsesor($idUsuario);
         echo json_encode($data);
     }
-
     public function getAsesoresDisponibles(){
         $datos["asesor"] = $this->Suma_model->allAsesor();
         if ($datos != null) {
@@ -614,7 +541,6 @@ class Suma extends CI_Controller
             echo json_encode(array());
         }
     }
-
     public function cargaxml2($id_user = ''){
         $user =   $usuarioid =$this->session->userdata('id_usuario');
         $this->load->model('Usuarios_modelo');
@@ -704,34 +630,26 @@ class Suma extends CI_Controller
         }
         echo json_encode( $respuesta );
     }
-
     public function SubirPDFExtranjero($id = '')
     {
         $id_usuario = $this->session->userdata('id_usuario');
         $nombre = $this->session->userdata('nombre');
         $opc = 0;
-
         if ($id != '') {
             $opc = 1;
             $id_usuario = $this->input->post("id_usuario");
             $nombre = $this->input->post("nombre");
         }
-
         date_default_timezone_set('America/Mexico_City');
         $hoy = date("Y-m-d");
-
-
         $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
         $fileName = $_FILES['file-upload-extranjero']['name'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
         $uploadFileDir = './static/documentos/extranjero_suma/';
-
         $dest_path = $uploadFileDir . $newFileName;
         move_uploaded_file($fileTmpPath, $dest_path);
-
-
         $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc, 'SUMA');
         echo json_encode($response);
     }
