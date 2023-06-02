@@ -4,6 +4,25 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar', ''); ?>
     <!--Contenido de la página-->
+    <!-- modal para rechazar estatus-->
+    <div class="modal fade" id="enviarContratos" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content" >
+                <div class="modal-body">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <label>Ingresa los códigos de los contratos a enviar: </label>
+                        <textarea name="txt" id="contratos" onkeydown="saltoLinea(value); return true;" class="form-control" style="text-transform:uppercase; min-height: 400px;width: 100%"></textarea><br><br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_show" class="btn btn-success"><span class="material-icons">send</span> </i> Enviar Contratos</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="content boxContent ">
         <div class="container-fluid">
             <div class="row">
@@ -22,55 +41,31 @@
 
                                     if ($this->session->userdata('id_rol') != "63"){?>
 
-                                    <div  class="toolbar">
+                            <div  class="toolbar">
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 pb-5">
-                                        <button class="btn-gral-data sendCont">Enviar contratos <i class="fas fa-paper-plane pl-1"></i></button>
+                                        <button class="btn-gral-data sendCont mb-1">Enviar contratos <i class="fas fa-paper-plane pl-1"></i></button>
                                     </div>
                                 </div>
                             </div>
 
                                    <?php }?>
 
-                                   
-                            
                             <div class="material-datatables">
-                                <div class="table-responsive">
-                                    <table id="tabla_envio_RL" name="tabla_envio_RL" class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>TIPO DE VENTA</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>CÓDIGO</th>
-                                                <th>RL</th>
-                                                <th>UBICACIÓN</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- modal para rechazar estatus-->
-                            <div class="modal fade" id="enviarContratos" data-backdrop="static" data-keyboard="false">
-                                <div class="modal-dialog modal-md">
-                                    <div class="modal-content" >
-                                        <div class="modal-body">
-                                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <label>Ingresa los códigos de los contratos a enviar: </label>
-                                                <textarea name="txt" id="contratos" onkeydown="saltoLinea(value);
-														return true;" class="form-control" style="text-transform:uppercase;
-														min-height: 400px;width: 100%"></textarea><br><br>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" id="btn_show" class="btn btn-success"><span class="material-icons">send</span> </i> Enviar Contratos</button>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
+                                <table id="tabla_envio_RL" name="tabla_envio_RL" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>TIPO DE VENTA</th>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>CLIENTE</th>
+                                            <th>CÓDIGO</th>
+                                            <th>RL</th>
+                                            <th>UBICACIÓN</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>

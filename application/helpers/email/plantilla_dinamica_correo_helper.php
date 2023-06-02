@@ -2,7 +2,7 @@
 
 class plantilla_dinamica_correo
 {
-	/*function crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
+	function crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, 
 								  $datos_etiquetas = null, $comentario_general, array $archivo_adjunto = null){
 		
 		$phpMailer = new PHPMailer_Lib;
@@ -185,6 +185,6 @@ class plantilla_dinamica_correo
 		}
 		$contenidoHtml .='</tr></table>';
 		return $contenidoHtml;
-	}*/
+	}
 }
 ?>

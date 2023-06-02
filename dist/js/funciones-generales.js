@@ -214,9 +214,9 @@ $("input[data-type='currency']").on({
   keyup: function() {
     formatCurrencyG($(this));
   },
-  blur: function() { 
-    formatCurrencyG($(this), "blur");
-  }
+  // blur: function() { 
+  //   formatCurrencyG($(this), "blur");
+  // }
 });
 
 function formatCurrencyG(input, blur) {

@@ -10,7 +10,7 @@ $("#tabla_envio_RL").ready(function () {
     });
 
     tabla_corrida = $("#tabla_envio_RL").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
         buttons: [
             {
@@ -112,6 +112,7 @@ $("#tabla_envio_RL").ready(function () {
         bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
+        scrollX: true,
         columns: [
             {
                 data: function (d) {
