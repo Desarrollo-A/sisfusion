@@ -46,6 +46,7 @@ $(document).on('click', '.see-comments', function(e){
 
     $.getJSON("getComments/"+id_prospecto).done( function( data ){
         counter = 0;
+        data.length > 0 ? data = data : data[0] = {creador:'', fecha_creacion: '', observacion: '<b>SIN COMENTARIOS</b>'};
         $.each( data, function(i, v){
             counter ++;
             fillTimeline(v, counter);
@@ -69,16 +70,22 @@ function cleanComments() {
 }
 
 function fillTimeline (v) {
-    $("#comments-list").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>'+v.creador+'</h6></label>\n' +
-        '            <br>'+v.observacion+'\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.fecha_creacion+'</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
+    let etiqueta_creador = v.creador !== '' 
+                            ?`<label><h6>${v.creador}</h6></label><br>`
+                            : '';
+
+    let etiqueta_fecha = v.fecha_creacion !== '' 
+                         ? `<h6><span class="small text-gray"><i class="fa fa-clock-o mr-1"></i>${v.fecha_creacion}</span></h6>`
+                         : '';
+    $("#comments-list")
+        .append(`<li class="timeline-inverted">
+                    <div class="timeline-badge success"></div>
+                    <div class="timeline-panel">
+                        ${etiqueta_creador}
+                        ${v.observacion}
+                        ${etiqueta_fecha}
+                    </div>
+                </li>`);
 }
 
 function fillChangelog (v) {
