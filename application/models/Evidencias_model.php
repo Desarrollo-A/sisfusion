@@ -18,7 +18,7 @@
             $join = "UNION ALL
             SELECT ve.id_video id, '' token, UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) asesor,
             ve.fecha_creacion, UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, ve.nombre_archivo, ve.estatus_validacion estatus,
-            CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, ve.idCliente id_cliente, ve.idLote id_lote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
+            CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado, ve.idCliente id_cliente, ve.idLote id_lote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
             l.nombreLote, 13 as currentRol, 'Vídeo' tipoEvidencia, '2' type
             FROM video_evidencia ve
             LEFT JOIN clientes cl ON cl.id_cliente = ve.idCliente
@@ -29,8 +29,8 @@
         }
         
         return $this->db->query("SELECT * FROM (SELECT tk.id_token id, tk.token, CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) asesor,
-        tk.fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, tk.nombre_archivo, tk.estatus,
-        CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado, tk.id_cliente, tk.id_lote, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno ) as nombreCliente,
+        CONVERT(VARCHAR, tk.fecha_creacion,120)fecha_creacion, CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, tk.nombre_archivo, tk.estatus,
+        CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado, tk.id_cliente, tk.id_lote, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno ) as nombreCliente,
         l.nombreLote, ".$this->session->userdata('id_rol')." as currentRol, 'BBVA' tipoEvidencia, '1' type
         FROM tokens tk
         INNER JOIN usuarios u1 ON u1.id_usuario = tk.para

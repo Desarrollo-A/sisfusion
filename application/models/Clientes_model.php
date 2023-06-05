@@ -4253,7 +4253,9 @@ function getStatusMktdPreventa(){
         WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
     }
 
-    public function getClientsByProyect($id_lider){
+    public function getClientsByProyect($id_lider) {
+        if ($this->session->userdata('id_usuario') == 7092)
+            $id_lider = 7092;
         $where = ($id_lider == 0 || is_null($id_lider))
                  ? ""
                  : "AND (cli.id_subdirector = $id_lider OR cli.id_regional = $id_lider OR cli.id_gerente = $id_lider OR cli.id_gerente = $id_lider)";

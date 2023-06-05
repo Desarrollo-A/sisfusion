@@ -837,40 +837,35 @@ function getDatosHistorialPagoRP($id_usuario){
 
     function getDatosComisionesNuevasNivel2(){
         return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 1 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 1 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+                }
+
+
+                function getDatosComisionesRecibidasNivel2(){
+                    return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 4 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
+                }
+                    
+
+
+                function getDatosComisionesHistorialNivel2(){
+                    $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
+            CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador,
+            oxc.nombre as puesto
+            FROM pago_comision_mktd pcm
+            INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
+            WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
     }
 
-
-    function getDatosComisionesRecibidasNivel2(){
-        return $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador, oxc.nombre as puesto, 3 as forma_pago, 1 as expediente
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 4 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
-    }
-        
-
-
-    function getDatosComisionesHistorialNivel2(){
-        $this->db->query("SELECT pcm.id_pago_mk, pcm.fecha_abono, pcm.estatus, pcm.abono_marketing, pcm.pago_mktd,
-CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS colaborador,
-oxc.nombre as puesto
-FROM pago_comision_mktd pcm
-INNER JOIN usuarios us ON us.id_usuario = pcm.id_usuario
-INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol
-WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->session->userdata('id_usuario')."");
-    }
-
-
-
-
-
-    
     function getDatosComisionesAsesor($estado){
         $user_data = $this->session->userdata('id_usuario');
         $sede = $this->session->userdata('id_sede');
@@ -918,9 +913,6 @@ WHERE oxc.id_catalogo = 1 AND pcm.estatus = 11 AND pcm.id_usuario =  ".$this->se
             u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcC.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion,
             opt.estatus)");
         }
-
-
-
 
     function getDatosComisionesAsesorBaja($estado){
         $filtro = 'AND u.estatus = 0 AND u.id_rol IN (3,9,7,42)';
@@ -5143,37 +5135,32 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
     
-      function insertar_codigo_postal($codigo_postal){ 
-
+    function insertar_codigo_postal($codigo_postal){
         $id_user = $this->session->userdata('id_usuario');
         $estatus_cp= $this->consulta_codigo_postal($id_user)->result_array();
-        $estatus_np= $estatus_cp[0]["estatus"];
-        $estatus_dato= $estatus_cp[0]["codigo_postal"];
-        if($estatus_cp == []){
-            return $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por)
-            values ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
+        if(count($estatus_cp) <= 0){
+            $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por)
+                            values ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
+            echo "Código postal insertado con éxito";
         }else{
-            echo "Dato ya registrado";
-        }
-        if($estatus_np == 0){
-
-            $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-
-            return $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por)
-            values ($id_user,'update',$estatus_dato, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
-
-        }else{
-            echo "Dato actualizado";
-        }
-        if($estatus_np != 0 && $estatus_cp != []){
-
-           return $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-
-        }else{
-            echo "Consulta actualizado";
-        }   
-      }
+            $estatus_np= $estatus_cp[0]["estatus"];
+            $estatus_dato= $estatus_cp[0]["codigo_postal"];
+            if($estatus_np == 0){
+                $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+                $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por)
+                                values ($id_user,'update',$estatus_dato, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
+                echo "Datos actualizados correctamente";
     
+            }elseif($estatus_np != 0 && $estatus_cp != []){
+                if($estatus_cp[0]['codigo_postal'] != $codigo_postal){
+                    $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+                    echo "Código postal actualizado correctamente";
+                }else {
+                    echo "El código postal ".$codigo_postal." ya se encuentra registrado";
+                }
+            }
+        }
+    }
       function consulta_codigo_postal($id_user){
 
         return $this->db->query("SELECT estatus, codigo_postal FROM cp_usuarios WHERE id_usuario = $id_user");

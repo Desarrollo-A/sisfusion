@@ -1,12 +1,11 @@
-
+const excluir_column = ['MÁS', ''];
+let columnas_datatable = {};
 
 $('#filtro33').change(function(ruta){
-
     residencial = $('#filtro33').val();
     param = $('#param').val();
     condominio = '';
     $("#filtro44").empty().selectpicker('refresh');
-    getAssimilatedCommissions(residencial, condominio);
     $.ajax({
         url: general_base_url+'Contratacion/lista_proyecto/',
         type: 'post',
@@ -80,37 +79,6 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
-$('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    if(i != 15){
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_historialGral').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-            }
-        });
-    }
-});
-
-$('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    if(i != 15){
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_comisiones_canceladas').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-            }
-        });
-    }
-});
-
-
 var totalLeon = 0;
 var totalQro = 0;
 var totalSlp = 0;
@@ -123,19 +91,38 @@ var tabla_historialGral3 ;
 var totaPen = 0;
 
 //INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
-
 function getAssimilatedCommissions(proyecto, condominio){
-    let titulos = [];
+    asignarValorColumnasDT("tabla_historialGral");
+    $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        if (!excluir_column.includes(title)) {
+            columnas_datatable.tabla_historialGral.titulos_encabezados.push(title);
+            columnas_datatable.tabla_historialGral.num_encabezados.push(columnas_datatable.tabla_historialGral.titulos_encabezados.length-1);
+        }
+        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+        if (title !== '') {
+            $(this).html(`<input    type="text"
+                                    class="textoshead"
+                                    data-toggle="tooltip" 
+                                    data-placement="top"
+                                    title="${title}"
+                                    placeholder="${title}"
+                                    ${readOnly}/>`);
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_historialGral').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+                }
+            });
+        }
+    });
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',                
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',                
         buttons: [
-        // {
-        //     text: '<i class="fa fa-table" aria-hidden="true"></i>',
-        //     className: 'btn buttons-general-dt ver-info-asesor',
-        //     titleAttr: 'Reporte pagos UM',
-        // },
         {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -143,43 +130,10 @@ function getAssimilatedCommissions(proyecto, condominio){
             titleAttr: 'Descargar archivo de Excel',
             title: 'HISTORIAL_GENERAL_ACTIVAS',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                columns: columnas_datatable.tabla_historialGral.num_encabezados,
                 format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            //  return ' '+d +' ';
-                            return 'ID PAGO';
-                        }else if(columnIdx == 1){
-                            return 'PROYECTO';
-                        }else if(columnIdx == 2){
-                            return 'CONDOMINIO';
-                        }else if(columnIdx == 3){
-                            return 'NOMBRE LOTE';
-                        }else if(columnIdx == 4){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 5){
-                            return 'PRECIO LOTE';
-                        }else if(columnIdx == 6){
-                            return 'TOTAL COMISIÓN';
-                        }else if(columnIdx == 7){
-                            return 'PAGO CLIENTE';
-                        }else if(columnIdx == 8){
-                            return 'DISPERSADO NEODATA';
-                        }else if(columnIdx == 9){
-                            return 'PAGADO';
-                        }else if(columnIdx == 10){
-                            return 'PENDIENTE';
-                        }else if(columnIdx == 11){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 12){
-                            return 'PUESTO';
-                        }else if(columnIdx == 13){
-                            return 'DETALLE';
-                        }else if(columnIdx == 14){
-                            return 'ESTATUS ACTUAL';
-                        }else if(columnIdx != 15 && columnIdx !=0){
-                            return ' '+titulos[columnIdx-1] +' ';
-                        }
+                    header: function (d, columnIdx) {
+                        return ' ' + columnas_datatable.tabla_historialGral.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -195,7 +149,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
         destroy: true,
         deferRender: true,
-
+        scrollX: true,
         columns: [{
             "width": "5%",
             "data": function( d ){
@@ -292,18 +246,18 @@ function getAssimilatedCommissions(proyecto, condominio){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;"> + 90 días</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-vividOrange"> + 90 días</span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-darkPink"">Bon. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
+                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
                 }
                 else{
                     p2 = '';
@@ -318,10 +272,16 @@ function getAssimilatedCommissions(proyecto, condominio){
                 var etiqueta;
 
                         if(d.pago_neodata < 1){
-                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                            etiqueta = '<p class="m-1">'+
+                                            '<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+
+                                                d.estatus_actual+
+                                            '</span>'+
+                                        '</p>'+
+                                        '<p class="m-1">'+
+                                        '<span class="label lbl-green">IMPORTACIÓN</span></p>';
                         }else{
 
-                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
+                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
                         }
 
                 return etiqueta;
@@ -331,10 +291,17 @@ function getAssimilatedCommissions(proyecto, condominio){
             "width": "2%",
             "orderable": false,
             "data": function( data ){
-
                 var BtnStats;
-
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                BtnStats = `<button href="#"
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.nombreLote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                    title="Detalles"
+                                    data-toggle="tooltip" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -351,13 +318,16 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-
             "url": general_base_url + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio,
             "type": "POST",
             cache: false,
             "data": function( d ){}
         },
-        order: [[ 1, 'asc' ]]
+        order: [[ 1, 'asc' ]],
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+        }
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -382,17 +352,38 @@ function getAssimilatedCommissions(proyecto, condominio){
 //INICIO TABLA QUERETARO CANCELACIONES****************************************************************************************
 
 function getAssimilatedCancelacion(proyecto, condominio){
-    let titulos = [];
+    asignarValorColumnasDT("tabla_comisiones_canceladas");
+    $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        if (!excluir_column.includes(title)) {
+            columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.push(title);
+            columnas_datatable.tabla_comisiones_canceladas.num_encabezados.push(columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.length-1);
+        }
+        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+        if (title !== '') {
+            $(this).html(`<input    type="text"
+                                    class="textoshead"
+                                    data-toggle="tooltip_canceladas" 
+                                    data-placement="top"
+                                    title="${title}"
+                                    placeholder="${title}"
+                                    ${readOnly}/>`);
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_comisiones_canceladas').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+                }
+            });
+        }
+    });
+
     $("#tabla_comisiones_canceladas").prop("hidden", false);
     tabla_historialGral3 = $("#tabla_comisiones_canceladas").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',                
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',                
         buttons: [
-        // {
-        //     text: '<i class="fa fa-table" aria-hidden="true"></i>',
-        //     className: 'btn buttons-general-dt ver-info-asesor',
-        //     titleAttr: 'Reporte pagos UM',
-        // },
         {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -400,43 +391,10 @@ function getAssimilatedCancelacion(proyecto, condominio){
             titleAttr: 'Descargar archivo de Excel',
             title: 'HISTORIAL_GENERAL_CANCELADAS',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                columns: columnas_datatable.tabla_comisiones_canceladas.num_encabezados,
                 format: {
                     header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            //  return ' '+d +' ';
-                            return 'ID PAGO';
-                        }else if(columnIdx == 1){
-                            return 'PROYECTO';
-                        }else if(columnIdx == 2){
-                            return 'CONDOMINIO';
-                        }else if(columnIdx == 3){
-                            return 'NOMBRE LOTE';
-                        }else if(columnIdx == 4){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 5){
-                            return 'PRECIO LOTE';
-                        }else if(columnIdx == 6){
-                            return 'TOTAL COMISIÓN';
-                        }else if(columnIdx == 7){
-                            return 'PAGO CLIENTE';
-                        }else if(columnIdx == 8){
-                            return 'DISPERSADO NEODATA';
-                        }else if(columnIdx == 9){
-                            return 'PAGADO';
-                        }else if(columnIdx == 10){
-                            return 'PENDIENTE';
-                        }else if(columnIdx == 11){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 12){
-                            return 'PUESTO';
-                        }else if(columnIdx == 13){
-                            return 'DETALLE';
-                        }else if(columnIdx == 14){
-                            return 'ESTATUS ACTUAL';
-                        }else if(columnIdx != 15 && columnIdx !=0){
-                            return ' '+titulos[columnIdx-1] +' ';
-                        }
+                        return ' '+columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados[columnIdx] +' ';
                     }
                 }
             },
@@ -451,8 +409,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
             }
         },
         destroy: true,
+        scrollX: true,
         deferRender: true,
-
         columns: [{
             "width": "5%",
             "data": function( d ){
@@ -549,18 +507,18 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label" style="background:orange;"> + 90 días</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-vividOrange"> + 90 días</span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label" style="background:pink;color: black;">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-darkPink">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label" style="background:RED;">Recisión</span></p>';
+                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
                 }
                 else{
                     p2 = '';
@@ -575,10 +533,19 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 var etiqueta;
 
                         if(d.pago_neodata < 1){
-                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+                            etiqueta = '<p class="m-0">'+
+                                            '<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'
+                                                +d.estatus_actual+
+                                            '</span>'+
+                                        '</p>'+
+                                        '<p class="m-0">'+
+                                            '<span class="label" style="background:#5FD48218; color: #5FD482;">'+
+                                                'IMPORTACIÓN'+
+                                            '</span>'+
+                                        '</p>';
                         }else{
 
-                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+';">'+d.estatus_actual+'</span></p>';
+                            etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span></p>';
                         }
 
                 return etiqueta;
@@ -591,7 +558,16 @@ function getAssimilatedCancelacion(proyecto, condominio){
 
                 var BtnStats;
 
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados"  title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                BtnStats = `<button href="#"
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.nombreLote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_asimilados"
+                                    title="Detalles"
+                                    data-toggle="tooltip_canceladas" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -614,7 +590,11 @@ function getAssimilatedCancelacion(proyecto, condominio){
             cache: false,
             "data": function( d ){}
         },
-        order: [[ 1, 'asc' ]]
+        order: [[ 1, 'asc' ]],
+        initComplete: function () {
+            $('[data-toggle="tooltip_canceladas"]').tooltip("destroy");
+            $('[data-toggle="tooltip_canceladas"]').tooltip({ trigger: "hover" });
+        }
     });
 
     $("#tabla_comisiones_canceladas tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -641,16 +621,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
-
 function cancela(){
     $("#modal_nuevas").modal('toggle');
 }
@@ -661,7 +631,6 @@ $("#form_interes").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Comisiones/despausar_solicitud",
@@ -703,7 +672,7 @@ $(document).on('click', '.ver-info-asesor', function(){
 
     /*tabla_modal*/
     $("#tabla_modal").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
         buttons: [{
             extend: 'excelHtml5',
@@ -723,6 +692,7 @@ $(document).on('click', '.ver-info-asesor', function(){
         },
         destroy: true,
         ordering: false,
+        scrollX: true,
         columns: [{
             "width": "5%",
             "data": function( d ){
@@ -787,9 +757,22 @@ $(document).on('click', '.ver-info-asesor', function(){
 
 
 function tableComisionesSuma(anio){
+    asignarValorColumnasDT("tabla_comisiones_suma");
     $('#tabla_comisiones_suma thead tr:eq(0) th').each( function (i) {
-        if( i != 9 ){
-            var title = $(this).text();  
+        var title = $(this).text();
+        if (!excluir_column.includes(title)) {
+            columnas_datatable.tabla_comisiones_suma.titulos_encabezados.push(title);
+            columnas_datatable.tabla_comisiones_suma.num_encabezados.push(columnas_datatable.tabla_comisiones_suma.titulos_encabezados.length-1);
+        }
+        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+        if (title !== '') {
+            $(this).html(`<input    type="text"
+                                    class="textoshead"
+                                    data-toggle="tooltip_nuevas" 
+                                    data-placement="top"
+                                    title="${title}"
+                                    placeholder="${title}"
+                                    ${readOnly}/>`);
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function() {
                 if (tabla_suma.column(i).search() !== this.value) {
@@ -798,7 +781,6 @@ function tableComisionesSuma(anio){
             });
         }
     });
-
     $('#tabla_comisiones_suma').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json, function(i, v) {
@@ -807,9 +789,8 @@ function tableComisionesSuma(anio){
         var to = formatMoney(total);
         
     });
-
     tabla_suma = $("#tabla_comisiones_suma").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -817,28 +798,10 @@ function tableComisionesSuma(anio){
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES SUMA PAGADAS',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: columnas_datatable.tabla_comisiones_suma.num_encabezados,
                 format: {
                     header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return 'ID PAGO';
-                        }else if(columnIdx == 1){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 2){
-                            return 'NOMBRE COMISIONISTA';
-                        }else if(columnIdx == 3){
-                            return 'SEDE';
-                        }else if(columnIdx == 4){
-                            return 'FORMA PAGO';
-                        }else if(columnIdx == 5){
-                            return 'TOTAL COMISIÓN';
-                        }else if(columnIdx == 6){
-                            return 'IMPUESTO';
-                        }else if(columnIdx == 7){
-                            return '% COMISIÓN';
-                        }else if(columnIdx == 8){
-                            return 'ESTATUS';
-                        }
+                        return ' '+columnas_datatable.tabla_comisiones_suma.titulos_encabezados[columnIdx] +' ';
                     }
                 }
             },
@@ -854,6 +817,7 @@ function tableComisionesSuma(anio){
         },
         destroy: true,
         ordering: false,
+        scrollX: true,
         columns: [{
             "width": "5%",
             "data": function(d) {
@@ -905,7 +869,7 @@ function tableComisionesSuma(anio){
         {
             "width": "9%",
             "data": function(d) {
-                return `<span style="background-color:${d.color_estatus}40; padding: 7px 10px; border-radius: 20px;"><label class="m-0 fs-125"><b style="color:${d.color_estatus}">${d.estatus}</b></label><span>`;
+                return `<span padding: 7px 10px; border-radius: 20px;"><label class="m-0 fs-125"><b class="label lbl-dark-blue">${d.estatus}</b></label><span>`;
             }
         },
         {
@@ -913,7 +877,6 @@ function tableComisionesSuma(anio){
             "orderable": false,
             "data": function(data) {
                 return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" title="Detalles">' +'<i class="fas fa-info"></i></button>';
-
             }
         }],
         ajax: {
@@ -951,12 +914,20 @@ $("#anio").ready( function(){
         $("#anio").append(`<option value="${yearBegin}">${yearBegin}</option>`);
         yearBegin++;
     }
-    $("#anio").val(currentYear);
     $("#anio").selectpicker('refresh');
-
-    tableComisionesSuma(currentYear);
 });
 
 $("#anio").on("change", function(){
     tableComisionesSuma(this.value);
 })
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+});
+
+function asignarValorColumnasDT(nombre_datatable) {
+    if(!columnas_datatable[`${nombre_datatable}`]) {
+        columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
+    }
+}
+

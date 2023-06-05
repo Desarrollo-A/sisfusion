@@ -5,74 +5,66 @@
 	<?php
 	    $this->load->view('template/sidebar', "");
 	?>
-
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="fas fa-bookmark fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align " id="showDate"> </h3>
-							<div  class="toolbar">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="col-md-4 form-group">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Sedes por proyecto</label>
-                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="Selecciona una sede"
-                                                        data-size="7" data-live-search="true" required>
-                                                </select>
-                                            </div>
+                        <h3 class="card-title center-align">Reporte último estatus </h3>
+                            <div  class="toolbar">
+                                <div class="container-fluid">
+                                <div class="row ">
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden">
+                                            <label class="control-label">Sedes por proyecto</label>
+                                            <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
+                                                    data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN"
+                                                    data-size="7" data-live-search="true" data-container="body" required>
+                                            </select>
                                         </div> 
-                                        <div class="col-md-4 form-group hide" id="div_proyectos">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">Proyectos</label>
-                                                <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="Selecciona una empresa"
-                                                        data-size="7" data-live-search="true">
-                                                </select>
-                                            </div>
-                                        </div> 
-                                    </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden hide" id="div_proyectos">
+                                            <label class="control-label">Proyecto</label>
+                                            <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0"
+                                                    data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" 
+                                                    data-size="7" data-live-search="true" data-container="body" >
+                                            </select>
+                                        </div>
+                                        </div>
                                 </div>
                             </div>
-                            <div class="material-datatables">
+                            <div class="material-datatables hide" id="JTH">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table id="Jtabla"  class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>SEDE</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>SUP</th>
-                                                    <th>GERENTE</th>
-                                                    <th>ASESOR(ES)</th>
-                                                    <th>PROCESO CONTRATACIÓN</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>COMENTARIO</th>
-                                                    <th>FECHA VENCIMIENTO</th>
-                                                    <th>DÍAS RESTANTES</th>
-                                                    <th>DÍAS VENCIDOS</th>
-                                                    <th>ESTATUS FECHA</th>
-                                                    <th>FECHA APARTADO</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>LIBERACIÓN</th>
-                                                    <th>ÚLT. MOVIMIENTO</th>
-                                                    <th>ESTATUS LOTE</th>
-                                                    <th>REUBICACIÓN</th>
-                                                    <th>FECHA REUBICACIÓN</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table id="Jtabla"  class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>SEDE</th>
+                                                <th>REFERENCIA</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>ASESOR(ES)</th>
+                                                <th>GERENTE</th>
+                                                <th>PROCESO DE CONTRATACIÓN</th>
+                                                <th>ESTATUS</th>
+                                                <th>COMENTARIO</th>
+                                                <th>FECHA DE VENCIMIENTO</th>
+                                                <th>DÍAS RESTANTES</th>
+                                                <th>DÍAS VENCIDOS</th>
+                                                <th>ESTATUS DE FECHA</th>
+                                                <th>FECHA DE APARTADO</th>
+                                                <th>CLIENTE</th>
+                                                <th>LIBERACIÓN</th>
+                                                <th>ÚLTIMO MOVIMIENTO</th>
+                                                <th>ESTATUS DEL LOTE</th>
+                                                <th>REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -81,11 +73,9 @@
             </div>
         </div>
     </div>
-	
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
 <?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

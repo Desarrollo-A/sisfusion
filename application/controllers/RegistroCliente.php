@@ -4287,7 +4287,7 @@ class RegistroCliente extends CI_Controller {
 		$this->registrolote_modelo->insertBitacoraRecibo($arreglo2);
 
 		if ($this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo)){
-			redirect(base_url()."index.php/registroCliente/registrosClienteDocumentosJuridico");
+			redirect(base_url()."index.php/Documentacion/documentacion");
 		}else
 		{
 			die("ERROR");

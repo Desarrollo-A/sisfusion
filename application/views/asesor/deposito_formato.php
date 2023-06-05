@@ -1,10 +1,11 @@
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
-<body onload="cargarInputs()" onsubmit="guardarInputs()">
+<body>
 <div class="wrapper">
     <style>
-        ul.timeline-3 {
+
+    ul.timeline-3 {
         list-style-type: none;
         position: relative;
         height: 300px; /* Establece la altura del contenedor */
@@ -105,9 +106,9 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
                         <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
-                            <?php if ($this->session->userdata('id_rol') == 17) { ?>
+                            
                                 <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
-                            <?php }?>
+                           
                         </h3>  
                         <h6 class="m-0">Modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
@@ -1127,7 +1128,7 @@
 <!-- Modal general -->
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
-    // Variables
+// Variables
 const cliente = "<?=$cliente[0]->id_cliente?>";
 const onlyView = <?=$onlyView?>;
 
@@ -1137,8 +1138,7 @@ $(document).ready(function() {
     element.dispatchEvent(e);
 });
 
-function validaTipoVivienda()
-{
+function validaTipoVivienda(){
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
     }
@@ -1184,9 +1184,7 @@ function resizeInput() {
     $(this).attr('size', $(this).val().length);
 }
 
-$('input[name="letraCantidad"]')
-    .keyup(resizeInput)
-    .each(resizeInput);
+$('input[name="letraCantidad"]').keyup(resizeInput).each(resizeInput);
 
 function estaEnRango(valor, minimo = 1, maximo = 31) {
     return valor >= minimo && valor <= maximo;
@@ -1218,7 +1216,7 @@ const validateEmail = (email) => {
     return email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-};
+}
 
 const validate = () => {
     const $result = $('#result');
@@ -1251,12 +1249,10 @@ function checkResidencia(){
         $('#domicilioCarta').addClass('hide');
         document.getElementsByName("imprimePagare")[0].removeAttribute('required');
         document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
-
     }
 }
 
 function historial() {
-    console.log("lo que sea");
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
         const info = JSON.parse(data);
         if (info.length === 0) {
@@ -1265,32 +1261,10 @@ function historial() {
         }
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
+        
         appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
-}
-
-function formatearNumero(numero) {
-    return "$" + numero.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-}
-
-function cargarInputs() {
-    var inputs = document.getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].name === "cantidad") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "costom2f") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "costoM2") {
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "importOferta"){
-            inputs[i].value = (inputs[i].value); 
-        }else if (inputs[i].name === "saldoDeposito"){
-            inputs[i].value = (inputs[i].value);                    
-        }else if (inputs[i].name === "aportMensualOfer"){
-            inputs[i].value = (inputs[i].value);
-        }
-    }
 }
 
 function guardarInputs() {
@@ -1302,16 +1276,6 @@ function guardarInputs() {
     }
   }
 }
-
-// function validarLetras(event) {
-// const input = event.target;
-// const regex = /[^a-zA-Z]/g;
-// input.value = input.value.replace(regex, '');
-// }
-
-// function mayus(e) {
-// e.value = e.value.toUpperCase();
-// }
 
 $( ".letrasCaracteres" ).on( "focusout", function(){
     const input = event.target;
@@ -1339,42 +1303,6 @@ $( ".espaciosOff" ).on( "focusout", function(){
     const input = event.target;
     input.value = input.value.trim();
 });
-
-
-
-function historialCampoHtml(data) {
-    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
-    
-    $( ".letrasCaracteres" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z ñÑáéíóúÁÉÍÓÚüÜ.,-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".letrasNumeros" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    $( ".letrasNumeros" ).on( "keyup", function() {
-        const input = event.target;
-        const regex = /[^a-zA-Z 0-9@#&_.-]/g;
-        input.value = input.value.replace(regex, '').toUpperCase();
-    });
-
-    $( ".espaciosOff" ).on( "focusout", function(){
-        const input = event.target;
-        input.value = input.value.trim();
-    });
-
-    $("input[data-type='currency']").on({
-        keyup: function() {
-        formatCurrency($(this));
-        },
-        blur: function() { 
-        formatCurrency($(this), "blur");
-        }
-    });
 
     function formatCurrency(input, blur) {
         var input_val = input.val();
@@ -1414,42 +1342,16 @@ function historialCampoHtml(data) {
     function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
-
+        
     function historialCampoHtml(data) {
-        let html = '<h3>Historial de movimientos</h3>';
-        data.forEach(columna => {
-            let dataTable = '';
-            columna.detalle.forEach(cambio => {
-                dataTable += `
-                <tr>
-				  <td>${(cambio.usuario) ? cambio.usuario : ''}</td>
-                  <td>${cambio.fecha}</td>
-                  <td>${cambio.anterior}</td>
-                  <td>${cambio.nuevo}</td>
-                </tr>`;
-            });
-
-            html += `
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h4><b>Campo: ${columna.columna}</b></h4>
-                    </div>
-                    <div class="col-lg-12">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Usuario</th>
-                              <th scope="col">Modificación</th>
-                              <th scope="col">Valor Anterior</th>
-                              <th scope="col">Valor Nuevo</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            ${dataTable}
-                          </tbody>
-                        </table>
-                    </div>
-                </div>
+    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
+    
+    dataTable += `
+    <div class="container-fluid">
+        <div class="row p-0">
+            <div class="col-md-12 offset-md-3 p-0">
+                <ul class="timeline-3 scroll-styles">
+                
             `;
 
     data.forEach(columna => {
@@ -1532,7 +1434,6 @@ function historialCampoHtml(data) {
 
     window.onscroll = () => {
         const nav = document.querySelector('#sectionBtns');
-        console.log(nav);
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
     };
 }

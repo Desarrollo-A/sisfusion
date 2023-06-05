@@ -1,7 +1,7 @@
 $('#tabla_ingresar_5 thead tr:eq(0) th').each(function (i) {
     if (i != 0) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_ingresar_5').DataTable().column(i).search() !== this.value) {
                 $('#tabla_ingresar_5').DataTable().column(i).search(this.value).draw();
@@ -38,8 +38,8 @@ $(document).ready(function () {
 $("#tabla_ingresar_5").ready(function () {
 
     tabla_5 = $("#tabla_ingresar_5").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -241,25 +241,25 @@ $("#tabla_ingresar_5").ready(function () {
 
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" title= "Registrar Status" ' +
-                                'data-tipo-venta="' + data.tipo_venta + '" class="stat5Rev btn-data btn-green" title="Registrar estatus">' +
+                                'data-tipo-venta="' + data.tipo_venta + '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Registrar estatus">' +
                                 '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
 
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="rechazarStatus btn-data btn-warning" title="Rechazar estatus">' +
+                                'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
                         else if (data.idStatusContratacion == 2 && data.idMovimiento == 74 || data.idStatusContratacion == 2 && data.idMovimiento == 93) {
 
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont6 btn-data btn-warning" title= "Rechazar Status">' +
+                                'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "Registrar estatus">' +
                                 '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="edit2 btn-data btn-warning" >' +
+                                'class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
                         else {
@@ -363,6 +363,12 @@ $("#tabla_ingresar_5").ready(function () {
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#rechazarStatus_2').modal('show');
+    });
+});
+
+$('#tabla_ingresar_5').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
 });
 

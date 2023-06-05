@@ -1,23 +1,20 @@
 $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
     if (i != 0) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value) {
                 $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
             }
         });
     }
-
 });
-
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
-
 $("#tabla_ingresar_9").ready(function () {
     tabla_9 = $("#tabla_ingresar_9").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -41,10 +38,10 @@ $("#tabla_ingresar_9").ready(function () {
                                 return 'LOTE';
                                 break;
                             case 5:
-                                return 'GERENTE';
+                                return 'CLIENTE';
                                 break;
                             case 6:
-                                return 'CLIENTE';
+                                return 'GERENTE';
                                 break;
                             case 7:
                                 return 'RESIDENCIA';
@@ -82,10 +79,10 @@ $("#tabla_ingresar_9").ready(function () {
                                 return 'LOTE';
                                 break;
                             case 5:
-                                return 'GERENTE';
+                                return 'CLIENTE';
                                 break;
                             case 6:
-                                return 'CLIENTE';
+                                return 'GERENTE';
                                 break;
                             case 7:
                                 return 'RESIDENCIA';
@@ -113,6 +110,7 @@ $("#tabla_ingresar_9").ready(function () {
         bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
+        scrollX: true,
         columns: [{
             width: "3%",
             className: 'details-control',
@@ -138,17 +136,16 @@ $("#tabla_ingresar_9").ready(function () {
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreLote + '</p>';
-
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.gerente + '</p>';
             }
         },
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+            }
+        },
+        {
+            data: function (d) {
+                return '<p class="m-0">' + d.gerente + '</p>';
             }
         },
         {
@@ -177,17 +174,15 @@ $("#tabla_ingresar_9").ready(function () {
                     if (data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
                         cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-residencia="' + data.residencia + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                            'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                             '<i class="fas fa-thumbs-up"></i></button>';
-
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
-                            'class="btn-data btn-warning cancelReg" title="Rechazo/regreso estatus (Juridico)">' +
+                            'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURIDICO)">' +
                             '<i class="fas fa-thumbs-down"></i></button>';
                     } else
                         cntActions = 'N/A';
                 }
-
                 return "<div class='d-flex justify-center'>" + cntActions + "</div>";
             }
         }],
@@ -208,10 +203,15 @@ $("#tabla_ingresar_9").ready(function () {
         order: [[1, 'asc']]
     });
 
+    $('#tabla_ingresar_9').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });    
+
     $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_9.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -225,14 +225,12 @@ $("#tabla_ingresar_9").ready(function () {
                 status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
             else 
                 status = 'N/A';
-
             if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
                 row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
                 fechaVenc = row.data().fechaVenc;
             }
             else 
                 fechaVenc = 'N/A';
-
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
             informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
@@ -251,7 +249,6 @@ $("#tabla_ingresar_9").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
     });
-
     $("#tabla_ingresar_9 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
@@ -272,8 +269,6 @@ $("#tabla_ingresar_9").ready(function () {
         $("#rl").selectpicker('refresh');
         $("#residencia").selectpicker('refresh');
     });
-
-
     $("#tabla_ingresar_9 tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
         getInfo3[0] = $(this).attr("data-idCliente");
@@ -289,7 +284,6 @@ $("#tabla_ingresar_9").ready(function () {
         $('#rechReg').modal('show');
     });
 });
-
 $(document).on('click', '#save1', function (e) {
     e.preventDefault();
     var comentario = $("#comentario").val();
@@ -351,7 +345,6 @@ $(document).on('click', '#save1', function (e) {
         });
     }
 });
-
 $(document).on('click', '#save3', function (e) {
     e.preventDefault();
     var comentario = $("#comentario3").val();
@@ -367,7 +360,6 @@ $(document).on('click', '#save3', function (e) {
     dataExp3.append("fechaVenc", getInfo3[6]);
     if (validaComent == 0)
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
-
     if (validaComent == 1) {
         $('#save3').prop('disabled', true);
         $.ajax({
@@ -405,7 +397,6 @@ $(document).on('click', '#save3', function (e) {
         });
     }
 });
-
 jQuery(document).ready(function () {
     fillSelectsForV9();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
@@ -414,14 +405,12 @@ jQuery(document).ready(function () {
         jQuery(this).find('#totalNeto').val('');
         jQuery(this).find('#totalNeto2').val('');
     })
-
     jQuery('#rechReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
     let info = [];
 });
-
 function SoloNumeros(evt) {
     if (window.event) {
         keynum = evt.keyCode;
@@ -429,7 +418,6 @@ function SoloNumeros(evt) {
     else {
         keynum = evt.which;
     }
-
     if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
         return true;
     }
@@ -438,7 +426,6 @@ function SoloNumeros(evt) {
         return false;
     }
 }
-
 // Jquery Dependency
 $("input[data-type='currency']").on({
     keyup: function () {
@@ -451,7 +438,6 @@ $("input[data-type='currency']").on({
         formatCurrency($(this));
     },
 });
-
 function formatNumber(n) {
     // format number 1000000 to 1,234,567
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -459,70 +445,53 @@ function formatNumber(n) {
 function formatCurrency(input, blur) {
     // appends $ to value, validates decimal side
     // and puts cursor back in right position.
-
     // get input value
     var input_val = input.val();
-
     // don't validate empty input
     if (input_val === "") { return; }
-
     // original length
     var original_len = input_val.length;
-
     // initial caret position
     var caret_pos = input.prop("selectionStart");
-
     // check for decimal
     if (input_val.indexOf(".") >= 0) {
-
         // get position of first decimal
         // this prevents multiple decimals from
         // being entered
         var decimal_pos = input_val.indexOf(".");
-
         // split number by decimal point
         var left_side = input_val.substring(0, decimal_pos);
         var right_side = input_val.substring(decimal_pos);
-
         // add commas to left side of number
         left_side = formatNumber(left_side);
-
         // validate right side
         right_side = formatNumber(right_side);
-
         // On blur make sure 2 numbers after decimal
         if (blur === "blur") {
             right_side += "00";
         }
-
         // Limit decimal to only 2 digits
         right_side = right_side.substring(0, 2);
-
         // join number by .
         input_val = "$" + left_side + "." + right_side;
-
     } else {
         // no decimal entered
         // add commas to number
         // remove all non-digits
         input_val = formatNumber(input_val);
         input_val = "$" + input_val;
-
         // final formatting
         if (blur === "blur") {
             input_val += ".00";
         }
     }
-
     // send updated string to input
     input.val(input_val);
-
     // put caret back in the right position
     var updated_len = input_val.length;
     caret_pos = updated_len - original_len + caret_pos;
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
-
 function fillSelectsForV9() {
     $.getJSON("fillSelectsForV9").done(function (data) {
         for (let i = 0; i < data.length; i++) {

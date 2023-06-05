@@ -81,7 +81,7 @@ class Contraloria extends CI_Controller {
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("contraloria/vista_6_contraloria",$datos);
+        $this->load->view("contraloria/vista_6_contraloria", $datos);
     }
 
     public function getCommissionPlans(){
@@ -1814,7 +1814,7 @@ class Contraloria extends CI_Controller {
         $fechaVenc=$this->input->post('fechaVenc');
         $totalNeto2=$this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
-        $naci = $this->input->post('residencia');
+        $residencia = $this->input->post('residencia');
         $charactersNoPermit = array('$',',');
         $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
         $id_usuario = $this->session->userdata('id_usuario');
@@ -3745,6 +3745,24 @@ class Contraloria extends CI_Controller {
         else
 		    echo json_encode(array());
 		exit;
+    }
+
+    public function reporteEscaneos() {
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $this->load->view('template/header');
+        $this->load->view("contraloria/reporteEscaneos_view",$datos);
+    }
+
+    public function getReporteEscaneos() {
+        if (isset($_POST) && !empty($_POST)) {
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $where = $this->input->post("where");
+            $data = $this->Contraloria_model->getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where);
+            echo json_encode($data);
+        } else
+            json_encode(array());
     }
 
 

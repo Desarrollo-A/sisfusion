@@ -35,9 +35,9 @@ class Api extends CI_Controller
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        "data" => array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@"),
+                        "data" => array("username" => "caja"),
                     );
-                    $token = JWT::encode($data, 'erhPE3r934oj4$f3#_');
+                    $token = JWT::encode($data, '977929_5117+8773_');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -45,8 +45,7 @@ class Api extends CI_Controller
         }
     }
 
-    function addLeadRecord()
-    {
+    function addLeadRecord() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -54,11 +53,11 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             else {
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(6489);
-                $valida_token = json_decode($this->validateToken($token, 6489));
-                if ($valida_token->status !== 200){
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9860);
+                $valida_token = json_decode($this->validateToken($token, 9860));
+                if ($valida_token->status !== 200)
                     echo json_encode($valida_token);
-                }else {
+                else {
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
                     $valida_token = Null;
                     foreach ($result->data as $key => $value) {
@@ -67,20 +66,18 @@ class Api extends CI_Controller
                     }
                     if(is_null($valida_token))
                         $valida_token = true;
-                    if(!empty($result->data) && $valida_token){
+                    if(!empty($result->data) && $valida_token)
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    }else{
+                    else {
                         $checkSingup = null;
                         echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $data = json_decode(file_get_contents("php://input"));
-                        if(!isset($data->APELLIDOPATERNO)){
+                        if(!isset($data->APELLIDOPATERNO))
                             $data->APELLIDOPATERNO = '';
-                        }
-                        if (!isset($data->APELLIDOMATERNO)) {
+                        if (!isset($data->APELLIDOMATERNO))
                             $data->APELLIDOMATERNO = ''; 
-                        }
                         if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDDRAGON))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
@@ -126,9 +123,8 @@ class Api extends CI_Controller
                                 }
                             }
                         }
-                    }else{
+                    } else
                         echo json_encode($checkSingup);
-                    }
                 }
             }
         }
@@ -234,7 +230,7 @@ class Api extends CI_Controller
             $documentName = $time . "_" . ($time + (24 * 60 * 60)) . "_" . $this->input->post("id_asesor") . "_" . $this->input->post("id_gerente") . "." . substr(strrchr($_FILES["uploaded_file"]["name"], "."), 1);
             $upload_file_response = move_uploaded_file($file["tmp_name"], "static/documentos/evidence_token/" . $documentName);
             if ($upload_file_response == true) {
-                $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"), "nombre_archivo" => $documentName);
+                $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 0, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"), "nombre_archivo" => $documentName);
                 $response = $this->General_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
                 if ($response == 1)
                     echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
@@ -428,6 +424,7 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['costo'] = $dbTransaction[$i]['costo'];
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
                             $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fechaEstatus9'];
+                            $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fechaEstatus7'];
                             $data2[$i]['pagos']['forma_pago'] = $dbTransaction[$i]['forma_pago'];
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
