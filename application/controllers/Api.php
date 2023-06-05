@@ -26,7 +26,7 @@ class Api extends CI_Controller
             if ($data->username == "" || $data->password == "")
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                //$JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
+                $JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
                 //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
                 $time = time();
                 $result = true;
@@ -35,9 +35,10 @@ class Api extends CI_Controller
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                         //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        "data" => array("username" => "caja"),
+                        // "data" => array("username" => "caja"),
+                        "data" => array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr"),
                     );
-                    $token = JWT::encode($data, '977929_5117+8773_');
+                    $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -139,7 +140,7 @@ class Api extends CI_Controller
     }
 
     function validateToken($token, $controller = null)
-    {   
+    {
         $time = time();
         if (is_null($controller))
             $JwtSecretKey = $this->jwt_key->getSecretKey();
@@ -442,5 +443,43 @@ class Api extends CI_Controller
         }
     }
 
+    function consultInfoOfficesResidences() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9860);
+                $valida_token = json_decode($this->validateToken($token, 9860));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = NULL;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dbTransaction = $this->Api_model->getInformationOfficesAndResidences();
+                        if ($dbTransaction) // SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 200, "message" => "Consulta realizada con éxito.", "resultado" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                        else // ERROR TRANSACTION
+                            echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
 
 }
