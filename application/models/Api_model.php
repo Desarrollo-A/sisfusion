@@ -94,7 +94,7 @@ class Api_model extends CI_Model
 
     function getInformationOfficesAndResidences(){
         $query["sedes"] = $this->db->query("SELECT id_sede, nombre, abreviacion FROM sedes WHERE estatus = 1")->result_array();
-        $query["residenciales"] = $this->db->query("SELECT idResidencial as id_sede, descripcion AS nombre, nombreResidencial AS abreviacion FROM residenciales WHERE status = 1")->result_array();
+        $query["residenciales"] = $this->db->query("SELECT idResidencial as id_residencial, descripcion AS nombre, nombreResidencial AS abreviacion FROM residenciales WHERE status = 1")->result_array();
         return $query;
     }
 
