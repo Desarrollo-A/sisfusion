@@ -1,44 +1,18 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <div class="wrapper">
+
         <?php
-           if($this->session->userdata('id_rol') =="13" || $this->session->userdata('id_rol') =="17" || $this->session->userdata('id_rol') =="18"
-               || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_usuario')=="2767" || $this->session->userdata('id_rol')=="70"){
-            /*-----------//contraloria--------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
+            if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario') == "2767"
+                || $this->session->userdata('id_rol')=="70")
+                $this->load->view('template/sidebar', "");
+            else
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
         ?>
 
         <!-- Modals -->
-        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <form method="post" id="form_espera_uno">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
-        
-        <div class="modal fade" id="modal_bonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -72,21 +46,10 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
-            <div class="modal-dialog ">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <center><img src="<?=base_url()?>static/images/warning.png" width="300" height="300"></center>
-                    </div>
-                    <form method="post" id="form_abono">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
+    
+        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+            <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -97,14 +60,17 @@
                                 <i class="fas fa-dollar-sign fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Bonos activos</h3>
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Comisiones enviadas <b>internomex</b></h3>
+                                    <p class="card-title pl-1">(Comisiones ya validadas por contraloría, solicitadas a Internomex para proceder a pago)</p>
+                                </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Bonos activos:</h4>
-                                                    <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
+                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                    <p class="input-tot pl-1" name="totpagarAsimilados" id="totpagarAsimilados">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -114,29 +80,62 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="m-0" for="id_proyecto_ei">Proyecto</label>
+                                                    <select name="id_proyecto_ei" id="id_proyecto_ei" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
+                                                        <option value="0">Seleccione todo</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="m-0" for="id_condominio_ei">Condominio</label>
+                                                    <select class="selectpicker select-gral" id="id_condominio_ei" name="id_condominio_ei[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="m-0" for="forma-pago-filtro">Forma de pago</label>
+                                                    <select name="forma-pago-filtro"
+                                                            id="forma-pago-filtro"
+                                                            class="selectpicker select-gral"
+                                                            data-style="btn"
+                                                            data-show-subtext="true"
+                                                            data-live-search="true"
+                                                            title="Selecciona una forma de pago"
+                                                            data-size="7"
+                                                            required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class=" table-striped table-hover" id="tabla_bono_revision" name="tabla_bono_revision">
+                                            <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
                                                         <th>ID</th>
+                                                        <th>PROY.</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>PRECIO LOTE</th>
+                                                        <th>EMP.</th>
+                                                        <th>TOT. COM.</th>
+                                                        <th>P. CLIENTE</th>
+                                                        <th>DESCUENTO</th>
+                                                        <th>A PAGAR</th>
+                                                        <th>TIPO VENTA</th>
                                                         <th>USUARIO</th>
                                                         <th>PUESTO</th>
-                                                        <th>MONTO BONO</th>
-                                                        <th>ABONADO</th>
-                                                        <th>PENDIENTE</th>
-                                                        <th>TOTAL PAGOS</th>
-                                                        <th>PAGO INDIVIDUAL</th>
-                                                        <th>IMPUESTO</th>
-                                                        <th>TOTAL A PAGAR</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA DE REGISTRO</th>
-                                                        <th>OPCIONES</th>
+                                                        <th>FORMA PAGO</th>
+                                                        <th>FEC. ENVÍO</th>
+                                                        <th>MÁS</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -161,5 +160,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos/bonos_solicitados.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/enviadas_internomex.js"></script>
 </body>
