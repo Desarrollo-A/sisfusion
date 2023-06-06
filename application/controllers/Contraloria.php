@@ -686,13 +686,6 @@ class Contraloria extends CI_Controller {
             )
         );
 
-        /*$data=array();
-        $data = $this->registrolote_modelo->getRevision5($datos);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -715,13 +708,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function getRevision10(){
-        /*$data=array();
-        $data = $this->registrolote_modelo->getRevision10();
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));

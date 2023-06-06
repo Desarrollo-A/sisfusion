@@ -3,7 +3,7 @@
 <body class="">
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar', ''); ?>
-    <!--Contenido de la página-->
+    
     <!-- modal para rechazar estatus-->
     <div class="modal fade" id="enviarContratos" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md">
@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <label>Ingresa los códigos de los contratos a enviar: </label>
-                        <textarea name="txt" id="contratos" onkeydown="saltoLinea(value); return true;" class="form-control" style="text-transform:uppercase; min-height: 400px;width: 100%"></textarea><br><br>
+                        <textarea name="txt" id="contratos" onkeydown="saltoLinea(value); return true;" class="text-modal" style="text-transform:uppercase; min-height: 400px;width: 100%"></textarea><br><br>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -37,19 +37,16 @@
                                 <p class="card-title pl-1">(estatus 10)</p>
                             </div>
 
-                             <?php 
-
-                                    if ($this->session->userdata('id_rol') != "63"){?>
-
+                            <?php 
+                            if ($this->session->userdata('id_rol') != "63"){?>
                             <div  class="toolbar">
                                 <div class="row">
-                                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 pb-5">
+                                    <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 pb-5">
                                         <button class="btn-gral-data sendCont mb-1">Enviar contratos <i class="fas fa-paper-plane pl-1"></i></button>
                                     </div>
                                 </div>
                             </div>
-
-                                   <?php }?>
+                            <?php }?>
 
                             <div class="material-datatables">
                                 <table id="tabla_envio_RL" name="tabla_envio_RL" class="table-striped table-hover">
