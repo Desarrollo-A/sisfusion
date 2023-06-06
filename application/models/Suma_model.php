@@ -262,12 +262,12 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios u ON u.id_usuario = pci1.id_usuario  
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 74 
         INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
-        INNER JOIN facturas_suma fa ON fa.id_pago_suma = pci1.id_pago_suma
+        left JOIN facturas_suma fa ON fa.id_pago_suma = pci1.id_pago_suma
         GROUP BY  u.nombre, u.apellido_paterno, u.apellido_materno, u.forma_pago, oxcest.id_opcion, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc, pci1.id_usuario
         ORDER BY u.nombre");
     }
     function get_solicitudes_factura($usuario){
-        return $this->db->query("SELECT ps.total_comision, cm.referencia, ps.id_pago_suma
+        return $this->db->query("SELECTT ps.total_comision, cm.referencia, ps.id_pago_suma
         FROM pagos_suma ps 
         INNER JOIN comisiones_suma cm ON ps.referencia = cm.referencia  
         INNER JOIN usuarios u ON u.id_usuario = ps.id_usuario AND u.id_usuario = $usuario

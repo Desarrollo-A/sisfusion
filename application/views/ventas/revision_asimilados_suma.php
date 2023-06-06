@@ -64,7 +64,6 @@
             </div>
         </div>
         <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -75,7 +74,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <diV class="row">
+                                    <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <h3 class="card-title center-align" >Comisiones nuevas <b>asimilados</b></h3>
                                             <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>

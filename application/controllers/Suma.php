@@ -219,13 +219,11 @@ class Suma extends CI_Controller
                     }
                 }
                 $id_pago_i = rtrim($id_pago_i, $sep);
-            
                 $up_b = $this->Suma_model->update_acepta_solicitante($id_pago_i);
                 $ins_b = $this->Suma_model->insert_historial($data);
                 if ($formaPagoUsuario == 5) {
                     $this->PagoInvoice_model->insertManySuma($pagoInvoice);
                 }
-            
                 if($up_b == true && $ins_b == true){
                     $data_response = 1;
                     echo json_encode($data_response);
@@ -249,75 +247,69 @@ class Suma extends CI_Controller
         $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
         $date = new DateTime();
         $week = $date->format("W");
-  
         date_default_timezone_set('America/Mexico_City');       
         $numDia =  date('N', time());
         $hora = date('H');
         if( $numDia == '1' || ( $numDia == '2' && $hora <= '14' ) ){
             if($usuario != ''){
-              $usuarioid = $usuario;
+                $usuarioid = $usuario;
             }
             else{
-              $usuarioid =$this->session->userdata('id_usuario');
+                $usuarioid =$this->session->userdata('id_usuario');
             }
-       
             $datos = explode(",",$this->input->post('pagos'));
             $resultado = array("resultado" => TRUE);
             if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
-              $this->db->trans_begin();
-              $responsable = $this->session->userdata('id_usuario');
-              $resultado = TRUE;
-              if( isset( $_FILES ) && !empty($_FILES) ){
-                $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
-                $config['allowed_types'] = 'xml';
-                $this->load->library('upload', $config);
-                $resultado = $this->upload->do_upload("xmlfile");
-                if( $resultado ){
-                  $xml_subido = $this->upload->data();
-                  $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-  
-                  $total = (float)$this->input->post('total');
-                  $totalXml = (float)$datos_xml['total'];
-  
-                  if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
-                    $nuevo_nombre = date("my")."_";
-                    $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-                    $nuevo_nombre .= date("Hms")."_";
-                    $nuevo_nombre .= rand(4, 100)."_";
-                    $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-                    rename( $xml_subido['full_path'], "./UPLOADS/XMLS_SUMA/".$nuevo_nombre );
-                    $datos_xml['nombre_xml'] = $nuevo_nombre;
-                    ini_set('max_execution_time', 0);
-                    for ($i=0; $i <count($datos) ; $i++) { 
-                      if(!empty($datos[$i])){
-                        $id_com =  $datos[$i];
-                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
-                        $this->Suma_model->update_acepta_solicitante($id_com);
-                        $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A DTO. SUMA')");
-                      }
+                $this->db->trans_begin();
+                $responsable = $this->session->userdata('id_usuario');
+                $resultado = TRUE;
+                if( isset( $_FILES ) && !empty($_FILES) ){
+                    $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
+                    $config['allowed_types'] = 'xml';
+                    $this->load->library('upload', $config);
+                    $resultado = $this->upload->do_upload("xmlfile");
+                    if( $resultado ){
+                        $xml_subido = $this->upload->data();
+                        $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+                        $total = (float)$this->input->post('total');
+                        $totalXml = (float)$datos_xml['total'];
+                        if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+                            $nuevo_nombre = date("my")."_";
+                            $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                            $nuevo_nombre .= date("Hms")."_";
+                            $nuevo_nombre .= rand(4, 100)."_";
+                            $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+                            rename( $xml_subido['full_path'], "./UPLOADS/XMLS_SUMA/".$nuevo_nombre );
+                            $datos_xml['nombre_xml'] = $nuevo_nombre;
+                            ini_set('max_execution_time', 0);
+                            for ($i=0; $i <count($datos) ; $i++) { 
+                                if(!empty($datos[$i])){
+                                    $id_com =  $datos[$i];
+                                    $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
+                                    $this->Suma_model->update_acepta_solicitante($id_com);
+                                    $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A DTO. SUMA')");
+                                }
+                            }
+                        } 
+                        else {
+                            $this->db->trans_rollback();
+                            echo json_encode(4);
+                            return;
+                        }
                     }
-                  } 
-                  else {
+                    else {
+                        $resultado["mensaje"] = $this->upload->display_errors();
+                    }
+                }
+                if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
                     $this->db->trans_rollback();
-                    echo json_encode(4);
-                    return;
-                  }
+                    $resultado = array("resultado" => FALSE);
                 }
-                else {
-                  $resultado["mensaje"] = $this->upload->display_errors();
+                else{
+                    $this->db->trans_commit();
+                    $resultado = array("resultado" => TRUE);
                 }
-              }
-              
-              if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-                $resultado = array("resultado" => FALSE);
-              }
-              else{
-                $this->db->trans_commit();
-                $resultado = array("resultado" => TRUE);
-              }
             }
-  
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
         }
@@ -458,21 +450,21 @@ class Suma extends CI_Controller
     }
     public function getDatosNuevasXSuma(){
     $datos =  $this->Suma_model->getDatosNuevasXSuma()->result_array();
-       echo json_encode( array( "data" => $datos));
+    echo json_encode( array( "data" => $datos));
     }
     public function lista_roles(){
-      echo json_encode($this->Suma_model->get_lista_roles()->result_array());
+    echo json_encode($this->Suma_model->get_lista_roles()->result_array());
     }
     public function lista_usuarios($rol,$forma_pago){
-      echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
+    echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
     }
     public function carga_listado_factura(){
         echo json_encode( $this->Suma_model->get_solicitudes_factura($this->input->post("id_usuario") ) );
     }
     public function getDatosFactura($uuid, $id_res){
         if($uuid){
-             $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
-             if (!empty($consulta_sol)) {
+            $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
+            if (!empty($consulta_sol)) {
                 $datos['datos_solicitud'] = $this->Suma_model->factura_comision($uuid, $id_res)->row(); 
             }
             else {
@@ -483,7 +475,7 @@ class Suma extends CI_Controller
             $datos['datos_solicitud'] = array('0', FALSE);
         }
         echo json_encode( $datos );
-      }
+    }
     public function GetDescripcionXML($xml){
         error_reporting(0);
     
@@ -494,12 +486,12 @@ class Suma extends CI_Controller
         $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
         $folio = $xml -> xpath('//cfdi:Comprobante')[0]['Folio'];
         if($folio[0] == null){
-          $folio = '*';
+        $folio = '*';
         }
         $total = $xml -> xpath('//cfdi:Comprobante')[0]['Total'];
         $cadena = '';
         for($i=0;$i< $cuantos; $i++ ){
-          $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+        $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
         }
         $arr[0]= $UUID[0];
         $arr[1]=  $fecha[0];
@@ -514,7 +506,7 @@ class Suma extends CI_Controller
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->nombre_cliente=="")
-                   echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
             else {
                 $updateData = array(
                     "id_cliente" => $data->id_cliente,
@@ -544,14 +536,12 @@ class Suma extends CI_Controller
     public function cargaxml2($id_user = ''){
         $user =   $usuarioid =$this->session->userdata('id_usuario');
         $this->load->model('Usuarios_modelo');
-      
         if(empty($id_user)){
-          $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+        $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
         }
         else{
-          $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+        $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
         }
-       
         $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
         if( isset( $_FILES ) && !empty($_FILES) ){
             $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
@@ -625,7 +615,7 @@ class Suma extends CI_Controller
                 unlink( $xml_subido );
             }
             else{
-              $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+            $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
             }
         }
         echo json_encode( $respuesta );

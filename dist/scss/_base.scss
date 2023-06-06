@@ -288,7 +288,7 @@ $tv                 : "(min-width: 1280px)";
 .buttons-pdf {
     box-shadow: none;
     padding: 7px 25px;
-    background-color: #f4433618 !important;
+    background-color: $redLight !important;
     border-radius: 27px;
     margin: 0;
 }
@@ -299,7 +299,7 @@ $tv                 : "(min-width: 1280px)";
     color: $redLight;
 }
 .buttons-pdf:hover {
-    background-color: $redLight !important;
+    background-color: #f4433618!important;
 }
 .buttons-pdf:hover i {
     color: $white;

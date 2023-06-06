@@ -5,10 +5,11 @@ $('#tabla_remanentes').on('click', 'input', function() {
     else totaPen -= row.impuesto;
     $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
-
+let titulos_intxt = [];
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
+        titulos_intxt.push(title);
         $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function() {
             if (tabla_asimilados.column(i).search() !== this.value) {
@@ -34,7 +35,6 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
         trigger: "hover"
     });
 });
-
 $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
     var total = 0;
     $.each(json, function(i, v) {
@@ -59,7 +59,6 @@ $(document).on("click", ".individualCheck", function() {
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
-
     });
     $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
@@ -71,14 +70,12 @@ function selectAll(e) {
             tr = this.closest('tr');
             row = tabla_asimilados.row(tr).data();
             tota2 += row.impuesto;
-
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
         $("#totpagarPen").html('$ ' + formatMoney(tota2));
     }
-
     if(e.checked == false){
         $(tabla_asimilados.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
@@ -88,7 +85,6 @@ function selectAll(e) {
         $("#totpagarPen").html('$ ' + formatMoney(0));
     }
 }
-
 tabla_asimilados = $("#tabla_asimilados").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
@@ -97,15 +93,12 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
         action: function() {
             if ($('input[name="idTQ[]"]:checked').length > 0) {
-                
                 $('#spiner-loader').removeClass('hide');
                 var idcomision = $(tabla_asimilados.$('input[name="idTQ[]"]:checked')).map(function() {
                     return this.value;
                 }).get();
-                
                 var com2 = new FormData();
                 com2.append("idcomision", idcomision); 
-                
                 $.ajax({
                     url : general_base_url + 'Suma/aceptoInternomexAsimilados/',
                     data: com2,
@@ -157,26 +150,8 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         exportOptions: {
             columns: [1,2,3,4,5,6,7,8],
             format: {
-                header:  function (d, columnIdx) {
-                    if(columnIdx == 0){
-                        return ' '+d +' ';
-                    }else if(columnIdx == 1){
-                        return 'ID PAGO';
-                    }else if(columnIdx == 2){
-                        return 'REFERENCIA';
-                    }else if(columnIdx == 3){
-                        return 'NOMBRE COMISIONISTA';
-                    }else if(columnIdx == 4){
-                        return 'SEDE';
-                    }else if(columnIdx == 5){
-                        return 'TOTAL COMISIÓN';
-                    }else if(columnIdx == 6){
-                        return 'IMPUESTO';
-                    }else if(columnIdx == 7){
-                        return '% COMISIÓN';
-                    }else if(columnIdx == 8){
-                        return 'ESTATUS';
-                    }
+                header: function (d, columnIdx) {
+                    return ' ' + titulos_intxt[columnIdx -1] + ' ';
                 }
             }
         },
@@ -239,12 +214,10 @@ tabla_asimilados = $("#tabla_asimilados").DataTable({
         "orderable": false,
         "data": function( data ){
             var BtnStats;
-
             BtnStats = `<button href="#" value="${data.id_pago_suma}"  data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>
             <button href="#" value="${data.id_pago_suma}" data-value="${data.id_pago_suma}" class="btn-data ${(data.estatus == 2)? 'btn-warning cambiar_estatus': 'btn-green cambiar_estatus'}" data-toggle="tooltip" data-placement="top"  title="${(data.estatus == 2) ? 'PAUSAR LA SOLICITUD': 'ACTIVAR LA SOLICITUD' }">${(data.estatus == 2) ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>`;
             return '<div class="d-flex justify-center">'+BtnStats+'</div>';
         }
-       
     }],
     columnDefs: [{
         orderable: false,
@@ -310,7 +283,7 @@ $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas").modal();
 });
  //Función para pausar la solicitud
- $("#form_interes").submit( function(e) {
+$("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -342,7 +315,6 @@ $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
         });
     }
 });
-
 $(window).resize(function(){
     tabla_asimilados.columns.adjust();
 });
