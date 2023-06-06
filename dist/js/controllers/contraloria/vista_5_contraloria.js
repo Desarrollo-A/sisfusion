@@ -185,29 +185,87 @@ $("#tabla_ingresar_5").ready(function () {
                         cntActions = 'EN PROCESO DE LIBERACIÓN';
 
                     } else {
-                        if (data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84
-                            || data.idStatusContratacion == 2 && data.idMovimiento == 101 || data.idStatusContratacion == 2 && data.idMovimiento == 103) {
+                        if (
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 4) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 84) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 101) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)
+                          ) {
 
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" title= "REGISTRAR STATUS" ' +
-                                'data-tipo-venta="' + data.tipo_venta + '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions = 
+                            '<button href="#" data-idLote="' +
+                            data.idLote + 
+                            '" data-nomLote="' + 
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" title= "REGISTRAR STATUS" ' +
+                            'data-tipo-venta="' +
+                            data.tipo_venta +
+                            '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
 
+                            cntActions +=
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
+                            'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-down"></i></button>';
+                        } else if (
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 74) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 93)
+                          ) {
+                            cntActions =
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
+                            'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
 
-                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
-                                '<i class="fas fa-thumbs-down"></i></button>';
-                        }
-                        else if (data.idStatusContratacion == 2 && data.idMovimiento == 74 || data.idStatusContratacion == 2 && data.idMovimiento == 93) {
-
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
-
-                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
+                            cntActions +=
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
                                 'class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
@@ -216,8 +274,6 @@ $("#tabla_ingresar_5").ready(function () {
                         }
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
-
-
                 }
             }
 
@@ -248,9 +304,13 @@ $("#tabla_ingresar_5").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             var status;
-            if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 4 ||
-                row.data().idStatusContratacion == 2 && row.data().idMovimiento == 74 ||
-                row.data().idStatusContratacion == 2 && row.data().idMovimiento == 93) {
+            if (
+                (row.data().idStatusContratacion == 2 &&
+                row.data().idMovimiento == 4) ||
+                (row.data().idStatusContratacion == 2 &&
+                row.data().idMovimiento == 74) ||
+                (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 93)
+            ) {
                 status = 'Status 2 enviado a Revisión (Asesor)';
             } else if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 84) {
                 status = 'Listo status 2 (Asesor)';
@@ -261,13 +321,27 @@ $("#tabla_ingresar_5").ready(function () {
 
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12 skyOpacity" margin-bottom: 7px">';
-            informacion_adicional += '          <label><b>Información adicional</b></label>';
+            informacion_adicional += 
+                '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12 skyOpacity" margin-bottom: 7px">';
+            informacion_adicional +=
+            '          <label><b>Información adicional</b></label>';
             informacion_adicional += '      </div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS </b>' + status + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO </b> ' + row.data().comentario + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR </b> ' + row.data().coordinador + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR </b> ' + row.data().asesor + '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS </b>' +
+            status +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO </b> ' +
+            row.data().comentario +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR </b> ' +
+            row.data().coordinador +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR </b> ' +
+            row.data().asesor +
+            '</label></div>';
             informacion_adicional += '  </div>';
             informacion_adicional += '</div>';
 
