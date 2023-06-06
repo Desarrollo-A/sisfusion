@@ -34,9 +34,7 @@ class Api extends CI_Controller
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        //"data" => array("id" => $result->id_eu, "username" => $result->usuario, "descripcion" => $result->descripcion),
-                        // "data" => array("username" => "caja"),
-                        "data" => array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr"),
+                        "data" => array("username" => $data->username, "password" => $data->password),
                     );
                     $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));
@@ -443,7 +441,7 @@ class Api extends CI_Controller
         }
     }
 
-    function consultInfoOfficesResidences() {
+    function consultaInfoSedesResidenciales() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -464,9 +462,9 @@ class Api extends CI_Controller
                     }
                     if(is_null($valida_token))
                         $valida_token = true;
-                    if(!empty($result->data) && $valida_token)
+                    if(!empty($result->data) && $valida_token){
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    else {
+                    }else {
                         $checkSingup = null;
                         echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
@@ -476,7 +474,7 @@ class Api extends CI_Controller
                         else // ERROR TRANSACTION
                             echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                     } else
-                        echo json_encode($checkSingup);
+                        echo ($checkSingup);
                 }
             }
         }
