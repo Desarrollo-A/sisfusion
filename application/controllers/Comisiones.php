@@ -290,31 +290,7 @@ class Comisiones extends CI_Controller
 
   
     // ------------------------------------------------------LUCERO MARIELA CONTRALORIA----------------------------------------
-    public function revision_asimilados()
-    {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      // $this->load->view('template/header');
-      // $this->load->view("ventas/revision_asimilados", $datos);
 
-      switch($this->session->userdata('id_rol')){
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXasimilados", $datos);
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_asimilados", $datos);
-        break;
-      }
-
-    }
- 
     public function getDatosRevisionAsimilados($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosRevisionAsimilados($proyecto,$condominio)->result_array();
      for( $i = 0; $i < count($dat); $i++ ){
@@ -886,54 +862,7 @@ function update_estatus(){
       echo json_encode($data_response);
       }
   }
-  public function acepto_internomex_asimilados(){
-    $this->load->model("Comisiones_model");
-    $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-   
-      if( $consulta_comisiones->num_rows() > 0 ){
-        $consulta_comisiones = $consulta_comisiones->result_array();
-        $id_user_Vl = $this->session->userdata('id_usuario');
-        
-          $sep = ',';
-          $id_pago_i = '';
 
-          $data=array();
-
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
-
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
-            );
-             array_push($data,$row_arr);
-
-
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
-      
-            $up_b = $this->Comisiones_model->update_acepta_contraloria($id_pago_i);
-            $ins_b = $this->Comisiones_model->insert_phc($data);
-      
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      }
-            
-      }
-      else{
-        $data_response = 0;
-      echo json_encode($data_response);
-      }
-  }
 
   public function acepto_internomex_remanente(){
     $this->load->model("Comisiones_model");
@@ -2549,41 +2478,14 @@ public function porcentajes2($idLote){
   echo json_encode($this->Comisiones_model->porcentajes2($idLote)->result_array(), JSON_NUMERIC_CHECK);
 }
  
- 
 
-   public function revision_xml()
-    {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      switch($this->session->userdata('id_rol')){
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXxml", $datos);
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_xml", $datos);
-        break;
-      }
-
-
-    }
-
-    public function getDatosNuevasXContraloria($proyecto,$condominio){
+public function getDatosNuevasXContraloria($proyecto,$condominio){
   $dat =  $this->Comisiones_model->getDatosNuevasXContraloria($proyecto,$condominio)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
  echo json_encode( array( "data" => $dat));
 }
-
-
-
 
 public function getDatosNuevasAContraloria($proyecto,$condominio){
   $dat =  $this->Comisiones_model->getDatosNuevasAContraloria($proyecto,$condominio)->result_array();
@@ -3045,28 +2947,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
     
-  
-    public function revision_remanente()
-    {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      switch($this->session->userdata('id_rol')){
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXremanente", $datos);
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_remanente", $datos);
-        break;
-      }
-
-    }
+ 
  
     public function revision_especial()
     {
@@ -3387,24 +3268,24 @@ public function LiquidarLote(){
     $this->load->view('template/header');
     $this->load->view("ventas/bonos", $datos);
   }
-  public function revision_bonos()
-  {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    if($this->session->userdata('id_rol') == 31){
-      $this->load->view('template/header');
-    $this->load->view("ventas/bonos_intmex", $datos);
+  // public function revision_bonos()
+  // {
+  //   $datos = array();
+  //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+  //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+  //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  //   $salida = str_replace('' . base_url() . '', '', $val);
+  //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+  //   if($this->session->userdata('id_rol') == 31){
+  //     $this->load->view('template/header');
+  //   $this->load->view("ventas/bonos_intmex", $datos);
 
-    }else{
-      $this->load->view('template/header');
-      $this->load->view("ventas/bonos_solicitados", $datos);
-    }
+  //   }else{
+  //     $this->load->view('template/header');
+  //     $this->load->view("ventas/bonos_solicitados", $datos);
+  //   }
     
-  }
+  // }
   public function bonos_historial()
   {
 
@@ -3573,31 +3454,9 @@ public function LiquidarLote(){
   }
 
 
+  // se va a pagos comentario Dano
 
 
-  public function getBonosPorUserContra($estado)
-  {
-
-   $dat = $this->Comisiones_model->getBonosPorUserContra($estado)->result_array();
-   for( $i = 0; $i < count($dat); $i++ ){
-    $dat[$i]['pa'] = 0;
-  }
-  echo json_encode( array( "data" => $dat));
-}
-  public function enviarBonosMex($idbono){
-   $estatus=6;
-   if($this->session->userdata('id_rol') == 31){
-    $estatus=3;
-  }else if($this->session->userdata('id_rol') == 18){
-    $estatus=2;
-  }
-  $ids = explode(',',$idbono);
-  for ($i=0; $i <count($ids) ; $i++) { 
-
-   $result = $this->Comisiones_model->UpdateINMEX($ids[$i],$estatus);
-  }
-  echo json_encode($result);
-  }
   
   public function prestamos_contraloria()
   {
@@ -5205,41 +5064,41 @@ public function getPagosByProyect($proyect = '',$formap = ''){
 }
 
 function IntMexPagadosByProyect(){
-  date_default_timezone_set('America/Mexico_City');
-  $idsessionado = $this->session->userdata('id_usuario');
-  $idsPagos = $this->input->post("ids");
-  $sep = ',';
-  $id_pago_i = '';
-  //$cadena_equipo = '';
-  $data = array();
-  for($i=0; $i <count($idsPagos) ; $i++) { 
-    $id_pago_i = implode(",", $idsPagos);
+    date_default_timezone_set('America/Mexico_City');
+    $idsessionado = $this->session->userdata('id_usuario');
+    $idsPagos = $this->input->post("ids");
+    $sep = ',';
+    $id_pago_i = '';
+    //$cadena_equipo = '';
+      $data = array();
+      for($i=0; $i <count($idsPagos) ; $i++) { 
+        $id_pago_i = implode(",", $idsPagos);
 
-   // $id_pago_i .= implode($sep, $idsPagos);
-          //  $id_pago_i .= $sep;
-            $row_arr=array(
-              'id_pago_i' => $idsPagos[$i],
-              'id_usuario' =>  $idsessionado,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'INTERNOMEX APLICO PAGO' 
-            );
-            array_push($data,$row_arr);
+      // $id_pago_i .= implode($sep, $idsPagos);
+              //  $id_pago_i .= $sep;
+                $row_arr=array(
+                  'id_pago_i' => $idsPagos[$i],
+                  'id_usuario' =>  $idsessionado,
+                  'fecha_movimiento' => date('Y-m-d H:i:s'),
+                  'estatus' => 1,
+                  'comentario' =>  'INTERNOMEX APLICO PAGO' 
+                );
+                array_push($data,$row_arr);
 
+      }
+      Ini_set('max_execution_time', 0);
+
+      $up_b = $this->Comisiones_model->update_acepta_INTMEX($id_pago_i);
+      $ins_b = $this->Comisiones_model->insert_phc($data);
+
+    if($up_b == true && $ins_b == true){
+    $data_response = 1;
+    echo json_encode($data_response);
+    } else {
+    $data_response = 0;
+    echo json_encode($data_response);
+    }
   }
-  Ini_set('max_execution_time', 0);
-
-  $up_b = $this->Comisiones_model->update_acepta_INTMEX($id_pago_i);
-  $ins_b = $this->Comisiones_model->insert_phc($data);
-
-if($up_b == true && $ins_b == true){
-$data_response = 1;
-echo json_encode($data_response);
-} else {
-$data_response = 0;
-echo json_encode($data_response);
-}
-}
 
 public function getDesarrolloSelectINTMEX($a = ''){
   if($a == ''){
@@ -6726,5 +6585,21 @@ public function descuentosCapitalHumano(){
     echo json_encode(  $dispersion);
     }
 
- 
+    public function revision_bonos()
+    {
+      $datos = array();
+      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
+      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
+      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $salida = str_replace('' . base_url() . '', '', $val);
+      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
+      $this->load->view('template/header');
+      if($this->session->userdata('id_rol') == 31){
+         $this->load->view("pagos/bonos_intmex_view", $datos);
+         //  se cambio la vista  
+         }else{
+           $this->load->view("pagos/bonos_solicitados_view", $datos);
+         }
+         //  se cambio la vista 
+    }
 }

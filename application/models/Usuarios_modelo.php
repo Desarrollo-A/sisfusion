@@ -479,6 +479,7 @@ class Usuarios_modelo extends CI_Model
     {
         switch ($this->session->userdata('id_rol')) {
             case '17': // SUBDIRECCIÓN CONTRALORÍA
+            case '70': // Ejecutivo de contraloría JR
             case '80': // CONTRALORÍA CORPORTATICA
                 $query = $this->db->query("SELECT fecha_creacion, creador, 
                 (CASE col_afect 

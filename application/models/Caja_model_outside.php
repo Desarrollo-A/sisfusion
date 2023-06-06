@@ -363,7 +363,7 @@
 
     public function allAsesor()
     {
-        return $this->db->query("SELECT u0.id_usuario as id_asesor, 
+        return $this->db->query("SELECT u0.id_usuario as id_asesor,u0.id_sede, 
 		u0.id_lider as id_coordinador, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
@@ -1480,11 +1480,15 @@
     public function allUserVentas()
     {
         return $this->db->query("(SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
         (CASE WHEN id_usuario IN(6482, 5, 7092) THEN 3 ELSE id_rol END) id_rol
         FROM usuarios 
         WHERE id_rol in(2,3,7,9) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')
         UNION 
-        (SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,id_rol
+        (SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
+		id_rol
+
         FROM usuarios 
         WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
     }
