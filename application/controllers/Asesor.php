@@ -890,6 +890,8 @@ class Asesor extends CI_Controller
             $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
             $data[$i]['autorizacion_correo'] = $query[0]->autorizacion_correo;
             $data[$i]['autorizacion_sms'] = $query[0]->autorizacion_sms;
+            $data[$i]['total_sol_correo'] = $query[0]->total_sol_correo;
+            $data[$i]['total_sol_sms'] = $query[0]->total_sol_sms;
         }
 
 
@@ -5587,13 +5589,18 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::ENVIADO) {
+        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::ENVIADO) {
             echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue enviado anteriormente.']);
             return false;
         }
 
-        if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
+        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::VALIDADO) {
             echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue validado anteriormente.']);
+            return false;
+        }
+
+        if (intval($cliente->total_sol_correo) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
             return false;
         }
 
@@ -5601,9 +5608,9 @@ class Asesor extends CI_Controller
         $codigoCorreoData = [
             'id_cliente' => $idCliente,
             'codigo' => $codigo,
-            'id_tipo' => TipoAutorizacionClienteOpcs::CORREO
+            'tipo' => TipoAutorizacionClienteOpcs::CORREO
         ];
-        $this->General_model->addRecord('autorizaciones_clientes', $codigoCorreoData);
+        $this->General_model->addRecord('codigo_autorizaciones', $codigoCorreoData);
 
         $banderaCorreoData = [
             'correo' => $correoCliente,
@@ -5646,21 +5653,26 @@ class Asesor extends CI_Controller
             return false;
         }
 
+        if (intval($cliente->total_sol_sms) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
+            return false;
+        }
+
         $codigo = md5(microtime());
-        $url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$codigo";
-        /*$resultadoSms = $this->smsAut($url, $telefonoCliente);
+        /*$url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$codigo";
+        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
 
         if (!$resultadoSms) {
             echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-            return;
+            return false;
         }*/
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
             'codigo' => $codigo,
-            'id_tipo' => TipoAutorizacionClienteOpcs::SMS
+            'tipo' => TipoAutorizacionClienteOpcs::SMS
         ];
-        $this->General_model->addRecord('autorizaciones_clientes', $codigoSmsData);
+        $this->General_model->addRecord('codigo_autorizaciones', $codigoSmsData, $this->session->userdata('id_usuario'));
 
         $banderaSmsData = [
             'telefono1' => $telefonoCliente,
@@ -5675,6 +5687,11 @@ class Asesor extends CI_Controller
     public function clienteAutorizacion($idCliente)
     {
         echo json_encode($this->Clientes_model->clienteAutorizacion($idCliente));
+    }
+
+    public function getSubdirectores()
+    {
+        echo json_encode($this->Asesor_model->getSubdirs());
     }
 
     public function reenvioAutorizacion()
@@ -5708,7 +5725,7 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
+            if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::VALIDADO) {
                 echo json_encode(['code' => 400, 'message' => 'El correo ya se ha validado anteriormente.']);
                 return;
             }
@@ -5731,7 +5748,7 @@ class Asesor extends CI_Controller
 
             $url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
 
-            /*$resultadoSms = $this->smsAut($url, $telefonoCliente);
+            /*$resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
 
             if (!$resultadoSms) {
                 echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
@@ -5740,6 +5757,85 @@ class Asesor extends CI_Controller
         }
 
         echo json_encode(['code' => 200]);
+    }
+
+    public function solicitarAclaracion()
+    {
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idSubdirector = $this->input->post('idSubdirector');
+        $aclaracionCorreo = $this->input->post('correo');
+        $aclaracionSms = $this->input->post('sms');
+
+        if (!isset($aclaracionCorreo) && !isset($aclaracionSms) || !isset($idCliente) || !isset($idSubdirector)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return;
+        }
+
+        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (isset($aclaracionCorreo)) {
+            if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::ENVIADO) {
+                echo json_encode(['code' => 400, 'message' => 'El correo de autorización no está en el estatus que corresponde para el movimiento.']);
+                return;
+            }
+
+            if (intval($cliente->total_sol_correo) > 0) {
+                echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
+                return;
+            }
+
+            $this->crearRegistroAclaracion($idCliente, $lote->idLote, $this->session->userdata('id_usuario'),
+                $idSubdirector, $comentario, TipoAutorizacionClienteOpcs::CORREO);
+        }
+
+        if (isset($aclaracionSms)) {
+            if (intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::ENVIADO) {
+                echo json_encode(['code' => 400, 'message' => 'El sms de autorización no está en el estatus que corresponde para el movimiento.']);
+                return;
+            }
+
+            if (intval($cliente->total_sol_sms) > 0) {
+                echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
+                return;
+            }
+
+            $this->crearRegistroAclaracion($idCliente, $lote->idLote, $this->session->userdata('id_usuario'),
+                $idSubdirector, $comentario, TipoAutorizacionClienteOpcs::SMS);
+        }
+
+        echo json_encode(['code' => 200]);
+    }
+
+    function crearRegistroAclaracion($idCliente, $idLote, $idUsuario, $idSubdirector, $comentario, $tipo): void
+    {
+        $autorizacionData = [
+            'idCliente' => $idCliente,
+            'idLote' => $idLote,
+            'id_sol' => $idUsuario,
+            // 'id_sol' => 11088,
+            'id_aut' => $idSubdirector,
+            'estatus' => 1,
+            'autorizacion' => $comentario,
+            'estatus_particular' => 1
+        ];
+        $this->Asesor_model->insertAutorizacion($autorizacionData);
+        $autorizacionId = $this->db->insert_id();
+        $this->General_model->addRecord('autorizaciones_clientes', [
+            'id_autorizacion' => $autorizacionId,
+            'tipo' => $tipo
+        ]);
     }
 
     public function correoAut(string $url, string $correo): void
@@ -5836,7 +5932,7 @@ class Asesor extends CI_Controller
             (isset($respuestaSMS["Code"]) && $respuestaSMS["Code"] == 301));
     }
 
-    public function apiExternoSms(string $url, string $tipo, string $body)
+    public function apiExternoSms(string $url, string $tipo, array $body)
     {
         $curl = curl_init();
 

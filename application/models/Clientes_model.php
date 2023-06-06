@@ -4392,11 +4392,23 @@ function getStatusMktdPreventa(){
     function clienteAutorizacion(int $id)
     {
         $query = $this->db->query("SELECT c.id_cliente, c.correo, c.telefono1, c.lada_tel,
-            acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
-	        acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms
+                acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
+                acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms,
+                ISNULL(tipo_correo.total, 0) AS total_sol_correo, ISNULL(tipo_sms.total, 0) AS total_sol_sms
             FROM clientes c
-            LEFT JOIN autorizaciones_clientes acc ON c.id_cliente = acc.id_cliente AND acc.id_tipo = 1
-            LEFT JOIN autorizaciones_clientes acs ON c.id_cliente = acs.id_cliente AND acs.id_tipo = 2
+            INNER JOIN lotes l ON l.idCliente = c.id_cliente
+            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 1
+            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 2
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 1 AND (estatus = 1 OR estatus = 0)
+                GROUP BY a.idCliente, a.idLote) tipo_correo ON tipo_correo.idCliente = $id AND tipo_correo.idLote = l.idLote
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 2 AND (estatus = 1 OR estatus = 0)
+                GROUP BY a.idCliente, a.idLote) tipo_sms ON tipo_sms.idCliente = $id AND tipo_sms.idLote = l.idLote
             WHERE c.id_cliente = $id");
         return $query->row();
     }

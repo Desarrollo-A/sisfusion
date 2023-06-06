@@ -500,7 +500,7 @@ class Api extends CI_Controller
             return;
         }
 
-        $this->General_model->deleteRecord('autorizaciones_clientes', ['id_aut_clientes' => $cliente->id_aut_correo]);
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_correo]);
         $this->General_model->updateRecord(
             'clientes', ['autorizacion_correo' => AutorizacionClienteOpcs::VALIDADO],
             'id_cliente', $idCliente
@@ -564,7 +564,7 @@ class Api extends CI_Controller
             return;
         }
 
-        $this->General_model->deleteRecord('autorizaciones_clientes', ['id_aut_clientes' => $cliente->id_aut_sms]);
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_sms]);
         $this->General_model->updateRecord(
             'clientes', ['autorizacion_sms' => AutorizacionClienteOpcs::VALIDADO],
             'id_cliente', $idCliente

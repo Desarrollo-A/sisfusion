@@ -50,6 +50,17 @@ $(document).ready(function() {
     } else { // MJ: PARA LOS DEMÁS SÍ CARGA EN EL READY
         fillDataTable(0);
     }
+
+    $('#subdirector').empty().selectpicker('refresh');
+    $.get(`${general_base_url}Asesor/getSubdirectores`, function (data) {
+        const subdirectores = JSON.parse(data);
+
+        subdirectores.forEach(subdirector => {
+            $('#subdirector').append($('<option>').val(subdirector.id_subdir).text(subdirector.nombre_subdir));
+        });
+
+        $('#subdirector').selectpicker('refresh');
+    });
 });
 
 $('#proyecto').change( function(){
@@ -1335,6 +1346,31 @@ $(document).on('click', '.btn-reenvio', function () {
     });
 });
 
+$(document).on('click', '.btn-solicitar', function () {
+    const $itself = $(this);
+    const idCliente = $itself.attr('data-idCliente');
+
+    $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
+        cliente = JSON.parse(data);
+
+        if (parseInt(cliente.total_sol_correo) > 0 || cliente.autorizacion_correo === null) {
+            $('#chk-correo-sol-div').hide();
+            $('#chk-sms-sol-div').removeAttr('class');
+            $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
+            $('#chkCorreoSol').prop('checked', false);
+        }
+
+        if (parseInt(cliente.total_sol_sms) > 0 || cliente.autorizacion_sms === null) {
+            $('#chk-sms-sol-div').hide();
+            $('#chk-correo-sol-div').removeAttr('class');
+            $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
+            $('#chkSmsSol').prop('checked', false);
+        }
+
+        $('#solicitar-modal').modal('toggle');
+    });
+});
+
 $(document).on('hidden.bs.modal', '#autorizaciones-modal', function () {
     cliente = null;
 
@@ -1374,10 +1410,27 @@ $(document).on('hidden.bs.modal', '#reenvio-modal', function () {
     $('#chkSmsReenvio').prop('checked', true);
 });
 
+$(document).on('hidden.bs.modal', '#solicitar-modal', function () {
+    cliente = null;
+
+    $('#chk-correo-sol-div').show();
+    $('#chk-sms-sol-div').show();
+
+    $('#chk-sms-sol-div').removeAttr('class');
+    $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
+    $('#chk-correo-sol-div').removeAttr('class');
+    $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
+
+    $('#chkCorreoSol').prop('checked', true);
+    $('#chkSmsSol').prop('checked', true);
+    $('#comentarioSol').val('');
+    $('#subdirector').val(null).trigger('change');
+});
+
 $(document).on('submit', '#autorizacion-form', function (e) {
     e.preventDefault();
 
-    const formValues = {};
+    let formValues = {};
     $.each($('#autorizacion-form').serializeArray(), function (i, campo) {
        formValues[campo.name] = campo.value;
     });
@@ -1471,7 +1524,7 @@ $(document).on('submit', '#autorizacion-form', function (e) {
 $(document).on('submit', '#reenvio-form', function (e) {
     e.preventDefault();
 
-    const formValues = {};
+    let formValues = {};
     $.each($('#reenvio-form').serializeArray(), function (i, campo) {
         formValues[campo.name] = campo.value;
     });
@@ -1520,6 +1573,78 @@ $(document).on('submit', '#reenvio-form', function (e) {
                 alerts.showNotification("top", "right", 'Autorización reenviada con éxito', "success");
                 tabla_valores_ds.ajax.reload();
                 $('#reenvio-modal').modal('hide');
+            }
+
+            if (response.code === 400) {
+                alerts.showNotification("top", "right", response.message, "warning");
+            }
+
+            if (response.code === 500) {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            }
+
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+            $('#spiner-loader').addClass('hide');
+        }
+    });
+});
+
+$(document).on('submit', '#solicitar-form', function (e) {
+    e.preventDefault();
+
+    let formValues = {};
+    $.each($('#solicitar-form').serializeArray(), function (i, campo) {
+        formValues[campo.name] = campo.value;
+    });
+
+    if (!formValues.chkCorreoSol && !formValues.chkSmsSol) {
+        alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
+        return;
+    }
+
+    if (formValues.comentario.length === 0) {
+        alerts.showNotification('top', 'right', 'El comentario es requerido.', 'danger');
+        return;
+    }
+
+    if (formValues.subdirector === null || formValues.subdirector === '') {
+        alerts.showNotification('top', 'right', 'El subdirector es requerido.', 'danger');
+        return;
+    }
+    
+    let data = new FormData();
+    data.append('idCliente', cliente.id_cliente);
+    data.append('idSubdirector', formValues.subdirector);
+    data.append('comentario', formValues.comentario);
+
+    if ((parseInt(cliente.total_sol_correo) === 0 || cliente.autorizacion_correo !== null) && formValues.chkCorreoSol) {
+        data.append('correo', true);
+    }
+
+    if ((parseInt(cliente.total_sol_sms) === 0 || cliente.autorizacion_sms !== null) && formValues.chkSmsSol) {
+        data.append('sms', true);
+    }
+
+    $('#spiner-loader').removeClass('hide');
+
+    $.ajax({
+        url: `${general_base_url}Asesor/solicitarAclaracion`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            const response = JSON.parse(data);
+
+            if (response.code === 200) {
+                alerts.showNotification("top", "right", 'Solicitud enviada con éxito', "success");
+                tabla_valores_ds.ajax.reload();
+                $('#solicitar-modal').modal('hide');
             }
 
             if (response.code === 400) {
@@ -1630,33 +1755,43 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
     </a>`;
 }
 
-function generarBotonesAutorizacion(data) {
+function generarBotonesAutorizacion(clienteData) {
     let botones = '';
 
-    if (data.autorizacion_correo === null || data.autorizacion_sms === null) {
+    console.log(clienteData);
+
+    if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
             <button class="btn-data btn-green btn-rounded btn-autorizacion" 
-                    title="Enviar autorización"
-                    data-idCliente='${data.id_cliente}'>
+                    title="ENVIAR AUTORIZACIÓN"
+                    data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-send"></i>
             </button>
         `;
     }
 
-    if (data.autorizacion_correo !== null || data.autorizacion_sms !== null) {
+    if (clienteData.autorizacion_correo !== null || clienteData.autorizacion_sms !== null) {
         botones += `
             <button class="btn-data btn-azure btn-rounded btn-reenvio" 
-                    title="Reenvío de verificación"
-                    data-idCliente='${data.id_cliente}'>
+                    title="REENVÍO DE VERIFICACIÓN"
+                    data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-share-square"></i>
             </button>
         `;
-        /**
-         * <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
-         *                     title="Solicitar edición del registro">
-         *                     <i class="fas fa-pencil-square"></i>
-         *             </button>
-         */
+    }
+
+    if (
+        (parseInt(clienteData.total_sol_correo) === 0 || parseInt(clienteData.total_sol_sms) === 0) &&
+            (((clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.AUTORIZADO) &&
+                (clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.AUTORIZADO)))
+    ) {
+        botones += `
+            <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+                    title="SOLICITAR EDICIÓN DEL REGISTRO" 
+                    data-idCliente='${clienteData.id_cliente}'>
+                <i class="fas fa-hand-paper-o"></i>
+            </button>
+        `;
     }
 
     return botones;

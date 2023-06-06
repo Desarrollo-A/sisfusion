@@ -154,7 +154,7 @@
                         <!-- CHECKBOX CORREO / SMS -->
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO</h4>
+                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-aut-div">
                                         <label class="m-0 checkstyleAut">
@@ -184,8 +184,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group m-0">
                                     <label class="label-on-left m-0">
-                                        CORREO ELECTRÓNICO
-                                        (<small style="color: red;">*</small>)
+                                        CORREO ELECTRÓNICO (<small style="color: red;">*</small>)
                                     </label>
                                     <input class="form-control input-gral"
                                            name="correoAut"
@@ -200,7 +199,7 @@
                         <div class="row mt-1" id="sms-aut-div">
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group m-0">
-                                    <h4 class="label-on-left m-0">LADA</h4>
+                                    <h4 class="label-on-left m-0">LADA (<small style="color: red;">*</small>)</h4>
                                     <select name="ladaAut"
                                             title="SELECCIONA UNA OPCIÓN"
                                             id="ladaAut"
@@ -217,8 +216,7 @@
                             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                                 <div class="form-group m-0">
                                     <label class="label-on-left m-0">
-                                        CELULAR
-                                        (<small style="color: red;">*</small>)
+                                        CELULAR (<small style="color: red;">*</small>)
                                     </label>
                                     <input class="form-control input-gral"
                                            required
@@ -237,7 +235,7 @@
                             <span class="glyphicon glyphicon-remove"></span> Cerrar
                         </button>
                         <button type="submit" id="guardar-autorizacion" class="btn btn-primary">
-                            <span class="material-icons" >send</span> </i> Enviar
+                            <span class="material-icons" >send</span> Enviar
                         </button>
                     </div>
                 </form>
@@ -259,7 +257,7 @@
                         <!-- CHECKBOX CORREO / SMS -->
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO</h4>
+                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-reenvio-div">
                                         <label class="m-0 checkstyleAut">
@@ -288,7 +286,79 @@
                             <span class="glyphicon glyphicon-remove"></span> Cerrar
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> </i> Reenviar
+                            <span class="material-icons" >send</span> Reenviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="solicitar-modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Solicitar edición de autorización
+                    </h4>
+                </div>
+                <form id="solicitar-form">
+                    <div class="modal-body">
+                        <!-- CHECKBOX CORREO / SMS -->
+                        <div class="row pt-1 pb-1 checkAut">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
+                                <div class="container boxChecks p-0">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-sol-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkCorreoSol"
+                                                   id="chkCorreoSol"
+                                                   checked>
+                                            <span>CORREO ELECTRÓNICO</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-sol-div">
+                                        <label class="m-0 checkstyleAut">
+                                            <input type="checkbox"
+                                                   name="chkSmsSol"
+                                                   id="chkSmsSol"
+                                                   checked>
+                                            <span>MENSAJE DE TEXTO SMS</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
+                                    <div class="form-group label-floating select-is-empty">
+                                        <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
+                                        <select id="subdirector"
+                                                name="subdirector"
+                                                class="selectpicker select-gral m-0"
+                                                data-style="btn"
+                                                data-show-subtext="true"
+                                                data-live-search="true"
+                                                title="Selecciona un subdirector"
+                                                data-size="7"
+                                                required>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                                    <label>Comentario adicional (<small style="color: red;">*</small>)</label>
+                                    <textarea class="text-modal" name="comentario" id="comentarioSol" rows="3" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove"></span> Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-icons" >send</span> Solicitar
                         </button>
                     </div>
                 </form>

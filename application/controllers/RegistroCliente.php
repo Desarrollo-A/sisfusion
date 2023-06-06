@@ -3944,8 +3944,8 @@ class RegistroCliente extends CI_Controller {
 
 	public function registrosClienteJuridico(){
 	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-   $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-   /*-------------------------------------------------------------------------------*/
+       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       /*-------------------------------------------------------------------------------*/
 		$this->validateSession();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
@@ -7697,24 +7697,25 @@ class RegistroCliente extends CI_Controller {
 	}
 
 
-	public function updateAutsFromsDC(){
+    public function updateAutsFromsDC() {
 		$tamanoOfAuts = ($_POST['numeroDeRow']);
-    $response =  0 ;
 		$idCliente = ($_POST['idCliente']);
 		$idCondominio = ($_POST['idCondominio']);
 		$idLote = ($_POST['idLote']);
 		$idAut = ($_POST['id_autorizacion']);
-    $code = '';
-    $mensaje = '';
-		$nombreResidencial=($_POST['nombreResidencial']);
-		$nombreCondominio=($_POST['nombreCondominio']);
-		$nombreLote=($_POST['nombreLote']);
+        $nombreResidencial=($_POST['nombreResidencial']);
+        $nombreCondominio=($_POST['nombreCondominio']);
+        $nombreLote=($_POST['nombreLote']);
+        $response =  0 ;
+        $code = '';
+        $mensaje = '';
 		$autorizacionComent = "";
 		$motivoAut='';
 		$type = 0;
 
-		for($i=0; $i<$tamanoOfAuts; $i++){
+		for($i=0; $i < $tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
+
 			if ($_FILES["docArchivo".$i]["name"] != '' && $_FILES["docArchivo".$i]["name"] != null) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
@@ -7726,17 +7727,14 @@ class RegistroCliente extends CI_Controller {
 				$numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
 				$date= date('dmY');
 				$composicion = $proyecto."_".$cond.$numeroLote."_".$date;
-				if($this->session->userdata('id_rol')==1)
-				{
-					$motivoAut='DIRECTOR SUBE ARCHIVO DE AUTORIZACIÓN';
-				}
-				else
-				{
-					$motivoAut='SUBDIRECTOR SUBE ARCHIVO DE AUTORIZACIÓN';
-				}
+
+                $motivoAut = ($this->session->userdata('id_rol') == 1)
+                    ? 'DIRECTOR SUBE ARCHIVO DE AUTORIZACIÓN'
+                    : 'SUBDIRECTOR SUBE ARCHIVO DE AUTORIZACIÓN';
+
 				$nombArchivo= $composicion;
 				$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$expediente;
-				$arreglo2=array(
+				$arreglo2 = array(
 					'movimiento' => $motivoAut,
 					'expediente' => $expediente,
 					'modificado' => date('Y-m-d h:i:s'),
@@ -7749,8 +7747,7 @@ class RegistroCliente extends CI_Controller {
 				);
 
 				$this->registrolote_modelo->insert_historial_documento($arreglo2);
-				if (move_uploaded_file($_FILES["docArchivo".$i]["tmp_name"],"static/documentos/cliente/expediente/".$expediente)) {
-				}
+                move_uploaded_file($_FILES["docArchivo".$i]["tmp_name"],"static/documentos/cliente/expediente/".$expediente);
 			}
 
 			$dataUPDAut = array(
@@ -7771,77 +7768,75 @@ class RegistroCliente extends CI_Controller {
 			$dataUpdAut = $this->registrolote_modelo->updAutFromDC($idAut, $dataUPDAut);
 			$dataInsertHA = $this->registrolote_modelo->insertAutFromDC($dataInsHA);
 
-			if($dataUpdAut>=1 || $dataInsertHA>=1)
-			{
+			if($dataUpdAut >= 1 || $dataInsertHA >= 1) {
 				if ($_POST['accion'.$i] == 3) {
 					$type = 1;
 				} else {
 					$type = 2;
 				}
-        $response = 1 ;
-        $code = 'success';
-        $mensaje = 'La acción se ha realizado correctamente.';
-        // se guarda la respuesta para regresar al js
+                $response = 1 ;
+                $code = 'success';
+                $mensaje = 'La acción se ha realizado correctamente.';
+                // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('success', 1);
-			}
-			else
-			{
+			} else {
 				$type = 3;
-        $response = 2 ;
-        // se guarda la respuesta para regresar al js
+                $response = 2 ;
+                // se guarda la respuesta para regresar al js
 				$this->session->set_userdata('error', 99);
-        $code = 'warning';
-        $mensaje = 'No se ha ejecutado la acción correctamente';
-			}
+                $code = 'warning';
+                $mensaje = 'No se ha ejecutado la acción correctamente';
+            }
 		}
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
 		if ($type == 1) {
 			//$this->notifyUsers($this->session->userdata('id_usuario'), $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
       
-      $idAut = $this->session->userdata('id_usuario');
-      $motivoAut = $autorizacionComent;
-      /********************************************************************************
-      * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-      ********************************************************************************/
-      $datos_correo[0] = array('nombreResidencial' =>  $nombreResidencial,
-      'nombreCondominio'  =>  $nombreCondominio,
-      'nombreLote'        =>  $nombreLote,
-      'motivoAut'         =>  $motivoAut,
-      'fechaHora'         =>  date("Y-m-d H:i:s"));
-      $datos_etiquetas = null;
-      $comentario = $autorizacionComent;
-      $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-      $correos_entregar = array('programador.analista18@ciudadmaderas.com'); //quit ar correo de test
-      //array_push($correos_entregar, $dataUser[0]->correo);
+            $idAut = $this->session->userdata('id_usuario');
+            $motivoAut = $autorizacionComent;
+            /********************************************************************************
+            * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
+            ********************************************************************************/
+            $datos_correo[0] = array('nombreResidencial' =>  $nombreResidencial,
+            'nombreCondominio'  =>  $nombreCondominio,
+            'nombreLote'        =>  $nombreLote,
+            'motivoAut'         =>  $motivoAut,
+            'fechaHora'         =>  date("Y-m-d H:i:s"));
+            $datos_etiquetas = null;
+            $comentario = $autorizacionComent;
+            $dataUser = $this->Asesor_model->getInfoUserById($idAut);
+            $correos_entregar = array('programador.analista18@ciudadmaderas.com'); //quit ar correo de test
+            //array_push($correos_entregar, $dataUser[0]->correo);
 
-      $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
+            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
                                 "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES);
 
-      $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_ASESOR_AUTORIZACIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
+            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_ASESOR_AUTORIZACIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
 
-      $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES;
+            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES;
 
-      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-      $plantilla_correo = new plantilla_dinamica_correo;
-      /********************************************************************************************/
-      if($correos_entregar[0] != 'gustavo.mancilla@ciudadmaderas.com'){
-        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
+            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
+            $plantilla_correo = new plantilla_dinamica_correo;
+            /********************************************************************************************/
+            if($correos_entregar[0] != 'gustavo.mancilla@ciudadmaderas.com'){
+                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
                                                                 $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-        if($envio_correo === 1 ){
-          $data['message_email'] = 'OK';
-        }else{
-          $data['message_email'] = $envio_correo;
-        }
-      }
+                if($envio_correo === 1 ){
+                  $data['message_email'] = 'OK';
+                }else{
+                  $data['message_email'] = $envio_correo;
+                }
+            }
 		}
-    $respuesta = array(
-      'code'    => $code,
-      'mensaje' => $mensaje,
-      'respuesta' => $response,
-      // donde 1 es succes y 2 es error
-    );
-    echo json_encode ($respuesta);
-	}
+        $respuesta = array(
+          'code'    => $code,
+          'mensaje' => $mensaje,
+          'respuesta' => $response,
+          // donde 1 es succes y 2 es error
+        );
+
+        echo json_encode ($respuesta);
+    }
 
     function getLotesAsesor($condominio,$residencial) {
         $data['lotes'] = $this->registrolote_modelo->getLotesAsesor($condominio,$residencial);
