@@ -187,58 +187,48 @@ tabla_remanente = $("#tabla_remanente").DataTable({
     destroy: true,
     ordering: false,
     columns: [{
-        "width": "3%" 
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0">' + d.id_pago_suma + '</p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0">' + d.referencia + '</p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.nombreComisionista + '</b></p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.sede + '</b></p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.estatusString + '</b></p>';
         }
     },
     {
-        "width": "5%",
         "orderable": false,
         "data": function( data ){
             var BtnStats;
