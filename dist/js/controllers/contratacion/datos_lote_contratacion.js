@@ -31,7 +31,12 @@ let titulosInventario = [];
 $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text"
+                         class="textoshead"
+                         data-toggle="tooltip" 
+                         data-placement="top"
+                         title="${title}"
+                         placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
             $('#tablaInventario').DataTable().column(i).search(this.value).draw();
@@ -54,6 +59,11 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
             dataSrc: ""
         },
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: "hover"
+                });
+            },
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -62,7 +72,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'MADERAS_CRM_INVENTARIO',
                 exportOptions: {
-                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
+                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx] + ' ';
@@ -125,17 +135,17 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
-                    return formatMoney(d.precio * d.sup);
+                    return '$' + formatMoney(d.precio * d.sup);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.totalNeto2);
+                    return '$' + formatMoney(d.totalNeto2);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.precio);
+                    return '$' + formatMoney(d.precio);
                 }
             },
             { data: 'referencia' },
@@ -190,9 +200,10 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
+                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
                     return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> <center>`;
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> ${libContraloria} <center>`;
                 }
             },
             {
@@ -215,7 +226,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
             {
                 data: function (d) {
-                    return formatMoney(d.cantidad_enganche);
+                    return '$' + formatMoney(d.cantidad_enganche);
                 }
             },
             {
@@ -258,13 +269,21 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.apartadoXReubicacion == 1)
                         return d.fechaAlta;
                     else
-                       return 'NO APLICA';                   
+                        return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                
                 }         
             },
             {
                 data: function(d){
                     if(d.venta_compartida != 0)
                         return `<center><span class="label" style="background:#A3E4D7; color:#0E6251;">COMPARTIDA</span> <center>`;
+                    else
+                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
+                data: function(d) {
+                    if(d.ubicacion != null)
+                        return `<center><span class="label" style="background:#ABEBC6; color:#186A3B;">${d.ubicacion}</span> <center>`;
                     else
                        return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
                 }         
@@ -279,6 +298,10 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+});
+
+$('#tablaInventario').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).on("click", ".ver_historial", function () {
@@ -312,7 +335,7 @@ let titulostablaHistorialContratacion = [];
 $('#tablaHistorialContratacion thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulostablaHistorialContratacion.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaHistorialContratacion').DataTable().column(i).search() !== this.value) {
             $('#tablaHistorialContratacion').DataTable().column(i).search(this.value).draw();
@@ -364,6 +387,9 @@ function consultarHistoriaContratacion(idLote) {
             url: `${general_base_url}Contratacion/historialProcesoLoteOp/${idLote}`,
             dataSrc: ""
         },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 }
 
@@ -371,7 +397,7 @@ let titulosTablaHistoriaLiberacion = [];
 $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosTablaHistoriaLiberacion.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaHistoriaLiberacion').DataTable().column(i).search() !== this.value) {
             $('#tablaHistoriaLiberacion').DataTable().column(i).search(this.value).draw();
@@ -429,7 +455,7 @@ let titulosTablaVentasCompartidas = [];
 $('#tablaVentasCompartidas thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosTablaVentasCompartidas.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaVentasCompartidas').DataTable().column(i).search() !== this.value) {
             $('#tablaVentasCompartidas').DataTable().column(i).search(this.value).draw();

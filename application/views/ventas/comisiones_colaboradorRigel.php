@@ -345,14 +345,14 @@
                                                         <tr>
                                                             <th></th>
                                                             <th>ID PAGO</th>
-                                                            <th>PROY.</th>
+                                                            <th>PROYECTO</th>
                                                             <th>LOTE</th>
                                                             <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COM</th>
+                                                            <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>COM %.</th>
+                                                            <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>MÁS</th>
@@ -412,14 +412,14 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID PAGO</th>
-                                                            <th>PROY.</th>
+                                                            <th>PROYECTO</th>
                                                             <th>LOTE</th>
                                                             <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COM</th>
+                                                            <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>COM %.</th>
+                                                            <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>MÁS</th>
@@ -485,14 +485,14 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID PAGO</th>
-                                                            <th>PROY.</th>
+                                                            <th>PROYECTO</th>
                                                             <th>LOTE</th>
                                                             <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COM</th>
+                                                            <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>COM %.</th>
+                                                            <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>MÁS</th>
@@ -552,14 +552,14 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID PAGO</th>
-                                                            <th>PROY.</th>
+                                                            <th>PROYECTO</th>
                                                             <th>LOTE</th>
                                                             <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COM</th>
+                                                            <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>COM %.</th>
+                                                            <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>MÁS</th>
@@ -620,14 +620,14 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID PAGO</th>
-                                                            <th>PROY.</th>
+                                                            <th>PROYECTO</th>
                                                             <th>LOTE</th>
                                                             <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COM</th>
+                                                            <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>COM %.</th>
+                                                            <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>MÁS</th>

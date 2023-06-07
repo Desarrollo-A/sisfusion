@@ -257,16 +257,6 @@ class Asesor_model extends CI_Model {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 26 AND estatus = 1 ORDER BY nombre");
     }
 
-    function get_gerentes_lista()
-    {
-        return $this->db->query("SELECT * FROM gerente WHERE status = 1");
-    }
-
-    function get_asesores_lista($gerente)
-    {
-        return $this->db->query("SELECT * FROM asesor WHERE status = 1 AND idGerente = " . $gerente . "");
-    }
-
     function get_proyecto_lista()
     {
         return $this->db->query("SELECT * FROM residenciales WHERE status = 1");
@@ -282,24 +272,9 @@ class Asesor_model extends CI_Model {
         return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio = " . $condominio . " AND idCliente in (SELECT idCliente FROM clientes) AND (idCliente <> 0 AND idCliente <>'') ");
     }
 
-    function get_datos_dinamicos($lote, $asesor)
-    {
-        return $this->db->query("SELECT id_asesor, sup, total, l.idCliente, CONCAT(c.nombre, ' ',c.apellido_paterno, ' ',c.apellido_materno) AS nombre FROM lotes l INNER JOIN clientes c ON c.id_cliente = l.idCliente WHERE l.idLote = " . $lote . " AND id_asesor = " . $asesor . "");
-    }
-
-    function get_datos_forma()
-    {
-        return $this->db->query("SELECT * FROM opciones_catalogo WHERE estatus = 1 AND id_catalogo = 1");
-    }
-
     function get_datos_tipo()
     {
         return $this->db->query("SELECT * FROM opciones_catalogo WHERE estatus = 1 AND id_catalogo = 2");
-    }
-
-    function get_validar_solicitud($lote)
-    {
-        return $this->db->query("SELECT * FROM comisiones c WHERE c.id_lote = " . $lote . "");
     }
 
     public function getLotesInfoCorrida($lote)
@@ -376,29 +351,6 @@ class Asesor_model extends CI_Model {
         }
     }
 
-    public function getReferenciasCliente($id_cliente)
-    {
-        $query = $this->db->query("SELECT * FROM referencias WHERE id_cliente = " . $id_cliente);
-        return $query->result();
-    }
-
-    public function getPrimerContactoCliente($id_opcion)//recibe la opcion en la tabla de clientes
-    {
-        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 9 AND id_opcion = " . $id_opcion);
-        return $query->result();
-    }
-
-    public function getVentasCompartidas($id_cliente)//recibe la opcion en la tabla de clientes
-    {
-        // $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 9 AND id_opcion = ".$id_opcion."");
-
-        $this->db->select("CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre");
-        $this->db->where('id_cliente', $id_cliente);/*le indicamos el cliente para ver si hay ventas compartidas*/
-        $this->db->join('usuarios as u', 'u.id_usuario=vc.id_asesor', 'LEFT');
-        $query = $this->db->get('ventas_compartidas vc');
-        return $query->result();
-    }
-
     public function registroCliente()
     {
 
@@ -429,7 +381,7 @@ class Asesor_model extends CI_Model {
 
     public function selectDS($cliente)
     {
-        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, FORMAT(CAST(ds.costoM2 AS float),'C') as costoM2, ds.proyecto, ds.municipio as municipioDS, FORMAT(CAST(ds.importOferta AS float),'C') as importOferta, ds.letraImport, FORMAT(CAST( ds.cantidad AS float),'C') as cantidad, ds.letraCantidad, FORMAT(CAST(ds.saldoDeposito AS float),'C') AS saldoDeposito, FORMAT(CAST(aportMensualOfer AS float),'C') AS aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, FORMAT(CAST(ds.costom2f AS float),'C') as costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, FORMAT(CAST(ds.costoM2_casas AS float),'C') as costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac FROM clientes cl INNER JOIN lotes lot ON cl.idLote = lot.idLote INNER JOIN condominios con ON con.idCondominio = lot.idCondominio INNER JOIN residenciales res ON res.idResidencial = con.idResidencial INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
+        $query = $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, cl.domicilio_particular, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, cl.correo, lot.idLote, lot.nombreLote, lot.sup, FORMAT(TRY_CAST(lot.precio AS float),'C') as precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave, res.idResidencial as desarrollo, con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, FORMAT(TRY_CAST(ds.costoM2 AS float),'C') as costoM2, ds.proyecto, ds.municipio as municipioDS, FORMAT(TRY_CAST(ds.importOferta AS float),'C') as importOferta, ds.letraImport, FORMAT(TRY_CAST( ds.cantidad AS float),'C') as cantidad, ds.letraCantidad, FORMAT(TRY_CAST(ds.saldoDeposito AS float),'C') AS saldoDeposito, FORMAT(TRY_CAST(REPLACE(ds.aportMensualOfer, ',', '') AS decimal(16,2)),'C') AS aportMensualOfer, ds.fecha1erAport, ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport,ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, FORMAT(TRY_CAST(ds.costom2f AS float),'C') as costom2f, cl.lugar_prospeccion, ds.fecha_modificacion, ds.costoM2_casas, cl.descuento_mdb, tipo_nc, printPagare, tipo_comprobanteD, cl.regimen_fac, cl.cp_fac FROM clientes cl INNER JOIN lotes lot ON cl.idLote = lot.idLote INNER JOIN condominios con ON con.idCondominio = lot.idCondominio INNER JOIN residenciales res ON res.idResidencial = con.idResidencial INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente WHERE cl.id_cliente = " . $cliente . "");
 
         return $query->result();
 
@@ -530,22 +482,6 @@ class Asesor_model extends CI_Model {
         return $query->result();
 
     }
-
-
-    public function getResidencialDis()
-    {
-        $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion   
-            FROM residenciales res
-            JOIN condominios con ON con.idResidencial = res.idResidencial
-            JOIN lotes lot ON lot.idCondominio = con.idCondominio
-            WHERE lot.idStatusLote in(1) 
-            GROUP BY res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100))
-            ORDER BY res.idResidencial");
-//        return $query->result();
-//		$query = $this->db->get();
-        return $query->result_array();
-    }
-
 
     public function getInventarioTodosc()
     {
@@ -727,23 +663,6 @@ class Asesor_model extends CI_Model {
         return $query->result();
     }
 
-    public function getInventarioXproyectoc($residencial)
-    {
-        $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion,
-			con.nombre as nombreCondominio, lot.nombreLote, lot.sup, con.msni as mesesn,
-			precio, total, porcentaje, enganche, saldo, lot.idLote
-            FROM residenciales res
-            JOIN condominios con ON con.idResidencial = res.idResidencial
-            JOIN lotes lot ON lot.idCondominio = con.idCondominio
-            WHERE lot.idStatusLote in(1) AND lot.status in(1) AND res.idResidencial=" . $residencial . "
-            GROUP BY res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)), con.nombre, lot.nombreLote,
-             lot.sup, con.msni,precio, total, porcentaje, enganche, saldo, lot.idLote
-            ORDER BY res.idResidencial");
-        return $query->result();
-
-
-    }
-
     function getModalidad()
     {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 28 AND estatus = 1 ORDER BY nombre");
@@ -753,9 +672,7 @@ class Asesor_model extends CI_Model {
     {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 30 AND estatus = 1 ORDER BY nombre");
     }
-    // function getTipoVenta(){
-    //     return $this->db->query("SELECT id_opcion, nombre FROM [sisfusion .[dboW.[opcs_x_catsHERE id_catalogo = 22 AND estatus = 1 ORDER BY nombre");
-    // }
+
     function getPlan()
     {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 29 AND estatus = 1 ORDER BY nombre");
@@ -834,15 +751,6 @@ class Asesor_model extends CI_Model {
                      u5.id_usuario,
                      autorizaciones.idLote");
         return $query->result();
-    }
-
-
-    public function editaRegistroLoteCaja($id, $dato)
-    {
-        $this->db->where("idLote", $id);
-        $this->db->update('lotes', $dato);
-        $this->db->join('cliente', 'lotes.idLote = cliente.idLote');
-        return true;
     }
 
     public function get_sol_aut()
@@ -1629,37 +1537,6 @@ class Asesor_model extends CI_Model {
         return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario)")->result_array();
     }
 
-    public function getAsesores2($idUsuario, $idSegundoAsesor)
-    {
-        return $this->db->query("SELECT id_usuario,  CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_rol IN (7,9) AND estatus IN (1,3) AND id_usuario NOT IN ($idUsuario, $idSegundoAsesor)")->result_array();
-    }
-
-    public function saveVentaCompartida($data)
-    {
-        $query = $this->db->insert('ventas_compartidas', $data);
-        return $query;
-    }
-
-    public function getAsesorData($idUsuario)
-    {
-        return $this->db->query("SELECT u.id_usuario asesor, u.id_rol, 
-        CASE u.id_rol WHEN 7 THEN coord.id_usuario ELSE 0 END coord,
-        CASE u.id_rol WHEN 7 THEN ger.id_usuario ELSE coord.id_usuario END ger,
-        CASE u.id_rol WHEN 7 THEN subdir.id_usuario ELSE ger.id_usuario END subdir,
-        CASE WHEN u.id_sede IN ('2', '3', '5', '6') THEN 0 ELSE CASE u.id_rol WHEN 7 THEN regional.id_usuario ELSE subdir.id_usuario END END regional
-        FROM usuarios u 
-        LEFT JOIN usuarios coord ON coord.id_usuario = u.id_lider
-        LEFT JOIN usuarios ger ON ger.id_usuario = coord.id_lider
-        LEFT JOIN usuarios subdir ON subdir.id_usuario = ger.id_lider
-        LEFT JOIN usuarios regional ON regional.id_usuario = subdir.id_lider
-        WHERE u.id_usuario = $idUsuario")->row();
-    }
-
-    public function updateFlagCompartida($id_cliente)
-    {
-        return $this->db->query("UPDATE clientes SET flag_compartida = 1 WHERE id_cliente = $id_cliente");
-    }
-
     public function getInfoCasasByLote($idLote){
         $query =  $this->db->query("SELECT id_lote,  tipo_casa FROM casas WHERE id_lote=".$idLote." AND estatus=1;");
         return $query->result_array();
@@ -1675,13 +1552,6 @@ class Asesor_model extends CI_Model {
         $lider_currentUser = $this->session->userdata('id_lider');
         $current_rol = $this->session->userdata('id_rol');
 
-//        print_r($id_currentUser);
-//        echo '<br>';
-//        print_r($lider_currentUser);
-//        echo '<br>';
-//        print_r($current_rol);
-//        echo '<br>';
-//        exit;
         $filter = '';
         switch ($current_rol) {
             case 1:

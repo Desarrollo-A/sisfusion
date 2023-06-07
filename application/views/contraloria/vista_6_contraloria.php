@@ -3,7 +3,7 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-    <?php $this->load->view('template/sidebar', $datos); ?>
+    <?php $this->load->view('template/sidebar', ''); ?>
 	<!-- modal para registrar corrida elaborada-->
 	<div class="modal fade " id="regCorrElab" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
@@ -260,27 +260,25 @@
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <div class="table-responsive">
-                                    <table  id="tabla_ingresar_6" name="tabla_ingresar_6"
-                                            class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>TIPO DE VENTA</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>GERENTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>F.MOD</th>
-                                                <th>F.VENC</th>
-                                                <th>UC</th>
-                                                <th>UBICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+								<table  id="tabla_ingresar_6" name="tabla_ingresar_6"
+										class="table-striped table-hover">
+									<thead>
+										<tr>
+											<th></th>
+											<th>TIPO DE VENTA</th>
+											<th>PROYECTO</th>
+											<th>CONDOMINIO</th>
+											<th>LOTE</th>
+											<th>GERENTE</th>
+											<th>CLIENTE</th>
+											<th>F.MOD</th>
+											<th>F.VENC</th>
+											<th>UC</th>
+											<th>UBICACIÓN</th>
+											<th>ACCIONES</th>
+										</tr>
+									</thead>
+								</table>
                             </div>
                         </div>
                     </div>

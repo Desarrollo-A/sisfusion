@@ -32,17 +32,8 @@ class Contraloria_model extends CI_Model {
 				WHERE cli.status = 1 AND cli.idLote = ".$lote);
     }
     function get_datos_lote_pagos($lote){
-        /* return $this->db->query('SELECT cli.id_cliente, cli.nombre, cli.apellido_paterno, cli.apellido_materno,
-		cli.idLote, lot.nombreLote, con.nombre as condominio, res.nombreResidencial,  lot.contratoArchivo 
-		FROM clientes cli
-		INNER JOIN lotes lot ON lot.idLote = cli.idLote
-		INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
-		WHERE cli.status = 1 AND cli.idLote = '.$lote);*/
-
         return $this->db-> query("SELECT idEnganche, historial_enganche.noRecibo, historial_enganche.engancheCliente,
  		historial_enganche.fechaEnganche, lotes.nombreLote, historial_enganche.usuario,
-
 	 	tipopago.tipo, cliente.nombre, cliente.apellido_paterno, 
 	 	cliente.apellido_materno, cliente.rfc, historial_enganche.concepto 
 	 	from historial_enganche 
@@ -53,7 +44,6 @@ class Contraloria_model extends CI_Model {
 
 
 
-//		 return $query->result_array();
     }
 
 
@@ -229,7 +219,7 @@ class Contraloria_model extends CI_Model {
 	public function registroStatusContratacion9 () {
 		$id_sede = $this->session->userdata('id_sede');
 		$id_usuario = $this->session->userdata('id_usuario');
-	    if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+	    if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -331,7 +321,7 @@ class Contraloria_model extends CI_Model {
     public function registroStatusContratacion10v2 () {
         $id_sede = $this->session->userdata('id_sede');
         $id_usuario = $this->session->userdata('id_usuario');
-        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
             $filtroSede = "";
         else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERRE Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -423,7 +413,7 @@ class Contraloria_model extends CI_Model {
     public function registroStatusContratacion15 () {
         $id_sede = $this->session->userdata('id_sede');
         $id_usuario = $this->session->userdata('id_usuario');
-        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
             $filtroSede = "";
         else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -1186,5 +1176,21 @@ class Contraloria_model extends CI_Model {
         WHERE lo.status = 1 $filtroEstatus --AND lo.idLote IN (83994, 66922, 53696, 53697, 81203, 55668, 63149, 51878, 58803)
         ORDER BY lo.nombreLote")->result_array();
     }
+
+    function getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where) {
+        $filter = "AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        return $this->db->query("SELECT re.nombreResidencial, re.descripcion, co.nombre nombreCondominio, lo.nombreLote, lo.referencia,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreUsuario,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, ISNULL(se.nombre, 'SIN ESPECIFICAR') nombreSede, 
+        CONVERT(varchar, hd.modificado, 105) fechaCargaContratoFirmado, CASE WHEN hd.expediente IS NULL THEN 'NO SE HA CARGADO CONTRATO' ELSE 'CONTRATO CARGADO' END estatusDocumento
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 $filter
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+        LEFT JOIN (SELECT * FROM historial_documento WHERE status = 1 AND tipo_doc = 30) hd ON hd.idLote = lo.idLote AND hd.idCliente = lo.idCliente
+        LEFT JOIN usuarios u0 ON u0.id_usuario = hd.idUser
+        WHERE lo.status = 1 AND lo.idStatusContratacion = 15 AND lo.idMovimiento = 45 AND lo.idStatusLote = 2")->result();
+	}
 
 }

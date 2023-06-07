@@ -281,7 +281,7 @@ class Caja_outside extends CI_Controller {
             $inicio = date("Y-m-01");
             $fin = date("Y-m-t");
             //$datosCondominio = $this->caja_model_aoutside->getDatosCondominio($data->idCondominio);
-                    if($data->tipo_lote == 1 ){ //1 - Comercial
+                    if($data->lotes[0]->tipo_lote == 1 ){ //1 - Comercial
                         //si el condominio es comercial solo consultar sin importar la superficie
                         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, $inicio, $fin);
                         $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
@@ -298,7 +298,7 @@ class Caja_outside extends CI_Controller {
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
                 $datos["activeLE"] = $data->activeLE;
-                $datos["tipo_lote"] = $data->tipo_lote;
+                $datos["tipo_lote"] = $data->lotes[0]->tipo_lote;
                 $datos["activeLP"] = $data->activeLP;
 
 
@@ -533,7 +533,7 @@ class Caja_outside extends CI_Controller {
             'id_subdirector' => $datosView->id_subdirector,
             'id_regional' => $datosView->id_regional,
             'id_regional_2' => $datosView->id_regional_2,
-            'id_sede' => $data['prospecto'][0]['id_sede'],
+            'id_sede' => $datosView->id_sede,
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
             'apellido_materno' => $data['prospecto'][0]['apellido_materno'],
@@ -1123,526 +1123,558 @@ class Caja_outside extends CI_Controller {
     }
 
 
-    public function insertarCliente()
-    {
+    public function insertarCliente(){
 
-        $data = json_decode(file_get_contents("php://input"));
-
+        $data = json_decode(file_get_contents("php://input"));   
+        
         $counter = 0;
         $res1 = array(); // SUCESS TRANSACTION
         $res2 = array(); // LOTE NO DISPONIBLE
         $res3 = array(); // ERROR AL INSERTAR EL CLIENTE
-
-        foreach ($data->lotes as $value) {
-            $arreglo = array();
-            $arreglo["idLote"] = $value->idLote;
-            $arreglo["idCondominio"] = $value->idCondominio;
-            $arreglo["engancheCliente"] = $value->pago;
-            $arreglo["noRecibo"] = $data->pago->recibo;
-            $arreglo["concepto"] = $data->concepto;
-            $arreglo["fechaEnganche"] = date('Y-m-d H:i:s');
-            $arreglo["usuario"] = $data->id_usuario;
-            if ($data->personalidad_juridica == 1) {
-                $arreglo["nombre"] = $data->propietarios[0]->nombre;
-                $arreglo["rfc"] = $data->propietarios[0]->rfc;
-            } else if ($data->personalidad_juridica == 2) {
-                $arreglo["nombre"] = $data->propietarios[0]->nombre;
-                $arreglo["apellido_paterno"] = $data->propietarios[0]->apellido_paterno;
-                $arreglo["apellido_materno"] = $data->propietarios[0]->apellido_materno;
+        
+         foreach($data->lotes as $value) {
+        
+        $arreglo=array();
+            
+        
+        
+        $arreglo["idLote"]=$value->idLote;
+        $arreglo["idCondominio"]=$value->idCondominio;
+        
+        
+        $arreglo["engancheCliente"]=$value->pago;
+        $arreglo["noRecibo"]=$data->pago->recibo;
+        $arreglo["concepto"]=$data->concepto;
+        $arreglo["fechaEnganche"]=date('Y-m-d H:i:s');
+        $arreglo["usuario"]=$data->id_usuario;
+        
+        
+        
+            if($data->personalidad_juridica == 1){
+        
+                $arreglo["nombre"]=$data->propietarios[0]->nombre;
+                $arreglo["rfc"]=$data->propietarios[0]->rfc;
+                
+            } else if ($data->personalidad_juridica == 2){
+            
+                $arreglo["nombre"]=$data->propietarios[0]->nombre;
+                $arreglo["apellido_paterno"]=$data->propietarios[0]->apellido_paterno;
+                $arreglo["apellido_materno"]=$data->propietarios[0]->apellido_materno;
+                    
             }
-
-            $arreglo["id_gerente"] = $data->id_gerente;
-            $arreglo["id_coordinador"] = $data->id_coordinador;
-            $arreglo["id_asesor"] = $data->id_asesor;
-            $arreglo["id_subdirector"] = $data->id_subdirector;
-            $arreglo["id_regional"] = $data->id_regional;
-            $arreglo["id_regional_2"] = $data->id_regional_2;
-            $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
-            $arreglo["personalidad_juridica"] = $data->personalidad_juridica;
-            $arreglo["id_sede"] = $data->id_sede;
+                
+            
+        
+        $arreglo["id_gerente"]=$data->asesores[0]->idGerente;
+        $arreglo["id_coordinador"]=$data->asesores[0]->idCoordinador;
+        $arreglo["id_asesor"]=$data->asesores[0]->idAsesor;
+        $arreglo["id_subdirector"] = $data->asesores[0]->id_subdirector;
+        $arreglo["id_regional"] = $data->asesores[0]->id_regional;
+        $arreglo["id_regional_2"] = $data->asesores[0]->id_regional_2;    
+        
+        $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
+        $arreglo["personalidad_juridica"]=$data->personalidad_juridica;
+        $arreglo["id_sede"]=$data->id_sede;
+        
+        
+        $fechaAccion = date("Y-m-d H:i:s");
+        $hoy_strtotime2 = strtotime($fechaAccion);
+        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+        
+        if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+         $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+         $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+         $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+         $sig_fecha_feriado2 == "25-12") {
+        
+        
+        $fecha = $fechaAccion;
+        
+        $i = 0;
+        while($i <= 46) {
+        $hoy_strtotime = strtotime($fecha);
+        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+        $sig_fecha_dia = date('D', $sig_strtotime);
+        $sig_fecha_feriado = date('d-m', $sig_strtotime);
+        
+        if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+         $sig_fecha_feriado == "25-12") {
+           }
+             else {
+                    $fecha= $sig_fecha;
+                     $i++;
+                  } 
+        $fecha = $sig_fecha;
+               }
+        
+        
+           $arreglo["fechaVencimiento"]= $fecha;
+        
+           }else{
+        
+        $fecha = $fechaAccion;
+        
+        $i = 0;
+        while($i <= 45) {
+        $hoy_strtotime = strtotime($fecha);
+        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+        $sig_fecha_dia = date('D', $sig_strtotime);
+        $sig_fecha_feriado = date('d-m', $sig_strtotime);
+        
+        if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+         $sig_fecha_feriado == "25-12") {
+           }
+             else {
+                    $fecha= $sig_fecha;
+                     $i++;
+                  } 
+        $fecha = $sig_fecha;
+               }
+        
+        
+           $arreglo["fechaVencimiento"]= $fecha;
+          
+        
+           }
+        
+        
+        
+        
+        $validateLote = $this->caja_model_outside->validate($value->idLote);
+        $disponibilidad =  ($validateLote==1) ? TRUE : FALSE;
+        
+        
+        if($disponibilidad == TRUE)
+        {
+              $idClienteInsert = $this->caja_model_outside->insertClient($arreglo);
+        
+        
+              if ($idClienteInsert){
+                  
+                  
+                  ////////////////// VENTA DE PARTICULARES 
+                  
+                 $vp = $this->caja_model_outside->validatep($value->idLote);
+                 $vp_v =  ($vp == 1) ? TRUE : FALSE;
+                    
+                    if($vp_v == TRUE){
+                      $updateLote["tipo_venta"] = 1;
+                    } else {
+                    
+                    }
+        
+                  /////////////////
+        
+                $updateLote=array();
+                $updateLote["idStatusContratacion"]= 1;
+                $updateLote["idStatusLote"]=3;
+                $updateLote["idMovimiento"]=31;
+                $updateLote["idCliente"]= $idClienteInsert[0]["lastId"];
+                $updateLote["comentario"]= 'OK';
+                $updateLote["usuario"]=$data->id_usuario;
+                $updateLote["perfil"]='caja';
+                $updateLote["modificado"]=date("Y-m-d H:i:s");
+                if (!isset($value->tipo_lote)) {
+                    
+                } else {
+                    
+                    $info = $this->caja_model_outside->getDatosLote($value->idLote);
+        
+                    
+                    if($value->tipo_lote == 'STELLA'){
+                            
+        
+                        
+                        if(
+                            $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
+                            $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
+                            $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' || 
+                            $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
+                            $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
+                            
+                            $value->nombre2 == 'CCMP-LIRIO-10' ||
+                            $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
+                            $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
+                            $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
+                        
+                        ){
+                            $total = $info->total;
+                            $updateLote["total"]= ($total + 2029185.00);
+                            $updateLote["enganche"]= ($updateLote["total"] * 0.1);
+                            $updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
+                            $updateLote["precio"]= ($updateLote["total"] / $info->sup);
+        
+                        
+                        } else {
+                            
+                            $total = $info->total;
+                            $updateLote["total"]= ($total + 2104340.00);
+                            $updateLote["enganche"]= ($updateLote["total"] * 0.1);
+                            $updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
+                            $updateLote["precio"]= ($updateLote["total"] / $info->sup);
+        
+                        
+                        }
+                        
+                        $updateLote["nombreLote"]=$value->nombre;
+        
+        
+                    } else if($value->tipo_lote == 'AURA'){
+                                        
+                        if(
+        
+                            $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
+                            $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
+                            $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' || 
+                            $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
+                            $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
+                            
+                            $value->nombre2 == 'CCMP-LIRIO-10' ||
+                            $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
+                            $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
+                            $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
+                        
+                        ){
+                            $total = $info->total;
+                            $updateLote["total"]= ($total + 1037340.00);
+                            $updateLote["enganche"]= ($updateLote["total"] * 0.1);
+                            $updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
+                            $updateLote["precio"]= ($updateLote["total"] / $info->sup);
+        
+                        } else {
+                                        
+                            $total = $info->total;
+                            $updateLote["total"]= ($total + 1075760.00);
+                            $updateLote["enganche"]= ($updateLote["total"] * 0.1);
+                            $updateLote["saldo"]= ($updateLote["total"] - $updateLote["enganche"]);
+                            $updateLote["precio"]= ($updateLote["total"] / $info->sup);
+        
+                        }
+                        
+                        
+                        $updateLote["nombreLote"]=$value->nombre;
+        
+        
+                    } else if($value->tipo_lote == 'TERRENO'){
+                        
+                            $t= (($info->precio + 500) * $info->sup);
+                            $e= ($t * 0.1);
+                            $s= ($t - $e);
+                            $m2= ($t / $info->sup);
+        
+                            
+                            $updateLote["total"]= $t;
+                            $updateLote["enganche"]= $e;
+                            $updateLote["saldo"]= $s;
+                            $updateLote["precio"]= $m2;
+                        
+                    }
+                    
+                
+                }
+            
+            date_default_timezone_set('America/Mexico_City');
+            $horaActual = date('H:i:s');
+            $horaInicio = date("08:00:00");
+            $horaFin = date("16:00:00");
+            
+            if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                $sig_fecha_feriado2 == "25-12") {
-                $fecha = $fechaAccion;
-
-                $i = 0;
-                while ($i <= 46) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVencimiento"] = $fecha;
-            } else {
-
-                $fecha = $fechaAccion;
-
-                $i = 0;
-                while ($i <= 45) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-
-
-                $arreglo["fechaVencimiento"] = $fecha;
-
-
+              $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                 $sig_fecha_feriado2 == "25-12") {
+            
+            
+            
+            $fecha = $fechaAccion;
+            $i = 0;
+                while($i <= 6) {
+              $hoy_strtotime = strtotime($fecha);
+              $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+              $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+              $sig_fecha_dia = date('D', $sig_strtotime);
+                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+            
+              if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+                 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                 $sig_fecha_feriado == "25-12") {
+                   }
+                     else {
+                            $fecha= $sig_fecha;
+                             $i++;
+                          } 
+                $fecha = $sig_fecha;
+                       }
+                   $updateLote["fechaVenc"]= $fecha;
+        
+                   }else{
+            
+            $fecha = $fechaAccion;
+            
+            $i = 0;
+            
+                while($i <= 5) {
+            
+              $hoy_strtotime = strtotime($fecha);
+              $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+              $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+              $sig_fecha_dia = date('D', $sig_strtotime);
+                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+            
+              if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+                 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                 $sig_fecha_feriado == "25-12") {
+                   }
+                     else {
+                            $fecha= $sig_fecha;
+                             $i++;
+                          } 
+            
+                $fecha = $sig_fecha;
+            
+                       }
+            
+                   $updateLote["fechaVenc"]= $fecha;
+            
+                   }
+            
+            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+              $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            
+            
+            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                 $sig_fecha_feriado2 == "25-12") {
+            
+            $fecha = $fechaAccion;
+            
+            $i = 0;
+            
+                while($i <= 6) {
+              $hoy_strtotime = strtotime($fecha);
+              $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+              $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+              $sig_fecha_dia = date('D', $sig_strtotime);
+                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+            
+              if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+                 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                 $sig_fecha_feriado == "25-12") {
+                   }
+                     else {
+                            $fecha= $sig_fecha;
+                             $i++;
+                          } 
+            
+                $fecha = $sig_fecha;
+            
+                       }
+            
+                   $updateLote["fechaVenc"]= $fecha;
+            
+                   }else{
+            
+            $fecha = $fechaAccion;
+            
+            $i = 0;
+            
+                while($i <= 6) {
+              $hoy_strtotime = strtotime($fecha);
+              $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+              $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+              $sig_fecha_dia = date('D', $sig_strtotime);
+                $sig_fecha_feriado = date('d-m', $sig_strtotime);
+            
+              if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+                 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                 $sig_fecha_feriado == "25-12") {
+                   }
+                     else {
+                            $fecha= $sig_fecha;
+                             $i++;
+                          } 
+                $fecha = $sig_fecha;
+                       }
+        
+                 $updateLote["fechaVenc"]= $fecha;
+            
+                   }
+            
             }
-
-
-            $validateLote = $this->caja_model_outside->validate($value->idLote);
-            $disponibilidad = ($validateLote == 1) ? TRUE : FALSE;
-
-
-            if ($disponibilidad == TRUE) {
-                $idClienteInsert = $this->caja_model_outside->insertClient($arreglo);
-
-
-                if ($idClienteInsert) {
-
-
-                    ////////////////// VENTA DE PARTICULARES
-
-                    $vp = $this->caja_model_outside->validatep($value->idLote);
-                    $vp_v = ($vp == 1) ? TRUE : FALSE;
-
-                    if ($vp_v == TRUE) {
-                        $updateLote["tipo_venta"] = 1;
-                    } else {
-
+        
+        
+            $nomLote = $this->caja_model_outside->getNameLote($value->idLote);
+        
+            
+                $arreglo2=array();
+                $arreglo2["idStatusContratacion"]= 1;
+                $arreglo2["idMovimiento"]=31;
+                $arreglo2["nombreLote"]= $nomLote->nombreLote;
+                $arreglo2["comentario"]= 'OK';
+                $arreglo2["usuario"]= $data->id_usuario;
+                $arreglo2["perfil"]= 'caja';
+                $arreglo2["modificado"]=date("Y-m-d H:i:s");
+                $arreglo2["fechaVenc"]= date('Y-m-d H:i:s');
+                $arreglo2["idLote"]= $value->idLote;  
+                $arreglo2["idCondominio"]= $value->idCondominio;          
+                $arreglo2["idCliente"]= $idClienteInsert[0]["lastId"];          
+        
+        
+                if($data->personalidad_juridica == 1){
+        
+                    $tipoDoc = $this->caja_model_outside->getDocsByType(32);
+                    foreach ($tipoDoc AS $arrayDocs){
+                          $arrayDocs = array(
+                            'movimiento' => $arrayDocs["nombre"],
+                            'idCliente' => $idClienteInsert[0]["lastId"],
+                            'idCondominio' => $value->idCondominio,
+                            'idLote' => $value->idLote,
+                            'tipo_doc' => $arrayDocs["id_opcion"]
+                          );
+                          $this->caja_model_outside->insertDocToHist($arrayDocs);
                     }
-
-                    /////////////////
-
-                    $updateLote = array();
-                    $updateLote["idStatusContratacion"] = 1;
-                    $updateLote["idStatusLote"] = 3;
-                    $updateLote["idMovimiento"] = 31;
-                    $updateLote["idCliente"] = $idClienteInsert[0]["lastId"];
-                    $updateLote["comentario"] = 'OK';
-                    $updateLote["usuario"] = $data->id_usuario;
-                    $updateLote["perfil"] = 'caja';
-                    $updateLote["modificado"] = date("Y-m-d H:i:s");
-                    if (!isset($value->tipo_lote)) {
-
-                    } else {
-
-                        $info = $this->caja_model_outside->getDatosLote($value->idLote);
-
-
-                        if ($value->tipo_lote == 'STELLA') {
-
-
-                            if (
-                                $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
-                                $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
-                                $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' ||
-                                $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
-                                $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
-
-                                $value->nombre2 == 'CCMP-LIRIO-10' ||
-                                $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
-                                $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
-                                $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
-
-                            ) {
-                                $total = $info->total;
-                                $updateLote["total"] = ($total + 2029185.00);
-                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
-                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
-                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
-
-
-                            } else {
-
-                                $total = $info->total;
-                                $updateLote["total"] = ($total + 2104340.00);
-                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
-                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
-                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
-
-
-                            }
-
-                            $updateLote["nombreLote"] = $value->nombre;
-
-
-                        } else if ($value->tipo_lote == 'AURA') {
-
-                            if (
-
-                                $value->nombre2 == 'CCMP-LAMAY-011' || $value->nombre2 == 'CCMP-LAMAY-021' || $value->nombre2 == 'CCMP-LAMAY-030' ||
-                                $value->nombre2 == 'CCMP-LAMAY-031' || $value->nombre2 == 'CCMP-LAMAY-032' || $value->nombre2 == 'CCMP-LAMAY-045' ||
-                                $value->nombre2 == 'CCMP-LAMAY-046' || $value->nombre2 == 'CCMP-LAMAY-047' || $value->nombre2 == 'CCMP-LAMAY-054' ||
-                                $value->nombre2 == 'CCMP-LAMAY-064' || $value->nombre2 == 'CCMP-LAMAY-079' || $value->nombre2 == 'CCMP-LAMAY-080' ||
-                                $value->nombre2 == 'CCMP-LAMAY-090' || $value->nombre2 == 'CCMP-LIRIO-010' ||
-
-                                $value->nombre2 == 'CCMP-LIRIO-10' ||
-                                $value->nombre2 == 'CCMP-LIRIO-033' || $value->nombre2 == 'CCMP-LIRIO-048' || $value->nombre2 == 'CCMP-LIRIO-049' ||
-                                $value->nombre2 == 'CCMP-LIRIO-067' || $value->nombre2 == 'CCMP-LIRIO-089' || $value->nombre2 == 'CCMP-LIRIO-091' ||
-                                $value->nombre2 == 'CCMP-LIRIO-098' || $value->nombre2 == 'CCMP-LIRIO-100'
-
-                            ) {
-                                $total = $info->total;
-                                $updateLote["total"] = ($total + 1037340.00);
-                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
-                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
-                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
-
-                            } else {
-
-                                $total = $info->total;
-                                $updateLote["total"] = ($total + 1075760.00);
-                                $updateLote["enganche"] = ($updateLote["total"] * 0.1);
-                                $updateLote["saldo"] = ($updateLote["total"] - $updateLote["enganche"]);
-                                $updateLote["precio"] = ($updateLote["total"] / $info->sup);
-
-                            }
-
-
-                            $updateLote["nombreLote"] = $value->nombre;
-
-
-                        } else if ($value->tipo_lote == 'TERRENO') {
-
-                            $t = (($info->precio + 500) * $info->sup);
-                            $e = ($t * 0.1);
-                            $s = ($t - $e);
-                            $m2 = ($t / $info->sup);
-
-
-                            $updateLote["total"] = $t;
-                            $updateLote["enganche"] = $e;
-                            $updateLote["saldo"] = $s;
-                            $updateLote["precio"] = $m2;
-
-                        }
-
-
+        
+                    
+                } else if ($data->personalidad_juridica == 2){
+                
+                    $tipoDoc = $this->caja_model_outside->getDocsByType(31);
+                    foreach ($tipoDoc AS $arrayDocs){
+                          $arrayDocs = array(
+                            'movimiento' => $arrayDocs["nombre"],
+                            'idCliente' => $idClienteInsert[0]["lastId"],
+                            'idCondominio' => $value->idCondominio,
+                            'idLote' => $value->idLote,
+                            'tipo_doc' => $arrayDocs["id_opcion"]
+                          );
+                          $this->caja_model_outside->insertDocToHist($arrayDocs);
+        
                     }
-
-                    date_default_timezone_set('America/Mexico_City');
-                    $horaActual = date('H:i:s');
-                    $horaInicio = date("08:00:00");
-                    $horaFin = date("16:00:00");
-
-                    if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-
-                        $fechaAccion = date("Y-m-d H:i:s");
-                        $hoy_strtotime2 = strtotime($fechaAccion);
-                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-                        if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                            $sig_fecha_feriado2 == "25-12") {
-
-
-                            $fecha = $fechaAccion;
-                            $i = 0;
-                            while ($i <= 6) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                } else {
-                                    $fecha = $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-                            $updateLote["fechaVenc"] = $fecha;
-
-                        } else {
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-
-                            while ($i <= 5) {
-
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                } else {
-                                    $fecha = $sig_fecha;
-                                    $i++;
-                                }
-
-                                $fecha = $sig_fecha;
-
-                            }
-
-                            $updateLote["fechaVenc"] = $fecha;
-
+                        
+                }
+        
+        
+                $this->caja_model_outside->addClientToLote($value->idLote, $updateLote);
+                $this->caja_model_outside->insertLotToHist($arreglo2);
+         
+                $count = count($data->propietarios);
+                $propietarios = array_slice($data->propietarios, 1, $count);
+                    foreach($propietarios as $value) {
+                        $arreglo_propietarios=array();
+                        if($data->personalidad_juridica == 1){
+                            $arreglo_propietarios["nombre"]=$value->nombre;
+                            $arreglo_propietarios["rfc"]=$value->rfc;
+        
+                            $arreglo_propietarios["id_cliente"]=$idClienteInsert[0]["lastId"];
+        
+                        } else if ($data->personalidad_juridica == 2){
+                            $arreglo_propietarios["nombre"]=$value->nombre;
+                            $arreglo_propietarios["apellido_paterno"]=$value->apellido_paterno;
+                            $arreglo_propietarios["apellido_materno"]=$value->apellido_materno;
+        
+        
+                            $arreglo_propietarios["id_cliente"]=$idClienteInsert[0]["lastId"];
+                            $arreglo_propietarios["estatus"]=1;
+                            $arreglo_propietarios["creado_por"]=$data->id_usuario;
+        
                         }
-
-                    } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-
-                        $fechaAccion = date("Y-m-d H:i:s");
-                        $hoy_strtotime2 = strtotime($fechaAccion);
-                        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-
-                        if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                            $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                            $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                            $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                            $sig_fecha_feriado2 == "25-12") {
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-
-                            while ($i <= 6) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                } else {
-                                    $fecha = $sig_fecha;
-                                    $i++;
-                                }
-
-                                $fecha = $sig_fecha;
-
-                            }
-
-                            $updateLote["fechaVenc"] = $fecha;
-
-                        } else {
-
-                            $fecha = $fechaAccion;
-
-                            $i = 0;
-
-                            while ($i <= 6) {
-                                $hoy_strtotime = strtotime($fecha);
-                                $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                                $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                                $sig_fecha_dia = date('D', $sig_strtotime);
-                                $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                                if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                                    $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                                    $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                                    $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                                    $sig_fecha_feriado == "25-12") {
-                                } else {
-                                    $fecha = $sig_fecha;
-                                    $i++;
-                                }
-                                $fecha = $sig_fecha;
-                            }
-
-                            $updateLote["fechaVenc"] = $fecha;
-
-                        }
-
+                    
+                      $this->caja_model_outside->insert_coopropietarios($arreglo_propietarios);
+        
                     }
-
-
-                    $nomLote = $this->caja_model_outside->getNameLote($value->idLote);
-
-
-                    $arreglo2 = array();
-                    $arreglo2["idStatusContratacion"] = 1;
-                    $arreglo2["idMovimiento"] = 31;
-                    $arreglo2["nombreLote"] = $nomLote->nombreLote;
-                    $arreglo2["comentario"] = 'OK';
-                    $arreglo2["usuario"] = $data->id_usuario;
-                    $arreglo2["perfil"] = 'caja';
-                    $arreglo2["modificado"] = date("Y-m-d H:i:s");
-                    $arreglo2["fechaVenc"] = date('Y-m-d H:i:s');
-                    $arreglo2["idLote"] = $value->idLote;
-                    $arreglo2["idCondominio"] = $value->idCondominio;
-                    $arreglo2["idCliente"] = $idClienteInsert[0]["lastId"];
-
-
-                    if ($data->personalidad_juridica == 1) {
-
-                        $tipoDoc = $this->caja_model_outside->getDocsByType(32);
-                        foreach ($tipoDoc AS $arrayDocs) {
-                            $arrayDocs = array(
-                                'movimiento' => $arrayDocs["nombre"],
-                                'idCliente' => $idClienteInsert[0]["lastId"],
-                                'idCondominio' => $value->idCondominio,
-                                'idLote' => $value->idLote,
-                                'tipo_doc' => $arrayDocs["id_opcion"]
-                            );
-                            $this->caja_model_outside->insertDocToHist($arrayDocs);
-                        }
-
-
-                    } else if ($data->personalidad_juridica == 2) {
-
-                        $tipoDoc = $this->caja_model_outside->getDocsByType(31);
-                        foreach ($tipoDoc AS $arrayDocs) {
-                            $arrayDocs = array(
-                                'movimiento' => $arrayDocs["nombre"],
-                                'idCliente' => $idClienteInsert[0]["lastId"],
-                                'idCondominio' => $value->idCondominio,
-                                'idLote' => $value->idLote,
-                                'tipo_doc' => $arrayDocs["id_opcion"]
-                            );
-                            $this->caja_model_outside->insertDocToHist($arrayDocs);
-
-                        }
-
-                    }
-
-
-                    $this->caja_model_outside->addClientToLote($value->idLote, $updateLote);
-                    $this->caja_model_outside->insertLotToHist($arreglo2);
-
-                    $count = count($data->propietarios);
-                    $propietarios = array_slice($data->propietarios, 1, $count);
-                    foreach ($propietarios as $value) {
-                        $arreglo_propietarios = array();
-                        if ($data->personalidad_juridica == 1) {
-                            $arreglo_propietarios["nombre"] = $value->nombre;
-                            $arreglo_propietarios["rfc"] = $value->rfc;
-
-                            $arreglo_propietarios["id_cliente"] = $idClienteInsert[0]["lastId"];
-
-                        } else if ($data->personalidad_juridica == 2) {
-                            $arreglo_propietarios["nombre"] = $value->nombre;
-                            $arreglo_propietarios["apellido_paterno"] = $value->apellido_paterno;
-                            $arreglo_propietarios["apellido_materno"] = $value->apellido_materno;
-
-
-                            $arreglo_propietarios["id_cliente"] = $idClienteInsert[0]["lastId"];
-                            $arreglo_propietarios["estatus"] = 1;
-                            $arreglo_propietarios["creado_por"] = $data->id_usuario;
-
-                        }
-
-                        $this->caja_model_outside->insert_coopropietarios($arreglo_propietarios);
-
-                    }
-
+        
                     $countAs = count($data->asesores);
                     $asesores = array_slice($data->asesores, 1, $countAs);
-
-                    foreach ($asesores as $value) {
-
-                        $arreglo_asesores = array();
-                        $arreglo_asesores["id_gerente"] = $value->idGerente;
-                        $arreglo_asesores["id_coordinador"] = $value->idCoordinador == $value->idAsesor && $value->idAsesor != 7092 && $value->idAsesor != 6626 ? 0 : $value->idCoordinador;
-                        $arreglo_asesores["id_asesor"] = $value->idAsesor;
-                        $arreglo_asesores["id_subdirector"] = $value->idSubdirector;
-                        $arreglo_asesores["id_regional"] = $value->idRegional;
-                        $arreglo_asesores["id_regional_2"] = $value->idRegional2;
-                        $arreglo_asesores["id_cliente"] = $idClienteInsert[0]["lastId"];
-                        $arreglo_asesores["estatus"] = 1;
-                        $arreglo_asesores["creado_por"] = $data->id_usuario;
-
-                        $this->caja_model_outside->insert_vcompartidas($arreglo_asesores);
-
+                    
+                        foreach($asesores as $value) {
+                    
+                            $arreglo_asesores=array();
+                            $arreglo_asesores["id_gerente"]=$value->idGerente;
+                            $arreglo_asesores["id_coordinador"]= $value->idCoordinador == $value->idAsesor ? 0 : $value->idCoordinador;
+                            $arreglo_asesores["id_asesor"]=$value->idAsesor;
+                            $arreglo_asesores["id_cliente"]=$idClienteInsert[0]["lastId"];
+                            $arreglo_asesores["estatus"]=1;
+                            $arreglo_asesores["creado_por"]=$data->id_usuario;
+        
+                            $this->caja_model_outside->insert_vcompartidas($arreglo_asesores);
+                    
+                        }
+                
+                $res1[$counter] = 1;
+                /*$response['message'] = 'OK';
+                echo json_encode($response);  */      
+              }
+                    else {
+                        $res3[$counter] = 1;
+                      /*$response['message'] = 'ERROR';
+                      echo json_encode($response);*/
                     }
-
-                    $res1[$counter] = 1;
-                    /*$response['message'] = 'OK';
-                    echo json_encode($response);  */
+        
                 } else {
-                    $res3[$counter] = 1;
-                    /*$response['message'] = 'ERROR';
-                    echo json_encode($response);*/
-                }
-
-            } else {
-                $res2[$counter] = 1;
+                    $res2[$counter] = 1;
                 /*$response['message'] = 'ERROR';
                 echo json_encode($response);*/
+              }
+              $counter ++;
             }
-            $counter++;
+            if (count($res1) == count($data->lotes)) { // MJ: TODOS LOS LOTES SE APARTARON BIEN
+                    $response['Titulo'] = 'Apartado';
+                    $response['resultado'] = TRUE;
+                    $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');
+                    echo json_encode($response);
+                } else if (count($res2) >= 1 && count($res3) >= 1) { // MJ: ALGUNO DE LOS LOTES TUVO UN DETALLE
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'Error, verifica el estatus de los apartados.'
+                    );
+                    echo json_encode($dataError);
+                } else if (count($res2) == count($data->lotes)) { // MJ: LOS LOTES NO ESTABAN DISPONIBLES A LA HORA DE APARTAR
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'Error, lotes no disponibles a la hora de apartar.'
+                    );
+                    echo json_encode($dataError);
+                }
+                else if (count($res3) == count($data->lotes)) { // MJ: ERROR AL INSERTAR EL CLIENTE
+                    $dataError['ERROR'] = array(
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'Error, no se pudo insertar el cliente.'
+                    );
+                    echo json_encode($dataError);
+                }
         }
-        if (count($res1) == count($data->lotes)) { // MJ: TODOS LOS LOTES SE APARTARON BIEN
-            $response['Titulo'] = 'Apartado';
-            $response['resultado'] = TRUE;
-            $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');
-            echo json_encode($response);
-        } else if (count($res2) >= 1 && count($res3) >= 1) { // MJ: ALGUNO DE LOS LOTES TUVO UN DETALLE
-            $dataError['ERROR'] = array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error, verifica el estatus de los apartados.'
-            );
-            echo json_encode($dataError);
-        } else if (count($res2) == count($data->lotes)) { // MJ: LOS LOTES NO ESTABAN DISPONIBLES A LA HORA DE APARTAR
-            $dataError['ERROR'] = array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error, lotes no disponibles a la hora de apartar.'
-            );
-            echo json_encode($dataError);
-        } else if (count($res3) == count($data->lotes)) { // MJ: ERROR AL INSERTAR EL CLIENTE
-            $dataError['ERROR'] = array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error, no se pudo insertar el cliente.'
-            );
-            echo json_encode($dataError);
-        }
-    }
 
 // FIN DE  REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 
@@ -1877,10 +1909,12 @@ class Caja_outside extends CI_Controller {
                         $arreglo["telefono2"] = $data->propietarios->telefono;
 
                         $arreglo["personalidad_juridica"] = 2;
+                        
                         //INFORMACION DEL ASESOR
                         $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
                         $arreglo["id_coordinador"] = $voBoCoord;
                         $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+                        $arreglo["id_sede"] = $data->asesores[0]->id_sede;
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;

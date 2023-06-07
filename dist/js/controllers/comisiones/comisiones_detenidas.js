@@ -25,7 +25,7 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx - 1] + ' ';
@@ -41,7 +41,7 @@ $('#comisiones-detenidas-table').ready(function () {
             [10, 25, 50, "Todos"]
         ],
         language: {
-            url: general_base_url+'/static/spanishLoader_v2.json',
+            url: general_base_url + '/static/spanishLoader_v2.json',
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -51,25 +51,25 @@ $('#comisiones-detenidas-table').ready(function () {
         ordering: false,
         columns: [
             {
-               
+
                 'className': 'details-control',
                 'orderable': false,
-                'data' : null,
+                'data': null,
                 'defaultContent': `
                     <div class='toggle-subTable'>
                         <i class='animacion fas fa-chevron-down fa-lg'></i>
                     </div>
                 `
             },
-            {data:'nombreResidencial'},
-            {data:'nombreCondominio'},
-            {data: 'nombreLote' },
-            { data:'idLote'},
+            { data: 'nombreResidencial' },
+            { data: 'nombreCondominio' },
+            { data: 'nombreLote' },
+            { data: 'idLote' },
             {
                 data: function (d) {
                     if (d.tipo_venta == 1) {
                         return '<span class="label lbl-warning" style="color:#78281F;background:#F5B7B1;" >Venta Particular</span>';
-                    }else if (d.tipo_venta == 2) {
+                    } else if (d.tipo_venta == 2) {
                         return '<span class="label lbl-green" style="color:#186A3B;background:#ABEBC6;">Venta normal</span>';
                     } else if (d.tipo_venta == 7) {
                         return '<span class="label lbl-orangeYellow" style="color:#626567;background:#E5E7E9;">Venta especial</span>';
@@ -79,7 +79,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
             },
             {
-                data: function( d ){
+                data: function (d) {
                     if (d.compartida === null) {
                         return '<span class="label lbl-orangeYellow"  style="color:#7D6608;background:#F9E79F;">Individual</span>';
                     } else {
@@ -87,79 +87,90 @@ $('#comisiones-detenidas-table').ready(function () {
                     }
                 }
             },
-            { data: function (d) {
-                var labelStatus;
-                if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
-                }else {
-                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-                }
-                return labelStatus;
-            }},
-            { data: function (d) {
-                var labelEstatus;
-                if(d.totalNeto2 == null) {
-                    labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
-                }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
-                }else {
-                    labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
-                }
-                return labelEstatus;
-            }},
-            { data: function (d) {
-                var fechaSistema;
-                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                }else {
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-                }
-                return fechaSistema;
-            }},
-            { data: function (d) {
-                var fechaNeodata;
-                var rescisionLote;
-                fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
-                rescisionLote = '';
-                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                } 
-                if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
-                }
-                return fechaNeodata+rescisionLote;
-            }},
             {
                 data: function (d) {
-                        let motivo ;
-                        let color ;
-                        if(d.motivo == 1 || d.motivo == 2 || d.motivo == 3){
-                            if(d.motivo == 1){  color  = 'lbl-azure';}else if(d.motivo == 2){  color  = 'lbl-brown';}
-                            motivo = d.motivoOpc;
-                        }else  {
-                            color = 'lbl-azure';
-                            motivo = d.motivo;
-                        }
-                    return '<span class="label '+color+'">'+motivo+'</span>';
+                    var labelStatus;
+                    if (d.idStatusContratacion == 15) {
+                        labelStatus = '<span class="label" style="color:#512E5F;background:#D7BDE2;">Contratado</span>';
+                    } else {
+                        labelStatus = '<p class="m-0"><b>' + d.idStatusContratacion + '</b></p>';
+                    }
+                    return labelStatus;
                 }
             },
             {
                 data: function (d) {
-                    if(id_rol_general != 63 && id_rol_general != 4){
-
-                        return `
-                            <div class="d-flex justify-center">
-                                <button value="${d.idLote}" data-value="${d.nombreLote}"
-                                    class="btn-data btn-blueMaderas btn-cambiar-estatus"
-                                    title="Detener">
-                                    <i class="material-icons">undo</i>
-                                </button>
-                            </div>
-                        `;
-                        } else{
-                        return 'NA';
+                    var labelEstatus;
+                    if (d.totalNeto2 == null) {
+                        labelEstatus = '<p class="m-0"><b>Sin Precio Lote</b></p>';
+                    } else if (d.registro_comision == 2) {
+                        labelEstatus = '<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>' + ' ' + d.plan_descripcion;
+                    } else {
+                        labelEstatus = `<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                    }
+                    return labelEstatus;
+                }
+            },
+            {
+                data: function (d) {
+                    var fechaSistema;
+                    if (d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null) {
+                        fechaSistema = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    } else {
+                        fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">' + d.fecha_sistema + '</span>';
+                    }
+                    return fechaSistema;
+                }
+            },
+            {
+                data: function (d) {
+                    var fechaNeodata;
+                    var rescisionLote;
+                    fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">' + d.fecha_neodata + '</span>';
+                    rescisionLote = '';
+                    if (d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null) {
+                        fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    }
+                    if (d.registro_comision == 8) {
+                        rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
+                    }
+                    return fechaNeodata + rescisionLote;
+                }
+            },
+            {
+                data: function (d) {
+                    let motivo;
+                    let color;
+                    if (d.motivo == 1 || d.motivo == 2 || d.motivo == 3) {
+                        if (d.motivo == 1) { color = 'lbl-azure'; } else if (d.motivo == 2) { color = 'lbl-brown'; }
+                        motivo = d.motivoOpc;
+                    } else {
+                        color = 'lbl-azure';
+                        motivo = d.motivo;
+                    }
+                    return '<span class="label ' + color + '">' + motivo + '</span>';
+                }
+            },
+            {
+                data: function (d) {
+                    let botton = '';
+                    if (id_rol_general != 63 && id_rol_general != 4) {
+                        if(d.motivo == 1){
+                            botton = ` <div class="d-flex justify-center">
+                            <button value="${d.idLote}" data-value="${d.nombreLote}"
+                                class="btn-data btn-blueMaderas btn-cambiar-estatus"
+                                title="Detener">
+                                <i class="material-icons">undo</i>
+                            </button>
+                        </div>`;
+                        }else{
+                            botton = ``;
                         }
-                   
+                        return botton;
+                    } else {
+                        return 'NA';
+                    }
+
                 }
             }
         ],
@@ -168,11 +179,11 @@ $('#comisiones-detenidas-table').ready(function () {
             searchable: false
         }],
         ajax: {
-            'url': general_base_url+'Comisiones/getStoppedCommissions',
+            'url': general_base_url + 'Comisiones/getStoppedCommissions',
             'dataSrc': '',
             'type': 'GET',
             cache: false,
-            'data': function (d) {}
+            'data': function (d) { }
         },
     });
 
@@ -216,7 +227,7 @@ $('#comisiones-detenidas-table').ready(function () {
             data: data,
             contentType: false,
             cache: false,
-            processData:false,
+            processData: false,
             success: function (data) {
                 if (data) {
                     $('#estatus-modal').modal("hide");
@@ -227,7 +238,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
                 }
             },
-            error: function(){
+            error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });

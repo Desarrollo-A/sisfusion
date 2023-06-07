@@ -19,13 +19,13 @@ class VentasAsistentes_model extends CI_Model {
     //Función para traer proyecto por usuario
     function get_proyecto_lista_usu(){
         return $this->db->query('SELECT r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80)) descripcion 
-                                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
-                                    INNER JOIN lotes l ON l.idCliente = cli.id_cliente
-                                    INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
-                                    INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
-                                WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1
-                                GROUP BY r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80))
-                                ORDER BY CAST(r.descripcion AS varchar(80))');
+                FROM clientes cli INNER JOIN usuarios u ON cli.id_asesor = u.id_usuario
+                INNER JOIN lotes l ON l.idCliente = cli.id_cliente
+                INNER JOIN condominios con ON con.idCondominio = cli.idCondominio
+                INNER JOIN residenciales r ON con.idResidencial = r.idResidencial
+                WHERE u.id_usuario = ' . $this->session->userdata('id_usuario') . ' AND r.status = 1
+                GROUP BY r.idResidencial, r.nombreResidencial, CAST(r.descripcion AS varchar(80))
+                ORDER BY CAST(r.descripcion AS varchar(80))');
     }
 
     //Función para traer condominio por usuario
@@ -104,6 +104,8 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
@@ -124,7 +126,7 @@ class VentasAsistentes_model extends CI_Model {
             if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                 $filtroGerente = "AND cl.id_gerente = 690";
                 $filtroSede = "";
-            } else if (in_array($id_usuario, array(7097, 7096, 10924 7324, 5620))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+            } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
             
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
@@ -256,6 +258,8 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
+            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+                $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;

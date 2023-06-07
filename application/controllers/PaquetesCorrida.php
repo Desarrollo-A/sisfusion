@@ -404,7 +404,7 @@ class PaquetesCorrida extends CI_Controller
       $dataDescuentos = $this->PaquetesCorrida_model->getDescuentosByPlan($row[0]['id_paquete']);
 
       echo json_encode(array(array("paquetes" => $dataPaquetes,
-      "descuentos" => $dataDescuentos)));
+      "descuentos" => $dataDescuentos)),JSON_NUMERIC_CHECK);
     }
 
 }
