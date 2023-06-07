@@ -3155,62 +3155,7 @@ public function LiquidarLote(){
 
     /**--------------------------------------BONOS Y PRESTAMOS------------------------------------ */
   
-    public function savePrestamo()
-    {
-      $this->input->post("pago");
-      // $file = $_FILES["evidencia"];
-      $monto = $this->input->post("monto");
-      $NumeroPagos = $this->input->post("numeroP");
-      $IdUsuario = $this->input->post("usuarioid");
-      $comentario = $this->input->post("comentario");
-      $tipo = $this->input->post("tipo");
-      $idUsu = intval($this->session->userdata('id_usuario')); 
-      $pesos = str_replace(",", "", $monto);
 
-      $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
-     
-      // if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
-      // $aleatorio = rand(100,1000);
-      // $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
-      // $date = date('dmYHis');
-      // $expediente = $date."_".$aleatorio."_prestamo";
-      // $ruta = "static/documentos/evidencia_prestamo_auto/";
-
-      // if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
-      if(empty($dato)){
-              $pesos=str_replace("$", "", $monto);
-        $comas =str_replace(",", "", $pesos);
-        $pago = $comas;
-              $pagoCorresp = $pago / $NumeroPagos;
-        $pagoCorresReal = $pagoCorresp;
-              $insertArray = array(
-                'id_usuario'      => $IdUsuario,
-                'monto'           => $pago,
-                'num_pagos'       => $NumeroPagos, 
-                'pago_individual' => $pagoCorresReal,
-                'comentario'      => $comentario,
-                'estatus'         => 1,
-                'pendiente'       => 0,
-                'creado_por'      => $idUsu ,
-                'fecha_creacion'  => date("Y-m-d H:i:s"),
-                'modificado_por'  => $idUsu ,
-                'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                'tipo'            => $tipo,
-                // 'evidenciaDocs'    => "$expediente",
-                                );
-              $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
-              echo json_encode($respuesta);
-      }else{
-              $respuesta = 3;
-              echo json_encode($respuesta);
-      }
-      // }else{
-      //   $respuesta = 4;
-      //   echo json_encode($respuesta);
-      // }
-      // }
-
-    }
 
 
   public function TienePago($id){
@@ -3611,13 +3556,7 @@ public function LiquidarLote(){
     $this->load->view('template/header');
     $this->load->view("ventas/prestamos", $datos);
   }
-  public function getPrestamos()
-  {
-        
-   $res["data"] = $this->Comisiones_model->getPrestamos()->result_array();
-
-   echo json_encode($res);
- }
+ 
  public function getPrestamosXporUsuario(){
    
    $res["data"] = $this->Comisiones_model->getPrestamosXporUsuario()->result_array();
@@ -6126,25 +6065,13 @@ for ($d=0; $d <count($dos) ; $d++) {
         $result = $this->Comisiones_model->getPuestoByIdOpts('3,7,9');
         echo json_encode($result);
     }
-    public function getDetallePrestamo($idPrestamo)
-    {
-        $general = $this->Comisiones_model->getGeneralDataPrestamo($idPrestamo);
-        $detalle = $this->Comisiones_model->getDetailPrestamo($idPrestamo);
-        echo json_encode(array(
-            'general' => $general,
-            'detalle' => $detalle
-        ));
-    }
+  
     public function getPrestamosTable($mes=0, $anio=0)
     {
         $data = $this->Comisiones_model->getPrestamosTable($mes, $anio);
         echo json_encode(array('data' => $data));
     }
-    public function lista_estatus_descuentos()
-    {
-      echo json_encode($this->Comisiones_model->lista_estatus_descuentos()->result_array());
-    }
-
+  
     public function getTotalPagoFaltanteUsuario($usuarioId)
     {
         $data = $this->Comisiones_model->getTotalPagoFaltanteUsuario($usuarioId);
