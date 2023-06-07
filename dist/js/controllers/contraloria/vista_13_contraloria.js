@@ -45,7 +45,7 @@ $("#tabla_ingresar_13").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
+                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
                         }
                     }
                 }
@@ -98,18 +98,18 @@ $("#tabla_ingresar_13").ready(function () {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.gerente + '</p>';
-                }
-            },
-            {
-                data: function (d) {
                     return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                 }
             },
             {
                 data: function (d) {
+                    return '<p class="m-0">' + d.gerente + '</p>';
+                }
+            },
+            {
+                data: function (d) {
                     if (d.RL == null || d.RL == '') {
-                        return '<p class="m-0"> No definido  </p>';
+                        return '<p class="m-0"> NO DEFINIDO  </p>';
                     } else {
                         return '<p class="m-0">' + d.RL + '</p>';
                     }
@@ -127,7 +127,7 @@ $("#tabla_ingresar_13").ready(function () {
                     var cntActions;
 
                     if (data.vl == '1') {
-                        cntActions = 'En proceso de Liberación';
+                        cntActions = 'EN PROCESO DE LIBERACIÓN';
 
                     } else {
 

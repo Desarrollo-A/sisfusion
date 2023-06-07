@@ -98,12 +98,12 @@ $("#tabla_ingresar_15").ready(function () {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.gerente + '</p>';
+                    return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                 }
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                    return '<p class="m-0">' + d.gerente + '</p>';
                 }
             },
             {
@@ -116,7 +116,7 @@ $("#tabla_ingresar_15").ready(function () {
                 data: function (data) {
                     var cntActions;
                     if (data.vl == '1') {
-                        cntActions = 'En proceso de Liberación';
+                        cntActions = 'EN PROCESO DE LIBERACIÓN';
                     } else {
                         if (data.idStatusContratacion == 14 && data.idMovimiento == 44 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 69 ||
@@ -146,7 +146,6 @@ $("#tabla_ingresar_15").ready(function () {
             dataSrc: "",
             type: "POST",
             cache: false,
-            data: function (d) {}
         },
         order: [[1, 'asc']]
     });
@@ -203,7 +202,6 @@ $("#tabla_ingresar_15").ready(function () {
         }
     });
 
-
     $("#tabla_ingresar_15 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
@@ -218,7 +216,6 @@ $("#tabla_ingresar_15").ready(function () {
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
     });
-
 
     $("#tabla_ingresar_15 tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
@@ -235,7 +232,6 @@ $("#tabla_ingresar_15").ready(function () {
         $('#rechReg').modal('show');
     });
 });
-
 
 $(document).on('click', '#save1', function (e) {
     e.preventDefault();

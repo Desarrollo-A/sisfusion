@@ -8,7 +8,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 13 - <b><span class="lote"></span></b></label></h4></center>
+                    <h4 class="modal-title text-center"><label>Registro estatus 13 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>
@@ -30,7 +30,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        <center><b>¡IMPORTANTE!</b></center>
+                        <b class="text-center">¡IMPORTANTE!</b>
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -68,8 +68,8 @@
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
-                                            <th>GERENTE</th>
                                             <th>CLIENTE</th>
+                                            <th>GERENTE</th>
                                             <th>RL</th>
                                             <th>UBICACIÓN</th>
                                             <th>ACCIONES</th>

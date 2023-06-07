@@ -687,9 +687,11 @@ class Contraloria extends CI_Controller {
         );
 
         if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->registrolote_modelo->getRevision5($datos, $typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -698,8 +700,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function estatus10()
-    {
+    public function estatus10(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
@@ -709,9 +710,11 @@ class Contraloria extends CI_Controller {
 
     public function getRevision10(){
         if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->registrolote_modelo->getRevision10($typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -720,8 +723,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function rechazoJuridico()
-    {
+    public function rechazoJuridico(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
@@ -740,8 +742,7 @@ class Contraloria extends CI_Controller {
     }
 
 
-    public function getregistroStatus5ContratacionContraloria()
-    {
+    public function getregistroStatus5ContratacionContraloria(){
         $data = array();
         $data = $this->Contraloria_model->registroStatusContratacion5();
         if($data != null) {
@@ -761,11 +762,8 @@ class Contraloria extends CI_Controller {
         $comentario=$this->input->post('comentario');
         $modificado=date('Y-m-d H:i:s');
         $fechaVenc=$this->input->post('fechaVenc');
-
         $ubicacion=$this->input->post('ubicacion');
         $tipo_venta=$this->input->post('tipo_venta');
-
-
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= 5;

@@ -11,28 +11,25 @@ $('#Jtabla thead tr:eq(0) th').each( function (i) {
 });
 
 $(document).ready(function() {
-    $.ajax(
-        {
-            post: "POST",
-            url: `${general_base_url}/registroLote/getDateToday/`
-        }).done(function(data)
-    {
+    $.ajax({
+        post: "POST",
+        url: `${general_base_url}/registroLote/getDateToday/`
+    }).done(function(data) {
         $('#showDate').append('(Envio de contrato a RL (Contraloría) al día de hoy: ' + data + ')');
-    }).fail(function()
-    {
-
-    });
+    }).fail(function(){});
 
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillDataTable(1, finalBeginDate, finalEndDate, 0);
 });
-
 
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
-            format: 'MM/DD/YYYY',
+            format: 'DD/MM/YYYY',
             icons: {
                 time: "fa fa-clock-o",
                 date: "fa fa-calendar",
@@ -49,41 +46,20 @@ sp = { //  SELECT PICKER
     }
 }
 
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-
-    var finalBeginDate2 = [ ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2), beginDate.getFullYear()].join('/');
-    var finalEndDate2 = [ ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2), endDate.getFullYear()].join('/');
-    $("#beginDate").val(finalBeginDate2);
-    $("#endDate").val(finalEndDate2);
-    fillDataTable(1, finalBeginDate, finalEndDate, 0);
-}
-
 function fillDataTable(typeTransaction, beginDate, endDate, where) {
-
     var table = $('#Jtabla').dataTable( {
-        "ajax":
-            {
-                "url": `${general_base_url}index.php/contraloria/getRevision10`,
-                "dataSrc": "",
-                "type": "POST",
-                cache: false,
-                data: {
-                    "typeTransaction": typeTransaction,
-                    "beginDate": beginDate,
-                    "endDate": endDate,
-                    "where": where
-                }
-            },
+        "ajax": {
+            "url": `${general_base_url}index.php/contraloria/getRevision10`,
+            "dataSrc": "",
+            "type": "POST",
+            cache: false,
+            data: {
+                "typeTransaction": typeTransaction,
+                "beginDate": beginDate,
+                "endDate": endDate,
+                "where": where
+            }
+        },
         "pageLength": 10,
         "bAutoWidth": false,
         "fixedColumns": true,
@@ -157,14 +133,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             {
                 data: function (data)
                 {
-                    return myFunctions.validateEmptyField(data.gerente);
-
-                }
-            },
-            {
-                data: function (data)
-                {
-                    return myFunctions.validateEmptyField(data.coordinador);
+                    return myFunctions.validateEmptyField(data.nombreUsuario);
 
                 }
             },
@@ -178,7 +147,14 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             {
                 data: function (data)
                 {
-                    return myFunctions.validateEmptyField(data.nombreUsuario);
+                    return myFunctions.validateEmptyField(data.coordinador);
+
+                }
+            },
+            {
+                data: function (data)
+                {
+                    return myFunctions.validateEmptyField(data.gerente);
 
                 }
             },

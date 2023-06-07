@@ -11,7 +11,6 @@
 		$this->load->view('template/sidebar', $datos);
 	?>
 	<!--Contenido de la página-->
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -22,8 +21,14 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">10. Solicitud de validación de enganche </h3>
-                                <p class="card-title pl-1" id="showDate"></p>
+                                <div class="row">
+                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <h3 class="card-title center-align">10. Solicitud de validación de enganche </h3>
+                                    </div>
+                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <p class="card-title center-align pl-1" id="showDate"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">
@@ -53,17 +58,15 @@
                                             <th>LOTE</th>
                                             <th>REFERENCIA</th>
                                             <th>CLIENTE</th>
-                                            <th>GERENTE</th>
-                                            <th>COORDINADOR</th>
-                                            <th>ASESOR</th>
                                             <th>USUARIO</th>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
                                             <th>FECHA APARTADO</th>
                                             <th>FECHA REALIZADO</th>
                                             <th>FECHA VENICMIENTO</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
