@@ -9,7 +9,7 @@ function cleanCommentsAsimilados() {
 
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
-    $.post(general_base_url+"/Comisiones/lista_roles", function (data) {
+    $.post(general_base_url+"/Pagos/lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -461,7 +461,7 @@ function getAssimilatedCommissions(proyecto, condominio){
 
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+"Pagos/getComments/", {id_pago: id_pago } ).done( function( data ){
+        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
             });
@@ -613,7 +613,7 @@ $(document).on("click", ".Pagar", function() {
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
 
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/",{proyect:valorSeleccionado,  formap:3}).done(function(data) {
+        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
             console.log(data[0]);
             if (!data) {
@@ -685,9 +685,6 @@ $("#form_refresh").submit( function(e) {
     }
 });
 
-$(document).on("click", ".btn-historial-lo", function(){
-    window.open(general_base_url+"Comisiones/getHistorialEmpresa", "_blank");
-});
 
 
 function cleanComments(){

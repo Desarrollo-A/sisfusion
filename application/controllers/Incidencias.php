@@ -126,7 +126,8 @@ class Incidencias extends CI_Controller
       
     public function UpdateInventarioClient(){
       $usuarioOld=0;
-      $asesor=$this->input->post('asesor');
+      $banderaSubRegional = 2;
+      $asesor=$this->input->post('asesor'); 
       $coordinador = $this->input->post('coordinador');
       $gerente = $this->input->post('gerente');
 
@@ -138,24 +139,45 @@ class Incidencias extends CI_Controller
       $comentario=$this->input->post('comentario3');
       $idLote=$this->input->post('idLote');
       $idCliente=$this->input->post('idCliente');
-  
+
       if($rolSelect == 7){
         $usuarioOld=$asesor;
+        
       }else if($rolSelect == 9){
         $usuarioOld=$coordinador;
+        
       }else if($rolSelect == 3){
         $usuarioOld=$gerente;
-  
+        
       }else if($rolSelect == 2){
         $usuarioOld=$subdirector;
-  
+        $TieneRegional = $this->Incidencias_model->tieneRegional1($subdirector);
+      
+        if(count($TieneRegional) != 0 ){
+            $banderaSubRegional = 1;
+         
+          }else{
+     
+          }
+
       }
       else if($rolSelect == 59){
         $usuarioOld=$regional;
-  
+        
       }
-      $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario));
-  
+   
+      $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional, $regional));
+       
+    
+      if (  $banderaSubRegional == 1){
+     
+        $rolSelect = 59;
+        $newColab  = 0;
+        $usuarioOld = $regional;
+        $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional, $regional));
+      }
+      
+     
       echo json_encode($respuesta[0]);
     }
 
@@ -268,28 +290,13 @@ public function ToparComision($id_comision,$idLote = '')
     public function tieneRegional()
     {
       $bandera = false;
-      
        $usuario = $this->input->post("usuario");
-
-      // $ids = [];
-      // $id_usuarios = $this->Incidencias_model->tieneRegional();
-      // foreach($id_usuarios as $id_usuario)
-      // {
-      //  array_push($ids , $id_usuario["id_usuario"]);
-      
-      // }
-      // $ins =  implode(",", $ids);
-      // $mandar = " in ( $ins ) ";
-
-       $regionals = $this->Incidencias_model->tieneRegional1($usuario);       
-
-        
+       $regionals = $this->Incidencias_model->tieneRegional1($usuario); 
       if(count($regionals) > 0 ){
         $bandera = $regionals;      
       }else{
         $bandera = false;      
       }
-
       echo json_encode( $bandera );
     }
 
