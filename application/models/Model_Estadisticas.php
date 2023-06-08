@@ -1587,11 +1587,6 @@ AS Gerencia,
                 ORDER BY MONTH(c.fecha_creacion)");
 	}
 
-	function get_subdirs(){
-		return $this->db->query("SELECT id_usuario as id_subdir, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) AS nombre_subdir FROM usuarios 
-        WHERE id_rol = 2 AND estatus = 1");
-	}
-
 	function get_all_places(){
 		return $this->db->query("SELECT lugar_prospeccion, 
         (CASE WHEN lugar_prospeccion = 1 THEN 'Call Picker' WHEN lugar_prospeccion = 2 THEN 'Correo electrónico' 
