@@ -16,6 +16,8 @@ class Contraloria extends CI_Controller {
         $this->load->library('phpmailer_lib');
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -24,13 +26,8 @@ class Contraloria extends CI_Controller {
         {
             redirect(base_url().'login');
         }
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-
         $this->load->view('template/header');
-        // $this->load->view('template/inicio_contraloria_view',$datos);
-        $this->load->view('template/home',$datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
 
@@ -2726,9 +2723,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function liberacion_contraloria(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view("contraloria/vista_liberacion_contraloria", $datos);
