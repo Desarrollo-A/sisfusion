@@ -56,9 +56,6 @@ class Cobranza extends CI_Controller
         echo json_decode($response);
     }
 
-
-    
-        /*********************/
     public function report_prospects(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
@@ -196,9 +193,8 @@ class Cobranza extends CI_Controller
             $beginDate = '';
         } else
             $idLote = '';
-       
         $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
-         echo json_encode($data);
+        echo json_encode($data);
     }
 
     public function getComments($pago){

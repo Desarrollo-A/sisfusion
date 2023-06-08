@@ -34,7 +34,8 @@ class General extends CI_Controller
 
     function getCondominiosList()
     {
-        $data = $this->General_model->getCondominiosList($this->input->post("idResidencial"));
+        $idResidencial = $this->input->post("idResidencial");
+        $data = $this->General_model->getCondominiosList($idResidencial);
         if ($data != null)
             echo json_encode($data);
         else
