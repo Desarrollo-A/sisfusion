@@ -200,8 +200,8 @@ function setIniDatesXMonth(inicioFecha, finFecha) {
     endDate.getFullYear(),
   ].join("/");
 
-  $("" + inicioFecha + "").val(finalBeginDate);
-  $("" + finFecha + "").val(finalEndDate);
+  $("" + inicioFecha + "").val(finalBeginDate2);
+  $("" + finFecha + "").val(finalEndDate2);
 }
 
 function remplazarCaracter(text, busca, reemplaza) {

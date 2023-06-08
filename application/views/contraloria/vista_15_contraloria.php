@@ -8,10 +8,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 15 - <b><span class="lote"></span></b></label></h4></center>
+                    <h4 class="modal-title text-center"><label>Registro estatus 15 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <label>Comentario</label>
                         <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         <br>
@@ -27,13 +27,12 @@
     </div>
     <!-- modal -->
 
-
     <!-- modal  rechazar A CONTRALORIA 7-->
     <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Rechazo estatus 15 - <b><span class="lote"></span></b></label></h4></center>
+                    <h4 class="modal-title text-center"><label>Rechazo estatus 15 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>
@@ -54,7 +53,7 @@
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="fas fa-expand fa-2x"></i>
@@ -73,8 +72,8 @@
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
-                                            <th>GERENTE</th>
                                             <th>CLIENTE</th>
+                                            <th>GERENTE</th>
                                             <th>UBICACIÓN</th>
                                             <th>ACCIONES</th>
                                         </tr>

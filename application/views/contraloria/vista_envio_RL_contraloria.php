@@ -9,14 +9,14 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content" >
                 <div class="modal-body">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label>Ingresa los códigos de los contratos a enviar: </label>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <label>Ingresa los códigos de los contratos a enviar </label>
                         <textarea name="txt" id="contratos" onkeydown="saltoLinea(value); return true;" class="text-modal" style="text-transform:uppercase; min-height: 400px;width: 100%"></textarea><br><br>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn_show" class="btn btn-success"><span class="material-icons">send</span> </i> Enviar Contratos</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                    <button type="button" id="btn_show" class="btn btn-primary"><span class="material-icons">send</span> </i> Enviar Contratos</button>
                     <br>
                 </div>
             </div>
@@ -26,7 +26,7 @@
     <div class="content boxContent ">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="fas fa-expand fa-2x"></i>
@@ -41,7 +41,7 @@
                             if ($this->session->userdata('id_rol') != "63"){?>
                             <div  class="toolbar">
                                 <div class="row">
-                                    <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 pb-5">
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 pb-5">
                                         <button class="btn-gral-data sendCont mb-1">Enviar contratos <i class="fas fa-paper-plane pl-1"></i></button>
                                     </div>
                                 </div>
