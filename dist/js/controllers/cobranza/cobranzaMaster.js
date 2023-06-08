@@ -1,16 +1,7 @@
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-        // BEGIN DATE
-        const fechaInicio = new Date();
-        // Iniciar en este año, este mes, en el día 1   
-        const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-        // END DATE
-        const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-        // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-        const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-        $("#beginDate").val('01/10/2022');
-        $("#endDate").val('01/10/2022');
+    setInitialValues();
     /*
     fillTable(typeTransaction, beginDate, endDate, where) PARAMS;
         typeTransaction:
@@ -24,9 +15,8 @@ $(document).ready(function () {
         where
             ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
     */
-        //    fillTable();
-    setInitialValues();
 });
+
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -49,12 +39,12 @@ sp = { // MJ: SELECT PICKER
 
 let num_colum_encabezado = [];
 let titulos_encabezado = [];
-$('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
+$('#masterCobranzaTable thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
-        if ($('#cobranzaHistorial').DataTable().column(i).search() !== this.value) {
-            $('#cobranzaHistorial').DataTable().column(i).search(this.value).draw();
+        if ($('#masterCobranzaTable').DataTable().column(i).search() !== this.value) {
+            $('#masterCobranzaTable').DataTable().column(i).search(this.value).draw();
         }
     });
     titulos_encabezado.push(title);
@@ -64,12 +54,11 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
     });
 });
 
-
-function fillTable(idLote, beginDate, endDate, bandera ) {
-    generalDataTable = $('#cobranzaHistorial').dataTable({
+function fillTable(typeTransaction, beginDate, endDate, where) {
+    generalDataTable = $('#masterCobranzaTable').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
-        scrollX: true,
+        scrollX:true,
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip("destroy");
             $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
@@ -79,7 +68,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                title: "Cobranza master V2",
+                title: 'Master cobranza',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
                     columns: num_colum_encabezado,
@@ -90,6 +79,11 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     }
                 }
             },
+            {
+                text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
+                titleAttr: 'Cargar vista inicial',
+                className: "btn btn-azure reset-initial-values",
+            }
         ],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -99,7 +93,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
         ],
         language: {
             url: `${general_base_url}/static/spanishLoader_v2.json`,
-            paginate: {
+                paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
             }
@@ -108,185 +102,201 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
         ordering: false,
         columns: [
             {
-                data: function (data) {
-                    return data.id_pago_i;
-                
-                },
-            },{
-                data: function (data) {
-                    return data.idLote;
-                },
-            },{
-                data: function (data) {
-                    return data.nombreLote;
-                
-                },
-            },{
-                data: function (data) {
-                    return data.referencia;
-                },
-            },
-            {
-                data: function(data){
-                    return data.precio_lote;
-                }
-            }, {
-                data: function(data){
-                    return data.comision_total;
+                data: function (d) {
+                    return d.idLote;
                 }
             },
             {
-                data: function(data){
-                    return data.pago_neodata;
+                data: function (d) {
+                    return d.nombreLote;
                 }
-            }, 
+            },
             {
-                data: function(data){
-                let respuesta = '';
-                if(data.fecha_apartado != null){
-                    respuesta = data.fecha_apartado;
-                }else{
-                    respuesta = 'No definida'
+                data: function (d) {
+                    if(d.rec == 8){
+                        return '-';
+                    }else{
+                        if(d.precioTotalLote == '$0.00')
+                            return '<span style="color: #960034">' + d.total_sindesc + '</span>'
+                        else
+                            return '<span style="font-weight: 700">'+d.precioTotalLote+'</span>';
+                    }
                 }
-                    return respuesta;
-                }
-            }, 
+            },
             {
-                data: function(data){
-                    return data.idStatusContratacion;
+                data: function (d) {
+                    if(d.rec == 8){
+                    return '-';
+                    }else{
+                    return d.fechaApartado;
                 }
-            }, {
-                data: function (data){
-                    //estatus de pago comisión
-                    labelStatus = '<span class="label" style="background:'+data.color+';"> '+data.estatus_actual_comision+'</span>';
+                }
+            },
+            {
+                data: function (d) {
+                    if(d.rec == 8){
+                    return '-';
+                    }else{
+                    return d.plaza;
+                }
+                }
+            },
+            {
+                data: function (d) {
+                    var labelStatus;
+
+                    if(d.rec == 8){
+                            labelStatus = 'VENTA CANCELADA';
+                    }else{
+
+                    switch (d.registroComision) {
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label lbl-sky">SOLICITUD ENVIADA</span>';
+                            break;
+                        case 3:
+                        default:
+                            labelStatus = '<span class="label lbl-gray">SIN SOLICITAR</span>';
+                            break;
+                    }
+                }
                     return labelStatus;
                 }
-            }, {
+            },
+            {
                 data: function (d) {
                     var labelStatus;
                     if(d.rec == 8){
-                            labelStatus = '<span class="label lbl-cerulean">RECISIÓN DE CONTRATO</span>';
+                        labelStatus = '<span class="label lbl-warning">RECISIÓN DE CONTRATO</span>';
                     }else{
-                    switch (d.registroComision) {
-                        case 0:
-                        case '0':
-                        case 2:
-                        case '2':
-                            labelStatus = '<span class="label lbl-oceanGreen">SIN DISPERSAR</span>';
-                            break;
-                        case 7:
-                        case '7':
-                            labelStatus = '<span class="label lbl-melon">LIQUIDADA</span>';
-                            break;
-                        case 8:
-                        case '8':
-                        case 88:
-                        case '88':
-                            labelStatus = '<span class="label lbl-cerulean">RECISIÓN DE CONTRATO</span>';
-                            break;
+                    switch (d.estatusEvidencia) {
                         case 1:
                         case '1':
+                            labelStatus = '<span class="label lbl-green">ENVIADA A COBRANZA</span>';
+                            break;
+                        case 10:
+                        case '10':
+                            labelStatus = '<span class="label lbl-warning">COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE</span>';
+                            break;
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label lbl-sky">ENVIADA A CONTRALORÍA</span>';
+                            break;
+                        case 20:
+                        case '20':
+                            labelStatus = '<span class="label lbl-warning">CONTRALORÍA RECHAZÓ LA EVIDENCIA</span>';
+                            break;
+                        case 3:
+                        case '3':
+                            labelStatus = '<span class="label lbl-violetDeep">EVIDENCIA ACEPTADA</span>';
+                            break;
                         default:
-                            labelStatus = '<span class="label lbl-violetBoot">ACTIVA</span>';
+                            labelStatus = '<span class="label lbl-warning">NO SE HA INTEGRADO EVIDENCIA</span>';
+                            break;
+                    }
+                    }
+                    return labelStatus;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.idStatusContratacion;
+                }
+            },
+            {
+                data: function (d) {
+                    var labelStatus;
+                    if(d.rec == 8){
+                            labelStatus = 'VENTA CANCELADA';
+                    }else{
+                    switch (d.idStatusLote) {
+                        case 1:
+                        case '1':
+                            labelStatus = '<span class="label lbl-green">DISPONIBLE</span>';
+                            break;
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label lbl-sky">CONTRATADO</span>';
+                            break;
+                        case 3:
+                        case '3':
+                            labelStatus = '<span class="label lbl-orangeYellow">APARTADO</span>';
+                            break;
+                        default:
+                            labelStatus = '<span class="label lbl-warning">SIN ESTATUS REGISTRADO</span>';
                             break;
                     }
                 }
                     return labelStatus;
                 }
-            }, {
-                data: function (data){
-                    //Estatus lotes/venta
-                    labelStatus = '<span class="label" style="background:#'+data.color_lote+';"> '+data.estatus_lote+'</span>';
-                    return labelStatus;
-                    
-                }
-            },{
-                data: function  (data){
-                    return data.pago_cliente;
-                }
-            },{
-                data: function (data){
-                    return data.pagado;
-                }
             },
             {
-                data: function( data ){
-                    labelStatus = '<p class="m-0">'+data.restantes+'</p>';
-                    return labelStatus;
-                }
-            }, 
-            {
-                data: function (data ){
-                    return data.user_names;
-                }
-            },
-            {
-                data: function (data ){
-                    return  data.puesto;
-                }
-            }, 
-            {
-                data: function (data ){
-                    let  respuesta = '' ; 
-                    if(data.plaza != null){
-                        respuesta = data.plaza;
-                    }else if(data.plazaB != null) {
-                        respuesta = data.plazaB;
+                data: function (d) {
+                    var labelStatus;
+                    if(d.rec == 8){
+                            labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
                     }else{
-                        respuesta = 'No definidos';
-                    }
-                    return respuesta;
+                        switch (d.registroComision) {
+                            case 0:
+                            case '0':
+                            case 2:
+                            case '2':
+                                labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
+                                break;
+                            case 7:
+                            case '7':
+                                labelStatus = '<span class="label lbl-warning">LIQUIDADA</span>';
+                                break;
+                            case 8:
+                            case '8':
+                            case 88:
+                            case '88':
+                                labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
+                                break;
+                            case 1:
+                            case '1':
+                            default:
+                                labelStatus = '<span class="label lbl-violetBoots">ACTIVA</span>';
+                                break;
+                        }
                 }
-            }, {
-                data: function (data ){
-                    let respuesta ='';
-                    let respuesta2 ='';
-                    if(data.source != null && data.source != 0){
-                        respuesta2 = "-  DragonCEM";
-                    }else{
-                        respuesta2 = ""
-                    }
-                    if(data.lugar_prospeccion != null){
-                        respuesta  = data.lugar_prospeccion + respuesta2;
-                    }else {
-                        respuesta  = 'No definido';
-                    }
-                    return respuesta;
-                }
-            },
-            {
-                "data": function( data ){
-                    var lblPenalizacion = '';
-                    if (data.penalizacion == 1){
-                        lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orangeYellow">Penalización + 90 días</span></p>';
-                    }
-                    if(data.bonificacion >= 1){
-                        p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="labe lbl-pink">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
-                    }
-                    else{
-                        p1 = '';
-                    }
-                    if(data.lugar_prospeccion  != null || data.lugar_prospeccion  == 0 ){
-                        p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión </span></p>';
-                    }
-                    else{
-                        p2 = '';
-                    }
-                    
-                    return p1 + p2 + lblPenalizacion;
+                    return labelStatus;
                 }
             },
             {
-                data: function (data){
+                data: function (d) {
+                    return d.comisionTotal;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.abonoDispersado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.abonoPagado;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.lugar_prospeccion;
+                }
+            },
+            {
+                // Info
+                data: function (d) {
                     let btns = '';
-                    let btns2 = ''; 
-                    if(data.rec == 8){
+                    if(d.rec == 8){
                         btns = '';
+                    }else{
+                    btns = '<button class="btn-data btn-blueMaderas" data-idLote="' + d.idLote + '" data-registroComision="' + d.registroComision + '" id="verifyNeodataStatus" data-toggle="tooltip" data-placement="top" title="VER MÁS"></body><i class="fas fa-info"></i></button>';
+                    if (d.estatusEvidencia == 3 && (d.registroComision == 0 ) && (d.idStatusContratacion == 11 || d.idStatusContratacion == 15))
+                        btns += '<button class="btn-data btn-green" data-idLote="' + d.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
                     }
-                    btns = '<button class="btn-data btn-green consultar_historys" data-idLote="' + data.idLote + '" data-registroComision="' + data.registroComision + '" id="verifyNeodataStatus" data-toggle="tooltip" data-placement="top" title="VER MÁS"></body><i class="fas fa-money-bill-wave" ></i></button>';
-                    btns2 += '<button value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'"  class="btn-data btn-blueMaderas m-auto consultar_history " data-toggle="tooltip" data-placement="top" title="DETALLES">' +'<i class="fas fa-info"></i></button>';
-                    return '<div class="d-flex">'+btns+btns2 +'</div>';  
+                    return '<div class="d-flex justify-center">'+btns+'</div>';
                 }
+                
             }
         ],
         columnDefs: [{
@@ -294,60 +304,31 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             searchable: false
         }],
         ajax: {
-            url: 'informationMasterCobranzaHistorial',
+            url: 'getInformation',
             type: "POST",
             cache: false,
             data: {
-                "idLote": idLote,
+                "typeTransaction": typeTransaction,
                 "beginDate": beginDate,
                 "endDate": endDate,
-                "bandera": bandera,
+                "where": where
             }
         }
     });
-    $('#cobranzaHistorial').removeClass('hide');
-    $(document).on("click", ".consultar_history", function(){
-        var myCommentsList = document.getElementById('comments-list-asimilados');
-        myCommentsList.innerHTML = '';
-        var clearTitle = document.getElementById('nameLote');
-        clearTitle.innerHTML = '';
-        $("#comments-list-asimilados").append('');
-        $("#nameLote").append();
-        $("#seeInformationModalAsimilados").modal();
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
-            $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
-            });
-        });
-    });
-    
-    $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("Comisiones/getComments/"+id_pago).done( function( data ){
-            $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
-            });
-        });
-    });
-    $("#cobranzaHistorial tbody").on("click", "#verifyNeodataStatus", function (e) {
+
+    $("#masterCobranzaTable tbody").on("click", "#verifyNeodataStatus", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         let tr = $(this).closest('tr');
-        let row = $("#cobranzaHistorial").DataTable().row(tr);
-        let idLote = $(this).attr("data-idLote");
+        let row = $("#masterCobranzaTable").DataTable().row(tr);
+        let lote = $(this).attr("data-idLote");
         let registro_status = $(this).attr("data-registroComision");
         let cadena = '';
+
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
-        $.getJSON("./../ComisionesNeo/getStatusNeodata/" + idLote).done(function (data) {
+
+        $.getJSON(general_base_url + "ComisionesNeo/getStatusNeodata/" + lote).done(function (data) {
             if (data.length > 0) {
                 switch (data[0].Marca) {
                     case 0:
@@ -355,7 +336,6 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                         break;
                     case 1:
                         if (registro_status == 0 || registro_status == 8) { //COMISION NUEVA
-                            console.log('entra 509');
                             let total0 = parseFloat(data[0].Aplicado);
                             let total = 0;
                             if (total0 > 0) {
@@ -372,8 +352,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                                 $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value="0">`);
                             }
                         } else if (registro_status == 1) {
-                            console.log('entra 526');
-                            $.getJSON("./../Comisiones/getDatosAbonadoSuma11/" + idLote).done(function (data1) {
+                            $.getJSON(general_base_url + "Comisiones/getDatosAbonadoSuma11/" + lote).done(function (data1) {
                                 let total0 = parseFloat((data[0].Aplicado));
                                 let total = 0;
                                 if (total0 > 0) {
@@ -412,75 +391,58 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12" style="text-align: center;"><h3><b>No se encontró esta referencia en NEODATA de ' + row.data().nombreLote + '.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="' + general_base_url + 'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             }
         });
-        console.log('entra 526');
         $("#modal_NEODATA").modal();
     });
 }
+
 $(document).on("click", "#searchByLote", function () {
-    let idLote = $("#idLote").val();
+    let lote = $("#idLote").val();
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    let bandera = 1 ;
-    if (idLote == ''){
-        alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
-    }else {
-        fillTable(idLote, finalBeginDate, finalEndDate, bandera);
-    }
+    fillTable(2, finalBeginDate, finalEndDate, lote);
 });
+
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    let bandera = 2;
-    let lote = 0;
-    if (finalBeginDate == '' || finalBeginDate == '')
-    {
-        alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
-    }else{
-    
-        fillTable(lote , finalBeginDate, finalEndDate, bandera);
-    }
+    fillTable(3, finalBeginDate, finalEndDate, 0);
 });
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-}
-function setInitialValues() { 
+
+function setInitialValues() {
     // BEGIN DATE
     const fechaInicio = new Date();
     // Iniciar en este año, este mes, en el día 1
     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
     // END DATE
-    const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    const fechaFin = new Date();
     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-  //  fillTable(1, finalBeginDate, finalEndDate, 0);
+    fillTable(1, finalBeginDate, finalEndDate, 0);
 }
+
 $(document).on("click", ".reset-initial-values", function () {
     setInitialValues();
     $(".idLote").val('');
     $(".textoshead").val('');
-    $("#beginDate").val('01/10/2022');
-    $("#endDate").val('31/10/2022');
+    $("#beginDate").val('01/01/2022');
+    $("#endDate").val('01/01/2022');
 });
+
 $(document).on('click', '#requestCommissionPayment', function () {
-    let idLote = $(this).attr("data-idLote");
-    $("#idLote").val(idLote);
+    let lote = $(this).attr("data-idLote");
+    $("#idLote").val(lote);
     $("#modalConfirmRequest").modal();
 });
+
 $(document).on('click', '#sendRequestCommissionPayment', function () {
-    let idLote = $("#idLote").val();
+    let lote = $("#idLote").val();
     $.ajax({
         type: 'POST',
         url: 'sendRequestPayment',
         data: {
-            'idLote': idLote
+            'idLote': lote
         },
         dataType: 'json',
         success: function (data) {

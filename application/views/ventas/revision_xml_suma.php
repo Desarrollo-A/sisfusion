@@ -14,12 +14,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsfactura()"></i>
+                            <i class="material-icons"></i>
                         </button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>

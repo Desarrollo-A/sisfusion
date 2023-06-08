@@ -973,6 +973,12 @@
   background-color: #A0400018;
 }
 
+.lbl-cerulean {
+  color: #00A0FF;
+  border: none;
+  background-color: #00A0FF;
+}
+
 .lbl-deepGray {
   color: #929292;
   border: none;
@@ -1001,10 +1007,28 @@
   background-color: #1E844918;
 }
 
+.lbl-melon {
+  color: #CD6155;
+  border: none;
+  background-color: #CD615518;
+}
+
+.lbl-oceanGreen {
+  color: #4BBC8E;
+  border: none;
+  background-color: #4BBC8E;
+}
+
 .lbl-orangeYellow {
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
+}
+
+.lbl-pink {
+  color: #cd5587;
+  border: none;
+  background-color: #cd558718;
 }
 
 .lbl-sky {
