@@ -374,20 +374,7 @@ function getFacturaCommissions(proyecto, condominio){
         return solicitudes += '</table>';
     }
 
-    /*$("#tabla_factura tbody").on("click", ".enviar_internomex", function(){
-        id_usuario = $(this).val();
-        id_residencial = $(this).attr("data-value");
-        user_factura = $(this).attr("data-userfactura");
-        
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de enviar las comisiones de <b>'+user_factura+'</b> a Internomex?</p></div></div>');
-
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_usuario" value="'+id_usuario+'"><input type="hidden" name="id_residencial" value="'+id_residencial+'">');
-
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="Enviar"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button></div></div>');
-        $("#modal_nuevas").modal();
-    });*/
-
+  
     $("#tabla_factura tbody").on("click", ".subirPDF", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -473,24 +460,7 @@ function getFacturaCommissions(proyecto, condominio){
     });
 
     /**----------------------------------------------------------------- */
-    /*$("#tabla_factura tbody").on("click", ".regresarPago", function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        idpago = $(this).val();
-        usuario = $(this).attr("data-userfactura");
-        total = $(this).attr("data-total");
-        lote =    $(this).attr("data-lote");  
-        $("#seeInformationModalPDF").modal();
-        $("#seeInformationModalPDF .modal-body").append(`<div class="input-group">
-            <input type="hidden" name="opc" id="opc" value="3">
-            <input type="hidden" name="id2" id="id2" value="${idpago}">
-            <h6>¿Estas seguro que deseas regresar este pago de <b>${formatMoney(total)}</b> con ID <b>${idpago}</b>, lote <b>${lote}</b> del usuario <b>${usuario}</b> ?</h6>
-            <span>Motivo</span>
-            <textarea id="motivo" name="motivo" class="form-control"></textarea>`);
-
-        $("#seeInformationModalPDF .modal-footer").append(`<button type="submit" id="sendFile" class="btn btn-primary"> Aceptar</button><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>`);
-    });*/
-
+ 
     /**--------------------------------------------------- */
     $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
         $("#seeInformationModalfactura .modal-body").html("");

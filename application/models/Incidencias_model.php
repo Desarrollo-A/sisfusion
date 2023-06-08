@@ -349,12 +349,19 @@ class Incidencias_model extends CI_Model {
 
 
 
-        function UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario){
+        function UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional,$regional){
             ini_set('max_execution_time', 0);
             $comentario= 'Se eliminó el pago';
             //1-- se topa la comision del usuario a modificar de la tabla clientes
 
         // una sola consulta se modifico una sola consulta porque era muy complicado el mantenimiento y codigo extra
+        // if($banderaSubRegional != false){
+        //     $cmdRol = 'SET id_subdirector =  '.$newColab.'  id_regional = 0 ' ; 
+        // }
+        if($banderaSubRegional != false){
+
+        }
+
 
         if($rolSelect == 7){
             $cmdRol = 'SET id_asesor = '.$newColab ;   
@@ -363,7 +370,9 @@ class Incidencias_model extends CI_Model {
         }else if($rolSelect == 3){
             $cmdRol = 'SET id_gerente = '.$newColab ;
         }else if($rolSelect == 2){
-            $cmdRol = 'SET id_subdirector = '.$newColab;
+           
+                $cmdRol = 'SET id_subdirector = '.$newColab;
+         
         }else if($rolSelect == 59){
             $cmdRol = 'SET id_regional = '.$newColab;
         }
@@ -372,20 +381,7 @@ class Incidencias_model extends CI_Model {
         $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
         
         $cmdComision =  "SELECT id_comision,comision_total,rol_generado from comisiones where id_usuario=$usuarioOld and id_lote=$idLote;";   
-        // if($rolSelect == 7){
-        //     $this->db->query("UPDATE clientes set id_asesor=$newColab where id_cliente=$idCliente;");
-        //     $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
-        
-        // }else if($rolSelect == 9){
-        //     $this->db->query("UPDATE clientes set id_coordinador=$newColab where id_cliente=$idCliente;");
-        //     $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
-        
-        
-        // }else if($rolSelect == 3){
-        //     $this->db->query("UPDATE clientes set id_gerente=$newColab where id_cliente=$idCliente;");
-        //     $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
-        // }
-     
+  
         $comision = $this->db->query($cmdComision)->result_array();
          if(count($comision) > 0){
         
