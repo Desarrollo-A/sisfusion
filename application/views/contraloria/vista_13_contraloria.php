@@ -8,7 +8,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Registro estatus 13 - <b><span class="lote"></span></b></label></h4></center>
+                    <h4 class="modal-title"><label>Registro estatus 13 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>

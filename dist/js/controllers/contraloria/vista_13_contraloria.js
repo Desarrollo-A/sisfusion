@@ -45,7 +45,7 @@ $("#tabla_ingresar_13").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
+                            return ' ' + titulosInventario[columnIdx  -1]  + ' ';
                         }
                     }
                 }
