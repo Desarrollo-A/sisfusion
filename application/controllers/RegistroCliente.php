@@ -8,6 +8,11 @@ class RegistroCliente extends CI_Controller {
 		parent::__construct();
 		$this->load->model('registrolote_modelo');
         $this->load->model('asesor/Asesor_model');
+        $this->load->model('General_model');
+        $this->load->model([
+            'opcs_catalogo/valores/EstatusAutorizacionesOpcs',
+            'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
+        ]);
 		$this->load->library(array('session','form_validation'));
       //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
       $this->load->library(array('session','form_validation', 'get_menu'));
@@ -7676,12 +7681,11 @@ class RegistroCliente extends CI_Controller {
 
 	/*autorizaciones SUBDIRE y DIRECTIVOS*/
 	public function directivosAut(){
-        	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-           $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-           /*-------------------------------------------------------------------------------*/
-        //		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        		$this->load->view('template/header');
-        		$this->load->view('contratacion/datos_autdirectivos_view',$datos);
+        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+        $this->load->view('template/header');
+        $this->load->view('contratacion/datos_autdirectivos_view',$datos);
 	}
 
 	function tableAut(){
@@ -7696,16 +7700,16 @@ class RegistroCliente extends CI_Controller {
 		echo json_encode($data);
 	}
 
-
     public function updateAutsFromsDC() {
 		$tamanoOfAuts = ($_POST['numeroDeRow']);
 		$idCliente = ($_POST['idCliente']);
 		$idCondominio = ($_POST['idCondominio']);
 		$idLote = ($_POST['idLote']);
 		$idAut = ($_POST['id_autorizacion']);
-        $nombreResidencial=($_POST['nombreResidencial']);
-        $nombreCondominio=($_POST['nombreCondominio']);
-        $nombreLote=($_POST['nombreLote']);
+        $nombreResidencial = ($_POST['nombreResidencial']);
+        $nombreCondominio = ($_POST['nombreCondominio']);
+        $nombreLote = ($_POST['nombreLote']);
+        $autorizacionesCliente = $_POST['autorizacionesCliente'];
         $response =  0 ;
         $code = '';
         $mensaje = '';
@@ -7716,7 +7720,7 @@ class RegistroCliente extends CI_Controller {
 		for($i=0; $i < $tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
 
-			if ($_FILES["docArchivo".$i]["name"] != '' && $_FILES["docArchivo".$i]["name"] != null) {
+			if (isset($_FILES["docArchivo".$i]["name"])) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
 				$proyecto = str_replace(' ', '',$nombreResidencial);
@@ -7768,6 +7772,18 @@ class RegistroCliente extends CI_Controller {
 			$dataUpdAut = $this->registrolote_modelo->updAutFromDC($idAut, $dataUPDAut);
 			$dataInsertHA = $this->registrolote_modelo->insertAutFromDC($dataInsHA);
 
+            if (isset($autorizacionesCliente)) {
+                $estatus = $_POST['accion'.$i];
+                if ($estatus == EstatusAutorizacionesOpcs::AUTORIZADA) {
+                    $this->Asesor_model->eliminarCodigoAutorizaciones($idCliente, $_POST["tipo$i"]);
+                    $campoEdicion = ($_POST["tipo$i"] == TipoAutorizacionClienteOpcs::CORREO)
+                        ? ['autorizacion_correo' => null]
+                        : ['autorizacion_sms' => null];
+
+                    $this->General_model->updateRecord('clientes', $campoEdicion, 'id_cliente', $idCliente);
+                }
+            }
+
 			if($dataUpdAut >= 1 || $dataInsertHA >= 1) {
 				if ($_POST['accion'.$i] == 3) {
 					$type = 1;
@@ -7788,20 +7804,23 @@ class RegistroCliente extends CI_Controller {
                 $mensaje = 'No se ha ejecutado la acción correctamente';
             }
 		}
+
 		// SE VALIDA EL TIPO DE ESTATUS 3 VA A DC Y SE ENVÍA CORREO
 		if ($type == 1) {
 			//$this->notifyUsers($this->session->userdata('id_usuario'), $nombreResidencial, $nombreCondominio, $nombreLote, $idCondominio, $autorizacionComent);
-      
+
             $idAut = $this->session->userdata('id_usuario');
             $motivoAut = $autorizacionComent;
             /********************************************************************************
             * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
             ********************************************************************************/
-            $datos_correo[0] = array('nombreResidencial' =>  $nombreResidencial,
-            'nombreCondominio'  =>  $nombreCondominio,
-            'nombreLote'        =>  $nombreLote,
-            'motivoAut'         =>  $motivoAut,
-            'fechaHora'         =>  date("Y-m-d H:i:s"));
+            $datos_correo[0] = array(
+                'nombreResidencial' =>  $nombreResidencial,
+                'nombreCondominio'  =>  $nombreCondominio,
+                'nombreLote'        =>  $nombreLote,
+                'motivoAut'         =>  $motivoAut,
+                'fechaHora'         =>  date("Y-m-d H:i:s")
+            );
             $datos_etiquetas = null;
             $comentario = $autorizacionComent;
             $dataUser = $this->Asesor_model->getInfoUserById($idAut);
@@ -7835,7 +7854,7 @@ class RegistroCliente extends CI_Controller {
           // donde 1 es succes y 2 es error
         );
 
-        echo json_encode ($respuesta);
+         echo json_encode ($respuesta);
     }
 
     function getLotesAsesor($condominio,$residencial) {
@@ -8069,32 +8088,32 @@ class RegistroCliente extends CI_Controller {
 	}
 
 
-  public function expedientesWS($lotes, $cliente = '') {
-    $query = $this->registrolote_modelo->getdp($lotes, $cliente);
-    if (count($query) <= 0) {
-        $query = $this->registrolote_modelo->getdp_DS($lotes);
-    }
+    public function expedientesWS($lotes, $cliente = '') {
+        $query = $this->registrolote_modelo->getdp($lotes, $cliente);
+        if (count($query) <= 0) {
+            $query = $this->registrolote_modelo->getdp_DS($lotes);
+        }
 
-    $data = array_merge(
-      $query,
-      $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
-      $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
-      $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
-      $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
-    );
+        $data = array_merge(
+          $query,
+          $this->registrolote_modelo->getExpedienteAll($lotes,$cliente),
+          $this->registrolote_modelo->get_auts_by_loteAll($lotes,$cliente),
+          $this->registrolote_modelo->getsProspeccionData($lotes,$cliente),
+          $this->registrolote_modelo->getEVMTKTD($lotes,$cliente)
+        );
 
-    if ($data != null) {
-        echo json_encode($data);
-    } else {
-        echo json_encode(array());
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
-  }
 
     public function getcop() {
       $id_cliente = $this->input->post("id_cliente");
       $response['data'] = $this->registrolote_modelo->getcop($id_cliente);
       echo json_encode($response);
-   }
+    }
 	
     function getResultsClientsSerch()
     {
@@ -8214,4 +8233,15 @@ class RegistroCliente extends CI_Controller {
         }
         exit;
     }
-}//clase
+
+    function autorizacionesClienteCodigo()
+    {
+        if ($this->session->userdata('id_rol') == 1) {
+            echo json_encode(['data' => []]);
+            return;
+        }
+
+        $data = $this->registrolote_modelo->autorizacionesClienteCodigo($this->session->userdata('id_usuario'));
+        echo json_encode(['data' => $data]);
+    }
+}

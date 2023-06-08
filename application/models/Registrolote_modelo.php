@@ -4167,47 +4167,30 @@ group by lotes.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellid
 
 
 	public function registroClienteAut(){
-
-		/*$this->db->select('cliente.id_cliente, cliente.nombre,  apellido_paterno, apellido_materno, nombreLote, fechaApartado, fechaVencimiento, rfc,
-				noRecibo, noAcuse, nombreResidencial, condominio.nombre as nombreCondominio, cliente.status, cliente.idAsesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion,
-				cliente.idAut, cliente.motivoAut');
-
-		$this->db->join('lotes', 'cliente.idLote = lotes.idLote');
-		$this->db->join('condominios condominio', 'lotes.idCondominio = condominio.idCondominio');
-		$this->db->join('residenciales residencial', 'condominio.idResidencial = residencial.idResidencial');
-
-		$this->db->where('cliente.status', 1);
-		$this->db->where("(cliente.idAut = '".$this->session->userdata('id')."')");
-
-		$this->db->where("(cliente.autorizacion = 1 AND (idStatusContratacion = 1 AND idMovimiento = 31 OR idStatusContratacion = 2 AND idMovimiento = 85)  )");
-
-		$query = $this->db->get('clientes cliente');
-		return $query->result();*/
 		$query = $this->db-> query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
-		lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(id_autorizacion) as id_autorizacion, MAX(autorizaciones.fecha_creacion) as fecha_creacion,
-		MAX(autorizaciones.autorizacion) as autorizacion, id_aut, cl.id_cliente, condominio.idCondominio,
-		users.usuario as sol,   autorizaciones.idLote,
-		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente,
-		CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as asesor,
-        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente
-		FROM autorizaciones 
-		inner join lotes on lotes.idLote = autorizaciones.idLote 
-		inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
-		inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
-		inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
-		INNER JOIN clientes as cl ON autorizaciones.idCliente=cl.id_cliente
-		INNER JOIN usuarios as asesor ON cl.id_asesor=asesor.id_usuario
+            lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(autorizaciones.id_autorizacion) as id_autorizacion, 
+            MAX(autorizaciones.fecha_creacion) as fecha_creacion, MAX(autorizaciones.autorizacion) as autorizacion, 
+            id_aut, cl.id_cliente, condominio.idCondominio, users.usuario as sol,   autorizaciones.idLote,
+            CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente,
+            CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as asesor,
+            CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente
+        FROM autorizaciones 
+        inner join lotes on lotes.idLote = autorizaciones.idLote 
+        inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
+        inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
+        inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
+        INNER JOIN clientes as cl ON autorizaciones.idCliente=cl.id_cliente
+        INNER JOIN usuarios as asesor ON cl.id_asesor=asesor.id_usuario
         INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
- 		where autorizaciones.id_aut = ".$this->session->userdata('id_usuario')."  AND autorizaciones.estatus=1
-		GROUP BY residencial.nombreResidencial, condominio.nombre, 
-		lotes.nombreLote, id_aut, cl.id_cliente, condominio.idCondominio,
-		users.usuario,  autorizaciones.idLote, CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno),
+        LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
+        where autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND autorizaciones.estatus = 1 AND ac.id_autorizacion IS NULL
+        GROUP BY residencial.nombreResidencial, condominio.nombre, 
+        lotes.nombreLote, id_aut, cl.id_cliente, condominio.idCondominio,
+        users.usuario,  autorizaciones.idLote, CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno)");
+        CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno)");
 
 		return $query->result();
-
-
 	}
 
 
@@ -4619,33 +4602,33 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 		return $query->result();
 	}
 
-	public function get_auts_by_lote_directivos($idLote){
-		$condicion;
-		if($this->session->userdata('id_rol') == 1){
-			$condicion ='';
-			$query = $this->db-> query('SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, users.usuario as sol, users1.usuario as aut, id_autorizacion, aut.idLote
-			FROM autorizaciones aut
-			inner join lotes on lotes.idLote = aut.idLote 
-			inner join condominios cond on cond.idCondominio = lotes.idCondominio 
-			inner join residenciales res on res.idResidencial = cond.idResidencial 
-			inner join usuarios as users on aut.id_sol = users.id_usuario 
-			inner join usuarios as users1 on aut.id_aut = users1.id_usuario 
-			where aut.estatus = 3 and '.$condicion.' lotes.idLote='.$idLote);
-		}
-		else{
-			$condicion = ' autorizaciones.id_aut ='.$this->session->userdata('id_usuario').' AND';
-			$query = $this->db-> query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
-			lotes.nombreLote, autorizaciones.estatus, lotes.idLote, condominio.idCondominio,
-		autorizaciones.autorizacion, autorizaciones.fecha_creacion, id_autorizacion, autorizaciones.idLote,
-		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
-		CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut
-		FROM autorizaciones 
-		inner join lotes on lotes.idLote = autorizaciones.idLote 
-		inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
-		inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
-		inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
-		inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
-		where autorizaciones.estatus = 1 and ".$condicion." lotes.idLote=".$idLote);
+	public function get_auts_by_lote_directivos($idLote) {
+        if($this->session->userdata('id_rol') == 1) {
+			$query = $this->db->query("SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, 
+                aut.estatus, aut.autorizacion, aut.fecha_creacion, users.usuario as sol, users1.usuario as aut, id_autorizacion, aut.idLote
+                FROM autorizaciones aut
+                inner join lotes on lotes.idLote = aut.idLote 
+                inner join condominios cond on cond.idCondominio = lotes.idCondominio 
+                inner join residenciales res on res.idResidencial = cond.idResidencial 
+                inner join usuarios as users on aut.id_sol = users.id_usuario 
+                inner join usuarios as users1 on aut.id_aut = users1.id_usuario
+                LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = aut.id_autorizacion
+                WHERE aut.estatus = 3 and lotes.idLote = $idLote AND ac.id_autorizacion IS NULL");
+		} else {
+			$query = $this->db->query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+                lotes.nombreLote, autorizaciones.estatus, lotes.idLote, condominio.idCondominio,
+                autorizaciones.autorizacion, autorizaciones.fecha_creacion, autorizaciones.id_autorizacion, autorizaciones.idLote,
+                CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
+                CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut
+                FROM autorizaciones 
+                inner join lotes on lotes.idLote = autorizaciones.idLote 
+                inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
+                inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
+                inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
+                inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
+                LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
+                where autorizaciones.estatus = 1 and autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND 
+                    lotes.idLote = $idLote AND ac.id_autorizacion IS NULL");
 		}
 
 		return $query->result_array();
@@ -4686,14 +4669,15 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
 				INNER JOIN autorizaciones aut ON aut.idLote = lotes.idLote
 				INNER JOIN usuarios asesor ON asesor.id_usuario = aut.id_sol
                 INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-				WHERE cl.status = 1 AND aut.estatus=3
+				LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = aut.id_autorizacion
+				WHERE cl.status = 1 AND aut.estatus = 3 AND ac.id_autorizacion IS NULL
 				GROUP BY cl.id_cliente, nombreLote, cl.rfc, res.nombreResidencial,
 				cond.nombre, cl.status, cl.id_asesor, cond.idCondominio,
 				lotes.idLote, cl.fechaApartado, 
 				CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
                 CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 				CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno), motivoAut
-				ORDER BY cl.fechaApartado DESC;");
+				ORDER BY cl.fechaApartado DESC");
 		return $query->result();
 	}
 
@@ -5615,5 +5599,53 @@ WHERE idLote IN ('".$row['idLote']."') and nombreLote = '".$insert_csv['nombreLo
     {
         $query = $this->db->query("SELECT $columns FROM lotes WHERE idCliente = $idCliente");
         return $query->row();
+    }
+
+    public function autorizacionesClienteCodigo($idUsuario) {
+        $query = $this->db-> query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+            lotes.nombreLote, MAX(autorizaciones.estatus) as estatus,  MAX(autorizaciones.id_autorizacion) as id_autorizacion, 
+            MAX(autorizaciones.fecha_creacion) as fecha_creacion, MAX(autorizaciones.autorizacion) as autorizacion, 
+            id_aut, cl.id_cliente, condominio.idCondominio, users.usuario as sol,   autorizaciones.idLote,
+            CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente,
+            CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as asesor,
+            CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente
+        FROM autorizaciones 
+        inner join lotes on lotes.idLote = autorizaciones.idLote 
+        inner join condominios as condominio on condominio.idCondominio = lotes.idCondominio 
+        inner join residenciales as residencial on residencial.idResidencial = condominio.idResidencial
+        inner join usuarios as users on autorizaciones.id_sol = users.id_usuario
+        INNER JOIN clientes as cl ON autorizaciones.idCliente=cl.id_cliente
+        INNER JOIN usuarios as asesor ON cl.id_asesor=asesor.id_usuario
+        INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
+        INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
+        where autorizaciones.id_aut = $idUsuario AND autorizaciones.estatus = 1
+        GROUP BY residencial.nombreResidencial, condominio.nombre, 
+        lotes.nombreLote, id_aut, cl.id_cliente, condominio.idCondominio,
+        users.usuario,  autorizaciones.idLote, CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno),
+        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+        CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno)");
+
+        return $query->result();
+    }
+
+    public function getAutorizacionesClientePorLote($idLote)
+    {
+        $query = $this->db->query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
+                lotes.nombreLote, autorizaciones.estatus, lotes.idLote, condominio.idCondominio,
+                autorizaciones.autorizacion, autorizaciones.fecha_creacion, autorizaciones.id_autorizacion, autorizaciones.idLote,
+                CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
+                CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut,
+                ac.tipo
+                FROM autorizaciones 
+                inner join lotes on lotes.idLote = autorizaciones.idLote 
+                inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
+                inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
+                inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
+                inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
+                where autorizaciones.estatus = 1 and autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND 
+                    lotes.idLote = $idLote");
+
+        return $query->result_array();
     }
 } 

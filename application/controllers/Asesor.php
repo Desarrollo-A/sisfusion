@@ -890,8 +890,10 @@ class Asesor extends CI_Controller
             $data[$i]['tipo_comprobanteD'] = ($query[0]->tipo_comprobanteD == '' || $query[0]->tipo_comprobanteD==NULL) ? 0 : $query[0]->tipo_comprobanteD;
             $data[$i]['autorizacion_correo'] = $query[0]->autorizacion_correo;
             $data[$i]['autorizacion_sms'] = $query[0]->autorizacion_sms;
-            $data[$i]['total_sol_correo'] = $query[0]->total_sol_correo;
-            $data[$i]['total_sol_sms'] = $query[0]->total_sol_sms;
+            $data[$i]['total_sol_correo_aut'] = $query[0]->total_sol_correo_aut;
+            $data[$i]['total_sol_correo_pend'] = $query[0]->total_sol_correo_pend;
+            $data[$i]['total_sol_sms_aut'] = $query[0]->total_sol_sms_aut;
+            $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
         }
 
 
@@ -5599,8 +5601,13 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if (intval($cliente->total_sol_correo) > 0) {
+        if (intval($cliente->total_sol_correo_pend) > 0) {
             echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
+            return false;
+        }
+
+        if (intval($cliente->total_sol_correo_aut) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
             return false;
         }
 
@@ -5653,8 +5660,13 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if (intval($cliente->total_sol_sms) > 0) {
+        if (intval($cliente->total_sol_sms_pend) > 0) {
             echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
+            return false;
+        }
+
+        if (intval($cliente->total_sol_sms_aut) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
             return false;
         }
 
@@ -5791,8 +5803,13 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            if (intval($cliente->total_sol_correo) > 0) {
+            if (intval($cliente->total_sol_correo_pend) > 0) {
                 echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
+                return;
+            }
+
+            if (intval($cliente->total_sol_correo_aut) > 0) {
+                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
                 return;
             }
 
@@ -5806,8 +5823,13 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            if (intval($cliente->total_sol_sms) > 0) {
+            if (intval($cliente->total_sol_sms_pend) > 0) {
                 echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
+                return;
+            }
+
+            if (intval($cliente->total_sol_sms_aut) > 0) {
+                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
                 return;
             }
 
@@ -5824,7 +5846,6 @@ class Asesor extends CI_Controller
             'idCliente' => $idCliente,
             'idLote' => $idLote,
             'id_sol' => $idUsuario,
-            // 'id_sol' => 11088,
             'id_aut' => $idSubdirector,
             'estatus' => 1,
             'autorizacion' => $comentario,

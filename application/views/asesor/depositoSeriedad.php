@@ -146,7 +146,7 @@
             <div class="modal-content" >
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        Envío de autorizaciones al cliente
+                        Envío de verificaciones al cliente
                     </h4>
                 </div>
                 <form id="autorizacion-form">
@@ -329,27 +329,28 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
-                                    <div class="form-group label-floating select-is-empty">
-                                        <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
-                                        <select id="subdirector"
-                                                name="subdirector"
-                                                class="selectpicker select-gral m-0"
-                                                data-style="btn"
-                                                data-show-subtext="true"
-                                                data-live-search="true"
-                                                title="Selecciona un subdirector"
-                                                data-size="7"
-                                                required>
-                                        </select>
-                                    </div>
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
+                                    <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
+                                    <select id="subdirector"
+                                            name="subdirector"
+                                            class="selectpicker select-gral m-0"
+                                            data-style="btn"
+                                            data-show-subtext="true"
+                                            data-live-search="true"
+                                            title="Selecciona un subdirector"
+                                            data-size="7"
+                                            data-container="body"
+                                            required>
+                                    </select>
                                 </div>
+                            </div>
 
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
-                                    <label>Comentario adicional (<small style="color: red;">*</small>)</label>
-                                    <textarea class="text-modal" name="comentario" id="comentarioSol" rows="3" required></textarea>
-                                </div>
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                                <label>Comentario adicional (<small style="color: red;">*</small>)</label>
+                                <textarea class="text-modal" name="comentario" id="comentarioSol" rows="3" required></textarea>
                             </div>
                         </div>
                     </div>

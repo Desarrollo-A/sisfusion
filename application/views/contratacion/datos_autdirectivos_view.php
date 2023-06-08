@@ -8,34 +8,12 @@
 		    $this->load->view('template/sidebar', '');
 		?>
 
-		<style>
-			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iAccepted {
-				color: #4caf50;
-			}
-
-			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iDenied {
-				color: #929292;
-			}
-
-			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iSend {
-				color: #103f75;
-			}
-
-			#addFile .radio-with-Icon i {
-				color: #eaeaea;
-			}
-
-			#addFile .radio-with-Icon i:hover {
-				color: #929292;
-			}
-		</style>
-
 		<!-- Modals -->
 		<!-- modal  INSERT COMENTARIOS-->
 		<div class="modal fade" id="addFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
 			<div class="modal-dialog">
 				<div class="modal-content" >
-					<form method="POST" name="sendAutsFromD" id="sendAutsFromD" enctype="multipart/form-data" action="<?=base_url()?>registroCliente/updateAutsFromsDC">
+					<form name="sendAutsFromD" id="sendAutsFromD">
 						<div class="modal-header d-flex justify-between align-center">
 							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
 							<label class="m-0">(<span class="items"></span>) autorizaciones pendientes</label>
@@ -59,18 +37,48 @@
 				</div>
 			</div>
 		</div>
+
+        <!-- Modal autorizaciones clientes códigos -->
+        <div class="modal fade" id="autCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="autClienteForm" id="autClienteForm">
+                        <div class="modal-header d-flex justify-between align-center">
+                            <h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
+                            <label class="m-0">(<span class="items-aut"></span>) autorizaciones pendientes</label>
+                        </div>
+                        <div class="modal-body pl-0 pr-0">
+                            <div class="scroll-styles" id="loadAutsCliente" style="max-height:450px; padding:0 20px; overflow:auto"></div>
+                            <input hidden name="numeroDeRow" id="numeroDeRowAut">
+                            <input hidden name="idCliente" id="idClienteAut">
+                            <input hidden name="idCondominio" id="idCondominioAut">
+                            <input hidden name="idLote" id="idLoteAut">
+                            <input hidden name="id_autorizacion" id="id_autorizacion_aut">
+                            <input hidden name="nombreResidencial" id="nombreResidencialAut">
+                            <input hidden name="nombreCondominio" id="nombreCondominioAut">
+                            <input hidden name="nombreLote" id="nombreLoteAut">
+                            <input hidden name="autorizacionesCliente" id="autorizacionesCliente">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Enviar autorización</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 		<!-- END Modals -->
 
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
                                 <a href="#autorizaciones" role="tab"  data-toggle="tab">AUTORIZACIONES</a>
                             </li>
                             <li>
-                                <a href="#autorizaciones-verificacion" role="tab"  data-toggle="tab">AUTORIZACIONES CLIENTE</a>
+                                <a href="#autorizaciones-verificacion" role="tab"  data-toggle="tab">AUTORIZACIONES DE VERIFICACIÓN</a>
                             </li>
                         </ul>
 						<div class="card no-shadow m-0">
@@ -78,46 +86,44 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="autorizaciones">
-                                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                                <i class="material-icons">verified_user</i>
-                                            </div>
                                             <div class="card-content">
                                                 <h3 class="card-title center-align">Tus autorizaciones</h3>
-                                                <table id="addExp" class="table-striped table-hover">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>ASESOR(es)</th>
-                                                        <th>GERENTE</th>
-                                                        <th>AUTORIZACIÓN</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody></tbody>
-                                                </table>
+                                                <div class="form-group">
+                                                    <table id="addExp" class="table-striped table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>PROYECTO</th>
+                                                            <th>LOTE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ASESOR(es)</th>
+                                                            <th>GERENTE</th>
+                                                            <th>AUTORIZACIÓN</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="tab-pane" id="autorizaciones-verificacion">
-                                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                                <i class="material-icons">verified_user</i>
-                                            </div>
                                             <div class="card-content">
-                                                <h3 class="card-title center-align">Tus autorizaciones</h3>
-                                                <table id="aut-verificacion" class="table-striped table-hover">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>ASESOR(es)</th>
-                                                        <th>GERENTE</th>
-                                                        <th>AUTORIZACIÓN</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody></tbody>
-                                                </table>
+                                                <h3 class="card-title center-align">Tus autorizaciones de verificación</h3>
+                                                <div class="form-group">
+                                                    <table id="aut-verificacion" class="table-striped table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>PROYECTO</th>
+                                                            <th>LOTE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ASESOR(es)</th>
+                                                            <th>GERENTE</th>
+                                                            <th>AUTORIZACIÓN</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

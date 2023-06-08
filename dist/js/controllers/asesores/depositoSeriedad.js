@@ -1353,14 +1353,14 @@ $(document).on('click', '.btn-solicitar', function () {
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
 
-        if (parseInt(cliente.total_sol_correo) > 0 || cliente.autorizacion_correo === null) {
+        if (parseInt(cliente.total_sol_correo_pend) > 0 || cliente.autorizacion_correo === null) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
 
-        if (parseInt(cliente.total_sol_sms) > 0 || cliente.autorizacion_sms === null) {
+        if (parseInt(cliente.total_sol_sms_pend) > 0 || cliente.autorizacion_sms === null) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
@@ -1621,11 +1621,11 @@ $(document).on('submit', '#solicitar-form', function (e) {
     data.append('idSubdirector', formValues.subdirector);
     data.append('comentario', formValues.comentario);
 
-    if ((parseInt(cliente.total_sol_correo) === 0 || cliente.autorizacion_correo !== null) && formValues.chkCorreoSol) {
+    if ((parseInt(cliente.total_sol_correo_pend) === 0 || cliente.autorizacion_correo !== null) && formValues.chkCorreoSol) {
         data.append('correo', true);
     }
 
-    if ((parseInt(cliente.total_sol_sms) === 0 || cliente.autorizacion_sms !== null) && formValues.chkSmsSol) {
+    if ((parseInt(cliente.total_sol_sms_pend) === 0 || cliente.autorizacion_sms !== null) && formValues.chkSmsSol) {
         data.append('sms', true);
     }
 
@@ -1775,15 +1775,16 @@ function generarBotonesAutorizacion(clienteData) {
             <button class="btn-data btn-azure btn-rounded btn-reenvio" 
                     title="REENVÍO DE VERIFICACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
-                <i class="fas fa-share-square"></i>
+                <i class="fas fa-rotate-right"></i>
             </button>
         `;
     }
 
     if (
-        (parseInt(clienteData.total_sol_correo) === 0 || parseInt(clienteData.total_sol_sms) === 0) &&
-            (((clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.AUTORIZADO) &&
-                (clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.AUTORIZADO)))
+        ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
+            (clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.AUTORIZADO)) ||
+        ((parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
+            (clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.AUTORIZADO))
     ) {
         botones += `
             <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"

@@ -16193,7 +16193,7 @@ tr td:hover { background: #666; color: #FFF; }
 		}
 	}
 
-/////////////////////// NEW MAJO /////////////////////
+    /////////////////////// NEW MAJO /////////////////////
 
     public function getdbanco(){
         $datos["banco"]= $this->registrolote_modelo->table_datosBancarios();
@@ -16371,4 +16371,10 @@ tr td:hover { background: #666; color: #FFF; }
 		}
 	}
 
-}//clase
+
+    public function getAutorizacionesClientePorLote($idLote)
+    {
+        $data = $this->registrolote_modelo->getAutorizacionesClientePorLote($idLote);
+        echo json_encode($data);
+    }
+}
