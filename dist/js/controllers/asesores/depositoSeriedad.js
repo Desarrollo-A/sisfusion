@@ -1782,9 +1782,9 @@ function generarBotonesAutorizacion(clienteData) {
 
     if (
         ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
-            (clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_correo === ESTATUS_AUTORIZACION.AUTORIZADO)) ||
+            (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO)) ||
         ((parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
-            (clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.ENVIADO || clienteData.autorizacion_sms === ESTATUS_AUTORIZACION.AUTORIZADO))
+            (parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO))
     ) {
         botones += `
             <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"

@@ -5586,7 +5586,7 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
             return false;
         }
@@ -5645,7 +5645,7 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
             return false;
         }
@@ -5724,7 +5724,7 @@ class Asesor extends CI_Controller
             return;
         }
 
-        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
             return;
         }
@@ -5790,7 +5790,7 @@ class Asesor extends CI_Controller
             return;
         }
 
-        if ($lote->idStatusContratacion !== 1 || $lote->idMovimiento !== 31) {
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
             echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
             return;
         }
@@ -5933,13 +5933,13 @@ class Asesor extends CI_Controller
     /**
      * @return bool true si salió bien
      */
-    public function smsAut(string $url, string $telefono, int $idCliente): bool
+    public function smsAut(string $url, string $telefono, string $idCliente): bool
     {
         $camposSms = [
             'Content' => "Verificación de cliente, accede a través de este link $url",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
-            'Sender' => "$idCliente",
+            'Sender' => $idCliente,
             'Recipient' => $telefono,
             'CampaignCode' => 'null',
             'DynamicFields' => [],
