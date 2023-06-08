@@ -317,7 +317,7 @@ function getBonusCommissions(roles, users){
 
     $("#modal_bonos").modal();
     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE BONO</b></h5></p>');
-    $.getJSON(general_base_url+"Comisiones/getHistorialAbono2/"+id_pago).done( function( data ){
+    $.getJSON(general_base_url+"Pagos/getHistorialAbono2/"+id_pago).done( function( data ){
       $.each( data, function(i, v){
         $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">'+v.comentario+'<br><b style="color:#3982C0;font-size:0.9em;">'+v.date_final+'</b><b style="color:gray;font-size:0.9em;"> - '+v.nombre_usuario+'</b></p></div>');
       });
