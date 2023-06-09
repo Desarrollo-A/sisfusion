@@ -210,6 +210,8 @@ $veryDarkBlue       : #1B4F72;
 $veryDarkCyan       : #0E6251;
 $vividOrange        : #F57F17;
 $darkPink           : #880E4F;
+$melon              : #CD6155;
+$pink               : #cd5587;
 /* END vrbls coloress */
 
 /* size devices */
@@ -288,7 +290,7 @@ $tv                 : "(min-width: 1280px)";
 .buttons-pdf {
     box-shadow: none;
     padding: 7px 25px;
-    background-color: #f4433618 !important;
+    background-color: #f4433618!important;
     border-radius: 27px;
     margin: 0;
 }
@@ -607,6 +609,13 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #A0400018;
 }
+
+.lbl-cerulean{
+    color:              $cerulean;
+    border:             none;
+    background-color: #00A0FF;
+}
+
 .lbl-deepGray{
     color: $deepGray;
     border: none;
@@ -630,10 +639,26 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #1E844918;
 }
+.lbl-melon{
+    color: $melon;
+    border:none;
+    background-color: #CD615518;
+
+}
+.lbl-oceanGreen{
+    color:$oceanGreen;
+    border:none;
+    background-color: #4BBC8E;
+}
 .lbl-orangeYellow{
     color: $orangeYellow;
     border: none;
     background-color: #B9770E18;
+}
+.lbl-pink{
+    color: $pink;
+    border: none;
+    background-color:#cd558718 ;
 }
 .lbl-sky{
     color: $sky;
@@ -1011,3 +1036,4 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
     border: none;
     background-color: #880E4F18;
 }
+

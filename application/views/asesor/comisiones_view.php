@@ -2,51 +2,12 @@
 <div class="wrapper">
 
     <?php
-if ($this->session->userdata('id_rol') == "7") //contratacion
-{
-    /*-------------------------------------------------------*/
-$datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-  /*  $dato= array(
-                    'home' => 0,
-                    'listaCliente' => 0,
-                    'corridaF' => 0,
-                    'inventario' => 0,
-                    'prospectos' => 0,
-                    'prospectosAlta' => 0,
-                    'statistic' => 0,
-                    'comisiones' => 0,
-                    'DS'    => 0,
-                    'DSConsult' => 0,
-                    'DS' => 0,
-                    'autoriza' => 0,
-                    'DSConsult' => 0,
-                    'documentacion' => 0,
-                    'inventarioDisponible'  =>  0,
-                    'manual'    =>  0,
-                    'nuevasComisiones'     => 1,
-                    'histComisiones'       => 0,
-                    'sharedSales' => 0,
-                    'coOwners' => 0,
-                    'references' => 0,
-                    'autoriza' => 0,
-                    'documentacion' => 0,
-                    'altaUsuarios' => 0,
-                    'listaUsuarios' => 0,
-                    'consDepositoSeriedad' => 0,
-                    'asignarVentas' => 0,
-                    'clientsList' => 0
-                );
-
-//      $this->load->view('template/contratacion/sidebar', $dato);
-    $this->load->view('template/sidebar', $dato);*/
-} else {
-    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-}
+        if ($this->session->userdata('id_rol') == "7") //contratacion
+        {  
+                    $this->load->view('template/sidebar');
+        } else {
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+        }
 ?>
 
 <style type="text/css">

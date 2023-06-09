@@ -1,6 +1,8 @@
+let titulosInventario = [];
 $('#tabla_ingresar_5 thead tr:eq(0) th').each(function (i) {
     if (i != 0) {
         var title = $(this).text();
+        titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_ingresar_5').DataTable().column(i).search() !== this.value) {
@@ -36,7 +38,6 @@ $(document).ready(function () {
 });
 
 $("#tabla_ingresar_5").ready(function () {
-
     tabla_5 = $("#tabla_ingresar_5").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -51,32 +52,7 @@ $("#tabla_ingresar_5").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return 'TIPO';
-                                case 2:
-                                    return 'PROYECTO';
-                                case 3:
-                                    return 'CONDOMINIO';
-                                case 4:
-                                    return 'LOTE';
-                                case 5:
-                                    return 'REFERENCIA';
-                                case 6:
-                                    return 'GERENTE';
-                                case 7:
-                                    return 'CLIENTE';
-                                case 8:
-                                    return 'FECHA MODIFICADO';
-                                case 9:
-                                    return 'FECHA VENCIMIENTO';
-                                case 10:
-                                    return 'UC';
-                                case 11:
-                                    return 'SEDE';
-                                case 12:
-                                    return 'COMENTARIO';
-                            }
+                            return ' ' + titulosInventario[columnIdx -1] + ' ';
                         }
                     }
                 }
@@ -93,32 +69,7 @@ $("#tabla_ingresar_5").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return 'TIPO';
-                                case 2:
-                                    return 'PROYECTO';
-                                case 3:
-                                    return 'CONDOMINIO';
-                                case 4:
-                                    return 'LOTE';
-                                case 5:
-                                    return 'REFERENCIA';
-                                case 6:
-                                    return 'GERENTE';
-                                case 7:
-                                    return 'CLIENTE';
-                                case 8:
-                                    return 'FECHA MODIFICADO';
-                                case 9:
-                                    return 'FECHA VENCIMIENTO';
-                                case 10:
-                                    return 'UC';
-                                case 11:
-                                    return 'SEDE';
-                                case 12:
-                                    return 'COMENTARIO';
-                            }
+                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
                         }
                     }
                 }
@@ -143,13 +94,12 @@ $("#tabla_ingresar_5").ready(function () {
                 data: null,
                 defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
-
             {
                 data: function (d) {
                     if (d.idMovimiento == 4 || d.idMovimiento == 74 || d.idMovimiento == 93 || d.idMovimiento == 103)
-                        return `<span class="label" style="background: #F5B7B1; color: #78281F">Corrección</span>`;
+                        return `<span class="label lbl-warning">CORRECIÓN</span>`;
                     else 
-                        return `<span class="label" style="background: #A3E4D7; color: #0E6251">Nuevo</span>`;
+                        return `<span class="label lbl-green">NUEVO</span>`;
                 }
             },
             {
@@ -174,12 +124,12 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.gerente + '</p>';
+                    return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                 }
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                    return '<p class="m-0">' + d.gerente + '</p>';
                 }
             },
             {
@@ -189,13 +139,12 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
-
                     var fechaVenc;
 
                     if (d.idStatusContratacion == 2 && d.idMovimiento == 4 || d.idStatusContratacion == 2 && d.idMovimiento == 84)
                         fechaVenc = d.fechaVenc;
                     else if (d.idStatusContratacion == 2 && d.idMovimiento == 74 || d.idStatusContratacion == 2 && d.idMovimiento == 93)
-                        fechaVenc = 'Vencido';
+                        fechaVenc = 'VENCIDO';
                     else
                         fechaVenc = 'N/A';
 
@@ -204,23 +153,23 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
-                    var lastUc = (d.lastUc == null) ? 'Sin registro' : d.lastUc;
+                    var lastUc = (d.lastUc == null) ? 'SIN REGISTRO' : d.lastUc;
                     return '<p class="m-0">' + lastUc + '</p>';
                 }
             },
             {
                 data: function (d) {
                     if (d.sede == null || d.sede == '')
-                        return `<span class="label" style="background: #ABB2B9; color: #17202A">No definido</span>`;
+                        return `<span class="label lbl-gray">NO DEFINIDO</span>`;
                     else
-                        return `<span class="label" style="background: #A9CCE3; color: #154360">${d.sede}</span>`;
+                        return `<span class="label lbl-blueMaderas">${d.sede}</span>`;
                 }
             },
             {
                 data: function (d) {
                     let respuesta = '';
                     if (d.comentario == null || d.comentario == '')
-                        respuesta = 'No definido';
+                        respuesta = 'NO DEFINIDO';
                     else
                         respuesta = d.comentario;
                     return '<p class="m-0">' + respuesta + '</p>';
@@ -233,33 +182,91 @@ $("#tabla_ingresar_5").ready(function () {
                     var cntActions;
 
                     if (data.vl == '1') {
-                        cntActions = 'En proceso de Liberación';
+                        cntActions = 'EN PROCESO DE LIBERACIÓN';
 
                     } else {
-                        if (data.idStatusContratacion == 2 && data.idMovimiento == 4 || data.idStatusContratacion == 2 && data.idMovimiento == 84
-                            || data.idStatusContratacion == 2 && data.idMovimiento == 101 || data.idStatusContratacion == 2 && data.idMovimiento == 103) {
+                        if (
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 4) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 84) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 101) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)
+                          ) {
 
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" title= "Registrar Status" ' +
-                                'data-tipo-venta="' + data.tipo_venta + '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Registrar estatus">' +
-                                '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
+                            cntActions = 
+                            '<button href="#" data-idLote="' +
+                            data.idLote + 
+                            '" data-nomLote="' + 
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" title= "REGISTRAR STATUS" ' +
+                            'data-tipo-venta="' +
+                            data.tipo_venta +
+                            '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
 
+                            cntActions +=
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
+                            'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-down"></i></button>';
+                        } else if (
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 74) ||
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 93)
+                          ) {
+                            cntActions =
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
+                            'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
+                            '<i class="fas fa-thumbs-up"></i></button>';
 
-                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar estatus">' +
-                                '<i class="fas fa-thumbs-down"></i></button>';
-                        }
-                        else if (data.idStatusContratacion == 2 && data.idMovimiento == 74 || data.idStatusContratacion == 2 && data.idMovimiento == 93) {
-
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "Registrar estatus">' +
-                                '<i class="fas fa-thumbs-up"></i></button>&nbsp;&nbsp;';
-
-                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar estatus">' +
+                            cntActions +=
+                            '<button href="#" data-idLote="' +
+                            data.idLote +
+                            '" data-nomLote="' +
+                            data.nombreLote +
+                            '" data-idCond="' +
+                            data.idCondominio +
+                            '"' +
+                            'data-idCliente="' +
+                            data.id_cliente +
+                            '" data-fecVen="' +
+                            data.fechaVenc +
+                            '" data-ubic="' +
+                            data.ubicacion +
+                            '" ' +
+                                'class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
                         }
                         else {
@@ -267,8 +274,6 @@ $("#tabla_ingresar_5").ready(function () {
                         }
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
-
-
                 }
             }
 
@@ -299,9 +304,13 @@ $("#tabla_ingresar_5").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             var status;
-            if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 4 ||
-                row.data().idStatusContratacion == 2 && row.data().idMovimiento == 74 ||
-                row.data().idStatusContratacion == 2 && row.data().idMovimiento == 93) {
+            if (
+                (row.data().idStatusContratacion == 2 &&
+                row.data().idMovimiento == 4) ||
+                (row.data().idStatusContratacion == 2 &&
+                row.data().idMovimiento == 74) ||
+                (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 93)
+            ) {
                 status = 'Status 2 enviado a Revisión (Asesor)';
             } else if (row.data().idStatusContratacion == 2 && row.data().idMovimiento == 84) {
                 status = 'Listo status 2 (Asesor)';
@@ -310,24 +319,29 @@ $("#tabla_ingresar_5").ready(function () {
                 status = 'N/A';
             }
 
-            var informacion_adicional2 = '<table class="table text-justify">' +
-                '<tr><b>INFORMACIÓN ADICIONAL</b>:' +
-                '<td style="font-size: .8em"><strong>ESTATUS: </strong>' + status + '</td>' +
-                '<td style="font-size: .8em"><strong>COMENTARIO: </strong>' + row.data().comentario + '</td>' +
-                '<td style="font-size: .8em"><strong>COORDINADOR: </strong>' + row.data().coordinador + '</td>' +
-                '<td style="font-size: .8em"><strong>ASESOR: </strong>' + row.data().asesor + '</td>' +
-                '</tr>' +
-                '</table>';
-
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-            informacion_adicional += '          <label><b>Información adicional</b></label>';
+            informacion_adicional += 
+                '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12 skyOpacity" margin-bottom: 7px">';
+            informacion_adicional +=
+            '          <label><b>Información adicional</b></label>';
             informacion_adicional += '      </div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>' + status + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS </b>' +
+            status +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO </b> ' +
+            row.data().comentario +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR </b> ' +
+            row.data().coordinador +
+            '</label></div>';
+            informacion_adicional +=
+            '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR </b> ' +
+            row.data().asesor +
+            '</label></div>';
             informacion_adicional += '  </div>';
             informacion_adicional += '</div>';
 
@@ -366,8 +380,8 @@ $("#tabla_ingresar_5").ready(function () {
     });
 });
 
-$('#tabla_ingresar_5').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
+    $('#tabla_ingresar_5').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
     });
 });
@@ -659,5 +673,4 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario2').val('');
     })
-
 });

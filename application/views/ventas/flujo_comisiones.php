@@ -5,12 +5,7 @@
         <?php
         switch ($this->session->userdata('id_rol')) {
             case '28': // DIRECTOR
-           
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
                 break;
             default: // NO ACCESS
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';

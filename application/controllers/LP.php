@@ -13,13 +13,13 @@ class LP extends CI_Controller {
 		$this->load->model(array('Ventas_modelo', 'Statistics_model'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 		$this->load->library(array('session','form_validation', 'get_menu'));
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 	public function index(){
 		if($this->session->userdata("id_rol")== '18' || $this->session->userdata("id_rol") == '28'){
-			   /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-			   $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-			   /*-------------------------------------------------------------------------------*/
 			$datos['tprospectos'] = $this->Statistics_model->getProspectsNumber()->result();
 			$datos['pvigentes'] = $this->Statistics_model->getCurrentProspectsNumber()->result();
 			$datos['pnovigentes'] = $this->Statistics_model->getNonCurrentProspectsNumber()->result();

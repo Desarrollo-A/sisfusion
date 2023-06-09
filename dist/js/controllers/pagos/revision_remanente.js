@@ -458,76 +458,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#modal_nuevas").modal();
     });
 
-    /*$("#tabla_remanente tbody").on("click", ".despausar_estatus", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
-        id_pago_i = $(this).val();
-        $("#modal_refresh .modal-body").html("");
-        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
-        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-        $("#modal_refresh").modal();
-    });*/
 
-    /*$("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
-        id_com = $(this).val();
-        id_pj = $(this).attr("data-personalidad");
-
-        $("#seeInformationModal").modal();
-        $.getJSON( url + "Comisiones/getDatosDocumentos/"+id_com+"/"+id_pj).done( function( data ){
-            $.each( data, function( i, v){
-
-                $("#seeInformationModal .documents").append('<div class="row">');
-                if (v.estado == "NO EXISTE"){
-                    $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:gray;">'+(v.nombre).substr(0, 52)+'</label></div><div class="col-md-5"><label style="font-size:10px; margin:0; color:gray;">(No existente)</label></div>');
-                }
-                else{
-                    $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:#0a548b;"><b>'+(v.nombre).substr(0, 52)+'</b></label></div> <div class="col-md-5"><label style="font-size:10px; margin:0; color:#0a548b;"><b>('+v.expediente+')</label></b> - <button onclick="preview_info(&#39;'+(v.expediente)+'&#39;)" style="border:none; background-color:#fff;"><i class="fa fa-file" aria-hidden="true" style="font-size: 12px; color:#0a548b;"></i></button></div>');
-                }
-                $("#seeInformationModal .documents").append('</div>');
-            });
-        });
-
-        $.getJSON( url + "Comisiones/getDatosFactura/"+id_com).done( function( data ){
-            $("#seeInformationModal .facturaInfo").append('<div class="row">');
-            if (!data.datos_solicitud['id_factura'] == '' && !data.datos_solicitud['id_factura'] == '0'){
-
-                $("#seeInformationModal .facturaInfo").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> LOTE</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['total']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMSN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['folio_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA CAPTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN F.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>FORMA P.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CLAVE PROD.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['uuid']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['descripcion']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-            }
-            else {
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:10px; margin:0; color:orange;">SIN HAY DATOS A MOSTRAR</label></div>');
-            }
-            $("#seeInformationModal .facturaInfo").append('</div>');
-        });
-    });*/
 }
 //FIN TABLA  ****************************************************************************************
 
@@ -585,72 +516,6 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-//Función para regresar a estatus 7 la solicitud
-/*$("#form_refresh").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        console.log(data);
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: url + "Comisiones/refresh_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data[0] ){
-                    $("#modal_refresh").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
-                    }, 3000);
-                }
-                else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});*/
-
-/*$(document).on("click", ".btn-historial-lo", function(){
-    window.open(url+"Comisiones/getHistorialEmpresa", "_blank");
-});*/
-
-/*function preview_info(archivo){
-    $("#documento_preview .modal-dialog").html("");
-    $("#documento_preview").css('z-index', 9999);
-    archivo = url+"dist/documentos/"+archivo+"";
-    var re = /(?:\.([^.]+))?$/;
-    var ext = re.exec(archivo)[1];
-    elemento = "";
-    if (ext == 'pdf'){
-        elemento += '<iframe src="'+archivo+'" style="overflow:hidden; width: 100%; height: -webkit-fill-available">';
-        elemento += '</iframe>';
-        $("#documento_preview .modal-dialog").append(elemento);
-        $("#documento_preview").modal();
-    }
-    if(ext == 'jpg' || ext == 'jpeg'){
-        elemento += '<div class="modal-content" style="background-color: #333; display:flex; justify-content: center; padding:20px 0">';
-        elemento += '<img src="'+archivo+'" style="overflow:hidden; width: 40%;">';
-        elemento += '</div>';
-        $("#documento_preview .modal-dialog").append(elemento);
-        $("#documento_preview").modal();
-    }
-    if(ext == 'xlsx'){
-        elemento += '<div class="modal-content">';
-        elemento += '<iframe src="'+archivo+'"></iframe>';
-        elemento += '</div>';
-        $("#documento_preview .modal-dialog").append(elemento);
-    }
-}*/
 
 function selectAll(e) {
     tota2 = 0;
@@ -665,21 +530,3 @@ function selectAll(e) {
     });
 }
 
-/*function cleanComments(){
-    var myCommentsList = document.getElementById('documents');
-    myCommentsList.innerHTML = '';
-
-    var myFactura = document.getElementById('facturaInfo');
-    myFactura.innerHTML = '';
-}*/
-
-/*$(document).ready( function(){
-    $.getJSON( url + "Comisiones/getReporteEmpresa").done( function( data ){
-        $(".report_empresa").html();
-        $.each( data, function( i, v){
-            $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-
-        });
-    });
-
-});*/

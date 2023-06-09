@@ -1,36 +1,13 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'contrato' => 1,
-		'documentacion' => 0,
-		'corrida' => 0,
-		'inventario' => 0,
-		'inventarioDisponible' => 0,
-		'status8' => 0,
-		'status14' => 0,
-		'lotesContratados' => 0,
-		'ultimoStatus' => 0,
-		'lotes45dias' => 0,
-		'consulta9Status' => 0,
-		'consulta12Status' => 0,
-		'gerentesAsistentes' => 0,
-		'expedientesIngresados'	=>	0,
-		'asignarVentas' => 0,
-		'corridasElaboradas'	=>	0,
-	);
-	//$this->load->view('template/contratacion/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
+
 	<!--Contenido de la página-->
 	<div class="content">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<center>
-						<!--<h3>CONTRATO</h3>-->
 					</center>
 					<hr>
 					<br>

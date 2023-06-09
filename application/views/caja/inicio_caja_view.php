@@ -1,25 +1,9 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 1,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'cambiarAsesor' => 0,
-		'historialPagos' => 0,
-		'pagosCancelados' => 0,
-		'altaCluster' => 0,
-		'altaLote' => 0,
-		'inventario' => 0,
-		'actualizaPrecio' => 0,
-		'actualizaReferencia' => 0,
-		'liberacion' => 0
-	);
-	//$this->load->view('template/caja/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-	?>
-			<!--Contenido de la página-->
+	<?php $this->load->view('template/sidebar'); ?>
+	
+		<!--Contenido de la página-->
 		<div class="content">
 			<div class="container-fluid">
 				<div class="row">

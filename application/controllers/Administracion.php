@@ -1,9 +1,7 @@
 <?php
 
-use application\helpers\email\administracion\Elementos_Correos_Admin;
-
- if (!defined('BASEPATH')) exit('No direct script access allowed');
- class Administracion extends CI_Controller{
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+class Administracion extends CI_Controller{
 	public function __construct()
 	{
 		parent::__construct();
@@ -19,27 +17,26 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
         $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
 		$this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 
 	public function index() {
 		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' , '39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
-		'21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' , 
-		'76', '77' , '78', '79' , '80', '81' , '82', '83' , '84'))) {
+		    '21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' ,
+		    '76', '77' , '78', '79' , '80', '81' , '82', '83' , '84'))) {
 			redirect(base_url() . 'login');
 		}
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('template/home',$datos);
+		$this->load->view('template/home');
 		$this->load->view('template/footer');
 	}
 
 	public function lista_cliente_administracion(){
-		    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-			$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-			/*-------------------------------------------------------------------------------*/		
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
+		$this->load->view("contratacion/datos_cliente_contratacion_view");
 	}
 
 	public function datos_estatus_11_datos(){
@@ -214,9 +211,6 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 	}
 	public function inventario()/*this is the function*/
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$datos["rol"] = $this->session->userdata('id_rol');
@@ -462,17 +456,13 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
 	{
 		if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
 		{
-			//echo "<script>console.log('No hay sesión iniciada');</script>";
 			redirect(base_url() . "index.php/login");
 		}
 	}
 	
-    public function status11Validado(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
+    public function status11Validado() {
         $this->load->view('template/header');
-        $this->load->view("administracion/validadoStatus11", $datos);
+        $this->load->view("administracion/validadoStatus11");
     }
 
     public function getDateStatus11(){
@@ -486,10 +476,10 @@ use application\helpers\email\administracion\Elementos_Correos_Admin;
     }
 
 	public function repAdministracion(){
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("administracion/vista_reporte_admin", $datos);
+        $this->load->view("administracion/vista_reporte_admin");
 	}
+
 	public function getRepoAdmin($idResidencial){
 		$data = $this->Administracion_model->getRepAdmon($idResidencial);
         if($data != null) {

@@ -4,12 +4,8 @@
 <div class="wrapper">
     <?php
     if($this->session->userdata('id_rol')=="49" )
-    {/*-------------------------------------------------------*/
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+    {
+        $this->load->view('template/sidebar');
     }else{
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
     }

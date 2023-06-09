@@ -21,9 +21,8 @@
 <body>
     
     <div class="wrapper">
-        <?php  
-        $this->load->view('template/sidebar', '');
-        ?>
+    <?php $this->load->view('template/sidebar'); ?>
+
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">

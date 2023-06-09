@@ -8,13 +8,17 @@ class Api extends CI_Controller
 
     public function __construct()
     {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
-            parent::__construct();
-            date_default_timezone_set('America/Mexico_City');
-            $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-            $this->load->model(array('Api_model', 'General_model', 'Internomex_model'));
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+        parent::__construct();
+        date_default_timezone_set('America/Mexico_City');
+        $this->load->helper(array('form'));
+        $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model'));
+        $this->load->model([
+            'opcs_catalogo/valores/AutorizacionClienteOpcs',
+            'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
+        ]);
     }
 
     function authenticate()
@@ -442,5 +446,130 @@ class Api extends CI_Controller
         }
     }
 
+    public function validarAutorizacionCorreo(int $idCliente)
+    {
+        $codigo = $this->input->get('codigo');
+        if (!isset($codigo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No hay un código de verificación.'
+            ]);
+            return;
+        }
 
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (!isset($cliente)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No existe el cliente.'
+            ]);
+            return;
+        }
+
+        if (is_null($cliente->autorizacion_correo) && is_null($cliente->codigo_correo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El link ya no está activo.'
+            ]);
+            return;
+        }
+
+        if ($cliente->autorizacion_correo == AutorizacionClienteOpcs::VALIDADO) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El registro ya fue anteriormente validado.'
+            ]);
+            return;
+        }
+
+        if ($cliente->codigo_correo !== $codigo) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'El código no coincide con el registro.'
+            ]);
+            return;
+        }
+
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_correo]);
+        $this->General_model->updateRecord(
+            'clientes', ['autorizacion_correo' => AutorizacionClienteOpcs::VALIDADO],
+            'id_cliente', $idCliente
+        );
+
+        $this->load->view('template/header');
+        $this->load->view('clientes/autorizacion-cliente', [
+            'titulo' => 'PROCESO EXITOSO',
+            'mensaje' => 'Gracias por autorizar y verificar la información.'
+        ]);
+    }
+
+    public function validarAutorizacionSms(int $idCliente)
+    {
+        $codigo = $this->input->get('codigo');
+
+        if (!isset($codigo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No hay un código de verificación.'
+            ]);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (!isset($cliente)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No existe el cliente.'
+            ]);
+            return;
+        }
+
+        if (is_null($cliente->autorizacion_sms) && is_null($cliente->codigo_sms)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El link ya no está activo.'
+            ]);
+            return;
+        }
+
+        if ($cliente->autorizacion_sms == AutorizacionClienteOpcs::VALIDADO) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El registro ya fue anteriormente validado.'
+            ]);
+            return;
+        }
+
+        if ($cliente->codigo_sms !== $codigo) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'El código no coincide con el registro.'
+            ]);
+            return;
+        }
+
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_sms]);
+        $this->General_model->updateRecord(
+            'clientes', ['autorizacion_sms' => AutorizacionClienteOpcs::VALIDADO],
+            'id_cliente', $idCliente
+        );
+
+        $this->load->view('template/header');
+        $this->load->view('clientes/autorizacion-cliente', [
+            'titulo' => 'PROCESO EXITOSO',
+            'mensaje' => 'Gracias por autorizar y verificar la información.'
+        ]);
+    }
 }

@@ -23,7 +23,10 @@ class Pagos extends CI_Controller
     $this->load->database('default');
     $this->jwt_actions->authorize('4141', $_SERVER['HTTP_HOST']);
     $this->validateSession();
-   }
+
+      $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+  }
 
    public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
@@ -32,27 +35,17 @@ class Pagos extends CI_Controller
 
    public function revision_asimilados()
    {
-     $datos = array();
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-     $salida = str_replace('' . base_url() . '', '', $val);
-     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-     // $this->load->view('template/header');
-     // $this->load->view("ventas/revision_asimilados", $datos);
-
      switch($this->session->userdata('id_rol')){
        case '31':
-       $this->load->view('template/header');
-       $this->load->view("pagos/revision_asimilados_intmex_view", $datos);
+           $this->load->view('template/header');
+           $this->load->view("pagos/revision_asimilados_intmex_view");
        break;
 
        default:
-       $this->load->view('template/header');
-       $this->load->view("pagos/revision_asimilados_view", $datos);
+           $this->load->view('template/header');
+           $this->load->view("pagos/revision_asimilados_view");
        break;
      }
-
    }
 
 
@@ -118,15 +111,8 @@ class Pagos extends CI_Controller
 
     public function bonos_historial()
     {
-  
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("pagos/bonos_historial_view", $datos);
+        $this->load->view('template/header');
+        $this->load->view("pagos/bonos_historial_view");
     }
 
     public function enviarBonosMex($idbono){
@@ -200,24 +186,17 @@ class Pagos extends CI_Controller
   
   public function revision_remanente()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     switch($this->session->userdata('id_rol')){
       case '31':
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_remanente_intmex_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_remanente_intmex_view");
       break;
 
       default:
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_remanente_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_remanente_view");
       break;
     }
-
   }
   
   public function lista_usuarios(){
@@ -278,8 +257,6 @@ class Pagos extends CI_Controller
 
 
   public function getPagosByProyect($proyect, $formap){
-    $proyect = $this->input->post('proyect');  
-    $formap = $this->input->post('formap');  
     if(empty($proyect)){
       echo json_encode($this->Pagos_model->getPagosByProyect());
   
@@ -444,27 +421,17 @@ class Pagos extends CI_Controller
 
   public function revision_factura()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    // $this->load->view('template/header');
-    // $this->load->view("ventas/revision_factura", $datos);
-
     switch($this->session->userdata('id_rol')){
       case '31':
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_factura_intmex_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_factura_intmex_view");
       break;
 
       default:
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_factura_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_factura_view");
       break;
     }
-
   }
 
  
@@ -498,25 +465,17 @@ class Pagos extends CI_Controller
 
     public function revision_xml()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
-        $this->load->view('template/header');
-        $this->load->view("pagos/revision_xml_intmex_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_xml_intmex_view");
         break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("pagos/revision_xml_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_xml_view");
         break;
       }
-
-
     }
 
 
@@ -770,23 +729,16 @@ class Pagos extends CI_Controller
     
     public function pagosExtranjero()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
-
-        case '31':
-        $this->load->view('template/header');
+          case '31':
+            $this->load->view('template/header');
         
-        $this->load->view("pagos/pagos_extranjero_intmex_view", $datos);
-        break;
+            $this->load->view("pagos/pagos_extranjero_intmex_view");
+            break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("pagos/pagos_extranjero_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/pagos_extranjero_view");
         break;
       }
 
@@ -834,21 +786,15 @@ class Pagos extends CI_Controller
 
     public function revision_mktd()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXmktd", $datos);
+            $this->load->view('template/header');
+            $this->load->view("ventas/revision_INTMEXmktd");
         break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_mktd", $datos);
+            $this->load->view('template/header');
+            $this->load->view("ventas/revision_mktd");
         break;
       }
 
@@ -906,14 +852,8 @@ class Pagos extends CI_Controller
 
       public function enviadas_internomex()
       {
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
         $this->load->view('template/header');
-        $this->load->view("pagos/enviadas_intmex_view", $datos);
+        $this->load->view("pagos/enviadas_intmex_view");
       }
   
       public function getDatosEnviadasInternomex(){
@@ -928,5 +868,83 @@ class Pagos extends CI_Controller
       }
       
 
+      public function revision_especial()
+      {
+        switch($this->session->userdata('id_rol')){
+          case '31':
+              $this->load->view('template/header');
+              $this->load->view("ventas/revision_INTMEXremanente");
+          break;
+          default:
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_especial_view");
+          break;
+        }
+  
+      }
+
+
+      public function acepto_internomex_especial(){
+        $this->load->model("Comisiones_model");
+        $sol=$this->input->post('idcomision');  
+        $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+       
+          if( $consulta_comisiones->num_rows() > 0 ){
+            $consulta_comisiones = $consulta_comisiones->result_array();
+            $id_user_Vl = $this->session->userdata('id_usuario');
+            
+              $sep = ',';
+              $id_pago_i = '';
+    
+              $data=array();
+    
+              foreach ($consulta_comisiones as $row) {
+                $id_pago_i .= implode($sep, $row);
+                $id_pago_i .= $sep;
+    
+                $row_arr=array(
+                  'id_pago_i' => $row['id_pago_i'],
+                  'id_usuario' =>  $id_user_Vl,
+                  'fecha_movimiento' => date('Y-m-d H:i:s'),
+                  'estatus' => 1,
+                  'comentario' =>  'CONTRALORÍA MARCO COMO PAGADA' 
+                );
+                 array_push($data,$row_arr);
+    
+    
+              }
+              $id_pago_i = rtrim($id_pago_i, $sep);
+          
+                $up_b = $this->Pagos_model->update_contraloria_especial($id_pago_i);
+                $ins_b = $this->Pagos_model->insert_phc($data);
+          
+          if($up_b == true && $ins_b == true){
+            $data_response = 1;
+            echo json_encode($data_response);
+          } else {
+            $data_response = 0;
+            echo json_encode($data_response);
+          }
+                
+          }
+          else{
+            $data_response = 0;
+          echo json_encode($data_response);
+          }
+      }
+
+      public function getDatosEspecialRContraloria(){
+        $dat =  $this->Pagos_model->getDatosEspecialRContraloria()->result_array();
+       for( $i = 0; $i < count($dat); $i++ ){
+           $dat[$i]['pa'] = 0;
+       }
+       echo json_encode( array( "data" => $dat));
+      }
+  
+      public function getHistorialAbono2($id)
+      {
+        echo json_encode($this->Pagos_model->getHistorialAbono2($id)->result_array());
+      }
+    
 }
 

@@ -1,6 +1,8 @@
+let titulosInventario = [];
 $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
     if (i != 0) {
         var title = $(this).text();
+        titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value) {
@@ -25,31 +27,7 @@ $("#tabla_ingresar_9").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 1:
-                                return 'TIPO DE VENTA';
-                                break;
-                            case 2:
-                                return 'PROYECTO'
-                            case 3:
-                                return 'CONDOMINIO';
-                                break;
-                            case 4:
-                                return 'LOTE';
-                                break;
-                            case 5:
-                                return 'CLIENTE';
-                                break;
-                            case 6:
-                                return 'GERENTE';
-                                break;
-                            case 7:
-                                return 'RESIDENCIA';
-                                break;
-                            case 8:
-                                return 'UBICACIÓN';
-                                break;
-                        }
+                        return ' ' + titulosInventario[columnIdx -1]  + ' ';
                     }
                 }
             }
@@ -66,31 +44,7 @@ $("#tabla_ingresar_9").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 1:
-                                return 'TIPO VENTA';
-                                break;
-                            case 2:
-                                return 'PROYECTO'
-                            case 3:
-                                return 'CONDOMINIO';
-                                break;
-                            case 4:
-                                return 'LOTE';
-                                break;
-                            case 5:
-                                return 'CLIENTE';
-                                break;
-                            case 6:
-                                return 'GERENTE';
-                                break;
-                            case 7:
-                                return 'RESIDENCIA';
-                                break;
-                            case 8:
-                                return 'UBICACIÓN';
-                                break;
-                        }
+                        return ' ' + titulosInventario[columnIdx -1]  + ' ';
                     }
                 }
             }
@@ -120,7 +74,7 @@ $("#tabla_ingresar_9").ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -161,7 +115,7 @@ $("#tabla_ingresar_9").ready(function () {
         {
             width: "17%",
             data: function (d) {
-                return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+                return `<span class="label lbl-azure">${d.nombreSede}</span>`;
             }
         },
         {
@@ -169,7 +123,7 @@ $("#tabla_ingresar_9").ready(function () {
             data: function (data) {
                 var cntActions;
                 if (data.vl == '1')
-                    cntActions = 'En proceso de Liberación';
+                    cntActions = 'EN PROCESO LIBERACIÓN';
                 else {
                     if (data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
                         cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-residencia="' + data.residencia + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -233,7 +187,7 @@ $("#tabla_ingresar_9").ready(function () {
                 fechaVenc = 'N/A';
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" margin-bottom: 7px">';
             informacion_adicional += '          <label><b>Información adicional</b></label>';
             informacion_adicional += '      </div>';
             informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>' + status + '</label></div>';
@@ -249,6 +203,7 @@ $("#tabla_ingresar_9").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
     });
+
     $("#tabla_ingresar_9 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
@@ -269,6 +224,7 @@ $("#tabla_ingresar_9").ready(function () {
         $("#rl").selectpicker('refresh');
         $("#residencia").selectpicker('refresh');
     });
+    
     $("#tabla_ingresar_9 tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
         getInfo3[0] = $(this).attr("data-idCliente");
@@ -284,13 +240,13 @@ $("#tabla_ingresar_9").ready(function () {
         $('#rechReg').modal('show');
     });
 });
+
 $(document).on('click', '#save1', function (e) {
     e.preventDefault();
     var comentario = $("#comentario").val();
     var totalNeto2 = $("#totalNeto2").val();
     var rl = $("#rl").val();
     var residencia = $("#residencia").val();
-    //  me quede aqui para guaradar el nuevo dato porfavor que se guarde 
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
     var validaRL = ($("#rl").val().length == 0) ? 0 : 1;
@@ -305,7 +261,6 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
     dataExp1.append("residencia", residencia);
-    var cliente = getInfo1[0];
     if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
     if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {
@@ -345,6 +300,7 @@ $(document).on('click', '#save1', function (e) {
         });
     }
 });
+
 $(document).on('click', '#save3', function (e) {
     e.preventDefault();
     var comentario = $("#comentario3").val();
@@ -397,6 +353,7 @@ $(document).on('click', '#save3', function (e) {
         });
     }
 });
+
 jQuery(document).ready(function () {
     fillSelectsForV9();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
@@ -409,8 +366,8 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
-    let info = [];
 });
+
 function SoloNumeros(evt) {
     if (window.event) {
         keynum = evt.keyCode;
@@ -426,72 +383,7 @@ function SoloNumeros(evt) {
         return false;
     }
 }
-// Jquery Dependency
-$("input[data-type='currency']").on({
-    keyup: function () {
-        formatCurrency($(this));
-    },
-    blur: function () {
-        formatCurrency($(this), "blur");
-    },
-    click: function () {
-        formatCurrency($(this));
-    },
-});
-function formatNumber(n) {
-    // format number 1000000 to 1,234,567
-    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
-function formatCurrency(input, blur) {
-    // appends $ to value, validates decimal side
-    // and puts cursor back in right position.
-    // get input value
-    var input_val = input.val();
-    // don't validate empty input
-    if (input_val === "") { return; }
-    // original length
-    var original_len = input_val.length;
-    // initial caret position
-    var caret_pos = input.prop("selectionStart");
-    // check for decimal
-    if (input_val.indexOf(".") >= 0) {
-        // get position of first decimal
-        // this prevents multiple decimals from
-        // being entered
-        var decimal_pos = input_val.indexOf(".");
-        // split number by decimal point
-        var left_side = input_val.substring(0, decimal_pos);
-        var right_side = input_val.substring(decimal_pos);
-        // add commas to left side of number
-        left_side = formatNumber(left_side);
-        // validate right side
-        right_side = formatNumber(right_side);
-        // On blur make sure 2 numbers after decimal
-        if (blur === "blur") {
-            right_side += "00";
-        }
-        // Limit decimal to only 2 digits
-        right_side = right_side.substring(0, 2);
-        // join number by .
-        input_val = "$" + left_side + "." + right_side;
-    } else {
-        // no decimal entered
-        // add commas to number
-        // remove all non-digits
-        input_val = formatNumber(input_val);
-        input_val = "$" + input_val;
-        // final formatting
-        if (blur === "blur") {
-            input_val += ".00";
-        }
-    }
-    // send updated string to input
-    input.val(input_val);
-    // put caret back in the right position
-    var updated_len = input_val.length;
-    caret_pos = updated_len - original_len + caret_pos;
-    input[0].setSelectionRange(caret_pos, caret_pos);
-}
+
 function fillSelectsForV9() {
     $.getJSON("fillSelectsForV9").done(function (data) {
         for (let i = 0; i < data.length; i++) {

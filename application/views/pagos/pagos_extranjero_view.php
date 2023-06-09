@@ -6,11 +6,7 @@
         <?php
             if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"
                 || $this->session->userdata('id_rol')=="70"){
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;  
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             }
             else
             {
@@ -213,7 +209,7 @@
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="<?= base_url() ?>dist/js/controllers/pagos/enviadas_intmex.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/pago_extranjero.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

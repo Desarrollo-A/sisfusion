@@ -3,31 +3,13 @@
 <body>
     <div class="wrapper">
         <?php
-           if($this->session->userdata('id_rol') =="13" || $this->session->userdata('id_rol') =="17" || $this->session->userdata('id_rol') =="18"
-               || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_usuario')=="2767" || $this->session->userdata('id_rol')=="70"){
-            /*-----------//contraloria--------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+           if($this->session->userdata('id_rol') =="13" || $this->session->userdata('id_rol') =="17" || $this->session->userdata('id_rol') =="18" || $this->session->userdata('id_rol')=="31" || $this->session->userdata('id_usuario')=="2767" || $this->session->userdata('id_rol')=="70"){
+            $this->load->view('template/sidebar');
         }
         else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
         }
         ?>
-
-        <!-- Modals -->
-        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <form method="post" id="form_espera_uno">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">

@@ -1,20 +1,7 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'contrato' => 1,
-		'inventario' => 0,
-		'status3' => 0,
-		'status7' => 0,
-		'documentacion_ds' => 0,
-		'lotesContratados' => 0,
-	);
-	//$this->load->view('template/juridico/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-	?>
+<?php $this->load->view('template/sidebar'); ?>
+
 	<!--Contenido de la página-->
 	<div class="content">
 		<div class="container-fluid">

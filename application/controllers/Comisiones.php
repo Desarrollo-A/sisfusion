@@ -39,7 +39,6 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
         $this->load->view('template/header');
         $this->load->view("comisiones/dispersion-view", $datos);
@@ -76,7 +75,6 @@ class Comisiones extends CI_Controller
   public function activas() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
     $this->load->view("ventas/active_commissions", $datos);
@@ -90,9 +88,8 @@ class Comisiones extends CI_Controller
   public function liquidadas() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-    $this->load->view("comisiones/liquidadas-view", $datos);
+    $this->load->view("comisiones/liquidadas-view");
   }
 
   public function getDataLiquidadasPago() {
@@ -103,9 +100,8 @@ class Comisiones extends CI_Controller
   public function especiales() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-    $this->load->view("comisiones/especiales-view", $datos);
+    $this->load->view("comisiones/especiales-view");
   }
 
   public function getDataDispersionPagoEspecial() {
@@ -118,16 +114,8 @@ class Comisiones extends CI_Controller
 
   public function usuariosIncidencias()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/usuariosIncidencias", $datos);
+    $this->load->view("ventas/usuariosIncidencias");
   }
 
 
@@ -193,14 +181,8 @@ class Comisiones extends CI_Controller
   // ------------------------------------------------------CONFIRMAR PAGO CONTRALORIA----------------------------------------
   public function confirmar_pago()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/confirmar_pago", $datos);
+    $this->load->view("ventas/confirmar_pago");
   }
 
   public function getDatosConfirmarPago()
@@ -232,14 +214,8 @@ class Comisiones extends CI_Controller
     // ------------------------------------------------------CONFIRMAR PAGO CONTRALORIA----------------------------------------
     public function revision_cobranza()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/revision_cobranza_mktd", $datos);
+      $this->load->view("ventas/revision_cobranza_mktd");
     }
   
  
@@ -306,24 +282,16 @@ class Comisiones extends CI_Controller
   
     public function revision_factura()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      // $this->load->view('template/header');
-      // $this->load->view("ventas/revision_factura", $datos);
 
       switch($this->session->userdata('id_rol')){
         case '31':
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXfactura", $datos);
+        $this->load->view("ventas/revision_INTMEXfactura");
         break;
 
         default:
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_factura", $datos);
+        $this->load->view("ventas/revision_factura");
         break;
       }
 
@@ -339,27 +307,15 @@ class Comisiones extends CI_Controller
   
     public function enviadas_internomex()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/enviadas_internomex", $datos);
+      $this->load->view("ventas/enviadas_internomex");
     }
 
 
         public function enviadas_cobranza()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/enviadas_cobranza", $datos);
+      $this->load->view("ventas/enviadas_cobranza");
     }
  
 
@@ -380,25 +336,17 @@ class Comisiones extends CI_Controller
   // ------------------------------------------------------HISTORIAL GENERAL CONTRALORIA----------------------------------------
   public function historial_comisiones()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    // $this->load->view("ventas/historial_contraloria", $datos);
 
      switch($this->session->userdata('id_rol')){
       case '28':
       case '18':
       $this->load->view('template/header');
-      $this->load->view("ventas/historial_Marketing", $datos);
+      $this->load->view("ventas/historial_Marketing");
       break;
       default:
       $this->load->view('template/header');
-      $this->load->view("ventas/historial_contraloria", $datos);
+      $this->load->view("ventas/historial_contraloria");
       break;
     }
 
@@ -626,14 +574,8 @@ function update_estatus(){
   // ------------------------------------------------------ABONO TEMPORAL CONTRALORIA----------------------------------------
   public function dispersion_com_contraloria()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/dispersion_contraloria", $datos);
+    $this->load->view("ventas/dispersion_contraloria");
   }
   // ------------------------------------------------------****************----------------------------------------
 
@@ -643,12 +585,6 @@ function update_estatus(){
   {
     $id_user = $this->session->userdata('id_usuario');
     $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
     $datos["cp_datos"] = $this->Comisiones_model->consulta_codigo_postal($id_user)->result_array();
 
@@ -677,14 +613,8 @@ function update_estatus(){
 
   public function asesores_baja()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/comisiones_colaborador_externo", $datos);
+    $this->load->view("ventas/comisiones_colaborador_externo");
   }
 
   public function getDatosFactura($uuid, $id_res){
@@ -1171,27 +1101,15 @@ function update_estatus(){
 
   public function historial_colaborador()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-      $this->load->view("ventas/historial_contraloria", $datos);    
+      $this->load->view("ventas/historial_contraloria");    
   }
 
 
     public function historial_baja()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_comisiones_Baja", $datos);
+    $this->load->view("ventas/historial_comisiones_Baja");
   }
 
 
@@ -1542,14 +1460,8 @@ if( isset( $_FILES ) && !empty($_FILES) ){
   // ------------------------------------------DISPERSION MARKETING DIGITAL ----------------------------------------
   public function dispersion_mktd()
   {
-    $datos=array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace(''.base_url().'', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/comisiones_dispersion_mktd",$datos);
+    $this->load->view("ventas/comisiones_dispersion_mktd");
   }
 
   
@@ -1630,14 +1542,8 @@ if( isset( $_FILES ) && !empty($_FILES) ){
 // ------------------------------------------DISPERSION MARKETING DIGITAL ----------------------------------------
 public function dispersion_club()
 {
-  $datos=array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace(''.base_url().'', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/comisiones_dispersion_club",$datos);
+  $this->load->view("ventas/comisiones_dispersion_club");
 }
 
 
@@ -1730,14 +1636,8 @@ echo json_encode($respuesta);
 
 public function bonos_club()
 {
-  $datos=array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace(''.base_url().'', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/bonos_club",$datos);
+  $this->load->view("ventas/bonos_club");
 }
 
 public function getDatosComisionesNuevas_dos_bonos($proyecto, $condominio){
@@ -2686,16 +2586,8 @@ public function addFileControversia(){
 
 public function solicitar_controversia()
 {
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $datos = array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace('' . base_url() . '', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/solicitar_controversia", $datos);
+  $this->load->view("ventas/solicitar_controversia");
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -2759,29 +2651,13 @@ public function LiquidarLote(){
 
    
     public function getCommissionsWithoutPaymentInNeodata(){
-        $datos=array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        /*CONSULTAS PARA OBTENER EL PADRE DE LA OPCIÓN ACTUAL PARA ACTIVARLA*/
-        $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace(''.base_url().'', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
-        /*-----------------*/
         $this->load->view('template/header');
-        $this->load->view("ventas/commissions_without_payment", $datos);
+        $this->load->view("ventas/commissions_without_payment");
     }
 
     public function validateRegion(){
-        $datos=array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        /*CONSULTAS PARA OBTENER EL PADRE DE LA OPCIÓN ACTUAL PARA ACTIVARLA*/
-        $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace(''.base_url().'', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
-        /*-----------------*/
         $this->load->view('template/header');
-        $this->load->view("ventas/validate_region", $datos);
+        $this->load->view("ventas/validate_region");
     }
 
     public function getCommissionsToValidate(){
@@ -2887,21 +2763,15 @@ public function LiquidarLote(){
 
     public function revision_mktd()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXmktd", $datos);
+        $this->load->view("ventas/revision_INTMEXmktd");
         break;
 
         default:
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_mktd", $datos);
+        $this->load->view("ventas/revision_mktd");
         break;
       }
 
@@ -2952,21 +2822,15 @@ public function LiquidarLote(){
     public function revision_especial()
     {
       //Moficiaciones para revisiones especiales
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXremanente", $datos);
+        $this->load->view("ventas/revision_INTMEXremanente");
         break;
 
         default:
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_especial", $datos);
+        $this->load->view("ventas/revision_especial");
         break;
       }
 
@@ -2990,14 +2854,8 @@ public function LiquidarLote(){
 
     public function resguardos()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/revision_resguardo", $datos);
+      $this->load->view("ventas/revision_resguardo");
     }
  
     public function getDatosResguardoContraloria($user,$condominio){
@@ -3012,14 +2870,8 @@ public function LiquidarLote(){
 
      public function retiros()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/retiros", $datos);
+      $this->load->view("ventas/retiros");
     }
  
     public function getDatosRetirosContraloria($proyecto,$condominio){
@@ -3115,27 +2967,13 @@ public function LiquidarLote(){
 
   public function prestamo_colaborador()
   {
-    
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/PanelPrestamo", $datos);
+    $this->load->view("ventas/PanelPrestamo");
   }
   public function prestamos_historial()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/prestamos_historial", $datos);
+    $this->load->view("ventas/prestamos_historial");
   }
 
   public function getPrestamoPorUser($estado)
@@ -3170,27 +3008,13 @@ public function LiquidarLote(){
   }
   public function solicitudes_prestamo()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/prestamos_solicitados", $datos);
+    $this->load->view("ventas/prestamos_solicitados");
   }
   public function bonos_historial_colaborador()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/bonos_historial_colaborador", $datos);
+    $this->load->view("ventas/bonos_historial_colaborador");
   }
 
   public function getBonosX_User()
@@ -3203,15 +3027,8 @@ public function LiquidarLote(){
 
   public function bonos_contraloria()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/bonos", $datos);
+    $this->load->view("ventas/bonos");
   }
   // public function revision_bonos()
   // {
@@ -3233,39 +3050,18 @@ public function LiquidarLote(){
   // }
   public function bonos_historial()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/bonos_historial", $datos);
+    $this->load->view("ventas/bonos_historial");
   }
   public function bonos_colaborador()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/PanelBonos", $datos);
+    $this->load->view("ventas/PanelBonos");
   }
   public function prestamos()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/prestamos", $datos);
+    $this->load->view("ventas/prestamos");
   }
 
   public function saveBono()
@@ -3405,16 +3201,8 @@ public function LiquidarLote(){
   
   public function prestamos_contraloria()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/prestamos", $datos);
+    $this->load->view("ventas/prestamos");
   }
  
  public function getPrestamosXporUsuario(){
@@ -3485,43 +3273,18 @@ echo json_encode($respuesta);
 
 public function descuentos_contraloria()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/descuentos", $datos);
+    $this->load->view("ventas/descuentos");
   }
   public function descuentos_contra()
   {
-
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/descuentos_contra", $datos);
+    $this->load->view("ventas/descuentos_contra");
   }
 public function descuentos_historial()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_descuentos", $datos);
+    $this->load->view("ventas/historial_descuentos");
   }
 
 
@@ -3873,16 +3636,8 @@ echo json_encode($respuesta);
   
   public function historialTotalLote()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_postventa", $datos);
+    $this->load->view("ventas/historial_postventa");
   }
 
   public function getCommissionsByMktdUserReport(){
@@ -3927,14 +3682,8 @@ echo json_encode($respuesta);
   /**REPORTE JOSH */
   public function reportPz()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/reportAllpzr28", $datos);
+    $this->load->view("ventas/reportAllpzr28");
   }
 
 
@@ -3964,30 +3713,14 @@ echo json_encode($respuesta);
 
     public function cobranza_reporte()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_reporte", $datos);
+    $this->load->view("ventas/cobranza_reporte");
   }
 
       public function cobranza_ranking()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_ranking", $datos);
+    $this->load->view("ventas/cobranza_ranking");
   }
 
 
@@ -4031,16 +3764,8 @@ echo json_encode($respuesta);
 
     public function cobranza_dinamic()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_dinamic", $datos);
+    $this->load->view("ventas/cobranza_dinamic");
   }
 
  
@@ -4058,16 +3783,8 @@ echo json_encode($respuesta);
 
         public function cobranza_indicador()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_indicador", $datos);
+    $this->load->view("ventas/cobranza_indicador");
   }
 
  
@@ -4135,16 +3852,8 @@ echo json_encode($respuesta);
 
     public function changeCommissionAgent()
     {
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
         $this->load->view('template/header');
-        $this->load->view("ventas/changeCommissionAgent", $datos);
+        $this->load->view("ventas/changeCommissionAgent");
     }
 
     public function getMktdCommissionsList()
@@ -4563,16 +4272,8 @@ public function getComisionesLoteSelected($idLote){
 /**-------------------------------BONOS BAJAS-------------------------------------------- */
 public function BonosBaja()
 {
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $datos = array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace('' . base_url() . '', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/BonosBaja", $datos);
+  $this->load->view("ventas/BonosBaja");
 }
 /**-------------------------------------------------------------------------------------- */
 function getDatosNuevo(){
@@ -4649,16 +4350,8 @@ public function getMontoDispersadoDates($fecha1, $fecha2){
 
   public function historial_pagado()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_pagadoMKTD", $datos);
+    $this->load->view("ventas/historial_pagadoMKTD");
   }
 
 
@@ -4872,16 +4565,8 @@ public function lista_sedes()
     
   public function saldos_Intmex()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/saldos_Intmex", $datos);
+    $this->load->view("ventas/saldos_Intmex");
   }
 
     public function listEmpresa()
@@ -4909,14 +4594,8 @@ public function lista_sedes()
     /**CAMBIAR PRECIO LOTE */
     public function Ajustes()
 {
-  $datos = array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace('' . base_url() . '', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/UpdatePrecioLote", $datos);
+  $this->load->view("ventas/UpdatePrecioLote");
 }
 
 
@@ -4958,14 +4637,8 @@ public function SaveAjuste($opc = '')
 
     public function historialDescuentos()
 {
-  $datos = array();
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-  $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-  $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $salida = str_replace('' . base_url() . '', '', $val);
-  $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
   $this->load->view('template/header');
-  $this->load->view("ventas/historialCapitalFechas", $datos);
+  $this->load->view("ventas/historialCapitalFechas");
 }
 
 
@@ -5102,16 +4775,8 @@ function getDatosAbonadoDispersion3($idlote){
 
  public function general_Intmex()
   {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/general_Intmex", $datos);
+    $this->load->view("ventas/general_Intmex");
   }
 
 
@@ -5149,15 +4814,8 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
 
  public function historial_estatus()
   {
-
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_estatus", $datos);
+    $this->load->view("ventas/historial_estatus");
   }
 
 
@@ -5476,30 +5134,15 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
       }
   
       public function ReporteRevisionMKTD(){
-        $datos=array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        /*CONSULTAS PARA OBTENER EL PADRE DE LA OPCIÓN ACTUAL PARA ACTIVARLA*/
-        $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace(''.base_url().'', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
-        /*-----------------*/
         $this->load->view('template/header');
-        $this->load->view("ventas/ReporteRevisionMKTD", $datos);
+        $this->load->view("ventas/ReporteRevisionMKTD");
     }
 
 
         public function historial_nuevas()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-
         $this->load->view('template/header');
-        $this->load->view("ventas/historial_nuevas", $datos);      
+        $this->load->view("ventas/historial_nuevas");      
     }
 
     public function getDatosNuevasMontos($proyecto,$condominio){
@@ -5516,16 +5159,8 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
     }
 
     public function ReporteRevisionMKTD2(){
-      $datos=array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      /*CONSULTAS PARA OBTENER EL PADRE DE LA OPCIÓN ACTUAL PARA ACTIVARLA*/
-      $val = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace(''.base_url().'', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida,$this->session->userdata('id_rol'))->result();
-      /*-----------------*/
       $this->load->view('template/header');
-      $this->load->view("ventas/ReporteRevisionMKTD3", $datos);
+      $this->load->view("ventas/ReporteRevisionMKTD3");
   }
 
   public function ReporteTotalMktdFINAL($mes,$anio){
@@ -5756,16 +5391,8 @@ for ($d=0; $d <count($dos) ; $d++) {
 
   public function liquidadosDescuentos()
     {
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/liquidadosDescuentos", $datos);
+      $this->load->view("ventas/liquidadosDescuentos");
     }
 
   public function getDescuentosLiquidados()
@@ -5789,16 +5416,8 @@ for ($d=0; $d <count($dos) ; $d++) {
 
 
     function reporte_pagos(){
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
         $this->load->view('template/header');
-        $this->load->view("comisiones/reporte_pagos", $datos);
+        $this->load->view("comisiones/reporte_pagos");
     }
 
     function getByTypeOU($userType){
@@ -5824,17 +5443,10 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
     function conglomerado_descuentos(){
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
       $datos = array();
       $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-      $this->load->view("ventas/conglomerado", $datos);
+      $this->load->view("ventas/conglomerado",$datos);
   }
 
     function fusionAcLi(){
@@ -5848,15 +5460,8 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
 
     public function flujo_comisiones() {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-
       $this->load->view('template/header');
-      $this->load->view('ventas/flujo_comisiones', $datos);
+      $this->load->view('ventas/flujo_comisiones');
     }
 
     public function getDatosFlujoComisiones() {
@@ -5878,15 +5483,8 @@ for ($d=0; $d <count($dos) ; $d++) {
  
     
     public function detenidas() {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-
       $this->load->view('template/header');
-      $this->load->view('ventas/comisiones_detenidas', $datos);
+      $this->load->view('ventas/comisiones_detenidas');
     }
 
  
@@ -5974,9 +5572,8 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function viewAsistentesGerencia()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("ventas/seguimiento_comisiones_asistente", $datos);
+        $this->load->view("ventas/seguimiento_comisiones_asistente");
     }
 
     public function getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus)
@@ -6072,9 +5669,8 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function viewVentasCanceladas()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("ventas/ventas_canceladas", $datos);
+        $this->load->view("ventas/ventas_canceladas");
     }
 
     public function getVentasCanceladas()
@@ -6126,22 +5722,16 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function pagosExtranjero()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
 
         case '31':
         $this->load->view('template/header');
-        $this->load->view("ventas/vista_extranjero_internomex", $datos);
+        $this->load->view("ventas/vista_extranjero_internomex");
         break;
 
         default:
         $this->load->view('template/header');
-        $this->load->view("ventas/vista_extranjero_contraloria", $datos);
+        $this->load->view("ventas/vista_extranjero_contraloria");
         break;
       }
 
@@ -6217,16 +5807,8 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode($respuesta);
   }
   public function reporteDevolucion(){
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("comisiones/reporte_devolucion_view", $datos);
+    $this->load->view("comisiones/reporte_devolucion_view");
   }
 
 
@@ -6431,15 +6013,8 @@ for ($d=0; $d <count($dos) ; $d++) {
 
     public function historial_prestamos()
     {
-
-      $datos = array(); 
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
-        $this->load->view("ventas/historial_prestamo_view", $datos);    
+        $this->load->view("ventas/historial_prestamo_view");    
     }
    
     public function updatePrestamos (){
@@ -6480,16 +6055,8 @@ public function lista_usuarios($rol,$forma_pago){
 }
   
 public function descuentosCapitalHumano(){
-  $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    $this->load->view("ventas/add_descuento", $datos);
+    $this->load->view("ventas/add_descuento");
   }
 
   public function getPuestosDescuentos(){
@@ -6514,18 +6081,12 @@ public function descuentosCapitalHumano(){
 
     public function revision_bonos()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       $this->load->view('template/header');
       if($this->session->userdata('id_rol') == 31){
-         $this->load->view("pagos/bonos_intmex_view", $datos);
+         $this->load->view("pagos/bonos_intmex_view");
          //  se cambio la vista  
          }else{
-           $this->load->view("pagos/bonos_solicitados_view", $datos);
+           $this->load->view("pagos/bonos_solicitados_view");
          }
          //  se cambio la vista 
     }

@@ -460,7 +460,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasFContraloria/" + proyecto + "/" + condominio,
+            "url": general_base_url + "pagos/getDatosNuevasFContraloria/" ,
             "type": "POST",
             data:{
                 proyecto : proyecto,
@@ -481,7 +481,7 @@ function getAssimilatedCommissions(proyecto, condominio){
 
         $("#seeInformationModalremanente").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
             });
@@ -725,9 +725,6 @@ $("#form_despausar").submit( function(e) {
     }
 });
 
-$(document).on("click", ".btn-historial-lo", function(){
-    window.open(general_base_url+"Comisiones/getHistorialEmpresa", "_blank");
-});
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");

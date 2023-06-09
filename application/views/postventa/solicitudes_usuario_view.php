@@ -5,17 +5,9 @@
 
 <body>
     <div class="wrapper">
-        <?php 
-            /*-------------------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-            /*--------------------------------------------------------*/
-        ?>
+        <?php  $this->load->view('template/sidebar'); ?>
  
- <div class="modal fade" id="modal_nuevas"  nombre="modal_nuevas" tabindex="-1" role="dialog"
+        <div class="modal fade" id="modal_nuevas"  nombre="modal_nuevas" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">

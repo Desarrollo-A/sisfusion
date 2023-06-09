@@ -2,13 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-        ?>
+    <?php $this->load->view('template/sidebar'); ?>
+
 
         <!-- Modals -->
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -63,7 +58,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- END Modals -->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -74,8 +69,12 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones nuevas <b>asimilados</b></h3>
-                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+                                    <div class="row">
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <h3 class="card-title center-align" >Comisiones nuevas <b>asimilados</b></h3>
+                                            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+                                        </div>     
+                                    </div>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
@@ -94,25 +93,23 @@
                                             </div>
                                         </div>
                                         <div class="material-datatables">
-                                            <div class="form-group">
-                                                <div class="table-responsive">
-                                                    <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
-                                                        <thead>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th>ID PAGO</th>
-                                                                <th>REFERENCIA</th>
-                                                                <th>NOMBRE</th>
-                                                                <th>SEDE</th>
-                                                                <th>TOTAL COMISIÓN</th>
-                                                                <th>IMPUESTO</th>
-                                                                <th>% COMISIÓN</th>
-                                                                <th>ESTATUS</th>
-                                                                <th>MÁS</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
+                                            <div class="form-group">                                                
+                                                <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>ID DE PAGO</th>
+                                                            <th>REFERENCIA</th>
+                                                            <th>NOMBRE</th>
+                                                            <th>SEDE</th>
+                                                            <th>TOTAL DE COMISIÓN</th>
+                                                            <th>IMPUESTO</th>
+                                                            <th>% COMISIÓN</th>
+                                                            <th>ESTATUS</th>
+                                                            <th>MÁS</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>

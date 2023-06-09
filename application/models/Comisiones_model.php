@@ -8167,7 +8167,7 @@ public function getDataDispersionPagoEspecial($val = '') {
     // 
 
     public function lotes(){
-        $cmd = "SELECT SUM(lotes) nuevo_general 
+        $cmd = "SELECT SUM(lotes)  nuevo_general 
         FROM (SELECT  COUNT(DISTINCT(id_lote)) lotes 
         FROM pago_comision_ind pci 
         INNER JOIN comisiones c on c.id_comision = pci.id_comision 
@@ -8204,7 +8204,7 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->row();
     }
     public function monto(){
-        $cmd = "SELECT SUM(monto) nuevo_general 
+        $cmd = "SELECT ROUND (SUM(monto), 3 ) nuevo_general 
         FROM (SELECT SUM(pci.abono_neodata) monto 
         FROM pago_comision_ind pci 
         INNER JOIN comisiones c on c.id_comision = pci.id_comision 

@@ -218,7 +218,12 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 tabla_remanente2.ajax.reload();
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>");
+                                $("#myModalEnviadas .modal-body").append(` 
+                                    <center>
+                                        <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif">
+                                            <p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.
+                                            </p>
+                                    </center>`);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
@@ -762,9 +767,6 @@ $("#form_despausar").submit( function(e) {
     }
 });
 
-$(document).on("click", ".btn-historial-lo", function(){
-    window.open(general_base_url+"Comisiones/getHistorialEmpresa", "_blank");
-});
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");

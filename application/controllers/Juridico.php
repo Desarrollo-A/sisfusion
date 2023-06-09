@@ -22,7 +22,9 @@ class Juridico extends CI_Controller
 
 		date_default_timezone_set('America/Mexico_City');
 
-	}
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 	public function index()
 	{
@@ -30,12 +32,8 @@ class Juridico extends CI_Controller
 		{
 			redirect(base_url() . 'login');
 		}
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-	 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-	 /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-		// $this->load->view('juridico/inicio_juridico_view',$datos);
-		$this->load->view('template/home',$datos);
+		$this->load->view('template/home');
 		$this->load->view('template/footer');
 	}
 

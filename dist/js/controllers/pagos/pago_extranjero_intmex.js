@@ -393,7 +393,7 @@ function getAssimilatedCommissions(proyecto, condominio){
 
         $("#seeInformationModalExtranjero").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-extranjero").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
             });
@@ -716,33 +716,5 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
 
 $(document).ready( function(){
-    $.getJSON( general_base_url + "Comisiones/report_plazas").done( function( data ){
-        $(".report_plazas").html();
-        $(".report_plazas1").html();
-        $(".report_plazas2").html();
-        if(data[0].id_plaza == '0' || data[1].id_plaza == 0){
-            if(data[0].plaza00==null || data[0].plaza00=='null' ||data[0].plaza00==''){
-                $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> '+data[0].plaza01+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            }
-            else{
-                $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> '+data[0].plaza01+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[0].plaza00+'%</label>');
-            }
-        }
-        if(data[1].id_plaza == '1' || data[1].id_plaza == 1){
-            if(data[1].plaza10==null || data[1].plaza10=='null' ||data[1].plaza10==''){
-                $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> '+data[1].plaza11+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            }
-            else{
-                $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> '+data[1].plaza11+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[1].plaza10+'%</label>');
-            }
-        }
-        if(data[2].id_plaza == '2' || data[2].id_plaza == 2){
-            if(data[2].plaza20==null || data[2].plaza20=='null' ||data[2].plaza20==''){
-                $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> '+data[2].plaza21+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            }
-            else{
-                $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> '+data[2].plaza21+'%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> '+data[2].plaza20+'%</label>');
-            }
-        }
-    });
+ 
 });                               

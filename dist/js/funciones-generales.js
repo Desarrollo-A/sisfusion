@@ -200,8 +200,8 @@ function setIniDatesXMonth(inicioFecha, finFecha) {
     endDate.getFullYear(),
   ].join("/");
 
-  $("" + inicioFecha + "").val(finalBeginDate);
-  $("" + finFecha + "").val(finalEndDate);
+  $("" + inicioFecha + "").val(finalBeginDate2);
+  $("" + finFecha + "").val(finalEndDate2);
 }
 
 function remplazarCaracter(text, busca, reemplaza) {
@@ -214,9 +214,9 @@ $("input[data-type='currency']").on({
   keyup: function() {
     formatCurrencyG($(this));
   },
-  blur: function() { 
-    formatCurrencyG($(this), "blur");
-  }
+  // blur: function() { 
+  //   formatCurrencyG($(this), "blur");
+  // }
 });
 
 function formatCurrencyG(input, blur) {

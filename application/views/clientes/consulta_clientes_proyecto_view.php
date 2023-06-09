@@ -4,7 +4,7 @@
     <div class="wrapper ">
         <?php
             if(in_array($this->session->userdata('id_usuario'), array(1980, 7097, 7092)))
-                $this->load->view('template/sidebar', '');
+                $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         ?>
