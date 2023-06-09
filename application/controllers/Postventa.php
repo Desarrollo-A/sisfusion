@@ -8,19 +8,20 @@ class Postventa extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','formatter', 'phpmailer_lib'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'phpmailer_lib'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
     {
         if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '62')
             redirect(base_url() . 'login');
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view('template/home', $datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
 
@@ -38,13 +39,12 @@ class Postventa extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
-                $this->load->view("postventa/escrituracion", $datos);
+                $this->load->view("postventa/escrituracion");
                 break;
 
             default:
@@ -58,7 +58,6 @@ class Postventa extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
  
         switch ($this->session->userdata('id_rol')) {
             case '11': // ADMON
@@ -68,7 +67,7 @@ class Postventa extends CI_Controller
             case '57': // TITULACIÓN
             case '62': // PROYECTOS
                 $this->load->view('template/header');
-                $this->load->view("postventa/solicitudes_escrituracion", $datos);
+                $this->load->view("postventa/solicitudes_escrituracion");
                 break;
             
             default:
@@ -82,7 +81,6 @@ class Postventa extends CI_Controller
         if($this->session->userdata('id_rol') == FALSE){
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')){
             case '11': //ADMON
             case '17': //CONTRALORIA
@@ -91,7 +89,7 @@ class Postventa extends CI_Controller
             case '57': //TITULACION
             case '62': //Proyectos
             $this->load->view('template/header');
-            $this->load->view("postventa/notaria", $datos);
+            $this->load->view("postventa/notaria");
             break;
 
             default:
@@ -928,8 +926,9 @@ class Postventa extends CI_Controller
            // "descuento" => $data['descuentos'],
             "valor_escriturar" => $data['valor_escri']
         );
-        //($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
-        
+        ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
+        ($data['fContrato'] == '' || $data['fContrato'] == null || $data['fContrato'] == 'null' || $data['fContrato'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_contrato'] =date("Y-m-d", strtotime(str_replace('/', '-', $data['fContrato'])));
+
         if($_POST['tipoNotaria'] == 1){
             $updateData['id_notaria'] = 0;
             $updateData['bandera_notaria'] = 1;
@@ -1319,27 +1318,28 @@ class Postventa extends CI_Controller
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="font-size: 1em;">
-                                                    <b>Valor de operación (descontando bonificaciones y/o descuentos):</b><br>
-                                                    
-                                                </td>
+                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Superficie:</b><br>
                                                     ' . $data->superficie . '
                                                 </td>
                                                 <td style="font-size: 1em;">
+                                                    <b>Valor de operación de contrato</b><br>
+                                                    $' .number_format($data->valor_contrato, 2, '.', ',').'
+                                                </td>
+                                                <td style="font-size: 1em;">
                                                     <b>Aportaciones:</b><br>
-                                                    $'.number_format($data->aportacion, 2, '.', '').'
+                                                    $'.number_format($data->aportacion, 2, '.', ',').'
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Descuentos:</b><br>
-                                                    $'.number_format($data->descuento, 2, '.', '').'
+                                                    $'.number_format($data->descuento, 2, '.', ',').'
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>Fecha de contrato:</b><br>
-                                                    ' . $data->modificado . '
+                                                    ' . $data->fecha_contrato . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                 <b>Motivo:</b><br>
@@ -1362,13 +1362,10 @@ class Postventa extends CI_Controller
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                             <td style="font-size: 1em;">
-                                                <b>Valor de operación de contrato:</b><br>
-                                                ' .$data->valor_contrato. '
-                                            </td>
-                                             <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
                                                 ' .$data->valor_escriturar. '
                                             </td>
+                                            
                                             </tr>
                                                
                                         </table>
@@ -1381,6 +1378,10 @@ class Postventa extends CI_Controller
                                                             <td style="font-size: 1em;">
                                                                 <b>Nombre del titular anterior:</b><br>
                                                                 ' . $data->nombre_anterior . '
+                                                            </td>
+                                                            <td style="font-size: 1em;">
+                                                                <b>Tipo de contrato anterior:</b><br>
+                                                                ' . $data->tipoContrato . '
                                                             </td>
                                                             <td style="font-size: 1em;">
                                                                 <b>Fecha contrato anterior:</b><br>
@@ -1617,13 +1618,12 @@ class Postventa extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         switch ($this->session->userdata('id_rol')) {
             case '17': // CONTRALORIA
             case '55': // POSTVENTA
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
-                $this->load->view("postventa/Reportes/reportes", $datos);
+                $this->load->view("postventa/Reportes/reportes");
                 break;
 
             default:
@@ -1733,7 +1733,7 @@ class Postventa extends CI_Controller
         $updateData = array(
             "estatus_pago" => $data['liquidado'],
             "cliente_anterior" =>($data['clienteI'] == 'default' || $data['clienteI'] == null ? 2 : $data['clienteI'] == 'uno') ? 1 : 2,
-            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null) ? 0 : $data['tipoContratoAnt'],
+            "tipo_contrato_ant" => ($data['tipoContratoAnt'] == "" || $data['tipoContratoAnt'] == null || $data['tipoContratoAnt'] == 'null')  ? 0 : $data['tipoContratoAnt'],
             "nombre_anterior" => $data['nombreI'] == '' || $data['nombreI'] == null || $data['nombreI'] == 'null' ? '' : $data['nombreI'],
             "RFC" => $data['rfcDatosI'] == '' || $data['rfcDatosI'] == 'N/A' || $data['rfcDatosI'] == 'null' ? NULL : $data['rfcDatosI'],
             "aportacion" => str_replace($replace,"",$data['aportaciones']),
@@ -1884,14 +1884,12 @@ function saveNotaria(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['titulaciones'] = $this->Postventa_model->GetTitulaciones();
         switch ($this->session->userdata('id_rol')) {
             case '55': // POSTVENTA
             case '56': // COMITÉ TÉCNICO
             case '57': // TITULACIÓN
                 $this->load->view('template/header');
-               
                 $this->load->view("postventa/solicitudes_usuario_view", $datos);
                 break;
 
@@ -2284,11 +2282,8 @@ function saveNotaria(){
     }
 
     function estatus3(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("postventa/status3revision",$datos);
+        $this->load->view("postventa/status3revision");
     }
 
      function getStatus3VP(){

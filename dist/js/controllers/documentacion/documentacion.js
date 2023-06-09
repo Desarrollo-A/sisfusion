@@ -28,7 +28,7 @@ const TipoDoc = {
     CONTRATO_FIRMADO: 30,
     DS_NEW: 'ds_new',
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
-    AUTORIZACIONES: 'autorizaciones',
+    AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
 };
 
@@ -376,6 +376,25 @@ $(document).on('click', '.verDocumento', function () {
         return;
     }
 
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.AUTORIZACIONES) {
+        abrirModalAutorizaciones($itself.attr('data-idLote'));
+        return;
+    }
+
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
+        const idCliente = $itself.attr('data-idCliente');
+        const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
+            ? 'deposito_seriedad' : 'deposito_seriedad_ds';
+
+        pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
+    }
+
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.PROSPECTO) {
+        const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
+
+        pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
+    }
+
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src=${pathUrl}></iframe></div>`,
         player: "html",
@@ -388,32 +407,7 @@ $(document).on('click', '.verDocumento', function () {
 $(document).on('click', '.seeAuts', function (e) {
     e.preventDefault();
     const $itself = $(this);
-    const idLote = $itself.attr('data-idLote');
 
-    $.post(`${general_base_url}registroLote/get_auts_by_lote/${idLote}`, function (data) {
-        let statusProceso;
-        $('#auts-loads').empty();
-
-        $.each(JSON.parse(data), function (i, item) {
-            if (item['estatus'] == 0) {
-                statusProceso = "<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
-            } else if (item['estatus'] == 1) {
-                statusProceso = "<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
-            } else if (item['estatus'] == 2) {
-                statusProceso = "<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
-            } else if (item['estatus'] == 3) {
-                statusProceso = "<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
-            } else {
-                statusProceso = "<small class='label bg-gray' style='background-color: #2F4F4F'>N/A</small>";
-            }
-
-            $('#auts-loads').append('<h4>Solicitud de autorización:  ' + statusProceso + '</h4><br>');
-            $('#auts-loads').append('<h4>Autoriza: ' + item['nombreAUT'] + '</h4><br>');
-            $('#auts-loads').append('<p style="text-align: justify;"><i>' + item['autorizacion'] + '</i></p><br><hr>');
-        });
-
-        $('#verAutorizacionesAsesor').modal('show');
-    });
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {
@@ -576,6 +570,33 @@ $(document).on("click", "#sendRequestButton", function (e) {
     }
 });
 
+function abrirModalAutorizaciones(idLote) {
+    $.post(`${general_base_url}registroLote/get_auts_by_lote/${idLote}`, function (data) {
+        let statusProceso;
+        $('#auts-loads').empty();
+
+        $.each(JSON.parse(data), function (i, item) {
+            if (item['estatus'] == 0) {
+                statusProceso = "<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
+            } else if (item['estatus'] == 1) {
+                statusProceso = "<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
+            } else if (item['estatus'] == 2) {
+                statusProceso = "<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
+            } else if (item['estatus'] == 3) {
+                statusProceso = "<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
+            } else {
+                statusProceso = "<small class='label bg-gray' style='background-color: #2F4F4F'>N/A</small>";
+            }
+
+            $('#auts-loads').append('<h4>Solicitud de autorización:  ' + statusProceso + '</h4><br>');
+            $('#auts-loads').append('<h4>Autoriza: ' + item['nombreAUT'] + '</h4><br>');
+            $('#auts-loads').append('<p style="text-align: justify;"><i>' + item['autorizacion'] + '</i></p><br><hr>');
+        });
+
+        $('#verAutorizacionesAsesor').modal('show');
+    });
+}
+
 /**
  * @param {number} tipoDocumento
  * @returns {string}
@@ -626,8 +647,9 @@ function crearBotonAccion(type, data) {
                 data-idDocumento="${data.idDocumento}" 
                 data-idLote="${data.idLote}" 
                 data-tituloDocumento="${tituloDocumento}"
-                data-idCliente="${data.idCliente ?? data.id_cliente}">
-                
+                data-idCliente="${data.idCliente ?? data.id_cliente}"
+                data-lp="${data.lugar_prospeccion}"
+                data-idProspeccion="${data.id_prospecto}">
                     <i class="${buttonIcono}"></i>
             </button>`
 }

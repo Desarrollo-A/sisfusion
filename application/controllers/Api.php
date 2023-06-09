@@ -8,13 +8,17 @@ class Api extends CI_Controller
 
     public function __construct()
     {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
-            parent::__construct();
-            date_default_timezone_set('America/Mexico_City');
-            $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-            $this->load->model(array('Api_model', 'General_model', 'Internomex_model'));
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+        parent::__construct();
+        date_default_timezone_set('America/Mexico_City');
+        $this->load->helper(array('form'));
+        $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model'));
+        $this->load->model([
+            'opcs_catalogo/valores/AutorizacionClienteOpcs',
+            'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
+        ]);
     }
 
     function authenticate()
@@ -45,8 +49,7 @@ class Api extends CI_Controller
         }
     }
 
-    function addLeadRecord()
-    {
+    function addLeadRecord() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -54,11 +57,11 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             else {
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(6489);
-                $valida_token = json_decode($this->validateToken($token, 6489));
-                if ($valida_token->status !== 200){
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9860);
+                $valida_token = json_decode($this->validateToken($token, 9860));
+                if ($valida_token->status !== 200)
                     echo json_encode($valida_token);
-                }else {
+                else {
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
                     $valida_token = Null;
                     foreach ($result->data as $key => $value) {
@@ -67,20 +70,18 @@ class Api extends CI_Controller
                     }
                     if(is_null($valida_token))
                         $valida_token = true;
-                    if(!empty($result->data) && $valida_token){
+                    if(!empty($result->data) && $valida_token)
                         $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    }else{
+                    else {
                         $checkSingup = null;
                         echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $data = json_decode(file_get_contents("php://input"));
-                        if(!isset($data->APELLIDOPATERNO)){
+                        if(!isset($data->APELLIDOPATERNO))
                             $data->APELLIDOPATERNO = '';
-                        }
-                        if (!isset($data->APELLIDOMATERNO)) {
+                        if (!isset($data->APELLIDOMATERNO))
                             $data->APELLIDOMATERNO = ''; 
-                        }
                         if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDDRAGON))
                             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
@@ -126,9 +127,8 @@ class Api extends CI_Controller
                                 }
                             }
                         }
-                    }else{
+                    } else
                         echo json_encode($checkSingup);
-                    }
                 }
             }
         }
@@ -446,5 +446,130 @@ class Api extends CI_Controller
         }
     }
 
+    public function validarAutorizacionCorreo(int $idCliente)
+    {
+        $codigo = $this->input->get('codigo');
+        if (!isset($codigo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No hay un código de verificación.'
+            ]);
+            return;
+        }
 
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (!isset($cliente)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No existe el cliente.'
+            ]);
+            return;
+        }
+
+        if (is_null($cliente->autorizacion_correo) && is_null($cliente->codigo_correo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El link ya no está activo.'
+            ]);
+            return;
+        }
+
+        if ($cliente->autorizacion_correo == AutorizacionClienteOpcs::VALIDADO) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El registro ya fue anteriormente validado.'
+            ]);
+            return;
+        }
+
+        if ($cliente->codigo_correo !== $codigo) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'El código no coincide con el registro.'
+            ]);
+            return;
+        }
+
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_correo]);
+        $this->General_model->updateRecord(
+            'clientes', ['autorizacion_correo' => AutorizacionClienteOpcs::VALIDADO],
+            'id_cliente', $idCliente
+        );
+
+        $this->load->view('template/header');
+        $this->load->view('clientes/autorizacion-cliente', [
+            'titulo' => 'PROCESO EXITOSO',
+            'mensaje' => 'Gracias por autorizar y verificar la información.'
+        ]);
+    }
+
+    public function validarAutorizacionSms(int $idCliente)
+    {
+        $codigo = $this->input->get('codigo');
+
+        if (!isset($codigo)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No hay un código de verificación.'
+            ]);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (!isset($cliente)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'No existe el cliente.'
+            ]);
+            return;
+        }
+
+        if (is_null($cliente->autorizacion_sms) && is_null($cliente->codigo_sms)) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El link ya no está activo.'
+            ]);
+            return;
+        }
+
+        if ($cliente->autorizacion_sms == AutorizacionClienteOpcs::VALIDADO) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'INFORMACIÓN',
+                'mensaje' => 'El registro ya fue anteriormente validado.'
+            ]);
+            return;
+        }
+
+        if ($cliente->codigo_sms !== $codigo) {
+            $this->load->view('template/header');
+            $this->load->view('clientes/autorizacion-cliente', [
+                'titulo' => 'ERROR',
+                'mensaje' => 'El código no coincide con el registro.'
+            ]);
+            return;
+        }
+
+        $this->General_model->deleteRecord('codigo_autorizaciones', ['id_aut_clientes' => $cliente->id_aut_sms]);
+        $this->General_model->updateRecord(
+            'clientes', ['autorizacion_sms' => AutorizacionClienteOpcs::VALIDADO],
+            'id_cliente', $idCliente
+        );
+
+        $this->load->view('template/header');
+        $this->load->view('clientes/autorizacion-cliente', [
+            'titulo' => 'PROCESO EXITOSO',
+            'mensaje' => 'Gracias por autorizar y verificar la información.'
+        ]);
+    }
 }

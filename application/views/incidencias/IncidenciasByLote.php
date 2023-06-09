@@ -60,7 +60,7 @@ hr {
                             <div class="sedeOld" id="sedeOld" ></div>
                             
                             <div class="form-group" >
-                                <label class="label">Selecciona una opción </label>
+                                <label class="control-label">Selecciona una opción </label>
                                 <select id="sedesCambio" name="sedesCambio" 
                                 class="selectpicker select-gral sedesNuevo" 
                                 title="SELECCIONA UNA OPCIÓN"
@@ -441,7 +441,7 @@ hr {
                     <form method="post" id="form_ceder">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label">Asesor dado de baja</label>
+                                <label class="control-label">Asesor dado de baja</label>
                                 <select name="asesorold" id="asesorold" class="selectpicker select-gral" 
                                 title="SELECCIONA UNA OPCIÓN"
                                 data-style="btn " data-show-subtext="true" data-live-search="true" 
@@ -451,7 +451,7 @@ hr {
                             <div id="info" ></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
-                                <label class="label">Puesto del usuario a ceder la comisiones</label>
+                                <label class="control-label">Puesto del usuario a ceder la comisiones</label>
                                 <select class="selectpicker select-gral roles2" 
                                     name="roles2" id="roles2" required
                                  title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
@@ -461,13 +461,13 @@ hr {
                                 </select> 
                             </div>
                             <div class="form-group" id="users">
-                                <label class="label">Usuario a ceder comisiones</label>
+                                <label class="control-label">Usuario a ceder comisiones</label>
                                 <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
                                 title="SELECCIONA UNA OPCIÓN" 
                                  required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label">Descripción</label>
+                                <label class="control-label">Descripción</label>
                                 <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
                                 placeholder="Descripción" required="required"></textarea>
                             </div>
@@ -498,7 +498,7 @@ hr {
                             <div class="invent"></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
-                                <label class="label">Puesto del usuario a modificar</label>
+                                <label class="control-label">Puesto del usuario a modificar</label>
                                 <select class="selectpicker select-gral roles3"  name="roles3" 
                                     id="roles3" required
                                     title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
@@ -511,7 +511,7 @@ hr {
                                 <p id="UserSelect"></p>
                             </div>
                             <div class="form-group" id="users">
-                                <label class="label">Seleccionar usuario</label>
+                                <label class="control-label">Seleccionar usuario</label>
                                 <select id="usuarioid3" name="usuarioid3" 
                                 class="selectpicker select-gral directorSelect " 
                                 title="SELECCIONA UNA OPCIÓN" 
@@ -519,7 +519,7 @@ hr {
                             </div>      
                             <p id="UserSelectDirec"></p>                
                             <div class="form-group">
-                                <label class="label">Descripción</label>
+                                <label class="control-label">Descripción</label>
                                 <textarea id="comentario3" name="comentario3" 
                                 class="form-control input-gral" rows="3" placeholder="Descripción"
                                  required></textarea>
@@ -547,7 +547,7 @@ hr {
                             <div class="vc"></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
-                                <label class="label">Puesto del usuario a modificar</label>
+                                <label class="control-label">Puesto del usuario a modificar</label>
 
                                     <select class="selectpicker select-gral rolesvc" 
                                     name="rolesvc" id="rolesvc" required
@@ -560,14 +560,14 @@ hr {
                                 <p id="UserSelectvc"></p>
                             </div>
                             <div class="form-group" id="users">
-                                <label class="label">Seleccionar usuario</label>
+                                <label class="control-label">Seleccionar usuario</label>
                                 <select id="usuarioid4" name="usuarioid4" 
                                 class="selectpicker select-gral directorSelect" 
                                 title="SELECCIONA UNA OPCIÓN"
                                 required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label">Descripción</label>
+                                <label class="control-label">Descripción</label>
                                 <textarea id="comentario4" name="comentario4" class="form-control input-gral"
                                  rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
@@ -594,22 +594,22 @@ hr {
                         <div class="modal-body">
                             <div class="vcnew"></div>
                             <div class="form-group" id="users5">
-                                <label class="label">Asesor</label>
+                                <label class="control-label">Asesor</label>
                                 <select id="usuarioid5" name="usuarioid5" class="selectpicker select-gral  asesor " 
                                 required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users6">
-                                <label class="label">Coordinador</label>
+                                <label class="control-label">Coordinador</label>
                                 <select id="usuarioid6" name="usuarioid6" class="selectpicker select-gral  coor "
                                 data-live-search="true" required    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
                             <div class="form-group" id="users7">
-                                <label class="label">Gerente</label>
+                                <label class="control-label">Gerente</label>
                                 <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral  ger " 
                                 required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users7">
-                                <label class="label">Subdirector</label>
+                                <label class="control-label">Subdirector</label>
                                 <select id="usuarioid8" name="usuarioid8" class="selectpicker select-gral ger " 
                                 required data-live-search="true"    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>

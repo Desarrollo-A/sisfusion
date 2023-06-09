@@ -1990,3 +1990,23 @@ table .boxSBtns {
 .form-group.is-focused select.form-control {
   background-color: #eaeaea;
 }
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iAccepted {
+  color: #4caf50;
+}
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iDenied {
+  color: #929292;
+}
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iSend {
+  color: #103f75;
+}
+
+.radio-with-icon-autorizacones i {
+  color: #eaeaea;
+}
+
+.radio-with-icon-autorizacones i:hover {
+  color: #929292;
+}

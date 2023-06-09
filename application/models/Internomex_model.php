@@ -241,8 +241,8 @@ class Internomex_model extends CI_Model {
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
-        LEFT JOIN (SELECT id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103) fecha_comision, SUM(comision_total) comision_total FROM comisiones 
-        GROUP BY id_lote, idCliente, CONVERT(varchar, fecha_creacion, 103)) cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
+        LEFT JOIN (SELECT id_lote, idCliente, MIN(CONVERT(varchar, fecha_creacion, 103)) fecha_comision, SUM(comision_total) comision_total FROM comisiones 
+        GROUP BY id_lote, idCliente) cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
         INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
         INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
 		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 

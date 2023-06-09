@@ -19,7 +19,7 @@ function asDirector(userType){
         idUserOnReport = '2';
     }
     //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
-    else if( userType == '5' && ( idUser == '28' || idUser == '30' || idUser == '4888')){
+    else if( userType == '5' && (idUser == '28' || idUser == '30' || idUser == '4888')){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -132,11 +132,11 @@ async function initReport(){
     let rolString;
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888')))
         rolString = 'gerente';
     else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888')))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
@@ -214,9 +214,9 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
-    if( rol == 5 && (idUser == 28 && idUser == 30) )
+    if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
-    else if( rol == 5 && (idUser != 28 && idUser != 30) )
+    else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888))
         rolEspecial = 2;
     else if( rol == 6 )
         rolEspecial = 3;
@@ -456,14 +456,14 @@ function getLeadersLine (leadersList, id_usuario, id_lider) {
     else if (leadersList[0] == 7){ // 5 NIVEL: TENEMOS EL ID COORDINADOR
         leadersList[1] = id_usuario;
     }
-    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30 || idUser == 4888)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
         if(id_usuario == 3 || id_usuario == 607)
             leadersList[5] = 0;
         else
             leadersList[5] = leadersList[6] == 59 ? id_lider : idLider;
         leadersList[4] = id_usuario;
     }
-    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30)) { 
+    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30 || idUser != 4888)) { 
         // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
         if( idLider == 7092 )
             leadersList[5] = 3;
@@ -554,7 +554,7 @@ $(document).on('click', '.update-dataTable', function (e) {
     }
     else if (type == 5) { // MJ: #subdirector
         if (render == 1) {
-            if( idUser == 28 || idUser == 30 ){
+            if(idUser == 28 || idUser == 30 || idUser == 4888){
                 const table = "gerente";
                 fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
@@ -697,11 +697,11 @@ $(document).on('click', '#filterAction', async function (e) {
     let rolString;
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rolOnReport == '2' || (rolOnReport == '5' && ( idUserOnReport != '28' || idUserOnReport != '30' )))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888')))
         rolString = 'gerente';
     else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && ( idUserOnReport == '28' || idUserOnReport == '30' )))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888')))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
