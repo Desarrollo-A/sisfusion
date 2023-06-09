@@ -4,16 +4,7 @@
     <?php
     if ($this->session->userdata('id_rol') == "31") //contratacion
     {
-        $dato = array(
-            'home'=> 0,
-            'comisiones_internomex'=> 0,
-            'historial_internomex'=> 0,
-            'manual'=> 0,
-            'aparta'=> 0,
-        );
-
-        //$this->load->view('template/contratacion/sidebar', $dato);
-        $this->load->view('template/sidebar', $dato);
+        $this->load->view('template/sidebar');
     } 
     else {
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';

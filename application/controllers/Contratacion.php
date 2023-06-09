@@ -26,12 +26,8 @@ class Contratacion extends CI_Controller
         if ($this->session->userdata('id_rol') == false || $this->session->userdata('id_rol') != '16') {
             redirect(base_url() . 'login');
         }
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        // $this->load->view('contratacion/inicio_contratacion_view',$datos);
-        $this->load->view('template/home',$datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
 

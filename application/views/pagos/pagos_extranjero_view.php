@@ -6,11 +6,7 @@
         <?php
             if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"
                 || $this->session->userdata('id_rol')=="70"){
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;  
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             }
             else
             {

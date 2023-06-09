@@ -1,53 +1,7 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	if($this->session->userdata('id_rol') == 15)
-	{
-		$dato= array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'documentacion' => 0,
-			'contrato' => 0,
-			'inventario' => 1,
-			'status3' => 0,
-			'status7' => 0,
-			'documentacion_ds' => 0,
-			'lotesContratados' => 0,
-		);
-		//$this->load->view('template/juridico/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-	}
-	elseif ($this->session->userdata('id_rol') == 13)
-	{
-		$dato= array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'expediente' => 0,
-			'corrida' => 0,
-			'documentacion' => 0,
-			'historialpagos' => 0,
-			'inventario' => 1,
-			'estatus20' => 0,
-			'estatus2' => 0,
-			'estatus5' => 0,
-			'estatus6' => 0,
-			'estatus9' => 0,
-			'estatus10' => 0,
-			'estatus13' => 0,
-			'estatus15' => 0,
-			'enviosRL' => 0,
-			'estatus12' => 0,
-			'documentacion_ds' => 0,
-			'acuserecibidos' => 0,
-			'comnuevas' => 0,
-			'comhistorial' => 0
-		);
-		//$this->load->view('template/contraloria/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-	}
+<?php $this->load->view('template/sidebar'); ?>
 
-
-	?>
 	<!--Contenido de la página-->
 	<div class="content">
 		<div class="container-fluid">

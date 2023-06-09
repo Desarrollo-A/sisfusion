@@ -1,36 +1,7 @@
 <body class="">
 <div class="wrapper ">
-	<?php #include 'sidebarParams_statistics.php'
-	/**/
-	/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-	/*$dato= array(
-		'home'	=> 0,
-		'prospectos' => 0,
-		'prospectosMktd' => 0,
-		'prospectosAlta' => 0,
-		'statistics' => 0,
-		'sharedSales' => 0,
-		'coOwners' => 0,
-		'references' => 0,
-		'bulkload' => 0,
-		'listaAsesores' => 0,
-		'manual'	=>	0,
-		'aparta' => 0,
-		'mkt_digital' => 0,
-		'prospectPlace' => 1,
-		'documentacionMKT' => 0,
-		'clientsList' => 0,
-		'inventarioMKT' => 0,
-		'busquedaDetallada' => 0
-	);
-	$this->load->view('template/sidebar', $dato);*/
-	?>
+<?php $this->load->view('template/sidebar'); ?>
+
 
 	<div class="content" ng-controller="datos">
 		<div class="container-fluid">
