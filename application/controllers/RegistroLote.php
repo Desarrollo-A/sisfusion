@@ -16,7 +16,10 @@ class RegistroLote extends CI_Controller
 		$this->load->library('phpmailer_lib');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 	function getClusterGrupo($residencial, $condominio, $grupo)
 	{
 		$data['data'] = $this->registrolote_modelo->getClusterGrupo($residencial, $condominio, $grupo);
@@ -119,8 +122,6 @@ class RegistroLote extends CI_Controller
 	}
 	public function registrosLoteJuridico()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -149,8 +150,6 @@ class RegistroLote extends CI_Controller
 	public function registrosLoteContratacion()
 	{
 		$this->validateSession();
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -1402,15 +1401,11 @@ class RegistroLote extends CI_Controller
 	public function registroStatus7ContratacionJuridico()
 	{
 		$this->validateSession();
-		/*listar con el ajax*/
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		/*-------------------------------------------------------------------------------*/
 		$this->load->view("template/header");
 		if ($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096)
-			$this->load->view("juridico/datos_status7Contratacion_juridico_view_two", $datos);
+			$this->load->view("juridico/datos_status7Contratacion_juridico_view_two");
 		else
-			$this->load->view("juridico/datos_status7Contratacion_juridico_view", $datos);
+			$this->load->view("juridico/datos_status7Contratacion_juridico_view");
 	}
 	public function getStatus7ContratacionJuridico()
 	{
@@ -1934,9 +1929,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function registroStatus11ContratacionAdministracion()
 	{
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('administracion/estatus11_view', $datos);
+		$this->load->view('administracion/estatus11_view');
 	}
 	public function getStatus11ContrAdmin()
 	{
@@ -2467,10 +2461,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function registroStatus14ContratacionAsistentes()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_status14Contratacion_asistentes_view", $datos);
+		$this->load->view("contratacion/datos_status14Contratacion_asistentes_view");
 	}
 	public function getStatCont14()
 	{
@@ -2861,10 +2853,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function finalStatus()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_finalStatus_view", $datos);
+		$this->load->view("contratacion/datos_finalStatus_view");
 	}
 	public function Procesos_Status($idStatus, $idMov)
 	{
@@ -6712,10 +6702,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function getHistorialProceso()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('contratacion/report_historial_view', $datos);
+		$this->load->view('contratacion/report_historial_view');
 	}
 	public function getHistProcData()
 	{
@@ -7111,10 +7099,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function getReportContratados()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('juridico/historialContratadorReporte_view', $datos);
+		$this->load->view('juridico/historialContratadorReporte_view');
 	}
 	public function getReportData()
 	{
@@ -7314,9 +7300,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function reportLotesContratados()
 	{
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_lotesContratados_view", $datos);
+		$this->load->view("contratacion/datos_lotesContratados_view");
 	}
 	public function getLotesContratados()
 	{
@@ -7332,9 +7317,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function reportLotesPost45()
 	{
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_lotespost_view", $datos);
+		$this->load->view("contratacion/datos_lotespost_view");
 	}
 	public function getReportPost45()
 	{
@@ -9333,10 +9317,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function reporteStatus11()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('administracion/vista_rechazos_estatus_11', $datos);
+		$this->load->view('administracion/vista_rechazos_estatus_11');
 	}
 	public function getReporteStatus11()
 	{
@@ -9364,10 +9346,8 @@ class RegistroLote extends CI_Controller
 	//Reporte lotes apartados
 	public function reporteLotesApartados()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('administracion/vista_reportes_gerencial', $datos);
+		$this->load->view('administracion/vista_reportes_gerencial');
 	}
 	public function getReporteLotesApartados()
 	{
@@ -9397,10 +9377,8 @@ class RegistroLote extends CI_Controller
 	}
 	public function reporteRechazos()
 	{
-		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view('administracion/vista_rechazos', $datos);
+		$this->load->view('administracion/vista_rechazos');
 	}
 	public function getReporteRechazos()
 	{

@@ -29,6 +29,9 @@ class Asesor extends CI_Controller
         $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -43,22 +46,17 @@ class Asesor extends CI_Controller
 
     public function homeView()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61') {
             redirect(base_url() . 'login');
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
+
         $this->load->view('template/header');
-        $this->load->view('template/home', $datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
 
-    // public function dataPrueba($idCliente, $onlyView)
-    // {
-    //     $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
-    // }
-
     public function deposito_seriedad_ds($idCliente, $onlyView){
         $this->validateSession();
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
 
         if ($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3) {
@@ -158,94 +156,11 @@ class Asesor extends CI_Controller
     }
 
     public function inventario(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
-
-    // public function cf2(){
-    //     $this->load->view("corrida/cf_view2");
-    // }
-
-    // public function cf3()
-    // {
-    //     $this->load->view("corrida/cf_view_PAC");
-    // }
-
-    // public function agregar_propietario()
-    // {
-
-    //     $json['resultado'] = FALSE;
-
-    //     if($this->input->post("nombre_nuevo")){
-
-    //         $nuevo0 = $this->input->post("idd");
-    //         $nuevo1 = $this->input->post("nombre_nuevo");
-    //         $nuevo2 = $this->input->post("apellidop_nuevo");
-    //         $nuevo3 = $this->input->post("apellidom_nuevo");
-    //         $nuevo4 = $this->input->post("correo_nuevo");
-    //         $nuevo5 = $this->input->post("telefono1_nuevo");
-    //         $nuevo6 = $this->input->post("telefono2_nuevo");
-    //         $nuevo7 = $this->input->post("fnacimiento_nuevo");
-
-    //         $nuevo8 = $this->input->post("nacionalidad_nuevo");
-    //         $nuevo9 = $this->input->post("originario_nuevo");
-    //         $nuevo10 = $this->input->post("domicilio_particular_nuevo");
-
-    //         $nuevo11 = $this->input->post("estadocivil_nuevo");
-    //         $nuevo12 = $this->input->post("conyuge_nuevo");
-    //         $nuevo13 = $this->input->post("regimen_nuevo");
-
-    //         $nuevo14 = $this->input->post("ocupacion_nuevo");
-    //         $nuevo15 = $this->input->post("puesto_nuevo");
-    //         $nuevo16 = $this->input->post("empresa_nuevo");
-
-    //         $nuevo17 = $this->input->post("antiguedad_nuevo");
-    //         $nuevo18 = $this->input->post("edad_firma_nuevo");
-    //         $nuevo19 = $this->input->post("domempresa_nuevo");
-    //         $nuevo20 = 1;
-    //         $nuevo21 = $this->session->userdata('id_usuario');
-
-    //         $arreglo_nuevo = array();
-    //         $arreglo_nuevo["id_cliente"] = $nuevo0;
-    //         $arreglo_nuevo["nombre"] = $nuevo1;
-    //         $arreglo_nuevo["apellido_paterno"] = $nuevo2;
-    //         $arreglo_nuevo["apellido_materno"] = $nuevo3;
-
-    //         $arreglo_nuevo["correo"] = $nuevo4;
-    //         $arreglo_nuevo["telefono"] = $nuevo5;
-    //         $arreglo_nuevo["telefono_2"] = $nuevo6;
-    //         $arreglo_nuevo["fecha_nacimiento"] = $nuevo7;
-
-    //         $arreglo_nuevo["nacionalidad"] = $nuevo8;
-    //         $arreglo_nuevo["originario_de"] = $nuevo9;
-    //         $arreglo_nuevo["domicilio_particular"] = $nuevo10;
-
-    //         $arreglo_nuevo["estado_civil"] = $nuevo11;
-    //         $arreglo_nuevo["regimen_matrimonial"] = $nuevo13;
-    //         $arreglo_nuevo["conyuge"] = $nuevo12;
-
-    //         $arreglo_nuevo["ocupacion"] = $nuevo14;
-    //         $arreglo_nuevo["posicion"] = $nuevo15;
-    //         $arreglo_nuevo["empresa"] = $nuevo16;
-
-    //         $arreglo_nuevo["antiguedad"] = $nuevo17;
-    //         $arreglo_nuevo["edadFirma"] = $nuevo18;
-    //         $arreglo_nuevo["direccion"] = $nuevo19;
-    //         $arreglo_nuevo["estatus"] = $nuevo20;
-    //         $arreglo_nuevo["creado_por"] = $nuevo21;
-
-    //         $this->load->model("Asesor_model");
-    //         $this->db->insert('copropietarios', $arreglo_nuevo);
-
-    //         $json['resultado'] = TRUE;
-    //     }
-
-    //     echo json_encode($json);
-    // }
-
 
     public function getGerente(){
         $data = $this->registrolote_modelo->getGerente();
@@ -255,11 +170,6 @@ class Asesor extends CI_Controller
             echo json_encode(array());
         }
     }
-    // Evaluar UR
-    // public function getNationality()
-    // {
-    //     echo json_encode($this->Asesor_model->getNationality()->result_array());
-    // }
 
     public function getLegalPersonality()
     {
@@ -669,14 +579,12 @@ class Asesor extends CI_Controller
 
     public function depositoSeriedad()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/depositoSeriedad", $datos);
+        $this->load->view("asesor/depositoSeriedad");
     }
 
     public function registrosLoteVentasAsesor()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -685,8 +593,6 @@ class Asesor extends CI_Controller
 
     public function invDispAsesor()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("asesor/inventario_disponible", $datos);
@@ -694,9 +600,8 @@ class Asesor extends CI_Controller
 
     public function manual()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/manuales_view", $datos);
+        $this->load->view("asesor/manuales_view");
     }
 
     public function validateSession()
@@ -970,8 +875,7 @@ class Asesor extends CI_Controller
 
     /*********************************/
 
-    public function deposito_seriedad($id_cliente, $onlyView){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    public function deposito_seriedad($id_cliente, $onlyView) {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
         $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
 
@@ -3370,9 +3274,8 @@ class Asesor extends CI_Controller
     /*autorizaciones*/
     public function autorizaciones()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/autorizaciones", $datos);
+        $this->load->view("asesor/autorizaciones");
     }
 
     function getAutorizacionAs()
@@ -4635,16 +4538,14 @@ class Asesor extends CI_Controller
 
     public function presentacionesCarpetas()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/carpetas_view", $datos);
+        $this->load->view("asesor/carpetas_view");
     }
 
     public function AdminCarpetas()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/carpetas_admin", $datos);
+        $this->load->view("asesor/carpetas_admin");
     }
 
     public function getAllFoldersPDF()
@@ -5412,10 +5313,9 @@ class Asesor extends CI_Controller
 
     public function inventoryByLote()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
-        $this->load->view("contratacion/inventoryByLote", $datos);
+        $this->load->view("contratacion/inventoryByLote");
     }
 
     function envioContraloria()
@@ -5465,9 +5365,8 @@ class Asesor extends CI_Controller
 
     public function viewGrafica()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/grafica_comisiones", $datos);
+        $this->load->view("asesor/grafica_comisiones");
     }
 
     function getlotesRechazados(){

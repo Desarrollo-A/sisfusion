@@ -20,7 +20,10 @@ class Login extends CI_Controller
 		$this->load->database('default');
 //        $this->load->helper('language'); // cargo la libreria language
 //        $this->lang->load('generales'); // cargo los archivos del lenguaje
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 		
 	public function index()
 	{
