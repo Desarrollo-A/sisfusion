@@ -3,35 +3,7 @@
 	<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
-		<?php
-		$dato= array(
-			'home' => 0,
-			'usuarios' => 0,
-			'statistics' => 0,
-			'manual' => 0,
-			'aparta' => 0,
-			'autorizacionesReport' => 0,
-			'clubMaderasReport' => 0,
-			'prospectos' => 0,
-			'prospectosMktd' => 0,
-			'prospectosAlta' => 0,
-			'sharedSales' => 0,
-			'asignarVentas' => 0,
-			'coOwners' => 0,
-			'references' => 0,
-			'nuevasComisiones' => 0,
-			'histComisiones' => 0,
-			'bulkload' => 0,
-			'corridaF' => 0,
-			'inventario' => 0,
-			'inventarioDisponible' => 0,
-			'autorizaciones' =>	1,
-			'clientsList' => 0,
-			'busquedaDetallada' => 0
-		);
-		
-		$this->load->view('template/sidebar', $dato);
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 
 		<style>
 			#addFile .radio-with-Icon input[type="radio"]:checked ~ label .iAccepted {

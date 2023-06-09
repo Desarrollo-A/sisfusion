@@ -1,25 +1,8 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php
-	/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-	/*$dato= array(
-		'home' => 1,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'inventario' => 0,
-		'status11' => 0,
-		'documentacion_ds' => 0
-	);
-	//$this->load->view('template/administracion/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);*/
-	?>
+	
+	<?php $this->load->view('template/sidebar'); ?>
 	<!--Contenido de la página-->
 	<div class="content">
 		<div class="container-fluid">

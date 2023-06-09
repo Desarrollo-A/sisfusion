@@ -1,17 +1,12 @@
 <body>
 <div class="wrapper">
 	<?php
-
-	if($this->session->userdata('id_rol') == 22 && $this->session->userdata('id_usuario') == 4853){
-		 $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-			$this->load->view('template/sidebar', $datos);
-	} else {
-		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-	}
-?>
+		if($this->session->userdata('id_rol') == 22 && $this->session->userdata('id_usuario') == 4853){
+			$this->load->view('template/sidebar');
+		} else {
+			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+		}
+	?>
     <style>
         .textoshead::placeholder { color: white; }
         th { background: #003D82; }

@@ -57,9 +57,9 @@
                                             <th>ASESOR</th>
                                             <th>COORDINADOR</th>
                                             <th>GERENTE</th>
-                                            <th>FECHA APARTADO</th>
-                                            <th>FECHA REALIZADO</th>
-                                            <th>FECHA VENCIMIENTO</th>
+                                            <th>FECHA DE APARTADO</th>
+                                            <th>FECHA DE REALIZADO</th>
+                                            <th>FECHA DE VENCIMIENTO</th>
                                         </tr>
                                     </thead>
                                 </table>

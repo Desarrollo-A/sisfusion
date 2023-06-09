@@ -2,7 +2,6 @@
 use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('Contraloria_model');
@@ -20,7 +19,7 @@ class Contraloria extends CI_Controller {
 
     public function index()
     {
-        if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas'))
+        if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'ejecutivoContraloriaJR'))
         {
             redirect(base_url().'login');
         }
@@ -47,12 +46,30 @@ class Contraloria extends CI_Controller {
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_corrida_contraloria");
 	}
-
+    public function documentacion_contraloria(){
+		$this->validateSession();
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+		$this->load->view('template/header');
+		//$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
+		$this->load->view("contraloria/vista_documentacion_contraloria",$datos);
+	}
+	public function documentacion_contraloria_ds(){
+        $this->validateSession();
+        $datos=array();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        //$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
+        $this->load->view("contraloria/vista_documentacion_contraloria_ds",$datos);
+    }
 	public function historial_pagos_contraloria(){
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
+        $this->load->view("contraloria/vista_historial_pagos_contraloria",$datos);
     }
     public function estatus_2_0_contraloria(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
@@ -110,6 +127,13 @@ class Contraloria extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_envio_RL_contraloria",$datos);
     }
+    public function envio_RL_contraloria_2(){
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+	 	$this->load->view("contraloria/vista_envio_RL_contraloria_2",$datos);
+	}
     public function estatus_12_contraloria(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
@@ -289,6 +313,27 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Clientes_model->getAdvisersVentas()->result_array());
     }
 
+    public function consultClients(){
+        $this->validateSession();
+     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+	 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+	 /*-------------------------------------------------------------------------------*/
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("contraloria/vista_documentacion_contraloria_cl",$datos);
+    }
+
+    public function reasignClient(){
+        $data = array(
+            "id_gerente" => $_POST['id_gerente'],
+            "id_coordinador" => $_POST['id_coordinador'],
+            "id_asesor" => $_POST['id_asesor'],
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+        $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
+        echo json_encode($response);
+    }
     public function validateSession()
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")

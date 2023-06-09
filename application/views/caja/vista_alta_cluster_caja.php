@@ -1,51 +1,25 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'cambiarAsesor' => 0,
-		'historialPagos' => 0,
-		'pagosCancelados' => 0,
-		'altaCluster' => 1,
-		'altaLote' => 0,
-		'inventario' => 0,
-		'actualizaPrecio' => 0,
-		'actualizaReferencia' => 0,
-		'liberacion' => 0
-	);
-	//$this->load->view('template/caja/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-
-}
-
-
-
-
-
+            color: white;
+            opacity: 0.4;
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+        }
     </style>
 
     <div class="modal fade modal-alertas" id="modal_estatus_12" role="dialog">

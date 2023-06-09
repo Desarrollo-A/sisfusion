@@ -2,15 +2,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-    /*-------------------------------------------------------*/
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
-    /*--------------------------------------------------------*/
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
+    
     <!--Contenido de la página-->
     <div class="modal fade modal-alertas" id="modal_" role="dialog">
         <div class="modal-dialog">

@@ -22,17 +22,11 @@
                 case '40': // COBRANZA
                 case '53': // COBRANZA
                 case '70': // COBRANZA
-                    // code...
-                    $datos = array();
-                    $datos = $datos4;
-                    $datos = $datos2;
-                    $datos = $datos3;
-                    $this->load->view('template/sidebar', $datos);
+                    $this->load->view('template/sidebar');
                     break;
                 default:
-                    // code...
                     echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                    break;
+                break;
             }
         ?>
         <!--Contenido de la página-->
