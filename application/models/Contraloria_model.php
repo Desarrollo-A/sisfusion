@@ -855,28 +855,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
 
-    public function getCamposHistorialDS($idCliente)
-    {
-        $query = $this->db->query("SELECT DISTINCT(col_afect) AS columna FROM auditoria WHERE id_parametro = $idCliente 
-            AND col_afect IN ('Nombre', 'Apellido paterno', 'Apellido materno', 'Correo electrónico', 'Celular', 
-                              'Estado civil', 'Ocupación', 'Puesto', 'Fecha 1° Aportación')");
-        return $query->result_array();
-    }
-
-    public function getDetalleCamposHistorialDS($idCliente, $columna)
-    {
-        $query = $this->db->query("SELECT au.anterior, au.nuevo, au.col_afect, CONVERT(NVARCHAR, au.fecha_creacion, 6) AS fecha,
-            (CASE WHEN u.id_usuario IS NOT null THEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) 
-            WHEN u2.id_usuario IS NOT null THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) 
-                ELSE au.creado_por END) usuario
-            FROM auditoria au
-            LEFT JOIN usuarios u ON CAST(au.creado_por AS VARCHAR(45)) = CAST(u.id_usuario AS VARCHAR(45))
-            LEFT JOIN usuarios u2 ON SUBSTRING(u2.usuario, 1, 20) = SUBSTRING(au.creado_por, 1, 20)
-            WHERE au.col_afect = '$columna' AND au.id_parametro = $idCliente
-            ORDER BY au.fecha_creacion DESC");
-        return $query->result_array();
-    }
-
     public function registroDiario () {
         $id_currentUser = $this->session->userdata('id_usuario');
         $lider_currentUser = $this->session->userdata('id_usuario');

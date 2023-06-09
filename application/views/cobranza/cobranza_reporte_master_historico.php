@@ -90,8 +90,7 @@
                                             <div class="form-group d-flex">
                                                 <input type="number" class="form-control idLote" id="idLote"
                                                     placeholder="ID lote"/>
-                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                        id="searchByLote">
+                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByLote">
                                                     <span class="material-icons">search</span>
                                                 </button>
                                             </div>
@@ -102,9 +101,8 @@
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/10/2022"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="31/10/2022"/>
+                                                                id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
@@ -140,7 +138,7 @@
                                                     <th>USUARIO</th>
                                                     <th>PUESTO</th>
                                                     <th>PLAZA</th>
-                                                    <th>LUGAR DE PROSPECCION</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
                                                     <th>DETALLE</th>
                                                     <th>MÁS</th>
                                                 </tr>
