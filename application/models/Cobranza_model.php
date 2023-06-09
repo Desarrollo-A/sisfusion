@@ -208,12 +208,15 @@ class Cobranza_model extends CI_Model {
     }
 
     public function informationMasterCobranzaHistorial($idLote , $beginDate, $endDate) {
+        ini_set('max_execution_time', 9000);
+        set_time_limit(9000);
+        ini_set('memory_limit','12288M');
         if ($idLote == '' || $idLote ==  0)
             $query = '';
         else
             $query = "AND lo.idLote = $idLote";
         if( $beginDate != '') {
-            $query2  = " WHERE  pci1.fecha_abono > '$beginDate'   AND pci1.fecha_abono < '$endDate'" ;
+            $query2  = " WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             $query3  =  " ";
         } else {
             $query2 = '';

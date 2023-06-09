@@ -1,36 +1,15 @@
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-        // BEGIN DATE
-        const fechaInicio = new Date();
-        // Iniciar en este año, este mes, en el día 1   
-        const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-        // END DATE
-        const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-        // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-        const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-        $("#beginDate").val('01/10/2022');
-        $("#endDate").val('01/10/2022');
-    /*
-    fillTable(typeTransaction, beginDate, endDate, where) PARAMS;
-        typeTransaction:
-            1 = ES LA PRIMERA VEZ QUE SE LLENA LA TABLA O NO SE SELECCIONÓ UN RANGO DE FECHA (MUESTRA LO DEL AÑO ACTUAL)
-            2 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL ID DE LOTE INGRESADO)
-            3 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL RANGO DE FECHA SELECCIONADO)
-        beginDate
-            FECHA INICIO
-        endDate
-            FECHA FIN
-        where
-            ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
-    */
-        //    fillTable();
-    setInitialValues();
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(1,0, finalBeginDate, finalEndDate);
 });
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
-            format: 'MM/DD/YYYY',
+            format: 'DD/MM/YYYY',
             icons: {
                 time: "fa fa-clock-o",
                 date: "fa fa-calendar",
@@ -65,7 +44,7 @@ $('#cobranzaHistorial thead tr:eq(0) th').each(function (i) {
 });
 
 
-function fillTable(idLote, beginDate, endDate, bandera ) {
+function fillTable(idLote, bandera, beginDate, endDate ) {
     generalDataTable = $('#cobranzaHistorial').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -79,10 +58,10 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                title: "Cobranza master V2",
-                titleAttr: 'Descargar archivo de Excel',
+                title: "COBRANZA MASTER V2",
+                titleAttr: 'DESCARGAR ARCHIVO EXCEL',
                 exportOptions: {
-                    columns: num_colum_encabezado,
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                     format: {
                         header: function (d, columnIdx) {
                             return ' '+titulos_encabezado[columnIdx] +' ';
@@ -146,7 +125,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 if(data.fecha_apartado != null){
                     respuesta = data.fecha_apartado;
                 }else{
-                    respuesta = 'No definida'
+                    respuesta = 'NO DEFINIDA'
                 }
                     return respuesta;
                 }
@@ -157,8 +136,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 }
             }, {
                 data: function (data){
-                    //estatus de pago comisión
-                    labelStatus = '<span class="label" style="background:'+data.color+';"> '+data.estatus_actual_comision+'</span>';
+                    labelStatus = '<span class="label" style="color:'+data.color+'; background:'+data.color+'18"> '+data.estatus_actual_comision+'</span>';
                     return labelStatus;
                 }
             }, {
@@ -196,7 +174,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
             }, {
                 data: function (data){
                     //Estatus lotes/venta
-                    labelStatus = '<span class="label" style="background:#'+data.color_lote+';"> '+data.estatus_lote+'</span>';
+                    labelStatus = '<span class="label" style="color:#'+data.color_lote+'; background:#'+data.color_lote+'18"> '+data.estatus_lote+'</span>';
                     return labelStatus;
                     
                 }
@@ -233,7 +211,7 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     }else if(data.plazaB != null) {
                         respuesta = data.plazaB;
                     }else{
-                        respuesta = 'No definidos';
+                        respuesta = 'NO DEFINIDOS';
                     }
                     return respuesta;
                 }
@@ -242,14 +220,14 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                     let respuesta ='';
                     let respuesta2 ='';
                     if(data.source != null && data.source != 0){
-                        respuesta2 = "-  DragonCEM";
+                        respuesta2 = "-  DRAGONCEM";
                     }else{
                         respuesta2 = ""
                     }
                     if(data.lugar_prospeccion != null){
                         respuesta  = data.lugar_prospeccion + respuesta2;
                     }else {
-                        respuesta  = 'No definido';
+                        respuesta  = 'NO DEFINIDO';
                     }
                     return respuesta;
                 }
@@ -258,16 +236,16 @@ function fillTable(idLote, beginDate, endDate, bandera ) {
                 "data": function( data ){
                     var lblPenalizacion = '';
                     if (data.penalizacion == 1){
-                        lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orangeYellow">Penalización + 90 días</span></p>';
+                        lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 DÍAS</span></p>';
                     }
                     if(data.bonificacion >= 1){
-                        p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="labe lbl-pink">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                        p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="labe lbl-pink">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
                     }
                     else{
                         p1 = '';
                     }
                     if(data.lugar_prospeccion  != null || data.lugar_prospeccion  == 0 ){
-                        p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión </span></p>';
+                        p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión </span></p>';
                     }
                     else{
                         p2 = '';
@@ -424,7 +402,7 @@ $(document).on("click", "#searchByLote", function () {
     if (idLote == ''){
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else {
-        fillTable(idLote, finalBeginDate, finalEndDate, bandera);
+        fillTable(idLote,bandera, finalBeginDate, finalEndDate);
     }
 });
 $(document).on("click", "#searchByDateRange", function () {
@@ -437,7 +415,7 @@ $(document).on("click", "#searchByDateRange", function () {
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else{
     
-        fillTable(lote , finalBeginDate, finalEndDate, bandera);
+        fillTable(lote ,bandera, finalBeginDate, finalEndDate);
     }
 });
 function formatMoney(n) {
@@ -449,21 +427,9 @@ function formatMoney(n) {
         j = (j = i.length) > 3 ? j % 3 : 0;
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
-function setInitialValues() { 
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-  //  fillTable(1, finalBeginDate, finalEndDate, 0);
-}
+
 $(document).on("click", ".reset-initial-values", function () {
-    setInitialValues();
+    // setIniDatesXMonth(inicioFecha, finFecha);
     $(".idLote").val('');
     $(".textoshead").val('');
     $("#beginDate").val('01/10/2022');

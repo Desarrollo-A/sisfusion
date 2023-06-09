@@ -38,7 +38,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="modal-body text-center">
-                            <h5>¿Estás segura de hacer este movimiento? </h5>
+                            <h5>¿Estás seguro de hacer este movimiento? </h5>
                             <p style="font-size: 0.8em">Marcarás este lote para solicitar que se disperese la comisión.</p>
                         </div>
                         <input id="idLote" class="hide">
@@ -96,7 +96,7 @@
                                 <br>
                                 <div class="material-datatables" id="box-masterCobranzaTable">
                                     <div class="form-group">
-                                        <table id="masterCobranzaTable" class="table-striped table-hover hide">
+                                        <table id="masterCobranzaTable" class="table-striped table-hover ">
                                             <thead>
                                                 <tr>
                                                     <th>ID LOTE</th>

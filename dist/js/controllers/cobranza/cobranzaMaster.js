@@ -1,26 +1,16 @@
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
-    /*
-    fillTable(typeTransaction, beginDate, endDate, where) PARAMS;
-        typeTransaction:
-            1 = ES LA PRIMERA VEZ QUE SE LLENA LA TABLA O NO SE SELECCIONÓ UN RANGO DE FECHA (MUESTRA LO DEL AÑO ACTUAL)
-            2 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL ID DE LOTE INGRESADO)
-            3 = ES LA SEGUNDA VEZ QUE SE LLENA LA TABLA (MUESTRA INFORMACIÓN CON BASE EN EL RANGO DE FECHA SELECCIONADO)
-        beginDate
-            FECHA INICIO
-        endDate
-            FECHA FIN
-        where
-            ID LOTE (WHEN typeTransaction VALUE IS 2 WE SEND ID LOTE VALUE)
-    */
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(1, finalBeginDate, finalEndDate, 0);
 });
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
-            format: 'MM/DD/YYYY',
+            format: 'DD/MM/YYYY',
             icons: {
                 time: "fa fa-clock-o",
                 date: "fa fa-calendar",
@@ -49,6 +39,7 @@ $('#masterCobranzaTable thead tr:eq(0) th').each(function (i) {
     });
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
+    
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
     });
@@ -71,7 +62,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 title: 'Master cobranza',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: num_colum_encabezado,
+                    columns: [1,2,3,4,5,6,7,8,9,10],
                     format: {
                         header: function (d, columnIdx) {
                             return ' '+titulos_encabezado[columnIdx] +' ';
@@ -146,7 +137,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                     var labelStatus;
 
                     if(d.rec == 8){
-                            labelStatus = 'VENTA CANCELADA';
+                        labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
                     }else{
 
                     switch (d.registroComision) {
@@ -207,7 +198,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 data: function (d) {
                     var labelStatus;
                     if(d.rec == 8){
-                            labelStatus = 'VENTA CANCELADA';
+                            labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
                     }else{
                     switch (d.idStatusLote) {
                         case 1:
@@ -314,6 +305,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 "where": where
             }
         }
+        
     });
 
     $("#masterCobranzaTable tbody").on("click", "#verifyNeodataStatus", function (e) {
@@ -324,7 +316,6 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         let lote = $(this).attr("data-idLote");
         let registro_status = $(this).attr("data-registroComision");
         let cadena = '';
-
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
 
@@ -408,22 +399,9 @@ $(document).on("click", "#searchByDateRange", function () {
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
 
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    fillTable(1, finalBeginDate, finalEndDate, 0);
-}
+
 
 $(document).on("click", ".reset-initial-values", function () {
-    setInitialValues();
     $(".idLote").val('');
     $(".textoshead").val('');
     $("#beginDate").val('01/01/2022');
