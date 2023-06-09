@@ -232,9 +232,8 @@ class Documentacion extends CI_Controller {
     }
 
     function reasonsForRejectionByDocument() {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("documentacion/reasonsForRejectionByDocument", $datos);
+        $this->load->view("documentacion/reasonsForRejectionByDocument");
     }
 
     function getReasonsForRejectionByDocument() {

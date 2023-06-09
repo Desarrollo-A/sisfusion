@@ -8,134 +8,37 @@
  */
 class Login extends CI_Controller
 {
+	public $opcionInicio = '';
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('login/login_model');
 		$this->load->model('Usuarios_modelo');
 		$this->load->model('Chat_modelo');
-		$this->load->library(array('session','form_validation'));
+		$this->load->library(array('session','form_validation','get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 //        $this->load->helper('language'); // cargo la libreria language
 //        $this->lang->load('generales'); // cargo los archivos del lenguaje
 	}
-
+		
 	public function index()
 	{
 
-     switch ($this->session->userdata('id_rol')) {
-		case '':
+		if($this->session->userdata('id_rol') == ''){
 			$data['token'] = $this->token();
 			$data['titulo'] = 'Login con roles de usuario en codeigniter';
 			$this->load->view('login/login_view',$data);
-			//  $this->load->view('login/maintenance',$data);
-			// $this->load->view('errors/404not-found');
-			break;
-		case '1': // DIRECTOR
-		case '2': // SUBDIRECTOR
-		case '3': // GERENTE
-		case '4': // ASISTENTE DIRECCIÓN
-		case '5': // ASISTENTE SUBDIRECCIÓN
-		case '6': // ASISTENTE GERENCIA
-		case '7': // ASESOR
-		case '9': // COORDINADOR
-		case '18': // DIRECTOR MKTD
-		case '63': // CI AUDITORIA
-			redirect(base_url().'Ventas');
-        break;
-
-		case '11': // ADMINISTRACIÓN
-		case '12': // CAJA
-		case '23': // SUBDIRECTOR CLUB MADERAS
-		case '34': // FACTURACIÓN
-		case '35': // ATENCIÓN A CLIENTES
-		case '26': // MERCADÓLOGO
-		case '41': // GENERALISTA
-		case '39': // CONTABILIDAD
-		case '31': // INTERNOMEX
-		case '49': // CAPITAL HUMANO
-		case '50': // GENERALISTA MKTD
-		case '40': // COBRANZA
-		case '54': // SUBDIRECCIÓN CONSULTA
-		case '58': // ANALISTA DE DATOS CI
-		case '8': // SOPORTE
-		case '10': // EJECTUTIVO ADMINISTRATIVO MKTD
-		case '19': // SUBDIRECTOR MKTD
-		case '20': // GERENTE MKTD
-		case '21': // CLIENTE
-		case '23': // SUBDIRECTOR CLUB MADERAS
-		case '28': // EJECUTIVO ADMINISTRATIVO
-		case '33': // CONSULTA
-		case '25': // MKTD
-		case '27': // MKTD
-		case '30': // MKTD
-		case '36': // MKTD
-		case '22': // MKTD
-		case '53': // ANALISTA COMISIONES
-		case '61': // ANSESOR CONSULTA
-		case '64': // ASISTENTE DIRECCIÓN ADMINISTRACIÓN
-		case '65': // CONTABILIDAD (EXTERNO)
-		case '66': // OPERATIVO
-		case '67': // LEXINTEL
-		case '68': // DIRECTOR SUMA
-		case '69': // DIRECTOR GENERAL
-		case '70': // EJECUTIVO CONTRALORÍA JR
-		case '71': // AUXILIAR DE ARCHIVO
-		case '72': // DIRECCIÓN BIOFÍSICA
-		case '73': // PRACTICANTE CONTRALORÍA
-		case '74': // EJECUTIVO DE POSTVENTA
-		case '75': // SUPERVISOR POSTVENTA
-		case '76': // ASISTENTE SUBDIRECCIÓN POSTVENTA
-		case '77': // AUXILIAR POSTVENTA
-		case '78': // BASE DE DATOS POSTVENTA
-		case '79': // COORDINADOR DE POSTVENTA
-		case '80': // COORDINADOR DE CALL CENTER POSTVENTA
-		case '81': // SUBDIRECCIÓN POSTVENTA 
-		case '82': // AGENTE DE ASIGNACIÓN 
-		case '83': // AGENTE DE CALIDAD 
-		case '84': // CONSULTA BBVA
-					redirect(base_url().'Administracion');
-        break;
-
-        case '12':
-            redirect(base_url().'Caja');
-        break;
-
-		case '13': // CONTRALORÍA
-		case '17': // SUBDIRECTOR CONTRALORÍA
-		case '32': // CONTRALORÍA CORPORATIVA
-		case '47': // SUBDIRECCIÓN FINANZAS
-         	redirect(base_url().'Contraloria');
-        break;
-
-        case '14':
-            redirect(base_url().'Direccion_administracion');
-        break;
-
-        case '15':
-            redirect(base_url().'Juridico');
-        break;
-
-        case '16':
-            redirect(base_url().'Contratacion');
-        break;
-
-        case '31':
-            redirect(base_url().'Internomex');
-        break;
-		case '55': // POSTVENTA
-		case '56': // COMITÉ TÉCNICO
-		case '57': // TITULACIÓN
-		case '62': //PROYECTOS
-			redirect(base_url() . 'Postventa');
-		break;
-        default:
-            $data['titulo'] = 'Login con roles de usuario en codeigniter';
-    	    $this->load->view('login/login_view',$data);
-            //  $this->load->view('login/maintenance',$data);
-        break;
-     }
+		}else{
+			echo "<script>alert(".$controlador.");</script>";
+			if($this->session->userdata('controlador') == ''){
+				$data['token'] = $this->token();
+				$data['titulo'] = 'Login con roles de usuario en codeigniter';
+				$this->load->view('login/login_view',$data);
+			}else{
+				redirect(base_url().$this->session->userdata('controlador'));
+			}
+		}
 }
 
 	public function token()
@@ -282,7 +185,7 @@ class Login extends CI_Controller
 						document.write(localStorage.setItem("nombreUsuario", "'.$check_user[0]->nombre.' '.$check_user[0]->apellido_paterno.' '.$check_user[0]->apellido_materno.'"));
 						</script>';
 						
-
+ 
 						$data = array(
 							'is_logued_in' 	        => 		TRUE,
 							'id_usuario' 	        => 		$check_user[0]->id_usuario,
@@ -306,9 +209,17 @@ class Login extends CI_Controller
 							'idGerente'		        =>	    $idGerente,
 							'nombreGerente'	        =>	    $nombreGerente,
 							'forma_pago'	        =>	    $check_user[0]->forma_pago,
+							'controlador'			=>		$check_user[0]->controlador
 						);
+						session_start();
+						$_SESSION['rutaController'] = '';
+						$_SESSION['datos4'] = [];
+						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
+						$datos = $this->get_menu->get_menu_data($check_user[0]->id_rol,$check_user[0]->id_usuario);
+						$data['datos'] = $datos;
 						$this->session->set_userdata($data);
 						$this->index();
+						
 					}
 				}
 		}
