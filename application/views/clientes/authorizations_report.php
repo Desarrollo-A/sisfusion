@@ -3,40 +3,7 @@
 <body class="">
 <div class="wrapper ">
     <?php
-    /*-------------------------------------------------------*/
-$datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-    /*$dato= array(
-        'home' => 0,
-        'usuarios' => 0,
-        'statistics' => 0,
-        'manual' => 0,
-        'aparta' => 0,
-        'prospectos' => 0,
-        'prospectosMktd' => 0,
-        'prospectosAlta' => 0,
-        'sharedSales' => 0,
-        'coOwners' => 0,
-        'references' => 0,
-        'nuevasComisiones' => 0,
-        'histComisiones' => 0,
-        'bulkload' => 0,
-        'corridaF' => 0,
-        'inventario' => 0,
-        'autorizacionesReport' => 1,
-        'clubMaderasReport' => 0,
-        'clientsList' => 0,
-        'inventarioDisponible' => 0,
-        'autorizaciones' => 0,
-        'busquedaDetallada' => 0
-
-    );
-    //$this->load->view('template/asesor/sidebar', $dato);
-    $this->load->view('template/sidebar', $dato);*/
+            $this->load->view('template/sidebar');
     ?>
 
     <!-- modal  INSERT COMENTARIOS-->

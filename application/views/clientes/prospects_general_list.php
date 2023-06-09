@@ -1,15 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/><body>
 <div class="wrapper">
-	<?php //include 'sidebarParams_prospectsList.php' 
-/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-	?>
+	<?php $this->load->view('template/sidebar', $datos); ?>
 	<style>
 		.label-inf {
 			color: #333;

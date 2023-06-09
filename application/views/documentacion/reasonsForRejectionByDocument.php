@@ -2,9 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 <div class="wrapper ">
-    <?php
-    $this->load->view('template/sidebar');
-    ?>
+<?php $this->load->view('template/sidebar'); ?>
+
 
     <div class="modal" tabindex="-1" role="dialog" id="notification">
         <div class="modal-dialog" role="document">
