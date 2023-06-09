@@ -30,7 +30,6 @@ class Login extends CI_Controller
 			$data['titulo'] = 'Login con roles de usuario en codeigniter';
 			$this->load->view('login/login_view',$data);
 		}else{
-			echo "<script>alert(".$controlador.");</script>";
 			if($this->session->userdata('controlador') == ''){
 				$data['token'] = $this->token();
 				$data['titulo'] = 'Login con roles de usuario en codeigniter';
