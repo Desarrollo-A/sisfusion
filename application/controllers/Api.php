@@ -478,7 +478,7 @@ class Api extends CI_Controller
             return;
         }
 
-        if ($cliente->autorizacion_correo === AutorizacionClienteOpcs::VALIDADO) {
+        if ($cliente->autorizacion_correo == AutorizacionClienteOpcs::VALIDADO) {
             $this->load->view('template/header');
             $this->load->view('clientes/autorizacion-cliente', [
                 'titulo' => 'INFORMACIÓN',
@@ -542,7 +542,7 @@ class Api extends CI_Controller
             return;
         }
 
-        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
+        if ($cliente->autorizacion_sms == AutorizacionClienteOpcs::VALIDADO) {
             $this->load->view('template/header');
             $this->load->view('clientes/autorizacion-cliente', [
                 'titulo' => 'INFORMACIÓN',
