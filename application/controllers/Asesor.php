@@ -919,7 +919,6 @@ class Asesor extends CI_Controller
 
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
         $data_update_client = array(
-            'id_sede' => $data_prospecto[0]->id_sede,
             'rfc' => $data_prospecto[0]->rfc,
             'curp' => $data_prospecto[0]->curp,
             'correo' => $data_prospecto[0]->correo,
