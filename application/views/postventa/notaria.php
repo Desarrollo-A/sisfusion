@@ -4,16 +4,9 @@
 
 <body>
     <div class="wrapper">
-        <?php 
-            /*-------------------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-            /*--------------------------------------------------------*/
-        ?>
-     <!-- Modelo para eliminar -->
+    <?php  $this->load->view('template/sidebar'); ?>
+     
+    <!-- Modelo para eliminar -->
     <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content" >
