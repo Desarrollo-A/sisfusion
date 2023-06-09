@@ -10,21 +10,8 @@
     </style>
     <div class="wrapper">
         <?php
-        if($this->session->userdata('id_rol')=="18"){
-            //sistemas
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-        }
-        else if($this->session->userdata('id_rol')=="19" ||  $this->session->userdata('id_rol')=="20" ||$this->session->userdata('id_rol')=="21"){
-            //users  mktd
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
+        if (in_array($this->session->userdata('id_rol'), array(18,19,20,21))){
+            $this->load->view('template/sidebar');
         }
         else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
