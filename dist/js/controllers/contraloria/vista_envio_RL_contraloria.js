@@ -1,7 +1,9 @@
+let titulosInventario = [];
 $("#tabla_envio_RL").ready(function () {
     $('#tabla_envio_RL thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+        titulosInventario.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if (tabla_corrida.column(i).search() !== this.value) {
                 tabla_corrida.column(i).search(this.value).draw();
@@ -10,8 +12,8 @@ $("#tabla_envio_RL").ready(function () {
     });
 
     tabla_corrida = $("#tabla_envio_RL").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -23,33 +25,7 @@ $("#tabla_envio_RL").ready(function () {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'TIPO VENTA';
-                                    break;
-                                case 1:
-                                    return 'PROYECTO'
-                                case 2:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 3:
-                                    return 'LOTE';
-                                    break;
-                                case 4:
-                                    return 'CLIENTE';
-                                    break;
-
-                                case 5:
-                                    return 'CÓDIGO';
-                                    break;
-                                case 6:
-                                    return 'RL';
-                                    break;
-                                case 7:
-                                    return 'UBICACIÓN';
-                                    break;
-
-                            }
+                            return ' ' + titulosInventario[columnIdx]  + ' ';
                         }
                     }
                 }
@@ -66,32 +42,7 @@ $("#tabla_envio_RL").ready(function () {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'TIPO VENTA';
-                                    break;
-                                case 1:
-                                    return 'PROYECTO'
-                                case 2:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 3:
-                                    return 'LOTE';
-                                    break;
-                                case 4:
-                                    return 'CLIENTE';
-                                    break;
-                                case 5:
-                                    return 'CÓDIGO';
-                                    break;
-                                case 6:
-                                    return 'RL';
-                                    break;
-                                case 7:
-                                    return 'UBICACIÓN';
-                                    break;
-
-                            }
+                            return ' ' + titulosInventario[columnIdx]  + ' ';
                         }
                     }
                 }
@@ -112,10 +63,11 @@ $("#tabla_envio_RL").ready(function () {
         bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
+        scrollX: true,
         columns: [
             {
                 data: function (d) {
-                    return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+                    return `<span class="label lbl-green">${d.tipo_venta}</span>`;
                 }
             },
             {
@@ -142,10 +94,10 @@ $("#tabla_envio_RL").ready(function () {
                 data: function (d) {
                     var numeroContrato;
                     if (d.vl == '1')
-                        numeroContrato = 'En proceso de Liberación';
+                        numeroContrato = 'EN PROCESO DE LIBERACIÓN';
                     else {
                         if (d.numContrato == "" || d.numContrato == null)
-                            numeroContrato = "<p><i>Sin número de contrato</i></p>";
+                            numeroContrato = "<p><i>SIN NÚMERO DE CONTRATO</i></p>";
                         else
                             numeroContrato = d.numContrato;
                     }
@@ -155,14 +107,14 @@ $("#tabla_envio_RL").ready(function () {
             {
                 data: function (d) {
                     if (d.RL == null || d.RL == '')
-                        return '<p class="m-0"> No definido  </p>';
+                        return '<p class="m-0"> NO DEFINIDO  </p>';
                     else
                         return '<p class="m-0">' + d.RL + '</p>';
                 }
             },
             {
                 data: function (d) {
-                    return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+                    return `<span class="label lbl-azure">${d.nombreSede}</span>`;
                 }
             }
         ],
@@ -185,6 +137,13 @@ $("#tabla_envio_RL").ready(function () {
         order: [[1, 'asc']]
     });
 });
+
+$('#tabla_envio_RL').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});    
+
 
 var num = 1;
 function saltoLinea(value) {
@@ -259,9 +218,6 @@ $(document).ready(function () {
             arrw = JSON.stringify(duplicadosEliminados);
             fLen = duplicadosEliminados2.length;
             text = "<ul>";
-            for (i = 0; i < fLen; i++) {
-                var hey = text += "<li>" + duplicadosEliminados2[i] + "</li>";
-            }
 
             text += "</ul>";
             $.ajax({

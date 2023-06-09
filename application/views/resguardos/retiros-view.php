@@ -3,13 +3,8 @@
 <body class="">
     <div class="wrapper">
         <?php
-        if ($this->session->userdata('id_rol') == "1" || $this->session->userdata('id_rol') == "2" || $this->session->userdata('id_rol')=="4")
-        {
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+        if (in_array($this->session->userdata('id_rol'), array(1, 2, 4))){
+            $this->load->view('template/sidebar');
         }
         else {
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';

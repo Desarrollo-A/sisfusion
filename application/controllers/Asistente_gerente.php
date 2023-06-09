@@ -17,7 +17,10 @@ class Asistente_gerente extends CI_Controller {
 		$this->validateSession();
 
 		date_default_timezone_set('America/Mexico_City');
-	}
+
+      $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+  }
 
 
 	public function index()
@@ -31,45 +34,35 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function registrosClienteVentasAsistentes(){
-		/*menu function*/           
-     	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
+		$this->load->view("contratacion/datos_cliente_contratacion_view");
 	}
 	public function registroEstatus8VentasAsistentes()
 	{
 		$this->validateSession();
 
-	 	/*menu function*/                     
-   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view",$datos);
+	 	$this->load->view('template/header');
+		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view");
 	}
 	public function registroEstatus14VentasAsistentes(){
 		$this->validateSession();
-		 /*menu function*/                    
-     	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_status14Contratacion_asistentes_view",$datos);
+		$this->load->view("contratacion/datos_status14Contratacion_asistentes_view");
 	}
 	public function registroEstatus7VentasAsistentes(){
 		/*menu function*/           
-	   	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$this->load->view('template/header');
-		$this->load->view("ventasAsistentes/datos_7_ventasAsistentes_view",$datos);
+	   	$this->load->view('template/header');
+		$this->load->view("ventasAsistentes/datos_7_ventasAsistentes_view");
 	}
 
 	public function registroEstatus9VentasAsistentes(){
 		/*menu function*/                    
-   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$this->load->view('template/header');
-		$this->load->view('contratacion/report_historial_view',$datos);
+   		$this->load->view('template/header');
+		$this->load->view('contratacion/report_historial_view');
 	}
 
 	public function inventario()
 	{
-		/*menu function*/                   
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -77,8 +70,6 @@ class Asistente_gerente extends CI_Controller {
 
 	public function inventarioDisponible()
 	{
-		/*menu function*/                   
-   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_inventarioDventas_view", $datos);
@@ -86,10 +77,8 @@ class Asistente_gerente extends CI_Controller {
 
 	public function legalRejections()
     {
-        /*menu function*/                    
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("contratacion/legal_rejections", $datos);
+        $this->load->view("contratacion/legal_rejections");
     }
     
     public function getLegalRejections() {
@@ -103,10 +92,8 @@ class Asistente_gerente extends CI_Controller {
     }
 
 	public function registrosClienteAutorizacionAsistentes(){
-		/*menu function*/                     
-       	$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("ventasAsistentes/datos_cliente_autorizacion_ventasAsistentes_view",$datos);
+		$this->load->view("ventasAsistentes/datos_cliente_autorizacion_ventasAsistentes_view");
 	}
 	public function catalogoAsesores()
 	{
@@ -114,10 +101,8 @@ class Asistente_gerente extends CI_Controller {
 		$this->load->view("contratacion/cat_asesor_view");
 	}
 	public function registroContratoVentasAsistentes(){
- 		/*menu function*/                
- 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$this->load->view('template/header');
-		$this->load->view("ventasAsistentes/datos_cliente_contrato_ventasAsistentes_view",$datos);
+ 		$this->load->view('template/header');
+		$this->load->view("ventasAsistentes/datos_cliente_contrato_ventasAsistentes_view");
 	}
 	public function nueva_Solicitud(){
 		$this->load->view('template/header');
@@ -158,9 +143,7 @@ class Asistente_gerente extends CI_Controller {
 
 	public function invDispAsesor()
 	{
-	 	/*menu function*/                     
-   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
+	 	$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
       	$this->load->view('template/header');
         $this->load->view("asesor/inventario_disponible",$datos);
 	}

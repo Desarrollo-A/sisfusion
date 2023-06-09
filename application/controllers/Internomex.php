@@ -14,6 +14,9 @@
       $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Formatter'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
 
@@ -22,24 +25,17 @@
       if ($this->session->userdata('id_rol') == false || $this->session->userdata('id_rol') != '31') {
         redirect(base_url() . 'login');
       }
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
+
       $this->load->view('template/header');
-      // $this->load->view('internomex/inicio_internomex_view',$datos);
-      $this->load->view('template/home',$datos);
+      $this->load->view('template/home');
       $this->load->view('template/footer');
     }
 
     
     public function nuevos()
     {
-     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-     /*-------------------------------------------------------------------------------*/
-
      $this->load->view('template/header');
-     $this->load->view("internomex/nuevos", $datos);
+     $this->load->view("internomex/nuevos");
    }
 
    public function getDatosNuevasInternomex($proyecto,$condominio){
@@ -54,12 +50,8 @@
 
   public function aplicados()
   {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    /*-------------------------------------------------------------------------------*/
     $this->load->view('template/header');
-    
-    $this->load->view("internomex/aplicados", $datos);
+    $this->load->view("internomex/aplicados");
   }
 
   public function getDatosAplicadosInternomex($proyecto,$condominio){
@@ -74,11 +66,8 @@
 
   public function historial()
   {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    /*-------------------------------------------------------------------------------*/
     $this->load->view('template/header');
-    $this->load->view("internomex/historial", $datos);
+    $this->load->view("internomex/historial");
   }
 
   public function getDatosHistorialInternomex($proyecto,$condominio){
@@ -106,9 +95,8 @@
   }
 
   public function loadFinalPayment() {
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
     $this->load->view('template/header');
-    $this->load->view("internomex/load_final_payment", $datos);
+    $this->load->view("internomex/load_final_payment");
   }
 
   public function getPaymentsListByCommissionAgent($tipo_pago)

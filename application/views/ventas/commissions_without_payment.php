@@ -3,22 +3,12 @@
 <body>
     <div class="wrapper">
         <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '13': // CONTRALORÍA
-            case '17': // SUBDIRECTOR CONTRALORÍA
-            case '32': // CONTRALORÍA CORPORATIVA
-            case '11': // ADMINISTRACIÓN
-            case '70': // EJECUTIVO CONTRALORIA JR
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
-                break;
-            default: // NO ACCESS
+            if (in_array($this->session->userdata('id_rol'), array(13,17,32,11,70))){
+                $this->load->view('template/sidebar');
+            }
+            else{
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
+            }
         ?>
 
         <div class="content boxContent">

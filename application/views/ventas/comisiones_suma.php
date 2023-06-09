@@ -4,12 +4,8 @@
 
 <body>
     <div class="wrapper">
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+        <?php 
+        $this->load->view('template/sidebar');
 
         $usuarioid =  $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=" . $usuarioid . "");

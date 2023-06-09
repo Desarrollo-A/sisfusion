@@ -1,12 +1,6 @@
 <body>
     <div class="wrapper">
-        <?php
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <style type="text/css">
             .progress .progress-bar, .progress .progress-bar.progress-bar-default {

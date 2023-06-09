@@ -1,24 +1,7 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'cambiarAsesor' => 1,
-		'historialPagos' => 0,
-		'pagosCancelados' => 0,
-		'altaCluster' => 0,
-		'altaLote' => 0,
-		'inventario' => 0,
-		'actualizaPrecio' => 0,
-		'actualizaReferencia' => 0,
-		'liberacion' => 0
-	);
-	//$this->load->view('template/caja/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
+	<?php $this->load->view('template/sidebar'); ?>
 
-	?>
 	<!--Contenido de la página-->
 	<div class="modal fade modal-alertas" id="modal_autorizacion" role="dialog">
 		<div class="modal-dialog">
@@ -38,7 +21,6 @@
 
 	<div class="content">
 		<div class="container-fluid">
-			 
 			<div class="row">
 				<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<div class="card">
@@ -59,13 +41,7 @@
 										<label for="condominio">Condominio: </label>
 										<select name="condominio" id="condominio" class="selectpicker" data-style="btn"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA CONDOMINIO -</option></select>
 									</div>
-<!-- 
-									<div class="col-md-4 form-group">
-										<label for="lote">Lote: </label>
-										<select name="lote" id="lote" class="selectpicker" data-style="btn btn-primary btn-round"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA LOTE -</option></select>
-									</div> -->
 								</div>
- 
  						</div>
 
 						</div>

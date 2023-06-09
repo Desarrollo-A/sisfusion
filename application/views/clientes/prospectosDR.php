@@ -5,12 +5,7 @@
     <?php
     switch ($this->session->userdata('id_rol')) {
         case '54': // POPEA
-            // code...
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+            $this->load->view('template/sidebar');
             break;
         default:
             // code...

@@ -15,7 +15,10 @@ class Resguardos extends CI_Controller
     $this->load->database('default');
     $this->jwt_actions->authorize('6512', $_SERVER['HTTP_HOST']);
     $this->validateSession();
-   }
+
+    $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+  }
 
   public function index(){
     redirect(base_url());
@@ -27,11 +30,11 @@ class Resguardos extends CI_Controller
   }
 
   public function retiros() {
-    if ($this->session->userdata('id_rol') == FALSE)
-        redirect(base_url());
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        if ($this->session->userdata('id_rol') == FALSE) {
+            redirect(base_url());
+        }
         $this->load->view('template/header');
-        $this->load->view("resguardos/retiros-view", $datos);
+        $this->load->view("resguardos/retiros-view");
       }
 
   public function getRetiros($user,$opc)

@@ -7,7 +7,7 @@ class Contratacion_model extends CI_Model {
     }
 
    function get_proyecto_lista() {
-      return $this->db->query("SELECT idResidencial, nombreResidencial, UPPER(CAST(descripcion AS VARCHAR(100))) descripcion, ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM [residenciales] WHERE status = 1");
+      return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - '  ,descripcion) descripcion, ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM [residenciales] WHERE status = 1");
    }
    
    function get_condominio_lista($proyecto) {

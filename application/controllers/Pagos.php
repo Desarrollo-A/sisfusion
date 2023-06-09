@@ -23,7 +23,10 @@ class Pagos extends CI_Controller
     $this->load->database('default');
     $this->jwt_actions->authorize('4141', $_SERVER['HTTP_HOST']);
     $this->validateSession();
-   }
+
+      $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+  }
 
    public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
@@ -32,27 +35,17 @@ class Pagos extends CI_Controller
 
    public function revision_asimilados()
    {
-     $datos = array();
-     $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-     $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-     $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-     $salida = str_replace('' . base_url() . '', '', $val);
-     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-     // $this->load->view('template/header');
-     // $this->load->view("ventas/revision_asimilados", $datos);
-
      switch($this->session->userdata('id_rol')){
        case '31':
-       $this->load->view('template/header');
-       $this->load->view("pagos/revision_asimilados_intmex_view", $datos);
+           $this->load->view('template/header');
+           $this->load->view("pagos/revision_asimilados_intmex_view");
        break;
 
        default:
-       $this->load->view('template/header');
-       $this->load->view("pagos/revision_asimilados_view", $datos);
+           $this->load->view('template/header');
+           $this->load->view("pagos/revision_asimilados_view");
        break;
      }
-
    }
 
 
@@ -118,15 +111,8 @@ class Pagos extends CI_Controller
 
     public function bonos_historial()
     {
-  
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-      $this->load->view('template/header');
-      $this->load->view("pagos/bonos_historial_view", $datos);
+        $this->load->view('template/header');
+        $this->load->view("pagos/bonos_historial_view");
     }
 
     public function enviarBonosMex($idbono){
@@ -200,24 +186,17 @@ class Pagos extends CI_Controller
   
   public function revision_remanente()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     switch($this->session->userdata('id_rol')){
       case '31':
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_remanente_intmex_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_remanente_intmex_view");
       break;
 
       default:
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_remanente_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_remanente_view");
       break;
     }
-
   }
   
   public function lista_usuarios(){
@@ -442,27 +421,17 @@ class Pagos extends CI_Controller
 
   public function revision_factura()
   {
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    // $this->load->view('template/header');
-    // $this->load->view("ventas/revision_factura", $datos);
-
     switch($this->session->userdata('id_rol')){
       case '31':
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_factura_intmex_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_factura_intmex_view");
       break;
 
       default:
-      $this->load->view('template/header');
-      $this->load->view("pagos/revision_factura_view", $datos);
+          $this->load->view('template/header');
+          $this->load->view("pagos/revision_factura_view");
       break;
     }
-
   }
 
  
@@ -496,25 +465,17 @@ class Pagos extends CI_Controller
 
     public function revision_xml()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
-        $this->load->view('template/header');
-        $this->load->view("pagos/revision_xml_intmex_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_xml_intmex_view");
         break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("pagos/revision_xml_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_xml_view");
         break;
       }
-
-
     }
 
 
@@ -768,23 +729,16 @@ class Pagos extends CI_Controller
     
     public function pagosExtranjero()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
-
-        case '31':
-        $this->load->view('template/header');
+          case '31':
+            $this->load->view('template/header');
         
-        $this->load->view("pagos/pagos_extranjero_intmex_view", $datos);
-        break;
+            $this->load->view("pagos/pagos_extranjero_intmex_view");
+            break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("pagos/pagos_extranjero_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/pagos_extranjero_view");
         break;
       }
 
@@ -832,21 +786,15 @@ class Pagos extends CI_Controller
 
     public function revision_mktd()
     {
-      $datos = array();
-      $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-      $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-      $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-      $salida = str_replace('' . base_url() . '', '', $val);
-      $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
       switch($this->session->userdata('id_rol')){
         case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXmktd", $datos);
+            $this->load->view('template/header');
+            $this->load->view("ventas/revision_INTMEXmktd");
         break;
 
         default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_mktd", $datos);
+            $this->load->view('template/header');
+            $this->load->view("ventas/revision_mktd");
         break;
       }
 
@@ -904,14 +852,8 @@ class Pagos extends CI_Controller
 
       public function enviadas_internomex()
       {
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
         $this->load->view('template/header');
-        $this->load->view("pagos/enviadas_intmex_view", $datos);
+        $this->load->view("pagos/enviadas_intmex_view");
       }
   
       public function getDatosEnviadasInternomex(){
@@ -928,21 +870,14 @@ class Pagos extends CI_Controller
 
       public function revision_especial()
       {
-        //Moficiaciones para revisiones especiales
-        $datos = array();
-        $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-        $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-        $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $salida = str_replace('' . base_url() . '', '', $val);
-        $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
         switch($this->session->userdata('id_rol')){
           case '31':
-          $this->load->view('template/header');
-          $this->load->view("ventas/revision_INTMEXremanente", $datos);
+              $this->load->view('template/header');
+              $this->load->view("ventas/revision_INTMEXremanente");
           break;
           default:
-          $this->load->view('template/header');
-          $this->load->view("pagos/revision_especial_view", $datos);
+            $this->load->view('template/header');
+            $this->load->view("pagos/revision_especial_view");
           break;
         }
   

@@ -8,21 +8,22 @@ class Statistics extends CI_Controller
         parent::__construct();
         $this->load->model('Statistics_model');
         $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
     {    }
 
     public function consultMktdChart(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/consult_statistics_em", $datos);
+        $this->load->view("clientes/consult_statistics_em");
     }
 
     public function consultProspectingPlaceChart(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/consult_statistics_lp", $datos);
+        $this->load->view("clientes/consult_statistics_lp");
     }
 
     function getSubdirectories()

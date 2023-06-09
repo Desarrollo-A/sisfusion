@@ -2976,8 +2976,8 @@
             $filter = "";
             $filterTwo = " AND hl.modificado = $where";
         }
-        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
-		hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
+        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,120) as modificado, 
+		CONVERT(VARCHAR,hd.fechaVenc,120) as fechaVenc, l.idLote, CONVERT(VARCHAR,cl.fechaApartado,120) as fechaApartado, cond.nombre as nombreCondominio,
 		l.comentario, res.nombreResidencial,
 		hd.status, l.totalNeto, totalValidado, l.totalNeto2, 
 		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
@@ -3007,8 +3007,8 @@
             $filter = "";
             $filterTwo = " AND hl.modificado = $where";
         }
-        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
-		hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
+        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,120) as modificado, 
+		CONVERT(VARCHAR,hd.fechaVenc,120) as fechaVenc, l.idLote, CONVERT(VARCHAR,cl.fechaApartado,120) as fechaApartado, cond.nombre as nombreCondominio,
 		l.comentario, res.nombreResidencial, l.referencia,
 		hd.status, hd.comentario,
 		CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,

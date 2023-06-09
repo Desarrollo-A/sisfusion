@@ -2,7 +2,6 @@
 use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('Contraloria_model');
@@ -22,7 +21,7 @@ class Contraloria extends CI_Controller {
 
     public function index()
     {
-        if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas'))
+        if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'ejecutivoContraloriaJR'))
         {
             redirect(base_url().'login');
         }
@@ -44,12 +43,30 @@ class Contraloria extends CI_Controller {
 		$this->load->view('template/header');
 	 	$this->load->view("contraloria/vista_corrida_contraloria");
 	}
-
+    public function documentacion_contraloria(){
+		$this->validateSession();
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+		$this->load->view('template/header');
+		//$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
+		$this->load->view("contraloria/vista_documentacion_contraloria",$datos);
+	}
+	public function documentacion_contraloria_ds(){
+        $this->validateSession();
+        $datos=array();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        //$this->load->view("contratacion/datos_cliente_documentos_contratacion_view",$datos);
+        $this->load->view("contraloria/vista_documentacion_contraloria_ds",$datos);
+    }
 	public function historial_pagos_contraloria(){
 		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
 		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
+        $this->load->view("contraloria/vista_historial_pagos_contraloria",$datos);
     }
     public function estatus_2_0_contraloria(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
@@ -107,6 +124,13 @@ class Contraloria extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_envio_RL_contraloria",$datos);
     }
+    public function envio_RL_contraloria_2(){
+		/*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        /*-------------------------------------------------------------------------------*/
+		$this->load->view('template/header');
+	 	$this->load->view("contraloria/vista_envio_RL_contraloria_2",$datos);
+	}
     public function estatus_12_contraloria(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
@@ -132,6 +156,7 @@ class Contraloria extends CI_Controller {
     public function getProyectoExpediente(){
         echo json_encode($this->Contraloria_model->getProyecto()->result_array());
     }
+
     public function listaClientes()
     {
         /*se carga la vista desde contratacion*/
@@ -143,6 +168,7 @@ class Contraloria extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
     }
+
     public function inventario()
     {
         /*se carga la vista desde contratacion*/
@@ -150,22 +176,20 @@ class Contraloria extends CI_Controller {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
-        // $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
 
-
     public function lista_proyecto(){
         echo json_encode($this->Contraloria_model->get_proyecto_lista()->result_array());
     }
+
     public function lista_condominio($proyecto){
         echo json_encode($this->Contraloria_model->get_condominio_lista($proyecto)->result_array());
     }
 
-    public function lista_lote($condominio)
-    {
+    public function lista_lote($condominio){
         $residencial = 0;
         $data = $this->registrolote_modelo->getLotesGral($condominio,$residencial);
         if($data != null) {
@@ -174,19 +198,20 @@ class Contraloria extends CI_Controller {
             echo json_encode(array());
         }
     }
+
     public function lista_estatus($condominio){
         echo json_encode($this->Contraloria_model->get_lote_lista($condominio)->result_array());
     }
+
     public function get_lote_expediente($lote){
         echo json_encode($this->Contraloria_model->get_datos_lote_exp($lote)->result_array());
     }
+
     public function get_lote_historial_pagos($lote){
         echo json_encode($this->Contraloria_model->get_datos_lote_pagos($lote)->result_array());
     }
 
-    public function getStatus2_0()
-    {
-//		echo json_encode($this->registrolote_modelo->registroStatusContratacion2_0()->result());
+    public function getStatus2_0() {
         $data = $this->registrolote_modelo->registroStatusContratacion2_0();
         if($data != null) {
             echo json_encode($data);
@@ -285,6 +310,27 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Clientes_model->getAdvisersVentas()->result_array());
     }
 
+    public function consultClients(){
+        $this->validateSession();
+     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+	 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+	 /*-------------------------------------------------------------------------------*/
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("contraloria/vista_documentacion_contraloria_cl",$datos);
+    }
+
+    public function reasignClient(){
+        $data = array(
+            "id_gerente" => $_POST['id_gerente'],
+            "id_coordinador" => $_POST['id_coordinador'],
+            "id_asesor" => $_POST['id_asesor'],
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+        $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
+        echo json_encode($response);
+    }
     public function validateSession()
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
@@ -367,7 +413,7 @@ class Contraloria extends CI_Controller {
         // {
         // 	array_push($correos_entregar, $email);
         // }
-        array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+        array_push($correos_entregar, 'programador.analista26@ciudadmaderas.com');
 
         $elementos_correo = array(	"setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
             "Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_SEND_MAIL_RECEP_EXP);
@@ -682,17 +728,12 @@ class Contraloria extends CI_Controller {
             )
         );
 
-        /*$data=array();
-        $data = $this->registrolote_modelo->getRevision5($datos);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
         if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->registrolote_modelo->getRevision5($datos, $typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -701,8 +742,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function estatus10()
-    {
+    public function estatus10(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
@@ -711,17 +751,12 @@ class Contraloria extends CI_Controller {
     }
 
     public function getRevision10(){
-        /*$data=array();
-        $data = $this->registrolote_modelo->getRevision10();
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
         if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->registrolote_modelo->getRevision10($typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -730,8 +765,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function rechazoJuridico()
-    {
+    public function rechazoJuridico(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         /*-------------------------------------------------------------------------------*/
@@ -750,8 +784,7 @@ class Contraloria extends CI_Controller {
     }
 
 
-    public function getregistroStatus5ContratacionContraloria()
-    {
+    public function getregistroStatus5ContratacionContraloria(){
         $data = array();
         $data = $this->Contraloria_model->registroStatusContratacion5();
         if($data != null) {
@@ -771,11 +804,8 @@ class Contraloria extends CI_Controller {
         $comentario=$this->input->post('comentario');
         $modificado=date('Y-m-d H:i:s');
         $fechaVenc=$this->input->post('fechaVenc');
-
         $ubicacion=$this->input->post('ubicacion');
         $tipo_venta=$this->input->post('tipo_venta');
-
-
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= 5;
@@ -1905,8 +1935,6 @@ class Contraloria extends CI_Controller {
         }
     }
 
-
-
     public function registro_lote_contraloria_proceceso10(){
         $folio = array();
         $folio["variable"] = $this->Contraloria_model->findCount();
@@ -1964,10 +1992,6 @@ class Contraloria extends CI_Controller {
                                 $arrayAacuse["code"] = $b;
                                 $arrayAacuse["mod"] = date("Y-m-d H:i:s");
                                 $arrayAacuse["contratoUrgente"] = $fila->contratoUrgente;
-                                // $arrayAacuse["nombreGerente"] = $fila->gerente;
-                                // $arrayAacuse["nombreAsesor"] = $fila->asesor;
-                                // $arrayAacuse["observacionContratoUrgente"] = $fila->observacionContratoUrgente;
-
                                 $dato3 = array();
                                 $dato3["numContrato"] = $b;
                                 $dato3["fechaRecepcion"] = date('Y-m-d H:i:s');
@@ -2192,13 +2216,7 @@ class Contraloria extends CI_Controller {
 
     }
 
-
-
-
-
-
     public function editar_registro_lote_contraloria_proceceso15(){
-
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -2233,10 +2251,7 @@ class Contraloria extends CI_Controller {
 
 
         $validate = $this->Contraloria_model->validateSt15($idLote);
-
         if($validate == 1){
-
-
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
 
                 $insertToData = array(
@@ -2265,21 +2280,15 @@ class Contraloria extends CI_Controller {
             $data['message'] = 'FALSE';
             echo json_encode($data);
         }
-
-
     }
 
-
-
     public function editar_registro_loteRechazo_contraloria_proceceso15(){
-
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
         $idCliente=$this->input->post('idCliente');
         $comentario=$this->input->post('comentario');
         $modificado=date("Y-m-d H:i:s");
-
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= 13;
@@ -2289,7 +2298,6 @@ class Contraloria extends CI_Controller {
         $arreglo["perfil"]=$this->session->userdata('id_rol');
         $arreglo["modificado"]=date("Y-m-d H:i:s");
         $arreglo["fechaVenc"]=date("Y-m-d H:i:s");
-
 
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]=13;
@@ -2304,9 +2312,7 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-
         $validate = $this->Contraloria_model->validateSt15($idLote);
-
         if($validate == 1){
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
                 $data['message'] = 'OK';
@@ -2319,8 +2325,6 @@ class Contraloria extends CI_Controller {
             $data['message'] = 'FALSE';
             echo json_encode($data);
         }
-
-
     }
 
     public function liberacion_contraloria(){
@@ -2328,7 +2332,6 @@ class Contraloria extends CI_Controller {
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view("contraloria/vista_liberacion_contraloria", $datos);
     }
-
 
     public function app_lib(){
         $res =  $this->Contraloria_model->aplicaLiberaciones($this->input->post('idResidencial'));
@@ -2340,8 +2343,6 @@ class Contraloria extends CI_Controller {
             echo json_encode($data);
         }
     }
-
-
 
     public function return1(){
 
@@ -2957,29 +2958,6 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
-    /*public function updateLoteEngancheSede(){
-        $idLote = $_POST['idLote'];
-
-        $data = $this->Contraloria_model->get_datos_lotes($idLote);
-        $data = array(
-            "totalNeto" => $this->formatter->removeNumberFormat($_POST['enganches']),
-            "ubicacion" => $this->input->post("ubicacion_sede"));
-
-        $response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-        echo json_encode($response);
-    }
-
-    public function updateLoteSede(){
-        $idLote = $_POST['idLote'];
-
-        $data = $this->Contraloria_model->get_datos_lotes($idLote);
-        $data = array(
-            "ubicacion" => $this->input->post("ubicacion_sede"));
-
-        $response = $this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-        echo json_encode($response);
-    }*/
-
     public function reporte_diario(){
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
@@ -2989,8 +2967,7 @@ class Contraloria extends CI_Controller {
 
     }
 
-    public function getRegistroDiario()
-    {
+    public function getRegistroDiario() {
         $data = array();
         $data = $this->Contraloria_model->registroDiario();
         if($data != null) {

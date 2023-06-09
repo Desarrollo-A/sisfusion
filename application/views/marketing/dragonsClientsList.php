@@ -13,7 +13,7 @@
 <body class="">
 <div class="wrapper">
 
-    <?php $this->load->view('template/sidebar', ""); ?>
+<?php $this->load->view('template/sidebar'); ?>
 
     <div class="modal fade in" id="reviewTokenEvidence" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
         <div class="modal-dialog modal-lg">

@@ -20,7 +20,10 @@ class Login extends CI_Controller
 		$this->load->database('default');
 //        $this->load->helper('language'); // cargo la libreria language
 //        $this->lang->load('generales'); // cargo los archivos del lenguaje
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 		
 	public function index()
 	{
@@ -30,7 +33,6 @@ class Login extends CI_Controller
 			$data['titulo'] = 'Login con roles de usuario en codeigniter';
 			$this->load->view('login/login_view',$data);
 		}else{
-			echo "<script>alert(".$controlador.");</script>";
 			if($this->session->userdata('controlador') == ''){
 				$data['token'] = $this->token();
 				$data['titulo'] = 'Login con roles de usuario en codeigniter';

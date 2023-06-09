@@ -1,69 +1,13 @@
 <body class="">
 <div class="wrapper ">
 	<?php
-	if($this->session->userdata('id_rol') == "16")
-		//CONTRATACION
-	{
-		$dato= array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'contrato' => 0,
-			'documentacion' => 0,
-			'corrida' => 0,
-			'inventario' => 0,
-			'inventarioDisponible' => 0,
-			'status8' => 0,
-			'asignarVentas' => 0,
-			'status14' => 0,
-			'lotesContratados' => 0,
-			'ultimoStatus' => 0,
-			'lotes45dias' => 0,
-			'consulta9Status' => 0,
-			'consulta12Status' => 0,
-			'gerentesAsistentes' => 1,
-		);
-		//$this->load->view('template/contratacion/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-
-	}
-	else if($this->session->userdata('id_rol') == "6" || $this->session->userdata('id_rol') == "5")
-		//ASISTENTE GERENTE
-	{
-		$dato= array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'corridaF' => 0,
-			'documentacion' => 0,
-			'autorizacion' => 0,
-			'contrato' => 0,
-			'inventario' => 0,
-			'estatus8' => 0,
-			'estatus14' => 0,
-			'estatus7' => 0,
-			'reportes' => 0,
-			'estatus9' => 0,
-			'altaUsuarios' => 0,
-			'listaUsuarios' => 0,
-			'disponibles' => 0,
-			'asesores' => 1,
-			'nuevasComisiones' => 0,
-			'histComisiones' => 0,
-			'gerentesAsistentes' => 0,  
-			'prospectosAlta' => 0,
-			'prospectos' => 0
-
-
-
-		);
-		//$this->load->view('template/ventas/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-	}
-	else
-	{
+	if($this->session->userdata('id_rol') == "16" || $this->session->userdata('id_rol') == "6" || $this->session->userdata('id_rol') == "5"){
+		$this->load->view('template/sidebar');
+	} else {
 		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 	}
 	?>
-	<!--Contenido de la página-->
+
 	<div class="content">
 		<div class="container-fluid">
 			<div class="row">

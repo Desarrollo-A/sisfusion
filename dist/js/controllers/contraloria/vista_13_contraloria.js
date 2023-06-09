@@ -1,10 +1,11 @@
 var getInfo1 = new Array(6);
+let titulosInventario = [];
 $("#tabla_ingresar_13").ready(function () {
     $('#tabla_ingresar_13 thead tr:eq(0) th').each(function (i) {
-
         if (i != 0) {
             var title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            titulosInventario.push(title);
+            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (tabla_13.column(i).search() !== this.value) {
                     tabla_13.column(i).search(this.value).draw();
@@ -14,8 +15,8 @@ $("#tabla_ingresar_13").ready(function () {
     });
 
     tabla_13 = $("#tabla_ingresar_13").DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -27,30 +28,7 @@ $("#tabla_ingresar_13").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return 'TIPO DE VENTA';
-                                case 2:
-                                    return 'PROYECTO';
-                                case 3:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 4:
-                                    return 'LOTE';
-                                    break;
-                                case 5:
-                                    return 'GERENTE';
-                                    break;
-                                case 6:
-                                    return 'CLIENTE';
-                                    break;
-                                case 7:
-                                    return 'RL';
-                                    break;
-                                case 8:
-                                    return 'UBICACIÓN';
-                                    break;
-                            }
+                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
                         }
                     }
                 }
@@ -67,30 +45,7 @@ $("#tabla_ingresar_13").ready(function () {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return 'TIPO DE VENTA';
-                                case 2:
-                                    return 'PROYECTO';
-                                case 3:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 4:
-                                    return 'LOTE';
-                                    break;
-                                case 5:
-                                    return 'GERENTE';
-                                    break;
-                                case 6:
-                                    return 'CLIENTE';
-                                    break;
-                                case 7:
-                                    return 'RL';
-                                    break;
-                                case 8:
-                                    return 'UBICACIÓN';
-                                    break;
-                            }
+                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
                         }
                     }
                 }
@@ -111,6 +66,7 @@ $("#tabla_ingresar_13").ready(function () {
         bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
+        scrollX: true,
         columns: [
             {
                 width: "3%",
@@ -121,7 +77,7 @@ $("#tabla_ingresar_13").ready(function () {
             },
             {
                 data: function (d) {
-                    return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+                    return `<span class="label lbl-green">${d.tipo_venta}</span>`;
                 }
             },
             {
@@ -142,18 +98,18 @@ $("#tabla_ingresar_13").ready(function () {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + d.gerente + '</p>';
-                }
-            },
-            {
-                data: function (d) {
                     return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
                 }
             },
             {
                 data: function (d) {
+                    return '<p class="m-0">' + d.gerente + '</p>';
+                }
+            },
+            {
+                data: function (d) {
                     if (d.RL == null || d.RL == '') {
-                        return '<p class="m-0"> No definido  </p>';
+                        return '<p class="m-0"> NO DEFINIDO  </p>';
                     } else {
                         return '<p class="m-0">' + d.RL + '</p>';
                     }
@@ -162,7 +118,7 @@ $("#tabla_ingresar_13").ready(function () {
             },
             {
                 data: function (d) {
-                    return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+                    return `<span class="label lbl-azure">${d.nombreSede}</span>`;
                 }
             },
             {
@@ -171,44 +127,35 @@ $("#tabla_ingresar_13").ready(function () {
                     var cntActions;
 
                     if (data.vl == '1') {
-                        cntActions = 'En proceso de Liberación';
+                        cntActions = 'EN PROCESO DE LIBERACIÓN';
 
                     } else {
 
                         if (data.idStatusContratacion == 12 && data.idMovimiento == 42 && data.firmaRL == 'FIRMADO' && data.validacionEnganche == 'VALIDADO') {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
 
                         } else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.validacionEnganche == 'VALIDADO') {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
 
-                        } /*else if (data.idStatusContratacion == 11 && data.idMovimiento == 41 && data.validacionEnganche == 'VALIDADO' && (data.firmaRL == 'NULL' || data.firmaRL == null)) {
+                        } else if (data.idStatusContratacion == 12 && data.idMovimiento == 42 && data.firmaRL == 'FIRMADO' && (data.validacionEnganche == 'NULL' || data.validacionEnganche == null)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="boton btn-data btn-orangeYellow" title="Sin tiempo" id="limit">' +
-                                '<i class="fas fa-exclamation"></i></button>';
-
-
-                        } */else if (data.idStatusContratacion == 12 && data.idMovimiento == 42 && data.firmaRL == 'FIRMADO' && (data.validacionEnganche == 'NULL' || data.validacionEnganche == null)) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="boton_1 btn-data btn-orangeYellow" title="Sin tiempo" id="limi1">' +
+                                'class="boton_1 btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="SIN TIEMPO" id="limi1">' +
                                 '<i class="fas fa-exclamation"></i></button>';
                         } else if (data.idStatusContratacion == 10 && data.idMovimiento == 40) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
-
                         } else {
                             cntActions = 'N/A';
                         }
-
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
@@ -230,6 +177,12 @@ $("#tabla_ingresar_13").ready(function () {
             }
         },
         order: [[1, 'asc']]
+    });
+
+    $('#tabla_ingresar_13').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $('#tabla_ingresar_13 tbody').on('click', 'td.details-control', function () {
@@ -264,16 +217,6 @@ $("#tabla_ingresar_13").ready(function () {
             } else {
                 fechaVenc = 'N/A';
             }
-            var informacion_adicional2 = '<table class="table text-justify">' +
-                '<tr><b>INFORMACIÓN ADICIONAL</b>:' +
-                '<td style="font-size: .8em"><strong>ESTATUS: </strong>' + status + '</td>' +
-                '<td style="font-size: .8em"><strong>COMENTARIO: </strong>' + row.data().comentario + '</td>' +
-                '<td style="font-size: .8em"><strong>FECHA VENCIMIENTO: </strong>' + fechaVenc + '</td>' +
-                '<td style="font-size: .8em"><strong>FECHA REALIZADO: </strong>' + row.data().modificado + '</td>' +
-                '<td style="font-size: .8em"><strong>COORDINADOR: </strong>' + row.data().coordinador + '</td>' +
-                '<td style="font-size: .8em"><strong>ASESOR: </strong>' + row.data().asesor + '</td>' +
-                '</tr>' +
-                '</table>';
 
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
@@ -294,7 +237,6 @@ $("#tabla_ingresar_13").ready(function () {
         }
     });
 
-
     $("#tabla_ingresar_13 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
@@ -310,7 +252,6 @@ $("#tabla_ingresar_13").ready(function () {
         $('#editReg').modal('show');
     });
 });
-
 
 $(document).on('click', '#save1', function (e) {
     e.preventDefault();
@@ -369,7 +310,7 @@ $(document).on('click', '#save1', function (e) {
 $(document).on('click', '.boton', function (e) {
     var nomLote = $(this).attr("data-nomLote");
     e.preventDefault();
-    var cntMessage = "<center> <h5> El lote: <b>" + nomLote + "</b> aun no se encuentra firmado por Representante Legal. </h5> </center>";
+    var cntMessage = "<center> <h5> El lote <b>" + nomLote + "</b> aún no se encuentra firmado por representante legal. </h5> </center>";
     $("#showMessageStats .modal-body").html("");
     $("#showMessageStats .modal-body").append(cntMessage);
     $('#showMessageStats').modal();
@@ -378,7 +319,7 @@ $(document).on('click', '.boton', function (e) {
 $(document).on('click', '.boton_1', function (e) {
     var nomLote = $(this).attr("data-nomLote");
     e.preventDefault();
-    var cntMessage = "<center><h5> El lote: <b>" + nomLote + "</b> se encuentra en Validación de Enganche. </5> </center>";
+    var cntMessage = "<center><h5> El lote <b>" + nomLote + "</b> se encuentra en validación de enganche. </5> </center>";
     $("#showMessageStats .modal-body").html("");
     $("#showMessageStats .modal-body").append(cntMessage);
     $('#showMessageStats').modal();

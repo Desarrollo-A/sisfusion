@@ -1,20 +1,7 @@
 <body>
 <div class="wrapper">
 
-	<?php
-	// if ($this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9") //contratacion
-	// {
-		/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- 
-	// } else {
-	// 	echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-	// }
-	?>
+	<?php $this->load->view('template/sidebar', $datos);	?>
 
 
 
