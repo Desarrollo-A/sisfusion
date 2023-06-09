@@ -14,7 +14,10 @@ class Main extends CI_Controller
 		$this->load->helper('url');
 		$this->load->model('registrolote_modelo');
 		$this->load->database('default');
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 
 	function index()

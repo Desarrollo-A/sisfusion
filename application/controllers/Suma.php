@@ -8,6 +8,10 @@ class Suma extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
+        // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
     public function index() {}
     public function validateUserAccess() {
@@ -49,8 +53,6 @@ class Suma extends CI_Controller
         echo json_encode($data);
     }
     public function comisiones_suma(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
         $this->load->view('template/header');
         $this->load->view("ventas/comisiones_suma", $datos);
@@ -318,64 +320,44 @@ class Suma extends CI_Controller
         }
     }
     public function revision_asimilados(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_asimilados_suma", $datos);
+        $this->load->view("ventas/revision_asimilados_suma");
     }
     public function revision_remanentes(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_remanentes_suma", $datos);
+        $this->load->view("ventas/revision_remanentes_suma");
     }
     public function revision_facturas(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_factura_suma", $datos);
+        $this->load->view("ventas/revision_factura_suma");
     }
     public function revision_extranjero(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_extranjero_suma", $datos);
+        $this->load->view("ventas/revision_extranjero_suma");
     }
     public function revision_xml(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_xml_suma", $datos);
+        $this->load->view("ventas/revision_xml_suma");
     }
     public function revision_asimilados_intmex(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXasimilados_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXasimilados_suma");
     }
     public function revision_remanentes_intmex(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXremanente_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXremanente_suma");
     }
     public function revision_factura_intmex(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXfactura_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXfactura_suma");
     }
     public function revision_extranjeros_intmex(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXextranjero_suma", $datos);  
+        $this->load->view("ventas/revision_INTMEXextranjero_suma");
     }
     public function historial_comisiones(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
-        $this->load->view("ventas/historial_comisiones_suma", $datos);  
+        $this->load->view("ventas/historial_comisiones_suma");
     }
     public function getRevisionIntMex(){
         $idRol = $this->input->post("idRol");

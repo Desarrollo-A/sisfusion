@@ -8,6 +8,9 @@ class Caja_outside extends CI_Controller {
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->jwt_actions->authorize_externals('6489', apache_request_headers()["Authorization"]);
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()

@@ -22,7 +22,10 @@ class RegistroCliente extends CI_Controller {
 		$this->load->database('default');
 		date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 	// EN ESTA PARTE SE REALIZA EL REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 	public function index (){
 		$this->load->helper("url");
@@ -1954,7 +1957,6 @@ class RegistroCliente extends CI_Controller {
     {
       $this->validateSession();
       $datos=array();
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
       $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
       $this->load->view('template/header');
       $this->load->view("juridico/vista_documentacion_juridico",$datos);
@@ -3948,12 +3950,9 @@ class RegistroCliente extends CI_Controller {
 	}
 
 	public function registrosClienteJuridico(){
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
 		$this->validateSession();
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
+		$this->load->view("contratacion/datos_cliente_contratacion_view");
 	}
 
 
@@ -3983,11 +3982,8 @@ class RegistroCliente extends CI_Controller {
 	public function registrosClienteContratacion()
 	{
 		$this->validateSession();
-		 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-     /*-------------------------------------------------------------------------------*/
 		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_contratacion_view",$datos);
+		$this->load->view("contratacion/datos_cliente_contratacion_view");
 	}
 
 	public function getRegsClientes()
@@ -5427,9 +5423,6 @@ class RegistroCliente extends CI_Controller {
 		<?php
 	}
 	public function registroContratoVentasAsistentes(){
-     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_cliente_contrato_ventasAsistentes_view",$datos);
@@ -5565,12 +5558,9 @@ class RegistroCliente extends CI_Controller {
 	}
 
 	public function registrosClienteDS(){
-		     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
-		$this->load->view("asesor/datos_clienteDS_view",$datos);
+		$this->load->view("asesor/datos_clienteDS_view");
 	}
 	public function deposito_seriedad($idCliente){
 		$datos=array();
@@ -7681,11 +7671,8 @@ class RegistroCliente extends CI_Controller {
 
 	/*autorizaciones SUBDIRE y DIRECTIVOS*/
 	public function directivosAut(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view('contratacion/datos_autdirectivos_view',$datos);
+        $this->load->view('contratacion/datos_autdirectivos_view');
 	}
 
 	function tableAut(){

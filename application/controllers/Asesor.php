@@ -28,6 +28,9 @@ class Asesor extends CI_Controller
         $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
     public function index()
     {
@@ -40,16 +43,16 @@ class Asesor extends CI_Controller
     }
     public function homeView()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61') {
             redirect(base_url() . 'login');
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
+
         $this->load->view('template/header');
-        $this->load->view('template/home', $datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
     public function deposito_seriedad_ds($idCliente, $onlyView){
         $this->validateSession();
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
         if ($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3) {
             if ($onlyView == 1) { // CONSULTA
@@ -137,7 +140,6 @@ class Asesor extends CI_Controller
         }
     }
     public function inventario(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
@@ -538,29 +540,25 @@ class Asesor extends CI_Controller
     }
     public function depositoSeriedad()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/depositoSeriedad", $datos);
+        $this->load->view("asesor/depositoSeriedad");
     }
     public function registrosLoteVentasAsesor()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
     public function invDispAsesor()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("asesor/inventario_disponible", $datos);
     }
     public function manual()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/manuales_view", $datos);
+        $this->load->view("asesor/manuales_view");
     }
     public function validateSession()
     {
@@ -802,8 +800,8 @@ class Asesor extends CI_Controller
         echo json_encode($data_response);
     }
     /*********************************/
-    public function deposito_seriedad($id_cliente, $onlyView){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+
+    public function deposito_seriedad($id_cliente, $onlyView) {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
         $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
@@ -2805,9 +2803,8 @@ class Asesor extends CI_Controller
     /*autorizaciones*/
     public function autorizaciones()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/autorizaciones", $datos);
+        $this->load->view("asesor/autorizaciones");
     }
     function getAutorizacionAs()
     {
@@ -3830,15 +3827,13 @@ class Asesor extends CI_Controller
     }
     public function presentacionesCarpetas()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/carpetas_view", $datos);
+        $this->load->view("asesor/carpetas_view");
     }
     public function AdminCarpetas()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/carpetas_admin", $datos);
+        $this->load->view("asesor/carpetas_admin");
     }
     public function getAllFoldersPDF()
     {
@@ -4496,10 +4491,9 @@ class Asesor extends CI_Controller
     }
     public function inventoryByLote()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
-        $this->load->view("contratacion/inventoryByLote", $datos);
+        $this->load->view("contratacion/inventoryByLote");
     }
     function envioContraloria()
     {
@@ -4544,9 +4538,8 @@ class Asesor extends CI_Controller
     }
     public function viewGrafica()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("asesor/grafica_comisiones", $datos);
+        $this->load->view("asesor/grafica_comisiones");
     }
     function getlotesRechazados(){
         $data = $this->Asesor_model->getlotesRechazados();

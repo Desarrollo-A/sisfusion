@@ -13,13 +13,13 @@ class MKT extends CI_Controller {
 				$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 				  //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 				  $this->load->library(array('session','form_validation', 'get_menu'));
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 	public function index(){
 		if($this->session->userdata("id_rol")== '18' || $this->session->userdata("id_rol")== '28'){
-			 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-			 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-			 /*-------------------------------------------------------------------------------*/
 			$datos['tprospectos'] = $this->Statistics_model->getProspectsNumber()->result();
 			$datos['pvigentes'] = $this->Statistics_model->getCurrentProspectsNumber()->result();
 			$datos['pnovigentes'] = $this->Statistics_model->getNonCurrentProspectsNumber()->result();
@@ -34,8 +34,6 @@ class MKT extends CI_Controller {
 			$this->load->view('template/header');;
 			$this->load->view("clientes/vista_estadisticas_mkt", $datos);
 		} else if($this->session->userdata("inicio_sesion")["id_rol"] == '12'){
-			// $this->load->view("vista_estadisticas_mkt");]
-			//$this->load->view("v_ClientesMktd");
 			$this->load->view("v_Clientes_SM");
 		}
 
@@ -167,9 +165,6 @@ class MKT extends CI_Controller {
 
 	public function inventario()
 	{
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-	 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-	 /*-------------------------------------------------------------------------------*/
 		$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
 		$datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
 		$this->load->view('template/header');
@@ -180,9 +175,6 @@ class MKT extends CI_Controller {
 
 	public function documentsByLote()
 	{
-	 /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-	 $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-	 /*-------------------------------------------------------------------------------*/
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
 		$this->load->view('template/header');
 		$this->load->view("contratacion/documentsByLote", $datos);

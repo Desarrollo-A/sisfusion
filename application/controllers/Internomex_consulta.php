@@ -7,13 +7,15 @@ class Internomex_consulta extends CI_Controller
 {
     public function __construct()
     {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
-            parent::__construct();
-            date_default_timezone_set('America/Mexico_City');
-            $this->load->helper(array('form'));
-            $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-            $this->load->model(array('Api_model', 'General_model', 'Internomex_model'));
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type,Origin, authorization, X-API-KEY');
+        parent::__construct();
+        date_default_timezone_set('America/Mexico_City');
+        $this->load->helper(array('form'));
+        $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model'));
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     function authenticate()
