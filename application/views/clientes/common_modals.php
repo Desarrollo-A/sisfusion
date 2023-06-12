@@ -10,7 +10,7 @@
             </div>
             <form id="my-comment-form" name="my-comment-form" method="post">
                 <div class="modal-body">
-                    <textarea class="form-control input-gral" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    <textarea class="text-modal" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     <input type="hidden" name="id_prospecto" id="id_prospecto">
                 </div>
                 <div class="modal-footer">
@@ -31,7 +31,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                             <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
                             <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
@@ -58,7 +58,7 @@
                 <h4 class="modal-title">¿Qué estatus asignarás a este prospeto?</h4>
             </div>
             <form id="my_update_status_form_preventa" name="my_update_status_form_preventa" method="post">
-                <div class="col-lg-12 form-group">
+                <div class="col-lg-12 form-group overflow-hidden">
                     <label>Estatus</label>
                     <select class="selectpicker" name="estatus_particular2" id="estatus_particular2" data-style="select-with-transition" title="Selecciona una opción" data-size="7"></select>
                 </div>
@@ -209,8 +209,8 @@
                 <div class="modal-body">
                     <div class="row" data-step="1" data-title="Acerca de">
                         <div>
-                            <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                            <div class="col-sm-3 ">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Nacionalidad<small> (requerido)</small></label>
                                     <select id="nationality"
                                             name="nationality" 
@@ -227,7 +227,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Personalidad jurídica<small> (requerido)</small></label>
                                     <select id="legal_personality"
                                             name="legal_personality"
@@ -309,7 +309,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Estado civil</label>
                                     <select id="civil_status"
                                             name="civil_status"
@@ -325,7 +325,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Régimen matrimonial</label>
                                     <select id="matrimonial_regime"
                                             name="matrimonial_regime"
@@ -367,7 +367,7 @@
                                     <label><input id="own" name="lives_at_home" type="radio" value="1"> Propia</label>
                                 </div>
                                 <div class="radio radio-inline">
-                                    <label><input id="rented" name="lives_at_home" type="radio" value="2""> Rentada</label>
+                                    <label><input id="rented" name="lives_at_home" type="radio" value="2"> Rentada</label>
                                 </div>
                                 <div class="radio radio-inline">
                                     <label><input id="paying" name="lives_at_home" type="radio" value="3"> Pagándose</label>
@@ -417,9 +417,9 @@
                         </div>
                     </div>
                     <div class="row hide" data-step="3" data-title="Prospección">
-                        <div class="row">
+                        <div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
                                     <select id="prospecting_place"
                                             name="prospecting_place"
@@ -475,7 +475,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty ">
                                     <label class="control-label">Plaza de venta<small> (requerido)</small></label>
                                     <select id="sales_plaza"
                                             name="sales_plaza"
@@ -493,7 +493,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group label-floating div-observations">
                                     <label class="control-label">Observaciones</label>
-                                    <textarea type="text" id="observation" name="observation" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                    <textarea type="text" id="observation" name="observation"  class="text-modal" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                                     <input type="hidden" name="id_prospecto_ed" id="id_prospecto_ed">
                                     <input type="hidden" name="owner" id="owner">
                                     <input type="hidden" name="source" id="source">

@@ -52,7 +52,7 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
                                                 <th>CREACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
@@ -69,7 +69,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');
-       
         ?>
     </div>
     </div><!-- main-panel close -->

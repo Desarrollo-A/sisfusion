@@ -6,12 +6,7 @@ $(document).ready(function()
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
-        $(this).html(`<input type="text" 
-                             class="textoshead" 
-                             data-toggle="tooltip" 
-                             data-placement="top"
-                             title="${title}"
-                             placeholder="${title}"/>` );
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();
@@ -119,7 +114,7 @@ $(document).ready(function()
                                             style="margin-right: 3px;" 
                                             data-toggle="tooltip" 
                                             data-placement="top"
-                                            title="Ver información">
+                                            title="VER INFORMACIÓN">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </center>`;
