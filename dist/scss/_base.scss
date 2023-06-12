@@ -163,7 +163,7 @@ $water              : #D1EEFF;
 $blueLight          : #5DADE2;
 $shadowBlue         : #7083A9;
 $aqua               : #54d2d2;
-$sky                : #00bcd4;
+$sky                : #0067d4;
 $skyOpacity         : #00bcd418;
 $cerulean           : #00A0FF;
 $blueFrance         : #2C93E7;
@@ -549,7 +549,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-sky{
     color: $sky;
     border: none;
-    background-color: #00bcd418;
+    background-color: #0067d418;
 }
 .btn-sky:hover {
     background-color: $sky;
@@ -626,8 +626,10 @@ $tv                 : "(min-width: 1280px)";
     padding: 7px 10px;
 }
 .lbl-gray{
-    background-color: $grayOxford;
-    color: $white; 
+    color: $grayOxford;
+    border : none;
+    background-color: #4e4e4e18;
+   
 }
 .lbl-grayDark{
     color: $grayDark;
@@ -663,7 +665,7 @@ $tv                 : "(min-width: 1280px)";
 .lbl-sky{
     color: $sky;
     border: none;
-    background-color: #00bcd418;
+    background-color: #0067d418;
 }
 .lbl-violetBoots{
     color:$violetBoots;

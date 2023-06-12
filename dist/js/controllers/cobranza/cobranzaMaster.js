@@ -74,6 +74,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
                 titleAttr: 'Cargar vista inicial',
                 className: "btn btn-azure reset-initial-values",
+                onClick : "window.location.reload(true)"
             }
         ],
         pagingType: "full_numbers",
