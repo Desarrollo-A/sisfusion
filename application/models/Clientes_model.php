@@ -476,13 +476,13 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_asesor = $id_usuario";
         }
 
-        return $this->db->query("SELECT pr.id_prospecto, CONCAT (pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombre, pr.vigencia,
+        return $this->db->query("SELECT pr.id_prospecto, UPPER(CONCAT (pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno)) AS nombre, pr.vigencia,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
         UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
         UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-        CONVERT(varchar, pr.fecha_creacion, 20) fecha_creacion, pr.fecha_vencimiento, pr.estatus, pr.estatus_particular, pr.lugar_prospeccion, oxc.nombre nombre_lp, pr.id_asesor, pr.telefono, pr.telefono_2,
+        CONVERT(varchar, pr.fecha_creacion, 20) fecha_creacion, pr.fecha_vencimiento, pr.estatus, pr.estatus_particular, pr.lugar_prospeccion , UPPER(oxc.nombre) AS nombre_lp, pr.id_asesor, pr.telefono, pr.telefono_2,
         pr.source, pr.editProspecto, CASE WHEN CAST(pr.id_dragon AS VARCHAR(25)) = 0 THEN 'No disponible' ELSE CAST(pr.id_dragon AS VARCHAR(25)) END id_dragon
         FROM prospectos pr
         INNER JOIN usuarios u0 ON u0.id_usuario = pr.id_asesor
@@ -540,7 +540,7 @@ function getStatusMktdPreventa(){
                     pr.estatus, 
                     pr.estatus_particular, 
                     pr.lugar_prospeccion, 
-                    oxc.nombre AS nombre_lp, 
+                    UPPER(oxc.nombre) AS nombre_lp, 
                     pr.id_asesor, 
                     pr.telefono, 
                     pr.telefono_2, 

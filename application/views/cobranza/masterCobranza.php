@@ -79,9 +79,9 @@
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/01/2022"/>
+                                                                id="beginDate" />
                                                             <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="01/01/2022"/>
+                                                                />
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>

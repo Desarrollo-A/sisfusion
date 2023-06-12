@@ -2,9 +2,9 @@ $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
-    let finalBeginDate = $("#beginDate").val();
-    let finalEndDate = $("#endDate").val();
-    fillTable(1, finalBeginDate, finalEndDate, 0);
+    let finalBeginDate2 = $("#beginDate").val();
+    let finalEndDate2 = $("#endDate").val();
+    fillTable(1, finalBeginDate2, finalEndDate2, 0);
 });
 
 sp = { // MJ: SELECT PICKER
@@ -74,6 +74,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 text: "<i class='fa fa-refresh' aria-hidden='true'></i>",
                 titleAttr: 'Cargar vista inicial',
                 className: "btn btn-azure reset-initial-values",
+                
             }
         ],
         pagingType: "full_numbers",
@@ -404,8 +405,10 @@ $(document).on("click", "#searchByDateRange", function () {
 $(document).on("click", ".reset-initial-values", function () {
     $(".idLote").val('');
     $(".textoshead").val('');
-    $("#beginDate").val('01/01/2022');
-    $("#endDate").val('01/01/2022');
+    $("#beginDate").val(finalBeginDate2);
+    $("#endDate").val(finalEndDate2);
+    location.reload()
+
 });
 
 $(document).on('click', '#requestCommissionPayment', function () {
