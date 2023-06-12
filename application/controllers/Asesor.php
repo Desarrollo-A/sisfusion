@@ -803,63 +803,76 @@ class Asesor extends CI_Controller
 
     public function deposito_seriedad($id_cliente, $onlyView) {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
+        $datos["cliente"][0]->tipo_nc = ( is_null($datos["cliente"][0]->tipo_nc) || $datos["cliente"][0]->tipo_nc === '' )
+            ? 3
+            : $datos["cliente"][0]->tipo_nc;
+
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
         if (count($datos["referencias"]) < 1) {
-            $aray1 = array(
+            $emptyReferencias = [
                 'id_referencia' => '',
                 'nombre' => '',
                 'parentesco' => '',
-                'telefono' => '');
-            /**/
-            $datos["referencias"][0] = (object)$aray1;
-            $datos["referencias"][1] = (object)$aray1;
+                'telefono' => ''
+            ];
+            $datos["referencias"][0] = (object)$emptyReferencias;
+            $datos["referencias"][1] = (object)$emptyReferencias;
         }
+
         $datos["asesor"] = $this->Asesor_model->selectDSAsesor($id_cliente);
         if (count($datos["asesor"]) < 1) {
-            $aray1 = array(
+            $datos["asesor"][0] = (object)[
                 'id_usuario' => '',
                 'nombreAsesor' => '',
                 'id_lider' => '',
                 'nombreGerente' => '',
                 'nombreCoordinador' => '',
-                'correo' => '');
-            /**/
-            $datos["asesor"][0] = (object)$aray1;
+                'correo' => ''
+            ];
         }
+
         $datos["asesor2"] = $this->Asesor_model->selectDSAsesorCompartido($id_cliente);
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
-        $arrayobj1 = new ArrayObject();
-        $arrayobj2 = new ArrayObject();
-        $arrayobj3 = new ArrayObject();
-        $arrayobj4 = new ArrayObject();
-        $arrayobj5 = new ArrayObject();
-        for ($i = 0; $i < count($catalogs); $i++) {
-            if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
-                $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 18) // MJ: ESTADO CIVIL
-                $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
-                $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
-                $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-        }
-        $datos["nacionalidades"] = $arrayobj1;
-        $datos["edoCivil"] = $arrayobj2;
-        $datos["regMat"] = $arrayobj3;
-        $datos["parentescos"] = $arrayobj4;
-        $datos["regFis"] = $arrayobj5;
+
+        $nacionalidades = array_filter($catalogs, function ($item) {
+            // NACIONALIDAD
+            return $item['id_catalogo'] == 11;
+        });
+
+        $estadosCiviles = array_filter($catalogs, function ($item) {
+            // ESTADO CIVIL
+            return $item['id_catalogo'] == 18;
+        });
+
+        $regimenMatrimonial = array_filter($catalogs, function ($item) {
+            // REGIMEN MATRIMONIAL
+            return $item['id_catalogo'] == 19;
+        });
+
+        $parentesto = array_filter($catalogs, function ($item) {
+            // PARENTESCO
+            return $item['id_catalogo'] == 26;
+        });
+
+        $regimenFiscal = array_filter($catalogs, function ($item) {
+            // REGIMEN FISCAL
+            return $item['id_catalogo'] == 92;
+        });
+
+        $datos["nacionalidades"] = $nacionalidades;
+        $datos["edoCivil"] = $estadosCiviles;
+        $datos["regMat"] = $regimenMatrimonial;
+        $datos["parentescos"] = $parentesto;
+        $datos["regFis"] = $regimenFiscal;
         $datos['onlyView'] = $onlyView;
+
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
-        if(isset($datos['corrida_financiera']->id_corrida)){
-            $datos['descuentos_aplicados'] = $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida);
-        }else{
-            $datos['descuentos_aplicados'] = array();
-        }
+        $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
+            ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
+            : [];
+
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
     }
@@ -1633,11 +1646,11 @@ class Asesor extends CI_Controller
     public function editar_ds()
     {
         setlocale(LC_MONETARY, 'en_US');
-        $array1 = $this->input->post("email_cop[]");
-        $array2 = $this->input->post("telefono1_cop[]");
-        $array3 = $this->input->post("telefono2_cop[]");
-        $array4 = $this->input->post("fnacimiento_cop[]");
-        $array5 = $this->input->post("nacionalidad_cop[]");
+        $emailCopArray = $this->input->post("email_cop[]");
+        $telefono1CopArray = $this->input->post("telefono1_cop[]");
+        $telefono2CopArray = $this->input->post("telefono2_cop[]");
+        $fNacimientoCopArray = $this->input->post("fnacimiento_cop[]");
+        $NacionalidadCopArray = $this->input->post("nacionalidad_cop[]");
         $array6 = $this->input->post("originario_cop[]");
         $array7 = $this->input->post("id_particular_cop[]");
         $array8 = $this->input->post("ecivil_cop[]");
@@ -1653,7 +1666,7 @@ class Asesor extends CI_Controller
         $array19 = $this->input->post("rfc_cop[]");
         $array20 = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
-        $cm = (empty( $this->input->post('especificar') )) ? '11' : $this->input->post('especificar');
+
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
                 if ($this->input->post("tipo_vivienda_cop" . $i) == null ||
@@ -2328,13 +2341,13 @@ class Asesor extends CI_Controller
                     <table style="font-size: 1.2em; border-bottom: 1px solid #CCC">
                     <tr>
                         <td ><label>Nombre: </label><br><b>' . $copropiedad[$i]->nombre_cop . ' ' . $copropiedad[$i]->apellido_paterno . ' ' . $copropiedad[$i]->apellido_materno . '</b></td>
-                        <td ><label>Email: </label><br><b>' . $array1[$i] . '</b></td>
-                        <td ><label>Tel. Casa: </label><br><b>' . $array2[$i] . '</b></td>
-                        <td ><label>Celular: </label><br><b>' . $array3[$i] . '</b></td>
-                        <td ><label>Fecha Nac:</label><br><b>' . $array4[$i] . '</b></td>
+                        <td ><label>Email: </label><br><b>' . $emailCopArray[$i] . '</b></td>
+                        <td ><label>Tel. Casa: </label><br><b>' . $telefono1CopArray[$i] . '</b></td>
+                        <td ><label>Celular: </label><br><b>' . $telefono2CopArray[$i] . '</b></td>
+                        <td ><label>Fecha Nac:</label><br><b>' . $fNacimientoCopArray[$i] . '</b></td>
                         <td ><label>Nacionalidad: </label><br><b>';
                     for ($n = 0; $n < count($nacionalidades); $n++) {
-                        if ($nacionalidades[$n]['id_opcion'] == $array5[$i]) {
+                        if ($nacionalidades[$n]['id_opcion'] == $NacionalidadCopArray[$i]) {
                             $html .= $nacionalidades[$n]['nombre'];
                         }
                     }
@@ -2623,9 +2636,9 @@ class Asesor extends CI_Controller
             if (count($checkIfRefExist) >= 1) {
                 if (count($array17) > 0) {
                     for ($i = 0; $i < sizeof($array17); $i++) {
-                        $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', 
-                                                            telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "',
-                                                            nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "',
+                        $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
+                                                            telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
+                                                            nacionalidad = '" . $NacionalidadCopArray[$i] . "', originario_de = '" . $array6[$i] . "',
                                                             domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "',
                                                             conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "',
                                                             ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "',
@@ -2676,7 +2689,7 @@ class Asesor extends CI_Controller
             } else {
                 if (count($array17) > 0) {
                     for ($i = 0; $i < sizeof($array17); $i++) {
-                        $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
+                        $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $NacionalidadCopArray[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
                                 rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
                             WHERE id_copropietario = " . $array17[$i]);
                     }
@@ -2761,7 +2774,7 @@ class Asesor extends CI_Controller
                     }
                     if (count($array17) > 0) {
                         for ($i = 0; $i < sizeof($array17); $i++) {
-                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
+                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $NacionalidadCopArray[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
                                 rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
                             WHERE id_copropietario = " . $array17[$i]);
                             //$array18=$this->input->post("tipo_vivienda_cop[]");
@@ -4307,10 +4320,10 @@ class Asesor extends CI_Controller
                                                         Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR . $correo);
                 $datos_correo = $data_eviRec;
                 $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR;
-                
+
                 $comentario_general = Elementos_Correos_Asesor::EMAIL_EVIDENCIAS_RECHAZADAS_ASESOR . '<br>' . (!isset($comentario) ? '' : '<br>'. $comentario);
                 $plantilla_correo = new plantilla_dinamica_correo;
-                
+
                 $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
                                                                         $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
                 if ($envio_correo > 0) {
@@ -4458,7 +4471,7 @@ class Asesor extends CI_Controller
                 if ($data_return_insert >= 1) {
                     $data['exe'] = 1;
                     $data['msg'] = 'Se ha eliminado correctamente';
-                    
+
                     if ($id_prospecto != '' || $id_prospecto != null) {
                         $this->Asesor_model->updateProspectLP($data_update_cl, $id_prospecto);
                     }
