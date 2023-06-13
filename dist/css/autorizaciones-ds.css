@@ -571,15 +571,15 @@
 .btn-azure {
   box-shadow: none;
   padding: 7px 25px;
-  color: #4382EF;
+  color: #2874A6;
   background-color: transparent;
-  border: 1px solid #4382EF;
+  border: 1px solid #2874A6;
   border-radius: 27px;
   margin: 0;
 }
 
 .btn-azure:hover {
-  background-color: #4382EF;
+  background-color: #2874A6;
   color: #ffffff;
 }
 
@@ -719,7 +719,7 @@
 }
 
 .btn-s-red {
-  background-color: #c01313;
+  background-color: #B03A2E;
   color: #ffffff;
 }
 
@@ -729,7 +729,7 @@
 }
 
 .btn-s-greenLight {
-  background-color: #28B463;
+  background-color: #1E8449;
   color: #ffffff;
 }
 
@@ -766,20 +766,14 @@
   cursor: not-allowed;
 }
 
-.lbl-green {
-  color: #28B463;
-  border: none;
-  background-color: #28b46218;
-}
-
 .btn-green {
-  color: #28B463;
+  color: #1E8449;
   border: none;
   background-color: #28b46218;
 }
 
 .btn-green:hover {
-  background-color: #28B463;
+  background-color: #1E8449;
   color: #ffffff !important;
 }
 
@@ -794,12 +788,6 @@
   color: #ffffff !important;
 }
 
-.lbl-gray {
-  color: #333333;
-  border: none;
-  background-color: #33333318;
-}
-
 .btn-gray {
   color: #333333;
   border: none;
@@ -811,27 +799,15 @@
   color: #ffffff !important;
 }
 
-.lbl-violetDeep {
-  color: #702497;
-  border: none;
-  background-color: #70249718;
-}
-
 .btn-violetDeep {
-  color: #702497;
+  color: #6C3483;
   border: none;
   background-color: #70249718;
 }
 
 .btn-violetDeep:hover {
-  background-color: #702497;
+  background-color: #6C3483;
   color: #ffffff !important;
-}
-
-.lbl-deepGray {
-  color: #929292;
-  border: none;
-  background-color: #92929218;
 }
 
 .btn-deepGray {
@@ -845,12 +821,6 @@
   color: #ffffff !important;
 }
 
-.lbl-blueMaderas {
-  color: #0a548b;
-  border: none;
-  background-color: #0a538b18;
-}
-
 .btn-blueMaderas {
   color: #0a548b;
   border: none;
@@ -860,12 +830,6 @@
 .btn-blueMaderas:hover {
   background-color: #0a548b;
   color: #ffffff;
-}
-
-.lbl-violetChin {
-  color: #8E6C88;
-  border: none;
-  background-color: #8E6C8818;
 }
 
 .btn-violetChin {
@@ -879,12 +843,6 @@
   color: #ffffff;
 }
 
-.lbl-violetBoots {
-  color: #563D7C;
-  border: none;
-  background-color: #563D7C18;
-}
-
 .btn-violetBoots {
   color: #563D7C;
   border: none;
@@ -896,78 +854,48 @@
   color: #ffffff;
 }
 
-.lbl-orangeYellow {
-  color: #ff9800;
-  border: none;
-  background-color: #ff980018;
-}
-
 .btn-orangeYellow {
-  color: #ff9800;
+  color: #B9770E;
   border: none;
   background-color: #ff980018;
 }
 
 .btn-orangeYellow:hover {
-  background-color: #ff9800;
+  background-color: #B9770E;
   color: #ffffff !important;
 }
 
-.lbl-brown {
-  color: #6E2C00;
-  border: none;
-  background-color: #6E2C0018;
-}
-
 .btn-brown {
-  color: #6E2C00;
+  color: #A04000;
   border: none;
   background-color: #6E2C0018;
 }
 
 .btn-brown:hover {
-  background-color: #6E2C00;
+  background-color: #A04000;
   color: #ffffff !important;
 }
 
-.lbl-azure {
-  color: #4382EF;
-  border: none;
-  background-color: #4382EF18;
-}
-
 .btn-azure {
-  color: #4382EF;
+  color: #2874A6;
   border: none;
   background-color: #4382EF18;
 }
 
 .btn-azure:hover {
-  background-color: #4382EF;
+  background-color: #2874A6;
   color: #ffffff !important;
 }
 
-.lbl-yellow {
-  color: #ddaf07;
-  border: none;
-  background-color: #ddaf0718;
-}
-
 .btn-yellow {
-  color: #ddaf07;
+  color: #B7950B;
   border: none;
   background-color: #ddaf0718;
 }
 
 .btn-yellow:hover {
-  background-color: #ddaf07;
+  background-color: #B7950B;
   color: #ffffff !important;
-}
-
-.lbl-sky {
-  color: #00bcd4;
-  border: none;
-  background-color: #00bcd418;
 }
 
 .btn-sky {
@@ -981,27 +909,15 @@
   color: #ffffff !important;
 }
 
-.lbl-warning {
-  color: #c01313;
-  border: none;
-  background-color: #c0131318;
-}
-
 .btn-warning {
-  color: #c01313;
+  color: #B03A2E;
   border: none;
   background-color: #c0131318;
 }
 
 .btn-warning:hover, .btn-warning:focus {
-  background-color: #c01313 !important;
+  background-color: #B03A2E !important;
   color: #ffffff !important;
-}
-
-.lbl-acidGreen {
-  color: #AFB42B;
-  border: none;
-  background-color: #AFB42B18;
 }
 
 .btn-acidGreen {
@@ -1031,16 +947,130 @@
   background: none;
 }
 
+/* Btns acción dentro de datatable */
+/* Etiquetas */
+.lbl-acidGreen {
+  color: #AFB42B;
+  border: none;
+  background-color: #AFB42B18;
+}
+
+.lbl-azure {
+  color: #2874A6;
+  border: none;
+  background-color: #2874A618;
+}
+
+.lbl-blueMaderas {
+  color: #0a548b;
+  border: none;
+  background-color: #0a538b18;
+}
+
+.lbl-brown {
+  color: #A04000;
+  border: none;
+  background-color: #A0400018;
+}
+
+.lbl-cerulean {
+  color: #00A0FF;
+  border: none;
+  background-color: #00A0FF;
+}
+
+.lbl-deepGray {
+  color: #929292;
+  border: none;
+  background-color: #92929218;
+}
+
+.lbl-gral {
+  border-radius: 25px;
+  padding: 7px 10px;
+}
+
 .lbl-gray {
   background-color: #4e4e4e;
   color: #ffffff;
 }
 
-/* Btns acción dentro de datatable */
-/* Etiquetas */
-.lbl-gral {
-  border-radius: 25px;
-  padding: 7px 10px;
+.lbl-grayDark {
+  color: #191B1C;
+  border: none;
+  background-color: #28374718;
+}
+
+.lbl-green {
+  color: #1E8449;
+  border: none;
+  background-color: #1E844918;
+}
+
+.lbl-melon {
+  color: #CD6155;
+  border: none;
+  background-color: #CD615518;
+}
+
+.lbl-oceanGreen {
+  color: #4BBC8E;
+  border: none;
+  background-color: #4BBC8E;
+}
+
+.lbl-orangeYellow {
+  color: #B9770E;
+  border: none;
+  background-color: #B9770E18;
+}
+
+.lbl-pink {
+  color: #cd5587;
+  border: none;
+  background-color: #cd558718;
+}
+
+.lbl-sky {
+  color: #00bcd4;
+  border: none;
+  background-color: #00bcd418;
+}
+
+.lbl-violetBoots {
+  color: #563D7C;
+  border: none;
+  background-color: #563D7C18;
+}
+
+.lbl-violetChin {
+  color: #8E6C88;
+  border: none;
+  background-color: #8E6C8818;
+}
+
+.lbl-violetDeep {
+  color: #6C3483;
+  border: none;
+  background-color: #6C348318;
+}
+
+.lbl-warning {
+  color: #B03A2E;
+  border: none;
+  background-color: #B03A2E18;
+}
+
+.lbl-yellow {
+  color: #B7950B;
+  border: none;
+  background-color: #B7950B18;
+}
+
+.lbl-sunny {
+  color: #B7950B;
+  border: none;
+  background-color: #F9F87118;
 }
 
 /* END Etiquetas */
@@ -1076,7 +1106,7 @@
 }
 
 .file-gph .upload-btn {
-  width: 19%;
+  width: 22%;
   padding: 5px 0;
   border-radius: 30px;
   background: #ffffff;
@@ -1090,7 +1120,7 @@
 }
 
 .file-gph .file-name {
-  width: 80%;
+  width: 77%;
   background-color: transparent;
   border: none;
 }
@@ -1342,6 +1372,74 @@
 .isRequired {
   color: #EA4335;
   margin: 0 3px;
+}
+
+/*Etiqueta para DataTable (vista Inventario Disponible)*/
+.lbl-sale-type {
+  color: #0E6251;
+  border: none;
+  background-color: #0E625118;
+}
+
+/************************************************************/
+/*Boton para video de youtube (vista Solicitud de Comisiones)*/
+.btn-dt-youtube {
+  box-shadow: none;
+  padding: 7px 25px;
+  color: #B03A2E;
+  background-color: transparent;
+  border: 1px solid #B03A2E;
+  border-radius: 27px;
+  margin: 0;
+}
+
+.btn-dt-youtube {
+  color: #B03A2E;
+  border: none;
+  background-color: #c0131318;
+}
+
+.btn-dt-youtube:hover {
+  background-color: #B03A2E;
+  color: #ffffff !important;
+}
+
+/*-----------------------------------------------------------
+Etiqueta para etiquetas dentro de la DataTable en vistas:
+1.- comisiones_colaboradores
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+2.- comisionesSuma:
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+*/
+.lbl-dark-blue {
+  color: #1B4F72;
+  border: none;
+  background-color: #1B4F7250;
+}
+
+.lbl-dark-cyan {
+  color: #008c76;
+  border: none;
+  background-color: #008c7650;
+}
+
+/************************************************************/
+/*************************************************************
+Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
+1.- Columna: "Detalle" (distintos casos, distintos colores).
+2.- Columna: "Estatus" (queda poendiente ya que extrae colores de BD)
+****************************************************************/
+/*--------------Calumna "Detalle/*--------------*/
+.lbl-vividOrange {
+  color: #F57F17;
+  border: none;
+  background-color: #F57F1718;
+}
+
+.lbl-darkPink {
+  color: #880E4F;
+  border: none;
+  background-color: #880E4F18;
 }
 
 .checkAut .boxChecks {
