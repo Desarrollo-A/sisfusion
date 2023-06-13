@@ -1091,8 +1091,8 @@ function loadTable(tipoDescuento) {
         $("#tabla-general tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-
-
+            $("#condominios1").val('');
+          
             $("#idloteorigen").val('');
             $("#usuarioid").val('');
             $("#pagos_aplicados").val('');
@@ -1100,8 +1100,8 @@ function loadTable(tipoDescuento) {
 
             $("#idloteorigen").selectpicker("refresh");
             $('#idloteorigen option').remove();
-
-
+            $("#condominios1").selectpicker('refresh');
+            $('#condominios1 option').remove();
             id_user = $(this).val();
             monto = $(this).attr("data-value");
             sde = $(this).attr("data-sede");
@@ -1135,7 +1135,7 @@ function loadTable(tipoDescuento) {
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
 
 
-
+                    $("#condominios1").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
 
                     $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
                 }
@@ -1147,6 +1147,7 @@ function loadTable(tipoDescuento) {
                     $("#idloteorigen").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
                 $("#idloteorigen").selectpicker('refresh');
+                $("#condominios1").selectpicker('refresh');
             }, 'json');
 
 
