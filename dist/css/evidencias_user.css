@@ -592,7 +592,7 @@
 .buttons-pdf {
   box-shadow: none;
   padding: 7px 25px;
-  background-color: #f44336 !important;
+  background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
 }
@@ -606,7 +606,7 @@
 }
 
 .buttons-pdf:hover {
-  background-color: #f4433618 !important;
+  background-color: #f44336 !important;
 }
 
 .buttons-pdf:hover i {
