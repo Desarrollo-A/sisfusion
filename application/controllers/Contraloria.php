@@ -2940,44 +2940,6 @@ class Contraloria extends CI_Controller {
         }
 
         exit;
-
-
-
-
-
-
-
-
-        //no se hará la actualizacion
-        //hasta que e autorice
-        /*
-        $array_update = array();
-        switch ($typeTranscation){
-            case 1:
-                foreach ($arrayMsi as $index => $result){
-                    $data = $this->Contraloria_model->getLotes($arrayMsi[$index]->ID);
-                    foreach ($data as $resultado){
-                        $array_push=array(
-                            'idLote' => $resultado['idLote'],
-                            'msi' => $result->MSNI
-                        );
-                        array_push($array_update, $array_push);
-                    }
-                }
-                break;
-            case 0:
-                foreach ($arrayMsi as $result){
-                    $array_push=array(
-                        'idLote' => $result->ID,
-                        'msi' => $result->MSNI
-                    );
-                    array_push($array_update, $array_push);
-                }
-                break;
-        }
-       $resultado = $this->General_model->updateBatch("lotes", $array_update, "idLote"); // MJ: SE MANDA CORRER EL UPDATE BATCH
-        */
-
     }
 
     public function generalClientsReport()
@@ -3120,8 +3082,10 @@ class Contraloria extends CI_Controller {
     public function getInformation()
     {
         if (isset($_POST) && !empty($_POST)) {
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $data['data'] = $this->Contraloria_model->getInformation($beginDate, $endDate)->result_array();
             echo json_encode($data);
         } else {

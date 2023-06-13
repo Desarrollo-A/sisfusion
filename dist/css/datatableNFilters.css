@@ -592,7 +592,7 @@
 .buttons-pdf {
   box-shadow: none;
   padding: 7px 25px;
-  background-color: #f44336 !important;
+  background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
 }
@@ -606,7 +606,7 @@
 }
 
 .buttons-pdf:hover {
-  background-color: #f4433618 !important;
+  background-color: #f44336 !important;
 }
 
 .buttons-pdf:hover i {
@@ -1047,6 +1047,30 @@
   color: #B7950B;
   border: none;
   background-color: #F9F87118;
+}
+
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
 }
 
 /* END Etiquetas */

@@ -288,7 +288,7 @@ $tv                 : "(min-width: 1280px)";
 .buttons-pdf {
     box-shadow: none;
     padding: 7px 25px;
-    background-color: #f4433618!important;
+    background-color: #f4433618 !important;
     border-radius: 27px;
     margin: 0;
 }
@@ -670,6 +670,30 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #F9F87118;
 }
+
+.lbl-lightBlue{
+    color:#1B4F72;
+    border:none;
+    background:#AED6F1;
+}
+
+.lbl-peach{
+    color:#78281F;
+    border: none;
+    background:#F5B7B1;
+}
+
+.lbl-purple{
+    color:#512E5F;
+    border: none;
+    background:#D7BDE2;
+}
+
+.lbl-aqua{
+    color: $white; 
+    border: none;
+    background:#11DFC6;
+}
 /* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
@@ -1011,4 +1035,3 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
     border: none;
     background-color: #880E4F18;
 }
-

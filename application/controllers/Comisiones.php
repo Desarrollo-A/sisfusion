@@ -412,8 +412,6 @@ class Comisiones extends CI_Controller
     $salida = str_replace('' . base_url() . '', '', $val);
     $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
     $this->load->view('template/header');
-    // $this->load->view("ventas/historial_contraloria", $datos);
-
      switch($this->session->userdata('id_rol')){
       case '28':
       case '18':
@@ -1302,88 +1300,6 @@ function update_estatus(){
     echo json_encode($arr);
   }
 
-  
-// public function cargaxml2($id_user = ''){
-
-//   $user =   $usuarioid =$this->session->userdata('id_usuario');
-//   $this->load->model('Usuarios_modelo');
-
-//   if(empty($id_user)){
-//     $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
-
-//   }else{
-//     $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
-
-//   }
-
- 
-// $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
-// if( isset( $_FILES ) && !empty($_FILES) ){
-//     $config['upload_path'] = './UPLOADS/XMLS/';
-//     $config['allowed_types'] = 'xml';
-//     //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
-//     $this->load->library('upload', $config);
-//     if( $this->upload->do_upload("xmlfile") ){
-//         $xml_subido = $this->upload->data()['full_path'];
-//         $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
-//         if( $datos_xml['version'] >= 3.3){
-//           $responsable_factura = $this->Comisiones_model->verificar_uuid( $datos_xml['uuidV'] );
-//           if($responsable_factura->num_rows()>=1){
-//             $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
-//           }
-//           else{          
-//             if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
-//               $diasxmes = date('t');
-//                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
-//                $fecha2 = date('Y-m-').$diasxmes;
-//               if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
-
-//             if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
-//             if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
-//             if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
-//             if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
-//             if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
-//             if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
-//               $respuesta['respuesta'] = array( TRUE );
-//               $respuesta['datos_xml'] = $datos_xml;
-//             }else{
-//               $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
-//             }//FINAL DE UNIDAD
-//             }else{
-//               $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
-//             }//FINAL DE METODO DE PAGO
-//             }else{
-//               $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
-//             }//FINAL DE USO DEL CFDI
-//             }else{
-//               $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
-//             }//FINAL DE FORMA DE PAGO
-//             }else{
-//               $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
-//             }//FINAL DE REGIMEN FISCAL
-//             }else{
-//             $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
-//             }//FINAL DE RFC VALIDO
-//           }else{
-//             $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
-//           }          
-//             }else{
-//             $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
-//           }
-//         }
-//         }else{
-//           $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
-//         }
-//         unlink( $xml_subido );
-//       }
-//       else{
-//         $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
-//       }
-//     }
-//     echo json_encode( $respuesta );
-//   }
-
-
 public function cargaxml2($id_user = ''){
 
   $user =   $usuarioid =$this->session->userdata('id_usuario');
@@ -2159,7 +2075,6 @@ public function nuevo_abono_comision(){
 
       $suma = $suma + $var_n ;
     }
-        // $respuesta = $this->Comisiones_model->update_neodata($referencia, $idDesarrollo, $suma);
     $respuesta = $this->Comisiones_model->update_pago_general($suma, $ideLote);
  }
 echo json_encode( $respuesta );
@@ -4046,24 +3961,6 @@ echo json_encode($respuesta);
 echo json_encode($respuesta);
 
 }
-
-
-
-// public function UpdateRetiro(){
-//   // echo $this->input->post("id_bono");
-
-//   $respuesta =  $this->Comisiones_model->UpdateRetiro($this->input->post("id_descuento"));
-// echo json_encode($respuesta);
-
-// }
-
-
-  // public function getDatosHistorialPostventa()
-  // {
-  //   echo json_encode($this->Comisiones_model->getDatosHistorialPostventa()->result_array());
-  // }
-
-
    public function getDatosHistorialPostventa()
   {
    $res["data"] = $this->Comisiones_model->getDatosHistorialPostventa()->result_array();
@@ -4099,10 +3996,6 @@ echo json_encode($respuesta);
       } else {
           json_encode(array());
       }
-
-
-    /*$data =  $this->Comisiones_model->getCommissionsByMktdUserReport($fecha1,$fecha2,$estatus)->result_array();
-    echo json_encode( array( "data" => $data));*/
   }
   public function getCommissionsByMktdUser(){
       if (isset($_POST) && !empty($_POST)) {
@@ -4839,7 +4732,11 @@ public function getLotesDispersado(){
 
 
 public function getMontoDispersadoDates($fecha1, $fecha2){
-
+   $fechaInicio = explode('/', $this->input->post($fecha1));
+   $fechaFin = explode('/', $this->input->post($fecha1));
+   $typeTransaction = $this->input->post("typeTransaction");
+   $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+   $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
    $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
    $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
    $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
@@ -4862,17 +4759,6 @@ public function getMontoDispersadoDates($fecha1, $fecha2){
     $this->load->view('template/header');
     $this->load->view("ventas/historial_pagadoMKTD", $datos);
   }
-
-
-
-// public function getPagosDispersadoDates($fecha1, $fecha2){
-//   echo json_encode($this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array(), JSON_NUMERIC_CHECK);
-// }
-
-// public function getLotesDispersadoDates($fecha1, $fecha2){
-//   echo json_encode($this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array(), JSON_NUMERIC_CHECK);
-// }
-
 
 public function lista_proyecto($param)
 {
@@ -4904,37 +4790,6 @@ public function lista_proyecto($param)
     echo json_encode($this->Comisiones_model->get_proyectos_comisiones($filtro_post)->result_array());
 }
 
- // public function lista_condominio($param, $proyecto)
- //    {
- //      // $this->validateSession();
- //      $id_user = $this->session->userdata('id_usuario');
-
- //      // if($param == 0){
- //        $filtro_00 = ' WHERE con.idResidencial = '.$proyecto.' ';
- //      // }else{
- //      //   $filtro_00 = ' AND pci.estatus = '.$param.' AND con.idResidencial = '.$proyecto.' ';
- //      // }
-
- //      // switch ($this->session->userdata('id_rol')) {
- //      //   case '1':
- //      //   case '2':
- //      //   case '3':
- //      //   case '7':
- //      //   case '9':
- //      //   // case '1':
- //      //     $filtro_post = ' WHERE con.status = 1 AND com.id_usuario = '.$id_user.' '.$filtro_00;
- //      //     break;
-        
- //      //   default:
- //      //     $filtro_post = ' WHERE con.status = 1 '.$filtro_00;
- //      //     break; 
- //      // }
- //        echo json_encode($this->Comisiones_model->get_condominios_comisiones($filtro_post)->result_array());
- //    }
-
-
-
-
  public function lista_roles()
     {
       echo json_encode($this->Comisiones_model->get_lista_roles()->result_array());
@@ -4953,10 +4808,7 @@ public function lista_sedes()
             //ya no aplica
            $uuid = $this->input->post('uuid2');
            $motivo = $this->input->post('motivo');
-           $datos = $this->Comisiones_model->RegresarFactura($uuid,$motivo);
-         
-         
-         
+           $datos = $this->Comisiones_model->RegresarFactura($uuid,$motivo); 
            //echo $this->input->post('uuid2');
          if($datos == true){
            echo json_encode(1);
