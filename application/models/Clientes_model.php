@@ -4426,4 +4426,39 @@ function getStatusMktdPreventa(){
             WHERE c.id_cliente = $id");
         return $query->row();
     }
+
+    public function getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin)
+    {
+        $condicion = ($idRol == 6)
+            ? "AND (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuario) = ge.id_usuario"
+            : 'AND cl.cancelacion_proceso = 1';
+
+        $query = $this->db->query("SELECT l.idLote, l.nombreLote, l.idCliente,
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
+                cond.nombre AS nombreCondominio, 
+                res.nombreResidencial,
+                CASE WHEN ase.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno)) END asesor,
+                CASE WHEN coord.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno)) END coordinador,
+                CASE WHEN ge.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno)) END gerente,
+                CASE WHEN sub.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno)) END subdirector,
+                CASE WHEN reg.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(reg.nombre, ' ', reg.apellido_paterno, ' ', reg.apellido_materno)) END regional,
+                CASE WHEN reg2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(reg2.nombre, ' ', reg2.apellido_paterno, ' ', reg2.apellido_materno)) END regional2,
+                cl.cancelacion_proceso, cp.nombre AS nombreCancelacion, cp.color
+            FROM lotes l 
+            LEFT JOIN clientes cl ON l.idLote = cl.idLote
+            LEFT JOIN condominios cond ON l.idCondominio = cond.idCondominio
+            LEFT JOIN residenciales as res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios coord ON coord.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios sub ON sub.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios reg ON reg.id_usuario = cl.id_regional
+            LEFT JOIN usuarios reg2 ON reg2.id_usuario = cl.id_regional_2
+            LEFT JOIN opcs_x_cats cp ON cp.id_opcion = cl.cancelacion_proceso AND cp.id_catalogo = 94
+            WHERE l.idStatusLote IN (2,3) AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFin 23:59:59' 
+            $condicion
+        ");
+
+        return $query->result_array();
+    }
 }

@@ -217,6 +217,8 @@ class Caja_outside extends CI_Controller {
                     $datos['idStatusLote'] = 7;
                 } else if ($value->idStatusLote == 'BLOQUEO' || $value->idStatusLote == 'BLOQUEADO') {
                     $datos['idStatusLote'] = 8;
+                } else if ($value->idStatusLote == 'ESPECIAL') {
+                    $datos['idStatusLote'] = 101;
                 } else {
                     $datos['idStatusLote'] = 8;
                 }

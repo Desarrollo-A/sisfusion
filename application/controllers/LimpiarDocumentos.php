@@ -23,7 +23,8 @@ class LimpiarDocumentos extends CI_Controller
     $DirectorioExpediente = $this->db->query("SELECT DISTINCT(hd.expediente) from historial_documento hd WHERE hd.modificado < '2023-01-01' AND hd.tipo_doc = 0");
     $DirectorioCorrida = $this->db->query("SELECT DISTINCT(hd.expediente) from historial_documento hd WHERE hd.modificado < '2023-01-01' AND hd.tipo_doc = 7");
     $DirectorioContrato = $this->db->query("SELECT DISTINCT(hd.expediente) from historial_documento hd WHERE hd.modificado < '2023-01-01' AND hd.tipo_doc = 8");
-     
+    $facturasComisiones = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) from facturas fa WHERE fa.fecha_ingreso < '2023-01-01'");
+
         if($DirectorioExpediente->num_rows() > 0){
             foreach( $DirectorioExpediente->result() as $row ){
                 if (file_exists('./static/documentos/cliente/expediente/'.$row->expediente)) {
@@ -67,6 +68,22 @@ class LimpiarDocumentos extends CI_Controller
              
             echo 'ERROR, NO ENTRA AL PROCESO CONTRATO';
         }
+
+        if($facturasComisiones->num_rows() > 0){
+            foreach( $facturasComisiones->result() as $row ){
+                if (file_exists('./UPLOADS/XMLS/'.$row->factura)) {
+                    unlink('./UPLOADS/XMLS/'.$row->factura);
+                            echo 'OK FACTURAS'.$row->factura.'<br>';
+
+                } else{
+                    echo 'NOT FOUND FILE FACTURAS'.$row->factura.'<br>';
+                }
+            }
+        }else{ 
+             
+            echo 'ERROR, NO ENTRA AL PROCESO FACTURAS';
+        }
+
     }
 
 

@@ -42,7 +42,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
+						<h4 class="modal-title">PRÉSTAMOS, DESCUENTOS Y PENALIZACIONES</h4>
             </div>
             <form >
 			<div class="form-group row">
@@ -51,9 +51,10 @@
 					<select class="selectpicker select-gral " name="tipoD" id="tipoD" 
 					 required data-live-search="true">
 					<option disabled default >SELECCIONA UNA OPCIÓN</option>
-                        <?php foreach($descuentos as $descuento){ ?>
-                            <option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
-                        <?php } ?>
+                                            <?php foreach($descuentos as $descuento){ ?>
+
+                                                <option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
+                                            <?php } ?>
 					</select>
 				</div> 
 				<div class="col-md-4">
@@ -98,11 +99,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
+						<h4 class="modal-title">PRÉSTAMOS, DESCUENTOS Y PENALIZACIONES</h4>
 					</div>
 						<div class="modal-body">
 							<div class="form-group row">
-								
 								<!-- <div class="col-md-12">
 									<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
 									<select class="selectpicker" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
@@ -238,26 +238,26 @@
 								<i class="material-icons">dashboard</i>
                             </div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
+								<h3 class="card-title center-align">Préstamos, descuentos y penalizaciones</h3>
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
-                                                    <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
+                                                    <h4 class="title-tot center-align m-0">Saldo activos:</h4>
+                                                    <p class="input-tot pl-1" name="saldoActivos" id="saldoActivos">$0.00</p>
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Abonado :</h4>
-                                                    <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p>
+                                                    <p class="input-tot pl-1" name="saldoAbonado" id="saldoAbonado">$0.00</p>
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Pendinte :</h4>
-                                                    <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p>
+                                                    <h4 class="title-tot center-align m-0">Pendiente :</h4>
+                                                    <p class="input-tot pl-1" name="saldoPendiente" id="saldoPendiente">$0.00</p>
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -305,15 +305,14 @@
 	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer');?>
 	<!--DATATABLE BUTTONS DATA EXPORT-->
-	<script src="<?= base_url() ?>dist/js/controllers/comisiones/panel_prestamos.js"></script>
+	<script src="<?= base_url() ?>dist/js/controllers/prestamos/activos.js"></script>
 
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
 </body>
