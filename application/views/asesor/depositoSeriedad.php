@@ -327,7 +327,7 @@
 
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
+                                    <h4 class="label-on-left m-0">SUBDIRECTOR (<small style="color: red;">*</small>)</h4>
                                     <select id="subdirector"
                                             name="subdirector"
                                             class="selectpicker select-gral m-0"
