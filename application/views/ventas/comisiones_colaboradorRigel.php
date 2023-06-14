@@ -4,19 +4,11 @@
 <body>
     <div class="wrapper">
         <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '1': // DIRECTOR
-            case '2': // SUBDIRECTOR VENTAS
-            
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
-                break;
-            default: // NO ACCESS
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
+        if (in_array($this->session->userdata('id_rol'), array(1,2))){
+            $this->load->view('template/sidebar');
+        }
+        else{
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
 
@@ -26,9 +18,7 @@
             }
         </style>
 
-        <!-- Modals -->
- 
- 
+        <!-- Modals --> 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">

@@ -5,7 +5,7 @@
         <?php
         $rolesPermitidos = [13,17,32,63,70];
         if(in_array($this->session->userdata('id_rol'), $rolesPermitidos)){
-            $this->load->view('template/sidebar', "");
+            $this->load->view('template/sidebar');
         }
         else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';

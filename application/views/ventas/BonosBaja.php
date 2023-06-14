@@ -3,26 +3,9 @@
 <body>
     <div class="wrapper">
 
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- Modals -->
-        <!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content"> 
-                    <form method="post" id="form_espera_uno">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">

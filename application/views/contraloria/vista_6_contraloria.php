@@ -3,7 +3,7 @@
 <link href="<?= base_url() ?>dist/css/commonModals.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-    <?php $this->load->view('template/sidebar', ''); ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
 	<!-- modal para registrar corrida elaborada-->
 	<div class="modal fade " id="regCorrElab" data-backdrop="static" data-keyboard="false">

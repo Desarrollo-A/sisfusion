@@ -476,13 +476,13 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_asesor = $id_usuario";
         }
 
-        return $this->db->query("SELECT pr.id_prospecto, CONCAT (pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno) nombre, pr.vigencia,
+        return $this->db->query("SELECT pr.id_prospecto, UPPER(CONCAT (pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno)) AS nombre, pr.vigencia,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) asesor, 
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
         UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
         UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-        CONVERT(varchar, pr.fecha_creacion, 20) fecha_creacion, pr.fecha_vencimiento, pr.estatus, pr.estatus_particular, pr.lugar_prospeccion, oxc.nombre nombre_lp, pr.id_asesor, pr.telefono, pr.telefono_2,
+        CONVERT(varchar, pr.fecha_creacion, 20) fecha_creacion, pr.fecha_vencimiento, pr.estatus, pr.estatus_particular, pr.lugar_prospeccion , UPPER(oxc.nombre) AS nombre_lp, pr.id_asesor, pr.telefono, pr.telefono_2,
         pr.source, pr.editProspecto, CASE WHEN CAST(pr.id_dragon AS VARCHAR(25)) = 0 THEN 'No disponible' ELSE CAST(pr.id_dragon AS VARCHAR(25)) END id_dragon
         FROM prospectos pr
         INNER JOIN usuarios u0 ON u0.id_usuario = pr.id_asesor
@@ -540,7 +540,7 @@ function getStatusMktdPreventa(){
                     pr.estatus, 
                     pr.estatus_particular, 
                     pr.lugar_prospeccion, 
-                    oxc.nombre AS nombre_lp, 
+                    UPPER(oxc.nombre) AS nombre_lp, 
                     pr.id_asesor, 
                     pr.telefono, 
                     pr.telefono_2, 
@@ -4387,5 +4387,43 @@ function getStatusMktdPreventa(){
             WHERE cli.status = 1 AND oxc.id_catalogo = 10 AND oxc.estatus = 1 $where
             ORDER BY cli.id_cliente");
         return $query->result_array();
+    }
+
+    function clienteAutorizacion(int $id)
+    {
+        $query = $this->db->query("SELECT c.id_cliente, c.correo, c.telefono1, c.lada_tel,
+                acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
+                acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms,
+                ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
+	            ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
+            FROM clientes c
+            INNER JOIN lotes l ON l.idCliente = c.id_cliente
+            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 1
+            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 2
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 1 AND estatus = 0
+                GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id AND tipo_correo_aut.idLote = l.idLote
+            
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 1 AND estatus = 1
+                GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id AND tipo_correo_pend.idLote = l.idLote
+            
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 2 AND estatus = 0
+                GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id AND tipo_sms_aut.idLote = l.idLote
+            
+            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
+                FROM autorizaciones a
+                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
+                WHERE ac.tipo = 2 AND estatus = 1
+                GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id AND tipo_sms_pend.idLote = l.idLote
+            WHERE c.id_cliente = $id");
+        return $query->row();
     }
 }

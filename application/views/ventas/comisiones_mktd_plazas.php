@@ -2,43 +2,17 @@
 <div class="wrapper">
 
 	<?php
-
-
-	if($this->session->userdata('id_rol')=="18")//contraloria
-	{
-
-
-		$dato= array(
-			'home' => 0,
-			'usuarios' => 0,
-			'statistics' => 0,
-			'manual' => 0,
-			'aparta' => 0,
-			'prospectos' => 0,
-			'prospectosMktd' => 0,
-			'prospectosAlta' => 0,
-			'sharedSales' => 0,
-			'coOwners' => 0,
-			'references' => 0,
-			'plazasComisiones'     => 1,
-			'nuevasComisiones' => 0,
-			'histComisiones' => 0,
-			'bulkload' => 0
-		);
-
-
-		//$this->load->view('template/contraloria/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-	}
-	else
-	{
-		echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-	}
+		if($this->session->userdata('id_rol')=="18"){
+			$this->load->view('template/sidebar');
+		}
+		else{
+			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+		}
 	?>
 
 
 
-<style type="text/css">
+	<style type="text/css">
 		::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 			color: white;
 			opacity: 0.4;

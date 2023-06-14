@@ -1,31 +1,7 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-                    'home' => 1,
-                    'listaCliente' => 0,
-                    'corridaF' => 0,
-                    'inventario' => 0,
-                    'prospectos' => 0,
-                    'prospectosAlta' => 0,
-                    'statistic' => 0,
-                    'comisiones' => 0,
-                    'DS'    => 0,
-                    'DSConsult' => 0,
-                    'documentacion' => 0,
-                    'inventarioDisponible'  =>  0,
-                    'manual'    =>  0,
-                    'nuevasComisiones'     => 0,
-                    'histComisiones'       => 0,
-                    'sharedSales' => 0,
-                    'coOwners' => 0,
-                    'references' => 0,
-        'clientsList' => 0
-                );
-	//$this->load->view('template/asesor/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-	?>
+	<?php $this->load->view('template/sidebar');	?>
 			<!--Contenido de la página-->
 		<div class="content">
 			<div class="container-fluid">

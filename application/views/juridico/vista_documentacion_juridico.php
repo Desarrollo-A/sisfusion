@@ -4,7 +4,7 @@
 	<div class="wrapper ">
 		<?php
 		if($this->session->userdata('id_usuario')=="2762" || $this->session->userdata('id_usuario')=="1" || $this->session->userdata('id_usuario')=="1297"){
-			$this->load->view('template/sidebar', $dato);
+			 $this->load->view('template/sidebar');
 		}
 		
 		?>

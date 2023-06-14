@@ -10,7 +10,9 @@ class Contabilidad extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->programacion = $this->load->database('programacion', TRUE);
-        //$this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -25,16 +27,14 @@ class Contabilidad extends CI_Controller
 
     public function crmInformation()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("contabilidad/crmInformation", $datos);
+        $this->load->view("contabilidad/crmInformation");
     }
 
     public function neodataInformation()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("contabilidad/neodataInformation", $datos);
+        $this->load->view("contabilidad/neodataInformation");
     }
 
     public function getInformation()

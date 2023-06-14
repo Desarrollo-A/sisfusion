@@ -9,10 +9,12 @@ class Documentacion extends CI_Controller {
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
     
     public function documentacion() {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos["residencial"] = $this->Registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("documentacion/documentacion_view", $datos);
@@ -232,9 +234,8 @@ class Documentacion extends CI_Controller {
     }
 
     function reasonsForRejectionByDocument() {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("documentacion/reasonsForRejectionByDocument", $datos);
+        $this->load->view("documentacion/reasonsForRejectionByDocument");
     }
 
     function getReasonsForRejectionByDocument() {

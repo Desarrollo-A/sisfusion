@@ -253,7 +253,7 @@
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0">Fecha de contrato</label>
                                     <input type="text" class="form-control datepicker input-gral"
-                                    id="fContrato" name="fContrato" disabled/>
+                                    id="fContrato" name="fContrato" required/>
                                 </div>
                             </div>
                         </div>
@@ -878,8 +878,6 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
-=======
 
 
 <div class="modal fade" id="modalInfoClient" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -932,7 +930,6 @@
     </div>
 </div> -->
 
->>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -959,11 +956,7 @@
                             </div>
                             <div class="col-md-6 pr-0">
                                 <div class="form-group text-left m-0">
-<<<<<<< HEAD
-                                    <label class="control-label label-gral">Estatus construcción</label>
-=======
                                     <label class="control-label label-gral">Estatus construcción (<small style="color: red;">*</small>)</label>
->>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     <input id="construccionI" name="construccionI" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
@@ -988,11 +981,7 @@
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group m-0 m-0">
                                         <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
-<<<<<<< HEAD
-                                        <input id="nombreI" name="nombreI" class="form-control input-gral" type="text" >
-=======
                                         <input id="nombreI" name="nombreI"  class="form-control input-gral" type="text" >
->>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
@@ -1012,21 +1001,13 @@
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Aportaciones (<small style="color: red;">*</small>)</label>
-<<<<<<< HEAD
-                                        <input id="aportacionesI" name="aportaciones" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
-=======
                                         <input id="aportacionesI" name="aportaciones" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
->>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
-<<<<<<< HEAD
-                                        <input id="descuentosI" name="descuentos" required class="form-control input-gral" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" type="text">
-=======
                                         <input id="descuentosI" name="descuentos" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
->>>>>>> 1c793bea76ac6f8c34170687683319886e64c120
                                       </div>
                                 </div>
                                 <div class="col-md-12 pr-0">

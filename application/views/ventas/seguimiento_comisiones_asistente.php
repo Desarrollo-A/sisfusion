@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
 <div class="wrapper">
-    <?php $this->load->view('template/sidebar', ""); ?>
+<?php $this->load->view('template/sidebar'); ?>
 
     <div class="modal fade"
          id="seeInformationModalAsimilados"

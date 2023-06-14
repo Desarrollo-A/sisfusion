@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php $this->load->view('template/sidebar', ''); ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- modal  ENVIA A CONTRALORIA 7-->
         <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">

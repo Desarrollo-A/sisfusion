@@ -592,7 +592,7 @@
 .buttons-pdf {
   box-shadow: none;
   padding: 7px 25px;
-  background-color: #f44336 !important;
+  background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
 }
@@ -606,7 +606,7 @@
 }
 
 .buttons-pdf:hover {
-  background-color: #f4433618 !important;
+  background-color: #f44336 !important;
 }
 
 .buttons-pdf:hover i {
@@ -899,13 +899,13 @@
 }
 
 .btn-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .btn-sky:hover {
-  background-color: #00bcd4;
+  background-color: #0067d4;
   color: #ffffff !important;
 }
 
@@ -973,6 +973,12 @@
   background-color: #A0400018;
 }
 
+.lbl-cerulean {
+  color: #00A0FF;
+  border: none;
+  background-color: #00A0FF18;
+}
+
 .lbl-deepGray {
   color: #929292;
   border: none;
@@ -985,8 +991,9 @@
 }
 
 .lbl-gray {
-  background-color: #4e4e4e;
-  color: #ffffff;
+  color: #4e4e4e;
+  border: none;
+  background-color: #4e4e4e18;
 }
 
 .lbl-grayDark {
@@ -1001,16 +1008,34 @@
   background-color: #1E844918;
 }
 
+.lbl-melon {
+  color: #CD6155;
+  border: none;
+  background-color: #CD615518;
+}
+
+.lbl-oceanGreen {
+  color: #4BBC8E;
+  border: none;
+  background-color: #4BBC8E18;
+}
+
 .lbl-orangeYellow {
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
 }
 
-.lbl-sky {
-  color: #00bcd4;
+.lbl-pink {
+  color: #cd5587;
   border: none;
-  background-color: #00bcd418;
+  background-color: #cd558718;
+}
+
+.lbl-sky {
+  color: #0067d4;
+  border: none;
+  background-color: #0067d418;
 }
 
 .lbl-violetBoots {

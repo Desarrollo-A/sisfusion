@@ -1,79 +1,46 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'cambiarAsesor' => 0,
-		'historialPagos' => 0,
-		'pagosCancelados' => 0,
-		'altaCluster' => 0,
-		'altaLote' => 0,
-		'inventario' => 0,
-		'actualizaPrecio' => 0,
-		'actualizaReferencia' => 1,
-		'liberacion' => 0
-	);
-	//$this->load->view('template/caja/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);
-
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-
-}
-
-
-
-
-
+            color: white;
+            opacity: 0.4;
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+        }
     </style>
 
     <div class="modal fade modal-alertas" id="modal_estatus_12" role="dialog">
-    <div class="modal-dialog">
-       <div class="modal-content">
-        <div class="modal-header bg-red"  >
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">ESTATUS 2.0</h4>
-        </div>  
-        <form method="post" id="form_interes">
-            <div class="modal-body"></div>
-        </form>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-red"  >
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">ESTATUS 2.0</h4>
+                </div>  
+                <form method="post" id="form_interes">
+                    <div class="modal-body"></div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 
 
 
     <div class="content">
         <div class="container-fluid">
- 
             <div class="row">
-
-
- 
-
-
-
                 <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
@@ -97,53 +64,20 @@
 
  
                                        <div class="col-sm-3">
-                                       	<!-- <label for="proyecto">Proyecto: </label> -->
 										<select name="proyecto" id="proyecto" class="selectpicker" data-style="btn btn-primary btn-round"data-show-subtext="true" data-live-search="true"  title="" data-size="7" required><option disabled selected>- SELECCIONA CONDOMINIO -</option></select>
                                        </div>
-
- 
-
                                        <div class="col-sm-3">
                                        	<span class="btn btn-round btn-info btn-file">
                                        		<span class="fileinput-new">Agregar archivo</span>
                                        		<input type="file" name="..." />
                                        	</span>
-
-										
                                        </div>
-
- 
                                        <div class="col-sm-3"> 
- 
-                                        <center><button  class="btn btn-primary btn-round" style="background: #0FC693;"><i class="material-icons">done</i> ACTUALIZAR</button></center>
-                                        &nbsp;</div>
-                                    </div>
-
-<!-- 
-                                <div class="col xol-xs-9 col-sm-9 col-md-9 col-lg-9">
-                                        <div class="table-responsive">
-                                        <table class="table table-responsive table-bordered table-striped table-hover" id="tabla_alta_lote" name="tabla_alta_lote"> 
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: .9em;">PROYECTO</th>
-                                                <th style="font-size: .9em;">CONDOMINIO</th>
-                                                <th style="font-size: .9em;">ETAPA</th>
-                                                <th style="font-size: .9em;">DATOS BANCARIOS</th>
-                                                <th style="font-size: .9em;">TIPO</th>
-
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                            <center><button  class="btn btn-primary btn-round" style="background: #0FC693;"><i class="material-icons">done</i> ACTUALIZAR</button></center>
+                                            &nbsp;
+                                        </div>
                                     </div>
                                 </div>
- -->
-
-
-
-                                </div>
-
-
-
                             </div>
                         </div>
                     </div>

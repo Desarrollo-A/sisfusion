@@ -21,7 +21,7 @@
 <body class="">
 <div class="wrapper">
 
-    <?php $this->load->view('template/sidebar', ""); ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
     <!-- Modals -->
     <div class="modal" tabindex="-1" role="dialog" id="notificacion">
@@ -60,7 +60,6 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group d-flex p-0">
-                                            <!--<input type="number" class="form-control input-gral" id="idResidencial" placeholder="Proyecto"/>-->
                                             <select id="proyectos" name="proyectos" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
                                                     title="Selecciona un proyecto" data-size="7" required></select>
@@ -68,7 +67,6 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group d-flex p-0">
-                                            <!--<input type="number" class="form-control input-gral" id="idCliente" placeholder="Cliente"/>-->
                                             <select id="clientes" name="clientes" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
                                                     title="Selecciona un cliente" data-size="7" required></select>

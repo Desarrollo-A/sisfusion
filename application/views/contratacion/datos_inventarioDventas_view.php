@@ -3,33 +3,14 @@
 <body class="">
 <div class="wrapper ">
     <?php
-    if($this->session->userdata('id_rol') == "16")
-        //CONTRATACION
-    {
-        /*-------------------------------------------------------*/
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
-    }
-    else if($this->session->userdata('id_rol') == "6" || $this->session->userdata('id_rol') == "5" || $this->session->userdata('id_rol') == "3" || $this->session->userdata('id_rol') == "4" || $this->session->userdata('id_rol') == "9" || $this->session->userdata('id_rol') == "53")
-        //ASISTENTE GERENTE
-    {
-        /*-------------------------------------------------------*/
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        /*--------------------------------------------------------*/
-    }
-    else
-    {
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
+        if($this->session->userdata('id_rol') == "16" || $this->session->userdata('id_rol') == "6" || $this->session->userdata('id_rol') == "5" || $this->session->userdata('id_rol') == "3" || $this->session->userdata('id_rol') == "4" || $this->session->userdata('id_rol') == "9" || $this->session->userdata('id_rol') == "53"){
+            $this->load->view('template/sidebar');
+        }
+        else {
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+        }
     ?>
+
     <!--Contenido de la página-->
     <div class="content boxContent">
         <div class="container-fluid">

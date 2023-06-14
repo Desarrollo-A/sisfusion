@@ -203,6 +203,7 @@ $("#tabla_ingresar_9").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
     });
+
     $("#tabla_ingresar_9 tbody").on("click", ".editReg", function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
@@ -223,6 +224,7 @@ $("#tabla_ingresar_9").ready(function () {
         $("#rl").selectpicker('refresh');
         $("#residencia").selectpicker('refresh');
     });
+    
     $("#tabla_ingresar_9 tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
         getInfo3[0] = $(this).attr("data-idCliente");

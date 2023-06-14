@@ -2,7 +2,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-
+    <?php $this->load->view('template/sidebar'); ?>
+    
     <!-- modal  rechazar A CONTRALORIA 7-->
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -44,7 +45,6 @@
         </div>
     </div>
 
-    <?php $this->load->view('template/sidebar', ''); ?>
     <!--Contenido de la página-->
     <div class="content boxContent">
         <div class="container-fluid">

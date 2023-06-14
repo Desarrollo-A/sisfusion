@@ -2,7 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-	<?php $this->load->view('template/sidebar', ''); ?>
+	<?php $this->load->view('template/sidebar'); ?>
 
     <div class="content boxContent">
         <div class="container-fluid">

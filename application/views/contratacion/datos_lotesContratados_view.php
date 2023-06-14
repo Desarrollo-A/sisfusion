@@ -2,7 +2,9 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <body class="">
     <div class="wrapper ">
-        <?php $this->load->view('template/sidebar', ''); ?>
+
+        <?php $this->load->view('template/sidebar'); ?>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

@@ -9,44 +9,39 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Incidencias extends CI_Controller
 {
   private $gph;
-  public function __construct()
-  {
-    parent::__construct();
-    $this->load->model('Comisiones_model');
-    $this->load->model('Incidencias_model');
-    $this->load->model('asesor/Asesor_model');
-    $this->load->model('Usuarios_modelo');
-    $this->load->model('Incidencias_model');    
-    $this->load->model('PagoInvoice_model');
-    $this->load->model('General_model');
-    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib'));
-    $this->load->helper(array('url', 'form'));
-    $this->load->database('default');
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Comisiones_model');
+        $this->load->model('Incidencias_model');
+        $this->load->model('asesor/Asesor_model');
+        $this->load->model('Usuarios_modelo');
+        $this->load->model('Incidencias_model');
+        $this->load->model('PagoInvoice_model');
+        $this->load->model('General_model');
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib'));
+        $this->load->helper(array('url', 'form'));
+        $this->load->database('default');
 
 
-    $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
-    $this->validateSession(); 
-   }
+        $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
+        $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
    public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
 // antes se llamada incidencias se encontraba en comisiones
-   public function index()
-  {
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $datos = array();
-    $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $salida = str_replace('' . base_url() . '', '', $val);
-    $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    $datos["sedes"] = $this->Incidencias_model->sedesCambios();
-    
-    $this->load->view('template/header');
-    $this->load->view("incidencias/IncidenciasByLote", $datos);
-  }
+    public function index()
+    {
+        $datos["sedes"] = $this->Incidencias_model->sedesCambios();
+
+        $this->load->view('template/header');
+        $this->load->view("incidencias/IncidenciasByLote", $datos);
+    }
 
   // se encuentra en comisiones ! 
   
@@ -126,7 +121,8 @@ class Incidencias extends CI_Controller
       
     public function UpdateInventarioClient(){
       $usuarioOld=0;
-      $asesor=$this->input->post('asesor');
+      $banderaSubRegional = 2;
+      $asesor=$this->input->post('asesor'); 
       $coordinador = $this->input->post('coordinador');
       $gerente = $this->input->post('gerente');
 
@@ -138,24 +134,45 @@ class Incidencias extends CI_Controller
       $comentario=$this->input->post('comentario3');
       $idLote=$this->input->post('idLote');
       $idCliente=$this->input->post('idCliente');
-  
+
       if($rolSelect == 7){
         $usuarioOld=$asesor;
+        
       }else if($rolSelect == 9){
         $usuarioOld=$coordinador;
+        
       }else if($rolSelect == 3){
         $usuarioOld=$gerente;
-  
+        
       }else if($rolSelect == 2){
         $usuarioOld=$subdirector;
-  
+        $TieneRegional = $this->Incidencias_model->tieneRegional1($subdirector);
+      
+        if(count($TieneRegional) != 0 ){
+            $banderaSubRegional = 1;
+         
+          }else{
+     
+          }
+
       }
       else if($rolSelect == 59){
         $usuarioOld=$regional;
-  
+        
       }
-      $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario));
-  
+   
+      $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional, $regional));
+       
+    
+      if (  $banderaSubRegional == 1){
+     
+        $rolSelect = 59;
+        $newColab  = 0;
+        $usuarioOld = $regional;
+        $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional, $regional));
+      }
+      
+     
       echo json_encode($respuesta[0]);
     }
 
@@ -268,28 +285,13 @@ public function ToparComision($id_comision,$idLote = '')
     public function tieneRegional()
     {
       $bandera = false;
-      
        $usuario = $this->input->post("usuario");
-
-      // $ids = [];
-      // $id_usuarios = $this->Incidencias_model->tieneRegional();
-      // foreach($id_usuarios as $id_usuario)
-      // {
-      //  array_push($ids , $id_usuario["id_usuario"]);
-      
-      // }
-      // $ins =  implode(",", $ids);
-      // $mandar = " in ( $ins ) ";
-
-       $regionals = $this->Incidencias_model->tieneRegional1($usuario);       
-
-        
+       $regionals = $this->Incidencias_model->tieneRegional1($usuario); 
       if(count($regionals) > 0 ){
         $bandera = $regionals;      
       }else{
         $bandera = false;      
       }
-
       echo json_encode( $bandera );
     }
 

@@ -15,6 +15,9 @@ class Usuarios extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -26,9 +29,6 @@ class Usuarios extends CI_Controller
 
     public function configureProfile()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $data = $this->Usuarios_modelo->getPersonalInformation()->result();
         foreach ($data as $value) {
             $datos["id_usuario"] = $value->id_usuario;
@@ -95,29 +95,20 @@ class Usuarios extends CI_Controller
 
     public function advisersList()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/advisers_list", $datos);
+        $this->load->view("usuarios/advisers_list");
     }
 
     public function addUser()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/add_user", $datos);
+        $this->load->view("usuarios/add_user");
     }
 
     public function usersList()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/users_list", $datos);
+        $this->load->view("usuarios/users_list");
     }
 
     public function getUsersList()
@@ -398,11 +389,8 @@ class Usuarios extends CI_Controller
 
     public function usersListComptroller()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/users_list_comptroller", $datos);
+        $this->load->view("usuarios/users_list_comptroller");
     }
 
     public function getChangelog($id_usuario)
@@ -505,11 +493,8 @@ class Usuarios extends CI_Controller
 
     public function mktdAdvisors()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/mktd_advisers_list", $datos);
+        $this->load->view("usuarios/mktd_advisers_list");
     }
 
     public function getMktdAvisersList()
@@ -535,11 +520,8 @@ class Usuarios extends CI_Controller
 
     public function usersByLeader()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("usuarios/usersByLeader", $datos);
+        $this->load->view("usuarios/usersByLeader");
     }
 
     public function getUsersListByLeader()
@@ -550,11 +532,8 @@ class Usuarios extends CI_Controller
 
     public function usersAsesor()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("asesor/viewUser", $datos);
+        $this->load->view("asesor/viewUser");
     }
 
     public function getUsersListAsesor()

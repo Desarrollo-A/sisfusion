@@ -1281,7 +1281,8 @@ $('#planes').change(function () {
             console.log(data.lotes);
             console.log(data.monto);
             console.log(data.pagos);
-            $('#monto_label').append(data.monto.toFixed(2));
+
+            $('#monto_label').append(data.monto);
             $('#pagos_label').append(data.pagos);
             $('#lotes_label').append(data.lotes);
             console.log('kdkdkkdkdkdkdkkdkdkdkdkdkkdkdkdkdkdkkdk');

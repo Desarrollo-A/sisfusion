@@ -1,9 +1,3 @@
-function cleanCommentsfactura() {
-    var myCommentsList = document.getElementById('comments-list-factura');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
 function cleanCommentsPDF() {
     $('#seeInformationModalPDF').modal('toggle');
     var myCommentsList = document.getElementById('pdfbody');
@@ -64,7 +58,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.total);
             });
-            document.getElementById("totpagarfactura").textContent = formatMoney(total);
+            document.getElementById("totpagarfactura").textContent ='$'+formatMoney(total);
         }
     });
     $('[data-toggle="tooltip"]').tooltip({
@@ -80,6 +74,9 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
     var to = formatMoney(total);
     document.getElementById("totpagarfactura").textContent = '$' + to;
 });
+
+
+
 
 tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -244,84 +241,6 @@ function construir_subtablas( data ){
     return solicitudes += '</table>';
 }
 
-// $("#tabla_factura tbody").on("click", ".subirPDF", function(e){
-//     e.preventDefault();
-//     e.stopImmediatePropagation();
-//     uuid = $(this).val();
-//     user_factura = $(this).attr("data-userfactura");
-//     xmlfname = $(this).attr("data-file");
-//     $("#seeInformationModalPDF").modal();
-//     $("#seeInformationModalPDF .modal-body").append(`
-//     <div class="input-group">
-//         <input type="hidden" name="opc" id="opc" value="1">
-//         <input type="hidden" name="uuid" id="uuid" value="${uuid}">
-//         <input type="hidden" name="user" id="user" value="${user_factura}">
-//         <input type="hidden" name="xmlfile" id="xmlfile" value="${xmlfname}">
-//         <label  class="input-group-btn">
-//         </label>
-//         <span class="btn btn-primary">
-//         <i class="fa fa-cloud-upload"></i> Subir archivo
-//         <input id="file-uploadE" name="file-uploadE" required  accept="application/pdf" type="file"   / >
-//         </span>
-//         <p id="archivoE"></p>
-//     </div>`);
-//     $("#seeInformationModalPDF .modal-footer").append(`
-//         <button type="submit" id="sendFile" class="btn btn-primary"><span
-//         class="material-icons" >send</span> Guardar documento </button>
-//         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>`);
-// });
-
-// $("#tabla_factura tbody").on("click", ".regresar", function(e){
-//     e.preventDefault();
-//     e.stopImmediatePropagation();
-//     uuid = $(this).val();
-//     usuario = $(this).attr("data-userfactura");
-//     total = $(this).attr("data-total");
-//     id_user = $(this).attr("data-id_user");
-//     $("#seeInformationModalPDF").modal();
-//     $("#seeInformationModalPDF .modal-body").append(`
-//     <div class="input-group">
-//     <input type="hidden" name="opc" id="opc" value="4">
-//     <input type="hidden" name="uuid2" id="uuid2" value="${uuid}">
-//     <input type="hidden" name="totalxml" id="totalxml" value="${total}">
-//     <input type="hidden" name="id_user" id="id_user" value="${id_user}">
-//     <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b> $${formatMoney(total)}</b> ?</h6>
-//     <span>Motivo</span>
-//     <textarea id="motivo" name="motivo" class="form-control"></textarea>`);
-//     $("#seeInformationModalPDF .modal-body").append(`
-//         <div class="row">
-//             <div class="col-md-12 col-lg-12 text-left">
-//             </div>
-//         </div>
-//         <div class="row">
-//             <div class="col-lg-6">
-//                 <div class="fileinput fileinput-new text-center" data-provides="fileinput" style='width:250px'>
-//                     <div>
-//                         <br>
-//                         <span class="fileinput-new">Selecciona archivo XML</span>
-//                         <input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml" style='width:250px'>
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-lg-6 ">
-//                 <button class="btn btn-warning" type="button" onclick="xml2(${id_user})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
-//             </div>
-//         </div>`);
-//     $("#seeInformationModalPDF .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-//     $("#seeInformationModalPDF .modal-body").append(
-//         '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
-//         '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
-//         '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
-//         '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
-//         '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
-//         '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
-//         '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
-//         '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
-//         '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
-//         ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"></div><div class="col-md-4"></div><div class="col-md-4"> </div></div>');
-//     $("#seeInformationModalPDF .modal-footer").append(`<button type="submit" id="sendFile" class="btn btn-primary"> Aceptar</button><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>`);
-// });
-
 $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
     $("#seeInformationModalfactura .modal-body").html("");
     e.preventDefault();
@@ -447,17 +366,6 @@ $(document).on('click', '.verPDF', function () {
         height:     660
     });
 });
-
-// $(document).on('click', '.verPDF2', function () {
-//     var $itself = $(this);
-//     Shadowbox.open({
-//         content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>UPLOADS/PDF/'+$itself.attr('data-usuario')+'.pdf'+'"></iframe></div>',
-//         player:     "html",
-//         title:      "Visualizando pdf: " + $itself.attr('data-usuario'),
-//         width:      985,
-//         height:     660
-//     });
-// });
 
 $(window).resize(function(){
     tabla_factura.columns.adjust();
