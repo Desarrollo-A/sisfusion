@@ -10,13 +10,7 @@ $(document).ready(function() {
     $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         if (i != 9){
-            $(this).html(`<input    type="text"
-                                    class="textoshead"
-                                    data-toggle="tooltip" 
-                                    data-placement="top"
-                                    title="${title}" 
-                                    placeholder="${title}"/>`
-                        );
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip"  data-placement="top" title="${title}"  placeholder="${title}"/>`);
             $('input', this).on('keyup change', function () {
                 if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
                     $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
@@ -33,21 +27,21 @@ $(document).ready(function() {
             {
                 data: function(d) {
                      if (d.estatus_particular == 1) // DESCARTADO
-                        b = '<span class="label lbl-warning">Descartado</span>';
+                        b = '<span class="label lbl-warning">DESCARTADO</span>';
                     else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                        b = '<span class="label lbl-green">Interesado sin cita</span>';
+                        b = '<span class="label lbl-green">INTERESADO SIN CITA</span>';
                     else if (d.estatus_particular == 3) // CON CITA
-                        b = '<span class="label lbl-sunny">Con cita</span>';
+                        b = '<span class="label lbl-sunny">CON CITA</span>';
                     else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
+                        b = '<span class="label lbl-gray">SIN ESPECIFICAR</span>';
                     else if (d.estatus_particular == 5) // PAUSADO
-                        b = '<span class="label lbl-orangeYellow">Pausado</span>';
+                        b = '<span class="label lbl-orangeYellow">PAUSADO</span>';
                     else if (d.estatus_particular == 6) // PREVENTA
-                        b = '<span class="label lbl-violetDeep">Preventa</span>';
+                        b = '<span class="label lbl-violetDeep">PREVENTA</span>';
                     else if (d.estatus_particular == 7) // CLIENTE
-                        b = '<span class="label lbl-oceanGreen">Cliente</span>';
+                        b = '<span class="label lbl-oceanGreen">CLIENTE</span>';
                     else // CLIENTE
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
+                        b = '<span class="label lbl-gray">SIN ESPECIFICAR</span>';
                     return b;
                 }
             },
@@ -664,6 +658,7 @@ function validateMatrimonialRegime(type) {
 function getAdvisers(element) {
     sede = $('option:selected', element).attr('data-sede');
     $("#myselectasesor").find("option").remove();
+    $("#myselectasesor").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getAdvisers/' + sede, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
