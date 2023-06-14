@@ -57,10 +57,10 @@
                     </div>
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="updateBandera" class="btn btn-primary">Aceptar</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="updateBandera" class="btn btn-primary">Aceptar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -308,11 +308,7 @@
                                                 href="#myModal" style="color:white"> Reporte dispersión</a>
                                             </div>
                                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 d-flex align-end text-center">
-                                                <button class="btn-gral-data"
-                                                   id="btn-detalle-plan"
-                                                   style="color:white; ">
-                                                    Planes
-                                                </button>
+                                                <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
                                             </div>
                                         </div>
                                     </div>

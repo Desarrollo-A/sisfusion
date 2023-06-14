@@ -3937,34 +3937,22 @@
                 break;
             }
         }
-		$query = $this->db-> query("SELECT re.descripcion nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, 
-		CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, cl.fechaApartado, sc.nombreStatus estatusActual,
-		mo.descripcion, sl.nombre estatusLote, 
-		CONCAT(usu.nombre, ' ', usu.apellido_paterno, ' ', usu.apellido_materno) usuario,
-		lo.modificado fechaRechazo, lo.comentario motivoRechazo, mo.descripcion movimiento
-		FROM clientes cl
-		INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3
-		INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-		INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-		INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
-		INNER JOIN usuarios cr ON cr.id_usuario = cl.id_coordinador
-		INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
-		INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
-		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-		INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
-		INNER JOIN usuarios usu ON usu.id_usuario = lo.usuario
-		WHERE cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 66 AND cl.status = 1 $filter 
-		OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 7 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 64 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 7 AND lo.idMovimiento = 77 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 20 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 63 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 92 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 73 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 3 AND lo.idMovimiento = 82 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 1 AND lo.idMovimiento = 96 AND cl.status = 1 $filter
-		OR cl.status = 1 AND lo.idStatusContratacion = 13 AND lo.idMovimiento = 43 AND cl.status = 1 $filter
-		ORDER BY cl.id_Cliente ASC");
+		$query = $this->db-> query("SELECT UPPER(CONVERT(VARCHAR, re.descripcion)) AS nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, 
+		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente, 
+		CONVERT(VARCHAR,cl.fechaApartado, 120) AS fechaApartado, UPPER(sc.nombreStatus) AS estatusActual, UPPER(mo.descripcion) AS descripcion, UPPER(sl.nombre) AS estatusLote, 
+		UPPER(CONCAT(usu.nombre, ' ', usu.apellido_paterno, ' ', usu.apellido_materno)) AS usuario, 
+		CONVERT(VARCHAR,lo.modificado, 120) AS fechaRechazo, UPPER(CONVERT(VARCHAR,lo.comentario)) AS motivoRechazo, UPPER(mo.descripcion) AS movimiento FROM clientes cl 
+		INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote = 3 
+		INNER JOIN condominios co ON lo.idCondominio = co.idCondominio 
+		INNER JOIN residenciales re ON co.idResidencial = re.idResidencial 
+		INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor 
+		INNER JOIN usuarios cr ON cr.id_usuario = cl.id_coordinador 
+		INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente 
+		INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion 
+		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+		INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento 
+		INNER JOIN usuarios usu ON usu.id_usuario = lo.usuario WHERE cl.status = 1 AND lo.idStatusContratacion IN (7, 1, 3, 13) AND lo.idMovimiento IN (66, 7, 64, 77, 20, 63, 92, 73, 82, 96, 43) ORDER BY cl.id_Cliente ASC
+		");
 		return $query->result();
 		
 	}

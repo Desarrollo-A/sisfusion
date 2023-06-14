@@ -17,40 +17,14 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="material-icons" onclick="cleanComments()">clear</i>
                         </button>
-                        <h4 class="modal-title">Consulta información</h4>
+                        <h4 class="modal-title">Bitácora de cambios</h4>
                     </div>
                     <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab">Comentarios</a></li>
-                                <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                            </ul>
-                            <div class="tab-content">
-
-                                <div role="tabpanel" class="tab-pane active" id="commentsTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="conteiner-fluid">
+                            <div class="row">
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <ul class="timeline timeline-simple" id="changelog"></ul>
                                 </div>
-
-                                <div role="tabpanel" class="tab-pane" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="changelog"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>

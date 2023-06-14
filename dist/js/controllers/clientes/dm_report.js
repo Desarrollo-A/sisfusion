@@ -1,10 +1,10 @@
 let titulos_intxt = [];
 $('#mktdProspectsTable thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($('#mktdProspectsTable').DataTable().column(i).search() !== this.value) {
+    var title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+            if ($('#mktdProspectsTable').DataTable().column(i).search() !== this.value ) {
                 $('#mktdProspectsTable').DataTable().column(i).search(this.value).draw();
             }
         });
@@ -16,9 +16,9 @@ $(document).ready(function(){
     setIniDatesXMonth("#beginDate", "#endDate");
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    console.log(finalBeginDate);
     fillTable(1, finalBeginDate, finalEndDate, 0);
 });
+
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -45,7 +45,7 @@ $(document).on("click", "#searchByDateRange", function () {
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
 
-var mktdProspectsTable
+var mktdProspectsTable;
 function fillTable(typeTransaction, beginDate, endDate, where) {
     mktdProspectsTable = $('#mktdProspectsTable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -59,11 +59,12 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             title:'Reporte de estatus por prospecto',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                format: {
+                format: 
+                {
                     header:  function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx]  + ' ';
-                        }
                     }
+                }
             }
         }],
         pagingType: "full_numbers",
@@ -79,7 +80,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             }
         },
         columnDefs: [{
-            defaultContent: "Sin especificar",
+            defaultContent: "SIN ESPECIFICAR",
             targets: "_all",
             searchable: true,
             orderable: false
@@ -91,24 +92,24 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 {
                     data: function(d) {
                         if (d.estatus == 1) {
-                            return '<center><span class="label lbl-green">Vigente</span><center>';
+                            return '<center><span class="label lbl-green">VIGENTE</span><center>';
                         } else {
-                            return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
+                            return '<center><span class="label lbl-warning">SIN VIGENCIA</span><center>';
                         }
                     }
                 },
                 {
                     data: function(d) {
                         if (d.estatus_particular == 1) { // DESCARTADO
-                            b = '<center><span class="label lbl-warning">Descartado</span><center>';
+                            b = '<center><span class="label lbl-warning">DESCARTADO</span><center>';
                         } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                            b = '<center><span class="label lbl-yellow">Interesado sin cita</span><center>';
+                            b = '<center><span class="label lbl-yellow">INTERESADO EN CITA</span><center>';
                         } else if (d.estatus_particular == 3) { // CON CITA
-                            b = '<center><span class="label lbl-green">Con cita</span><center>';
+                            b = '<center><span class="label lbl-green">CON CITA</span><center>';
                         } else if (d.estatus_particular == 5) { // PAUSADO
-                            b = '<center><span class="label lbl-sky">Pausado</span><center>';
+                            b = '<center><span class="label lbl-sky">PAUSADO</span><center>';
                         } else if (d.estatus_particular == 6) { // PREVENTA
-                            b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
+                            b = '<center><span class="label lbl-violetChin">PREVENTA</span><center>';
                         }
                         return b;
                     }
@@ -150,7 +151,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 },
                 {
                     data: function(d) {
-                        return '<center><button class="btn-data btn-details-grey see-comments" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
+                        return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="CONSULTA INFORMACIÓN" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
                     }
                 }
             ],
@@ -166,6 +167,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             }
         }
     });
+
     $('#mktdProspectsTable').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
