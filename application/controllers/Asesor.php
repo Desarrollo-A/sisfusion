@@ -4686,7 +4686,7 @@ class Asesor extends CI_Controller
         $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
-        // $this->correoAut($url, $correoCliente);
+        $this->correoAut($url, $correoCliente);
 
         return true;
     }
@@ -4731,13 +4731,13 @@ class Asesor extends CI_Controller
         }
 
         $codigo = md5(microtime());
-        /*$url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$codigo";
+        $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$codigo";
         $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
 
         if (!$resultadoSms) {
             echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
             return false;
-        }*/
+        }
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
@@ -4804,7 +4804,7 @@ class Asesor extends CI_Controller
 
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
-            // $this->correoAut($urlCorreo, $correoCliente);
+            $this->correoAut($urlCorreo, $cliente->correo);
         }
 
         if (isset($reenviarSms)) {
@@ -4818,14 +4818,14 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/validarAutorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
+            $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
 
-            /*$resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
+            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
 
             if (!$resultadoSms) {
                 echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
                 return;
-            }*/
+            }
         }
 
         echo json_encode(['code' => 200]);
@@ -4977,11 +4977,19 @@ class Asesor extends CI_Controller
                             </table>
                         </tr>
                         <tr>
-                            <p>
-                                Te hemos enviado este correo con el motivo de dar un seguimiento a tu verificación de cliente.
-                                Si tu reconoces este proceso de verificación, accede a través de este <a href='$url' target='_blank'>link</a>.
-                                De lo contrario, has caso omiso a este correo.
-                            </p>
+                            Estimado/a 'cliente' <br>
+                            Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
+                            Por favor, siga los pasos a continuación para completar el proceso de verificación:<br>
+                            1.	Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
+                            2.	Será redirigido una página de verificación en nuestro sitio web.<br><br>
+                            
+                            Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre.<br>
+                            
+                            Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
+                            
+                            ¡Gracias por su colaboración!<br>
+                            Atentamente,<br>
+                            Equipo de Ventas de Ciudad Maderas
                         </tr>
                     </table>
                 </body>      
@@ -4993,16 +5001,21 @@ class Asesor extends CI_Controller
     /**
      * @return bool true si salió bien
      */
-    public function smsAut(string $url, string $telefono, string $idCliente): bool
+    public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Verificación de cliente, accede a través de este link $url",
+            'Content' => "Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Se ha iniciado un proceso de autentificacion, requerimos que verifique su numero telefonico.\nHaga clic en el siguiente enlace: [URL]\nUna vez que haya completado estos pasos, su numero quedara verificado. Si no ha iniciado este proceso o ha recibido este SMS por error, le pedimos que ignore este mensaje. No se realizara ninguna accion en su nombre.\nSi tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atencion al cliente.\nGracias por su colaboracion\nAtentamente,\nEquipo de Ventas de Ciudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
-            'Sender' => $idCliente,
+            'Sender' => 'aut_clientes',
             'Recipient' => $telefono,
             'CampaignCode' => 'null',
-            'DynamicFields' => [],
+            'DynamicFields' => [
+                [
+                    "N" => "URL",
+                    "V" => $url
+                ]
+            ],
             'isUnicode' => 0
         ];
 

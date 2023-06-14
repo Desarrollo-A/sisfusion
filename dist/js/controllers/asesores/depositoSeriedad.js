@@ -1786,8 +1786,6 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
 
-    console.log(clienteData);
-
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
             <button class="btn-data btn-green btn-rounded btn-autorizacion" 

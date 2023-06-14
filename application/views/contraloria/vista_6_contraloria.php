@@ -21,7 +21,7 @@
 						</div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Enganche</label>
-                            <input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" >
+                            <input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
                         </div>
 						<input type="hidden" name="idLote" id="idLoteregCor" >
 						<input type="hidden" name="idCliente" id="idClienteregCor" >
@@ -102,7 +102,7 @@
 						</div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Enganche</label>
-                            <input class="form-control input-gral" name="totalNeto" id="totalNetoR" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                            <input class="form-control input-gral" name="totalNeto" id="totalNetoR" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
                         </div>
 					</div>
 				</div>
@@ -130,7 +130,7 @@
 						</div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Enganche</label>
-                            <input class="form-control input-gral" name="totalNeto" id="totalNetoRevA7" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" >
+                            <input class="form-control input-gral" name="totalNeto" id="totalNetoRevA7" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
                         </div>
 					</div>
 				</div>
@@ -198,7 +198,7 @@
 						</div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label id="tvLbl">Enganche</label>
-                            <input class="form-control input-gral" name="totalNeto" id="totalReturn1" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" >
+                            <input class="form-control input-gral" name="totalNeto" id="totalReturn1" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
                         </div>
 					</div>
 				</div>

@@ -27,6 +27,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
+                                                    <th>CLIENTE</th>
                                                     <th id ="Upper">SEDE</th>
                                                     <th>REFERENCIA</th>
                                                     <th>USUARIO</th>

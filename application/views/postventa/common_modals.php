@@ -261,7 +261,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Clave catastral</label>
-                                    <input id="catastral" name="catastral" value="" class="form-control input-gral" type="number" required>
+                                    <input id="catastral" name="catastral" value="" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -435,7 +435,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group label-floating is-focused">
                                     <label class="control-label label-gral">Clave catastral</label>
-                                    <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="number" disabled>
+                                    <input id="catastral2" name="catastral2" value="" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -1044,7 +1044,7 @@
     </div>
 </div>
 
-
+ 
 
 
 
