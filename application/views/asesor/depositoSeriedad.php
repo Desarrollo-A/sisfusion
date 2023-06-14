@@ -57,11 +57,11 @@
                         <div class="material-datatables">
                             <table class="table table-responsive table-bordered table-striped table-hover" id="table_prospectos" width="100%">
                                 <thead>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Teléfono</th>
-                                <th>Información prospecto</th>
-                                <th>Asignar</th>
+                                <th>NOMBRE</th>
+                                <th>CORREO</th>
+                                <th>TELÉFONO</th>
+                                <th>INFORMACIÓN DEL PROSPECTO</th>
+                                <th>ASIGNAR</th>
                                 </thead>
                             </table>
                         </div>
