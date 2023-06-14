@@ -5579,11 +5579,9 @@ for ($d=0; $d <count($dos) ; $d++) {
         echo json_encode($data);
     }
 
-    public function findUsuariosByPuestoAsistente($puesto)
-    {
-        $idUsuario = $this->session->userdata('id_usuario');
-        $data = $this->Comisiones_model->findUsuariosByPuestoAsistente($puesto, $idUsuario);
-        echo json_encode($data);
+    public function findUsuariosByPuestoAsistente($puesto) {
+      $data = $this->Comisiones_model->findUsuariosByPuestoAsistente($puesto, $this->session->userdata('id_lider'), $this->session->userdata('id_usuario'));
+      echo json_encode($data);
     }
 
     public function findAllResidenciales()
