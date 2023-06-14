@@ -4406,21 +4406,18 @@ return 1;
  
 
 
-         function getHistorialAbono2($pago){
- 
-$this->db->query("SET LANGUAGE Español;");
-return $this->db->query(" SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
-convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
-hc.fecha_creacion as fecha_movimiento,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-FROM historial_bonos hc 
-INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
-INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-WHERE hc.id_pago_b = $pago
-ORDER BY hc.fecha_creacion DESC");
-
-
-}
+        function getHistorialAbono2($pago){
+            $this->db->query("SET LANGUAGE Español;");
+            return $this->db->query(" SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
+            convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
+            CONVERT(VARCHAR,hc.fecha_creacion,20) as fecha_movimiento,
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+            FROM historial_bonos hc 
+            INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
+            INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+            WHERE hc.id_pago_b = $pago
+            ORDER BY fecha_movimiento DESC");
+        }
 
 
 
@@ -4462,26 +4459,26 @@ function getBonosPorUserContra($estado){
 function getBonosX_User($usuario){
     return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
     p.id_rol,p.id_bono,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,
-    convert(date,b.fecha_abono) as fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,x.nombre as name,
-        (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto,opcx.nombre as id_rol
+    CONVERT(VARCHAR,b.fecha_abono,20) AS fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,x.nombre as name,
+    (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto,UPPER(opcx.nombre) as id_rol
     FROM bonos p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono 
     inner join opcs_x_cats opcx on opcx.id_opcion=u.id_rol
     INNER JOIN opcs_x_cats x on x.id_opcion=b.estado
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.forma_pago AND oxc.id_catalogo = 16
-     left JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-                 WHEN 2 THEN 2 
-                 WHEN 3 THEN 2 
-                 WHEN 1980 THEN 2 
-                 WHEN 1981 THEN 2 
-                 WHEN 1982 THEN 2 
-                 WHEN 1988 THEN 2 
-                 WHEN 4 THEN 5
-                 WHEN 5 THEN 3
-                 WHEN 607 THEN 1 
-                 WHEN 7092 THEN 4
-                WHEN 9629 THEN 2
-                 ELSE u.id_sede END) and sed.estatus = 1
+    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.forma_pago AND oxc.id_catalogo = 16
+    left JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+    WHEN 2 THEN 2 
+    WHEN 3 THEN 2 
+    WHEN 1980 THEN 2 
+    WHEN 1981 THEN 2 
+    WHEN 1982 THEN 2 
+    WHEN 1988 THEN 2 
+    WHEN 4 THEN 5
+    WHEN 5 THEN 3
+    WHEN 607 THEN 1 
+    WHEN 7092 THEN 4
+    WHEN 9629 THEN 2
+    ELSE u.id_sede END) and sed.estatus = 1
     WHERE x.id_catalogo=46  and opcx.id_catalogo=1 AND b.id_usuario=$usuario");
 }
 /**--------------------------------------------------- */
@@ -5471,27 +5468,27 @@ function getBonosPorUser($id,$estado){
     if($this->session->userdata('id_rol') == 32){
 $cadena = 'u.estatus in(0,3) AND';
     }
-    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
-    opcs.nombre as id_rol,p.id_bono,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,
-    b.fecha_abono,b.estado,b.id_pago_bono,b.abono,b.n_p,
+    return $this->db->query("SELECT UPPER(CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno)) as nombre,
+    UPPER(opcs.nombre) as id_rol,p.id_bono,p.id_usuario,p.monto,p.num_pagos,p.pago,p.estatus,p.comentario,
+    CONVERT(VARCHAR, b.fecha_abono,20) AS fecha_abono,UPPER(b.estado) AS estado,b.id_pago_bono,b.abono,b.n_p,
     (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto
     FROM bonos p INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
     INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.forma_pago AND oxc.id_catalogo = 16
-     LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-                 WHEN 2 THEN 2 
-                 WHEN 3 THEN 2 
-                 WHEN 1980 THEN 2 
-                 WHEN 1981 THEN 2 
-                 WHEN 1982 THEN 2 
-                 WHEN 1988 THEN 2 
-                 WHEN 4 THEN 5
-                 WHEN 5 THEN 3
-                 WHEN 607 THEN 1 
-                 WHEN 7092 THEN 4
-                     WHEN 9629 THEN 2
-                 ELSE u.id_sede END) and sed.estatus = 1
+    LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+    WHEN 2 THEN 2 
+    WHEN 3 THEN 2 
+    WHEN 1980 THEN 2 
+    WHEN 1981 THEN 2 
+    WHEN 1982 THEN 2 
+    WHEN 1988 THEN 2 
+    WHEN 4 THEN 5
+    WHEN 5 THEN 3
+    WHEN 607 THEN 1 
+    WHEN 7092 THEN 4
+    WHEN 9629 THEN 2
+    ELSE u.id_sede END) and sed.estatus = 1
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono
-    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE $cadena b.estado=$estado and opcs.id_catalogo=1");
+    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE $cadena estado=$estado and opcs.id_catalogo=1");
 }
 
 /*--------------planes-----------*/
