@@ -7496,24 +7496,19 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();
     }
 
-    public function findUsuariosByPuestoAsistente($puesto, $idUsuarioSesion)
-    {
+    public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
+        if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
+            $id_lider .= ", 671";
+        else if ($id_usuario == 12449) // MARCELA CUELLAR MORON
+            $id_lider .= ", 654";
         $puestoWhereClause = '';
-        if ($puesto === '3') {
-            $puestoWhereClause = "id_usuario = (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion)";
-        } else if ($puesto === '9') {
-            $puestoWhereClause = "id_lider IN (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuarioSesion) 
-                AND id_rol = 9";
-        } else if ($puesto === '7') {
-            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN (SELECT id_lider FROM usuarios 
-                WHERE id_usuario = $idUsuarioSesion) AND id_rol IN (7,9)) OR (id_lider IN (SELECT id_lider FROM usuarios WHERE id_usuario = 41) AND id_rol in (7)) ";
-        }
-
-        $query = $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)
-            AS nombre_completo
-            FROM usuarios WHERE $puestoWhereClause");
-
-        return $query->result_array();
+        if ($puesto === '3') // CONSULTA GERENTES
+            $puestoWhereClause = "id_usuario IN ($id_lider)";
+        else if ($puesto === '9') // CONSULTA COORDINADORES
+            $puestoWhereClause = "id_lider IN ($id_lider) AND id_rol = 9";
+        else if ($puesto === '7') // CONSULTA ASESORES Y COORDINADORES
+            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9))";
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre_completo FROM usuarios WHERE $puestoWhereClause ORDER BY nombre_completo")->result_array();
     }
 
     public function findAllResidenciales()

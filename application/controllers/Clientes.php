@@ -2921,5 +2921,20 @@ public function getStatusMktdPreventa(){
         $code = ($result) ? 200 : 500;
         echo json_encode(['code' => $code]);
     }
+
+    public function lotesApartReubicacion()
+    {
+        $this->load->view('template/header');
+        $this->load->view('clientes/lotes_apart_reubicacion');
+    }
+
+    public function getLotesApartadosReubicacion()
+    {
+        $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
+        echo json_encode($data);
+    }
 }
 
