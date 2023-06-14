@@ -423,27 +423,43 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red">
-                    <h4 class="card-title"><b>Aplicar descuento</b></h4>
+                    <h4 class="card-title aling-center"><b>Aplicar descuento</b></h4>
                 </div>
                 <form method="post" id="form_basta">
-                    <div class="modal-body">
-
-
-                        <div id="loteorigen"><label class="label">Lote origen</label>
+                    <div class="modal-body">              
+                    
+                    
+                        <b id="msj2" style="color: red;"></b>
+                        <div id="loteorigen" style="display:none;">
+                            <label class="label">Lote origen</label>
                             <select id="idloteorigen" disabled name="idloteorigen[]" multiple="multiple"
                                     class="form-control directorSelect2 js-example-theme-multiple"
                                     style="width: 100%;height:200px !important;" required
-                                    data-live-search="true"></select>
+                                    data-live-search="true">
+                            </select>
                         </div>
-
-
-                        <b id="msj2" style="color: red;"></b>
-
+                        <div class="col-md-12">
+							<div class="form-group">
+								<label class="control-label">Condominio</label>
+								<select id="condominios1"
+										name="condominios1[]"
+										class="selectpicker select-gral m-0"
+										data-style="btn"
+										data-show-subtext="true"
+										data-live-search="true"
+										multiple
+										title="Selecciona una opción" 
+										data-size="7"
+										data-container="body"
+										required>
+								</select>
+							</div>	
+                        </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="label">Monto disponible</label>
-                                <input class="form-control" type="text" id="idmontodisponible" readonly required
+                                <label class="control-label">Monto disponible</label>
+                                <input class="form-control input-gral" type="text" id="idmontodisponible" readonly required
                                        name="idmontodisponible" value=""></div>
                             <div id="montodisponible">
 
@@ -453,17 +469,16 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="label">Monto a descontar</label>
-                                <input class="form-control" type="text" id="monto" readonly="readonly" name="monto"
+                                <label class="control-label">Monto a descontar</label>
+                                <input class="form-control input-gral" type="text" id="monto" readonly="readonly" name="monto"
                                        value="">
                             </div>
                         </div>
-
-
+                    
                         <div class="col-md-12">
 
-                            <label class="label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control" rows="5"
+                            <label class="control-label">Mótivo de descuento</label>
+                            <textarea id="comentario" name="comentario" class="form-control input-gral" rows="5"
                                       required></textarea>
 
                         </div>
@@ -471,19 +486,12 @@
                         <input class="form-control" type="hidden" id="usuarioid" name="usuarioid" value="">
                         <input class="form-control" type="hidden" id="pagos_aplicados" name="pagos_aplicados" value="">
                         <input class="form-control" type="hidden" id="saldo_comisiones" name="saldo_comisiones">
-
-
-                        <div class="form-group">
-
-                            <center>
-                                <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>
-                                <button class="btn btn-danger" type="button" data-dismiss="modal">CANCELAR</button>
-                            </center>
-                        </div>
-
-
                     </div>
-
+                    <div class="modal-footer">
+                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>
+                                
+                    </div>
                 </form>
             </div>
         </div>
@@ -591,7 +599,7 @@
     <div class="modal fade modal-alertas" id="ModalBonos" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header bg-red">
+                <div class="modal-header bg-red center-align">
                     <button type="button" class="close" data-dismiss="modal" data-toggle="modal"> &times;</button>
                     <h4 class="modal-title">Descuentos</h4>
                 </div>
@@ -600,8 +608,9 @@
 
                         <div class="form-group">
                             <label class="label">Puesto del usuario *</label>
-                            <select class="selectpicker roles" name="roles" id="roles" required>
-                                <option value="">----Seleccionar-----</option>
+                            <select class="selectpicker select-gral roles" name="roles" id="roles"
+                            title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                        
                                 <option value="7">Asesor</option>
                                 <option value="9">Coordinador</option>
                                 <option value="3">Gerente</option>
@@ -614,12 +623,10 @@
 
 
                         <div class="form-group row">
-
-
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Monto Descuento *</label>
-                                    <input class="form-control"
+                                    <input class="form-control input-gral"
                                            type="number"
                                            id="descuento"
                                            name="descuento"
@@ -627,19 +634,15 @@
                                            min="1"
                                            max="19000"
                                            step=".01"
-                                           required
-                                    />
+                                           required />
                                 </div>
-
                             </div>
-
-
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Número de Pagos *</label>
-                                    <select class="form-control" name="numeroPagos" id="numeroPagos" required>
-                                        <option value="" disabled="true" selected="selected">- Selecciona opción -
-                                        </option>
+                                    <select class="selectpicker select-gral " name="numeroPagos" id="numeroPagos" 
+                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                                        
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -659,7 +662,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Monto a descontar</label>
-                                    <input class="form-control" type="text" id="pago_ind01" name="pago_ind01" value="">
+                                    <input class="form-control input-gral" type="text" id="pago_ind01" name="pago_ind01" value="">
                                 </div>
                             </div>
 
@@ -669,21 +672,15 @@
                         <div class="form-group">
 
                             <label class="label">Mótivo de descuento *</label>
-                            <textarea id="comentario2" name="comentario2" class="form-control" rows="3"
+                            <textarea id="comentario2" name="comentario2" class="form-control input-gral" rows="3"
                                       required></textarea>
-
                         </div>
-
-                        <div class="form-group">
-
-                            <center>
-                                <button type="submit" id="btn_descontar" class="btn btn-primary">GUARDAR</button>
-                                <button class="btn btn-danger" type="button" data-dismiss="modal" data-toggle="modal">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" data-toggle="modal">
                                     CANCELAR
-                                </button>
-                            </center>
-                        </div>
-
+                        </button>
+                        <button type="submit" id="btn_descontar" class="btn btn-gral-data">GUARDAR</button>
                     </div>
                 </form>
             </div>
@@ -891,6 +888,7 @@
 </body>
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
+
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

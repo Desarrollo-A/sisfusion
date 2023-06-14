@@ -15,7 +15,7 @@
 					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
 							<label>Comentario</label>
-							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE">
+							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE" autocomplete="off">
                              <br>
 						</div>
 

@@ -896,7 +896,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInfo($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
@@ -906,7 +906,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data);
+            echo json_encode($data,JSON_NUMERIC_CHECK);
         else
             echo json_encode(array());
     }
@@ -1102,7 +1102,7 @@ class Postventa extends CI_Controller
                                                     <div>Superficie:</div>
                                                 </td>
                                                 <td style="border: 1px solid #333;width: 50%;text-align: initial; display:flex; align-items: center;">
-                                                    <div style ="width: 100%;border: 1px solid #F1F4FF;">' . $data->superficie . '</div>
+                                                    <div style ="width: 100%;border: 1px solid #F1F4FF;">' . number_format($data->superficie, 2, '.', ',') . '</div>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1325,7 +1325,7 @@ class Postventa extends CI_Controller
                                                 
                                                 <td style="font-size: 1em;">
                                                     <b>Superficie:</b><br>
-                                                    ' . $data->superficie . '
+                                                    ' . number_format($data->superficie, 2, '.', ',') . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Valor de operación de contrato</b><br>
@@ -1343,7 +1343,7 @@ class Postventa extends CI_Controller
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>Fecha de contrato:</b><br>
-                                                    ' . $data->fecha_contrato . '
+                                                    ' . date("d-m-Y", strtotime($data->fecha_contrato)) . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                 <b>Motivo:</b><br>

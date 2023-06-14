@@ -2,7 +2,8 @@
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside')); 
+        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside',
+            'General_model'));
         $this->load->library(array('session','form_validation'));
         $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url','form'));
@@ -2885,6 +2886,42 @@ public function getStatusMktdPreventa(){
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function cancelacionesProceso()
+    {
+        $this->load->view('template/header');
+        $this->load->view('clientes/cancelaciones_proceso');
+    }
+
+    public function infoCancelacionesProceso()
+    {
+        if (!isset($_POST) || empty($_POST)) {
+            echo json_encode([]);
+            return;
+        }
+
+        $idRol = $this->session->userdata('id_rol');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $data = $this->Clientes_model->getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin);
+        echo json_encode($data);
+    }
+
+    public function updateCancelacionProceso()
+    {
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $result = $this->General_model->updateRecord('clientes', ['cancelacion_proceso' => 1], 'id_cliente', $idCliente);
+        $code = ($result) ? 200 : 500;
+        echo json_encode(['code' => $code]);
     }
 }
 
