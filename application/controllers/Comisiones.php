@@ -1121,8 +1121,6 @@ function update_estatus(){
     echo json_encode($arr);
   }
 
-
-
 public function cargaxml2($id_user = ''){
 
   $user =   $usuarioid =$this->session->userdata('id_usuario');
@@ -4249,7 +4247,11 @@ public function getLotesDispersado(){
 
 
 public function getMontoDispersadoDates($fecha1, $fecha2){
-
+   $fechaInicio = explode('/', $this->input->post($fecha1));
+   $fechaFin = explode('/', $this->input->post($fecha1));
+   $typeTransaction = $this->input->post("typeTransaction");
+   $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+   $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
    $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
    $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
    $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
@@ -4264,17 +4266,6 @@ public function getMontoDispersadoDates($fecha1, $fecha2){
     $this->load->view('template/header');
     $this->load->view("ventas/historial_pagadoMKTD");
   }
-
-
-
-// public function getPagosDispersadoDates($fecha1, $fecha2){
-//   echo json_encode($this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array(), JSON_NUMERIC_CHECK);
-// }
-
-// public function getLotesDispersadoDates($fecha1, $fecha2){
-//   echo json_encode($this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array(), JSON_NUMERIC_CHECK);
-// }
-
 
 public function lista_proyecto($param)
 {
@@ -4306,37 +4297,6 @@ public function lista_proyecto($param)
     echo json_encode($this->Comisiones_model->get_proyectos_comisiones($filtro_post)->result_array());
 }
 
- // public function lista_condominio($param, $proyecto)
- //    {
- //      // $this->validateSession();
- //      $id_user = $this->session->userdata('id_usuario');
-
- //      // if($param == 0){
- //        $filtro_00 = ' WHERE con.idResidencial = '.$proyecto.' ';
- //      // }else{
- //      //   $filtro_00 = ' AND pci.estatus = '.$param.' AND con.idResidencial = '.$proyecto.' ';
- //      // }
-
- //      // switch ($this->session->userdata('id_rol')) {
- //      //   case '1':
- //      //   case '2':
- //      //   case '3':
- //      //   case '7':
- //      //   case '9':
- //      //   // case '1':
- //      //     $filtro_post = ' WHERE con.status = 1 AND com.id_usuario = '.$id_user.' '.$filtro_00;
- //      //     break;
-        
- //      //   default:
- //      //     $filtro_post = ' WHERE con.status = 1 '.$filtro_00;
- //      //     break; 
- //      // }
- //        echo json_encode($this->Comisiones_model->get_condominios_comisiones($filtro_post)->result_array());
- //    }
-
-
-
-
  public function lista_roles()
     {
       echo json_encode($this->Comisiones_model->get_lista_roles()->result_array());
@@ -4355,10 +4315,7 @@ public function lista_sedes()
             //ya no aplica
            $uuid = $this->input->post('uuid2');
            $motivo = $this->input->post('motivo');
-           $datos = $this->Comisiones_model->RegresarFactura($uuid,$motivo);
-         
-         
-         
+           $datos = $this->Comisiones_model->RegresarFactura($uuid,$motivo); 
            //echo $this->input->post('uuid2');
          if($datos == true){
            echo json_encode(1);

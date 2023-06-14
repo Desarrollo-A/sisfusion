@@ -49,9 +49,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <center>
-                            <h3 class="modal-title">Autorizaciones <span class="material-icons">vpn_key</span></h3>
-                        </center>
+                        <h3 class="modal-title text-center">Autorizaciones <span class="material-icons">vpn_key</span></h3>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
