@@ -10,7 +10,7 @@
 	<div class="content">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<div class="card">
 						<div class="card-header card-header-icon" data-background-color="goldMaderas">
 							<i class="material-icons">reorder</i>
@@ -18,7 +18,7 @@
 						<div class="card-content">
 							<h4 class="card-title">Manuales</h4><br><br>
 							<div class="row">
-								<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
 									<div id="msg"></div>
 									<div class="nav-center">
 										<ul class="nav nav-tabs" role="tablist" id="navbartabs"></ul>

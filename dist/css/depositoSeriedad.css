@@ -1076,6 +1076,7 @@
 
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
+
 /* El background del scroll */
 .scroll-styles::-webkit-scrollbar-track {
   border-radius: 10px;
@@ -1684,6 +1685,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   border-radius: 12px;
   border: 1px solid #eee;
   background-color: #eee;
+  height: 200px;
 }
 
 #mainBoxDS #mainContainer #checkDS .boxChecks {
