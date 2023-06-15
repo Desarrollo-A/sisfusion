@@ -4444,7 +4444,7 @@ function getStatusMktdPreventa(){
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
         cl.cancelacion_proceso, cp.nombre AS nombreCancelacion, cp.color
         FROM lotes lo
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '2022-01-01 00:00:00' AND '2022-12-31 23:59:59'
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFin 23:59:59'
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor

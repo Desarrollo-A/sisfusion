@@ -217,7 +217,7 @@ class Login extends CI_Controller
 						$_SESSION['rutaController'] = '';
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
-						$datos = $this->get_menu->get_menu_data($check_user[0]->id_rol,$check_user[0]->id_usuario);
+						$datos = $this->get_menu->get_menu_data($check_user[0]->id_rol,$check_user[0]->id_usuario,$check_user[0]->estatus);
 						$data['datos'] = $datos;
 						$this->session->set_userdata($data);
 						$this->index();
