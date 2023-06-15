@@ -6,11 +6,7 @@
     <?php
 
     if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83'))) {
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+        $this->load->view('template/sidebar');
     } else {
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
     }

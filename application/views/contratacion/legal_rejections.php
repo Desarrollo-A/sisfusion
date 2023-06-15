@@ -2,36 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php
-        if($this->session->userdata('id_rol') == "5" || $this->session->userdata('id_rol') == "6")//ventasAsistentes
-        {
-            $dato= array(
-                'home' => 0,
-                'listaCliente' => 0,
-                'corridaF' => 0,
-                'legalRejections' => 0,
-                'documentacion' => 0,
-                'autorizacion' => 0,
-                'contrato' => 0,
-                'inventario' => 0,
-                'estatus8' => 0,
-                'estatus14' => 0,
-                'estatus7' => 0,
-                'reportes' => 0,
-                'estatus9' => 0,
-                'asignarVentas' => 0,
-                'disponibles' => 1,
-                'asesores' => 0,
-                'nuevasComisiones' => 0,
-                'histComisiones' => 0,
-                'prospectos' => 0,
-                'prospectosAlta' => 0
-            );
-            $this->load->view('template/sidebar', $dato);
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <!--Contenido de la página-->
-
 
         <div class="content boxContent">
             <div class="container-fluid">

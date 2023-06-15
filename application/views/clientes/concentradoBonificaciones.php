@@ -1,21 +1,6 @@
 <body>
 <div class="wrapper">
-	<?php
-	switch ($this->session->userdata('id_rol')) {
-		case "21": // CLIENTE
-			$dato= array(
-				'home' => 0,
-				'usuarios' => 0,
-				'statistics' => 0,
-				'manual' => 0,
-				'aparta' => 0,
-				'prospectos' => 0,
-				'prospectosAlta' => 0,
-			);
-			$this->load->view('template/ventas_pr/sidebar', $dato);
-			break;
-	}
-	?>
+	<?php $this->load->view('template/ventas_pr/sidebar'); ?>
 	<div class="content">
 		<div class="container-fluid">
 

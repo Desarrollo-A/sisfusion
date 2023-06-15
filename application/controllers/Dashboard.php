@@ -16,14 +16,17 @@ class Dashboard extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
         $this->googleCode = isset($_GET["code"]) ? $_GET["code"] : '';
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13')
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13') {
             redirect(base_url() . 'login');
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
         $this->load->view('template/header');
-        $this->load->view('template/home', $datos);
+        $this->load->view('template/home');
         $this->load->view('template/footer');
     }
 
@@ -38,8 +41,6 @@ class Dashboard extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $datos['googleCode'] = $this->googleCode;
         $this->load->view('template/header');

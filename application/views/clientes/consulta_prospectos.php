@@ -2,13 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php 
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -52,7 +46,7 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>LUGAR PROSPECCIÓN</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
                                                 <th>CREACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
@@ -69,7 +63,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');
-       
         ?>
     </div>
     </div><!-- main-panel close -->

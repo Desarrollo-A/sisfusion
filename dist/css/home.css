@@ -899,13 +899,13 @@
 }
 
 .btn-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .btn-sky:hover {
-  background-color: #00bcd4;
+  background-color: #0067d4;
   color: #ffffff !important;
 }
 
@@ -973,6 +973,12 @@
   background-color: #A0400018;
 }
 
+.lbl-cerulean {
+  color: #00A0FF;
+  border: none;
+  background-color: #00A0FF18;
+}
+
 .lbl-deepGray {
   color: #929292;
   border: none;
@@ -985,12 +991,13 @@
 }
 
 .lbl-gray {
-  background-color: #4e4e4e;
-  color: #ffffff;
+  color: #4e4e4e;
+  border: none;
+  background-color: #4e4e4e18;
 }
 
 .lbl-grayDark {
-  color: #283747;
+  color: #191B1C;
   border: none;
   background-color: #28374718;
 }
@@ -1001,16 +1008,34 @@
   background-color: #1E844918;
 }
 
+.lbl-melon {
+  color: #CD6155;
+  border: none;
+  background-color: #CD615518;
+}
+
+.lbl-oceanGreen {
+  color: #4BBC8E;
+  border: none;
+  background-color: #4BBC8E18;
+}
+
 .lbl-orangeYellow {
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
 }
 
-.lbl-sky {
-  color: #00bcd4;
+.lbl-pink {
+  color: #cd5587;
   border: none;
-  background-color: #00bcd418;
+  background-color: #cd558718;
+}
+
+.lbl-sky {
+  color: #0067d4;
+  border: none;
+  background-color: #0067d418;
 }
 
 .lbl-violetBoots {
@@ -1348,6 +1373,74 @@
 .isRequired {
   color: #EA4335;
   margin: 0 3px;
+}
+
+/*Etiqueta para DataTable (vista Inventario Disponible)*/
+.lbl-sale-type {
+  color: #0E6251;
+  border: none;
+  background-color: #0E625118;
+}
+
+/************************************************************/
+/*Boton para video de youtube (vista Solicitud de Comisiones)*/
+.btn-dt-youtube {
+  box-shadow: none;
+  padding: 7px 25px;
+  color: #B03A2E;
+  background-color: transparent;
+  border: 1px solid #B03A2E;
+  border-radius: 27px;
+  margin: 0;
+}
+
+.btn-dt-youtube {
+  color: #B03A2E;
+  border: none;
+  background-color: #c0131318;
+}
+
+.btn-dt-youtube:hover {
+  background-color: #B03A2E;
+  color: #ffffff !important;
+}
+
+/*-----------------------------------------------------------
+Etiqueta para etiquetas dentro de la DataTable en vistas:
+1.- comisiones_colaboradores
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+2.- comisionesSuma:
+  * Columnas: Estatus (campo condicionado tomando en cuenta forma de pago)
+*/
+.lbl-dark-blue {
+  color: #1B4F72;
+  border: none;
+  background-color: #1B4F7250;
+}
+
+.lbl-dark-cyan {
+  color: #008c76;
+  border: none;
+  background-color: #008c7650;
+}
+
+/************************************************************/
+/*************************************************************
+Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
+1.- Columna: "Detalle" (distintos casos, distintos colores).
+2.- Columna: "Estatus" (queda poendiente ya que extrae colores de BD)
+****************************************************************/
+/*--------------Calumna "Detalle/*--------------*/
+.lbl-vividOrange {
+  color: #F57F17;
+  border: none;
+  background-color: #F57F1718;
+}
+
+.lbl-darkPink {
+  color: #880E4F;
+  border: none;
+  background-color: #880E4F18;
 }
 
 .navbar .navbar-nav > li > a {

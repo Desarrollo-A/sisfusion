@@ -1,42 +1,29 @@
 
 <body class="">
 <div class="wrapper ">
-    <?php
-/*-------------------------------------------------------*/
-$datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-
-}
-
-
+            color: white;
+            opacity: 0.4;
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+        }
     </style>
 
-<div class="modal fade modal-alertas" id="modal_ingresar_2_0" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade modal-alertas" id="modal_ingresar_2_0" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,16 +32,15 @@ $datos = array();
                 <form method="post" id="form_interes">
 					<input type="hidden" name="idLote" id="idLote">
 					<input type="hidden" name="nombreLote" id="nombreLote">
-                    <div class="modal-body">
-
-                    </div>
+                    <div class="modal-body"></div>
 					<div class="row">
 						<div class="col-lg-2">&nbsp;</div>
 						<div class="col-lg-8">
 							<center>
 								<button class="btn btn-social btn-fill btn-info boton_aceptar" id="boton_aceptar" style="background:green;
 								margin-right: 10px;" value="'+IDLote+'">ACEPTAR</button>
-								<button class="btn btn-social btn-fill btn-danger" data-dismiss="modal" >CANCELAR</button></center>
+								<button class="btn btn-social btn-fill btn-danger" data-dismiss="modal" >CANCELAR</button>
+                            </center>
 						</div>
 					</div>
                 </form>
@@ -62,11 +48,8 @@ $datos = array();
         </div>
     </div>
 
-
-
     <div class="content">
         <div class="container-fluid">
-<!-- 			<h4 style="text-align: center">REGISTRO ESTATUS <b>2.0</b> (Recepción de expediente)</h4>-->
             <div class="row">
                 <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">

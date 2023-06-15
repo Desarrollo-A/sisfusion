@@ -10,11 +10,7 @@
         <?php
             if($this->session->userdata('id_rol')=="19" || $this->session->userdata('id_rol')=="28" )//sistemas
             {
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;  
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             }
             else
             {

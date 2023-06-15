@@ -1,56 +1,7 @@
 <body class="">
 <div class="wrapper ">
-	<?php
-	//se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-	if($this->session->userdata('id_rol')=="16")//contratacion
-	{
-		$dato = array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'contrato' => 0,
-			'documentacion' => 0,
-			'corrida' => 0,
-			'inventario' => 0,
-			'inventarioDisponible' => 0,
-			'status8' => 0,
-			'status14' => 0,
-			'lotesContratados' => 0,
-			'ultimoStatus' => 0,
-			'lotes45dias' => 0,
-			'consulta9Status' => 0,
-			'consulta12Status' => 0,
-			'gerentesAsistentes' => 0,
-			'expedientesIngresados'	=>	1,
-			'asignarVentas' => 0,
-			'corridasElaboradas'	=>	0
-		);
-		//$this->load->view('template/contratacion/sidebar', $dato);
-		$this->load->view('template/sidebar', $dato);
-	}
-	else if($this->session->userdata('id_rol')=="6")//ventasAsistentes
-	{
-		$dato= array(
-			'home' => 0,
-			'listaCliente' => 0,
-			'corridaF' => 0,
-			'documentacion' => 0,
-			'autorizacion' => 0,
-			'contrato' => 0,
-			'inventario' => 0,
-			'estatus8' => 0,
-			'estatus14' => 0,
-			'estatus7' => 0,
-			'reportes' => 0,
-			'estatus9' => 1,
-			'disponibles' => 0,
-			'asesores' => 0,
-			'nuevasComisiones' => 0,
-			'histComisiones' => 0
-
-		);
-		$this->load->view('template/ventas/sidebar', $dato);
-	}
-	?>
+	<?php $this->load->view('template/ventas/sidebar'); ?>
+	
 	<!--Contenido de la página-->
 	<div class="content">
 		<div class="container-fluid">

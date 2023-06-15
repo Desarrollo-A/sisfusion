@@ -3,17 +3,7 @@
 <?php
 switch ($this->session->userdata('id_rol')) {
     case "21": // CLIENTE
-        $dato= array(
-            'home' => 0,
-            'usuarios' => 0,
-            'statistics' => 0,
-            'manual' => 0,
-            'aparta' => 0,
-            'prospectos' => 0,
-            'prospectosAlta' => 0,
-            'listaAsesores' => 0
-        );
-        $this->load->view('template/sidebar', $dato);
+        $this->load->view('template/sidebar');
         break;
 }
 ?>

@@ -4,12 +4,8 @@
 
 <body>
     <div class="wrapper">
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+        <?php 
+        $this->load->view('template/sidebar');
 
         $usuarioid =  $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=" . $usuarioid . "");
@@ -56,7 +52,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
+                        <h4 class="card-title"><b>Cargar de documento fiscal</b></h4>
                     </div>
                     <form id="EditarPerfilExtranjeroForm" name="EditarPerfilExtranjeroForm" method="post">
                         <div class="modal-body">
@@ -120,15 +116,13 @@
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div><br>
-                                                        <span class="fileinput-new">Selecciona archivo</span>
+                                                        <span class="fileinput-new">Selecciona un archivo</span>
                                                         <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
+                                                <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
                                         <form id="frmnewsol" method="post" action="#">
@@ -158,8 +152,8 @@
                                                     <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
                                                 </div>
                                                 <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma Pago:</label>
-                                                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
+                                                    <label for="formaPago">Forma de Pago:</label>
+                                                    <input type="text" class="form-control" placeholder="Forma de Pago" id="formaPago" name="formaPago" value="">
                                                 </div>
                                                 <div class="col-lg-3 form-group">
                                                     <label for="cfdi">Uso del CFDI:</label>
@@ -180,7 +174,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12 form-group">
-                                                    <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
+                                                    <label for="obse">OBSERVACIONES DE LA FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
                                                     <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
                                                 </div>
                                             </div>
@@ -263,7 +257,7 @@
                 </div>
             </div>
         </div>
-
+        <!--END MODALS-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -388,12 +382,12 @@
                                                         <thead>
                                                             <tr>
                                                                 <th></th>
-                                                                <th>ID PAGO</th>
+                                                                <th>ID DE PAGO</th>
                                                                 <th>REFERENCIA</th>
                                                                 <th>NOMBRE</th>
                                                                 <th>SEDE</th>
-                                                                <th>FORMA PAGO</th>
-                                                                <th>TOTAL COMISIÓN</th>
+                                                                <th>FORMA DE PAGO</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>IMPUESTO</th>
                                                                 <th>% COMISIÓN</th>
                                                                 <th>ESTATUS</th>
@@ -429,12 +423,12 @@
                                             <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -465,12 +459,12 @@
                                             <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -504,12 +498,12 @@
                                             <table class="table-striped table-hover" id="tabla_pausadas_comisiones" name="tabla_pausadas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -527,7 +521,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
     </div><!-- main-panel close -->
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -540,8 +533,6 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
     <script>
-        userType = <?= $this->session->userdata('id_rol') ?>;
-        userSede = <?= $this->session->userdata('id_sede') ?>;
         forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         Shadowbox.init();
     </script>

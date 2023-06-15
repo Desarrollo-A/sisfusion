@@ -26,7 +26,7 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 $(document).on('change', "#sedes", function () {
-     if($(this).val() != "2") {
+    if($(this).val() != "2") {
         fillTable($(this).val(), 0);
         $('#JTH').removeClass('hide');
         $('#div_proyectos').addClass('hide');

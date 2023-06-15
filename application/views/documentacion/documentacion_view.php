@@ -6,7 +6,7 @@
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
 		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73)))
-                $this->load->view('template/sidebar', '');
+             $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
@@ -49,9 +49,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <center>
-                            <h3 class="modal-title">Autorizaciones <span class="material-icons">vpn_key</span></h3>
-                        </center>
+                        <h3 class="modal-title text-center">Autorizaciones <span class="material-icons">vpn_key</span></h3>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">

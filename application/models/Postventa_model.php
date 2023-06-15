@@ -24,7 +24,7 @@ class Postventa_model extends CI_Model
     function getLotes($idCondominio)
     {
         return $this->db->query("SELECT * FROM lotes l
-        WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
+        WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote in (2,9) 
         AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 

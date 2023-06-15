@@ -2,16 +2,9 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper ">
-     
-    <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;  
-        $this->load->view('template/sidebar', $datos);
-        ?>
-  
-          <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
+        <?php $this->load->view('template/sidebar'); ?>
+        <!--MODALS-->
+        <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -26,7 +19,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content"> 
@@ -44,12 +36,10 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                   
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
@@ -77,6 +67,7 @@
                 </div>
             </div>
         </div>
+<!--END MODALS-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -91,10 +82,8 @@
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="form-group d-flex">
-                                                <input type="number" class="form-control idLote" id="idLote"
-                                                    placeholder="ID lote"/>
-                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                        id="searchByLote">
+                                                <input type="number" class="form-control idLote" id="idLote" placeholder="ID lote"/>
+                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByLote">
                                                     <span class="material-icons">search</span>
                                                 </button>
                                             </div>
@@ -104,10 +93,8 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/10/2022"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="31/10/2022"/>
+                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
@@ -122,44 +109,33 @@
                                 <br>
                                 <div class="material-datatables" id="box-cobranzaHistorial">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover"
-                                                id="cobranzaHistorial" name="cobranzaHistorial">
-                                                <thead>
+                                        <table  class="table-striped table-hover hide" id="cobranzaHistorial" name="cobranzaHistorial">
+                                            <thead>
                                                 <tr>
-                                                    <th title="ID PAGO" class="encabezado">ID PAGO</th>
-                                                    <th title="ID LOTE">ID LOTE</th>
-                                                    <th title="LOTE">LOTE</th>
-                                                    <th title="REFERENCIA LOTE">REFERENCIA LOTE</th>
-                                                    <th title="PRECIO LOTE">PRECIO LOTE</th>
-
-                                                    <th title="TOTAL COMISIÓN">TOTAL COMISIÓN</th>
-                                                    <th title="PAGO CLIENTE">PAGO CLIENTE </th>
-                                                    <th title="FECHA DE APARTADO">FECHA DE APARTADO</th>
-                                                    <!-- <th title="FECHA DE ABONO">FECHA DE ABONO</th> -->
-                                                 
-                                                    <th title="ESTATUS CONTRATACIÓN">ESTATUS CONTRATACIÓN</th>
-                                                    <th title="ESTATUS PAGO COMISIÓN">ESTATUS PAGO COMISIÓN</th>
-                                                    <th title="ESTATUS COMISIÓN">ESTATUS COMISIÓN</th>
-                                              
-
-                                                    <th title="ESTATUS VENTA/LOTE">ESTATUS LOTE/VENTA</th>
-                                                    <th title="DISPERSADO POR MES">DISPERSADO</th>
-                                                   
-                                                    <th title="PAGO HISTÓRICO">PAGO HISTÓRICO </th>
-                                                    <th title="PENDIENTE">PENDIENTE</th>
-
-                                                    <th title="USUARIO">USUARIO</th>
-                                                    <th title="PUESTO">PUESTO</th>
-                                                    <th title="PLAZA">PLAZA</th>
-                                                    <th title="LUGAR DE PROSPECCION">LUGAR DE PROSPECCION</th>
-                                                    
-                                                    <th title="DETALLE">DETALLE</th>
-                                                    <th title="MAS">MÁS</th>
+                                                    <th>ID PAGO</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>LOTE</th>
+                                                    <th>REFERENCIA DEL LOTE</th>
+                                                    <th>PRECIO DEL LOTE</th>
+                                                    <th>TOTAL DE LA COMISIÓN</th>
+                                                    <th>PAGO DEL CLIENTE </th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>ESTATUS DE CONTRATACIÓN</th>
+                                                    <th>ESTATUS DE PAGO COMISIÓN</th>
+                                                    <th>ESTATUS DE COMISIÓN</th>
+                                                    <th>ESTATUS LOTE/VENTA</th>
+                                                    <th>DISPERSADO</th>
+                                                    <th>PAGO HISTÓRICO </th>
+                                                    <th>PENDIENTE</th>
+                                                    <th>USUARIO</th>
+                                                    <th>PUESTO</th>
+                                                    <th>PLAZA</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                    <th>DETALLE</th>
+                                                    <th>MÁS</th>
                                                 </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -169,9 +145,7 @@
             </div>
         </div> 
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
     </div><!--main-panel close-->
-
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -191,5 +165,4 @@
     <!--  Full Calendar Plugin    -->
     <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/cobranza/cobranza.js"></script> 
-
 </body>

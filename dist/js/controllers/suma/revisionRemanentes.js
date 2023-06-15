@@ -1,33 +1,31 @@
-var totaPen = 0;
-
 $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function() {
             if (tabla_remanente.column(i).search() !== this.value) {
                 tabla_remanente.column(i).search(this.value).draw();
-
                 var total = 0;
                 var index = tabla_remanente.rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-
                 var data = tabla_remanente.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-
-                document.getElementById("totpagarremanente").textContent = '$' + formatMoney(total);
+                
+                document.getElementById("totpagarAsimilados").textContent = '$' + formatMoney(total);
             }
         });
     } 
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
 });
-
 $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
     var total = 0;
     $.each(json, function(i, v) {
@@ -37,32 +35,57 @@ $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
     document.getElementById("totpagarremanente").textContent = '$' + to;
 });
 
-function selectAll(e) {
-    tota2 = 0;
-    $(tabla_remanente.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_remanente.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html('$' + formatMoney(tota2));
-    });
-}
-
+// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
-    tr = $(this).closest('tr');
-    var row = tabla_remanente.row(tr).data();
+    var totaPen = 0;
+    tabla_remanente.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_remanente.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_remanente.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_remanente.row(tr).data();
+            totaPen += parseFloat(row.impuesto); 
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
 
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
+    });
     $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
 
+// Función de selección total
+function selectAll(e) {
+    tota2 = 0;
+    if(e.checked == true){
+        $(tabla_remanente.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_remanente.row(tr).data();
+            tota2 += parseFloat(row.impuesto);
+
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+    }
+
+    if(e.checked == false){
+        $(tabla_remanente.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(0));
+    }
+}
+
 tabla_remanente = $("#tabla_remanente").DataTable({
-    dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-    width: 'auto',
+    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: '100%',
+    scrollX:true,
     buttons: [{
         text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
         action: function() {
@@ -164,66 +187,54 @@ tabla_remanente = $("#tabla_remanente").DataTable({
     destroy: true,
     ordering: false,
     columns: [{
-        "width": "3%" 
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0">' + d.id_pago_suma + '</p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0">' + d.referencia + '</p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.nombreComisionista + '</b></p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.sede + '</b></p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
         }
     },
     {
-        "width": "5%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
         }
     },
     {
-        "width": "9%",
         "data": function(d) {
             return '<p class="m-0"><b>' + d.estatusString + '</b></p>';
         }
     },
     {
-        "width": "5%",
         "orderable": false,
         "data": function( data ){
             var BtnStats;
-            
-            BtnStats = `<button href="#" value="${data.id_pago_suma}"  data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_logs" title="Historial"><i class="fas fa-info"></i></button>
-            <button href="#" value="${data.id_pago_suma}" data-value="${data.id_pago_suma}" class="btn-data btn-warning cambiar_estatus" title="${(data.estatus == 2) ? 'Pausar solicitud': 'Activar solicitud' }">${(data.estatus == 2) ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>`;
+            BtnStats = `<button href="#" value="${data.id_pago_suma}"  data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_logs" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>
+            <button href="#" value="${data.id_pago_suma}" data-value="${data.id_pago_suma}" class="btn-data ${(data.estatus == 2)? 'btn-warning cambiar_estatus': 'btn-green cambiar_estatus'}" data-toggle="tooltip" data-placement="top"  title="${(data.estatus == 2) ? 'PAUSAR LA SOLICITUD': 'ACTIVAR LA SOLICITUD' }">${(data.estatus == 2) ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>`;
             return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-
         }
     }],
     columnDefs: [{
@@ -257,6 +268,11 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         dataType: 'json',
         dataSrc: ""
     },
+    initComplete: function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    },
 });
 
 $("#tabla_remanente tbody").on("click", ".consultar_logs", function(e){
@@ -285,7 +301,7 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas .modal-body").append(`<div class="row"><div class="col-lg-12"><p class="text-center">¿Estás seguro de ${(row.data().estatus == 4 || row.data().estatus == 5) ? 'activar' : 'pausar'} la comisión con referencia <b>${row.data().referencia}</b> para <b>${(row.data().nombreComisionista).toUpperCase()}</b>?</p></div></div>`);
     $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="estatus" value="'+row.data().estatus+'"><input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe motivo para el cambio de estatus de esta solicitud"></input></div></div>');
     $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+id_pago_i+'">');
-    $("#modal_nuevas .modal-body").append('<div class="row mt-3"><div class="col-md-6"></div><div class="col-md-3"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button></div><div class="col-md-3"><input type="submit" class="btn btn-primary"></div></div>');
+    $("#modal_nuevas .modal-body").append('<div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><input type="submit" class="btn btn-primary"></div>');
     $("#modal_nuevas").modal();
 });
 
@@ -321,4 +337,7 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
             }
         });
     }
+});
+$(window).resize(function(){
+    tabla_remanente.columns.adjust();
 });

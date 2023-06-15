@@ -4,7 +4,7 @@
             <!-- <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;"> -->
             <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
-	</div>
+	</div> 
 	<div class="logo logo-mini">
 		<a href="<?=base_url()?>#" class="simple-text" style="color: #0e4377;font-weight: 800;font-family: 'Times New Roman', Times, serif;">CM</a>
 	</div>
@@ -12,40 +12,26 @@
 		<br>
 		<ul class="nav">
             <?php
-                $url = "https://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
-                $url2 = "";
+                $menu = $this->session->userdata('datos');
+                $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+                $menu2 = $this->session->userdata('datos');
+                     $menu2 = $menu2['datos3'];
+                     $existe = -1;
+                     foreach ($menu2 as $key => $objeto) {
+                         if ($objeto->pagina == str_replace('' . base_url() . '', '', $val)) {
+                             $_SESSION['datos4'] = (object)array($objeto);
+                             $existe = $key;
+                         }
+                     }  
+                $_SESSION['datos4'] = $existe == -1 ? [] :  $_SESSION['datos4'];
+                $certificado = $this->session->userdata('certificado');
+                $url = $certificado.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];		
+                $url2  = base_url().$this->session->userdata('controlador');
                 $padreVal = 0;
                 $rol = $this->session->userdata('id_rol');
-                if($rol == 1 || $rol == 2 || $rol == 3 || $rol == 4 || $rol == 5 || $rol == 6 || $rol == 7 || $rol == 9 || $rol == 18 || $rol == 63)
-                {
-                    $url2 = base_url()."Ventas";
-                }
-                elseif ($rol == 55 || $rol == 56 || $rol == 57) {
-                    $url2 = base_url()."Postventa";
-                }
-                elseif ($rol == 11 || $rol == 23 || $rol == 26 || $rol == 34 || $rol == 35 || $rol == 38 || $rol == 41 || $rol == 49 || $rol == 50 || $rol == 40 || $rol == 54 || $rol == 58
-                || $rol == 8 || $rol == 10 || $rol == 19 || $rol == 20 || $rol == 21 || $rol == 23 || $rol == 28 || $rol == 33 || $rol == 25 || $rol == 27 || $rol == 30
-                || $rol == 36 || $rol == 22 || $rol == 53 || $rol == 8 || $rol == 12 || $rol == 61 || $rol == 31 || $rol == 63 || $rol == 64 || $rol == 65 || $rol == 39 || $rol == 66 || $rol == 67 || $rol == 68 || $rol == 69 || $rol == 70 || $rol == 71 || $rol == 72 || $rol == 73 || $rol == 74 || $rol == 75 || $rol == 76 || $rol == 77 || $rol == 78 || $rol == 79 || $rol == 80 || $rol == 81 || $rol == 82 || $rol == 83 || $rol == 84) {
-                    $url2 = base_url()."Administracion";
-                }
-                elseif ($rol == 12) {
-                    $url2 = base_url()."Caja";
-                }
-                elseif ($rol == 13 || $rol == 17 || $rol == 32 || $rol == 47) {
-                    $url2 = base_url()."Contraloria";
-                }
-                elseif ($rol == 14) {
-                    $url2 = base_url()."Direccion_administracion";
-                }
-                elseif ($rol == 15) {
-                    $url2 = base_url()."Juridico";
-                }
-                elseif ($rol == 16) {
-                    $url2 = base_url()."Contratacion";
-                }
-                elseif ($rol == 31) {
-                    $url2 = base_url()."Internomex";
-                }
+                $datos2 = $menu['datos2'];
+                $datos3 = $menu['datos3'];
+                $datos4 = $_SESSION['datos4'];
                 if(isset($datos4))
                 {
                     foreach($datos4 as $valor)
@@ -54,12 +40,12 @@
                     }
                 }
                 $c=0;
-                foreach($datos2 as $datos){ 			
+                foreach($datos2 as $datos){
                     if($datos->padre == 0){	
                         if($datos->hijos == 0)
-                        { 
+                        {                    
             ?>
-                            <li class="nav-item hidden-xs  <?php if ($url == $url2 && $datos->nombre == "Inicio") { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}?>">
+                            <li class="nav-item hidden-xs  <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
                                 <a class="nav-link" href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>

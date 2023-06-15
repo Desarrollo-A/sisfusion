@@ -10,7 +10,10 @@ class Ventas extends CI_Controller {
         $this->jwt_actions->authorize('3515', $_SERVER['HTTP_HOST']);
 		$this->load->database('default');
         $this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
     public function validateSession() {
         if($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
@@ -23,8 +26,6 @@ class Ventas extends CI_Controller {
                 && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
 			redirect(base_url().'login');
 		}
-        $datos = $this->get_menu->get_menu_data($id_rol);
-        $datos['sub_menu'] = $this->get_menu->get_submenu_data($id_rol, $this->session->userdata('id_usuario'));
         switch ($id_rol) {
             case '1': // DIRECTOR
             case '2': // SUBDIRECTOR
@@ -38,7 +39,7 @@ class Ventas extends CI_Controller {
             case '63': // CONTROL INTERNO
             default: // POR DEFECTO
                 $this->load->view('template/header');
-                $this->load->view("template/home", $datos);
+                $this->load->view("template/home");
                 $this->load->view('template/footer');
             break;
         }
@@ -46,9 +47,8 @@ class Ventas extends CI_Controller {
 
     public function repoVtasAsesor(){
         $this->validateSession();
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("ventas/vtas_periodo_asesor",$datos);
+        $this->load->view("ventas/vtas_periodo_asesor");
     }
 
     public function getInfRepoVta(){

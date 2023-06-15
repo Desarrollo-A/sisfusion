@@ -4,10 +4,11 @@
     <div class="wrapper ">
         <?php
             if (in_array($this->session->userdata('id_rol'), array(17,5)))
-                $this->load->view('template/sidebar', '');
+                $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         ?>
+        
         <div class="modal fade" id="detailComisionistaModal" tabindex="-1" role="dialog" aria-labelledby="detailComisionistaLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">

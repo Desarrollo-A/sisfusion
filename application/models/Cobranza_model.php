@@ -28,11 +28,11 @@ class Cobranza_model extends CI_Model {
                 $result = "'1', '5', '8', '9'";
         }
         $query="SELECT r.nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(l.nombreLote) nombreLote, l.idLote,
-        FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, cl.fechaApartado, UPPER(s.nombre) plaza,
+        FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, CONVERT( VARCHAR,cl.fechaApartado ,20) AS fechaApartado, UPPER(s.nombre) plaza,
         ISNULL(ec.estatus, 0) estatusEvidencia, 
         (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
+		WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+		WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
         idStatusContratacion, idStatusLote, pc.bandera estatusComision,
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
@@ -45,7 +45,6 @@ class Cobranza_model extends CI_Model {
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6,29) OR cl.descuento_mdb = 1 OR (ec.estatus = 3 and cl.lugar_prospeccion not IN(6,29)) ) $filter
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
-        --INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(15)) = CAST(u.id_sede AS VARCHAR(15))
         INNER JOIN sedes s ON s.id_sede = (CASE WHEN l.ubicacion_dos != 0 THEN l.ubicacion_dos WHEN l.ubicacion != 0 and l.ubicacion_dos = 0 THEN l.ubicacion WHEN u.id_sede != 0 and l.ubicacion_dos = 0 and l.ubicacion  = 0 THEN u.id_sede END)
         LEFT JOIN comisiones cm ON cm.id_lote = l.idLote AND cm.rol_generado = 38
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote    
@@ -55,16 +54,15 @@ class Cobranza_model extends CI_Model {
         WHERE l.status = 1 $filterTwo
         UNION ALL
         SELECT r.nombreResidencial, UPPER(cn.nombre) nombreCondominio, UPPER(l.nombreLote) nombreLote, l.idLote,
-        FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, cl.fechaApartado, UPPER(s.nombre) plaza,
+        FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, CONVERT( VARCHAR,cl.fechaApartado ,20) AS fechaApartado, UPPER(s.nombre) plaza,
         ISNULL(ec.estatus, 0) estatusEvidencia, 
         (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
+        WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+        WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
         idStatusContratacion, idStatusLote, pc.bandera estatusComision,
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
-        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado,
-         l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
+        FORMAT(ISNULL(pci2.abonoPagado, '0.00'), 'C') abonoPagado, l.registro_comision registroComision, cm.estatus as rec, cl.descuento_mdb,
         REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion
         FROM lotes l
         INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
@@ -209,13 +207,15 @@ class Cobranza_model extends CI_Model {
     }
 
     public function informationMasterCobranzaHistorial($idLote , $beginDate, $endDate) {
+        ini_set('max_execution_time', 9000);
+        set_time_limit(9000);
+        ini_set('memory_limit','12288M');
         if ($idLote == '' || $idLote ==  0)
             $query = '';
         else
             $query = "AND lo.idLote = $idLote";
-      
         if( $beginDate != '') {
-            $query2  = " WHERE  pci1.fecha_abono > '$beginDate'   AND pci1.fecha_abono < '$endDate'" ;
+            $query2  = " WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             $query3  =  " ";
         } else {
             $query2 = '';
@@ -230,20 +230,19 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL( pci2.abono_pagado , '0.00'), 'C') pagado ,
         FORMAT(ISNULL( pci3.abono_neodata , '0.00'), 'C') pagado3 ,
         FORMAT(ISNULL( pc14.abono_pagado2  , '0.00'), 'C') pago_neodata4,
-			FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
-			FORMAT(ISNULL(com.comision_total-pc14.abono_pagado2, '0.00'),'C') restantes3, 
-         FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes,
-		 ISNULL(ec.estatus, 0) estatusEvidencia, 
+        FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
+        FORMAT(ISNULL(com.comision_total-pc14.abono_pagado2, '0.00'),'C') restantes3, 
+        FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes,
+        ISNULL(ec.estatus, 0) estatusEvidencia, 
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
-        pci1.estatus,  cl.fechaApartado fecha_apartado  , pci1.fecha_abono fecha_abono,
+        pci1.estatus, CONVERT(VARCHAR, cl.fechaApartado,20) AS fecha_apartado, pci1.fecha_abono fecha_abono,
         (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion,
-        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, oprol.nombre as puesto, u.estatus as estatus_usuario, 
+        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, UPPER(oprol.nombre) as puesto, u.estatus as estatus_usuario, 
         oxcest.nombre as estatus_actual_comision,slo.nombre as estatus_lote,slo.color as color_lote , oxcest.id_opcion id_estatus_actual,  pr.source as source,
         pci1.descuento_aplicado,lo.registro_comision registroComision,
         lo.idStatusContratacion , pac.total_comision as totalComision,
-        
         FORMAT(ISNULL( pac.total_comision , '0.00'),'C') allComision,
-        REPLACE(oxc.nombre, ' (especificar)', '') lugar_prospeccion, oxcest.color   ,
+        UPPER(REPLACE(oxc.nombre, ' (especificar)', '')) AS lugar_prospeccion, oxcest.color   ,
         (CASE lo.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
         WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
         WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END)  contratacion , pac.bandera estatusComision   ,
@@ -253,15 +252,14 @@ class Cobranza_model extends CI_Model {
         FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado2, id_usuario ,id_comision
-			FROM pago_comision_ind   WHERE estatus = (11)
-			GROUP BY id_usuario,id_comision) pc14 ON pci1.id_usuario = pc14.id_usuario AND pc14.id_comision =  pci1.id_comision  and estatus = (11)
+        FROM pago_comision_ind   WHERE estatus = (11)
+        GROUP BY id_usuario,id_comision) pc14 ON pci1.id_usuario = pc14.id_usuario AND pc14.id_comision =  pci1.id_comision  and estatus = (11)
 		INNER JOIN pago_comision_ind pci3 on pci1.id_pago_i = pci3.id_pago_i
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 $query
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-		
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
         LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
@@ -273,9 +271,9 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN sedes s3 ON lo.ubicacion = s3.id_sede 
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
-      $query2 
+        $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera , pac.bonificacion ,
-        com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado,pc14.abono_pagado2,pci3.abono_neodata,pci3.pago_neodata,  pci1.estatus, cl.fechaApartado ,  pci1.fecha_abono,  pci1.fecha_abono,
+        com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado,pc14.abono_pagado2,pci3.abono_neodata,pci3.pago_neodata,  pci1.estatus,cl.fechaApartado, pci1.fecha_abono,  pci1.fecha_abono,
         pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
         pci1.descuento_aplicado, lo.idStatusContratacion,oxc.nombre , com.estatus, lo.referencia, com.estatus, u.estatus,pac.total_comision, oxcest.color
 		,slo.nombre ,slo.color,s.nombre, s3.nombre ,registro_comision ,ec.estatus,   pr.source ,pe.id_penalizacion ORDER BY lo.nombreLote";
@@ -556,14 +554,14 @@ class Cobranza_model extends CI_Model {
         SELECT YEAR(cl.fechaApartado) anio, COUNT(*) total
         FROM clientes cl 
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.status = 1
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         WHERE cl.$columna = $comisionista AND cl.status = 1 GROUP BY YEAR(cl.fechaApartado)) tbl1
         LEFT JOIN (
         SELECT YEAR(cl.fechaApartado) anio, COUNT(*) total
         FROM clientes cl 
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.status = 1
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         WHERE cl.$columna = $comisionista AND cl.status = 0 AND isNULL(noRecibo, '') != 'CANCELADO' GROUP BY YEAR(cl.fechaApartado)) tbl2 ON tbl2.anio = tbl1.anio
         ORDER BY tbl1.anio");
     }
-
-
 }

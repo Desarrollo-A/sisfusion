@@ -11,7 +11,9 @@ class Evidencias extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu', 'jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -21,9 +23,8 @@ class Evidencias extends CI_Controller
 
     public function evidenciaPorLote()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("evidencias/evidenciaPorLote", $datos);
+        $this->load->view("evidencias/evidenciaPorLote");
     }
 
     public function evidenciaUser()
@@ -151,9 +152,8 @@ class Evidencias extends CI_Controller
 
     public function generateToken()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("token/generateToken", $datos);
+        $this->load->view("token/generateToken");
     }
 
     public function getEvidencesInformation()
@@ -164,9 +164,8 @@ class Evidencias extends CI_Controller
 
     public function reviewEvidences()
     {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("token/reviewTokenEvidence", $datos);
+        $this->load->view("token/reviewTokenEvidence");
     }
 
     public function validateEvidence()

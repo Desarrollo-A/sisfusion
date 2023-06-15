@@ -1,41 +1,26 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php
-		/*-------------------------------------------------------*/
-		$datos = array();
-		$datos = $datos4;
-		$datos = $datos2;
-		$datos = $datos3;  
-		$this->load->view('template/sidebar', $datos);
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
 	<!--Contenido de la página-->
 
 	<style type="text/css">
 		::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-
-}
-
-
-
-
-
+			color: white;
+			opacity: 0.4;
+			::-moz-placeholder { /* Firefox 19+ */
+				color: white;
+				opacity: 0.4;
+			}
+			:-ms-input-placeholder { /* IE 10+ */
+				color: white;
+				opacity: 0.4;
+			}
+			:-moz-placeholder { /* Firefox 18- */
+				color: white;
+				opacity: 0.4;
+			}
+		}
 	</style>
 
 	<!-- modal para registrar corrida elaborada-->

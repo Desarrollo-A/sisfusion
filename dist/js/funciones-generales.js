@@ -200,6 +200,32 @@ function setIniDatesXMonth(inicioFecha, finFecha) {
     endDate.getFullYear(),
   ].join("/");
 
+  $("" + inicioFecha + "").val(finalBeginDate2);
+  $("" + finFecha + "").val(finalEndDate2);
+}
+
+/**
+ * Settear los valores del 1/Enero y el 31/Dic del año en curso
+ *
+ * @param {string} inicioFecha
+ * @param {string} finFecha
+ */
+function setIniDatesXYear(inicioFecha, finFecha) {
+  const year = new Date().getFullYear();
+  const fechaInicio = new Date(year, 0,1);
+  const fechaFin = new Date(year, 11, 31);
+
+  finalBeginDate = [
+    ("0" + fechaInicio.getDate()).slice(-2),
+    ("0" + (fechaInicio.getMonth() + 1)).slice(-2),
+    fechaInicio.getFullYear(),
+  ].join("/");
+  finalEndDate = [
+    ("0" + fechaFin.getDate()).slice(-2),
+    ("0" + (fechaFin.getMonth() + 1)).slice(-2),
+    fechaFin.getFullYear(),
+  ].join("/");
+
   $("" + inicioFecha + "").val(finalBeginDate);
   $("" + finFecha + "").val(finalEndDate);
 }
@@ -214,9 +240,9 @@ $("input[data-type='currency']").on({
   keyup: function() {
     formatCurrencyG($(this));
   },
-  blur: function() { 
-    formatCurrencyG($(this), "blur");
-  }
+  // blur: function() { 
+  //   formatCurrencyG($(this), "blur");
+  // }
 });
 
 function formatCurrencyG(input, blur) {
@@ -256,4 +282,16 @@ function formatCurrencyG(input, blur) {
 
 function formatNumberG(n) {
   return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+/**
+ * Convertir fecha con formato día/mes/año a formato año-mes-día
+ *
+ * @param {string} date
+ * @return {string} formatDate
+ */
+function convertDateDDMMYYYYToYYYYMMDD(date)
+{
+  const parts = date.split('/');
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }

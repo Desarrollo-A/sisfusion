@@ -8,6 +8,9 @@ class Caja_outside extends CI_Controller {
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->jwt_actions->authorize_externals('6489', apache_request_headers()["Authorization"]);
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -214,6 +217,8 @@ class Caja_outside extends CI_Controller {
                     $datos['idStatusLote'] = 7;
                 } else if ($value->idStatusLote == 'BLOQUEO' || $value->idStatusLote == 'BLOQUEADO') {
                     $datos['idStatusLote'] = 8;
+                } else if ($value->idStatusLote == 'ESPECIAL') {
+                    $datos['idStatusLote'] = 101;
                 } else {
                     $datos['idStatusLote'] = 8;
                 }
@@ -281,7 +286,7 @@ class Caja_outside extends CI_Controller {
             $inicio = date("Y-m-01");
             $fin = date("Y-m-t");
             //$datosCondominio = $this->caja_model_aoutside->getDatosCondominio($data->idCondominio);
-                    if($data->tipo_lote == 1 ){ //1 - Comercial
+                    if($data->lotes[0]->tipo_lote == 1 ){ //1 - Comercial
                         //si el condominio es comercial solo consultar sin importar la superficie
                         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, $inicio, $fin);
                         $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
@@ -298,7 +303,7 @@ class Caja_outside extends CI_Controller {
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
                 $datos["activeLE"] = $data->activeLE;
-                $datos["tipo_lote"] = $data->tipo_lote;
+                $datos["tipo_lote"] = $data->lotes[0]->tipo_lote;
                 $datos["activeLP"] = $data->activeLP;
 
 
@@ -533,7 +538,7 @@ class Caja_outside extends CI_Controller {
             'id_subdirector' => $datosView->id_subdirector,
             'id_regional' => $datosView->id_regional,
             'id_regional_2' => $datosView->id_regional_2,
-            'id_sede' => $data['prospecto'][0]['id_sede'],
+            'id_sede' => $datosView->id_sede,
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
             'apellido_materno' => $data['prospecto'][0]['apellido_materno'],
@@ -1909,10 +1914,12 @@ class Caja_outside extends CI_Controller {
                         $arreglo["telefono2"] = $data->propietarios->telefono;
 
                         $arreglo["personalidad_juridica"] = 2;
+                        
                         //INFORMACION DEL ASESOR
                         $arreglo["id_gerente"] = $data->asesores[0]->idGerente;
                         $arreglo["id_coordinador"] = $voBoCoord;
                         $arreglo["id_asesor"] = $data->asesores[0]->idAsesor;
+                        $arreglo["id_sede"] = $data->asesores[0]->id_sede;
                         //INFORMACION DEL APARTADO
                         $arreglo["fechaApartado"] = date('Y-m-d H:i:s');
                         $arreglo["id_sede"] = 0;

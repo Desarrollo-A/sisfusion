@@ -2,15 +2,7 @@
 <link href="<?=base_url()?>dist/js/controllers/files/themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css"/>
 <div>
     <div class="wrapper">
-        <?php
-/*--------------------Datos para cargar el sidebar--------------------*/
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-/*--------------------------------------------------------------------*/
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="content" id="bulkload_div">
             <div class="container-fluid">
                 <div class="row">

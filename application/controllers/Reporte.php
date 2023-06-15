@@ -9,7 +9,10 @@ class Reporte extends CI_Controller {
         date_default_timezone_set('America/Mexico_City');
         $this->jwt_actions->authorize('9717', $_SERVER['HTTP_HOST']);
         $this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
     public function validateSession(){
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
@@ -209,9 +212,8 @@ class Reporte extends CI_Controller {
     public function reporteConRecisiones(){
 		$this->validateSession();
 
-   		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("reportes/reporteConRecisiones",$datos);
+		$this->load->view("reportes/reporteConRecisiones");
 	}
 
     public function getVentasConSinRecision(){
@@ -228,9 +230,8 @@ class Reporte extends CI_Controller {
     public function reporteTrimestral(){
         $this->validateSession();
 
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("reportes/reporteTrimestral",$datos);
+        $this->load->view("reportes/reporteTrimestral");
     }
 
     public function getLotesTrimestral(){
@@ -246,9 +247,8 @@ class Reporte extends CI_Controller {
 
     public function reporteApartados(){
         $this->validateSession();
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("reportes/reporteApartados",$datos);
+        $this->load->view("reportes/reporteApartados");
     }
 
     public function getLotesApartados(){
@@ -279,8 +279,7 @@ class Reporte extends CI_Controller {
     }
 
     public function lotesXStatus(){        
-		$datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
 		$this->load->view('template/header');
-		$this->load->view("reportes/lotesXStatus_view",$datos);
+		$this->load->view("reportes/lotesXStatus_view");
     }
 }

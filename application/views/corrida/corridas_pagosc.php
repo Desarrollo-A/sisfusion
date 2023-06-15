@@ -22,43 +22,14 @@
 </style>
 <div class="wrapper ">
     <?php
-    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    switch ($this->session->userdata('id_rol')) {
-        case '2': // SUB VENTAS
-        case '3': // GERENTE VENTAS
-        case '4': // ASISTENTE DIRECCIÓN COMERCIAL
-        case '5': // ASISTENTE SUBDIRECCIÓN COMERCIAL
-        case '6': // ASISTENTE GERENCIA COMERCIAL
-        case '7': // ASESOR
-        case '9': // COORDINADOR
-        case '11': // ADMINISTRACIÓN
-        case '12': // CAJA
-        case '13': // CONTRALORÍA
-        case '15': // JURÍDICO
-        case '16': // CONTRATACIÓN
-        case '28': // EJECUTIVO ADMINISTRATIVO MKTD
-        case '32': // CONTRALORÍA CORPORATIVA
-        case '33': // CONSULTA
-        case '34': // FACTURACIÓN
-        case '39': // CONTABILIDAD
-        case '50': // GENERALISTA MKTD
-        case '40': // COBRANZA
-        case '53': // analista comisisones
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-            break;
-
-        default:
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-            break;
+    if (in_array($this->session->userdata('id_rol'), array(2,3,4,5,6,7,9,11,12,13,15,16,28,32,33,34,39,50,40,53))){
+        $this->load->view('template/sidebar');
+    }
+    else{
+        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
     }
     ?>
     <!--Contenido de la página-->
-
-
 
     <div class="modal fade" id="avisoModal" >
         <div class="modal-dialog">

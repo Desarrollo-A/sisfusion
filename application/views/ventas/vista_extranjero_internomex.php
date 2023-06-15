@@ -5,11 +5,7 @@
     <div class="wrapper">
         <?php
             if($this->session->userdata('id_rol')=="31"){
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;  
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             }
             else
             {

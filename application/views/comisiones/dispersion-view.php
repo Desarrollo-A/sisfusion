@@ -3,13 +3,8 @@
 <body class="">
     <div class="wrapper">
         <?php
-        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70")
-        {
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70"){
+            $this->load->view('template/sidebar');
         }
         else {
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -31,18 +26,18 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header alcenter-align">
-                        <button type="button"class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title  center-align" ><b>Reporte dispersión</b></h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input  type="date" name="fecha1" id="fecha1" class="form-control input-gral">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title  center-align" ><b>Reporte dispersión</b></h4>
+                            <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" name="fecha1" id="fecha1" class="form-control datepicker">
+                                    </div>
+                                    <div class="col-md-6" id="f2">
+                                        <input type="text" name="fecha2" id="fecha2" class="form-control datepicker"> 
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6" id="f2">
-                                <input type="date" name="fecha2" id="fecha2" class="form-control input-gral"> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body"></div>
+                        <div class="modal-body"></div>
                     <div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button></div>
                 </div>
             </div>
@@ -57,10 +52,10 @@
                     </div>
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="updateBandera" class="btn btn-primary">Aceptar</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="updateBandera" class="btn btn-primary">Aceptar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -76,24 +71,11 @@
                         <div class="modal-body">
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="statusLote" id="statusLote">
-                            
-                            <!-- <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
-                                </div>
-                            </div> -->
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <select class="selectpicker select-gral"
-                                            id="motivo"
-                                            name="motivo"
-                                            data-style="btn"
-                                            required
-                                            title="SELECCIONA UNA OPCIÓN">
-                                            
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
                                             <?php foreach($controversias as $controversia){ ?>
-
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
                                             <?php } ?>
                                     </select>
@@ -101,7 +83,7 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -187,8 +169,6 @@
             </div>
         </div>
 
-
-
         <div class="modal fade modal-alertas" id="Nopenalizacion-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -245,11 +225,7 @@
 
                                 <div class="form-group">
                                      <br>
-                                    <select class="selectpicker select-gral" id="planes" name="planes" 
-                                        title="SELECCIONA UNA OPCIÓN"
-                                        required data-live-search="true"
-                                        data-style="btn" required>
-                                    </select>
+                                    <select class="selectpicker select-gral" id="planes" name="planes" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-style="btn" required></select>
                                 </div>
                             </div>
                             <div id="detalle-tabla-div"
@@ -286,8 +262,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                 
-                                       <p class="card-title pl-1 center-align">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
+                                    <p class="card-title pl-1 center-align">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -328,18 +303,13 @@
                                                 href="#myModal" style="color:white"> Reporte dispersión</a>
                                             </div>
                                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 d-flex align-end text-center">
-                                                <button class="btn-gral-data"
-                                                   id="btn-detalle-plan"
-                                                   style="color:white; ">
-                                                    Planes
-                                                </button>
+                                                <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
                                             <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
                                                 <thead>
                                                     <tr>
@@ -353,13 +323,12 @@
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th> 
-                                                        <th>FEC. NEODATA</th>
+                                                        <th>FECHA SISTEMA</th> 
+                                                        <th>FECHA NEODATA</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

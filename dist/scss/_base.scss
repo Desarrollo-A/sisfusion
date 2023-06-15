@@ -163,7 +163,7 @@ $water              : #D1EEFF;
 $blueLight          : #5DADE2;
 $shadowBlue         : #7083A9;
 $aqua               : #54d2d2;
-$sky                : #00bcd4;
+$sky                : #0067d4;
 $skyOpacity         : #00bcd418;
 $cerulean           : #00A0FF;
 $blueFrance         : #2C93E7;
@@ -210,6 +210,8 @@ $veryDarkBlue       : #1B4F72;
 $veryDarkCyan       : #0E6251;
 $vividOrange        : #F57F17;
 $darkPink           : #880E4F;
+$melon              : #CD6155;
+$pink               : #cd5587;
 /* END vrbls coloress */
 
 /* size devices */
@@ -547,7 +549,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-sky{
     color: $sky;
     border: none;
-    background-color: #00bcd418;
+    background-color: #0067d418;
 }
 .btn-sky:hover {
     background-color: $sky;
@@ -607,6 +609,13 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #A0400018;
 }
+
+.lbl-cerulean{
+    color:              $cerulean;
+    border:             none;
+    background-color: #00A0FF18;
+}
+
 .lbl-deepGray{
     color: $deepGray;
     border: none;
@@ -617,8 +626,9 @@ $tv                 : "(min-width: 1280px)";
     padding: 7px 10px;
 }
 .lbl-gray{
-    background-color: $grayOxford;
-    color: $white; 
+    color: $grayOxford;
+    border : none;
+    background-color: #4e4e4e18;
 }
 .lbl-grayDark{
     color: $grayDark;
@@ -630,15 +640,31 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #1E844918;
 }
+.lbl-melon{
+    color: $melon;
+    border:none;
+    background-color: #CD615518;
+
+}
+.lbl-oceanGreen{
+    color:$oceanGreen;
+    border:none;
+    background-color: #4BBC8E18;
+}
 .lbl-orangeYellow{
     color: $orangeYellow;
     border: none;
     background-color: #B9770E18;
 }
+.lbl-pink{
+    color: $pink;
+    border: none;
+    background-color:#cd558718 ;
+}
 .lbl-sky{
     color: $sky;
     border: none;
-    background-color: #00bcd418;
+    background-color: #0067d418;
 }
 .lbl-violetBoots{
     color:$violetBoots;
@@ -669,6 +695,30 @@ $tv                 : "(min-width: 1280px)";
     color: $yellow;
     border: none;
     background-color: #F9F87118;
+}
+
+.lbl-lightBlue{
+    color:#1B4F72;
+    border:none;
+    background:#AED6F1;
+}
+
+.lbl-peach{
+    color:#78281F;
+    border: none;
+    background:#F5B7B1;
+}
+
+.lbl-purple{
+    color:#512E5F;
+    border: none;
+    background:#D7BDE2;
+}
+
+.lbl-aqua{
+    color: $white; 
+    border: none;
+    background:#11DFC6;
 }
 /* END Etiquetas */
 
