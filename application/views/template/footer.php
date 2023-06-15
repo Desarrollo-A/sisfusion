@@ -53,8 +53,8 @@
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
-    let id_rol_general = <?= $this->session->userdata('id_rol') ?> ;
-    let id_usuario_general =  <?= $this->session->userdata('id_usuario') ?>;
+    let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
+    let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
@@ -69,7 +69,7 @@
         }
     }
 
-    var id_rol_global = <?=$this->session->userdata('id_rol')?>; 
+    var id_rol_global = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
 </script>
 
 <?php if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_guardia')==1){?>
